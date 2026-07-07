@@ -1,0 +1,3183 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 03:32+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/telephony/app.py:599 src/telephony/app.py:717
+msgid "Modem unavailable"
+msgstr "Modem pole saadaval"
+
+#: src/telephony/app.py:600
+msgid "Calls are not possible until the modem recovers."
+msgstr "Kõned pole võimalikud enne, kui modem taastub."
+
+#: src/telephony/app.py:602 src/telephony/app.py:720
+#: src/telephony/backend/managers/lockscreen_manager.py:87
+#: src/telephony/ui/windows/advanced_settings_window.py:177
+#: src/telephony/ui/windows/incall_window.py:272
+#: src/telephony/ui/windows/incall_window.py:850
+#: src/telephony/ui/windows/incall_window.py:870
+#: src/telephony/ui/windows/modem_recovery_window.py:40
+msgid "Modem Recovery"
+msgstr "Modemi taastamine"
+
+#: src/telephony/app.py:655
+msgid "Network registration denied"
+msgstr "Võrku registreerimine keelati"
+
+#: src/telephony/app.py:656
+msgid "The network rejected this SIM. Contact your operator."
+msgstr "Võrk lükkas selle SIM-kaardi tagasi. Võta ühendust operaatoriga."
+
+#: src/telephony/app.py:694
+msgid "SIM PIN required"
+msgstr "Vajalik on SIM-kaardi PIN-kood"
+
+#: src/telephony/app.py:695
+msgid "Calls and messages stay offline until the SIM is unlocked."
+msgstr "Kõned ja sõnumid jäävad võrguühenduseta, kuni SIM-kaart avatakse."
+
+#: src/telephony/app.py:718 src/telephony/ui/windows/incall_window.py:869
+msgid "Could not restore the modem. Please reboot the phone."
+msgstr "Modemit ei õnnestunud taastada. Palun taaskäivita telefon."
+
+#: src/telephony/app.py:786 src/telephony/app.py:859
+#: src/telephony/ui/views/history_view.py:284
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} uus sõnum"
+msgstr[1] "{count} uut sõnumit"
+
+#: src/telephony/app.py:788 src/telephony/ui/views/history_view.py:286
+msgid "New voicemail"
+msgstr "Uus kõnepostisõnum"
+
+#: src/telephony/app.py:794 src/telephony/app.py:829
+msgid "Call Back"
+msgstr "Helista tagasi"
+
+#: src/telephony/app.py:798 src/telephony/ui/views/history_view.py:288
+msgid "Voicemail"
+msgstr "Kõnepost"
+
+#: src/telephony/app.py:818 src/telephony/app.py:852
+#: src/telephony/backend/managers/database_manager.py:1049
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:368
+#: src/telephony/ui/main_window.py:673 src/telephony/ui/views/chat_view.py:87
+#: src/telephony/ui/views/chat_view.py:92
+#: src/telephony/ui/views/chat_view.py:145
+#: src/telephony/ui/views/chat_view.py:155
+#: src/telephony/ui/views/chat_view.py:159
+#: src/telephony/ui/views/chat_view.py:727
+#: src/telephony/ui/views/chat_view.py:731
+#: src/telephony/ui/views/chat_view.py:842
+#: src/telephony/ui/views/chat_view.py:848
+#: src/telephony/ui/views/chat_view.py:1016
+#: src/telephony/ui/views/chat_view.py:1018
+#: src/telephony/ui/views/chat_view.py:1215
+#: src/telephony/ui/views/dialpad_view.py:171
+#: src/telephony/ui/views/history_view.py:436
+#: src/telephony/ui/views/messages_view.py:378
+#: src/telephony/ui/views/messages_view.py:381
+#: src/telephony/ui/views/messages_view.py:452
+#: src/telephony/ui/views/messages_view.py:456
+#: src/telephony/ui/views/messages_view.py:546
+#: src/telephony/ui/views/messages_view.py:883
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: src/telephony/ui/widgets/history_rows_widget.py:127
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:181
+#: src/telephony/ui/windows/custom_tone_list_window.py:264
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:222
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:202
+#: src/telephony/ui/windows/incall_window.py:434
+#: src/telephony/ui/windows/incall_window.py:447
+#: src/telephony/ui/windows/incall_window.py:571
+#: src/telephony/ui/windows/incall_window.py:647
+#: src/telephony/ui/windows/trusted_actions_list_window.py:352
+#: src/telephony/ui/windows/trusted_actions_list_window.py:472
+msgid "Unknown"
+msgstr "Tundmatu"
+
+#: src/telephony/app.py:822
+msgid "Missed Call"
+msgstr "Vastamata kõne"
+
+#: src/telephony/app.py:863
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Ava"
+
+#: src/telephony/app.py:867
+msgid "Call"
+msgstr "Helista"
+
+#: src/telephony/backend/managers/database_manager.py:1032
+#: src/telephony/backend/managers/eds_manager.py:818
+#: src/telephony/ui/views/messages_view.py:372
+#: src/telephony/ui/views/messages_view.py:443
+msgid "Blocked Number"
+msgstr "Blokeeritud number"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency Mode"
+msgstr "Hädaolukord"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency calls only."
+msgstr "Ainult hädaabikõned."
+
+#: src/telephony/backend/managers/emergency_manager.py:122
+msgid "Start Emergency Process"
+msgstr "Käivita hädaabi protsess"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+#: src/telephony/ui/main_window.py:515 src/telephony/ui/main_window.py:706
+#: src/telephony/ui/views/history_view.py:85
+#: src/telephony/ui/views/messages_view.py:125
+#: src/telephony/ui/windows/advanced_settings_window.py:49
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:89
+#: src/telephony/ui/windows/camera_video_window.py:100
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/contact_picker_window.py:47
+#: src/telephony/ui/windows/custom_tone_list_window.py:57
+#: src/telephony/ui/windows/custom_tone_list_window.py:285
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: src/telephony/ui/windows/import_export_window.py:74
+#: src/telephony/ui/windows/import_export_window.py:171
+#: src/telephony/ui/windows/import_export_window.py:197
+#: src/telephony/ui/windows/import_export_window.py:311
+#: src/telephony/ui/windows/import_export_window.py:340
+#: src/telephony/ui/windows/import_export_window.py:441
+#: src/telephony/ui/windows/import_export_window.py:501
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/settings_window.py:467
+#: src/telephony/ui/windows/settings_window.py:966
+#: src/telephony/ui/windows/settings_window.py:996
+#: src/telephony/ui/windows/sound_recorder_window.py:96
+#: src/telephony/ui/windows/trusted_actions_list_window.py:124
+#: src/telephony/ui/windows/trusted_actions_list_window.py:535
+#: src/telephony/ui/windows/trusted_actions_list_window.py:628
+#: src/telephony/ui/windows/trusted_actions_list_window.py:649
+msgid "Cancel"
+msgstr "Loobu"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+msgid "Return to Lockscreen"
+msgstr "Tagasi lukustuskuvale"
+
+#: src/telephony/backend/managers/emergency_manager.py:136
+msgid "Back"
+msgstr "Tagasi"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "No Numbers Configured"
+msgstr "Numbreid pole seadistatud"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "Set numbers in Settings."
+msgstr "Määra numbrid seadetes."
+
+#: src/telephony/backend/managers/emergency_manager.py:151
+#, python-brace-format
+msgid "Call {number}"
+msgstr "Helista {number}"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+msgid "Confirm Emergency Call"
+msgstr "Kinnita hädaabikõne"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "Kas helistan kontaktile {name}?"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🟢 Yes, Call"
+msgstr "🟢 Jah, helista"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🔴 No, Return"
+msgstr "🔴 Ei, tagasi"
+
+#: src/telephony/backend/managers/location_manager.py:67
+msgid "Initializing location services..."
+msgstr "Asukohateenuste käivitamine..."
+
+#: src/telephony/backend/managers/location_manager.py:134
+msgid "Waiting for location service..."
+msgstr "Asukohateenuse ootel..."
+
+#: src/telephony/backend/managers/location_manager.py:151
+msgid "Waiting for satellite fix..."
+msgstr "Satelliidiühenduse ootel..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:82
+#: src/telephony/ui/windows/incall_window.py:269
+msgid "Modem Stuck"
+msgstr "Modem on kinni jooksnud"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Call failed to disconnect."
+msgstr "Kõne lõpetamine ebaõnnestus."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:85
+msgid "Telephony Emergency"
+msgstr "Telephony hädaolukord"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:187
+#: src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "Telephony - Sissetulev"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:188
+#: src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "🟢 Sissetulev: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:189
+#: src/telephony/ui/windows/incall_window.py:48
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Incoming Call..."
+msgstr "Sissetulev kõne..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:192
+#: src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁 Vaheta"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 Vasta"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:195
+#: src/telephony/backend/managers/lockscreen_manager.py:208
+#: src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 Lõpeta kõne"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:200
+#: src/telephony/ui/windows/incall_window.py:49
+msgid "Waiting..."
+msgstr "Ootab..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "Telephony - Ootel"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (Ootel)"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "Kõne ootel..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁 Jätka"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "Telephony - Kõne käib"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "🟢 Kõne: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "Käimasolev kõne"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴 Lõpeta kõik"
+
+#: src/telephony/backend/managers/ofono_manager.py:799
+#: src/telephony/backend/managers/ofono_manager.py:803
+#: src/telephony/backend/managers/ofono_manager.py:945
+#: src/telephony/ui/main_window.py:500
+msgid "Modem not ready"
+msgstr "Modem ei ole valmis"
+
+#: src/telephony/backend/managers/ofono_manager.py:817
+msgid "Cannot dial while in another call"
+msgstr "Teise kõne ajal ei saa helistada"
+
+#: src/telephony/backend/managers/ofono_manager.py:822
+#: src/telephony/ui/main_window.py:736
+msgid "Please wait, the previous call is still ending"
+msgstr "Palun oota, eelmine kõne on veel lõppemas"
+
+#: src/telephony/backend/managers/ofono_manager.py:834
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "Viga helistamisel: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:963
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "Saatmine ebaõnnestus: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1060
+msgid "Not supported"
+msgstr "Pole toetatud"
+
+#: src/telephony/backend/managers/ofono_manager.py:1065
+#: src/telephony/ui/windows/camera_photo_window.py:205
+#: src/telephony/ui/windows/camera_photo_window.py:290
+#: src/telephony/ui/windows/camera_photo_window.py:319
+#: src/telephony/ui/windows/camera_photo_window.py:361
+#: src/telephony/ui/windows/camera_video_window.py:243
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "Viga: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1117
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Oota 60 sekundit enne, kui uuesti {prefix} käivitad."
+
+#: src/telephony/backend/managers/ofono_manager.py:1317
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr " (Täpsus: {acc}m)"
+
+#: src/telephony/backend/managers/ofono_manager.py:1319
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Olen siin: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1327
+msgid "Failed to obtain location after trying all methods."
+msgstr "Asukoha leidmine ebaõnnestus kõigi meetoditega."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:135
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "Eksportisin {count} sõnumit XML-i."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:201
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Eksportisin {count} kõnet XML-i."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:88
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Saatsin {count} sõnumit Chatty andmebaasi."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:144
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Saatsin {count} kõnet Gnome Calls andmebaasi."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:161
+msgid "Source database not found."
+msgstr "Algset andmebaasi ei leitud."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Exported Telephony database successfully."
+msgstr "Telephony andmebaas sai kenasti eksporditud."
+
+#: src/telephony/backend/utils/importer_android_utils.py:34
+#: src/telephony/backend/utils/importer_android_utils.py:140
+#: src/telephony/backend/utils/importer_ios_utils.py:38
+#: src/telephony/backend/utils/importer_ios_utils.py:209
+#: src/telephony/ui/windows/camera_photo_window.py:331
+msgid "File not found."
+msgstr "Faili ei leitud."
+
+#: src/telephony/backend/utils/importer_android_utils.py:131
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Tõin Androidi varukoopiast {count} sõnumit."
+
+#: src/telephony/backend/utils/importer_android_utils.py:207
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Tõin Androidi varukoopiast {count} kõnet."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:67
+msgid "Could not find messages table in iOS database."
+msgstr "iOS-i andmebaasist ei leitud sõnumite tabelit."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:74
+msgid "Failed to read iOS SMS database structure."
+msgstr "iOS-i SMS-ide andmebaasi lugemine ebaõnnestus."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:200
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Tõin iOS-i varukoopiast {count} sõnumit."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:234
+msgid "Could not find call history table in iOS database."
+msgstr "iOS-i andmebaasist ei leitud kõneajaloo tabelit."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:241
+msgid "Failed to read iOS Calls database structure."
+msgstr "iOS-i kõnede andmebaasi lugemine ebaõnnestus."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:306
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Tõin iOS-i varukoopiast {count} kõnet."
+
+#: src/telephony/backend/utils/importer_local_utils.py:32
+msgid "Chatty database not found."
+msgstr "Chatty andmebaasi ei leitud."
+
+#: src/telephony/backend/utils/importer_local_utils.py:54
+msgid "Could not find messages table in Chatty database."
+msgstr "Chatty andmebaasist ei leitud sõnumite tabelit."
+
+#: src/telephony/backend/utils/importer_local_utils.py:61
+msgid "Failed to read Chatty database structure."
+msgstr "Chatty andmebaasi lugemine ebaõnnestus."
+
+#: src/telephony/backend/utils/importer_local_utils.py:125
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Tõin Chatty-st {count} sõnumit."
+
+#: src/telephony/backend/utils/importer_local_utils.py:135
+msgid "Calls database not found."
+msgstr "Kõnede andmebaasi ei leitud."
+
+#: src/telephony/backend/utils/importer_local_utils.py:155
+msgid "Could not find call history table in Calls database."
+msgstr "Kõnede andmebaasist ei leitud kõneajaloo tabelit."
+
+#: src/telephony/backend/utils/importer_local_utils.py:162
+msgid "Failed to read Calls database structure."
+msgstr "Kõnede andmebaasi lugemine ebaõnnestus."
+
+#: src/telephony/backend/utils/importer_local_utils.py:216
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Tõin {count} kõnet."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}t {m}m"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}s"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telephony"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Numbrilaud"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Ajalugu"
+
+#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/views/messages_view.py:67
+#: src/telephony/ui/windows/settings_window.py:666
+msgid "Messages"
+msgstr "Sõnumid"
+
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:667
+msgid "Contacts"
+msgstr "Kontaktid"
+
+#: src/telephony/ui/main_window.py:169
+msgid "Syncing Contacts..."
+msgstr "Kontaktide sünroonimine..."
+
+#: src/telephony/ui/main_window.py:263
+msgid "Set your number in Settings"
+msgstr "Määra oma number seadetes"
+
+#: src/telephony/ui/main_window.py:279 src/telephony/ui/main_window.py:284
+msgid "Please set Default Country Code in Settings"
+msgstr "Määra riigikood seadetes"
+
+#: src/telephony/ui/main_window.py:304
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Määra hädaabinumbrid seadetes"
+
+#: src/telephony/ui/main_window.py:320
+msgid "Resolve Duplicates"
+msgstr "Lahenda duplikaadid"
+
+#: src/telephony/ui/main_window.py:326
+#: src/telephony/ui/windows/settings_window.py:44
+msgid "Settings"
+msgstr "Seaded"
+
+#: src/telephony/ui/main_window.py:331
+msgid "Reload Contacts"
+msgstr "Värskenda kontakte"
+
+#: src/telephony/ui/main_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Import / Eksport"
+
+#: src/telephony/ui/main_window.py:346 src/telephony/ui/main_window.py:580
+msgid "Blocklist"
+msgstr "Must nimekiri"
+
+#: src/telephony/ui/main_window.py:439
+msgid "Modem Connected"
+msgstr "Modem on ühendatud"
+
+#: src/telephony/ui/main_window.py:441
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Modemi viga: {message}"
+
+#: src/telephony/ui/main_window.py:490
+msgid "Sending USSD..."
+msgstr "USSD saatmine..."
+
+#: src/telephony/ui/main_window.py:505
+msgid "USSD Result"
+msgstr "USSD vastus"
+
+#: src/telephony/ui/main_window.py:507
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:913
+#: src/telephony/ui/windows/settings_window.py:518
+#: src/telephony/ui/windows/settings_window.py:530
+#: src/telephony/ui/windows/settings_window.py:890
+msgid "OK"
+msgstr "Olgu"
+
+#: src/telephony/ui/main_window.py:516
+#: src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "Kinnita"
+
+#: src/telephony/ui/main_window.py:552
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "Leiti {count} korduv kontakt. Vaata menüüd."
+msgstr[1] "Leiti {count} korduvat kontakti. Vaata menüüd."
+
+#: src/telephony/ui/main_window.py:577 src/telephony/ui/main_window.py:651
+msgid "Contacts syncing..."
+msgstr "Kontaktide sünroonimine..."
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:864
+#: src/telephony/ui/windows/advanced_settings_window.py:230
+#: src/telephony/ui/windows/chat_media_controller_window.py:150
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:401
+#: src/telephony/ui/windows/settings_window.py:434
+#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:504
+#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:1029
+msgid "Close"
+msgstr "Sulge"
+
+#: src/telephony/ui/main_window.py:623
+msgid "Syncing address books..."
+msgstr "Aadressiraamatute sünkroonimine..."
+
+#: src/telephony/ui/main_window.py:633 src/telephony/ui/main_window.py:638
+#: src/telephony/ui/main_window.py:643
+msgid "Reloading Contacts..."
+msgstr "Kontaktide värskendamine..."
+
+#: src/telephony/ui/main_window.py:636
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "Sünkroonimine alustatud {count} aadressiraamatu jaoks"
+
+#: src/telephony/ui/main_window.py:661
+msgid "Multiple Contacts Found"
+msgstr "Leiti mitu kontakti"
+
+#: src/telephony/ui/main_window.py:662
+msgid "Which contact would you like to edit?"
+msgstr "Millist kontakti soovid muuta?"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Unknown Addressbook"
+msgstr "Tundmatu aadressiraamat"
+
+#: src/telephony/ui/main_window.py:738 src/telephony/ui/main_window.py:745
+#: src/telephony/ui/main_window.py:751
+msgid "Call Failed"
+msgstr "Kõne ebaõnnestus"
+
+#: src/telephony/ui/main_window.py:741
+msgid "Calling (Anonymous)..."
+msgstr "Helistamine (peidetult)..."
+
+#: src/telephony/ui/main_window.py:741
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Helistamine numbrile {number}..."
+
+#: src/telephony/ui/main_window.py:757
+msgid "Call Details"
+msgstr "Kõne üksikasjad"
+
+#: src/telephony/ui/main_window.py:758
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Number: {number}\n"
+"Nimi: {name}\n"
+"Kuupäev: {date}\n"
+"Kestus: {duration}"
+
+#: src/telephony/ui/main_window.py:774
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Unblock Number"
+msgstr "Eemalda blokk"
+
+#: src/telephony/ui/main_window.py:780 src/telephony/ui/views/chat_view.py:797
+msgid "Unblocked"
+msgstr "Blokk eemaldatud"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/windows/contact_editor_window.py:416
+msgid "Edit Contact"
+msgstr "Muuda kontakti"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "Lisa kontaktidesse"
+
+#: src/telephony/ui/main_window.py:799
+msgid "Add to Existing Contact"
+msgstr "Lisa olemasolevale kontaktile"
+
+#: src/telephony/ui/main_window.py:808
+#: src/telephony/ui/windows/incall_window.py:223
+msgid "Search Number"
+msgstr "Otsi numbrit"
+
+#: src/telephony/ui/main_window.py:832
+msgid "Send Message"
+msgstr "Saada sõnum"
+
+#: src/telephony/ui/main_window.py:837
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "Kopeeri number"
+
+#: src/telephony/ui/main_window.py:842
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Blokeeri number"
+
+#: src/telephony/ui/main_window.py:855
+msgid "Delete this call"
+msgstr "Kustuta see kõne"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Delete Call"
+msgstr "Kustuta kõne"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Remove this call?"
+msgstr "Kas kustutada see kõne?"
+
+#: src/telephony/ui/main_window.py:874
+msgid "Number copied"
+msgstr "Number kopeeritud"
+
+#: src/telephony/ui/main_window.py:880
+#: src/telephony/ui/windows/contact_editor_window.py:807
+msgid "Saving contact..."
+msgstr "Kontakti salvestamine..."
+
+#: src/telephony/ui/main_window.py:884
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Lisatud kontakti {name} juurde"
+
+#: src/telephony/ui/main_window.py:887
+msgid "Failed to add number"
+msgstr "Numbri lisamine ebaõnnestus"
+
+#: src/telephony/ui/main_window.py:895
+#: src/telephony/ui/windows/contact_editor_window.py:205
+#: src/telephony/ui/windows/settings_window.py:236
+msgid "Add Number"
+msgstr "Lisa number"
+
+#: src/telephony/ui/main_window.py:896
+#: src/telephony/ui/windows/advanced_settings_window.py:53
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:148
+#: src/telephony/ui/windows/custom_tone_list_window.py:61
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:75
+#: src/telephony/ui/windows/settings_window.py:967
+#: src/telephony/ui/windows/trusted_actions_list_window.py:129
+#: src/telephony/ui/windows/trusted_actions_list_window.py:539
+msgid "Save"
+msgstr "Salvesta"
+
+#: src/telephony/ui/views/chat_view.py:136
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Mustand {count} saajale"
+
+#: src/telephony/ui/views/chat_view.py:163
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} osalejat"
+
+#: src/telephony/ui/views/chat_view.py:312
+msgid "Replies not supported for this sender"
+msgstr "Siia ei saa vastata"
+
+#: src/telephony/ui/views/chat_view.py:358
+#: src/telephony/ui/views/chat_view.py:1285
+msgid "Scheduled time must be in the future"
+msgstr "Aeg peab olema tulevikus"
+
+#: src/telephony/ui/views/chat_view.py:367
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Uusi aika: {time}"
+
+#: src/telephony/ui/views/chat_view.py:374
+msgid "Re-Schedule Message"
+msgstr "Muuda sõnumi aega"
+
+#: src/telephony/ui/views/chat_view.py:509
+#: src/telephony/ui/views/chat_view.py:580
+msgid "— New Messages —"
+msgstr "— Uued sõnumid —"
+
+#: src/telephony/ui/views/chat_view.py:618
+msgid "No results found in this conversation"
+msgstr "Selles vestluses pole tulemusi"
+
+#: src/telephony/ui/views/chat_view.py:696
+msgid "Group Name"
+msgstr "Grupi nimi"
+
+#: src/telephony/ui/views/chat_view.py:697
+msgid "Set group name..."
+msgstr "Määra grupi nimi..."
+
+#: src/telephony/ui/views/chat_view.py:705
+msgid "Participants"
+msgstr "Osalejad"
+
+#: src/telephony/ui/views/chat_view.py:823
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Conversation"
+msgstr "Kustuta vestlus"
+
+#: src/telephony/ui/views/chat_view.py:840
+#: src/telephony/ui/views/chat_view.py:1217
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "Mina"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Edastatud saatjalt {sender}:\n"
+"{body}"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Edastatud saatjalt {sender}"
+
+#: src/telephony/ui/views/chat_view.py:859
+msgid "Forward To"
+msgstr "Saada edasi"
+
+#: src/telephony/ui/views/chat_view.py:860
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "Saada edasi"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Delete Message"
+msgstr "Kustuta sõnum"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Are you sure you want to delete this message?"
+msgstr "Kas oled kindel, et soovid selle sõnumi kustutada?"
+
+#: src/telephony/ui/views/chat_view.py:1033
+msgid "Group renamed"
+msgstr "Grupi nimi muudetud"
+
+#: src/telephony/ui/views/chat_view.py:1063
+msgid "Compressing image..."
+msgstr "Pildi pakkimine..."
+
+#: src/telephony/ui/views/chat_view.py:1065
+msgid "Image is too large to send"
+msgstr "Pilt on saatmiseks liiga suur"
+
+#: src/telephony/ui/views/chat_view.py:1067
+msgid "Compressing video..."
+msgstr "Video pakkimine..."
+
+#: src/telephony/ui/views/chat_view.py:1069
+msgid "Video compression failed"
+msgstr "Video pakkimine ebaõnnestus"
+
+#: src/telephony/ui/views/chat_view.py:1071
+msgid "File is too large to send via MMS"
+msgstr "Fail on MMS-i kaudu saatmiseks liiga suur"
+
+#: src/telephony/ui/views/chat_view.py:1279
+msgid "Nothing to schedule"
+msgstr "Pole midagi ajastada"
+
+#: src/telephony/ui/views/chat_view.py:1293
+msgid "Schedule Message"
+msgstr "Ajasta sõnum"
+
+#: src/telephony/ui/views/chat_view.py:1353
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Sõnum ajastatud ajaks: {time}"
+
+#: src/telephony/ui/views/chat_view.py:1354
+#: src/telephony/ui/views/chat_view.py:1360
+msgid "[Attachment]"
+msgstr "[Manus]"
+
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Group"
+msgstr "Kustuta grupp"
+
+#: src/telephony/ui/views/chat_view.py:1452
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr "See kustutab vestluse ajaloo ja kõik failid jäädavalt."
+
+#: src/telephony/ui/views/contacts_view.py:64
+msgid "Search contacts"
+msgstr "Otsi kontakte"
+
+#: src/telephony/ui/views/contacts_view.py:439
+msgid "Call Anonymous"
+msgstr "Helista peidetult"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Sisesta number"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:162
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Nutikas numbrilaud ootab!"
+
+#: src/telephony/ui/views/dialpad_view.py:259
+msgid "Invalid number in clipboard"
+msgstr "Lõikelaual on vigane number"
+
+#: src/telephony/ui/views/dialpad_view.py:261
+msgid "Invalid number"
+msgstr "Vigane number"
+
+#: src/telephony/ui/views/history_view.py:129
+msgid "All"
+msgstr "Kõik"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Any duration"
+msgstr "Iga kestus"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Unanswered"
+msgstr "Vastamata"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1-3 mins"
+msgstr "1-3 min"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "3-10 mins"
+msgstr "3-10 min"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "> 15 mins"
+msgstr "> 15 min"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Any date"
+msgstr "Iga kuupäev"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Today"
+msgstr "Täna"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 3 days"
+msgstr "Viimeiset 3 päeva"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 14 days"
+msgstr "Viimeiset 14 päivää"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 30 days"
+msgstr "Viimeiset 30 päivää"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 60 days"
+msgstr "Viimeiset 60 päivää"
+
+#: src/telephony/ui/views/messages_view.py:117
+#: src/telephony/ui/views/messages_view.py:590
+msgid "Search Contacts..."
+msgstr "Otsi kontakte..."
+
+#: src/telephony/ui/views/messages_view.py:235
+msgid "All Messages"
+msgstr "Kõik sõnumid"
+
+#: src/telephony/ui/views/messages_view.py:236
+msgid "Unread Messages"
+msgstr "Lugemata"
+
+#: src/telephony/ui/views/messages_view.py:237
+msgid "Unknown Numbers"
+msgstr "Tundmatud numbrid"
+
+#: src/telephony/ui/views/messages_view.py:238
+msgid "Saved Contacts"
+msgstr "Minu kontaktid"
+
+#: src/telephony/ui/views/messages_view.py:239
+msgid "Group Messages"
+msgstr "Grupisõnumid"
+
+#: src/telephony/ui/views/messages_view.py:240
+msgid "Individual Messages"
+msgstr "Erasõnumid"
+
+#: src/telephony/ui/views/messages_view.py:241
+msgid "Alphabetical Senders"
+msgstr "Saatjad tähestiku järjekorras"
+
+#: src/telephony/ui/views/messages_view.py:337
+#: src/telephony/ui/views/messages_view.py:459
+msgid "[Multimedia Message]"
+msgstr "[Multimeediasõnum]"
+
+#: src/telephony/ui/views/messages_view.py:594
+msgid "Search Messages..."
+msgstr "Otsi sõnumeid..."
+
+#: src/telephony/ui/views/messages_view.py:636
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Alusta ({count})"
+
+#: src/telephony/ui/views/messages_view.py:643
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "Ava ({count})"
+
+#: src/telephony/ui/views/messages_view.py:715
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Lisa number: {number}"
+
+#: src/telephony/ui/views/messages_view.py:748
+msgid "Group chat"
+msgstr "Grupivestlus"
+
+#: src/telephony/ui/views/messages_view.py:756
+#: src/telephony/ui/widgets/common_widget.py:100
+msgid "No contacts found"
+msgstr "Kontakte ei leitud"
+
+#: src/telephony/ui/views/messages_view.py:871
+msgid "No results found"
+msgstr "Tulemusi ei leitud"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "Kopeeri tekst"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "Muuda aega"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "Märgi loetuks"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:839
+#: src/telephony/ui/windows/settings_window.py:997
+msgid "Delete"
+msgstr "Kustuta"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "Proovi saatmist uuesti"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Ajastatud: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "Saatmine ebaõnnestus"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "Saatmine..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "Ava rakendusega"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "Kopeeri"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "Salvesta nimega"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "Ava rakendusega..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "Salvesta fail nimega"
+
+#: src/telephony/ui/widgets/common_widget.py:29
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Mobile"
+msgstr "Mobiil"
+
+#: src/telephony/ui/widgets/common_widget.py:30
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Work"
+msgstr "Töö"
+
+#: src/telephony/ui/widgets/common_widget.py:31
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Home"
+msgstr "Kodu"
+
+#: src/telephony/ui/widgets/common_widget.py:32
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Fax"
+msgstr "Faks"
+
+#: src/telephony/ui/widgets/common_widget.py:33
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Other"
+msgstr "Muu"
+
+#: src/telephony/ui/widgets/common_widget.py:34
+msgid "Main"
+msgstr "Peamine"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "Lõpeta kõik kõned"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "Lõpeta kõne"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Grupp"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Mustand: {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:33
+#: src/telephony/ui/windows/settings_window.py:385
+msgid "Advanced Settings"
+msgstr "Lisaseaded"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "Laadimine..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Seadete laadimine ebaõnnestus: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:132
+msgid "Secret SMS Triggers"
+msgstr "Salajased SMS-käsud"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:135
+#: src/telephony/ui/windows/trusted_actions_list_window.py:92
+msgid "Set \"Find my Telephony\""
+msgstr "Määra \"Find my Telephony\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:141
+#: src/telephony/ui/windows/trusted_actions_list_window.py:94
+msgid "Set \"Trusted Callback\""
+msgstr "Määra \"Trusted Callback\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:147
+#: src/telephony/ui/windows/trusted_actions_list_window.py:96
+msgid "Set \"SMS -Relay\""
+msgstr "Määra \"SMS -Relay\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+#: src/telephony/ui/windows/trusted_actions_list_window.py:98
+msgid "Set \"SMS -tmate\""
+msgstr "Määra \"SMS -tmate\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:159
+#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+msgid "Set \"SMS Switch Lock Device\""
+msgstr "Määra \"SMS Switch Lock Device\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:167
+#: src/telephony/ui/windows/advanced_settings_window.py:229
+msgid "Automatic Modem Recovery"
+msgstr "Automaatne modemi taastamine"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Data Management"
+msgstr "Andmehaldus"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:200
+msgid "Authentication cancelled"
+msgstr "Tuvastamine tühistati"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:206
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Tuvastamise viga: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:213
+msgid "Advanced Settings Applied"
+msgstr "Lisaseaded rakendatud"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:222
+msgid ""
+"When the modem stops responding, the phone quietly runs the recovery steps "
+"by itself: phone service restart, radio restart, modem power cycle, firmware "
+"restart and re-enabling a disabled radio. The phone is never rebooted "
+"automatically. If nothing helps you are asked to reboot. When this is off, "
+"the Modem Recovery window opens instead so you can run the steps yourself."
+msgstr ""
+"Kui modem lakkab vastamast, teeb telefon taastamise sammud vaikselt ise "
+"läbi: telefoniteenuse taaskäivitus, raadio taaskäivitus, modemi "
+"toitetsükkel, püsivara taaskäivitus ja keelatud raadio uuesti lubamine. "
+"Telefoni ei taaskäivitata kunagi automaatselt. Kui miski ei aita, palutakse "
+"sul telefon taaskäivitada. Kui see on väljas, avaneb selle asemel Modemi "
+"taastamise aken, kus saad sammud ise läbi teha."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Numbri andmed"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Sellelt numbrilt tulevad kõned lükatakse automaatselt tagasi."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:835
+msgid "Number"
+msgstr "Number"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Märge (valikuline)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Korduv"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "See number on juba blokeeritud."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Andmebaasi viga"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Musta nimekirja salvestamine ebaõnnestus."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:893
+msgid "Conflict"
+msgstr "Konflikt"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Number ei saa olla korraga nii blokilistis kui ka kontaktides.\n"
+"\n"
+"Kas soovid numbri blokeerida ja kontaktidest eemaldada?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Jah, blokeeri"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Blokeeritud numbrid"
+
+#: src/telephony/ui/windows/blocklist_window.py:147
+msgid "No notes"
+msgstr "Märkmed puuduvad"
+
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Are you sure you want to unblock this number?"
+msgstr "Kas oled kindel, et soovid selle numbri blokeeringu tühistada?"
+
+#: src/telephony/ui/windows/blocklist_window.py:174
+msgid "Unblocked number"
+msgstr "Numbri blokk eemaldatud"
+
+#: src/telephony/ui/windows/camera_photo_window.py:48
+msgid "Take Picture"
+msgstr "Tee pilti"
+
+#: src/telephony/ui/windows/camera_photo_window.py:160
+#: src/telephony/ui/windows/camera_video_window.py:202
+#: src/telephony/ui/windows/sound_recorder_window.py:181
+msgid "Retake"
+msgstr "Uuesti"
+
+#: src/telephony/ui/windows/camera_photo_window.py:165
+msgid "Attach Photo"
+msgstr "Lisa foto"
+
+#: src/telephony/ui/windows/camera_video_window.py:61
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Salvesta videot"
+
+#: src/telephony/ui/windows/camera_video_window.py:207
+msgid "Attach Video"
+msgstr "Lisa video"
+
+#: src/telephony/ui/windows/camera_video_window.py:336
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Video salvestamine ebaõnnestus: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:416
+msgid "Recording failed (File empty)."
+msgstr "Salvestamine ebaõnnestus (fail on tühi)."
+
+#: src/telephony/ui/windows/camera_video_window.py:420
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Suur video ({size}KB). See pakitakse kokku."
+
+#: src/telephony/ui/windows/camera_video_window.py:437
+msgid "Cannot play empty file."
+msgstr "Tühja faili ei saa mängida."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "Tee pilti"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "Salvesta heli"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "Vali fail"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "Ajasta"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "Kaamera viga"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "Kaamerat ei saanud käivitada."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "Video salvestamist ei saanud alustada."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Audio Error"
+msgstr "Heli viga"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Could not start audio recorder."
+msgstr "Heli salvestamist ei saanud alustada."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:103
+msgid "Select Attachment"
+msgstr "Vali manus"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Attachment Error"
+msgstr "Manuse viga"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Failed to prepare attachment."
+msgstr "Manuse ettevalmistamine ebaõnnestus."
+
+#: src/telephony/ui/windows/contact_editor_window.py:38
+#: src/telephony/ui/windows/contact_editor_window.py:423
+msgid "Contact Details"
+msgstr "Kontakti andmed"
+
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:194
+msgid "Edit"
+msgstr "Muuda"
+
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Identity"
+msgstr "Isik"
+
+#: src/telephony/ui/windows/contact_editor_window.py:165
+#: src/telephony/ui/windows/contact_editor_window.py:183
+msgid "Favorite"
+msgstr "Lemmik"
+
+#: src/telephony/ui/windows/contact_editor_window.py:173
+msgid "Full Name"
+msgstr "Täisnimi"
+
+#: src/telephony/ui/windows/contact_editor_window.py:179
+msgid "Name"
+msgstr "Nimi"
+
+#: src/telephony/ui/windows/contact_editor_window.py:183
+#: src/telephony/ui/windows/trusted_actions_list_window.py:629
+msgid "Yes"
+msgstr "Jah"
+
+#: src/telephony/ui/windows/contact_editor_window.py:189
+msgid "Phone Numbers"
+msgstr "Telefoninumbrid"
+
+#: src/telephony/ui/windows/contact_editor_window.py:216
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "E-posti aadressid"
+
+#: src/telephony/ui/windows/contact_editor_window.py:226
+msgid "Add Email"
+msgstr "Lisa e-post"
+
+#: src/telephony/ui/windows/contact_editor_window.py:237
+msgid "Additional Details"
+msgstr "Lisainfo"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Organization"
+msgstr "Ettevõte"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Job Title"
+msgstr "Amet"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Address"
+msgstr "Aadress"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Notes"
+msgstr "Märkmed"
+
+#: src/telephony/ui/windows/contact_editor_window.py:242
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Veebileht"
+
+#: src/telephony/ui/windows/contact_editor_window.py:267
+#: src/telephony/ui/windows/contact_editor_window.py:272
+msgid "Birthday"
+msgstr "Sünnipäev"
+
+#: src/telephony/ui/windows/contact_editor_window.py:268
+#: src/telephony/ui/windows/contact_editor_window.py:275
+msgid "Anniversary"
+msgstr "Aastapäev"
+
+#: src/telephony/ui/windows/contact_editor_window.py:284
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Delete Contact"
+msgstr "Kustuta kontakt"
+
+#: src/telephony/ui/windows/contact_editor_window.py:295
+#: src/telephony/ui/windows/settings_window.py:174
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Address Books"
+msgstr "Aadressiraamatud"
+
+#: src/telephony/ui/windows/contact_editor_window.py:315
+msgid "Unknown Source"
+msgstr "Tundmatu allikas"
+
+#: src/telephony/ui/windows/contact_editor_window.py:339
+#: src/telephony/ui/windows/contact_editor_window.py:377
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Vali kuupäev"
+
+#: src/telephony/ui/windows/contact_editor_window.py:350
+msgid "Clear Date"
+msgstr "Eemalda kuupäev"
+
+#: src/telephony/ui/windows/contact_editor_window.py:392
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Vali {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:402
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Kopeeri {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/trusted_actions_list_window.py:603
+msgid "Copied to clipboard"
+msgstr "Kopeeritud lõikelauale"
+
+#: src/telephony/ui/windows/contact_editor_window.py:541
+msgid "Export Contact"
+msgstr "Ekspordi kontakt"
+
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Are you sure you want to delete this contact?"
+msgstr "Kas oled kindel, et soovid selle kontakti kustutada?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:573
+msgid "Deleting contact..."
+msgstr "Kontakti kustutamine..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:791
+#: src/telephony/ui/windows/contact_editor_window.py:881
+msgid "Failed to save contact"
+msgstr "Kontakti salvestamine ebaõnnestus"
+
+#: src/telephony/ui/windows/contact_editor_window.py:876
+msgid "Contact saved"
+msgstr "Kontakt salvestatud"
+
+#: src/telephony/ui/windows/contact_editor_window.py:894
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Number ei saa olla korraga nii blokilistis kui ka kontaktides.\n"
+"\n"
+"Kas soovid blokeeringu tühistada ja lisada numbri kontaktidesse?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:898
+msgid "Yes, Add to Contacts"
+msgstr "Jah, lisa kontaktidesse"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Vali kontakt"
+
+#: src/telephony/ui/windows/contact_picker_window.py:63
+msgid "Name or Number"
+msgstr "Nimi või number"
+
+#: src/telephony/ui/windows/contact_picker_window.py:199
+msgid "No number"
+msgstr "Numbrit pole"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:356
+msgid "Individual SMS Notifications"
+msgstr "Sõnumihelid kontaktipõhiselt"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:367
+msgid "Individual Ringtones"
+msgstr "Helinad kontaktipõhiselt"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:74
+msgid "Find contact to add..."
+msgstr "Otsi lisatav kontakt..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:82
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Vali kontakt ja seejärel helifail (.ogg või .oga). Fail kopeeritakse sinu "
+"seadmesse."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:201
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Eemalda"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:217
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Eriheli eemaldatud (klõpsa Salvesta)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:281
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Vali heli kontaktile {name}"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:284
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Select"
+msgstr "Vali"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:289
+msgid "Supported Audio (OGG)"
+msgstr "Toetatud heli (OGG)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:317
+msgid "Only .ogg or .oga files are supported"
+msgstr "Toetatud on vaid .ogg ja .oga failid"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:328
+msgid "Failed to copy audio file"
+msgstr "Helifaili kopeerimine ebaõnnestus"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:348
+msgid "Custom tone added"
+msgstr "Eriheli lisatud"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Andmebaasi haldus"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Vali andmed, mida soovid jäädavalt kustutada."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Kustuta kõneajalugu"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Kustuta kõik sõnumid"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Kustuta kõik grupinimed"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Kustuta must nimekiri"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Kustuta kõik kontaktid"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:994
+msgid "Delete Address Book"
+msgstr "Kustuta aadressiraamat"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "KUSTUTA KÕIK"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Oled kindel? Seda ei saa tagasi võtta."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "See kustutab kõik SMS-id, MMS-id ja manused."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Kustuta grupinimed"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Kas taastada kõigi grupivestluste algsed nimed?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Kas eemaldada kõik numbrid mustast nimekirjast?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Kustutatavaid aadressiraamatuid pole"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Pole ühtegi kasutaja loodud aadressiraamatut, mida saaks kustutada."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Millise aadressiraamatu soovid jäädavalt kustutada?\n"
+"\n"
+"See eemaldab selle täielikult süsteemist."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:995
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr ""
+"Kas oled kindel, et soovid aadressiraamatu '{name}' jäädavalt kustutada?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "KUSTUTA KÕIK"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr "Kas pühkida andmebaas, seaded ja kontaktid? Äpp läheb algseisundisse."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Kas tõesti soovid kustutada kõik oma kontaktid?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Vali, milline aadressiraamat tühjendada:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Kõik aadressiraamatud"
+
+#: src/telephony/ui/windows/data_management_window.py:218
+msgid "Call History Deleted"
+msgstr "Kõneajalugu kustutatud"
+
+#: src/telephony/ui/windows/data_management_window.py:222
+msgid "Deleting messages..."
+msgstr "Sõnumite kustutamine..."
+
+#: src/telephony/ui/windows/data_management_window.py:228
+msgid "Messages & Attachments Deleted"
+msgstr "Sõnumid ja manused kustutatud"
+
+#: src/telephony/ui/windows/data_management_window.py:234
+msgid "Group Names Reset"
+msgstr "Grupinimed taastatud"
+
+#: src/telephony/ui/windows/data_management_window.py:239
+msgid "Blocklist Cleared"
+msgstr "Must nimekiri tühjendatud"
+
+#: src/telephony/ui/windows/data_management_window.py:243
+msgid "Deleting contacts..."
+msgstr "Kontaktide kustutamine..."
+
+#: src/telephony/ui/windows/data_management_window.py:249
+msgid "Contacts Deleted"
+msgstr "Kontaktid kustutatud"
+
+#: src/telephony/ui/windows/data_management_window.py:257
+msgid "Deleting address book..."
+msgstr "Aadressiraamatu kustutamine..."
+
+#: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:1015
+msgid "Address Book Deleted"
+msgstr "Aadressiraamat kustutatud"
+
+#: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:1013
+msgid "Failed to delete Address Book"
+msgstr "Aadressiraamatu kustutamine ebaõnnestus"
+
+#: src/telephony/ui/windows/data_management_window.py:270
+msgid "Wiping Database..."
+msgstr "Andmebaasi pühkimine..."
+
+#: src/telephony/ui/windows/data_management_window.py:283
+msgid "App Reset Complete"
+msgstr "Äpi algseadistus lõpetatud"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "Aasta"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Kuu"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Tund"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Minut"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:338
+#: src/telephony/ui/windows/settings_window.py:527
+msgid "Notification Overrides"
+msgstr "Teavituste erandid"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:162
+msgid "Find and add contacts..."
+msgstr "Osi ja lisa kontakte..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:78
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Selle nimekirja kontaktid helisevad alati täie valjusega, isegi kui telefon "
+"on hääletu või 'Mitte segada' režiimis."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Korduv kontakt"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Ühenda kõik"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Kontaktide ühendamine..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Järelejäänud konfliktid: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} on kontaktide all olemas:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Aadressiraamat: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Jäta see, eemalda teised"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Jäta see, ühenda teistega"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Ühendamine {current}/{total}..."
+
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"Väljavõte, teisendamine, laadimine (ETL).\n"
+"Vali andmeallikas või sihtkoht."
+
+#: src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "Impordi kontaktid vCard-ist"
+
+#: src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "Ekspordi kontaktid vCard-i"
+
+#: src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "Impordi kontaktid SIM-ilt"
+
+#: src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "Impordi Chatty-st"
+
+#: src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "Impordi Kõned-est"
+
+#: src/telephony/ui/windows/import_export_window.py:67
+#: src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "Impordi Androidist"
+
+#: src/telephony/ui/windows/import_export_window.py:68
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "Impordi iOS-ist"
+
+#: src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "Ekspordi kõned või sõnumid"
+
+#: src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "Kontaktide toomine SIM-ilt..."
+
+#: src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "SIM-i lugemiseks ei leitud modemit"
+
+#: src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "SIM-kaardil pole kontakte."
+
+#: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "Tõin SIM-ilt {count} kontakti."
+
+#: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "SIM-ilt importimine ebaõnnestus: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Chatty importimine..."
+
+#: src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "Kõnede importimine..."
+
+#: src/telephony/ui/windows/import_export_window.py:159
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "Vali üks:"
+
+#: src/telephony/ui/windows/import_export_window.py:169
+#: src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "Vali SMS/MMS fail"
+
+#: src/telephony/ui/windows/import_export_window.py:170
+#: src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "Vali kõneajaloo fail"
+
+#: src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "Otse-import USB kaudu (soovituslik)"
+
+#: src/telephony/ui/windows/import_export_window.py:211
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr "iOS seadet ei leitud. Ühenda iPhone USB-ga."
+
+#: src/telephony/ui/windows/import_export_window.py:214
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr "Seadet ei usaldata. Ava iPhone ja vali 'Usalda'."
+
+#: src/telephony/ui/windows/import_export_window.py:217
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "Andmete kättesaamine iPhone'ist... See võib aega võtta!"
+
+#: src/telephony/ui/windows/import_export_window.py:225
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "USB varundus ebaõnnestus: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:230
+msgid "No SMS database found in backup."
+msgstr "Varukoopiast ei leitud sõnumite andmebaasi."
+
+#: src/telephony/ui/windows/import_export_window.py:231
+msgid "No Call History database found in backup."
+msgstr "Varukoopiast ei leitud kõneajaloo andmebaasi."
+
+#: src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone SMS..."
+msgstr "iPhone'i sõnumite importimine..."
+
+#: src/telephony/ui/windows/import_export_window.py:238
+msgid "Importing iPhone Calls..."
+msgstr "iPhone'i kõnede importimine..."
+
+#: src/telephony/ui/windows/import_export_window.py:247
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "Viga iOS-ist importimisel: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:255
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Vali fail"
+
+#: src/telephony/ui/windows/import_export_window.py:258
+msgid "XML Files"
+msgstr "XML failid"
+
+#: src/telephony/ui/windows/import_export_window.py:272
+#: src/telephony/ui/windows/import_export_window.py:463
+msgid "Importing..."
+msgstr "Importimine..."
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Export Data"
+msgstr "Ekspordi andmed"
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Select destination format:"
+msgstr "Vali vorming:"
+
+#: src/telephony/ui/windows/import_export_window.py:306
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - Chatty/Puhelut"
+
+#: src/telephony/ui/windows/import_export_window.py:307
+msgid "Linux - Telephony"
+msgstr "Linux - Telephony"
+
+#: src/telephony/ui/windows/import_export_window.py:308
+msgid "Android"
+msgstr "Android"
+
+#: src/telephony/ui/windows/import_export_window.py:309
+msgid "iOS"
+msgstr "iOS"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "Ekspordi vormingusse {fmt}"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+msgid "What do you want to export?"
+msgstr "Mitä haluat viedä?"
+
+#: src/telephony/ui/windows/import_export_window.py:326
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"Märkus: see eksport kasutab Androidi vormingut. Selle faili importimisel iOS-"
+"i seadmesse kasuta valikut \"Import From Android\"."
+
+#: src/telephony/ui/windows/import_export_window.py:337
+msgid "Messages (SMS/MMS)"
+msgstr "Sõnumid (SMS/MMS)"
+
+#: src/telephony/ui/windows/import_export_window.py:338
+msgid "Call History"
+msgstr "Kõneajalugu"
+
+#: src/telephony/ui/windows/import_export_window.py:348
+msgid "Export File"
+msgstr "Eksportfail"
+
+#: src/telephony/ui/windows/import_export_window.py:374
+msgid "Exporting..."
+msgstr "Eksportimine..."
+
+#: src/telephony/ui/windows/import_export_window.py:408
+msgid "Import VCard"
+msgstr "Impordi VCard"
+
+#: src/telephony/ui/windows/import_export_window.py:410
+msgid "VCard Files"
+msgstr "VCard failid"
+
+#: src/telephony/ui/windows/import_export_window.py:429
+#: src/telephony/ui/windows/import_export_window.py:493
+msgid "No enabled address books found"
+msgstr "Ühtegi aktiivset aadressiraamatut ei leitud"
+
+#: src/telephony/ui/windows/import_export_window.py:437
+msgid "Select Address Book"
+msgstr "Vali aadressiraamat"
+
+#: src/telephony/ui/windows/import_export_window.py:438
+msgid "Where do you want to import contacts?"
+msgstr "Kuhu soovid kontaktid importida?"
+
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "Imporditi {count} kontakti"
+
+#: src/telephony/ui/windows/import_export_window.py:481
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "Import ebaõnnestus: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:535
+msgid "Export Contacts"
+msgstr "Ekspordi kontaktid"
+
+#: src/telephony/ui/windows/import_export_window.py:498
+msgid "Which address book do you want to export?"
+msgstr "Millist aadressiraamatut soovid eksportida?"
+
+#: src/telephony/ui/windows/import_export_window.py:509
+msgid "Export All Address Books"
+msgstr "Ekspordi kõik aadressiraamatud"
+
+#: src/telephony/ui/windows/import_export_window.py:558
+msgid "No contacts found to export"
+msgstr "Ekspordiks ei leitud kontakte"
+
+#: src/telephony/ui/windows/import_export_window.py:570
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "Eksporditi {count} kontakti"
+
+#: src/telephony/ui/windows/import_export_window.py:573
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "Viga eksportimisel: {e}"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Impordi sõnumid"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Impordi kõneajalugu"
+
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Ootan valikut..."
+
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Kust soovid andmed tuua?"
+
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Süsteemi andmebaas"
+
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "To Chatty-st"
+
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "To Kõned-est"
+
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Impordi"
+
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Oma andmebaasi varukoopia"
+
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Vali eksporditud SQLite fail"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Vali andmebaasi fail"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS-i manused (valikuline)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "MMS-i kausta varukoopia"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Vali kaust, kus on pildid/videod"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Vali kaust"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Jäta manused vahele"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Impordi ainult tekstid"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Jäta vahele"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Vali MMS-i kaust"
+
+#: src/telephony/ui/windows/incall_window.py:44
+msgid "Active"
+msgstr "Aktiivne"
+
+#: src/telephony/ui/windows/incall_window.py:45
+msgid "On Hold"
+msgstr "Ootel"
+
+#: src/telephony/ui/windows/incall_window.py:46
+msgid "Dialing..."
+msgstr "Valimine..."
+
+#: src/telephony/ui/windows/incall_window.py:47
+msgid "Alerting..."
+msgstr "Kutsub..."
+
+#: src/telephony/ui/windows/incall_window.py:50
+msgid "Disconnected"
+msgstr "Katkestatud"
+
+#: src/telephony/ui/windows/incall_window.py:58
+#: src/telephony/ui/windows/settings_window.py:301
+msgid "Earpiece"
+msgstr "Kuular"
+
+#: src/telephony/ui/windows/incall_window.py:59
+#: src/telephony/ui/windows/settings_window.py:302
+msgid "Speaker"
+msgstr "Valjuhääldi"
+
+#: src/telephony/ui/windows/incall_window.py:60
+#: src/telephony/ui/windows/settings_window.py:303
+msgid "Wired Headset"
+msgstr "Juhtmega peakomplekt"
+
+#: src/telephony/ui/windows/incall_window.py:61
+#: src/telephony/ui/windows/settings_window.py:304
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: src/telephony/ui/windows/incall_window.py:69
+msgid "Microphone"
+msgstr "Mikrofon"
+
+#: src/telephony/ui/windows/incall_window.py:70
+msgid "Wired Mic"
+msgstr "Juhtmega mikrofon"
+
+#: src/telephony/ui/windows/incall_window.py:71
+msgid "Bluetooth Mic"
+msgstr "Bluetooth-mikrofon"
+
+#: src/telephony/ui/windows/incall_window.py:228
+msgid "Hangup and Send SMS"
+msgstr "Lõpeta ja saada SMS"
+
+#: src/telephony/ui/windows/incall_window.py:231
+#: src/telephony/ui/windows/incall_window.py:668
+msgid "Silence"
+msgstr "Vaigista"
+
+#: src/telephony/ui/windows/incall_window.py:232
+msgid "Decline"
+msgstr "Keeldu"
+
+#: src/telephony/ui/windows/incall_window.py:233
+msgid "Accept"
+msgstr "Vasta"
+
+#: src/telephony/ui/windows/incall_window.py:253
+msgid "Mute"
+msgstr "Summuta"
+
+#: src/telephony/ui/windows/incall_window.py:254
+msgid "Keypad"
+msgstr "Klahvistik"
+
+#: src/telephony/ui/windows/incall_window.py:255
+msgid "Hold"
+msgstr "Ootele"
+
+#: src/telephony/ui/windows/incall_window.py:270
+#: src/telephony/ui/windows/incall_window.py:849
+msgid "The call failed to disconnect."
+msgstr "Kõne lõpetamine ebaõnnestus."
+
+#: src/telephony/ui/windows/incall_window.py:349
+#: src/telephony/ui/windows/incall_window.py:925
+msgid "Output"
+msgstr "Väljund"
+
+#: src/telephony/ui/windows/incall_window.py:364
+#: src/telephony/ui/windows/incall_window.py:944
+msgid "Input"
+msgstr "Sisend"
+
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Silenced Incoming Call"
+msgstr "Vaigistatud sissetulev kõne"
+
+#: src/telephony/ui/windows/incall_window.py:660
+msgid "Swap"
+msgstr "Vaheta"
+
+#: src/telephony/ui/windows/incall_window.py:664
+msgid "Answer"
+msgstr "Vasta"
+
+#: src/telephony/ui/windows/incall_window.py:672
+msgid "Message"
+msgstr "Sõnum"
+
+#: src/telephony/ui/windows/incall_window.py:678
+msgid "Answering holds the current call"
+msgstr "Vastamine paneb praeguse kõne ootele"
+
+#: src/telephony/ui/windows/incall_window.py:695
+#: src/telephony/ui/windows/settings_window.py:264
+msgid "I can't talk right now."
+msgstr "Ma ei saa praegu rääkida."
+
+#: src/telephony/ui/windows/incall_window.py:858
+msgid "Recovering modem..."
+msgstr "Modemi taastamine..."
+
+#: src/telephony/ui/windows/incall_window.py:910
+#: src/telephony/ui/windows/settings_window.py:947
+msgid "Not connected"
+msgstr "Pole ühendatud"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Telephony kohta"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr "Kiire helistamis- ja sõnumirakendus FLX1 ja FLX1s jaoks."
+
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Versioon"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Arendaja"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Litsents"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Lingid"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Vigade jälgimine"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Teata vigadest või soovi uusi funktsioone"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Ajastatud ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "Kellele: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Saada kohe"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Sõnum eemaldatud"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Sõnumi saatmine numbrile {number}..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:67
+msgid ""
+"Steps are tried from gentlest to strongest. Each one is verified before the "
+"next unlocks."
+msgstr ""
+"Samme proovitakse leebeimast tugevaimani. Iga samm kontrollitakse enne "
+"järgmise avanemist."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Phone service restart"
+msgstr "Telefoniteenuse taaskäivitus"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Restarts the ofono service that manages the modem."
+msgstr "Taaskäivitab ofono teenuse, mis haldab modemit."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Radio restart"
+msgstr "Raadio taaskäivitus"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Turns the radio off and back on, like flight mode."
+msgstr "Lülitab raadio välja ja uuesti sisse, nagu lennurežiim."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Modem power cycle"
+msgstr "Modemi toitetsükkel"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Powers the modem down and back up."
+msgstr "Lülitab modemi toite välja ja uuesti sisse."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Modem firmware restart"
+msgstr "Modemi püsivara taaskäivitus"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Restarts the vendor modem firmware."
+msgstr "Taaskäivitab tootja modemi püsivara."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Re-enable radio"
+msgstr "Luba raadio uuesti"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Fixes a radio left disabled by an unclean shutdown."
+msgstr "Parandab raadio, mis jäi ootamatu väljalülitumise tõttu keelatuks."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Reboot phone"
+msgstr "Taaskäivita telefon"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Opens the system power menu. Last resort."
+msgstr "Avab süsteemi toitemenüü. Viimane abinõu."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:87
+msgid "Try"
+msgstr "Proovi"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:97
+msgid "Save Modem Logs"
+msgstr "Salvesta modemi logid"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:111
+#: src/telephony/ui/windows/modem_recovery_window.py:178
+msgid "Did not help"
+msgstr "Ei aidanud"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:129
+msgid "Waiting for the modem..."
+msgstr "Modemi ootamine..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:171
+#: src/telephony/ui/windows/modem_recovery_window.py:174
+msgid "Modem recovered"
+msgstr "Modem taastatud"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:203
+#, python-brace-format
+msgid "Logs saved to {path}"
+msgstr "Logid salvestatud asukohta {path}"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:205
+msgid "Saving logs failed"
+msgstr "Logide salvestamine ebaõnnestus"
+
+#: src/telephony/ui/windows/settings_window.py:93
+#: src/telephony/ui/windows/settings_window.py:450
+msgid "Ringback Tone"
+msgstr "Ootetoon"
+
+#: src/telephony/ui/windows/settings_window.py:96
+msgid "Enable Local Ringback"
+msgstr "Luba kohalik ootetoon"
+
+#: src/telephony/ui/windows/settings_window.py:111
+msgid "Selected Tone"
+msgstr "Valitud heli"
+
+#: src/telephony/ui/windows/settings_window.py:114
+#: src/telephony/ui/windows/settings_window.py:411
+msgid "System Default"
+msgstr "Süsteemi vaikeväärtus"
+
+#: src/telephony/ui/windows/settings_window.py:141
+msgid "SIM Settings"
+msgstr "SIM-kaardi seaded"
+
+#: src/telephony/ui/windows/settings_window.py:144
+msgid "My Number"
+msgstr "Minu number"
+
+#: src/telephony/ui/windows/settings_window.py:145
+msgid "My Number (International Format)"
+msgstr "Minu number (rahvusvaheline)"
+
+#: src/telephony/ui/windows/settings_window.py:151
+#: src/telephony/ui/windows/settings_window.py:152
+#: src/telephony/ui/windows/settings_window.py:398
+msgid "Default Country Code"
+msgstr "Vaikimisi riigikood"
+
+#: src/telephony/ui/windows/settings_window.py:167
+msgid "Voicemail Number"
+msgstr "Kõneposti number"
+
+#: src/telephony/ui/windows/settings_window.py:186
+msgid "Address Book Info"
+msgstr "Aadressiraamatu info"
+
+#: src/telephony/ui/windows/settings_window.py:194
+msgid "Default Address Book"
+msgstr "Vaikimisi aadressiraamat"
+
+#: src/telephony/ui/windows/settings_window.py:200
+msgid "Duplicate Resolver"
+msgstr "Duplikaatide eemaldaja"
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr "Otsi korduvaid numbreid ja näita kontaktiaknas teavitust."
+
+#: src/telephony/ui/windows/settings_window.py:211
+#: src/telephony/ui/windows/settings_window.py:963
+msgid "Add Local Address Book"
+msgstr "Lisa kohalik aadressiraamat"
+
+#: src/telephony/ui/windows/settings_window.py:225
+msgid "Lockscreen Emergency"
+msgstr "Hädaabi lukustuskuval"
+
+#: src/telephony/ui/windows/settings_window.py:228
+msgid "Show Emergency Button"
+msgstr "Näita hädaabi nuppu"
+
+#: src/telephony/ui/windows/settings_window.py:233
+msgid "Emergency Numbers"
+msgstr "Hädaabinumbrid"
+
+#: src/telephony/ui/windows/settings_window.py:250
+msgid "Quick Response"
+msgstr "Kiirvastus"
+
+#: src/telephony/ui/windows/settings_window.py:253
+msgid "Add Decline Message"
+msgstr "Lisa keeldumise sõnum"
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Messaging"
+msgstr "Sõnumside"
+
+#: src/telephony/ui/windows/settings_window.py:280
+#: src/telephony/ui/windows/settings_window.py:431
+msgid "MMS Size Limit"
+msgstr "MMS-i suuruspiirang"
+
+#: src/telephony/ui/windows/settings_window.py:288
+#: src/telephony/ui/windows/settings_window.py:887
+msgid "Call Volume"
+msgstr "Kõne helitugevus"
+
+#: src/telephony/ui/windows/settings_window.py:319
+msgid "Notification Exceptions"
+msgstr "Teavituste erandid"
+
+#: src/telephony/ui/windows/settings_window.py:322
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Repeated Calls Bypass"
+msgstr "Korduvate kõnede läbilaskmine"
+
+#: src/telephony/ui/windows/settings_window.py:324
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr ""
+"Kui sama number helistab 5 minuti jooksul 3 korda, heliseb telefon täie "
+"valjusega."
+
+#: src/telephony/ui/windows/settings_window.py:339
+msgid "Manage contacts that always play sound"
+msgstr "Halda kontakte, kes alati helisevad"
+
+#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:360
+#: src/telephony/ui/windows/settings_window.py:371
+msgid "Manage"
+msgstr "Halda"
+
+#: src/telephony/ui/windows/settings_window.py:358
+msgid "Set custom notification sounds for specific contacts"
+msgstr "Määra valitud kontaktidele oma sõnumiheli"
+
+#: src/telephony/ui/windows/settings_window.py:369
+msgid "Set custom ringtones for specific contacts"
+msgstr "Määra valitud kontaktidele oma helin"
+
+#: src/telephony/ui/windows/settings_window.py:394
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Vaikimisi riigikoodi kasutatakse numbrite puhul, millel puudub suunakood (nt "
+"+358).\n"
+"\n"
+"Kui jätad tühjaks, proovib süsteem seda ise SIM-kaardilt või võrgust leida.\n"
+"\n"
+"Saad selle siin ise määrata, sisestades 2-kohalise koodi (nt EE, FI) või "
+"suunakoodi (nt +372, 372)."
+
+#: src/telephony/ui/windows/settings_window.py:422
+msgid ""
+"Carriers limit how large a multimedia message can be. Images and videos you "
+"attach are automatically compressed to fit under this limit before sending.\n"
+"\n"
+"600 kB is a safe default for most carriers. Pick a smaller value if your "
+"messages fail to send, or a larger one if you know your carrier allows it."
+msgstr ""
+"Operaatorid piiravad multimeediumsõnumi suurust. Lisatud pildid ja videod "
+"pakitakse enne saatmist automaatselt nii, et need mahuksid selle piirangu "
+"alla.\n"
+"\n"
+"600 kB on turvaline vaikeväärtus enamikule operaatoritele. Vali väiksem "
+"väärtus, kui sõnumite saatmine ebaõnnestub, või suurem, kui tead, et sinu "
+"operaator seda lubab."
+
+#: src/telephony/ui/windows/settings_window.py:443
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Ooteheli on see, mida kuuleid (tuut-tuut-tuut) kõnet oodates. Mõned "
+"operaatorid seda ei paku, seega saad selle siit ise sisse lülitada.\n"
+"\n"
+"Saad valida oma muusikafaili või jätta tavalise süsteemiheli."
+
+#: src/telephony/ui/windows/settings_window.py:463
+msgid "Select Ringback Tone"
+msgstr "Vali ootetoon"
+
+#: src/telephony/ui/windows/settings_window.py:471
+msgid "Audio Files"
+msgstr "Helifailid"
+
+#: src/telephony/ui/windows/settings_window.py:497
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Vali siit aadressiraamatud, mida Telephonyga kasutada, ja pane need "
+"järjekorda. Kõige ülemisel on suurim prioriteet ja seda eelistatakse, kui "
+"number on mitmes raamatus. Võid kasutada allpool olevat duplikaatide "
+"lahendajat, see teeb kasutuskogemuse palju paremaks."
+
+#: src/telephony/ui/windows/settings_window.py:516
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Kui see on sees ja sama number helistab sulle 5 minuti jooksul 3 korda, "
+"hakkab kolmas kõne (ja järgmised) helisema täisvaljusega, isegi kui telefon "
+"on hääletu peal."
+
+#: src/telephony/ui/windows/settings_window.py:528
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Vali kontaktid, kelle teavitused kostuvad alati täisvaljusega, isegi kui "
+"telefon on hääletul režiimil või 'mitte segada' olekus."
+
+#: src/telephony/ui/windows/settings_window.py:549
+msgid "Unknown Callers"
+msgstr "Tundmatud helistajad"
+
+#: src/telephony/ui/windows/settings_window.py:554
+msgid "Unknown Callers Action"
+msgstr "Kuidas käituda tundmatute numbritega"
+
+#: src/telephony/ui/windows/settings_window.py:556
+msgid "Applies also to hidden numbers."
+msgstr "Kehtib ka peidetud numbrite puhul."
+
+#: src/telephony/ui/windows/settings_window.py:559
+msgid "Do Nothing"
+msgstr "Ära tee midagi"
+
+#: src/telephony/ui/windows/settings_window.py:560
+msgid "Block Completely"
+msgstr "Blokeeri täielikult"
+
+#: src/telephony/ui/windows/settings_window.py:561
+msgid "Silence and Hide UI"
+msgstr "Vaigista ja peida"
+
+#: src/telephony/ui/windows/settings_window.py:562
+msgid "Silence Only"
+msgstr "Ainult vaigista"
+
+#: src/telephony/ui/windows/settings_window.py:570
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr "Lisa otsingunupp tundmatute numbrite juurde"
+
+#: src/telephony/ui/windows/settings_window.py:576
+msgid "Search Engine"
+msgstr "Otsingumootor"
+
+#: src/telephony/ui/windows/settings_window.py:580
+#: src/telephony/ui/windows/settings_window.py:585
+msgid "Custom URL"
+msgstr "Oma URL"
+
+#: src/telephony/ui/windows/settings_window.py:635
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Sisesta veebiaadress (URL) tundmatute numbrite otsimiseks. Pane '{number}' "
+"sinna kohta, kuhu helistaja number peab ilmuma.\n"
+"\n"
+"Näiteks: https://google.com/search?q={number}\n"
+"\n"
+"Kui vajutad kõne ajal otsingunuppu, asendame '{number}' õige numbriga ja "
+"avame selle sinu brauseris."
+
+#: src/telephony/ui/windows/settings_window.py:639
+msgid "Custom Search URL"
+msgstr "Oma otsingu URL"
+
+#: src/telephony/ui/windows/settings_window.py:660
+msgid "Desktop Shortcuts"
+msgstr "Töölaua otseteed"
+
+#: src/telephony/ui/windows/settings_window.py:665
+msgid "Calls"
+msgstr "Kõned"
+
+#: src/telephony/ui/windows/settings_window.py:831
+msgid "Name (e.g. Mom)"
+msgstr "Nimi (nt Ema)"
+
+#: src/telephony/ui/windows/settings_window.py:888
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"See on kõne helitugevus iga väljundi jaoks. Tase rakendub automaatselt kõne "
+"ühendumisel ja alati, kui väljund kõne ajal muutub, ning liuguri muudatused "
+"on kohe kuulda. Riistvara rakendab tasemeid jämedate sammudena ja kuular ei "
+"jää kunagi täiesti vaikseks. Bluetoothi tase salvestatakse tulevase "
+"marsruutimistoe jaoks."
+
+#: src/telephony/ui/windows/settings_window.py:897
+msgid "Decline Message"
+msgstr "Keeldumise sõnum"
+
+#: src/telephony/ui/windows/settings_window.py:940
+msgid "System Default (Always Enabled)"
+msgstr "Süsteemi vaikeväärtus (alati sees)"
+
+#: src/telephony/ui/windows/settings_window.py:942
+msgid "Synced from Andromeda"
+msgstr "Sünkroonitud Andromedast"
+
+#: src/telephony/ui/windows/settings_window.py:945
+msgid "Connected"
+msgstr "Ühendatud"
+
+#: src/telephony/ui/windows/settings_window.py:946
+msgid "Connecting..."
+msgstr "Ühendamine..."
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Login required"
+msgstr "Sisselogimine vajalik"
+
+#: src/telephony/ui/windows/settings_window.py:949
+msgid "Connection failed (SSL)"
+msgstr "Ühendus ebaõnnestus (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:964
+msgid "Address book name"
+msgstr "Aadressiraamatu nimi"
+
+#: src/telephony/ui/windows/settings_window.py:985
+msgid "Could not create address book"
+msgstr "Aadressiraamatu loomine ebaõnnestus"
+
+#: src/telephony/ui/windows/settings_window.py:987
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "Aadressiraamat '{name}' loodud"
+
+#: src/telephony/ui/windows/settings_window.py:1076
+msgid "Personal Address Book"
+msgstr "Isiklik aadressiraamat"
+
+#: src/telephony/ui/windows/settings_window.py:1077
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"See on aadressiraamat, mis sünroonitakse Andromedasse, kui oled nii süsteemi "
+"seadetes valinud."
+
+#: src/telephony/ui/windows/settings_window.py:1085
+msgid "Andromeda Contacts"
+msgstr "Andromeda kontaktid"
+
+#: src/telephony/ui/windows/settings_window.py:1086
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"See on aadressiraamat, mis tuuakse Andromedast, kui oled nii süsteemi "
+"seadetes valinud."
+
+#: src/telephony/ui/windows/settings_window.py:1230
+msgid "Settings Saved"
+msgstr "Seaded salvestatud"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:59
+msgid "Voice Message"
+msgstr "Häälsonum"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:117
+msgid "Tap to Record"
+msgstr "Vajuta salvestamiseks"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:174
+msgid "Attach Voice Note"
+msgstr "Lisa häälmärge"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:305
+#, python-brace-format
+msgid "Recording is too large for MMS (Max {size}). Please retake shorter."
+msgstr "Salvestis on MMS-i jaoks liiga suur (max {size}). Tee lühem salvestis."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:142
+msgid "Enable Feature"
+msgstr "Luba funktsioon"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:171
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"Sinu kontaktid saavad käivitada tegevusi, saates salajase SMS-i. Lisa "
+"kontaktid siia alla ja määra neile salajane märksõna."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:174
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"Usaldusväärsed kontaktid saavad küsida sinu asukohta, saates salajase SMS-i. "
+"Selle funktsiooni toimimiseks on TOTP kohustuslik. Lisa kontaktid siia alla "
+"ja määra neile salajane märksõna. Näidismall: 'SALASÕNA TOTP' Eluline näide: "
+"'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:177
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"Usaldusväärsed kontaktid saavad panna telefoni neile salaja tagasi "
+"helistama, saates salajase SMS-i. Selle funktsiooni toimimiseks on TOTP "
+"kohustuslik. Lisa kontaktid siia alla ja määra neile salajane märksõna. "
+"Näidismall: 'SALASÕNA TOTP' Eluline näide: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:180
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"Usaldusväärsed kontaktid saavad saata SMS-i edastuse (relay). Selle "
+"funktsiooni toimimiseks on TOTP kohustuslik. Lisa kontaktid siia alla ja "
+"määra neile salajane märksõna. Näidismall: 'SALASÕNA TOTP +1234567890 SÕNUM' "
+"Eluline näide: 'Gorilla 123456 +1234567890 Tere'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:183
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"Usaldusväärsed kontaktid saavad avada tmate SSH-sessiooni ja saada koodi, "
+"saates salajase SMS-i. Selle funktsiooni toimimiseks on TOTP kohustuslik. "
+"Lisa kontaktid siia alla ja määra neile salajane märksõna. Näidismall: "
+"'SALASÕNA TOTP' Eluline näide: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:186
+msgid ""
+"Trusted contacts can lock your device: the SIM PIN is changed to a new one "
+"and locked, and the phone powers off. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"Usaldusväärsed kontaktid saavad sinu seadme lukustada: SIM-kaardi PIN-kood "
+"vahetatakse uue vastu ja lukustatakse ning telefon lülitub välja. Selle "
+"funktsiooni toimimiseks on TOTP kohustuslik. Lisa kontaktid siia alla ja "
+"määra neile salajane märksõna. Näidismall: 'SALASÕNA TOTP SIM_PRAEGUNE_PIN "
+"SIM_UUS_PIN SUDO_PAROOL' Eluline näide: 'Gorilla 123456 0000 1234 "
+"SupportYourLocalFootball'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:303
+msgid "View or edit TOTP"
+msgstr "Vaata või muuda TOTP-d"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:305
+msgid "Setup TOTP"
+msgstr "Seadista TOTP"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:380
+msgid "Secret message"
+msgstr "Salajane sõnum"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Remove Contact"
+msgstr "Eemalda kontakt"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Contact removed (Click Save to commit)"
+msgstr "Kontakt eemaldatud (vajuta Salvesta)"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:490
+msgid "Contact already in trusted list"
+msgstr "Kontakt on juba usaldusväärsete nimekirjas"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:504
+msgid "Contact added"
+msgstr "Kontakt lisatud"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+msgid "TOTP Setup"
+msgstr "TOTP seadistus"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:568
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"Jaga seda koodi oma usaldusväärse kontaktiga. Nad peaksid lisama selle "
+"autentimisrakendusse, näiteks Gnome Authenticator.\n"
+"\n"
+"Käsitsi sisestamisel veendu järgmistes seadetes:\n"
+"• Algoritm: SHA1\n"
+"• Numbreid: 6\n"
+"• Intervall: 60 sekundit\n"
+"\n"
+"Igal tegevusel on oma kood. SMS-iga tegevuse käivitamisel peavad nad lisama "
+"märksõna järele autentimisrakendusest saadud kehtiva 6-kohalise koodi."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:597
+msgid "Copy TOTP key"
+msgstr "Kopeeri TOTP võti"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:608
+#: src/telephony/ui/windows/trusted_actions_list_window.py:650
+msgid "Regenerate"
+msgstr "Loo uus"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+msgid "Remove current TOTP"
+msgstr "Eemalda praegune TOTP"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:624
+msgid "Remove TOTP Key?"
+msgstr "Kas eemaldada TOTP võti?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:625
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr ""
+"Kas oled kindel, et soovid TOTP võtme eemaldada? See tegevus lülitab välja "
+"TOTP kinnituse selle funktsiooni jaoks."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:645
+msgid "Regenerate Code?"
+msgstr "Kas luua uus kood?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr ""
+"See muudab kehtetuks praeguse koodi sinu kontakti autentimisrakenduses. Oled "
+"sa kindel?"
+
+#~ msgid ""
+#~ "When the modem stops responding, the phone quietly runs the recovery "
+#~ "steps by itself: radio restart, modem power cycle, firmware restart and "
+#~ "re-enabling a disabled radio. The phone is never rebooted automatically. "
+#~ "If nothing helps you are asked to reboot. When this is off, the Modem "
+#~ "Recovery window opens instead so you can run the steps yourself."
+#~ msgstr ""
+#~ "Kui modem lakkab vastamast, teeb telefon taastamise sammud vaikselt ise "
+#~ "läbi: raadio taaskäivitus, modemi toitetsükkel, püsivara taaskäivitus ja "
+#~ "keelatud raadio uuesti lubamine. Telefoni ei taaskäivitata kunagi "
+#~ "automaatselt. Kui miski ei aita, palutakse sul telefon taaskäivitada. Kui "
+#~ "see on väljas, avaneb selle asemel Modemi taastamise aken, kus saad "
+#~ "sammud ise läbi teha."
+
+#~ msgid "🔴 Reboot Modem"
+#~ msgstr "🔴 Taaskäivita modem"
+
+#~ msgid "Recover"
+#~ msgstr "Taasta"
+
+#~ msgid "Restart Modem"
+#~ msgstr "Taaskäivita modem"
+
+#~ msgid "Restarting Modem..."
+#~ msgstr "Modemi taaskäivitamine..."
+
+#~ msgid "Restarting RIL..."
+#~ msgstr "RIL-i taaskäivitamine..."
+
+#~ msgid "Restored!"
+#~ msgstr "Taastatud!"
+
+#~ msgid "Failed. Reboot Device."
+#~ msgstr "Ebaõnnestus. Taaskäivita seade."
+
+#, python-brace-format
+#~ msgid "Verifying... {attempt}"
+#~ msgstr "Kontrollimine... {attempt}"
+
+#~ msgid "Set \"SMS Switch Wipe Device\""
+#~ msgstr "Määra \"SMS Switch Wipe Device\""
+
+#~ msgid "Automatic"
+#~ msgstr "Automaatne"
+
+#~ msgid ""
+#~ "Carriers limit how large a multimedia message can be. Images and videos "
+#~ "you attach are automatically compressed to fit under this limit before "
+#~ "sending.\n"
+#~ "\n"
+#~ "Automatic uses the limit reported by the phone's MMS service, which is "
+#~ "right for most carriers. Pick a smaller value if your messages fail to "
+#~ "send, or a larger one if you know your carrier allows it."
+#~ msgstr ""
+#~ "Operaatorid piiravad multimeediumsõnumi suurust. Lisatud pildid ja videod "
+#~ "pakitakse enne saatmist automaatselt nii, et need mahuksid selle piirangu "
+#~ "alla.\n"
+#~ "\n"
+#~ "Automaatne kasutab telefoni MMS-teenuse teatatud piirangut, mis sobib "
+#~ "enamikule operaatoritele. Vali väiksem väärtus, kui sõnumite saatmine "
+#~ "ebaõnnestub, või suurem, kui tead, et sinu operaator seda lubab."
+
+#~ msgid ""
+#~ "Trusted contacts can wipe your device. TOTP is mandatory for this feature "
+#~ "to work. Add contacts below and set their secret trigger phrase. Example "
+#~ "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real "
+#~ "life example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+#~ msgstr ""
+#~ "Usaldusväärsed kontaktid saavad sinu seadme tühjendada. Selle funktsiooni "
+#~ "toimimiseks on TOTP kohustuslik. Lisa kontaktid siia alla ja määra neile "
+#~ "salajane märksõna. Näidismall: 'SALASÕNA TOTP SIM_PRAEGUNE_PIN "
+#~ "SIM_UUS_PIN SUDO_PAROOL' Eluline näide: 'Gorilla 123456 0000 1234 "
+#~ "SupportYourLocalFootball'"
+
+#~ msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+#~ msgstr "Salvestis on MMS-i jaoks liiga suur (max 600KB)."
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS ja lõpeta"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} pandi ootele"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 Keeldu"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "Mikker sisse"
+
+#~ msgid "MuteMic"
+#~ msgstr "Mikker kinni"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "Valjuhääldi kinni"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "Valjuhääldi sisse"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "Luba võimendus"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr "Luba liuguritel minna üle 100%. Võimendatud heli võib moonduda."
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "See on riistvara põhihelitugevus, mida rakendatakse valitud väljundile "
+#~ "kõne ühendumisel. Helitugevuse nupud kõne ajal reguleerivad ainult "
+#~ "peenhäälestust selle põhitaseme peal, seega kui põhitase on 0%, jääb kõne "
+#~ "igal juhul vaikseks. Väärtused üle 100% kasutavad tarkvaralist võimendust "
+#~ "ja võivad heli moonutada. Juhtmega peakomplekti ja Bluetoothi tasemed "
+#~ "salvestatakse tulevase marsruutimistoe jaoks."
+
+#~ msgid "Mute Microphone"
+#~ msgstr "Vaigista mikker"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Numbrile {number} saatmine ebaõnnestus"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Kustuta kohandatud seaded"
+
+#~ msgid "Delete Settings"
+#~ msgstr "Kustuta seaded"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "Kas kustutada kõik seaded? Kaotad ka hädaabinumbrid."
+
+#~ msgid "Settings cleared"
+#~ msgstr "Seaded tühjendatud"
+
+#~ msgid "Error saving settings"
+#~ msgstr "Viga seadete salvestamisel"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Näita TOTP seadistust"
+
+#~ msgid "Failed to send message"
+#~ msgstr "Sõnumi saatmine ebaõnnestus"
+
+#~ msgid "Switching address book..."
+#~ msgstr "Aadressiraamatu vahetamine..."

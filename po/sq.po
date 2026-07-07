@@ -1,0 +1,3226 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 03:32+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: sq\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/telephony/app.py:599 src/telephony/app.py:717
+msgid "Modem unavailable"
+msgstr "Modemi nuk është i disponueshëm"
+
+#: src/telephony/app.py:600
+msgid "Calls are not possible until the modem recovers."
+msgstr "Telefonatat nuk janë të mundura derisa modemi të rikuperohet."
+
+#: src/telephony/app.py:602 src/telephony/app.py:720
+#: src/telephony/backend/managers/lockscreen_manager.py:87
+#: src/telephony/ui/windows/advanced_settings_window.py:177
+#: src/telephony/ui/windows/incall_window.py:272
+#: src/telephony/ui/windows/incall_window.py:850
+#: src/telephony/ui/windows/incall_window.py:870
+#: src/telephony/ui/windows/modem_recovery_window.py:40
+msgid "Modem Recovery"
+msgstr "Rikuperimi i modemit"
+
+#: src/telephony/app.py:655
+msgid "Network registration denied"
+msgstr "Regjistrimi në rrjet u refuzua"
+
+#: src/telephony/app.py:656
+msgid "The network rejected this SIM. Contact your operator."
+msgstr "Rrjeti e refuzoi këtë kartë SIM. Kontaktoni operatorin tuaj."
+
+#: src/telephony/app.py:694
+msgid "SIM PIN required"
+msgstr "Kërkohet kodi PIN i kartës SIM"
+
+#: src/telephony/app.py:695
+msgid "Calls and messages stay offline until the SIM is unlocked."
+msgstr "Telefonatat dhe mesazhet mbeten jashtë linje derisa karta SIM të zhbllokohet."
+
+#: src/telephony/app.py:718 src/telephony/ui/windows/incall_window.py:869
+msgid "Could not restore the modem. Please reboot the phone."
+msgstr "Modemi nuk mund të rikthehej. Ju lutemi rinisni telefonin."
+
+#: src/telephony/app.py:786 src/telephony/app.py:859
+#: src/telephony/ui/views/history_view.py:284
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} mesazh i ri"
+msgstr[1] "{count} mesazhe të reja"
+
+#: src/telephony/app.py:788 src/telephony/ui/views/history_view.py:286
+msgid "New voicemail"
+msgstr "Mesazh zanor i ri"
+
+#: src/telephony/app.py:794 src/telephony/app.py:829
+msgid "Call Back"
+msgstr "Thirrni përsëri"
+
+#: src/telephony/app.py:798 src/telephony/ui/views/history_view.py:288
+msgid "Voicemail"
+msgstr "Posta zanore"
+
+#: src/telephony/app.py:818 src/telephony/app.py:852
+#: src/telephony/backend/managers/database_manager.py:1049
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:368
+#: src/telephony/ui/main_window.py:673 src/telephony/ui/views/chat_view.py:87
+#: src/telephony/ui/views/chat_view.py:92
+#: src/telephony/ui/views/chat_view.py:145
+#: src/telephony/ui/views/chat_view.py:155
+#: src/telephony/ui/views/chat_view.py:159
+#: src/telephony/ui/views/chat_view.py:727
+#: src/telephony/ui/views/chat_view.py:731
+#: src/telephony/ui/views/chat_view.py:842
+#: src/telephony/ui/views/chat_view.py:848
+#: src/telephony/ui/views/chat_view.py:1016
+#: src/telephony/ui/views/chat_view.py:1018
+#: src/telephony/ui/views/chat_view.py:1215
+#: src/telephony/ui/views/dialpad_view.py:171
+#: src/telephony/ui/views/history_view.py:436
+#: src/telephony/ui/views/messages_view.py:378
+#: src/telephony/ui/views/messages_view.py:381
+#: src/telephony/ui/views/messages_view.py:452
+#: src/telephony/ui/views/messages_view.py:456
+#: src/telephony/ui/views/messages_view.py:546
+#: src/telephony/ui/views/messages_view.py:883
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: src/telephony/ui/widgets/history_rows_widget.py:127
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:181
+#: src/telephony/ui/windows/custom_tone_list_window.py:264
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:222
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:202
+#: src/telephony/ui/windows/incall_window.py:434
+#: src/telephony/ui/windows/incall_window.py:447
+#: src/telephony/ui/windows/incall_window.py:571
+#: src/telephony/ui/windows/incall_window.py:647
+#: src/telephony/ui/windows/trusted_actions_list_window.py:352
+#: src/telephony/ui/windows/trusted_actions_list_window.py:472
+msgid "Unknown"
+msgstr "E panjohur"
+
+#: src/telephony/app.py:822
+msgid "Missed Call"
+msgstr "Telefonatë e humbur"
+
+#: src/telephony/app.py:863
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Hapur"
+
+#: src/telephony/app.py:867
+msgid "Call"
+msgstr "Thirrni"
+
+#: src/telephony/backend/managers/database_manager.py:1032
+#: src/telephony/backend/managers/eds_manager.py:818
+#: src/telephony/ui/views/messages_view.py:372
+#: src/telephony/ui/views/messages_view.py:443
+msgid "Blocked Number"
+msgstr "Numri i bllokuar"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency Mode"
+msgstr "Modaliteti i urgjencës"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency calls only."
+msgstr "Vetëm telefonatat e urgjencës."
+
+#: src/telephony/backend/managers/emergency_manager.py:122
+msgid "Start Emergency Process"
+msgstr "Filloni procesin e urgjencës"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+#: src/telephony/ui/main_window.py:515 src/telephony/ui/main_window.py:706
+#: src/telephony/ui/views/history_view.py:85
+#: src/telephony/ui/views/messages_view.py:125
+#: src/telephony/ui/windows/advanced_settings_window.py:49
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:89
+#: src/telephony/ui/windows/camera_video_window.py:100
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/contact_picker_window.py:47
+#: src/telephony/ui/windows/custom_tone_list_window.py:57
+#: src/telephony/ui/windows/custom_tone_list_window.py:285
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: src/telephony/ui/windows/import_export_window.py:74
+#: src/telephony/ui/windows/import_export_window.py:171
+#: src/telephony/ui/windows/import_export_window.py:197
+#: src/telephony/ui/windows/import_export_window.py:311
+#: src/telephony/ui/windows/import_export_window.py:340
+#: src/telephony/ui/windows/import_export_window.py:441
+#: src/telephony/ui/windows/import_export_window.py:501
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/settings_window.py:467
+#: src/telephony/ui/windows/settings_window.py:966
+#: src/telephony/ui/windows/settings_window.py:996
+#: src/telephony/ui/windows/sound_recorder_window.py:96
+#: src/telephony/ui/windows/trusted_actions_list_window.py:124
+#: src/telephony/ui/windows/trusted_actions_list_window.py:535
+#: src/telephony/ui/windows/trusted_actions_list_window.py:628
+#: src/telephony/ui/windows/trusted_actions_list_window.py:649
+msgid "Cancel"
+msgstr "Anulo"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+msgid "Return to Lockscreen"
+msgstr "Kthehu te ekrani i kyçur"
+
+#: src/telephony/backend/managers/emergency_manager.py:136
+msgid "Back"
+msgstr "Mbrapa"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "No Numbers Configured"
+msgstr "Nuk ka numra të konfiguruar"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "Set numbers in Settings."
+msgstr "Vendosni numrat te Cilësimet."
+
+#: src/telephony/backend/managers/emergency_manager.py:151
+#, python-brace-format
+msgid "Call {number}"
+msgstr "Telefono {number}"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+msgid "Confirm Emergency Call"
+msgstr "Konfirmo thirrjen e urgjencës"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "Të telefonosh {name}?"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🟢 Yes, Call"
+msgstr "🟢 Po, telefono"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🔴 No, Return"
+msgstr "🔴 Jo, Kthehu"
+
+#: src/telephony/backend/managers/location_manager.py:67
+msgid "Initializing location services..."
+msgstr "Shërbimet e vendndodhjes po inicohen..."
+
+#: src/telephony/backend/managers/location_manager.py:134
+msgid "Waiting for location service..."
+msgstr "Në pritje të shërbimit të vendndodhjes..."
+
+#: src/telephony/backend/managers/location_manager.py:151
+msgid "Waiting for satellite fix..."
+msgstr "Në pritje të rregullimit të satelitit..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:82
+#: src/telephony/ui/windows/incall_window.py:269
+msgid "Modem Stuck"
+msgstr "Modemi i mbërthyer"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Call failed to disconnect."
+msgstr "Telefonata nuk u shkëput."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:85
+msgid "Telephony Emergency"
+msgstr "Emergjenca e Telefonisë"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:187
+#: src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "Telefonia - Në hyrje"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:188
+#: src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "Në hyrje: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:189
+#: src/telephony/ui/windows/incall_window.py:48
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Incoming Call..."
+msgstr "Telefonata hyrëse..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:192
+#: src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁 Ndërroni"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 Përgjigju"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:195
+#: src/telephony/backend/managers/lockscreen_manager.py:208
+#: src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 Hangup"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:200
+#: src/telephony/ui/windows/incall_window.py:49
+msgid "Waiting..."
+msgstr "Duke pritur..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "Telefonia - Në pritje"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (Në pritje)"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "Telefononi në pritje..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁 Rezyme"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "Telefonia - Thirrje aktive"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "Aktive: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "Thirrje aktive"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴 HangupAll"
+
+#: src/telephony/backend/managers/ofono_manager.py:799
+#: src/telephony/backend/managers/ofono_manager.py:803
+#: src/telephony/backend/managers/ofono_manager.py:945
+#: src/telephony/ui/main_window.py:500
+msgid "Modem not ready"
+msgstr "Modemi nuk është gati"
+
+#: src/telephony/backend/managers/ofono_manager.py:817
+msgid "Cannot dial while in another call"
+msgstr "Nuk mund të telefononi ndërsa jeni në një telefonatë tjetër"
+
+#: src/telephony/backend/managers/ofono_manager.py:822
+#: src/telephony/ui/main_window.py:736
+msgid "Please wait, the previous call is still ending"
+msgstr "Ju lutemi prisni, telefonata e mëparshme ende po përfundon"
+
+#: src/telephony/backend/managers/ofono_manager.py:834
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "Gabim në numrin: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:963
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "Dërgimi dështoi: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1060
+msgid "Not supported"
+msgstr "Nuk mbështetet"
+
+#: src/telephony/backend/managers/ofono_manager.py:1065
+#: src/telephony/ui/windows/camera_photo_window.py:205
+#: src/telephony/ui/windows/camera_photo_window.py:290
+#: src/telephony/ui/windows/camera_photo_window.py:319
+#: src/telephony/ui/windows/camera_photo_window.py:361
+#: src/telephony/ui/windows/camera_video_window.py:243
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "Gabim: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1117
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Prit 60 sekonda përpara se të aktivizosh sërish {prefix}."
+
+#: src/telephony/backend/managers/ofono_manager.py:1317
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Saktësia: {acc}m)"
+
+#: src/telephony/backend/managers/ofono_manager.py:1319
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Unë jam këtu: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1327
+msgid "Failed to obtain location after trying all methods."
+msgstr "Vendndodhja dështoi pasi u provuan të gjitha metodat."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:135
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "Mesazhet {count} u eksportuan me sukses në XML."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:201
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Thirrjet {count} u eksportuan me sukses në XML."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:88
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Mesazhet {count} u eksportuan në bazën e të dhënave Chatty."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:144
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Thirrjet {count} u eksportuan në bazën e të dhënave Gnome Calls."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:161
+msgid "Source database not found."
+msgstr "Baza e të dhënave burimore nuk u gjet."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Exported Telephony database successfully."
+msgstr "Baza e të dhënave të telefonisë u eksportua me sukses."
+
+#: src/telephony/backend/utils/importer_android_utils.py:34
+#: src/telephony/backend/utils/importer_android_utils.py:140
+#: src/telephony/backend/utils/importer_ios_utils.py:38
+#: src/telephony/backend/utils/importer_ios_utils.py:209
+#: src/telephony/ui/windows/camera_photo_window.py:331
+msgid "File not found."
+msgstr "Skedari nuk u gjet."
+
+#: src/telephony/backend/utils/importer_android_utils.py:131
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Mesazhe {count} të importuara nga rezervimi i Android."
+
+#: src/telephony/backend/utils/importer_android_utils.py:207
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Telefonatat e importuara {count} nga rezervimi i Android."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:67
+msgid "Could not find messages table in iOS database."
+msgstr "Tabela e mesazheve nuk u gjet në bazën e të dhënave iOS."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:74
+msgid "Failed to read iOS SMS database structure."
+msgstr "Leximi i strukturës së bazës së të dhënave iOS SMS dështoi."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:200
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Mesazhe {count} të importuara nga rezervimi i iOS."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:234
+msgid "Could not find call history table in iOS database."
+msgstr ""
+"Tabela e historikut të thirrjeve nuk mund të gjendej në bazën e të dhënave "
+"iOS."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:241
+msgid "Failed to read iOS Calls database structure."
+msgstr "Leximi i strukturës së bazës së të dhënave të thirrjeve iOS dështoi."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:306
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Telefonata të importuara {count} nga rezervimi i iOS."
+
+#: src/telephony/backend/utils/importer_local_utils.py:32
+msgid "Chatty database not found."
+msgstr "Baza e të dhënave Chatty nuk u gjet."
+
+#: src/telephony/backend/utils/importer_local_utils.py:54
+msgid "Could not find messages table in Chatty database."
+msgstr "Tabela e mesazheve nuk u gjet në bazën e të dhënave Chatty."
+
+#: src/telephony/backend/utils/importer_local_utils.py:61
+msgid "Failed to read Chatty database structure."
+msgstr "Leximi i strukturës së bazës së të dhënave Chatty dështoi."
+
+#: src/telephony/backend/utils/importer_local_utils.py:125
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Mesazhe të importuara {count} nga Chatty."
+
+#: src/telephony/backend/utils/importer_local_utils.py:135
+msgid "Calls database not found."
+msgstr "Baza e të dhënave të thirrjeve nuk u gjet."
+
+#: src/telephony/backend/utils/importer_local_utils.py:155
+msgid "Could not find call history table in Calls database."
+msgstr ""
+"Tabela e historikut të thirrjeve nuk mund të gjendej në bazën e të dhënave "
+"të thirrjeve."
+
+#: src/telephony/backend/utils/importer_local_utils.py:162
+msgid "Failed to read Calls database structure."
+msgstr "Leximi i strukturës së bazës së të dhënave të thirrjeve dështoi."
+
+#: src/telephony/backend/utils/importer_local_utils.py:216
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Telefonata të importuara {count}."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telefonia"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Pllaka telefonike"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Historia"
+
+#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/views/messages_view.py:67
+#: src/telephony/ui/windows/settings_window.py:666
+msgid "Messages"
+msgstr "Mesazhet"
+
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:667
+msgid "Contacts"
+msgstr "Kontaktet"
+
+#: src/telephony/ui/main_window.py:169
+msgid "Syncing Contacts..."
+msgstr "Po sinkronizon kontaktet..."
+
+#: src/telephony/ui/main_window.py:263
+msgid "Set your number in Settings"
+msgstr "Vendosni numrin tuaj te Cilësimet"
+
+#: src/telephony/ui/main_window.py:279 src/telephony/ui/main_window.py:284
+msgid "Please set Default Country Code in Settings"
+msgstr "Ju lutemi vendosni kodin e parazgjedhur të shtetit te \"Cilësimet\"."
+
+#: src/telephony/ui/main_window.py:304
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Konfiguro numrat e urgjencës te \"Cilësimet\"."
+
+#: src/telephony/ui/main_window.py:320
+msgid "Resolve Duplicates"
+msgstr "Zgjidh Dublikatat"
+
+#: src/telephony/ui/main_window.py:326
+#: src/telephony/ui/windows/settings_window.py:44
+msgid "Settings"
+msgstr "Cilësimet"
+
+#: src/telephony/ui/main_window.py:331
+msgid "Reload Contacts"
+msgstr "Ringarko kontaktet"
+
+#: src/telephony/ui/main_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Import/Eksport"
+
+#: src/telephony/ui/main_window.py:346 src/telephony/ui/main_window.py:580
+msgid "Blocklist"
+msgstr "Lista e bllokimit"
+
+#: src/telephony/ui/main_window.py:439
+msgid "Modem Connected"
+msgstr "Modemi u lidh"
+
+#: src/telephony/ui/main_window.py:441
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Gabim i modemit: {message}"
+
+#: src/telephony/ui/main_window.py:490
+msgid "Sending USSD..."
+msgstr "Po dërgon USSD..."
+
+#: src/telephony/ui/main_window.py:505
+msgid "USSD Result"
+msgstr "Rezultati USSD"
+
+#: src/telephony/ui/main_window.py:507
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:913
+#: src/telephony/ui/windows/settings_window.py:518
+#: src/telephony/ui/windows/settings_window.py:530
+#: src/telephony/ui/windows/settings_window.py:890
+msgid "OK"
+msgstr "OK"
+
+#: src/telephony/ui/main_window.py:516
+#: src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "Konfirmo"
+
+#: src/telephony/ui/main_window.py:552
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "U gjet {count} kontakt dublikatë. Kontrolloni menunë."
+msgstr[1] "U gjetën {count} kontakte dublikatë. Kontrolloni menunë."
+
+#: src/telephony/ui/main_window.py:577 src/telephony/ui/main_window.py:651
+msgid "Contacts syncing..."
+msgstr "Kontaktet po sinkronizohen..."
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:864
+#: src/telephony/ui/windows/advanced_settings_window.py:230
+#: src/telephony/ui/windows/chat_media_controller_window.py:150
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:401
+#: src/telephony/ui/windows/settings_window.py:434
+#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:504
+#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:1029
+msgid "Close"
+msgstr "Mbylle"
+
+#: src/telephony/ui/main_window.py:623
+msgid "Syncing address books..."
+msgstr "Po sinkronizohen librat e adresave..."
+
+#: src/telephony/ui/main_window.py:633 src/telephony/ui/main_window.py:638
+#: src/telephony/ui/main_window.py:643
+msgid "Reloading Contacts..."
+msgstr "Po ringarkon kontaktet..."
+
+#: src/telephony/ui/main_window.py:636
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "Sinkronizimi filloi për {count} libra adresash"
+
+#: src/telephony/ui/main_window.py:661
+msgid "Multiple Contacts Found"
+msgstr "U gjetën kontakte të shumta"
+
+#: src/telephony/ui/main_window.py:662
+msgid "Which contact would you like to edit?"
+msgstr "Cilin kontakt dëshironi të redaktoni?"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Unknown Addressbook"
+msgstr "Libri i adresave i panjohur"
+
+#: src/telephony/ui/main_window.py:738 src/telephony/ui/main_window.py:745
+#: src/telephony/ui/main_window.py:751
+msgid "Call Failed"
+msgstr "Telefonata dështoi"
+
+#: src/telephony/ui/main_window.py:741
+msgid "Calling (Anonymous)..."
+msgstr "Duke telefonuar (anonim)..."
+
+#: src/telephony/ui/main_window.py:741
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Po telefonon {number}..."
+
+#: src/telephony/ui/main_window.py:757
+msgid "Call Details"
+msgstr "Detajet e thirrjes"
+
+#: src/telephony/ui/main_window.py:758
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Numri: {number}\n"
+"Emri: {name}\n"
+"Data: {date}\n"
+"Kohëzgjatja: {duration}"
+
+#: src/telephony/ui/main_window.py:774
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Unblock Number"
+msgstr "Zhblloko numrin"
+
+#: src/telephony/ui/main_window.py:780 src/telephony/ui/views/chat_view.py:797
+msgid "Unblocked"
+msgstr "E zhbllokuar"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/windows/contact_editor_window.py:416
+msgid "Edit Contact"
+msgstr "Redakto kontaktin"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "Shto te Kontaktet"
+
+#: src/telephony/ui/main_window.py:799
+msgid "Add to Existing Contact"
+msgstr "Shto te kontakti ekzistues"
+
+#: src/telephony/ui/main_window.py:808
+#: src/telephony/ui/windows/incall_window.py:223
+msgid "Search Number"
+msgstr "Numri i kërkimit"
+
+#: src/telephony/ui/main_window.py:832
+msgid "Send Message"
+msgstr "Dërgo Mesazh"
+
+#: src/telephony/ui/main_window.py:837
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "Numri i kopjes"
+
+#: src/telephony/ui/main_window.py:842
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Numri i bllokut"
+
+#: src/telephony/ui/main_window.py:855
+msgid "Delete this call"
+msgstr "Fshije këtë telefonatë"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Delete Call"
+msgstr "Fshi thirrjen"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Remove this call?"
+msgstr "Të hiqet kjo telefonatë?"
+
+#: src/telephony/ui/main_window.py:874
+msgid "Number copied"
+msgstr "Numri u kopjua"
+
+#: src/telephony/ui/main_window.py:880
+#: src/telephony/ui/windows/contact_editor_window.py:807
+msgid "Saving contact..."
+msgstr "Po ruan kontaktin..."
+
+#: src/telephony/ui/main_window.py:884
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Shtuar në {name}"
+
+#: src/telephony/ui/main_window.py:887
+msgid "Failed to add number"
+msgstr "Shtimi i numrit dështoi"
+
+#: src/telephony/ui/main_window.py:895
+#: src/telephony/ui/windows/contact_editor_window.py:205
+#: src/telephony/ui/windows/settings_window.py:236
+msgid "Add Number"
+msgstr "Shto numrin"
+
+#: src/telephony/ui/main_window.py:896
+#: src/telephony/ui/windows/advanced_settings_window.py:53
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:148
+#: src/telephony/ui/windows/custom_tone_list_window.py:61
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:75
+#: src/telephony/ui/windows/settings_window.py:967
+#: src/telephony/ui/windows/trusted_actions_list_window.py:129
+#: src/telephony/ui/windows/trusted_actions_list_window.py:539
+msgid "Save"
+msgstr "Ruaj"
+
+#: src/telephony/ui/views/chat_view.py:136
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Draft për marrësit e {count}"
+
+#: src/telephony/ui/views/chat_view.py:163
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} Pjesëmarrësit"
+
+#: src/telephony/ui/views/chat_view.py:312
+msgid "Replies not supported for this sender"
+msgstr "Përgjigjet nuk mbështeten për këtë dërgues"
+
+#: src/telephony/ui/views/chat_view.py:358
+#: src/telephony/ui/views/chat_view.py:1285
+msgid "Scheduled time must be in the future"
+msgstr "Koha e planifikuar duhet të jetë në të ardhmen"
+
+#: src/telephony/ui/views/chat_view.py:367
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Riplanifikuar për {time}"
+
+#: src/telephony/ui/views/chat_view.py:374
+msgid "Re-Schedule Message"
+msgstr "Riprogramoni mesazhin"
+
+#: src/telephony/ui/views/chat_view.py:509
+#: src/telephony/ui/views/chat_view.py:580
+msgid "— New Messages —"
+msgstr "- Mesazhe të reja -"
+
+#: src/telephony/ui/views/chat_view.py:618
+msgid "No results found in this conversation"
+msgstr "Nuk u gjetën rezultate në këtë bisedë"
+
+#: src/telephony/ui/views/chat_view.py:696
+msgid "Group Name"
+msgstr "Emri i grupit"
+
+#: src/telephony/ui/views/chat_view.py:697
+msgid "Set group name..."
+msgstr "Cakto emrin e grupit..."
+
+#: src/telephony/ui/views/chat_view.py:705
+msgid "Participants"
+msgstr "Pjesëmarrësit"
+
+#: src/telephony/ui/views/chat_view.py:823
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Conversation"
+msgstr "Fshi Bisedën"
+
+#: src/telephony/ui/views/chat_view.py:840
+#: src/telephony/ui/views/chat_view.py:1217
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "Unë"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Transferuar nga {sender}:\n"
+"{body}"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Transferuar nga {sender}"
+
+#: src/telephony/ui/views/chat_view.py:859
+msgid "Forward To"
+msgstr "Përpara Për të"
+
+#: src/telephony/ui/views/chat_view.py:860
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "Përpara"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Delete Message"
+msgstr "Fshi Mesazhin"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Are you sure you want to delete this message?"
+msgstr "Jeni i sigurt që dëshironi ta fshini këtë mesazh?"
+
+#: src/telephony/ui/views/chat_view.py:1033
+msgid "Group renamed"
+msgstr "Grupi u riemërua"
+
+#: src/telephony/ui/views/chat_view.py:1063
+msgid "Compressing image..."
+msgstr "Imazhi po kompresohet..."
+
+#: src/telephony/ui/views/chat_view.py:1065
+msgid "Image is too large to send"
+msgstr "Imazhi është shumë i madh për t'u dërguar"
+
+#: src/telephony/ui/views/chat_view.py:1067
+msgid "Compressing video..."
+msgstr "Videoja po kompresohet..."
+
+#: src/telephony/ui/views/chat_view.py:1069
+msgid "Video compression failed"
+msgstr "Kompresimi i videos dështoi"
+
+#: src/telephony/ui/views/chat_view.py:1071
+msgid "File is too large to send via MMS"
+msgstr "Skedari është shumë i madh për t'u dërguar me MMS"
+
+#: src/telephony/ui/views/chat_view.py:1279
+msgid "Nothing to schedule"
+msgstr "Asgjë për të planifikuar"
+
+#: src/telephony/ui/views/chat_view.py:1293
+msgid "Schedule Message"
+msgstr "Orari i mesazhit"
+
+#: src/telephony/ui/views/chat_view.py:1353
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Mesazhi i planifikuar për {time}"
+
+#: src/telephony/ui/views/chat_view.py:1354
+#: src/telephony/ui/views/chat_view.py:1360
+msgid "[Attachment]"
+msgstr "[Shtojcë]"
+
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Group"
+msgstr "Fshi grupin"
+
+#: src/telephony/ui/views/chat_view.py:1452
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Kjo do të fshijë përgjithmonë historikun e bisedave dhe të gjithë skedarët e "
+"ruajtur të medias."
+
+#: src/telephony/ui/views/contacts_view.py:64
+msgid "Search contacts"
+msgstr "Kërkoni kontakte"
+
+#: src/telephony/ui/views/contacts_view.py:439
+msgid "Call Anonymous"
+msgstr "Telefononi Anonim"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Fut numrin"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:162
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Telefoni Smart Dialpad në shërbimin tuaj"
+
+#: src/telephony/ui/views/dialpad_view.py:259
+msgid "Invalid number in clipboard"
+msgstr "Numër i pavlefshëm në kujtesën e fragmenteve"
+
+#: src/telephony/ui/views/dialpad_view.py:261
+msgid "Invalid number"
+msgstr "Numër i pavlefshëm"
+
+#: src/telephony/ui/views/history_view.py:129
+msgid "All"
+msgstr "Të gjitha"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Any duration"
+msgstr "Çdo kohëzgjatje"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Unanswered"
+msgstr "Pa përgjigje"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1s - 60s"
+msgstr "1-60"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1-3 mins"
+msgstr "1-3 min"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "3-10 mins"
+msgstr "3-10 minuta"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "> 15 mins"
+msgstr "> 15 min"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Any date"
+msgstr "Çdo datë"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Today"
+msgstr "Sot"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 3 days"
+msgstr "3 ditët e fundit"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 14 days"
+msgstr "14 ditët e fundit"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 30 days"
+msgstr "30 ditët e fundit"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 60 days"
+msgstr "60 ditët e fundit"
+
+#: src/telephony/ui/views/messages_view.py:117
+#: src/telephony/ui/views/messages_view.py:590
+msgid "Search Contacts..."
+msgstr "Kërko kontaktet..."
+
+#: src/telephony/ui/views/messages_view.py:235
+msgid "All Messages"
+msgstr "Të gjitha mesazhet"
+
+#: src/telephony/ui/views/messages_view.py:236
+msgid "Unread Messages"
+msgstr "Mesazhe të palexuara"
+
+#: src/telephony/ui/views/messages_view.py:237
+msgid "Unknown Numbers"
+msgstr "Numra të panjohur"
+
+#: src/telephony/ui/views/messages_view.py:238
+msgid "Saved Contacts"
+msgstr "Kontaktet e ruajtura"
+
+#: src/telephony/ui/views/messages_view.py:239
+msgid "Group Messages"
+msgstr "Mesazhet në grup"
+
+#: src/telephony/ui/views/messages_view.py:240
+msgid "Individual Messages"
+msgstr "Mesazhe Individuale"
+
+#: src/telephony/ui/views/messages_view.py:241
+msgid "Alphabetical Senders"
+msgstr "Dërguesit alfabetik"
+
+#: src/telephony/ui/views/messages_view.py:337
+#: src/telephony/ui/views/messages_view.py:459
+msgid "[Multimedia Message]"
+msgstr "[Mesazhi multimedial]"
+
+#: src/telephony/ui/views/messages_view.py:594
+msgid "Search Messages..."
+msgstr "Kërko Mesazhet..."
+
+#: src/telephony/ui/views/messages_view.py:636
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Fillimi ({count})"
+
+#: src/telephony/ui/views/messages_view.py:643
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "Hap ({count})"
+
+#: src/telephony/ui/views/messages_view.py:715
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Shto numrin: {number}"
+
+#: src/telephony/ui/views/messages_view.py:748
+msgid "Group chat"
+msgstr "Bisedë në grup"
+
+#: src/telephony/ui/views/messages_view.py:756
+#: src/telephony/ui/widgets/common_widget.py:100
+msgid "No contacts found"
+msgstr "Nuk u gjetën kontakte"
+
+#: src/telephony/ui/views/messages_view.py:871
+msgid "No results found"
+msgstr "Nuk u gjet asnjë rezultat"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "Kopjoni tekstin"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "Riprogramoni"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "Shëno si të palexuar"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:839
+#: src/telephony/ui/windows/settings_window.py:997
+msgid "Delete"
+msgstr "Fshije"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "Riprovo dërgimin"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Planifikuar: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "Dërgimi dështoi"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "Po dërgohet..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "Hap me"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "Kopjo"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "Ruaj si"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "Hap me..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "Ruaj skedarin si"
+
+#: src/telephony/ui/widgets/common_widget.py:29
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Mobile"
+msgstr "Celular"
+
+#: src/telephony/ui/widgets/common_widget.py:30
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Work"
+msgstr "Puna"
+
+#: src/telephony/ui/widgets/common_widget.py:31
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Home"
+msgstr "Shtëpi"
+
+#: src/telephony/ui/widgets/common_widget.py:32
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Fax"
+msgstr "Faks"
+
+#: src/telephony/ui/widgets/common_widget.py:33
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Other"
+msgstr "Të tjera"
+
+#: src/telephony/ui/widgets/common_widget.py:34
+msgid "Main"
+msgstr "Kryesor"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "Mbyll të gjitha telefonatat"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "Mbyll telefonatën"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Grupi"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Drafti: {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:33
+#: src/telephony/ui/windows/settings_window.py:385
+msgid "Advanced Settings"
+msgstr "Cilësimet e avancuara"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "Po ngarkohet..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Gabim gjatë ngarkimit të cilësimeve: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:132
+msgid "Secret SMS Triggers"
+msgstr "Nxitësit sekret të SMS-ve"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:135
+#: src/telephony/ui/windows/trusted_actions_list_window.py:92
+msgid "Set \"Find my Telephony\""
+msgstr "Cakto \"Gjej telefonin tim\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:141
+#: src/telephony/ui/windows/trusted_actions_list_window.py:94
+msgid "Set \"Trusted Callback\""
+msgstr "Cakto \"Thirrje të besueshme\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:147
+#: src/telephony/ui/windows/trusted_actions_list_window.py:96
+msgid "Set \"SMS -Relay\""
+msgstr "Cakto \"SMS-rele\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+#: src/telephony/ui/windows/trusted_actions_list_window.py:98
+msgid "Set \"SMS -tmate\""
+msgstr "Cakto \"SMS -tmate\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:159
+#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+msgid "Set \"SMS Switch Lock Device\""
+msgstr "Cakto \"Pajisjen e kyçjes me ndërprerës SMS\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:167
+#: src/telephony/ui/windows/advanced_settings_window.py:229
+msgid "Automatic Modem Recovery"
+msgstr "Rikuperimi automatik i modemit"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Data Management"
+msgstr "Menaxhimi i të Dhënave"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:200
+msgid "Authentication cancelled"
+msgstr "Autentifikimi u anulua"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:206
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Gabim vërtetimi: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:213
+msgid "Advanced Settings Applied"
+msgstr "Cilësimet e avancuara u aplikuan"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:222
+msgid ""
+"When the modem stops responding, the phone quietly runs the recovery steps "
+"by itself: phone service restart, radio restart, modem power cycle, firmware "
+"restart and re-enabling a disabled radio. The phone is never rebooted "
+"automatically. If nothing helps you are asked to reboot. When this is off, "
+"the Modem Recovery window opens instead so you can run the steps yourself."
+msgstr ""
+"Kur modemi ndalon së përgjigjuri, telefoni i kryen vetë në heshtje hapat e "
+"rikuperimit: rinisja e shërbimit të telefonisë, rinisja e radios, cikli i "
+"energjisë së modemit, rinisja e firmuerit dhe riaktivizimi i një radioje të "
+"çaktivizuar. Telefoni nuk riniset kurrë automatikisht. Nëse asgjë nuk "
+"ndihmon, ju kërkohet të rinisni telefonin. Kur kjo është e çaktivizuar, në "
+"vend të kësaj hapet dritarja Rikuperimi i modemit, që t'i kryeni vetë hapat."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Detajet e numrit"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Thirrjet nga ky numër do të refuzohen automatikisht."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:835
+msgid "Number"
+msgstr "Numri"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Shënim (Opsionale)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Dublikatë"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Ky numër tashmë është i bllokuar."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Gabim në bazën e të dhënave"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Ruajtja në listën e bllokimit dështoi."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:893
+msgid "Conflict"
+msgstr "Konflikti"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Numri nuk mund të jetë si në listën e bllokimit ashtu edhe në "
+"\"Kontaktet\".\n"
+"\n"
+"Dëshiron të vazhdosh me Bllokim dhe të heqësh numrin nga Kontaktet?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Po, Blloku"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Numrat e bllokuar"
+
+#: src/telephony/ui/windows/blocklist_window.py:147
+msgid "No notes"
+msgstr "Asnjë shënim"
+
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Are you sure you want to unblock this number?"
+msgstr "Je i sigurt që dëshiron ta zhbllokosh këtë numër?"
+
+#: src/telephony/ui/windows/blocklist_window.py:174
+msgid "Unblocked number"
+msgstr "Numri i zhbllokuar"
+
+#: src/telephony/ui/windows/camera_photo_window.py:48
+msgid "Take Picture"
+msgstr "Merrni foto"
+
+#: src/telephony/ui/windows/camera_photo_window.py:160
+#: src/telephony/ui/windows/camera_video_window.py:202
+#: src/telephony/ui/windows/sound_recorder_window.py:181
+msgid "Retake"
+msgstr "Rimarrë"
+
+#: src/telephony/ui/windows/camera_photo_window.py:165
+msgid "Attach Photo"
+msgstr "Bashkangjit Foto"
+
+#: src/telephony/ui/windows/camera_video_window.py:61
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Regjistro Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:207
+msgid "Attach Video"
+msgstr "Bashkangjit Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:336
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Regjistrimi i videos dështoi: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:416
+msgid "Recording failed (File empty)."
+msgstr "Regjistrimi dështoi (Skedari bosh)."
+
+#: src/telephony/ui/windows/camera_video_window.py:420
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Video e madhe ({size}KB). Do të kompresohet me dërgimin."
+
+#: src/telephony/ui/windows/camera_video_window.py:437
+msgid "Cannot play empty file."
+msgstr "Skedari bosh nuk mund të luhet."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "Bëj foto"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "Regjistro audio"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "Zgjidhni Skedarin"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "Orari"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "Gabim i kamerës"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "Kamera nuk mund të nisej."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "Nuk mund të fillonte regjistrimin e videos."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Audio Error"
+msgstr "Gabim audio"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Could not start audio recorder."
+msgstr "Regjistruesi audio nuk mund të nisej."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:103
+msgid "Select Attachment"
+msgstr "Zgjidhni Shtojcën"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Attachment Error"
+msgstr "Gabim i bashkëngjitjes"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Failed to prepare attachment."
+msgstr "Përgatitja e bashkëngjitjes dështoi."
+
+#: src/telephony/ui/windows/contact_editor_window.py:38
+#: src/telephony/ui/windows/contact_editor_window.py:423
+msgid "Contact Details"
+msgstr "Detajet e Kontaktit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:194
+msgid "Edit"
+msgstr "Redakto"
+
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Identity"
+msgstr "Identiteti"
+
+#: src/telephony/ui/windows/contact_editor_window.py:165
+#: src/telephony/ui/windows/contact_editor_window.py:183
+msgid "Favorite"
+msgstr "E preferuara"
+
+#: src/telephony/ui/windows/contact_editor_window.py:173
+msgid "Full Name"
+msgstr "Emri i plotë"
+
+#: src/telephony/ui/windows/contact_editor_window.py:179
+msgid "Name"
+msgstr "Emri"
+
+#: src/telephony/ui/windows/contact_editor_window.py:183
+#: src/telephony/ui/windows/trusted_actions_list_window.py:629
+msgid "Yes"
+msgstr "po"
+
+#: src/telephony/ui/windows/contact_editor_window.py:189
+msgid "Phone Numbers"
+msgstr "Numrat e telefonit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:216
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "Adresat e emailit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:226
+msgid "Add Email"
+msgstr "Shto email"
+
+#: src/telephony/ui/windows/contact_editor_window.py:237
+msgid "Additional Details"
+msgstr "Detaje Shtesë"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Organization"
+msgstr "Organizimi"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Job Title"
+msgstr "Titulli i Punës"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Address"
+msgstr "Adresa"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Notes"
+msgstr "Shënime"
+
+#: src/telephony/ui/windows/contact_editor_window.py:242
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Faqja e internetit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:267
+#: src/telephony/ui/windows/contact_editor_window.py:272
+msgid "Birthday"
+msgstr "ditëlindjen"
+
+#: src/telephony/ui/windows/contact_editor_window.py:268
+#: src/telephony/ui/windows/contact_editor_window.py:275
+msgid "Anniversary"
+msgstr "përvjetor"
+
+#: src/telephony/ui/windows/contact_editor_window.py:284
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Delete Contact"
+msgstr "Fshi kontaktin"
+
+#: src/telephony/ui/windows/contact_editor_window.py:295
+#: src/telephony/ui/windows/settings_window.py:174
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Address Books"
+msgstr "Librat e adresave"
+
+#: src/telephony/ui/windows/contact_editor_window.py:315
+msgid "Unknown Source"
+msgstr "Burim i panjohur"
+
+#: src/telephony/ui/windows/contact_editor_window.py:339
+#: src/telephony/ui/windows/contact_editor_window.py:377
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Zgjidhni Data"
+
+#: src/telephony/ui/windows/contact_editor_window.py:350
+msgid "Clear Date"
+msgstr "Data e qartë"
+
+#: src/telephony/ui/windows/contact_editor_window.py:392
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Zgjidhni {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:402
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Kopjo {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/trusted_actions_list_window.py:603
+msgid "Copied to clipboard"
+msgstr "Kopjuar në kujtesën e fragmenteve"
+
+#: src/telephony/ui/windows/contact_editor_window.py:541
+msgid "Export Contact"
+msgstr "Kontakti i eksportit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Are you sure you want to delete this contact?"
+msgstr "Jeni i sigurt që dëshironi ta fshini këtë kontakt?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:573
+msgid "Deleting contact..."
+msgstr "Po fshin kontaktin..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:791
+#: src/telephony/ui/windows/contact_editor_window.py:881
+msgid "Failed to save contact"
+msgstr "Ruajtja e kontaktit dështoi"
+
+#: src/telephony/ui/windows/contact_editor_window.py:876
+msgid "Contact saved"
+msgstr "Kontakti u ruajt"
+
+#: src/telephony/ui/windows/contact_editor_window.py:894
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Numri nuk mund të jetë si në listën e bllokimit ashtu edhe në "
+"\"Kontaktet\".\n"
+"\n"
+"Dëshiron të vazhdosh me Zhbllokimin dhe të shtosh numrin te Kontaktet?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:898
+msgid "Yes, Add to Contacts"
+msgstr "Po, Shto te Kontaktet"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Zgjidh Kontakt"
+
+#: src/telephony/ui/windows/contact_picker_window.py:63
+msgid "Name or Number"
+msgstr "Emri ose Numri"
+
+#: src/telephony/ui/windows/contact_picker_window.py:199
+msgid "No number"
+msgstr "Asnjë numër"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:356
+msgid "Individual SMS Notifications"
+msgstr "Njoftimet individuale SMS"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:367
+msgid "Individual Ringtones"
+msgstr "Zile individuale"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:74
+msgid "Find contact to add..."
+msgstr "Gjeni kontaktin për të shtuar..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:82
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Zgjidhni një kontakt dhe zgjidhni një skedar zanor të personalizuar (.ogg "
+"ose .oga). Skedari do të kopjohet në ruajtjen tuaj lokale."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:201
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Hiq"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:217
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Toni i personalizuar u hoq (Kliko Ruaj për të kryer)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:281
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Zgjidhni Tone për {name}"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:284
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Select"
+msgstr "Zgjidhni"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:289
+msgid "Supported Audio (OGG)"
+msgstr "Audioja e mbështetur (OGG)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:317
+msgid "Only .ogg or .oga files are supported"
+msgstr "Mbështeten vetëm skedarët .ogg ose .oga"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:328
+msgid "Failed to copy audio file"
+msgstr "Kopjimi i skedarit audio dështoi"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:348
+msgid "Custom tone added"
+msgstr "U shtua toni i personalizuar"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Menaxhimi i bazës së të dhënave"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Zgjidhni të dhënat për t'i fshirë përgjithmonë."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Fshi historikun e thirrjeve"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Fshi të gjitha mesazhet"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Fshi të gjithë emrat e grupeve"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Fshi listën e bllokimit"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Fshi të gjitha kontaktet"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:994
+msgid "Delete Address Book"
+msgstr "Fshi librin e adresave"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "FSHI GJITHÇKA"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "je i sigurt? Kjo nuk mund të zhbëhet."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Kjo do të fshijë të gjitha SMS/MMS dhe bashkëngjitjet."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Fshini emrat e grupeve"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Të rivendosen të gjithë emrat e personalizuar të bisedave në grup?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Të zhbllokohen të gjithë numrat?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Nuk ka libra adresash që mund të fshihen"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Nuk ka libra të personalizuar të adresave që mund të fshihen."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Cilin libër adresash dëshironi të fshini përgjithmonë?\n"
+"\n"
+"Kjo do ta fshijë atë nga sistemi."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:995
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr ""
+"Jeni i sigurt që dëshironi të fshini përgjithmonë librin e adresave "
+"\"{name}\"?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Fshij GJITHÇKA"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"Të fshihet baza e të dhënave, skedarët e konfigurimit dhe kontaktet? "
+"Aplikacioni do të rivendoset."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Të fshihen vërtet të gjithë nga libri i adresave?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Zgjidhni cilin libër adresash të pastroni:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Të gjithë librat e adresave"
+
+#: src/telephony/ui/windows/data_management_window.py:218
+msgid "Call History Deleted"
+msgstr "Historia e thirrjeve u fshi"
+
+#: src/telephony/ui/windows/data_management_window.py:222
+msgid "Deleting messages..."
+msgstr "Po fshin mesazhet..."
+
+#: src/telephony/ui/windows/data_management_window.py:228
+msgid "Messages & Attachments Deleted"
+msgstr "Mesazhet dhe bashkëngjitjet u fshinë"
+
+#: src/telephony/ui/windows/data_management_window.py:234
+msgid "Group Names Reset"
+msgstr "Rivendosja e emrave të grupeve"
+
+#: src/telephony/ui/windows/data_management_window.py:239
+msgid "Blocklist Cleared"
+msgstr "Lista e bllokimit u pastrua"
+
+#: src/telephony/ui/windows/data_management_window.py:243
+msgid "Deleting contacts..."
+msgstr "Po fshin kontaktet..."
+
+#: src/telephony/ui/windows/data_management_window.py:249
+msgid "Contacts Deleted"
+msgstr "Kontaktet u fshinë"
+
+#: src/telephony/ui/windows/data_management_window.py:257
+msgid "Deleting address book..."
+msgstr "Po fshin librin e adresave..."
+
+#: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:1015
+msgid "Address Book Deleted"
+msgstr "Libri i adresave u fshi"
+
+#: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:1013
+msgid "Failed to delete Address Book"
+msgstr "Fshirja e Librit të Adresave dështoi"
+
+#: src/telephony/ui/windows/data_management_window.py:270
+msgid "Wiping Database..."
+msgstr "Duke fshirë bazën e të dhënave..."
+
+#: src/telephony/ui/windows/data_management_window.py:283
+msgid "App Reset Complete"
+msgstr "Rivendosja e aplikacionit përfundoi"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "viti"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "muaj"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Ora"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Minuta"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:338
+#: src/telephony/ui/windows/settings_window.py:527
+msgid "Notification Overrides"
+msgstr "Anulimet e njoftimit"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:162
+msgid "Find and add contacts..."
+msgstr "Gjeni dhe shtoni kontakte..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:78
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Kontaktet në këtë listë do të luajnë gjithmonë njoftime me volum të plotë, "
+"edhe nëse telefoni është në modalitetin \"Heshtje\" ose \"Mos shqetëso\"."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Kontakt i kopjuar"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Bashkoni të gjitha"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Bashkimi i kontakteve..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Konfliktet e mbetura: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} ruhet te kontaktet:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Libri i adresave: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Mbaje këtë, Hiq dublikatat"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Mbaje këtë, bashko dublikatat"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Duke bashkuar {current}/{total}..."
+
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"Nxjerrja, transformimi, ngarkimi (ETL).\n"
+"Zgjidhni burimin ose destinacionin e të dhënave."
+
+#: src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "Importoni kontaktet nga vCard"
+
+#: src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "Eksporto kontaktet në vCard"
+
+#: src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "Importoni kontaktet nga karta SIM"
+
+#: src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "Importi nga Chatty lokale"
+
+#: src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "Importi nga thirrjet lokale"
+
+#: src/telephony/ui/windows/import_export_window.py:67
+#: src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "Importo nga Android"
+
+#: src/telephony/ui/windows/import_export_window.py:68
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "Importoni nga iOS"
+
+#: src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "Eksporto thirrje ose mesazhe"
+
+#: src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "Po importon kontaktet nga SIM..."
+
+#: src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "Nuk u gjet asnjë modem për importimin e kartës SIM"
+
+#: src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "Nuk u gjetën kontakte në kartën SIM."
+
+#: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "Kontaktet e importuara {count} nga SIM."
+
+#: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "Importimi i kartës SIM dështoi: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Po importon Chatty..."
+
+#: src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "Importimi i telefonatave..."
+
+#: src/telephony/ui/windows/import_export_window.py:159
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "Zgjidhni një opsion:"
+
+#: src/telephony/ui/windows/import_export_window.py:169
+#: src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "Zgjidhni skedarin SMS/MMS"
+
+#: src/telephony/ui/windows/import_export_window.py:170
+#: src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "Zgjidhni skedarin e historisë së thirrjeve"
+
+#: src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "Importi direkt USB (rekomandohet)"
+
+#: src/telephony/ui/windows/import_export_window.py:211
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr ""
+"Nuk u zbulua asnjë pajisje iOS. Ju lutemi lidhni iPhone tuaj nëpërmjet USB."
+
+#: src/telephony/ui/windows/import_export_window.py:214
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr ""
+"Pajisja nuk është e besuar. Zhbllokoni iPhone tuaj dhe trokitni lehtë mbi "
+"\"Trust\"."
+
+#: src/telephony/ui/windows/import_export_window.py:217
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "Po nxirret kopje rezervë nga iPhone... Kjo mund të zgjasë shumë!"
+
+#: src/telephony/ui/windows/import_export_window.py:225
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "Rezervimi USB dështoi: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:230
+msgid "No SMS database found in backup."
+msgstr "Nuk u gjet asnjë bazë të dhënash SMS në kopje rezervë."
+
+#: src/telephony/ui/windows/import_export_window.py:231
+msgid "No Call History database found in backup."
+msgstr ""
+"Asnjë bazë e të dhënave e Historisë së Thirrjeve nuk u gjet në kopje rezervë."
+
+#: src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone SMS..."
+msgstr "Po importon SMS për iPhone..."
+
+#: src/telephony/ui/windows/import_export_window.py:238
+msgid "Importing iPhone Calls..."
+msgstr "Importimi i telefonatave iPhone..."
+
+#: src/telephony/ui/windows/import_export_window.py:247
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "Gabim gjatë importimit të iOS: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:255
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Zgjidhni Skedar"
+
+#: src/telephony/ui/windows/import_export_window.py:258
+msgid "XML Files"
+msgstr "Skedarët XML"
+
+#: src/telephony/ui/windows/import_export_window.py:272
+#: src/telephony/ui/windows/import_export_window.py:463
+msgid "Importing..."
+msgstr "Importimi..."
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Export Data"
+msgstr "Eksporto të dhëna"
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Select destination format:"
+msgstr "Zgjidhni formatin e destinacionit:"
+
+#: src/telephony/ui/windows/import_export_window.py:306
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - Chatty/Telefonata"
+
+#: src/telephony/ui/windows/import_export_window.py:307
+msgid "Linux - Telephony"
+msgstr "Linux - Telefonia"
+
+#: src/telephony/ui/windows/import_export_window.py:308
+msgid "Android"
+msgstr "Android"
+
+#: src/telephony/ui/windows/import_export_window.py:309
+msgid "iOS"
+msgstr "iOS"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "Eksporto në {fmt}"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+msgid "What do you want to export?"
+msgstr "Çfarë dëshironi të eksportoni?"
+
+#: src/telephony/ui/windows/import_export_window.py:326
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"Shënim: ky eksport përdor formatin e Android. Kur ta importoni këtë skedar "
+"në një pajisje iOS, ju lutemi përdorni opsionin \"Importo nga Android\"."
+
+#: src/telephony/ui/windows/import_export_window.py:337
+msgid "Messages (SMS/MMS)"
+msgstr "Mesazhet (SMS/MMS)"
+
+#: src/telephony/ui/windows/import_export_window.py:338
+msgid "Call History"
+msgstr "Historia e Thirrjeve"
+
+#: src/telephony/ui/windows/import_export_window.py:348
+msgid "Export File"
+msgstr "Eksporto skedarin"
+
+#: src/telephony/ui/windows/import_export_window.py:374
+msgid "Exporting..."
+msgstr "Eksportimi..."
+
+#: src/telephony/ui/windows/import_export_window.py:408
+msgid "Import VCard"
+msgstr "Importo VCard"
+
+#: src/telephony/ui/windows/import_export_window.py:410
+msgid "VCard Files"
+msgstr "Skedarët VCard"
+
+#: src/telephony/ui/windows/import_export_window.py:429
+#: src/telephony/ui/windows/import_export_window.py:493
+msgid "No enabled address books found"
+msgstr "Nuk u gjetën libra adresash të aktivizuara"
+
+#: src/telephony/ui/windows/import_export_window.py:437
+msgid "Select Address Book"
+msgstr "Zgjidhni Librin e Adresave"
+
+#: src/telephony/ui/windows/import_export_window.py:438
+msgid "Where do you want to import contacts?"
+msgstr "Ku dëshironi të importoni kontaktet?"
+
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "Kontaktet e importuara {count}"
+
+#: src/telephony/ui/windows/import_export_window.py:481
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "Importimi dështoi: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:535
+msgid "Export Contacts"
+msgstr "Eksporto kontaktet"
+
+#: src/telephony/ui/windows/import_export_window.py:498
+msgid "Which address book do you want to export?"
+msgstr "Cilin libër adresash dëshironi të eksportoni?"
+
+#: src/telephony/ui/windows/import_export_window.py:509
+msgid "Export All Address Books"
+msgstr "Eksporto të gjithë librat e adresave"
+
+#: src/telephony/ui/windows/import_export_window.py:558
+msgid "No contacts found to export"
+msgstr "Nuk u gjetën kontakte për eksport"
+
+#: src/telephony/ui/windows/import_export_window.py:570
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "Kontaktet {count} u eksportuan"
+
+#: src/telephony/ui/windows/import_export_window.py:573
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "Gabim eksporti: {e}"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Importoni mesazhe"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Importoni Historinë e Thirrjeve"
+
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Në pritje të përzgjedhjes..."
+
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Nga doni të importoni?"
+
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Baza e të dhënave të sistemit"
+
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Importo nga instalimi lokal Chatty"
+
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Importoni nga instalimi i thirrjeve lokale"
+
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Importi"
+
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Rezervimi i personalizuar i bazës së të dhënave"
+
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Zgjidhni një skedar SQLite DB të eksportuar"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Zgjidhni skedarin e bazës së të dhënave"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "Bashkëngjitjet MMS (opsionale)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "Rezervimi i dosjes MMS"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Zgjidhni direktorinë që përmban imazhe/video"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Zgjidhni Dosjen"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Kapërceni bashkëngjitjet"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Importoni vetëm SMS dhe tekste"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Kapërce"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Zgjidhni dosjen MMS"
+
+#: src/telephony/ui/windows/incall_window.py:44
+msgid "Active"
+msgstr "Aktive"
+
+#: src/telephony/ui/windows/incall_window.py:45
+msgid "On Hold"
+msgstr "Në pritje"
+
+#: src/telephony/ui/windows/incall_window.py:46
+msgid "Dialing..."
+msgstr "Po formohet numri..."
+
+#: src/telephony/ui/windows/incall_window.py:47
+msgid "Alerting..."
+msgstr "Po bie zilja..."
+
+#: src/telephony/ui/windows/incall_window.py:50
+msgid "Disconnected"
+msgstr "E shkëputur"
+
+#: src/telephony/ui/windows/incall_window.py:58
+#: src/telephony/ui/windows/settings_window.py:301
+msgid "Earpiece"
+msgstr "Altoparlanti i veshit"
+
+#: src/telephony/ui/windows/incall_window.py:59
+#: src/telephony/ui/windows/settings_window.py:302
+msgid "Speaker"
+msgstr "Altoparlanti"
+
+#: src/telephony/ui/windows/incall_window.py:60
+#: src/telephony/ui/windows/settings_window.py:303
+msgid "Wired Headset"
+msgstr "Kufje me tel"
+
+#: src/telephony/ui/windows/incall_window.py:61
+#: src/telephony/ui/windows/settings_window.py:304
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: src/telephony/ui/windows/incall_window.py:69
+msgid "Microphone"
+msgstr "Mikrofoni"
+
+#: src/telephony/ui/windows/incall_window.py:70
+msgid "Wired Mic"
+msgstr "Mikrofon me tel"
+
+#: src/telephony/ui/windows/incall_window.py:71
+msgid "Bluetooth Mic"
+msgstr "Mikrofon Bluetooth"
+
+#: src/telephony/ui/windows/incall_window.py:228
+msgid "Hangup and Send SMS"
+msgstr "Hangup dhe dërgoni SMS"
+
+#: src/telephony/ui/windows/incall_window.py:231
+#: src/telephony/ui/windows/incall_window.py:668
+msgid "Silence"
+msgstr "Heshtje"
+
+#: src/telephony/ui/windows/incall_window.py:232
+msgid "Decline"
+msgstr "Refuzo"
+
+#: src/telephony/ui/windows/incall_window.py:233
+msgid "Accept"
+msgstr "Prano"
+
+#: src/telephony/ui/windows/incall_window.py:253
+msgid "Mute"
+msgstr "Heshto"
+
+#: src/telephony/ui/windows/incall_window.py:254
+msgid "Keypad"
+msgstr "Tastiera"
+
+#: src/telephony/ui/windows/incall_window.py:255
+msgid "Hold"
+msgstr "Në pritje"
+
+#: src/telephony/ui/windows/incall_window.py:270
+#: src/telephony/ui/windows/incall_window.py:849
+msgid "The call failed to disconnect."
+msgstr "Telefonata nuk u shkëput."
+
+#: src/telephony/ui/windows/incall_window.py:349
+#: src/telephony/ui/windows/incall_window.py:925
+msgid "Output"
+msgstr "Prodhimi"
+
+#: src/telephony/ui/windows/incall_window.py:364
+#: src/telephony/ui/windows/incall_window.py:944
+msgid "Input"
+msgstr "Input"
+
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Silenced Incoming Call"
+msgstr "Thirrje hyrëse e heshtur"
+
+#: src/telephony/ui/windows/incall_window.py:660
+msgid "Swap"
+msgstr "Ndërro"
+
+#: src/telephony/ui/windows/incall_window.py:664
+msgid "Answer"
+msgstr "Përgjigju"
+
+#: src/telephony/ui/windows/incall_window.py:672
+msgid "Message"
+msgstr "Mesazh"
+
+#: src/telephony/ui/windows/incall_window.py:678
+msgid "Answering holds the current call"
+msgstr "Përgjigjja e vë telefonatën aktuale në pritje"
+
+#: src/telephony/ui/windows/incall_window.py:695
+#: src/telephony/ui/windows/settings_window.py:264
+msgid "I can't talk right now."
+msgstr "Nuk mund të flas për momentin."
+
+#: src/telephony/ui/windows/incall_window.py:858
+msgid "Recovering modem..."
+msgstr "Po rikuperohet modemi..."
+
+#: src/telephony/ui/windows/incall_window.py:910
+#: src/telephony/ui/windows/settings_window.py:947
+msgid "Not connected"
+msgstr "Nuk është lidhur"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Rreth Telefonisë"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr ""
+"Telefonues i shpejtë telefonik dhe klient i mesazheve i krijuar për FLX1 dhe "
+"FLX1."
+
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Versioni"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Zhvilluesi"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Licenca"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Lidhjet"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Gjurmuesi i çështjeve"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Raporto defektet ose kërko veçori"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Planifikuar ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "Për: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Dërgo Tani"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Mesazhi u hoq"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Po dërgohet mesazhi te {number}..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:67
+msgid ""
+"Steps are tried from gentlest to strongest. Each one is verified before the "
+"next unlocks."
+msgstr ""
+"Hapat provohen nga më i buti te më i forti. Secili verifikohet përpara se të "
+"zhbllokohet tjetri."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Phone service restart"
+msgstr "Rinisja e shërbimit të telefonisë"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Restarts the ofono service that manages the modem."
+msgstr "Rinis shërbimin ofono që menaxhon modemin."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Radio restart"
+msgstr "Rinisja e radios"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Turns the radio off and back on, like flight mode."
+msgstr "E fik radion dhe e ndez përsëri, si modaliteti i fluturimit."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Modem power cycle"
+msgstr "Cikli i energjisë së modemit"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Powers the modem down and back up."
+msgstr "E fik modemin dhe e ndez përsëri."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Modem firmware restart"
+msgstr "Rinisja e firmuerit të modemit"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Restarts the vendor modem firmware."
+msgstr "Rinis firmuerin e modemit të prodhuesit."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Re-enable radio"
+msgstr "Riaktivizimi i radios"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Fixes a radio left disabled by an unclean shutdown."
+msgstr ""
+"Rregullon një radio të lënë të çaktivizuar nga një mbyllje e parregullt."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Reboot phone"
+msgstr "Rinisni telefonin"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Opens the system power menu. Last resort."
+msgstr "Hap menynë e energjisë së sistemit. Zgjidhja e fundit."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:87
+msgid "Try"
+msgstr "Provo"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:97
+msgid "Save Modem Logs"
+msgstr "Ruaj regjistrat e modemit"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:111
+#: src/telephony/ui/windows/modem_recovery_window.py:178
+msgid "Did not help"
+msgstr "Nuk ndihmoi"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:129
+msgid "Waiting for the modem..."
+msgstr "Në pritje të modemit..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:171
+#: src/telephony/ui/windows/modem_recovery_window.py:174
+msgid "Modem recovered"
+msgstr "Modemi u rikuperua"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:203
+#, python-brace-format
+msgid "Logs saved to {path}"
+msgstr "Regjistrat u ruajtën në {path}"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:205
+msgid "Saving logs failed"
+msgstr "Ruajtja e regjistrave dështoi"
+
+#: src/telephony/ui/windows/settings_window.py:93
+#: src/telephony/ui/windows/settings_window.py:450
+msgid "Ringback Tone"
+msgstr "Toni i ziles"
+
+#: src/telephony/ui/windows/settings_window.py:96
+msgid "Enable Local Ringback"
+msgstr "Aktivizo kthimin e ziles lokale"
+
+#: src/telephony/ui/windows/settings_window.py:111
+msgid "Selected Tone"
+msgstr "Toni i zgjedhur"
+
+#: src/telephony/ui/windows/settings_window.py:114
+#: src/telephony/ui/windows/settings_window.py:411
+msgid "System Default"
+msgstr "Parazgjedhja e sistemit"
+
+#: src/telephony/ui/windows/settings_window.py:141
+msgid "SIM Settings"
+msgstr "Cilësimet e kartës SIM"
+
+#: src/telephony/ui/windows/settings_window.py:144
+msgid "My Number"
+msgstr "Numri im"
+
+#: src/telephony/ui/windows/settings_window.py:145
+msgid "My Number (International Format)"
+msgstr "Numri im (Format Ndërkombëtar)"
+
+#: src/telephony/ui/windows/settings_window.py:151
+#: src/telephony/ui/windows/settings_window.py:152
+#: src/telephony/ui/windows/settings_window.py:398
+msgid "Default Country Code"
+msgstr "Kodi i parazgjedhur i shtetit"
+
+#: src/telephony/ui/windows/settings_window.py:167
+msgid "Voicemail Number"
+msgstr "Numri i postës zanore"
+
+#: src/telephony/ui/windows/settings_window.py:186
+msgid "Address Book Info"
+msgstr "Informacioni i librit të adresave"
+
+#: src/telephony/ui/windows/settings_window.py:194
+msgid "Default Address Book"
+msgstr "Libri i adresave të paracaktuar"
+
+#: src/telephony/ui/windows/settings_window.py:200
+msgid "Duplicate Resolver"
+msgstr "Zgjidhës dublikatë"
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr ""
+"Skanoni për numra dublikatë dhe shfaqni një baner me rezolucion në pamjen e "
+"Kontakteve."
+
+#: src/telephony/ui/windows/settings_window.py:211
+#: src/telephony/ui/windows/settings_window.py:963
+msgid "Add Local Address Book"
+msgstr "Shto libër adresash lokal"
+
+#: src/telephony/ui/windows/settings_window.py:225
+msgid "Lockscreen Emergency"
+msgstr "Emergjenca e ekranit të kyçur"
+
+#: src/telephony/ui/windows/settings_window.py:228
+msgid "Show Emergency Button"
+msgstr "Shfaq butonin e urgjencës"
+
+#: src/telephony/ui/windows/settings_window.py:233
+msgid "Emergency Numbers"
+msgstr "Numrat e Urgjencës"
+
+#: src/telephony/ui/windows/settings_window.py:250
+msgid "Quick Response"
+msgstr "Përgjigje e Shpejtë"
+
+#: src/telephony/ui/windows/settings_window.py:253
+msgid "Add Decline Message"
+msgstr "Shto mesazh refuzimi"
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Messaging"
+msgstr "Mesazhet"
+
+#: src/telephony/ui/windows/settings_window.py:280
+#: src/telephony/ui/windows/settings_window.py:431
+msgid "MMS Size Limit"
+msgstr "Kufiri i madhësisë së MMS"
+
+#: src/telephony/ui/windows/settings_window.py:288
+#: src/telephony/ui/windows/settings_window.py:887
+msgid "Call Volume"
+msgstr "Volumi i telefonatës"
+
+#: src/telephony/ui/windows/settings_window.py:319
+msgid "Notification Exceptions"
+msgstr "Përjashtimet e njoftimeve"
+
+#: src/telephony/ui/windows/settings_window.py:322
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Repeated Calls Bypass"
+msgstr "Anashkalimi i thirrjeve të përsëritura"
+
+#: src/telephony/ui/windows/settings_window.py:324
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr ""
+"Nëse i njëjti numër telefonon 3 herë në 5 minuta, detyrojeni volumin "
+"maksimal."
+
+#: src/telephony/ui/windows/settings_window.py:339
+msgid "Manage contacts that always play sound"
+msgstr "Menaxho kontaktet që luajnë gjithmonë tingull"
+
+#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:360
+#: src/telephony/ui/windows/settings_window.py:371
+msgid "Manage"
+msgstr "Menaxhoni"
+
+#: src/telephony/ui/windows/settings_window.py:358
+msgid "Set custom notification sounds for specific contacts"
+msgstr "Cakto tingujt e personalizuar të njoftimeve për kontakte specifike"
+
+#: src/telephony/ui/windows/settings_window.py:369
+msgid "Set custom ringtones for specific contacts"
+msgstr "Vendosni zile të personalizuara për kontakte specifike"
+
+#: src/telephony/ui/windows/settings_window.py:394
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Kodi i parazgjedhur i shtetit përdoret për të formatuar numrat që nuk "
+"përfshijnë një prefiks ndërkombëtar (p.sh., +358).\n"
+"\n"
+"Nëse lihet bosh, sistemi përpiqet ta zbulojë atë automatikisht nga karta SIM "
+"ose rrjeti juaj.\n"
+"\n"
+"Mund ta anashkaloni manualisht këtu duke futur një kod rajoni ISO me 2 "
+"shkronja (p.sh. SHBA, FI, DE) ose një kod telefonues (p.sh. +358, 358, +1, "
+"1)."
+
+#: src/telephony/ui/windows/settings_window.py:422
+msgid ""
+"Carriers limit how large a multimedia message can be. Images and videos you "
+"attach are automatically compressed to fit under this limit before sending.\n"
+"\n"
+"600 kB is a safe default for most carriers. Pick a smaller value if your "
+"messages fail to send, or a larger one if you know your carrier allows it."
+msgstr ""
+"Operatorët kufizojnë se sa i madh mund të jetë një mesazh multimedial. Fotot "
+"dhe videot që bashkëngjitni ngjishen automatikisht që të futen nën këtë kufi "
+"para dërgimit.\n"
+"\n"
+"600 kB është një vlerë e parazgjedhur e sigurt për shumicën e operatorëve. "
+"Zgjidhni një vlerë më të vogël nëse mesazhet tuaja dështojnë të dërgohen, "
+"ose një më të madhe nëse e dini që operatori juaj e lejon."
+
+#: src/telephony/ui/windows/settings_window.py:443
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Toni i kthimit të ziles është tingulli që luhet (toot-toot-toot) ndërsa pret "
+"që një telefonatë dalëse të përgjigjet. Disa operatorë nuk e gjenerojnë atë, "
+"kështu që ne kemi opsionin për ta gjeneruar manualisht këtu. \n"
+"\n"
+"Mund të zgjidhni skedarin tuaj muzikor ose ta pastroni atë për të përdorur "
+"tonin standard të sistemit."
+
+#: src/telephony/ui/windows/settings_window.py:463
+msgid "Select Ringback Tone"
+msgstr "Zgjidhni Tonin e kthimit të ziles"
+
+#: src/telephony/ui/windows/settings_window.py:471
+msgid "Audio Files"
+msgstr "Skedarët audio"
+
+#: src/telephony/ui/windows/settings_window.py:497
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Zgjidhni librat e adresave për t'i përdorur me Telephony dhe renditini ato "
+"sipas prioritetit. Libri më i lartë i adresave ka përparësinë më të lartë "
+"dhe do të preferohet nëse një numër gjendet në libra të shumëfishtë "
+"adresash. Ju mund të përdorni çelësin \"Duplicate Resolver\" më poshtë për "
+"të ndihmuar në menaxhimin e dublikatave, por edhe nëse është i çaktivizuar, "
+"ne inkurajojmë aktivizimin e tij për një përvojë më të mirë."
+
+#: src/telephony/ui/windows/settings_window.py:516
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Kur aktivizohet, nëse i njëjti numër telefoni ju telefonon 3 herë brenda 5 "
+"minutave, telefonata e tretë (dhe ato pasuese brenda dritares) do ta "
+"detyrojë telefonin të bjerë me volumin maksimal, duke anashkaluar "
+"modalitetin \"Heshtje\" ose \"Mos shqetëso\"."
+
+#: src/telephony/ui/windows/settings_window.py:528
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Zgjidhni kontaktet që do të luajnë gjithmonë njoftime me volum të plotë, "
+"edhe kur telefoni është në modalitetin \"Heshtje\" ose \"Mos shqetëso\"."
+
+#: src/telephony/ui/windows/settings_window.py:549
+msgid "Unknown Callers"
+msgstr "Telefonuesit e panjohur"
+
+#: src/telephony/ui/windows/settings_window.py:554
+msgid "Unknown Callers Action"
+msgstr "Veprimi i telefonuesve të panjohur"
+
+#: src/telephony/ui/windows/settings_window.py:556
+msgid "Applies also to hidden numbers."
+msgstr "Zbatohet edhe për numrat e fshehur."
+
+#: src/telephony/ui/windows/settings_window.py:559
+msgid "Do Nothing"
+msgstr "Mos bëni asgjë"
+
+#: src/telephony/ui/windows/settings_window.py:560
+msgid "Block Completely"
+msgstr "Blloko plotësisht"
+
+#: src/telephony/ui/windows/settings_window.py:561
+msgid "Silence and Hide UI"
+msgstr "Heshtni dhe Fshih UI"
+
+#: src/telephony/ui/windows/settings_window.py:562
+msgid "Silence Only"
+msgstr "Vetëm heshtje"
+
+#: src/telephony/ui/windows/settings_window.py:570
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr ""
+"Shto butonin e Kërkimit në dritaren InCall dhe Historinë e Thirrjeve për "
+"telefonuesit e panjohur"
+
+#: src/telephony/ui/windows/settings_window.py:576
+msgid "Search Engine"
+msgstr "Motori i kërkimit"
+
+#: src/telephony/ui/windows/settings_window.py:580
+#: src/telephony/ui/windows/settings_window.py:585
+msgid "Custom URL"
+msgstr "URL e personalizuar"
+
+#: src/telephony/ui/windows/settings_window.py:635
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Futni URL-në që dëshironi të përdorni për të kërkuar numra të panjohur. "
+"Përfshi \"{number}\" në URL-në ku duhet të shkojë numri i telefonit të "
+"telefonuesit.\n"
+"\n"
+"Për shembull: https://mysearch.com/?q={number}\n"
+"\n"
+"Kur trokitni lehtë mbi butonin e kërkimit gjatë një telefonate, ne do të "
+"zëvendësojmë '{number}' me numrin aktual të telefonit dhe do ta hapim atë në "
+"shfletuesin tuaj të paracaktuar."
+
+#: src/telephony/ui/windows/settings_window.py:639
+msgid "Custom Search URL"
+msgstr "URL e personalizuar e kërkimit"
+
+#: src/telephony/ui/windows/settings_window.py:660
+msgid "Desktop Shortcuts"
+msgstr "Shkurtoret e desktopit"
+
+#: src/telephony/ui/windows/settings_window.py:665
+msgid "Calls"
+msgstr "Thirrjet"
+
+#: src/telephony/ui/windows/settings_window.py:831
+msgid "Name (e.g. Mom)"
+msgstr "Emri (p.sh. nëna)"
+
+#: src/telephony/ui/windows/settings_window.py:888
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"Ky është volumi i telefonatës për çdo dalje. Niveli zbatohet automatikisht "
+"kur lidhet një telefonatë dhe sa herë që dalja ndryshon gjatë telefonatës, "
+"dhe ndryshimet e rrëshqitësit dëgjohen menjëherë. Hardueri i zbaton nivelet "
+"me hapa të mëdhenj, dhe altoparlanti i veshit nuk bëhet kurrë plotësisht i "
+"heshtur. Niveli i Bluetooth ruhet për mbështetjen e ardhshme të drejtimit."
+
+#: src/telephony/ui/windows/settings_window.py:897
+msgid "Decline Message"
+msgstr "Refuzimi i mesazhit"
+
+#: src/telephony/ui/windows/settings_window.py:940
+msgid "System Default (Always Enabled)"
+msgstr "Parazgjedhja e sistemit (Gjithmonë e aktivizuar)"
+
+#: src/telephony/ui/windows/settings_window.py:942
+msgid "Synced from Andromeda"
+msgstr "Sinkronizuar nga Andromeda"
+
+#: src/telephony/ui/windows/settings_window.py:945
+msgid "Connected"
+msgstr "E lidhur"
+
+#: src/telephony/ui/windows/settings_window.py:946
+msgid "Connecting..."
+msgstr "Po lidhet..."
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Login required"
+msgstr "Kërkohet identifikimi"
+
+#: src/telephony/ui/windows/settings_window.py:949
+msgid "Connection failed (SSL)"
+msgstr "Lidhja dështoi (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:964
+msgid "Address book name"
+msgstr "Emri i librit të adresave"
+
+#: src/telephony/ui/windows/settings_window.py:985
+msgid "Could not create address book"
+msgstr "Libri i adresave nuk mund të krijohej"
+
+#: src/telephony/ui/windows/settings_window.py:987
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "Libri i adresave '{name}' u krijua"
+
+#: src/telephony/ui/windows/settings_window.py:1076
+msgid "Personal Address Book"
+msgstr "Libri personal i adresave"
+
+#: src/telephony/ui/windows/settings_window.py:1077
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ky është libri i adresave që do të sinkronizohet me Andromeda nëse vendosni "
+"ta bëni këtë te \"Cilësimet e sistemit\"."
+
+#: src/telephony/ui/windows/settings_window.py:1085
+msgid "Andromeda Contacts"
+msgstr "Kontaktet e Andromedës"
+
+#: src/telephony/ui/windows/settings_window.py:1086
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ky është libri i adresave që do të sinkronizohet nga Andromeda nëse vendosni "
+"ta bëni këtë te \"Cilësimet e sistemit\"."
+
+#: src/telephony/ui/windows/settings_window.py:1230
+msgid "Settings Saved"
+msgstr "Cilësimet u ruajtën"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:59
+msgid "Voice Message"
+msgstr "Mesazh zanor"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:117
+msgid "Tap to Record"
+msgstr "Prekni për të regjistruar"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:174
+msgid "Attach Voice Note"
+msgstr "Bashkangjit shënimin zanor"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:305
+#, python-brace-format
+msgid "Recording is too large for MMS (Max {size}). Please retake shorter."
+msgstr ""
+"Regjistrimi është shumë i madh për MMS (Maks. {size}). Ju lutemi rimerrni më "
+"shkurt."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:142
+msgid "Enable Feature"
+msgstr "Aktivizo funksionin"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:171
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"Kontaktet mund të shkaktojnë një veprim duke dërguar një mesazh sekret SMS. "
+"Shtoni kontaktet më poshtë dhe caktoni frazën e tyre të aktivizimit sekret."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:174
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"Kontaktet e besuara mund të kërkojnë vendndodhjen tuaj duke dërguar një "
+"mesazh sekret SMS. TOTP është i detyrueshëm që kjo veçori të funksionojë. "
+"Shtoni kontaktet më poshtë dhe caktoni frazën e tyre të aktivizimit sekret. "
+"Shembull shablloni: 'SECRET TOTP' Shembull nga jeta reale: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:177
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"Kontaktet e besuara mund të shkaktojnë në heshtje një kthim të telefonatës "
+"duke dërguar një mesazh sekret SMS. TOTP është i detyrueshëm që kjo veçori "
+"të funksionojë. Shtoni kontaktet më poshtë dhe caktoni frazën e tyre të "
+"aktivizimit sekret. Shembull shablloni: 'SECRET TOTP' Shembull nga jeta "
+"reale: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:180
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"Kontaktet e besuara mund të dërgojnë një SMS rele. TOTP është i detyrueshëm "
+"që kjo veçori të funksionojë. Shtoni kontaktet më poshtë dhe caktoni frazën "
+"e tyre të aktivizimit sekret. Shembull shablloni: 'SECRET TOTP +1234567890 "
+"MESSAGE' Shembull nga jeta reale: 'Gorilla 123456 +1234567890 Hello'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:183
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"Kontaktet e besuara mund të fillojnë një seancë tmate SSH dhe të marrin "
+"vargun e aksesit SSH duke dërguar një mesazh sekret SMS. TOTP është i "
+"detyrueshëm që kjo veçori të funksionojë. Shtoni kontaktet më poshtë dhe "
+"caktoni frazën e tyre të aktivizimit sekret. Shembull shablloni: 'SECRET "
+"TOTP' Shembull nga jeta reale: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:186
+msgid ""
+"Trusted contacts can lock your device: the SIM PIN is changed to a new one "
+"and locked, and the phone powers off. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"Kontaktet e besuara mund të kyçin pajisjen tuaj: PIN-i i SIM-it ndryshohet "
+"me një të ri dhe kyçet, dhe telefoni fiket. TOTP është i detyrueshëm që kjo "
+"veçori të funksionojë. Shtoni kontaktet më poshtë dhe caktoni frazën e tyre "
+"të aktivizimit sekret. Shembull shablloni: 'SECRET TOTP SIM_CURRENT_PIN "
+"SIM_NEW_PIN SUDO_PASSWORD' Shembull nga jeta reale: 'Gorilla 123456 0000 "
+"1234 SupportYourLocalFootball'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:303
+msgid "View or edit TOTP"
+msgstr "Shiko ose modifiko TOTP"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:305
+msgid "Setup TOTP"
+msgstr "Konfiguro TOTP"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:380
+msgid "Secret message"
+msgstr "Mesazh sekret"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Remove Contact"
+msgstr "Hiq kontaktin"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Contact removed (Click Save to commit)"
+msgstr "Kontakti u hoq (Kliko Ruaj për të kryer)"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:490
+msgid "Contact already in trusted list"
+msgstr "Kontaktoni tashmë në listën e besuar"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:504
+msgid "Contact added"
+msgstr "Kontakti u shtua"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+msgid "TOTP Setup"
+msgstr "Konfigurimi i TOTP"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:568
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"Ndajeni këtë kod me kontaktin tuaj të besuar. Ata duhet ta shtojnë atë në "
+"një aplikacion autentifikues si Gnome Authenticator.\n"
+"\n"
+"Nëse e futni manualisht, sigurohuni për cilësimet e mëposhtme:\n"
+"• Algoritmi: SHA1\n"
+"• Shifrat: 6\n"
+"• Intervali: 60 sekonda\n"
+"\n"
+"Çdo veprim ka kodin e vet. Kur aktivizojnë një veprim me anë të SMS-së, ata "
+"duhet të shtojnë kodin aktual 6-shifror nga autentifikuesi i tyre pas fjalës "
+"kyçe."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:597
+msgid "Copy TOTP key"
+msgstr "Kopjo çelësin TOTP"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:608
+#: src/telephony/ui/windows/trusted_actions_list_window.py:650
+msgid "Regenerate"
+msgstr "Rigjenero"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+msgid "Remove current TOTP"
+msgstr "Hiq TOTP aktual"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:624
+msgid "Remove TOTP Key?"
+msgstr "Të hiqet çelësi TOTP?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:625
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr ""
+"Jeni i sigurt që dëshironi të hiqni çelësin TOTP? Ky veprim do të "
+"çaktivizojë verifikimin TOTP për këtë veçori."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:645
+msgid "Regenerate Code?"
+msgstr "Të rigjenerohet kodi?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr ""
+"Kjo do të zhvlerësojë kodin aktual në aplikacionin autentifikues të "
+"kontaktit tuaj. Jeni i sigurt?"
+
+#~ msgid ""
+#~ "When the modem stops responding, the phone quietly runs the recovery "
+#~ "steps by itself: radio restart, modem power cycle, firmware restart and "
+#~ "re-enabling a disabled radio. The phone is never rebooted automatically. "
+#~ "If nothing helps you are asked to reboot. When this is off, the Modem "
+#~ "Recovery window opens instead so you can run the steps yourself."
+#~ msgstr ""
+#~ "Kur modemi ndalon së përgjigjuri, telefoni i kryen vetë në heshtje hapat "
+#~ "e rikuperimit: rinisja e radios, cikli i energjisë së modemit, rinisja e "
+#~ "firmuerit dhe riaktivizimi i një radioje të çaktivizuar. Telefoni nuk "
+#~ "riniset kurrë automatikisht. Nëse asgjë nuk ndihmon, ju kërkohet të "
+#~ "rinisni telefonin. Kur kjo është e çaktivizuar, në vend të kësaj hapet "
+#~ "dritarja Rikuperimi i modemit, që t'i kryeni vetë hapat."
+
+#~ msgid "🔴 Reboot Modem"
+#~ msgstr "🔴 Rinisni modemin"
+
+#~ msgid "Recover"
+#~ msgstr "Rikupero"
+
+#~ msgid "Restart Modem"
+#~ msgstr "Rinisni modemin"
+
+#~ msgid "Restarting Modem..."
+#~ msgstr "Po rifillon modemin..."
+
+#~ msgid "Restarting RIL..."
+#~ msgstr "Rinisja e RIL..."
+
+#~ msgid "Restored!"
+#~ msgstr "Restauruar!"
+
+#~ msgid "Failed. Reboot Device."
+#~ msgstr "Dështoi. Rinisni pajisjen."
+
+#, python-brace-format
+#~ msgid "Verifying... {attempt}"
+#~ msgstr "Po verifikohet... {attempt}"
+
+#~ msgid "Set \"SMS Switch Wipe Device\""
+#~ msgstr "Cakto \"Pajisjen e fshirjes me ndërprerës SMS\""
+
+#~ msgid "Automatic"
+#~ msgstr "Automatik"
+
+#~ msgid ""
+#~ "Carriers limit how large a multimedia message can be. Images and videos "
+#~ "you attach are automatically compressed to fit under this limit before "
+#~ "sending.\n"
+#~ "\n"
+#~ "Automatic uses the limit reported by the phone's MMS service, which is "
+#~ "right for most carriers. Pick a smaller value if your messages fail to "
+#~ "send, or a larger one if you know your carrier allows it."
+#~ msgstr ""
+#~ "Operatorët kufizojnë se sa i madh mund të jetë një mesazh multimedial. "
+#~ "Fotot dhe videot që bashkëngjitni ngjishen automatikisht që të futen nën "
+#~ "këtë kufi para dërgimit.\n"
+#~ "\n"
+#~ "Automatik përdor kufirin e raportuar nga shërbimi MMS i telefonit, i cili "
+#~ "është i përshtatshëm për shumicën e operatorëve. Zgjidhni një vlerë më të "
+#~ "vogël nëse mesazhet tuaja dështojnë të dërgohen, ose një më të madhe nëse "
+#~ "e dini që operatori juaj e lejon."
+
+#~ msgid ""
+#~ "Trusted contacts can wipe your device. TOTP is mandatory for this feature "
+#~ "to work. Add contacts below and set their secret trigger phrase. Example "
+#~ "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real "
+#~ "life example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+#~ msgstr ""
+#~ "Kontaktet e besuara mund të fshijnë pajisjen tuaj. TOTP është i "
+#~ "detyrueshëm që kjo veçori të funksionojë. Shtoni kontaktet më poshtë dhe "
+#~ "caktoni frazën e tyre të aktivizimit sekret. Shembull shablloni: 'SECRET "
+#~ "TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Shembull nga jeta reale: "
+#~ "'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+
+#~ msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+#~ msgstr ""
+#~ "Regjistrimi është shumë i madh për MMS (Maks. 600 KB). Ju lutemi rimerrni "
+#~ "më shkurt."
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS & Fund"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} vënë si në pritje"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 Rënie"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "UnmuteMic"
+
+#~ msgid "MuteMic"
+#~ msgstr "MuteMic"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "Speaker Off"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "FolësiOn"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "Lejo amplifikimin"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr ""
+#~ "Lejon rrëshqitësit të kalojnë mbi 100%. Audioja e amplifikuar mund të "
+#~ "shtrembërohet."
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "Ky është volumi bazë harduerik që zbatohet në daljen e zgjedhur kur "
+#~ "lidhet një telefonatë. Butonat e volumit gjatë telefonatës bëjnë vetëm "
+#~ "rregullime të imëta mbi këtë nivel bazë, kështu që nëse baza është 0%, "
+#~ "telefonata mbetet e heshtur në çdo rast. Vlerat mbi 100% përdorin "
+#~ "amplifikim softuerik dhe mund ta shtrembërojnë audion. Nivelet për kufjet "
+#~ "me tel dhe Bluetooth ruhen për mbështetjen e ardhshme të drejtimit."
+
+#~ msgid "Mute Microphone"
+#~ msgstr "Heqja e mikrofonit"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Dërgimi te {number} dështoi"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Fshi cilësimet e personalizuara"
+
+#~ msgid "Delete Settings"
+#~ msgstr "Fshi cilësimet"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr ""
+#~ "Të pastrohen të gjitha cilësimet e personalizuara? Numrat e urgjencës do "
+#~ "të humbasin."
+
+#~ msgid "Settings cleared"
+#~ msgstr "Cilësimet u pastruan"
+
+#~ msgid "Error saving settings"
+#~ msgstr "Gabim gjatë ruajtjes së cilësimeve"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Shfaq konfigurimin e TOTP"
+
+#~ msgid "Failed to send message"
+#~ msgstr "Dërgimi i mesazhit dështoi"
+
+#~ msgid "Switching address book..."
+#~ msgstr "Po ndërron librin e adresave..."

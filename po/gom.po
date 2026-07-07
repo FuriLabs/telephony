@@ -1,0 +1,3175 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 03:32+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: gom\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/telephony/app.py:599 src/telephony/app.py:717
+msgid "Modem unavailable"
+msgstr "मॉडेम उपलब्ध ना"
+
+#: src/telephony/app.py:600
+msgid "Calls are not possible until the modem recovers."
+msgstr "मॉडेम रिकवर जायसर कॉल करूंक मेळचे ना."
+
+#: src/telephony/app.py:602 src/telephony/app.py:720
+#: src/telephony/backend/managers/lockscreen_manager.py:87
+#: src/telephony/ui/windows/advanced_settings_window.py:177
+#: src/telephony/ui/windows/incall_window.py:272
+#: src/telephony/ui/windows/incall_window.py:850
+#: src/telephony/ui/windows/incall_window.py:870
+#: src/telephony/ui/windows/modem_recovery_window.py:40
+msgid "Modem Recovery"
+msgstr "मॉडेम रिकवरी"
+
+#: src/telephony/app.py:655
+msgid "Network registration denied"
+msgstr "नेटवर्क नोंदणी न्हयकारली"
+
+#: src/telephony/app.py:656
+msgid "The network rejected this SIM. Contact your operator."
+msgstr "नेटवर्कान हें सिम न्हयकारलें. तुमच्या ऑपरेटराकडेन संपर्क करात."
+
+#: src/telephony/app.py:694
+msgid "SIM PIN required"
+msgstr "सिम पिन जाय"
+
+#: src/telephony/app.py:695
+msgid "Calls and messages stay offline until the SIM is unlocked."
+msgstr "सिम अनलॉक जायसर कॉल आनी संदेश ऑफलायन उरतले."
+
+#: src/telephony/app.py:718 src/telephony/ui/windows/incall_window.py:869
+msgid "Could not restore the modem. Please reboot the phone."
+msgstr "मॉडेम परत हाडूंक जालें ना. उपकार करून फोन रिबूट करात."
+
+#: src/telephony/app.py:786 src/telephony/app.py:859
+#: src/telephony/ui/views/history_view.py:284
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} नवो संदेश"
+msgstr[1] "{count} नवे संदेश"
+
+#: src/telephony/app.py:788 src/telephony/ui/views/history_view.py:286
+msgid "New voicemail"
+msgstr "नवो व्हॉइसमेल"
+
+#: src/telephony/app.py:794 src/telephony/app.py:829
+msgid "Call Back"
+msgstr "कॉल बॅक"
+
+#: src/telephony/app.py:798 src/telephony/ui/views/history_view.py:288
+msgid "Voicemail"
+msgstr "व्हॉइसमेल"
+
+#: src/telephony/app.py:818 src/telephony/app.py:852
+#: src/telephony/backend/managers/database_manager.py:1049
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:368
+#: src/telephony/ui/main_window.py:673 src/telephony/ui/views/chat_view.py:87
+#: src/telephony/ui/views/chat_view.py:92
+#: src/telephony/ui/views/chat_view.py:145
+#: src/telephony/ui/views/chat_view.py:155
+#: src/telephony/ui/views/chat_view.py:159
+#: src/telephony/ui/views/chat_view.py:727
+#: src/telephony/ui/views/chat_view.py:731
+#: src/telephony/ui/views/chat_view.py:842
+#: src/telephony/ui/views/chat_view.py:848
+#: src/telephony/ui/views/chat_view.py:1016
+#: src/telephony/ui/views/chat_view.py:1018
+#: src/telephony/ui/views/chat_view.py:1215
+#: src/telephony/ui/views/dialpad_view.py:171
+#: src/telephony/ui/views/history_view.py:436
+#: src/telephony/ui/views/messages_view.py:378
+#: src/telephony/ui/views/messages_view.py:381
+#: src/telephony/ui/views/messages_view.py:452
+#: src/telephony/ui/views/messages_view.py:456
+#: src/telephony/ui/views/messages_view.py:546
+#: src/telephony/ui/views/messages_view.py:883
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: src/telephony/ui/widgets/history_rows_widget.py:127
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:181
+#: src/telephony/ui/windows/custom_tone_list_window.py:264
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:222
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:202
+#: src/telephony/ui/windows/incall_window.py:434
+#: src/telephony/ui/windows/incall_window.py:447
+#: src/telephony/ui/windows/incall_window.py:571
+#: src/telephony/ui/windows/incall_window.py:647
+#: src/telephony/ui/windows/trusted_actions_list_window.py:352
+#: src/telephony/ui/windows/trusted_actions_list_window.py:472
+msgid "Unknown"
+msgstr "अज्ञात"
+
+#: src/telephony/app.py:822
+msgid "Missed Call"
+msgstr "मिस्ड कॉल"
+
+#: src/telephony/app.py:863
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "उकतें"
+
+#: src/telephony/app.py:867
+msgid "Call"
+msgstr "कॉल"
+
+#: src/telephony/backend/managers/database_manager.py:1032
+#: src/telephony/backend/managers/eds_manager.py:818
+#: src/telephony/ui/views/messages_view.py:372
+#: src/telephony/ui/views/messages_view.py:443
+msgid "Blocked Number"
+msgstr "आडायल्लो क्रमांक"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency Mode"
+msgstr "आपत्कालीन मोड"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency calls only."
+msgstr "फकत आपत्कालीन कॉल."
+
+#: src/telephony/backend/managers/emergency_manager.py:122
+msgid "Start Emergency Process"
+msgstr "आपत्कालीन प्रक्रिया सुरू करप"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+#: src/telephony/ui/main_window.py:515 src/telephony/ui/main_window.py:706
+#: src/telephony/ui/views/history_view.py:85
+#: src/telephony/ui/views/messages_view.py:125
+#: src/telephony/ui/windows/advanced_settings_window.py:49
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:89
+#: src/telephony/ui/windows/camera_video_window.py:100
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/contact_picker_window.py:47
+#: src/telephony/ui/windows/custom_tone_list_window.py:57
+#: src/telephony/ui/windows/custom_tone_list_window.py:285
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: src/telephony/ui/windows/import_export_window.py:74
+#: src/telephony/ui/windows/import_export_window.py:171
+#: src/telephony/ui/windows/import_export_window.py:197
+#: src/telephony/ui/windows/import_export_window.py:311
+#: src/telephony/ui/windows/import_export_window.py:340
+#: src/telephony/ui/windows/import_export_window.py:441
+#: src/telephony/ui/windows/import_export_window.py:501
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/settings_window.py:467
+#: src/telephony/ui/windows/settings_window.py:966
+#: src/telephony/ui/windows/settings_window.py:996
+#: src/telephony/ui/windows/sound_recorder_window.py:96
+#: src/telephony/ui/windows/trusted_actions_list_window.py:124
+#: src/telephony/ui/windows/trusted_actions_list_window.py:535
+#: src/telephony/ui/windows/trusted_actions_list_window.py:628
+#: src/telephony/ui/windows/trusted_actions_list_window.py:649
+msgid "Cancel"
+msgstr "रद्द"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+msgid "Return to Lockscreen"
+msgstr "लॉकस्क्रीनाचेर परत वचचें"
+
+#: src/telephony/backend/managers/emergency_manager.py:136
+msgid "Back"
+msgstr "फाटीं"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "No Numbers Configured"
+msgstr "क्रमांक संरचीत करूंक नात"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "Set numbers in Settings."
+msgstr "सेटिंग्जांत क्रमांक सेट करात."
+
+#: src/telephony/backend/managers/emergency_manager.py:151
+#, python-brace-format
+msgid "Call {number}"
+msgstr "{number} हांकां फोन करचो"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+msgid "Confirm Emergency Call"
+msgstr "आपत्कालीन कॉलाची खात्री करात"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "{name} कडेन फोन करचो?"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🟢 Yes, Call"
+msgstr "🟢 हय, फोन करात"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🔴 No, Return"
+msgstr "🔴 ना, परत"
+
+#: src/telephony/backend/managers/location_manager.py:67
+msgid "Initializing location services..."
+msgstr "थळ सेवा सुरू करप..."
+
+#: src/telephony/backend/managers/location_manager.py:134
+msgid "Waiting for location service..."
+msgstr "थळ सेवाची वाट पळयतात..."
+
+#: src/telephony/backend/managers/location_manager.py:151
+msgid "Waiting for satellite fix..."
+msgstr "उपग्रह फिक्स करपाची वाट पळयतात..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:82
+#: src/telephony/ui/windows/incall_window.py:269
+msgid "Modem Stuck"
+msgstr "मॉडेम अडकलो"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Call failed to disconnect."
+msgstr "कॉल डिस्कनेक्ट करपाक अपेस आयलें."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:85
+msgid "Telephony Emergency"
+msgstr "टेलिफोनी आणीबाणी"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:187
+#: src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "दूरध्वनी - येवपी"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:188
+#: src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "🟢 येवपी: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:189
+#: src/telephony/ui/windows/incall_window.py:48
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Incoming Call..."
+msgstr "येवपी कॉल..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:192
+#: src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁 अदलाबदल करप"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 जाप दिवप"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:195
+#: src/telephony/backend/managers/lockscreen_manager.py:208
+#: src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 हॅंगअप करप"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:200
+#: src/telephony/ui/windows/incall_window.py:49
+msgid "Waiting..."
+msgstr "प्रतीक्षेंत..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "टेलिफोनी - ऑन होल्ड"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (ऑन होल्ड)"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "कॉल ऑन होल्ड..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁 रिज्यूमे करप"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "टेलिफोनी - सक्रिय कॉल"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "🟢 सक्रिय: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "सक्रिय कॉल"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴 हॅंगअपऑल"
+
+#: src/telephony/backend/managers/ofono_manager.py:799
+#: src/telephony/backend/managers/ofono_manager.py:803
+#: src/telephony/backend/managers/ofono_manager.py:945
+#: src/telephony/ui/main_window.py:500
+msgid "Modem not ready"
+msgstr "मॉडेम तयार ना"
+
+#: src/telephony/backend/managers/ofono_manager.py:817
+msgid "Cannot dial while in another call"
+msgstr "दुसर् या कॉलांत आसतना डायल करूंक मेळना"
+
+#: src/telephony/backend/managers/ofono_manager.py:822
+#: src/telephony/ui/main_window.py:736
+msgid "Please wait, the previous call is still ending"
+msgstr "कृपया रावात, आदलो कॉल अजून सोंपता आसा"
+
+#: src/telephony/backend/managers/ofono_manager.py:834
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "डायल त्रुटी: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:963
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "धाडपाक अपेस आयलें: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1060
+msgid "Not supported"
+msgstr "समर्थीत ना"
+
+#: src/telephony/backend/managers/ofono_manager.py:1065
+#: src/telephony/ui/windows/camera_photo_window.py:205
+#: src/telephony/ui/windows/camera_photo_window.py:290
+#: src/telephony/ui/windows/camera_photo_window.py:319
+#: src/telephony/ui/windows/camera_photo_window.py:361
+#: src/telephony/ui/windows/camera_video_window.py:243
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "त्रुटी: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1117
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "उपकार करून {prefix} परतून सुरू करचे पयलीं 60 सेकंद वाट पळयात."
+
+#: src/telephony/backend/managers/ofono_manager.py:1317
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(अचूकता: {acc} मी)"
+
+#: src/telephony/backend/managers/ofono_manager.py:1319
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "हांव हांगा आसां: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1327
+msgid "Failed to obtain location after trying all methods."
+msgstr "सगळ्यो पद्दती वापरून पळयल्या उपरांत थळ मेळोवंक अपेस आयलें."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:135
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "XML कडेन {count} संदेश यशस्वीपणान निर्यात केल्यात."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:201
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "XML कडेन {count} कॉल यशस्वीपणान निर्यात केल्यात."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:88
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Chatty डेटाबेसांत {count} संदेश निर्यात केल्यात."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:144
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Gnome कॉल डेटाबेसांत {count} कॉल निर्यात केल्यात."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:161
+msgid "Source database not found."
+msgstr "स्त्रोत डेटाबेस मेळूंक ना."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Exported Telephony database successfully."
+msgstr "टेलिफोनी डेटाबेस यशस्वीपणान निर्यात केला."
+
+#: src/telephony/backend/utils/importer_android_utils.py:34
+#: src/telephony/backend/utils/importer_android_utils.py:140
+#: src/telephony/backend/utils/importer_ios_utils.py:38
+#: src/telephony/backend/utils/importer_ios_utils.py:209
+#: src/telephony/ui/windows/camera_photo_window.py:331
+msgid "File not found."
+msgstr "फायल मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_android_utils.py:131
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Android बॅकअपांतल्यान {count} संदेश आयात केल्यात."
+
+#: src/telephony/backend/utils/importer_android_utils.py:207
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Android बॅकअपांतल्यान {count} कॉल आयात केल्यात."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:67
+msgid "Could not find messages table in iOS database."
+msgstr "iOS डेटाबेसांत संदेश कोश्टक मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:74
+msgid "Failed to read iOS SMS database structure."
+msgstr "iOS SMS डेटाबेस संरचना वाचपाक अपेस आयलें."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:200
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "iOS बॅकअपांतल्यान {count} संदेश आयात केल्यात."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:234
+msgid "Could not find call history table in iOS database."
+msgstr "iOS डेटाबेसांत कॉल इतिहास कोश्टक मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:241
+msgid "Failed to read iOS Calls database structure."
+msgstr "iOS कॉल डेटाबेस संरचना वाचपाक अपेस आयलें."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:306
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "iOS बॅकअपांतल्यान {count} कॉल आयात केल्यात."
+
+#: src/telephony/backend/utils/importer_local_utils.py:32
+msgid "Chatty database not found."
+msgstr "गप्पा मारपी डेटाबेस मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_local_utils.py:54
+msgid "Could not find messages table in Chatty database."
+msgstr "चॅटी डेटाबेसांत संदेश कोश्टक मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_local_utils.py:61
+msgid "Failed to read Chatty database structure."
+msgstr "Chatty डेटाबेस संरचना वाचपाक अपेस आयलें."
+
+#: src/telephony/backend/utils/importer_local_utils.py:125
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Chatty कडल्यान {count} संदेश आयात केल्यात."
+
+#: src/telephony/backend/utils/importer_local_utils.py:135
+msgid "Calls database not found."
+msgstr "कॉल डेटाबेस मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_local_utils.py:155
+msgid "Could not find call history table in Calls database."
+msgstr "कॉल डेटाबेसांत कॉल इतिहास कोश्टक मेळूंक ना."
+
+#: src/telephony/backend/utils/importer_local_utils.py:162
+msgid "Failed to read Calls database structure."
+msgstr "कॉल डेटाबेस संरचना वाचपाक अपेस आयलें."
+
+#: src/telephony/backend/utils/importer_local_utils.py:216
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "आयात केल्ले {count} कॉल."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "०स"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}मी"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}s हें नांव"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s हें नांव"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "दूरध्वनी"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "डायलपॅड हें नांव"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "इतिहास"
+
+#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/views/messages_view.py:67
+#: src/telephony/ui/windows/settings_window.py:666
+msgid "Messages"
+msgstr "संदेश"
+
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:667
+msgid "Contacts"
+msgstr "संपर्क करप"
+
+#: src/telephony/ui/main_window.py:169
+msgid "Syncing Contacts..."
+msgstr "संपर्क समक्रमीत करप..."
+
+#: src/telephony/ui/main_window.py:263
+msgid "Set your number in Settings"
+msgstr "Set your number in Settings"
+
+#: src/telephony/ui/main_window.py:279 src/telephony/ui/main_window.py:284
+msgid "Please set Default Country Code in Settings"
+msgstr "Please set Default Country Code in Settings"
+
+#: src/telephony/ui/main_window.py:304
+msgid "Setup Emergency Numbers in Settings"
+msgstr "सेटिंग्जांत आपत्कालीन क्रमांक सेट करात"
+
+#: src/telephony/ui/main_window.py:320
+msgid "Resolve Duplicates"
+msgstr "डुप्लीकेट सोडोवप"
+
+#: src/telephony/ui/main_window.py:326
+#: src/telephony/ui/windows/settings_window.py:44
+msgid "Settings"
+msgstr "सेटिंग्ज"
+
+#: src/telephony/ui/main_window.py:331
+msgid "Reload Contacts"
+msgstr "संपर्क परतून लोड करात"
+
+#: src/telephony/ui/main_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "आयात / निर्यात करप"
+
+#: src/telephony/ui/main_window.py:346 src/telephony/ui/main_window.py:580
+msgid "Blocklist"
+msgstr "ब्लॉकलिस्ट"
+
+#: src/telephony/ui/main_window.py:439
+msgid "Modem Connected"
+msgstr "मॉडेम जोडला"
+
+#: src/telephony/ui/main_window.py:441
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "मॉडेम त्रुटी: {message}"
+
+#: src/telephony/ui/main_window.py:490
+msgid "Sending USSD..."
+msgstr "यूएसएसडी धाडटा..."
+
+#: src/telephony/ui/main_window.py:505
+msgid "USSD Result"
+msgstr "यूएसएसडी रिजल्ट"
+
+#: src/telephony/ui/main_window.py:507
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:913
+#: src/telephony/ui/windows/settings_window.py:518
+#: src/telephony/ui/windows/settings_window.py:530
+#: src/telephony/ui/windows/settings_window.py:890
+msgid "OK"
+msgstr "बरें"
+
+#: src/telephony/ui/main_window.py:516
+#: src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "निश्चीत"
+
+#: src/telephony/ui/main_window.py:552
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "{count} डुप्लीकेट संपर्क मेळ्ळा. मेनू तपासात."
+msgstr[1] "{count} डुप्लीकेट संपर्क मेळ्ळे. मेनू तपासात."
+
+#: src/telephony/ui/main_window.py:577 src/telephony/ui/main_window.py:651
+msgid "Contacts syncing..."
+msgstr "संपर्क समक्रमीत करप..."
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:864
+#: src/telephony/ui/windows/advanced_settings_window.py:230
+#: src/telephony/ui/windows/chat_media_controller_window.py:150
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:401
+#: src/telephony/ui/windows/settings_window.py:434
+#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:504
+#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:1029
+msgid "Close"
+msgstr "धांपप"
+
+#: src/telephony/ui/main_window.py:623
+msgid "Syncing address books..."
+msgstr "पत्तो पुस्तकां समक्रमीत करप..."
+
+#: src/telephony/ui/main_window.py:633 src/telephony/ui/main_window.py:638
+#: src/telephony/ui/main_window.py:643
+msgid "Reloading Contacts..."
+msgstr "संपर्क परतून लोड करप..."
+
+#: src/telephony/ui/main_window.py:636
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "{count} पत्तो पुस्तकां खातीर समक्रमण सुरू जालें"
+
+#: src/telephony/ui/main_window.py:661
+msgid "Multiple Contacts Found"
+msgstr "एका परस चड संपर्क मेळ्ळे"
+
+#: src/telephony/ui/main_window.py:662
+msgid "Which contact would you like to edit?"
+msgstr "तुमकां खंयचो संपर्क संपादीत करपाक आवडटलो?"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Unknown Addressbook"
+msgstr "अज्ञात पत्तोपुस्तिका"
+
+#: src/telephony/ui/main_window.py:738 src/telephony/ui/main_window.py:745
+#: src/telephony/ui/main_window.py:751
+msgid "Call Failed"
+msgstr "कॉल अपेशी थारलो"
+
+#: src/telephony/ui/main_window.py:741
+msgid "Calling (Anonymous)..."
+msgstr "कॉलिंग (अनामिक)..."
+
+#: src/telephony/ui/main_window.py:741
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "{number} हांकां कॉल करप..."
+
+#: src/telephony/ui/main_window.py:757
+msgid "Call Details"
+msgstr "कॉल तपशील"
+
+#: src/telephony/ui/main_window.py:758
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+
+#: src/telephony/ui/main_window.py:774
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Unblock Number"
+msgstr "क्रमांक अनब्लॉक करचो"
+
+#: src/telephony/ui/main_window.py:780 src/telephony/ui/views/chat_view.py:797
+msgid "Unblocked"
+msgstr "अनब्लॉक केल्लें"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/windows/contact_editor_window.py:416
+msgid "Edit Contact"
+msgstr "संपर्क संपादीत करचो"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "संपर्कांत जोडचें"
+
+#: src/telephony/ui/main_window.py:799
+msgid "Add to Existing Contact"
+msgstr "सद्याच्या संपर्कांत जोडचें"
+
+#: src/telephony/ui/main_window.py:808
+#: src/telephony/ui/windows/incall_window.py:223
+msgid "Search Number"
+msgstr "सोद क्रमांक"
+
+#: src/telephony/ui/main_window.py:832
+msgid "Send Message"
+msgstr "संदेश धाडचो"
+
+#: src/telephony/ui/main_window.py:837
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "प्रत क्रमांक"
+
+#: src/telephony/ui/main_window.py:842
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "ब्लॉक क्रमांक"
+
+#: src/telephony/ui/main_window.py:855
+msgid "Delete this call"
+msgstr "हो कॉल काडून उडोवचो"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Delete Call"
+msgstr "कॉल काडून उडोवप"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Remove this call?"
+msgstr "हो कॉल काडून उडोवप?"
+
+#: src/telephony/ui/main_window.py:874
+msgid "Number copied"
+msgstr "क्रमांक कॉपी केला"
+
+#: src/telephony/ui/main_window.py:880
+#: src/telephony/ui/windows/contact_editor_window.py:807
+msgid "Saving contact..."
+msgstr "संपर्क जतनाय घेवप..."
+
+#: src/telephony/ui/main_window.py:884
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "{name} कडेन जोडलां"
+
+#: src/telephony/ui/main_window.py:887
+msgid "Failed to add number"
+msgstr "Failed to add number"
+
+#: src/telephony/ui/main_window.py:895
+#: src/telephony/ui/windows/contact_editor_window.py:205
+#: src/telephony/ui/windows/settings_window.py:236
+msgid "Add Number"
+msgstr "क्रमांक जोडचो"
+
+#: src/telephony/ui/main_window.py:896
+#: src/telephony/ui/windows/advanced_settings_window.py:53
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:148
+#: src/telephony/ui/windows/custom_tone_list_window.py:61
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:75
+#: src/telephony/ui/windows/settings_window.py:967
+#: src/telephony/ui/windows/trusted_actions_list_window.py:129
+#: src/telephony/ui/windows/trusted_actions_list_window.py:539
+msgid "Save"
+msgstr "सांबाळचें"
+
+#: src/telephony/ui/views/chat_view.py:136
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "{count} मेळोवप्यांक मसुदो तयार करचो"
+
+#: src/telephony/ui/views/chat_view.py:163
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} सहभागी"
+
+#: src/telephony/ui/views/chat_view.py:312
+msgid "Replies not supported for this sender"
+msgstr "ह्या धाडप्या खातीर जाप समर्थीत नात"
+
+#: src/telephony/ui/views/chat_view.py:358
+#: src/telephony/ui/views/chat_view.py:1285
+msgid "Scheduled time must be in the future"
+msgstr "नियोजीत वेळ फुडाराक आसूंक जाय"
+
+#: src/telephony/ui/views/chat_view.py:367
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "{time} खातीर परतून वेळापत्रक केलां"
+
+#: src/telephony/ui/views/chat_view.py:374
+msgid "Re-Schedule Message"
+msgstr "संदेश परतून वेळापत्रक करचो"
+
+#: src/telephony/ui/views/chat_view.py:509
+#: src/telephony/ui/views/chat_view.py:580
+msgid "— New Messages —"
+msgstr "— नवे संदेश —"
+
+#: src/telephony/ui/views/chat_view.py:618
+msgid "No results found in this conversation"
+msgstr "ह्या संवादांत परिणाम मेळूंक नात"
+
+#: src/telephony/ui/views/chat_view.py:696
+msgid "Group Name"
+msgstr "गटाचें नांव"
+
+#: src/telephony/ui/views/chat_view.py:697
+msgid "Set group name..."
+msgstr "गटाचें नांव सेट करचें..."
+
+#: src/telephony/ui/views/chat_view.py:705
+msgid "Participants"
+msgstr "सहभागी"
+
+#: src/telephony/ui/views/chat_view.py:823
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Conversation"
+msgstr "संवाद काडून उडोवप"
+
+#: src/telephony/ui/views/chat_view.py:840
+#: src/telephony/ui/views/chat_view.py:1217
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "हांव"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"{sender} कडल्यान फुडें धाडलां:\n"
+"{body} हें नांव"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "{sender} कडल्यान फुडें धाडलां"
+
+#: src/telephony/ui/views/chat_view.py:859
+msgid "Forward To"
+msgstr "फुडें To"
+
+#: src/telephony/ui/views/chat_view.py:860
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "फुडें व्हरप"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Delete Message"
+msgstr "संदेश काडून उडोवप"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Are you sure you want to delete this message?"
+msgstr "तुमकां हो संदेश काडून उडोवपाचो आसा हाची खात्री आसा?"
+
+#: src/telephony/ui/views/chat_view.py:1033
+msgid "Group renamed"
+msgstr "गटाचें नांव बदललें"
+
+#: src/telephony/ui/views/chat_view.py:1063
+msgid "Compressing image..."
+msgstr "चित्र संकुचीत करता..."
+
+#: src/telephony/ui/views/chat_view.py:1065
+msgid "Image is too large to send"
+msgstr "धाडपाक चित्र खूब व्हड आसा"
+
+#: src/telephony/ui/views/chat_view.py:1067
+msgid "Compressing video..."
+msgstr "व्हिडियो संकुचीत करप..."
+
+#: src/telephony/ui/views/chat_view.py:1069
+msgid "Video compression failed"
+msgstr "व्हिडियो संपीडन अपयशी थारलें"
+
+#: src/telephony/ui/views/chat_view.py:1071
+msgid "File is too large to send via MMS"
+msgstr "MMS वरवीं धाडपाक फायल खूब व्हड आसा"
+
+#: src/telephony/ui/views/chat_view.py:1279
+msgid "Nothing to schedule"
+msgstr "वेळापत्रक करपाक कांयच ना"
+
+#: src/telephony/ui/views/chat_view.py:1293
+msgid "Schedule Message"
+msgstr "वेळापत्रक संदेश"
+
+#: src/telephony/ui/views/chat_view.py:1353
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "{time} खातीर नियोजीत केल्लो संदेश"
+
+#: src/telephony/ui/views/chat_view.py:1354
+#: src/telephony/ui/views/chat_view.py:1360
+msgid "[Attachment]"
+msgstr "[जोडणी]"
+
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Group"
+msgstr "गट काडून उडोवप"
+
+#: src/telephony/ui/views/chat_view.py:1452
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"हाका लागून संवाद इतिहास आनी सगळ्यो जतनाय घेतल्यो माध्यम फायली कायमचे काडून उडयतले."
+
+#: src/telephony/ui/views/contacts_view.py:64
+msgid "Search contacts"
+msgstr "संपर्क सोदचे"
+
+#: src/telephony/ui/views/contacts_view.py:439
+msgid "Call Anonymous"
+msgstr "अनामिकाक फोन करचो"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Enter number"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:162
+msgid "Telephony Smart Dialpad at your service"
+msgstr "तुमच्या सेवेंत टेलिफोनी स्मार्ट डायलपॅड"
+
+#: src/telephony/ui/views/dialpad_view.py:259
+msgid "Invalid number in clipboard"
+msgstr "क्लिपबोर्डांतलो अवैध क्रमांक"
+
+#: src/telephony/ui/views/dialpad_view.py:261
+msgid "Invalid number"
+msgstr "अवैध क्रमांक"
+
+#: src/telephony/ui/views/history_view.py:129
+msgid "All"
+msgstr "सगलें"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Any duration"
+msgstr "खंयचोय काळ"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Unanswered"
+msgstr "जाप नासतना"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1s - 60s"
+msgstr "१ - ६० च्या दशका"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1-3 mins"
+msgstr "१-३ मि"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "3-10 mins"
+msgstr "३-१० मि"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "> 15 mins"
+msgstr "> १५ मि"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Any date"
+msgstr "खंयचीय तारीख"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Today"
+msgstr "आयज"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 3 days"
+msgstr "फाटले 3 दीस"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 14 days"
+msgstr "फाटले 14 दीस"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 30 days"
+msgstr "फाटले 30 दीस"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 60 days"
+msgstr "फाटले 60 दीस"
+
+#: src/telephony/ui/views/messages_view.py:117
+#: src/telephony/ui/views/messages_view.py:590
+msgid "Search Contacts..."
+msgstr "संपर्क सोदचो..."
+
+#: src/telephony/ui/views/messages_view.py:235
+msgid "All Messages"
+msgstr "सगळे संदेश"
+
+#: src/telephony/ui/views/messages_view.py:236
+msgid "Unread Messages"
+msgstr "वाचूंक नाशिल्ले संदेश"
+
+#: src/telephony/ui/views/messages_view.py:237
+msgid "Unknown Numbers"
+msgstr "अज्ञात संख्या"
+
+#: src/telephony/ui/views/messages_view.py:238
+msgid "Saved Contacts"
+msgstr "जतनाय केल्ले संपर्क"
+
+#: src/telephony/ui/views/messages_view.py:239
+msgid "Group Messages"
+msgstr "गट संदेश"
+
+#: src/telephony/ui/views/messages_view.py:240
+msgid "Individual Messages"
+msgstr "वैयक्तीक संदेश"
+
+#: src/telephony/ui/views/messages_view.py:241
+msgid "Alphabetical Senders"
+msgstr "वर्णमाळे प्रमाण धाडपी"
+
+#: src/telephony/ui/views/messages_view.py:337
+#: src/telephony/ui/views/messages_view.py:459
+msgid "[Multimedia Message]"
+msgstr "[मल्टीमीडिया संदेश]"
+
+#: src/telephony/ui/views/messages_view.py:594
+msgid "Search Messages..."
+msgstr "संदेश सोदप..."
+
+#: src/telephony/ui/views/messages_view.py:636
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "सुरू करप ({count}) ."
+
+#: src/telephony/ui/views/messages_view.py:643
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "उगडचें ({count})"
+
+#: src/telephony/ui/views/messages_view.py:715
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "क्रमांक जोडचो: {number}"
+
+#: src/telephony/ui/views/messages_view.py:748
+msgid "Group chat"
+msgstr "गट चॅट"
+
+#: src/telephony/ui/views/messages_view.py:756
+#: src/telephony/ui/widgets/common_widget.py:100
+msgid "No contacts found"
+msgstr "संपर्क मेळूंक नात"
+
+#: src/telephony/ui/views/messages_view.py:871
+msgid "No results found"
+msgstr "कसलोच निकाल मेळूंक ना"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "मजकूर प्रत करचो"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "परतून वेळापत्रक करप"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "अवाच्य अशें चिन्न करचें"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:839
+#: src/telephony/ui/windows/settings_window.py:997
+msgid "Delete"
+msgstr "वगळावचें"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "परतून धाडपाचो यत्न करचो"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "वेळापत्रक: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "धाडपाक अपेस आयलें"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "धाडटा..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "कडेन उगडप"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "प्रत करप"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "म्हणून जतनाय घेयात"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "Open With..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "फायल अशें जतनाय घेयात"
+
+#: src/telephony/ui/widgets/common_widget.py:29
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Mobile"
+msgstr "मोबायल"
+
+#: src/telephony/ui/widgets/common_widget.py:30
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Work"
+msgstr "काम"
+
+#: src/telephony/ui/widgets/common_widget.py:31
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Home"
+msgstr "घर"
+
+#: src/telephony/ui/widgets/common_widget.py:32
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Fax"
+msgstr "फॅक्स करचें"
+
+#: src/telephony/ui/widgets/common_widget.py:33
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Other"
+msgstr "हेर"
+
+#: src/telephony/ui/widgets/common_widget.py:34
+msgid "Main"
+msgstr "मुखेल"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "सगळे कॉल हॅंगअप करात"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "हॅंगअप करात"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • गट"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "मसुदो: {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:33
+#: src/telephony/ui/windows/settings_window.py:385
+msgid "Advanced Settings"
+msgstr "प्रगत मांडावळी"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "लोड करप..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "मांडावळी लोड करपाक त्रुटी: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:132
+msgid "Secret SMS Triggers"
+msgstr "गुप्त एसएमएस ट्रिगर"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:135
+#: src/telephony/ui/windows/trusted_actions_list_window.py:92
+msgid "Set \"Find my Telephony\""
+msgstr "\"माझी टेलिफोनी सोद\" सेट करात."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:141
+#: src/telephony/ui/windows/trusted_actions_list_window.py:94
+msgid "Set \"Trusted Callback\""
+msgstr "\"विस्वासांत घेवपासारको कॉलबॅक\" सेट करचो."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:147
+#: src/telephony/ui/windows/trusted_actions_list_window.py:96
+msgid "Set \"SMS -Relay\""
+msgstr "\"एसएमएस -रिले\" सेट करात."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+#: src/telephony/ui/windows/trusted_actions_list_window.py:98
+msgid "Set \"SMS -tmate\""
+msgstr "\"SMS -tmate\" सेट करात."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:159
+#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+msgid "Set \"SMS Switch Lock Device\""
+msgstr "\"एसएमएस स्विच लॉक डिव्हायस\" सेट करात."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:167
+#: src/telephony/ui/windows/advanced_settings_window.py:229
+msgid "Automatic Modem Recovery"
+msgstr "आपोआप मॉडेम रिकवरी"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Data Management"
+msgstr "डेटा वेवस्थापन"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:200
+msgid "Authentication cancelled"
+msgstr "प्रमाणीकरण रद्द केलां"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:206
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "प्रमाणीकरण त्रुटी: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:213
+msgid "Advanced Settings Applied"
+msgstr "प्रगत मांडावळी लागू केल्यात"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:222
+msgid ""
+"When the modem stops responding, the phone quietly runs the recovery steps "
+"by itself: phone service restart, radio restart, modem power cycle, firmware "
+"restart and re-enabling a disabled radio. The phone is never rebooted "
+"automatically. If nothing helps you are asked to reboot. When this is off, "
+"the Modem Recovery window opens instead so you can run the steps yourself."
+msgstr ""
+"मॉडेम प्रतिसाद दिवपाचें बंद जाता तेन्ना, फोन रिकवरीचीं पावलां गुपचिपपणान आपणेंच चलयता: "
+"फोन सेवा परतून सुरू करप, रेडिओ परतून सुरू करप, मॉडेम पॉवर सायकल, फर्मवेर परतून सुरू करप "
+"आनी बंद केल्लो रेडिओ परतून चालू करप. फोन केन्नाच आपोआप रिबूट जायना. कांयच उपेग जायना "
+"जाल्यार तुमकां रिबूट करपाक सांगतात. हें बंद आसतना, ताचे बदला मॉडेम रिकवरी विंडो उगडटा, "
+"जाका लागून तुमी हीं पावलां स्वता चलोवंक शकतात."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "क्रमांक तपशील"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "ह्या क्रमांकाचेर आयिल्ले कॉल आपोआप नाका जातले."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:835
+msgid "Number"
+msgstr "आंकडो"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "टिप (पर्यायी)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "डुप्लीकेट करप"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "हो नंबर पयलींच आडायला."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "डेटाबेस त्रुटी"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "ब्लॉकलिस्टांत जतनाय घेवंक अपेस आयलें."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:893
+msgid "Conflict"
+msgstr "संघर्श"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"क्रमांक ब्लॉकलिस्ट आनी संपर्क ह्या दोनूय प्रकारांचेर आसूंक शकना.\n"
+"\n"
+"तुमकां ब्लॉक करपाक फुडें वचून संपर्कांतल्यान क्रमांक काडून उडोवपाचो आसा?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "हो, ब्लॉक"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "आडायल्ले क्रमांक"
+
+#: src/telephony/ui/windows/blocklist_window.py:147
+msgid "No notes"
+msgstr "नोंदी ना"
+
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Are you sure you want to unblock this number?"
+msgstr "तुमकां हो नंबर अनब्लॉक करपाचो आसा हाची खात्री आसा?"
+
+#: src/telephony/ui/windows/blocklist_window.py:174
+msgid "Unblocked number"
+msgstr "अनब्लॉक केल्लो क्रमांक"
+
+#: src/telephony/ui/windows/camera_photo_window.py:48
+msgid "Take Picture"
+msgstr "चित्र काडचें"
+
+#: src/telephony/ui/windows/camera_photo_window.py:160
+#: src/telephony/ui/windows/camera_video_window.py:202
+#: src/telephony/ui/windows/sound_recorder_window.py:181
+msgid "Retake"
+msgstr "परतून घेवप"
+
+#: src/telephony/ui/windows/camera_photo_window.py:165
+msgid "Attach Photo"
+msgstr "फोटो संलग्न करचें"
+
+#: src/telephony/ui/windows/camera_video_window.py:61
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "व्हिडियो रेकॉर्ड करचो"
+
+#: src/telephony/ui/windows/camera_video_window.py:207
+msgid "Attach Video"
+msgstr "व्हिडियो संलग्न करचो"
+
+#: src/telephony/ui/windows/camera_video_window.py:336
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "व्हिडियो रेकॉर्ड करपाक अपेस आयलें: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:416
+msgid "Recording failed (File empty)."
+msgstr "रेकॉर्डिंग अपयशी (फायल रिती)."
+
+#: src/telephony/ui/windows/camera_video_window.py:420
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "व्हडलो व्हिडियो ({size}KB). धाडल्यार संकुचीत जातले."
+
+#: src/telephony/ui/windows/camera_video_window.py:437
+msgid "Cannot play empty file."
+msgstr "रिती फायल खेळूंक शकना."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "फोटो काडचो"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "ऑडियो रेकॉर्ड करचो"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "फायल निवडात"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "वेळापत्रक"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "कॅमेरा त्रुटी"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "कॅमेरो सुरू करूंक शकलो ना."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "व्हिडियो रेकॉर्डिंग सुरू करूंक शकलें ना."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Audio Error"
+msgstr "ऑडियो त्रुटी"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Could not start audio recorder."
+msgstr "ऑडियो रेकॉर्डर सुरू करूंक शकलो ना."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:103
+msgid "Select Attachment"
+msgstr "संलग्नक निवडात"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Attachment Error"
+msgstr "संलग्नक त्रुटी"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Failed to prepare attachment."
+msgstr "आसक्ति तयार करपाक अपेस आयलें."
+
+#: src/telephony/ui/windows/contact_editor_window.py:38
+#: src/telephony/ui/windows/contact_editor_window.py:423
+msgid "Contact Details"
+msgstr "संपर्क तपशील"
+
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:194
+msgid "Edit"
+msgstr "संपादन करचें"
+
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Identity"
+msgstr "वळख"
+
+#: src/telephony/ui/windows/contact_editor_window.py:165
+#: src/telephony/ui/windows/contact_editor_window.py:183
+msgid "Favorite"
+msgstr "आवडीचें"
+
+#: src/telephony/ui/windows/contact_editor_window.py:173
+msgid "Full Name"
+msgstr "पुराय नांव"
+
+#: src/telephony/ui/windows/contact_editor_window.py:179
+msgid "Name"
+msgstr "नांव"
+
+#: src/telephony/ui/windows/contact_editor_window.py:183
+#: src/telephony/ui/windows/trusted_actions_list_window.py:629
+msgid "Yes"
+msgstr "हय"
+
+#: src/telephony/ui/windows/contact_editor_window.py:189
+msgid "Phone Numbers"
+msgstr "फोन क्रमांक"
+
+#: src/telephony/ui/windows/contact_editor_window.py:216
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "ईमेल पत्ते"
+
+#: src/telephony/ui/windows/contact_editor_window.py:226
+msgid "Add Email"
+msgstr "ईमेल जोडचें"
+
+#: src/telephony/ui/windows/contact_editor_window.py:237
+msgid "Additional Details"
+msgstr "अतिरिक्त तपशील"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Organization"
+msgstr "संघटणा"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Job Title"
+msgstr "नोकरीचें नांव"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Address"
+msgstr "नामो"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Notes"
+msgstr "टिपा"
+
+#: src/telephony/ui/windows/contact_editor_window.py:242
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "वेबसायट"
+
+#: src/telephony/ui/windows/contact_editor_window.py:267
+#: src/telephony/ui/windows/contact_editor_window.py:272
+msgid "Birthday"
+msgstr "वाडदीस"
+
+#: src/telephony/ui/windows/contact_editor_window.py:268
+#: src/telephony/ui/windows/contact_editor_window.py:275
+msgid "Anniversary"
+msgstr "वर्सुकीदीस"
+
+#: src/telephony/ui/windows/contact_editor_window.py:284
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Delete Contact"
+msgstr "संपर्क काडून उडोवप"
+
+#: src/telephony/ui/windows/contact_editor_window.py:295
+#: src/telephony/ui/windows/settings_window.py:174
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Address Books"
+msgstr "पत्तो पुस्तकां"
+
+#: src/telephony/ui/windows/contact_editor_window.py:315
+msgid "Unknown Source"
+msgstr "अज्ञात स्रोत"
+
+#: src/telephony/ui/windows/contact_editor_window.py:339
+#: src/telephony/ui/windows/contact_editor_window.py:377
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "तारीख निवडात"
+
+#: src/telephony/ui/windows/contact_editor_window.py:350
+msgid "Clear Date"
+msgstr "तारीख स्पश्ट करात"
+
+#: src/telephony/ui/windows/contact_editor_window.py:392
+#, python-brace-format
+msgid "Select {title}"
+msgstr "{title} निवडात"
+
+#: src/telephony/ui/windows/contact_editor_window.py:402
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "{title} कॉपी करात"
+
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/trusted_actions_list_window.py:603
+msgid "Copied to clipboard"
+msgstr "क्लिपबोर्डाचेर प्रतिलिपी केल्या"
+
+#: src/telephony/ui/windows/contact_editor_window.py:541
+msgid "Export Contact"
+msgstr "निर्यात संपर्क"
+
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Are you sure you want to delete this contact?"
+msgstr "तुमकां हो संपर्क काडून उडोवपाचो आसा हाची खात्री आसा?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:573
+msgid "Deleting contact..."
+msgstr "संपर्क काडून उडोवप..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:791
+#: src/telephony/ui/windows/contact_editor_window.py:881
+msgid "Failed to save contact"
+msgstr "संपर्क जतनाय करपाक अपेस आयलें"
+
+#: src/telephony/ui/windows/contact_editor_window.py:876
+msgid "Contact saved"
+msgstr "संपर्क जतनाय केला"
+
+#: src/telephony/ui/windows/contact_editor_window.py:894
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"क्रमांक ब्लॉकलिस्ट आनी संपर्क ह्या दोनूय प्रकारांचेर आसूंक शकना.\n"
+"\n"
+"तुमकां अनब्लॉक करपाक फुडें वचून संपर्कांत क्रमांक जोडपाक जाय?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:898
+msgid "Yes, Add to Contacts"
+msgstr "हो, संपर्कांत जोडचें"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "संपर्क उखलचो"
+
+#: src/telephony/ui/windows/contact_picker_window.py:63
+msgid "Name or Number"
+msgstr "नांव वा क्रमांक"
+
+#: src/telephony/ui/windows/contact_picker_window.py:199
+msgid "No number"
+msgstr "क्रमांक ना"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:356
+msgid "Individual SMS Notifications"
+msgstr "वैयक्तीक एसएमएस अधिसुचोवण्यो"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:367
+msgid "Individual Ringtones"
+msgstr "वैयक्तीक रिंगटोन"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:74
+msgid "Find contact to add..."
+msgstr "जोडपाक संपर्क सोदून काडात..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:82
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"संपर्क निवडात आनी सानुकूल आवाज फायल (.ogg वा .oga) निवडात. फायल तुमच्या थळाव्या "
+"साठवणांत कॉपी जातली."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:201
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "काडचें"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:217
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "सानुकूल टोन काडून उडयला (कमिट करपाक जतनाय क्लिक करात)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:281
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "{name} खातीर टोन निवडात"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:284
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Select"
+msgstr "वेंचचें"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:289
+msgid "Supported Audio (OGG)"
+msgstr "समर्थीत ऑडियो (ओजीजी)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:317
+msgid "Only .ogg or .oga files are supported"
+msgstr "फकत .ogg वा .oga फायली समर्थीत आसात"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:328
+msgid "Failed to copy audio file"
+msgstr "ऑडियो फायल कॉपी करपाक अपेस आयलें"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:348
+msgid "Custom tone added"
+msgstr "सानुकूल टोन जोडला"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "डेटाबेस वेवस्थापन"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "कायमचे काडून उडोवपाक डेटा निवडात."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "कॉल इतिहास काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "सगळे संदेश काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "सगळे गट नांव काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "ब्लॉकलिस्ट काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "सगळे संपर्क काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:994
+msgid "Delete Address Book"
+msgstr "पत्तो पुस्तक काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "सगळें डिलीट करचें"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "तुमकां खात्री आसा? हें फाटीं घेवंक मेळना."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "हाका लागून सगळे एसएमएस/एमएमएस आनी संलग्नक काडून उडयतले."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "गट नांवां काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "सगळे सानुकूल गट गप्पा नांवां रीसेट करात?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "सगळे नंबर अनब्लॉक करप?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "डिलीट करपाक येवपी पत्तो पुस्तकां नात"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "काडून उडोवंक मेळपी कसलीच सानुकूल पत्तो पुस्तकां नात."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"तुमकां खंयची पत्तो पुस्तक कायमचे काडून उडोवपाची आसा?\n"
+"\n"
+"हाका लागून तो वेवस्थेंतल्यान पुसून वचतलो."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:995
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "तुमकां खात्री आसा की तुमकां '{name}' पत्तो पुस्तक कायमचे काडून उडोवपाची आसा?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "सगळें काडून उडोवप"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr "डेटाबेस, कॉन्फिग फायली आनी संपर्क पुसप? अॅप रीसेट जातलो."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "खरेंच तुमच्या पत्तो पुस्तकांतल्यान सगळ्यांक काडून उडोवप?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "खंयचें पत्तो पुस्तक निवळ करचें तें निवडात:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "सगळीं पत्तो पुस्तकां"
+
+#: src/telephony/ui/windows/data_management_window.py:218
+msgid "Call History Deleted"
+msgstr "कॉल इतिहास काडून उडयला"
+
+#: src/telephony/ui/windows/data_management_window.py:222
+msgid "Deleting messages..."
+msgstr "संदेश काडून उडोवप..."
+
+#: src/telephony/ui/windows/data_management_window.py:228
+msgid "Messages & Attachments Deleted"
+msgstr "संदेश आनी संलग्नक काडून उडयल्यात"
+
+#: src/telephony/ui/windows/data_management_window.py:234
+msgid "Group Names Reset"
+msgstr "गट नांवां रीसेट करात"
+
+#: src/telephony/ui/windows/data_management_window.py:239
+msgid "Blocklist Cleared"
+msgstr "ब्लॉकलिस्ट निवळ जाली"
+
+#: src/telephony/ui/windows/data_management_window.py:243
+msgid "Deleting contacts..."
+msgstr "संपर्क काडून उडोवप..."
+
+#: src/telephony/ui/windows/data_management_window.py:249
+msgid "Contacts Deleted"
+msgstr "संपर्क काडून उडयले"
+
+#: src/telephony/ui/windows/data_management_window.py:257
+msgid "Deleting address book..."
+msgstr "पत्तो पुस्तक काडून उडोवप..."
+
+#: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:1015
+msgid "Address Book Deleted"
+msgstr "पत्तो पुस्तिका काडून उडयल्या"
+
+#: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:1013
+msgid "Failed to delete Address Book"
+msgstr "पत्तो पुस्तक काडून उडोवपाक अपेस आयलें"
+
+#: src/telephony/ui/windows/data_management_window.py:270
+msgid "Wiping Database..."
+msgstr "डेटाबेस पुसप..."
+
+#: src/telephony/ui/windows/data_management_window.py:283
+msgid "App Reset Complete"
+msgstr "अॅप रीसेट पुराय जाला"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "वर्स"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "म्हयनो"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "वर"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "मिनीट"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:338
+#: src/telephony/ui/windows/settings_window.py:527
+msgid "Notification Overrides"
+msgstr "अधिसुचोवणी अधिलिखित करता"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:162
+msgid "Find and add contacts..."
+msgstr "संपर्क सोदून काडात आनी जोडात..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:78
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"ह्या वळेरेतले संपर्क सदांच अधिसुचोवण्यो पुराय आवाजान वाजयतले, जरी फोन सायलेंट वा डिस्टर्ब "
+"करूंक नाकात मोडांत आसलो तरी."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "डुप्लीकेट संपर्क करप"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "सगळें विलीन करचें"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "संपर्क विलीन करप..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "उरिल्ले संघर्श: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} संपर्कांत जतनाय घेता:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "पत्तो पुस्तक: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "हें दवरात, डुप्लीकेट काडून उडोवचें"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "हें दवरात, डुप्लीकेट विलीन करात"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "{current}/{total} विलीन करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"काडप, रुपांतर करप, भार (ईटीएल).\n"
+"डेटा स्त्रोत वा गंतव्य निवडात."
+
+#: src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "vCard कडल्यान संपर्क आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "संपर्क vCard कडेन निर्यात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "सिम कार्डा वयल्यान संपर्क आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "थळाव्या चॅटी कडल्यान आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "थळाव्या कॉलांतल्यान आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:67
+#: src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "एंड्रॉयडा वयल्यान आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:68
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "iOS कडल्यान आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "कॉल वा संदेश निर्यात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "सिमा वयल्यान संपर्क आयात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "सिम आयात करपाखातीर मॉडेम मेळूंक ना"
+
+#: src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "सिम कार्डाचेर संपर्क मेळूंक नात."
+
+#: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "सिमांतल्यान {count} संपर्क आयात केल्यात."
+
+#: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "सिम आयात अपयशी: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "चॅटी आयात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "कॉल आयात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:159
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "एक पर्याय निवडात:"
+
+#: src/telephony/ui/windows/import_export_window.py:169
+#: src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "एसएमएस/एमएमएस फायल निवडात"
+
+#: src/telephony/ui/windows/import_export_window.py:170
+#: src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "कॉल इतिहास फायल निवडात"
+
+#: src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "थेट यूएसबी आयात (शिफारशी)"
+
+#: src/telephony/ui/windows/import_export_window.py:211
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr "आयओएस डिव्हायस मेळूंक ना. उपकार करून तुमचो आयफोन USB वरवीं जोडचो."
+
+#: src/telephony/ui/windows/import_export_window.py:214
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr ""
+"डिव्हायसाचेर विस्वास ना. उपकार करून तुमचो आयफोन अनलॉक करचो आनी ‘विस्वास’ टॅप करचो."
+
+#: src/telephony/ui/windows/import_export_window.py:217
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "आयफोना वयल्यान बॅकअप काडप... हाका बरोच वेळ लागूं येता!"
+
+#: src/telephony/ui/windows/import_export_window.py:225
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "USB बॅकअप अपयशी: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:230
+msgid "No SMS database found in backup."
+msgstr "बॅकअपांत एसएमएस डेटाबेस मेळूंक ना."
+
+#: src/telephony/ui/windows/import_export_window.py:231
+msgid "No Call History database found in backup."
+msgstr "बॅकअपांत कॉल इतिहास डेटाबेस मेळूंक ना."
+
+#: src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone SMS..."
+msgstr "आयफोन एसएमएस आयात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:238
+msgid "Importing iPhone Calls..."
+msgstr "आयफोन कॉल आयात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:247
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "iOS आयात करतना त्रुटी: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:255
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "फायल निवडात"
+
+#: src/telephony/ui/windows/import_export_window.py:258
+msgid "XML Files"
+msgstr "XML फायली"
+
+#: src/telephony/ui/windows/import_export_window.py:272
+#: src/telephony/ui/windows/import_export_window.py:463
+msgid "Importing..."
+msgstr "आयात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Export Data"
+msgstr "डेटा निर्यात करप"
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Select destination format:"
+msgstr "गंतव्य स्वरूप निवडात:"
+
+#: src/telephony/ui/windows/import_export_window.py:306
+msgid "Linux - Chatty/Calls"
+msgstr "लिनक्स - गप्पा मारपी/कॉल"
+
+#: src/telephony/ui/windows/import_export_window.py:307
+msgid "Linux - Telephony"
+msgstr "लिनक्स - टेलिफोनी"
+
+#: src/telephony/ui/windows/import_export_window.py:308
+msgid "Android"
+msgstr "एंड्रॉयड"
+
+#: src/telephony/ui/windows/import_export_window.py:309
+msgid "iOS"
+msgstr "आयओएस"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "{fmt} कडेन निर्यात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+msgid "What do you want to export?"
+msgstr "तुमकां कितें निर्यात करपाचें आसा?"
+
+#: src/telephony/ui/windows/import_export_window.py:326
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"टीप: ही निर्यात Android स्वरूप वापरता. ही फायल iOS उपकरणाचेर आयात करतना, उपकार "
+"करून \"Import From Android\" पर्याय वापरचो."
+
+#: src/telephony/ui/windows/import_export_window.py:337
+msgid "Messages (SMS/MMS)"
+msgstr "संदेश (एसएमएस/एमएमएस)"
+
+#: src/telephony/ui/windows/import_export_window.py:338
+msgid "Call History"
+msgstr "कॉल इतिहास"
+
+#: src/telephony/ui/windows/import_export_window.py:348
+msgid "Export File"
+msgstr "फायल निर्यात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:374
+msgid "Exporting..."
+msgstr "निर्यात करप..."
+
+#: src/telephony/ui/windows/import_export_window.py:408
+msgid "Import VCard"
+msgstr "व्हीकार्ड आयात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:410
+msgid "VCard Files"
+msgstr "व्हीकार्ड फायली"
+
+#: src/telephony/ui/windows/import_export_window.py:429
+#: src/telephony/ui/windows/import_export_window.py:493
+msgid "No enabled address books found"
+msgstr "सक्षम केल्लीं पत्तो पुस्तकां मेळूंक नात"
+
+#: src/telephony/ui/windows/import_export_window.py:437
+msgid "Select Address Book"
+msgstr "पत्तो पुस्तक निवडात"
+
+#: src/telephony/ui/windows/import_export_window.py:438
+msgid "Where do you want to import contacts?"
+msgstr "तुमकां संपर्क खंय आयात करपाचे आसात?"
+
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "आयात केल्ले {count} संपर्क"
+
+#: src/telephony/ui/windows/import_export_window.py:481
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "आयात अपयशी: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:535
+msgid "Export Contacts"
+msgstr "संपर्क निर्यात करप"
+
+#: src/telephony/ui/windows/import_export_window.py:498
+msgid "Which address book do you want to export?"
+msgstr "तुमकां खंयची पत्तो पुस्तक निर्यात करपाची आसा?"
+
+#: src/telephony/ui/windows/import_export_window.py:509
+msgid "Export All Address Books"
+msgstr "सगळ्यो पत्तो पुस्तकां निर्यात करात"
+
+#: src/telephony/ui/windows/import_export_window.py:558
+msgid "No contacts found to export"
+msgstr "निर्यात करपाक संपर्क मेळूंक नात"
+
+#: src/telephony/ui/windows/import_export_window.py:570
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "{count} संपर्क निर्यात केल्यात"
+
+#: src/telephony/ui/windows/import_export_window.py:573
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "निर्यात त्रुटी: {e}"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "संदेश आयात करप"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "कॉल इतिहास आयात करचो"
+
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "निवडीची वाट पळयतात..."
+
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "खंयच्यान आयात करपाची आसा?"
+
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "प्रणाली डेटाबेस"
+
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "थळाव्या Chatty प्रतिष्ठापनांतल्यान आयात करात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "थळाव्या कॉल प्रतिष्ठापनांतल्यान आयात करात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "आयात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "सानुकूल डेटाबेस बॅकअप"
+
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "निर्यात केल्ली SQLite DB फायल निवडात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "डेटाबेस फायल निवडात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "एमएमएस संलग्नक (पर्यायी)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "एमएमएस फोल्डर बॅकअप"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "प्रतिमा/व्हिडियो आशिल्ली निर्देशिका निवडात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "फोल्डर निवडात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "संलग्नक वगडावप"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "फकत एसएमएस आनी मजकूर आयात करात"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "सोडप"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "एमएमएस फोल्डर निवडात"
+
+#: src/telephony/ui/windows/incall_window.py:44
+msgid "Active"
+msgstr "सक्रिय"
+
+#: src/telephony/ui/windows/incall_window.py:45
+msgid "On Hold"
+msgstr "होल्डाचेर"
+
+#: src/telephony/ui/windows/incall_window.py:46
+msgid "Dialing..."
+msgstr "डायल करता..."
+
+#: src/telephony/ui/windows/incall_window.py:47
+msgid "Alerting..."
+msgstr "रिंग जाता..."
+
+#: src/telephony/ui/windows/incall_window.py:50
+msgid "Disconnected"
+msgstr "डिस्कनेक्ट जालें"
+
+#: src/telephony/ui/windows/incall_window.py:58
+#: src/telephony/ui/windows/settings_window.py:301
+msgid "Earpiece"
+msgstr "इयरपीस"
+
+#: src/telephony/ui/windows/incall_window.py:59
+#: src/telephony/ui/windows/settings_window.py:302
+msgid "Speaker"
+msgstr "स्पीकर"
+
+#: src/telephony/ui/windows/incall_window.py:60
+#: src/telephony/ui/windows/settings_window.py:303
+msgid "Wired Headset"
+msgstr "वायर आशिल्लें हेडसेट"
+
+#: src/telephony/ui/windows/incall_window.py:61
+#: src/telephony/ui/windows/settings_window.py:304
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: src/telephony/ui/windows/incall_window.py:69
+msgid "Microphone"
+msgstr "मायक्रोफोन"
+
+#: src/telephony/ui/windows/incall_window.py:70
+msgid "Wired Mic"
+msgstr "वायर आशिल्लो मायक्रोफोन"
+
+#: src/telephony/ui/windows/incall_window.py:71
+msgid "Bluetooth Mic"
+msgstr "ब्लूटूथ मायक्रोफोन"
+
+#: src/telephony/ui/windows/incall_window.py:228
+msgid "Hangup and Send SMS"
+msgstr "हॅंगअप आनी एसएमएस धाडप"
+
+#: src/telephony/ui/windows/incall_window.py:231
+#: src/telephony/ui/windows/incall_window.py:668
+msgid "Silence"
+msgstr "निःशब्द"
+
+#: src/telephony/ui/windows/incall_window.py:232
+msgid "Decline"
+msgstr "न्हयकारप"
+
+#: src/telephony/ui/windows/incall_window.py:233
+msgid "Accept"
+msgstr "स्वीकारप"
+
+#: src/telephony/ui/windows/incall_window.py:253
+msgid "Mute"
+msgstr "म्यूट"
+
+#: src/telephony/ui/windows/incall_window.py:254
+msgid "Keypad"
+msgstr "कीपॅड"
+
+#: src/telephony/ui/windows/incall_window.py:255
+msgid "Hold"
+msgstr "होल्ड"
+
+#: src/telephony/ui/windows/incall_window.py:270
+#: src/telephony/ui/windows/incall_window.py:849
+msgid "The call failed to disconnect."
+msgstr "कॉल डिस्कनेक्ट करपाक अपेस आयलें."
+
+#: src/telephony/ui/windows/incall_window.py:349
+#: src/telephony/ui/windows/incall_window.py:925
+msgid "Output"
+msgstr "उत्पादन"
+
+#: src/telephony/ui/windows/incall_window.py:364
+#: src/telephony/ui/windows/incall_window.py:944
+msgid "Input"
+msgstr "इनपुट"
+
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Silenced Incoming Call"
+msgstr "येवपी कॉल निःशब्द केल्लो"
+
+#: src/telephony/ui/windows/incall_window.py:660
+msgid "Swap"
+msgstr "बदल"
+
+#: src/telephony/ui/windows/incall_window.py:664
+msgid "Answer"
+msgstr "जाप दिवप"
+
+#: src/telephony/ui/windows/incall_window.py:672
+msgid "Message"
+msgstr "संदेश"
+
+#: src/telephony/ui/windows/incall_window.py:678
+msgid "Answering holds the current call"
+msgstr "जाप दिल्यार सद्याचो कॉल होल्डाचेर वता"
+
+#: src/telephony/ui/windows/incall_window.py:695
+#: src/telephony/ui/windows/settings_window.py:264
+msgid "I can't talk right now."
+msgstr "सध्या उलोवंक मेळना."
+
+#: src/telephony/ui/windows/incall_window.py:858
+msgid "Recovering modem..."
+msgstr "मॉडेम रिकवर जायत आसा..."
+
+#: src/telephony/ui/windows/incall_window.py:910
+#: src/telephony/ui/windows/settings_window.py:947
+msgid "Not connected"
+msgstr "जोडणी ना"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "टेलिफोनी विशीं"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr "FLX1 आनी FLX1s खातीर तयार केल्लो फास्ट फोन डायलर आनी संदेशन क्लायंट."
+
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "आवृत्ती"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "विकसीत करपी"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "परवानो"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "दुवे"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "मुद्दो ट्रॅकर"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "बग अहवाल दिवचो वा वैशिश्ट्यांची विनंती करची"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "वेळापत्रक ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "ते: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "आतां धाडचें"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "संदेश काडून उडयलो"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "{number} कडेन संदेश धाडटा..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:67
+msgid ""
+"Steps are tried from gentlest to strongest. Each one is verified before the "
+"next unlocks."
+msgstr ""
+"पावलां सगळ्यांत सौम्य सावन सगळ्यांत घट मेरेन करून पळयतात. फुडलें पावल उगडचे पयलीं दरेक पावल "
+"तपासतात."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Phone service restart"
+msgstr "फोन सेवा परतून सुरू करप"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Restarts the ofono service that manages the modem."
+msgstr "मॉडेमाचें वेवस्थापन करपी ofono सेवा परतून सुरू करता."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Radio restart"
+msgstr "रेडिओ परतून सुरू करप"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Turns the radio off and back on, like flight mode."
+msgstr "विमान मोडा भशेन रेडिओ बंद करून परतून सुरू करता."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Modem power cycle"
+msgstr "मॉडेम पॉवर सायकल"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Powers the modem down and back up."
+msgstr "मॉडेम बंद करून परतून चालू करता."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Modem firmware restart"
+msgstr "मॉडेम फर्मवेर परतून सुरू करप"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Restarts the vendor modem firmware."
+msgstr "विक्रेत्याचें मॉडेम फर्मवेर परतून सुरू करता."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Re-enable radio"
+msgstr "रेडिओ परतून चालू करचो"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Fixes a radio left disabled by an unclean shutdown."
+msgstr "अयोग्य रितीन बंद जाल्ल्यान निश्क्रिय उरिल्लो रेडिओ सारको करता."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Reboot phone"
+msgstr "फोन रिबूट करचें"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Opens the system power menu. Last resort."
+msgstr "सिस्टम पॉवर मेनू उगडटा. निमाणो उपाय."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:87
+msgid "Try"
+msgstr "करून पळयात"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:97
+msgid "Save Modem Logs"
+msgstr "मॉडेम लॉग जतनाय करात"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:111
+#: src/telephony/ui/windows/modem_recovery_window.py:178
+msgid "Did not help"
+msgstr "मदत जावंक ना"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:129
+msgid "Waiting for the modem..."
+msgstr "मॉडेमाची वाट पळयता..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:171
+#: src/telephony/ui/windows/modem_recovery_window.py:174
+msgid "Modem recovered"
+msgstr "मॉडेम रिकवर जालो"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:203
+#, python-brace-format
+msgid "Logs saved to {path}"
+msgstr "लॉग {path} हांगा जतनाय केल्यात"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:205
+msgid "Saving logs failed"
+msgstr "लॉग जतनाय करपाक अपेस आयलें"
+
+#: src/telephony/ui/windows/settings_window.py:93
+#: src/telephony/ui/windows/settings_window.py:450
+msgid "Ringback Tone"
+msgstr "रिंगबॅक टोन"
+
+#: src/telephony/ui/windows/settings_window.py:96
+msgid "Enable Local Ringback"
+msgstr "थळावो रिंगबॅक सक्षम करचो"
+
+#: src/telephony/ui/windows/settings_window.py:111
+msgid "Selected Tone"
+msgstr "निवडिल्लो टोन"
+
+#: src/telephony/ui/windows/settings_window.py:114
+#: src/telephony/ui/windows/settings_window.py:411
+msgid "System Default"
+msgstr "प्रणाली मुलभूत"
+
+#: src/telephony/ui/windows/settings_window.py:141
+msgid "SIM Settings"
+msgstr "सिम सेटिंग्ज"
+
+#: src/telephony/ui/windows/settings_window.py:144
+msgid "My Number"
+msgstr "माझें नंबर"
+
+#: src/telephony/ui/windows/settings_window.py:145
+msgid "My Number (International Format)"
+msgstr "म्हजो क्रमांक (आंतरराष्ट्रीय स्वरूप)"
+
+#: src/telephony/ui/windows/settings_window.py:151
+#: src/telephony/ui/windows/settings_window.py:152
+#: src/telephony/ui/windows/settings_window.py:398
+msgid "Default Country Code"
+msgstr "मुलभूत देश कोड"
+
+#: src/telephony/ui/windows/settings_window.py:167
+msgid "Voicemail Number"
+msgstr "व्हॉइसमेल नंबर"
+
+#: src/telephony/ui/windows/settings_window.py:186
+msgid "Address Book Info"
+msgstr "पत्तो पुस्तकाची म्हायती"
+
+#: src/telephony/ui/windows/settings_window.py:194
+msgid "Default Address Book"
+msgstr "मुलभूत पत्तो पुस्तक"
+
+#: src/telephony/ui/windows/settings_window.py:200
+msgid "Duplicate Resolver"
+msgstr "डुप्लीकेट रिझोल्वर"
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr "डुप्लीकेट क्रमांक स्कॅन करात आनी संपर्क दृश्यांत रिझोल्यूशन बॅनर दाखयात."
+
+#: src/telephony/ui/windows/settings_window.py:211
+#: src/telephony/ui/windows/settings_window.py:963
+msgid "Add Local Address Book"
+msgstr "थळावें पत्तो पुस्तक जोडचें"
+
+#: src/telephony/ui/windows/settings_window.py:225
+msgid "Lockscreen Emergency"
+msgstr "लॉकस्क्रीन आणीबाणी"
+
+#: src/telephony/ui/windows/settings_window.py:228
+msgid "Show Emergency Button"
+msgstr "आपत्कालीन बटण दाखोवचें"
+
+#: src/telephony/ui/windows/settings_window.py:233
+msgid "Emergency Numbers"
+msgstr "आपत्कालीन क्रमांक"
+
+#: src/telephony/ui/windows/settings_window.py:250
+msgid "Quick Response"
+msgstr "बेगीन प्रतिसाद दिवप"
+
+#: src/telephony/ui/windows/settings_window.py:253
+msgid "Add Decline Message"
+msgstr "नाका म्हणपाचो संदेश जोडचो"
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Messaging"
+msgstr "मेसेजिंग"
+
+#: src/telephony/ui/windows/settings_window.py:280
+#: src/telephony/ui/windows/settings_window.py:431
+msgid "MMS Size Limit"
+msgstr "एमएमएस आकार मर्यादा"
+
+#: src/telephony/ui/windows/settings_window.py:288
+#: src/telephony/ui/windows/settings_window.py:887
+msgid "Call Volume"
+msgstr "कॉलाचो आवाज"
+
+#: src/telephony/ui/windows/settings_window.py:319
+msgid "Notification Exceptions"
+msgstr "अधिसुचोवणी आडवाद"
+
+#: src/telephony/ui/windows/settings_window.py:322
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Repeated Calls Bypass"
+msgstr "परत परत केल्ले कॉल बायपास"
+
+#: src/telephony/ui/windows/settings_window.py:324
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr "त्याच नंबरान 5 मिनटांनी 3 फावटीं कॉल केल्यार चडांत चड आवाज जबरदस्तीन करचो."
+
+#: src/telephony/ui/windows/settings_window.py:339
+msgid "Manage contacts that always play sound"
+msgstr "सदांच आवाज वाजोवपी संपर्क वेवस्थापन करात"
+
+#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:360
+#: src/telephony/ui/windows/settings_window.py:371
+msgid "Manage"
+msgstr "हाताळचें"
+
+#: src/telephony/ui/windows/settings_window.py:358
+msgid "Set custom notification sounds for specific contacts"
+msgstr "विशिश्ट संपर्कां खातीर सानुकूल अधिसुचोवणी आवाज सेट करात"
+
+#: src/telephony/ui/windows/settings_window.py:369
+msgid "Set custom ringtones for specific contacts"
+msgstr "विशिश्ट संपर्कां खातीर सानुकूल रिंगटोन सेट करात"
+
+#: src/telephony/ui/windows/settings_window.py:394
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"आंतरराष्ट्रीय उपसर्ग (देखीक, +358) समाविष्ट करूंक नाशिल्ल्या क्रमांकांक स्वरूपीत करपाक मुलभूत "
+"देश कोड वापरतात.\n"
+"\n"
+"रितें सोडल्यार, प्रणाली तुमच्या सिम कार्डा वयल्यान वा नेटवर्का वयल्यान आपोआप ती सोदून "
+"काडपाचो यत्न करता.\n"
+"\n"
+"तुमी हांगा 2 अक्षरी ISO प्रदेश कोड (देखीक US, FI, DE) वा कॉलिंग कोड (देखीक +358, "
+"358, +1, 1) दाखोवन हाताळणी करून तो ओव्हररायड करूंक शकतात."
+
+#: src/telephony/ui/windows/settings_window.py:422
+msgid ""
+"Carriers limit how large a multimedia message can be. Images and videos you "
+"attach are automatically compressed to fit under this limit before sending.\n"
+"\n"
+"600 kB is a safe default for most carriers. Pick a smaller value if your "
+"messages fail to send, or a larger one if you know your carrier allows it."
+msgstr ""
+"कॅरियर मल्टिमिडिया संदेश कितलो व्हड आसूं येता हाचेर मर्यादा घालतात. तुमी जोडिल्ल्यो "
+"प्रतिमा आनी व्हिडियो धाडचे पयलीं ह्या मर्यादे सकयल बसपाक आपोआप संकुचित जातात.\n"
+"\n"
+"चडश्या कॅरियरां खातीर 600 kB सुरक्षीत मूळ मोल आसा. तुमचे संदेश धाडपाक अपेस आयल्यार ल्हान "
+"मोल निवडात, वा तुमचो कॅरियर परवानगी दिता म्हूण खबर आसल्यार व्हडलें निवडात."
+
+#: src/telephony/ui/windows/settings_window.py:443
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"रिंगबॅक टोन म्हळ्यार भायर सरपी कॉलाक जाप मेळपाची वाट पळयतना वाजयल्लो आवाज (toot-"
+"toot-toot). कांय वाहक तो तयार करिनात देखून आमकां हांगा हाताळणीन तयार करपाचो पर्याय "
+"आसा. \n"
+"\n"
+"तुमी तुमची स्वताची संगीत फायल निवडूंक शकतात, वा मानक प्रणाली टोन वापरपाक ती निवळ "
+"करूंक शकतात."
+
+#: src/telephony/ui/windows/settings_window.py:463
+msgid "Select Ringback Tone"
+msgstr "रिंगबॅक टोन निवडात"
+
+#: src/telephony/ui/windows/settings_window.py:471
+msgid "Audio Files"
+msgstr "ऑडियो फायली"
+
+#: src/telephony/ui/windows/settings_window.py:497
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"टेलिफोनी वांगडा वापरपाच्यो पत्तो पुस्तकां निवडात आनी प्राधान्याच्या क्रमांकान वेवस्था "
+"करात. सगळ्यांत वयल्या पत्तो पुस्तकाक सगळ्यांत चड प्राधान्य आसता आनी एका परस चड पत्तो "
+"पुस्तकांत क्रमांक मेळ्ळो जाल्यार ताका पसंत करतले. डुप्लीकेट वेवस्थापन करपाक मदत करपाक तुमी "
+"सकयल दिल्लो डुप्लीकेट रिझोल्वर टॉगल वापरूं येता, पूण अक्षम केल्यार लेगीत, आमी ताका बऱ्या "
+"अणभवाक सक्षम करपाक प्रोत्साहन दितात."
+
+#: src/telephony/ui/windows/settings_window.py:516
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"सक्षम केल्यार, जर तोच फोन क्रमांक तुमकां 5 मिनटां भितर 3 फावटीं कॉल करता जाल्यार, "
+"तिसरो कॉल (आनी उपरांतच्या विंडो भितर) फोनाक चडांत चड आवाजांत रिंग करपाक बाध्य "
+"करतलो, सायलेंट वा डिस्टर्ब करूंक नाकात मोड बायपास करतलो."
+
+#: src/telephony/ui/windows/settings_window.py:528
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"फोन सायलेंट वा डिस्टर्ब करूंक नाकात मोडांत आसतना लेगीत, सदांच अधिसुचोवण्यो पुराय आवाजांत "
+"वाजोवपी संपर्क निवडात."
+
+#: src/telephony/ui/windows/settings_window.py:549
+msgid "Unknown Callers"
+msgstr "अज्ञात कॉलर"
+
+#: src/telephony/ui/windows/settings_window.py:554
+msgid "Unknown Callers Action"
+msgstr "अज्ञात कॉलर्स कृती"
+
+#: src/telephony/ui/windows/settings_window.py:556
+msgid "Applies also to hidden numbers."
+msgstr "लिपल्ल्या क्रमांकांकूय लागू जाता."
+
+#: src/telephony/ui/windows/settings_window.py:559
+msgid "Do Nothing"
+msgstr "कांयच करचें न्हय"
+
+#: src/telephony/ui/windows/settings_window.py:560
+msgid "Block Completely"
+msgstr "पुरायपणान ब्लॉक करप"
+
+#: src/telephony/ui/windows/settings_window.py:561
+msgid "Silence and Hide UI"
+msgstr "मौन आनी यूआय लिपोवप"
+
+#: src/telephony/ui/windows/settings_window.py:562
+msgid "Silence Only"
+msgstr "फकत मौन"
+
+#: src/telephony/ui/windows/settings_window.py:570
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr "अज्ञात कॉलरां खातीर InCall विंडो आनी कॉल इतिहासांत सोद बटण जोडचें"
+
+#: src/telephony/ui/windows/settings_window.py:576
+msgid "Search Engine"
+msgstr "सर्च इंजिन"
+
+#: src/telephony/ui/windows/settings_window.py:580
+#: src/telephony/ui/windows/settings_window.py:585
+msgid "Custom URL"
+msgstr "सानुकूल URL"
+
+#: src/telephony/ui/windows/settings_window.py:635
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"अज्ञात क्रमांक सोदपाखातीर तुमकां वापरपाक जाय आशिल्ली URL दाखयात. कॉलराच्या फोन "
+"क्रमांकाक वचपाक जाय आशिल्ल्या URL त '{number}' समाविष्ट करात.\n"
+"\n"
+"देखीक: https://mysearch.com/?q={number}\n"
+"\n"
+"जेन्ना तुमी कॉल करतना सोद बटण टॅप करतात, तेन्ना आमी '{number}' च्या बदलाक प्रत्यक्ष "
+"फोन क्रमांक घालतले आनी तुमच्या मुलभूत ब्राउझरांत उगडटले."
+
+#: src/telephony/ui/windows/settings_window.py:639
+msgid "Custom Search URL"
+msgstr "सानुकूल सोद URL"
+
+#: src/telephony/ui/windows/settings_window.py:660
+msgid "Desktop Shortcuts"
+msgstr "डेस्कटॉप शॉर्टकट"
+
+#: src/telephony/ui/windows/settings_window.py:665
+msgid "Calls"
+msgstr "कॉल करतात"
+
+#: src/telephony/ui/windows/settings_window.py:831
+msgid "Name (e.g. Mom)"
+msgstr "नांव (देखीक- आवय) २."
+
+#: src/telephony/ui/windows/settings_window.py:888
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"हो दर एका आउटपुटा खातीर कॉलाचो आवाज. कॉल जोडटकच आनी कॉला वेळार आउटपुट बदलता "
+"तेन्ना पांवडो आपशींच लागू जाता, आनी स्लायडराचे बदल रोखडेच आयकुपाक येतात. हार्डवेअर पांवडे "
+"व्हड टप्प्यांनी लागू करता, आनी इयरपीस केन्नाच पुरायपणान ओगी जायना. Bluetooth पांवडो "
+"फुडाराच्या रूटिंग आदारा खातीर सांबाळून दवरतात."
+
+#: src/telephony/ui/windows/settings_window.py:897
+msgid "Decline Message"
+msgstr "नाका म्हणपाचो संदेश"
+
+#: src/telephony/ui/windows/settings_window.py:940
+msgid "System Default (Always Enabled)"
+msgstr "प्रणाली मुलभूत (सदांच सक्षम)"
+
+#: src/telephony/ui/windows/settings_window.py:942
+msgid "Synced from Andromeda"
+msgstr "Andromeda वयल्यान समक्रमीत"
+
+#: src/telephony/ui/windows/settings_window.py:945
+msgid "Connected"
+msgstr "कनेक्ट जालें"
+
+#: src/telephony/ui/windows/settings_window.py:946
+msgid "Connecting..."
+msgstr "कनेक्ट जाता..."
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Login required"
+msgstr "लॉगिन गरजेचें"
+
+#: src/telephony/ui/windows/settings_window.py:949
+msgid "Connection failed (SSL)"
+msgstr "कनेक्शन अपयशी (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:964
+msgid "Address book name"
+msgstr "पत्तो पुस्तकाचें नांव"
+
+#: src/telephony/ui/windows/settings_window.py:985
+msgid "Could not create address book"
+msgstr "पत्तो पुस्तक तयार करपाक अपेस आयलें"
+
+#: src/telephony/ui/windows/settings_window.py:987
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "पत्तो पुस्तक '{name}' तयार जालें"
+
+#: src/telephony/ui/windows/settings_window.py:1076
+msgid "Personal Address Book"
+msgstr "वैयक्तीक पत्तो पुस्तक"
+
+#: src/telephony/ui/windows/settings_window.py:1077
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"तुमी प्रणाली मांडावळींनी तशें करपाक निवडल्यार ही पत्तो पुस्तिका Andromeda कडेन समक्रमीत "
+"जातली."
+
+#: src/telephony/ui/windows/settings_window.py:1085
+msgid "Andromeda Contacts"
+msgstr "अँड्रोमेडा संपर्क"
+
+#: src/telephony/ui/windows/settings_window.py:1086
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"तुमी प्रणाली मांडावळींत तशें करपाक निवडल्यार ही पत्तो पुस्तक आसा जी Andromeda कडल्यान "
+"समक्रमीत जातली."
+
+#: src/telephony/ui/windows/settings_window.py:1230
+msgid "Settings Saved"
+msgstr "सेटिंग्ज जतनाय घेतल्या"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:59
+msgid "Voice Message"
+msgstr "आवाज संदेश"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:117
+msgid "Tap to Record"
+msgstr "रेकॉर्ड करपाक टॅप करात"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:174
+msgid "Attach Voice Note"
+msgstr "आवाज टिप जोडची"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:305
+#, python-brace-format
+msgid "Recording is too large for MMS (Max {size}). Please retake shorter."
+msgstr "एमएमएस खातीर रेकॉर्डिंग चड व्हड आसा (चडांत चड {size}). कृपया ल्हान रिटेक करात."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:142
+msgid "Enable Feature"
+msgstr "वैशिश्ट्य सक्रीय करचें"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:171
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"संपर्क गुप्त एसएमएस संदेश धाडून कृती सुरू करूंक शकतात. सकयल संपर्क जोडात आनी तांचे गुपीत "
+"ट्रिगर वाक्यांश सेट करात."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:174
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"विस्वासपात्र संपर्क गुप्त एसएमएस संदेश धाडून तुमच्या थळाची विनंती करूंक शकतात. ह्या "
+"वैशिश्ट्याक काम करपाखातीर TOTP सक्तीचें आसा. सकयल संपर्क जोडात आनी तांचे गुपीत ट्रिगर "
+"वाक्यांश सेट करात. देखीची साचा: 'SECRET TOTP' खर्‍या जिवितांतली देख: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:177
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"विस्वासांत घेवपासारके संपर्क गुप्त एसएमएस संदेश धाडून ओगीच कॉलबॅक सुरू करूंक शकतात. ह्या "
+"वैशिश्ट्याक काम करपाखातीर TOTP सक्तीचें आसा. सकयल संपर्क जोडात आनी तांचे गुपीत ट्रिगर "
+"वाक्यांश सेट करात. देखीची साचा: 'SECRET TOTP' खर्‍या जिवितांतली देख: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:180
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"विस्वासपात्र संपर्क एसएमएस रिले धाडूंक शकतात. ह्या वैशिश्ट्याक काम करपाखातीर TOTP सक्तीचें "
+"आसा. सकयल संपर्क जोडात आनी तांचे गुपीत ट्रिगर वाक्यांश सेट करात. देखीची साचा: 'SECRET "
+"TOTP +1234567890 MESSAGE' खर्‍या जिवितांतली देख: 'Gorilla 123456 +1234567890 "
+"Hello'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:183
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"विस्वासांत घेवपासारके संपर्क tmate SSH सत्र सुरू करूंक शकतात आनी गुप्त SMS संदेश धाडून SSH "
+"प्रवेश स्ट्रिंग मेळोवंक शकतात. ह्या वैशिश्ट्याक काम करपाखातीर TOTP सक्तीचें आसा. सकयल संपर्क "
+"जोडात आनी तांचे गुपीत ट्रिगर वाक्यांश सेट करात. देखीची साचा: 'SECRET TOTP' खर्‍या "
+"जिवितांतली देख: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:186
+msgid ""
+"Trusted contacts can lock your device: the SIM PIN is changed to a new one "
+"and locked, and the phone powers off. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"विस्वासपात्र संपर्क तुमचें डिव्हायस लॉक करूंक शकतात: सिम पिन नव्या पिनान बदलतात आनी लॉक "
+"करतात, आनी फोन बंद जाता. ह्या वैशिश्ट्याक काम करपाखातीर TOTP सक्तीचें आसा. सकयल संपर्क "
+"जोडात आनी तांचे गुपीत ट्रिगर वाक्यांश सेट करात. देखीची साचा: 'SECRET TOTP "
+"SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' खर्‍या जिवितांतली देख: 'Gorilla "
+"123456 0000 1234 SupportYourLocalFootball'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:303
+msgid "View or edit TOTP"
+msgstr "TOTP पळोवचें वा संपादीत करचें"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:305
+msgid "Setup TOTP"
+msgstr "TOTP स्थापीत करचें"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:380
+msgid "Secret message"
+msgstr "गुपीत संदेश"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Remove Contact"
+msgstr "संपर्क काडून उडोवप"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Contact removed (Click Save to commit)"
+msgstr "संपर्क काडून उडयला (कमिट करपाक जतनाय क्लिक करात)"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:490
+msgid "Contact already in trusted list"
+msgstr "पयलींच विस्वासांत घेवपासारके वळेरेंत संपर्क करचो"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:504
+msgid "Contact added"
+msgstr "संपर्क जोडला"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+msgid "TOTP Setup"
+msgstr "TOTP सेटअप"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:568
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"हो कोड तुमच्या विस्वासपात्र संपर्का वांगडा वांटून घेयात. तांणी तो Gnome Authenticator "
+"सारक्या प्रमाणीकरण अ‍ॅपांत जोडपाक जाय.\n"
+"\n"
+"जर मॅन्युअली प्रविष्ट करतात जाल्यार, सकयल्या मांडावळींची खात्री करात:\n"
+"• अल्गोरिदम: SHA1\n"
+"• अंक: 6\n"
+"• मध्यंतर: 60 सेकंद\n"
+"\n"
+"दर एके कृतीचो स्वताचो कोड आसता. एसएमएस वतीन कृती सुरू करतना, तांणी कीवर्डा उपरांत "
+"तांच्या प्रमाणीकरण अ‍ॅपांतलो सद्याचो 6-अंकी कोड जोडपाक जाय."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:597
+msgid "Copy TOTP key"
+msgstr "TOTP की प्रत करची"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:608
+#: src/telephony/ui/windows/trusted_actions_list_window.py:650
+msgid "Regenerate"
+msgstr "परतून तयार करात"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+msgid "Remove current TOTP"
+msgstr "सद्याचो TOTP काडून उडयात"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:624
+msgid "Remove TOTP Key?"
+msgstr "TOTP की काडून उडोवंची?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:625
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr ""
+"तुमकां TOTP की काडून उडोवपाची आसा हाची खात्री आसा? ही कृती ह्या वैशिश्ट्याखातीर TOTP "
+"पडताळणी अक्षम करतली."
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:645
+msgid "Regenerate Code?"
+msgstr "कोड परतून तयार करचो?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr ""
+"हाका लागून तुमच्या संपर्काच्या प्रमाणीकरण अ‍ॅपांतलो सद्याचो कोड अवैध थारतलो. तुमची खात्री "
+"आसा?"
+
+#~ msgid ""
+#~ "When the modem stops responding, the phone quietly runs the recovery "
+#~ "steps by itself: radio restart, modem power cycle, firmware restart and "
+#~ "re-enabling a disabled radio. The phone is never rebooted automatically. "
+#~ "If nothing helps you are asked to reboot. When this is off, the Modem "
+#~ "Recovery window opens instead so you can run the steps yourself."
+#~ msgstr ""
+#~ "मॉडेम प्रतिसाद दिवपाचें बंद जाता तेन्ना, फोन रिकवरीचीं पावलां गुपचिपपणान आपणेंच "
+#~ "चलयता: रेडिओ परतून सुरू करप, मॉडेम पॉवर सायकल, फर्मवेर परतून सुरू करप आनी बंद केल्लो "
+#~ "रेडिओ परतून चालू करप. फोन केन्नाच आपोआप रिबूट जायना. कांयच उपेग जायना जाल्यार तुमकां "
+#~ "रिबूट करपाक सांगतात. हें बंद आसतना, ताचे बदला मॉडेम रिकवरी विंडो उगडटा, जाका लागून "
+#~ "तुमी हीं पावलां स्वता चलोवंक शकतात."
+
+#~ msgid "🔴 Reboot Modem"
+#~ msgstr "🔴 मॉडेम रिबूट करचें"
+
+#~ msgid "Recover"
+#~ msgstr "रिकवर करात"
+
+#~ msgid "Restart Modem"
+#~ msgstr "मॉडेम परतून सुरू करात"
+
+#~ msgid "Restarting Modem..."
+#~ msgstr "मॉडेम परतून सुरू करप..."
+
+#~ msgid "Restarting RIL..."
+#~ msgstr "आरआयएल परतून सुरू करप..."
+
+#~ msgid "Restored!"
+#~ msgstr "परतून मेळ्ळां!"
+
+#~ msgid "Failed. Reboot Device."
+#~ msgstr "अपेशी. डिव्हायस रिबूट करचें."
+
+#, python-brace-format
+#~ msgid "Verifying... {attempt}"
+#~ msgstr "सत्यापीत करप... {attempt}"
+
+#~ msgid "Set \"SMS Switch Wipe Device\""
+#~ msgstr "\"एसएमएस स्विच वाइप डिव्हायस\" सेट करात."
+
+#~ msgid "Automatic"
+#~ msgstr "स्वयंचलित"
+
+#~ msgid ""
+#~ "Carriers limit how large a multimedia message can be. Images and videos "
+#~ "you attach are automatically compressed to fit under this limit before "
+#~ "sending.\n"
+#~ "\n"
+#~ "Automatic uses the limit reported by the phone's MMS service, which is "
+#~ "right for most carriers. Pick a smaller value if your messages fail to "
+#~ "send, or a larger one if you know your carrier allows it."
+#~ msgstr ""
+#~ "कॅरियर मल्टिमिडिया संदेश कितलो व्हड आसूं येता हाचेर मर्यादा घालतात. तुमी जोडिल्ल्यो "
+#~ "प्रतिमा आनी व्हिडियो धाडचे पयलीं ह्या मर्यादे सकयल बसपाक आपोआप संकुचित जातात.\n"
+#~ "\n"
+#~ "स्वयंचलित फोनाच्या एमएमएस सेवेन कळयल्ली मर्यादा वापरता, जी चडश्या कॅरियरां खातीर "
+#~ "योग्य आसा. तुमचे संदेश धाडपाक अपेस आयल्यार ल्हान मोल निवडात, वा तुमचो कॅरियर "
+#~ "परवानगी दिता म्हूण खबर आसल्यार व्हडलें निवडात."
+
+#~ msgid ""
+#~ "Trusted contacts can wipe your device. TOTP is mandatory for this feature "
+#~ "to work. Add contacts below and set their secret trigger phrase. Example "
+#~ "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real "
+#~ "life example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+#~ msgstr ""
+#~ "विस्वासपात्र संपर्क तुमचें डिव्हायस पुसून उडोवंक शकतात. ह्या वैशिश्ट्याक काम करपाखातीर "
+#~ "TOTP सक्तीचें आसा. सकयल संपर्क जोडात आनी तांचे गुपीत ट्रिगर वाक्यांश सेट करात. देखीची "
+#~ "साचा: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' खर्‍या "
+#~ "जिवितांतली देख: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+
+#~ msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+#~ msgstr "एमएमएस (Max 600KB) खातीर रेकॉर्डिंग चड व्हड आसा. कृपया ल्हान रिटेक करात."
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 एसएमएस&समाप्त"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} थांबयल्ल्या प्रमाणें घालून"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 उणाव"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "UnmuteMic हें नांव"
+
+#~ msgid "MuteMic"
+#~ msgstr "म्यूटमाइक हें नांव"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "स्पीकरबंद"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "स्पीकरऑन"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "विस्तारीकरणाक परवानगी दिवची"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr "स्लायडराक 100% वयर वचपाक दिवचें. विस्तारीत आवाज विकृत जावंक शकता."
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "कॉल जोडटकच निवडिल्ल्या आउटपुटाक लागू जावपी हो मूळ हार्डवेअर आवाज. कॉला वेळार "
+#~ "आवाजाचीं बटणां ह्या मूळ पांवड्या वयर फकत बारीक समायोजन करतात, देखून मूळ 0% आसल्यार "
+#~ "कॉल केन्नाच आयकुपाक येना. 100% परस चड मोलां सॉफ्टवेअर विस्तारीकरण वापरतात आनी "
+#~ "आवाज विकृत जावंक शकता. वायर आशिल्लें हेडसेट आनी Bluetooth पांवडे फुडाराच्या रूटिंग "
+#~ "आदारा खातीर सांबाळून दवरतात."
+
+#~ msgid "Mute Microphone"
+#~ msgstr "मायक्रोफोन म्यूट करचो"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "{number} कडेन धाडपाक अपेस आयलें"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "सानुकूल मांडावळी काडून उडोवप"
+
+#~ msgid "Delete Settings"
+#~ msgstr "सेटिंग्ज काडून उडोवप"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "सगळ्यो सानुकूल सेटिंग्ज निवळ करप? आपत्कालीन क्रमांक वचतले."
+
+#~ msgid "Settings cleared"
+#~ msgstr "सेटिंग्ज निवळ केल्यात"
+
+#~ msgid "Error saving settings"
+#~ msgstr "सेटिंग्ज जतनाय घेवपाक त्रुटी"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "TOTP सेटअप दाखयात"
+
+#~ msgid "Failed to send message"
+#~ msgstr "संदेश धाडपाक अपेस आयलें"
+
+#~ msgid "Switching address book..."
+#~ msgstr "पत्तो पुस्तक बदलत..."

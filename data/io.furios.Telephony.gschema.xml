@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="io.furios.Telephony" path="/io/furios/Telephony/">
+    <key name="own-number" type="s">
+      <default>''</default>
+      <summary>Own Number</summary>
+      <description>The user's own phone number.</description>
+    </key>
+    <key name="default-country-code" type="s">
+      <default>''</default>
+      <summary>Default Country Code</summary>
+      <description>Default country code for formatting numbers without international prefix.</description>
+    </key>
+    <key name="reject-call-message" type="s">
+      <default>''</default>
+      <summary>Reject Message</summary>
+      <description>Message to send when rejecting a call.</description>
+    </key>
+    <key name="reject-call-messages" type="s">
+      <default>'[]'</default>
+      <summary>Reject Messages</summary>
+      <description>JSON list of messages to choose from when rejecting a call.</description>
+    </key>
+    <key name="call-volume-levels" type="s">
+      <default>'{}'</default>
+      <summary>Call Volume Levels</summary>
+      <description>JSON map of output route to base volume percent applied when a call connects.</description>
+    </key>
+    <key name="notification-override-repeated-calls-bypass" type="s">
+      <default>'false'</default>
+      <summary>Repeated Calls Bypass</summary>
+      <description>Whether repeated calls bypass Do Not Disturb.</description>
+    </key>
+    <key name="ringback-enabled" type="s">
+      <default>'false'</default>
+      <summary>Ringback Enabled</summary>
+      <description>Whether custom ringback is enabled.</description>
+    </key>
+    <key name="ringback-custom-file" type="s">
+      <default>''</default>
+      <summary>Custom Ringback File</summary>
+      <description>Path to custom ringback file.</description>
+    </key>
+    <key name="emergency-numbers" type="s">
+      <default>'[]'</default>
+      <summary>Emergency Numbers</summary>
+      <description>JSON serialized array of configured emergency numbers.</description>
+    </key>
+    <key name="trusted-sms-location-request" type="s">
+      <default>'[]'</default>
+      <summary>Find My Telephony</summary>
+      <description>JSON serialized array of trusted contacts for location requests.</description>
+    </key>
+    <key name="trusted-sms-silent-callback" type="s">
+      <default>'[]'</default>
+      <summary>Trusted Callback</summary>
+      <description>JSON serialized array of trusted contacts for silent callbacks.</description>
+    </key>
+    <key name="trusted-sms-relay" type="s">
+      <default>'[]'</default>
+      <summary>SMS Relay</summary>
+      <description>JSON serialized array of trusted contacts for SMS relay.</description>
+    </key>
+    <key name="trusted-sms-ssh-access" type="s">
+      <default>'[]'</default>
+      <summary>SMS tmate</summary>
+      <description>JSON serialized array of trusted contacts for tmate ssh access.</description>
+    </key>
+    <key name="trusted-sms-lock-device" type="s">
+      <default>'[]'</default>
+      <summary>Lock Device</summary>
+      <description>JSON serialized array of trusted contacts for device locking.</description>
+    </key>
+    <key name="notification-override-dnd-bypass-contacts" type="s">
+      <default>'[]'</default>
+      <summary>Priority Contacts</summary>
+      <description>JSON serialized array of priority contacts.</description>
+    </key>
+    <key name="notification-override-sms-custom-tone-contacts" type="s">
+      <default>'[]'</default>
+      <summary>SMS Custom Tones</summary>
+      <description>JSON serialized array of SMS custom tones per contact.</description>
+    </key>
+    <key name="notification-override-call-custom-contacts" type="s">
+      <default>'[]'</default>
+      <summary>Ring Custom Tones</summary>
+      <description>JSON serialized array of ring custom tones per contact.</description>
+    </key>
+      <key name="address-book-sources" type="s">
+      <default>'[]'</default>
+      <summary>Address Book Sources</summary>
+      <description>JSON serialized array of configured address book sources.</description>
+    </key>
+    <key name="duplicate-resolver-enabled" type="b">
+      <default>true</default>
+      <summary>Enable Duplicate Contacts Resolver</summary>
+      <description>Whether to show the duplicate contacts resolution banner.</description>
+    </key>
+    <key name="unknown-callers" type="s">
+      <default>'none'</default>
+      <summary>Unknown Callers Action</summary>
+      <description>Action to take for unknown callers: none, block, hide, silence.</description>
+    </key>
+    <key name="unknown-callers-search" type="s">
+      <default>'false'</default>
+      <summary>Search Unknown Callers</summary>
+      <description>Show search button for unknown callers.</description>
+    </key>
+    <key name="unknown-callers-engine" type="s">
+      <default>'duckduckgo'</default>
+      <summary>Unknown Callers Search Engine</summary>
+      <description>Search engine to use for unknown callers.</description>
+    </key>
+    <key name="unknown-callers-custom-url" type="s">
+      <default>''</default>
+      <summary>Unknown Callers Custom URL</summary>
+      <description>Custom URL for unknown callers search.</description>
+    </key>
+    <key name="trusted-sms-location-request-enabled" type="b">
+      <default>false</default>
+      <summary>Find My Telephony Enabled</summary>
+      <description>Whether the feature Location Requests is enabled. Note: It also requires a trusted contact, secret, and TOTP setup to work.</description>
+    </key>
+    <key name="trusted-sms-silent-callback-enabled" type="b">
+      <default>false</default>
+      <summary>Trusted Callback Enabled</summary>
+      <description>Whether the feature Trusted Callback is enabled. Note: It also requires a trusted contact, secret, and TOTP setup to work.</description>
+    </key>
+    <key name="trusted-sms-relay-enabled" type="b">
+      <default>false</default>
+      <summary>SMS Relay Enabled</summary>
+      <description>Whether the feature SMS Relay is enabled. Note: It also requires a trusted contact, secret, and TOTP setup to work.</description>
+    </key>
+    <key name="trusted-sms-ssh-access-enabled" type="b">
+      <default>false</default>
+      <summary>SMS tmate Enabled</summary>
+      <description>Whether the feature SMS tmate is enabled. Note: It also requires a trusted contact, secret, and TOTP setup to work.</description>
+    </key>
+    <key name="trusted-sms-lock-device-enabled" type="b">
+      <default>false</default>
+      <summary>Lock Device Enabled</summary>
+      <description>Whether the feature Lock Device is enabled. Note: It also requires a trusted contact, secret, and TOTP setup to work.</description>
+    </key>
+    <key name="voicemail-number" type="s">
+      <default>''</default>
+      <summary>Voicemail Number</summary>
+      <description>Custom voicemail mailbox number; empty uses the number provisioned on the SIM.</description>
+    </key>
+    <key name="automatic-modem-recovery" type="b">
+      <default>true</default>
+      <summary>Automatic Modem Recovery</summary>
+      <description>Whether the app silently runs the modem recovery steps (never the reboot) when the modem stops responding, instead of opening the Modem Recovery window.</description>
+    </key>
+    <key name="mms-size-limit" type="s">
+      <default>'600'</default>
+      <summary>MMS Size Limit</summary>
+      <description>Maximum total MMS attachment size in kilobytes.</description>
+    </key>
+  </schema>
+</schemalist>
