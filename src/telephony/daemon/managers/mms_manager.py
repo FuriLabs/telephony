@@ -1,0 +1,658 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+import mimetypes
+import os
+import random
+import shutil
+import tempfile
+import threading
+import time
+from telephony.shared.utils.log_utils import logger
+from gi.repository import Gio, GLib, GObject
+
+from telephony.shared.utils.phone_utils import get_own_number, normalize_number
+from telephony.shared.utils.thread_utils import run_in_background
+
+
+MMS_RESOLVE_TIMEOUT_SECONDS = 180
+MMS_DELIVERY_WATCH_LIMIT = 50
+UNCLAIMED_STATE_LIMIT = 20
+SEEN_SIGNATURE_LIMIT = 50
+
+MIME_EXTENSION_MAP = {
+    "image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif",
+    "image/bmp": ".bmp", "image/tiff": ".tiff", "image/webp": ".webp",
+    "image/heic": ".heic", "image/heif": ".heif", "image/jp2": ".jp2",
+    "image/svg+xml": ".svg", "image/x-icon": ".ico",
+
+    "video/mp4": ".mp4", "video/x-matroska": ".mkv", "video/webm": ".webm",
+    "video/x-msvideo": ".avi", "video/quicktime": ".mov",
+    "video/3gpp": ".3gp", "video/3gpp2": ".3g2",
+    "video/x-ms-wmv": ".wmv", "video/mpeg": ".mpg", "video/x-flv": ".flv",
+
+    "audio/mpeg": ".mp3", "audio/flac": ".flac", "audio/x-wav": ".wav",
+    "audio/wav": ".wav", "audio/ogg": ".ogg", "audio/amr": ".amr",
+    "audio/mp4": ".m4a", "audio/aac": ".aac", "audio/x-m4a": ".m4a",
+    "audio/midi": ".mid", "audio/x-matroska": ".mka",
+
+    "application/pdf": ".pdf", "application/rtf": ".rtf",
+    "application/msword": ".doc", "application/vnd.ms-excel": ".xls",
+    "application/vnd.ms-powerpoint": ".ppt",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx",
+    "application/vnd.oasis.opendocument.text": ".odt",
+    "application/vnd.oasis.opendocument.spreadsheet": ".ods",
+    "application/vnd.oasis.opendocument.presentation": ".odp",
+    "text/plain": ".txt", "text/csv": ".csv", "text/x-log": ".log",
+    "text/vcard": ".vcf", "text/calendar": ".ics", "text/html": ".html",
+    "application/json": ".json", "text/yaml": ".yaml", "text/xml": ".xml",
+    "text/x-python": ".py", "text/x-shellscript": ".sh",
+
+    "application/zip": ".zip", "application/x-tar": ".tar",
+    "application/gzip": ".tar.gz", "application/x-bzip2": ".tar.bz2",
+    "application/x-xz": ".tar.xz", "application/x-rar-compressed": ".rar",
+    "application/x-7z-compressed": ".7z",
+    "application/vnd.debian.binary-package": ".deb",
+    "application/x-debian-package": ".deb", "application/vnd.android.package-archive": ".apk",
+    "application/java-archive": ".jar", "application/smil+xml": ".smil"
+}
+
+
+class MmsManager(GObject.Object):
+    """
+    Manages MMS sending, receiving, and storage, interfacing with ofono and mmsd.
+    """
+    __gsignals__ = {
+        "message-received": (GObject.SignalFlags.RUN_FIRST, None, (str, object, str, str, object, str)),
+    }
+
+    def __init__(self, db_manager, eds_manager=None, gsettings_mgr=None, notification_manager=None,
+                 owns_reception=True):
+        super().__init__()
+        self.db = db_manager
+        self.eds = eds_manager
+        self.gsettings_mgr = gsettings_mgr
+        self.notification_manager = notification_manager
+        self.owns_reception = owns_reception
+
+        self.bus = None
+        self.proxy = None
+        self.manager_proxy = None
+        self.connected = False
+        self.service_path = None
+        self.subs = []
+
+        self.seen_mms_signatures = []
+        self.processed_paths = set()
+        self.last_sent_mms = None
+        self.active_chat_provider = None
+
+        self.inflight_mms = {}
+        self.inflight_mms_paths = {}
+        self.inflight_mms_recipients = {}
+        self.unclaimed_mms_states = {}
+        self.delivery_watch = {}
+        self.mms_send_lock = threading.Lock()
+
+        if not mimetypes.inited:
+            mimetypes.init()
+
+        self.local_att_dir = os.path.join(GLib.get_user_data_dir(), "telephony", "attachments")
+
+        os.makedirs(self.local_att_dir, exist_ok=True)
+
+        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        try:
+
+            if self.owns_reception:
+                self.subs.append(self.bus.signal_subscribe(
+                    "org.ofono.mms", "org.ofono.mms.Service", "MessageAdded",
+                    None, None, Gio.DBusSignalFlags.NONE,
+                    self.on_message_added_raw, None
+                ))
+
+            self.subs.append(self.bus.signal_subscribe(
+                "org.ofono.mms", "org.ofono.mms.Message", "PropertyChanged",
+                None, None, Gio.DBusSignalFlags.NONE,
+                self.on_message_prop_changed, None
+            ))
+
+            self.subs.append(self.bus.signal_subscribe(
+                "org.ofono.mms", "org.ofono.mms.Service", "MessageSendError",
+                None, None, Gio.DBusSignalFlags.NONE,
+                self.on_message_send_error, None
+            ))
+
+            self.init_manager()
+
+        except Exception as e:
+            logger.error(f"[MMS] Bus Error: {e}")
+
+    def init_manager(self):
+        try:
+            self.manager_proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                "org.ofono.mms", "/org/ofono/mms", "org.ofono.mms.Manager", None
+            )
+            ret = self.manager_proxy.call_sync("GetServices", None, Gio.DBusCallFlags.NONE, -1, None)
+            services = ret.unpack()[0]
+            if services:
+                self.service_path = services[0][0]
+                logger.debug("[MMS-LOG] MANAGER-INIT | MMS Service found and connected")
+                self.connect_service_proxy()
+                self.load_existing_messages()
+            else:
+                logger.debug("[MMS-LOG] MANAGER-INIT | No MMS services found")
+        except Exception as e:
+            logger.debug(f"[MMS-LOG] INIT-FAILED | {e}")
+
+    def connect_service_proxy(self):
+        try:
+            self.proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                "org.ofono.mms", self.service_path, "org.ofono.mms.Service", None
+            )
+            if self.proxy:
+                self.connected = True
+                if self.gsettings_mgr:
+                    enabled = self.gsettings_mgr.get_setting("delivery_reports") == "true"
+                    self.set_delivery_reports(enabled)
+        except Exception as e:
+            logger.debug(f"[MMS-LOG] PROXY-FAILED | {e}")
+
+    def set_delivery_reports(self, enabled, on_result=None):
+        if not self.proxy:
+            self.init_manager()
+            if not self.proxy:
+                if on_result:
+                    on_result(False, "no proxy")
+                return
+
+        def answered(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.error(f"[MMS-LOG] DELIVERY-REPORTS | {e}")
+                if on_result:
+                    on_result(False, str(e))
+                return
+            if on_result:
+                on_result(True, None)
+
+        self.proxy.call("SetProperty",
+                        GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                        Gio.DBusCallFlags.NONE, -1, None, answered, None)
+
+    def load_existing_messages(self):
+        if not self.proxy or not self.owns_reception:
+            return
+        logger.debug("[MMS-LOG] HISTORY-CHECK | Scanning daemon for existing messages")
+
+        def scanned(proxy, result, _data):
+            try:
+                for msg_path, props in proxy.call_finish(result).unpack()[0]:
+                    self.process_message_signal(msg_path, props)
+            except Exception as e:
+                logger.debug(f"[MMS-LOG] HISTORY-ERROR | {e}")
+
+        self.proxy.call("GetMessages", None, Gio.DBusCallFlags.NONE, -1, None, scanned, None)
+
+    def on_message_added_raw(self, conn, sender, path, iface, signal, params, user_data):
+        try:
+            msg_path, props = params.unpack()
+            logger.debug(f"[MMS-LOG] SIGNAL-RECV | New message signal at {msg_path}")
+            self.process_message_signal(msg_path, props)
+        except Exception as e:
+            logger.debug(f"[MMS-LOG] SIGNAL-ERROR | {e}")
+
+    def process_message_signal(self, msg_path, props):
+        try:
+            if msg_path in self.processed_paths:
+                logger.debug(f"[MMS-LOG] DEDUP-PATH | Ignoring duplicate signal for {msg_path}")
+                return
+
+            status = props.get("Status", "")
+            if isinstance(status, GLib.Variant):
+                status = status.unpack()
+
+            logger.debug(f"[MMS-LOG] MSG-STATUS | Path: {msg_path} | Status: {status}")
+
+            if status == "sent":
+                return
+
+            if status == "received" or status == "downloaded":
+                sender = props.get("Sender", "Unknown")
+                if isinstance(sender, GLib.Variant):
+                    sender = sender.unpack()
+
+                date = props.get("Date", "")
+                if isinstance(date, GLib.Variant):
+                    date = date.unpack()
+
+                subject = props.get("Subject", "")
+                if isinstance(subject, GLib.Variant):
+                    subject = subject.unpack()
+
+                signature = f"{sender}_{date}_{subject}"
+
+                if signature in self.seen_mms_signatures:
+                    logger.debug(f"[MMS-LOG] DEDUP-SIG | Duplicate content ignored: {signature}")
+                    self.processed_paths.add(msg_path)
+                    self.delete_message_from_daemon(msg_path)
+                    return
+
+                self.seen_mms_signatures.append(signature)
+                if len(self.seen_mms_signatures) > SEEN_SIGNATURE_LIMIT:
+                    self.seen_mms_signatures.pop(0)
+                self.processed_paths.add(msg_path)
+
+                logger.debug("[MMS-LOG] MSG-PROCESS | Starting parse and store sequence")
+
+                def process():
+                    self.parse_and_store(msg_path, props)
+                    self.delete_message_from_daemon(msg_path)
+
+                run_in_background(process)
+
+            elif status == "draft":
+                logger.debug("[MMS-LOG] MSG-WAIT | Notification only. Waiting for auto-download.")
+        except Exception as e:
+            logger.debug(f"[MMS-LOG] SIGNAL-PROC-ERR | {e}")
+
+    def delete_message_from_daemon(self, msg_path):
+        try:
+            msg_proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                "org.ofono.mms", msg_path, "org.ofono.mms.Message", None
+            )
+            def deleted(proxy, result, _data):
+                try:
+                    proxy.call_finish(result)
+                    logger.debug(f"[MMS-LOG] MSG-CLEANUP | Removed {msg_path} from daemon storage")
+                except Exception as e:
+                    logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
+
+            msg_proxy.call("Delete", None, Gio.DBusCallFlags.NONE, -1, None, deleted, None)
+        except Exception as e:
+            logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
+
+    def send_mms(self, recipients, body=None, attachment_paths=[]):
+        if not self.proxy:
+            self.init_manager()
+            if not self.proxy:
+                logger.error("[MMS] Cannot send: MMS service not ready")
+                return False
+
+        current_sig = f"{sorted(recipients)}_{body}_{len(attachment_paths)}"
+        if self.last_sent_mms:
+            last_sig, last_time = self.last_sent_mms
+            if last_sig == current_sig and (time.time() - last_time) < 3.0:
+                logger.debug("[MMS-LOG] SEND-BLOCK | Double-click prevented")
+                return False
+
+        self.last_sent_mms = (current_sig, time.time())
+
+        fmt_attachments = []
+        temp_files = []
+
+        logger.debug(f"[MMS-LOG] SEND-START | Recipients: {len(recipients)} | Files: {len(attachment_paths)}")
+
+        if body:
+            try:
+                tf = tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".txt")
+                tf.write(body)
+                tf.close()
+                temp_files.append(tf.name)
+                fmt_attachments.append((f"text_{os.path.basename(tf.name)}", "text/plain", tf.name))
+            except Exception as e:
+                logger.debug(f"[MMS-LOG] BODY-TEMP-FAIL | {e}")
+
+        for path in attachment_paths:
+            ctype = self.detect_mime(path)
+            fmt_attachments.append((os.path.basename(path), ctype or "application/octet-stream", path))
+
+        try:
+            ret = self.proxy.call_sync("SendMessage",
+                                       GLib.Variant("(asva(sss))", (list(recipients), GLib.Variant("s", ""), fmt_attachments)),
+                                       Gio.DBusCallFlags.NONE, -1, None)
+            self.cleanup(temp_files)
+            msg_path = ret.unpack()[0]
+            logger.debug(f"[MMS-LOG] SEND-SUCCESS | Handed off to mmsd as {msg_path}")
+
+            return msg_path
+        except Exception as e:
+            self.cleanup(temp_files)
+            logger.debug(f"[MMS-LOG] SEND-FAILED | {e}")
+            return None
+
+    def send_mms_tracked(self, recipients, body, attachment_paths, row_id):
+        path = self.send_mms(recipients, body=body, attachment_paths=attachment_paths)
+        if not path:
+            self.db.update_message_status(row_id, "failed")
+            return
+
+        delivery_recipients = {}
+        delivery_reports_enabled = (
+            self.gsettings_mgr
+            and self.gsettings_mgr.get_setting("delivery_reports") == "true"
+        )
+        if delivery_reports_enabled:
+            for recipient in recipients:
+                number = normalize_number(recipient, permissive=True)
+                if number:
+                    delivery_recipients[number] = "none"
+
+        with self.mms_send_lock:
+            state = self.unclaimed_mms_states.pop(path, None)
+            if state is None:
+                self.inflight_mms[row_id] = path
+                self.inflight_mms_paths[path] = row_id
+                self.inflight_mms_recipients[row_id] = delivery_recipients
+
+        if state is not None:
+            self.resolve_mms(row_id, state, path, delivery_recipients)
+            return
+
+        GLib.timeout_add_seconds(MMS_RESOLVE_TIMEOUT_SECONDS, self.timeout_mms, row_id)
+
+    def resolve_mms(self, row_id, state, path=None, delivery_recipients=None):
+        status = "sent" if state == "sent" else "failed"
+        logger.info(f"[MMS] Row {row_id} resolved: {status}")
+        self.db.update_message_status(row_id, status)
+
+        if status != "sent" or not path or not delivery_recipients:
+            return
+
+        with self.mms_send_lock:
+            self.delivery_watch[path] = {
+                "row_id": row_id,
+                "recipients": dict(delivery_recipients),
+            }
+            while len(self.delivery_watch) > MMS_DELIVERY_WATCH_LIMIT:
+                self.delivery_watch.pop(next(iter(self.delivery_watch)))
+
+    def timeout_mms(self, row_id):
+        with self.mms_send_lock:
+            if row_id not in self.inflight_mms:
+                return False
+            path = self.inflight_mms.pop(row_id)
+            self.inflight_mms_paths.pop(path, None)
+            self.inflight_mms_recipients.pop(row_id, None)
+
+        logger.warning(f"[MMS] Row {row_id} timed out without a state signal")
+        self.db.update_message_status(row_id, "failed")
+        return False
+
+    def update_delivery_status(self, path, value):
+        if not isinstance(value, str) or not value.startswith("delivery_update,"):
+            return
+
+        update = value.split(",", 1)[1]
+        if "=" not in update:
+            logger.debug(f"[MMS] Invalid delivery update for {path}: {value}")
+            return
+
+        recipient, delivery_status = update.split("=", 1)
+        recipient = normalize_number(recipient, permissive=True)
+        delivery_status = delivery_status.lower()
+
+        row_id = None
+        all_retrieved = False
+
+        with self.mms_send_lock:
+            watch = self.delivery_watch.get(path)
+            if not watch:
+                return
+
+            statuses = watch["recipients"]
+            delivery_recipient = None
+
+            if recipient in statuses:
+                delivery_recipient = recipient
+            else:
+                matching_recipients = []
+                for number in statuses:
+                    if recipient and number.lstrip("+") == recipient.lstrip("+"):
+                        matching_recipients.append(number)
+
+                if len(matching_recipients) == 1:
+                    delivery_recipient = matching_recipients[0]
+                elif len(statuses) == 1:
+                    delivery_recipient = next(iter(statuses))
+
+            if delivery_recipient is None:
+                logger.debug(f"[MMS] Delivery report recipient {recipient} does not match {path}")
+                return
+
+            statuses[delivery_recipient] = delivery_status
+            row_id = watch["row_id"]
+            all_retrieved = bool(statuses) and all(status == "retrieved" for status in statuses.values())
+
+            logger.info(f"[MMS] Delivery report for row {row_id}: {delivery_recipient}={delivery_status}")
+
+            if all_retrieved:
+                self.delivery_watch.pop(path, None)
+
+        if all_retrieved and row_id is not None:
+            self.db.update_message_status(row_id, "delivered")
+
+    def on_message_prop_changed(self, conn, sender, path, iface, signal, params, user_data):
+        try:
+            name, value = params.unpack()
+        except Exception as e:
+            logger.debug(f"[MMS] Message state unpack failed: {e}")
+            return
+
+        if name != "status":
+            return
+
+        if isinstance(value, str) and value.startswith("delivery_update,"):
+            self.update_delivery_status(path, value)
+            return
+
+        if value != "sent":
+            return
+
+        row_id = None
+        delivery_recipients = None
+        with self.mms_send_lock:
+            row_id = self.inflight_mms_paths.pop(path, None)
+            if row_id is not None:
+                self.inflight_mms.pop(row_id, None)
+                delivery_recipients = self.inflight_mms_recipients.pop(row_id, {})
+            else:
+                self.unclaimed_mms_states[path] = value
+                while len(self.unclaimed_mms_states) > UNCLAIMED_STATE_LIMIT:
+                    self.unclaimed_mms_states.pop(next(iter(self.unclaimed_mms_states)))
+
+        if row_id is not None:
+            self.resolve_mms(row_id, "sent", path, delivery_recipients)
+
+    def on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
+        logger.warning(f"[MMS] MessageSendError from daemon: {params.unpack() if params else None}")
+        row_id = None
+        with self.mms_send_lock:
+            if self.inflight_mms:
+                row_id = next(iter(self.inflight_mms))
+                msg_path = self.inflight_mms.pop(row_id)
+                self.inflight_mms_paths.pop(msg_path, None)
+                self.inflight_mms_recipients.pop(row_id, None)
+
+        if row_id is not None:
+            self.resolve_mms(row_id, "failed")
+
+    def cleanup(self, files):
+        for tmp in files:
+            if os.path.exists(tmp):
+                try:
+                    os.remove(tmp)
+                except Exception as e:
+                    logger.debug(f"[MMS-LOG] CLEANUP-FAIL | {e}")
+
+    def parse_and_store(self, path, props):
+        try:
+            sender = props.get("Sender", None) or "Unknown"
+            if isinstance(sender, GLib.Variant):
+                sender = sender.unpack()
+
+            if self.db and self.db.is_blocked(sender, kind="messages"):
+                logger.info(f"[MMS] Dropping message from blocked sender {sender}")
+                self.delete_message_from_daemon(path)
+                return
+
+            recipients = props.get("Recipients", [])
+            if isinstance(recipients, GLib.Variant):
+                recipients = recipients.unpack()
+
+            date = props.get("Date", "")
+            if isinstance(date, GLib.Variant):
+                date = date.unpack()
+
+            attachments = props.get("Attachments", [])
+            if isinstance(attachments, GLib.Variant):
+                attachments = attachments.unpack()
+
+            final_atts = []
+            body_text = ""
+
+            logger.debug(f"[MMS] Parsing message with {len(attachments)} attachments")
+
+            for att in attachments:
+                if len(att) < 3:
+                    continue
+
+                mime, src_path = str(att[1]), att[2]
+                real_mime = self.detect_mime(src_path)
+                is_file_only = any(x in real_mime.lower() for x in ["vcard", "smil", "shellscript", "python", "javascript"])
+
+                if real_mime == "text/plain" and not is_file_only:
+                    content = self.read_text_safely(src_path)
+                    if content and not body_text:
+                        body_text = content
+                        logger.debug(f"[MMS] Body extracted ({len(content)} chars)")
+                elif "smil" not in real_mime.lower():
+                    dest = self.sanitize_and_store(src_path, mime)
+                    if dest:
+                        final_atts.append(dest)
+                        logger.debug(f"[MMS] Attachment saved: {real_mime} -> {os.path.basename(dest)}")
+
+            logger.debug(f"[MMS] Parsing complete, {len(final_atts)} attachments saved")
+
+            sender_name = sender
+            if self.eds and sender != "Unknown":
+                name = self.eds.get_contact_name(sender)
+                if name:
+                    sender_name = name
+
+            own_number = get_own_number()
+            if not own_number and self.db:
+                own_number = self.gsettings_mgr.get_setting("own_number") if self.gsettings_mgr else ""
+
+            valid_recipients = [r for r in recipients if r and r.strip()]
+            participants = set(valid_recipients)
+
+            if sender != "Unknown":
+                participants.add(sender)
+
+            if own_number:
+                norm_own = normalize_number(own_number)
+                participants.discard(own_number)
+                participants.discard(norm_own)
+
+            clean_list = sorted([normalize_number(p) for p in participants if p])
+
+            if len(clean_list) == 0:
+                saved_remote_number = sender
+            elif len(clean_list) == 1:
+                saved_remote_number = clean_list[0]
+            else:
+                saved_remote_number = clean_list
+
+            status = "unread"
+            if self.active_chat_provider:
+                try:
+                    active_chat, focused = self.active_chat_provider()
+                    chat_id = saved_remote_number if isinstance(saved_remote_number, str) else ",".join(saved_remote_number)
+                    if active_chat and focused and chat_id == active_chat:
+                        status = "read"
+                except Exception as e:
+                    logger.debug(f"[MMS] Active chat check failed: {e}")
+
+            if self.db:
+                self.db.add_message(
+                    remote_number=saved_remote_number,
+                    direction="incoming",
+                    body=body_text,
+                    status=status,
+                    attachments=final_atts,
+                    sender=sender
+                )
+
+            GLib.idle_add(self.emit, "message-received", sender, recipients, str(date), body_text, final_atts, sender_name)
+
+        except Exception as e:
+            logger.error(f"[MMS] Parse error: {e}")
+
+    def read_text_safely(self, path):
+        try:
+            if os.path.exists(path):
+                with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                    return f.read()
+        except Exception as e:
+            logger.debug(f"[MMS] Text read failed: {e}")
+        return None
+
+    def detect_mime(self, path):
+        try:
+            import magic
+            mime = magic.from_file(path, mime=True)
+            if mime and mime in ["text/html", "text/plain", "text/xml", "application/xml"]:
+                try:
+                    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                        header = f.read(1024)
+                        if "<smil" in header.lower():
+                            return "application/smil+xml"
+                except Exception as e:
+                    logger.warning(f"[MMS] Failed to sniff content for SMIL: {e}")
+
+            if mime:
+                return mime
+        except Exception as e:
+            logger.debug(f"[MMS] MIME detection failed: {e}")
+        return "application/octet-stream"
+
+    def sanitize_and_store(self, src_path, mime_hint=None):
+        try:
+            if not os.path.exists(src_path):
+                return None
+            detected = self.detect_mime(src_path)
+            final_mime = detected if detected != "application/octet-stream" else (mime_hint or detected)
+
+            if not mimetypes.inited:
+                mimetypes.init()
+
+            ext = mimetypes.guess_extension(final_mime)
+
+            ext = MIME_EXTENSION_MAP.get(final_mime, ext)
+            if not ext:
+                ext = ".bin"
+
+            new_name = f"mms_{int(time.time())}_{random.randint(1000, 9999)}{ext}"
+            dest_path = os.path.join(self.local_att_dir, new_name)
+            shutil.copy2(src_path, dest_path)
+
+            fd = os.open(dest_path, os.O_RDONLY)
+            try:
+                os.fsync(fd)
+            finally:
+                os.close(fd)
+            return dest_path
+        except Exception as e:
+            logger.debug(f"[MMS] Attachment store failed: {e}")
+            return None

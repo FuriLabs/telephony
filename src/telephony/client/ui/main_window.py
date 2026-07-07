@@ -1,0 +1,1122 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from telephony.shared.utils.thread_utils import run_in_background
+import urllib.parse
+from gettext import gettext as _, ngettext
+
+import gi
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk
+from telephony.shared.utils.log_utils import logger
+
+from telephony.shared.utils.phone_utils import normalize_number
+from telephony.shared.utils.system_utils import get_phosh_emergency_calls
+from telephony.shared.utils import region_utils as utils
+from telephony.client.ui.views.history_view import HistoryView
+from telephony.client.ui.views.contacts_view import ContactsView
+from telephony.client.ui.views.dialpad_view import DialpadView
+from telephony.client.ui.views.messages_view import MessagesView
+from telephony.client.ui.windows.settings_window import SettingsWindow
+from telephony.client.ui.windows.contact_editor_window import ContactEditor
+from telephony.client.ui.windows.missed_scheduled_messages_window import (MissedScheduledMessagesDialog)
+from telephony.client.ui.windows.blocklist_editor_window import BlocklistEditor
+from telephony.client.ui.windows.info_window import InfoPage
+from telephony.client.ui.windows.contact_picker_window import ContactPicker
+from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
+from telephony.client.utils.model_utils import (call_direction_text, call_outcome_text,
+                                                call_ending_text)
+from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add_choice_row,
+                                                      install_sheet_host, present_sheet,
+                                                      present_sheet_page, close_sheet_page,
+                                                      present_alert_sheet,
+                                                      present_unblock_choice)
+
+CAPABILITY_BANNER_REASONS = ("no-modem", "airplane-mode", "no-voice-service")
+
+
+class MainWindow(Adw.Window):
+
+    def __init__(self, application, ofono_manager, db_manager, eds_manager, gsettings_mgr=None, show_calls=False, show_messages=False, show_contacts=False):
+        self._unread_timer = None
+        self._menu_actions = {}
+        self._resolve_section = None
+        self.in_error_mode = False
+        self._manual_sync_active = False
+        self._ussd_in_flight = False
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = False
+        self._ussd_generation = 0
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+        self._loading_toast = None
+        self._current_toast = None
+        self._current_message = None
+        self._setup_hint_shown = False
+        """Initialize the main window."""
+        super().__init__(application=application)
+        self.app = application
+
+        self.show_calls_mode = show_calls
+        self.show_messages_mode = show_messages
+        self.show_contacts_mode = show_contacts
+
+        self.set_title("Telephony")
+        self.set_icon_name("io.furios.Telephony.Calls")
+        self.set_default_size(360, 600)
+        self.eds = eds_manager
+        self.db = db_manager
+        self.ofono = ofono_manager
+        self.gsettings_mgr = gsettings_mgr
+        self.daemon = self.app.daemon_client
+
+
+        self.toast_overlay = Adw.ToastOverlay()
+        self.set_content(self.toast_overlay)
+        self.sheet_host = install_sheet_host(self)
+        self.sheet_host.connect("notify::open", self.on_sheet_open_changed)
+
+        main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.toast_overlay.set_child(main_vbox)
+
+        self.header = Adw.HeaderBar()
+        title_lbl = Gtk.Label(label=_("Telephony"), css_classes=["title"])
+        self.header.set_title_widget(title_lbl)
+
+        self.actions_btn = Gtk.MenuButton(icon_name="open-menu-symbolic")
+        self.setup_actions_menu()
+        self.header.pack_end(self.actions_btn)
+        main_vbox.append(self.header)
+
+        self.banner = Adw.Banner()
+        self.banner.set_revealed(False)
+        self.banner.connect("button-clicked", self.on_banner_action)
+        self._banner_action = None
+        self._banner_states = {}
+        main_vbox.append(self.banner)
+
+        self.stack = Adw.ViewStack()
+
+        self.history_view = None
+        self.contacts_view = None
+        self.messages_view = None
+        self.dialpad_view = None
+        self.msgs_page = None
+        self._view_pages = {}
+
+        def add_lazy_page(name, title, icon):
+            placeholder = Adw.Bin()
+            page = self.stack.add_titled(placeholder, name, title)
+            page.set_icon_name(icon)
+            self._view_pages[name] = placeholder
+            return page
+
+        if self.show_calls_mode:
+            add_lazy_page("dialpad", _("Dialpad"), "input-dialpad-symbolic")
+            add_lazy_page("history", _("History"), "document-open-recent-symbolic")
+
+        if self.show_messages_mode:
+            self.msgs_page = add_lazy_page("messages", _("Messages"), "mail-message-new-symbolic")
+
+        if self.show_contacts_mode:
+            add_lazy_page("contacts", _("Contacts"), "system-users-symbolic")
+
+        self.stack.connect("notify::visible-child-name", self.on_stack_page_changed)
+        self.check_country_code()
+        self.ensure_view(self.stack.get_visible_child_name())
+
+        self.stack.set_vexpand(True)
+        main_vbox.append(self.stack)
+
+        self.switcher = Adw.ViewSwitcherBar(stack=self.stack, reveal=True)
+        main_vbox.append(self.switcher)
+
+
+        self.signal_ids = []
+        if self.ofono:
+            self.signal_ids.append((self.ofono, self.ofono.connect("connection-status", self.on_ofono_status)))
+            self.signal_ids.append((self.ofono, self.ofono.connect("action-error", lambda obj, msg: self.notify_error(msg))))
+            self.signal_ids.append((self.ofono, self.ofono.connect("ussd-notification", self.on_ussd_notification)))
+            self.signal_ids.append((self.ofono, self.ofono.connect("ussd-request", self.on_ussd_request)))
+            self.signal_ids.append((self.ofono, self.ofono.connect("ussd-state-changed", self.on_ussd_state_changed)))
+
+        self.signal_ids.append((self.eds, self.eds.connect("contacts-loaded", self.on_contacts_loaded)))
+
+        if self.ofono:
+            for sig in ("call-added", "call-removed", "dial-availability-changed"):
+                self.signal_ids.append((self.ofono, self.ofono.connect(sig, self.refresh_calling_controls)))
+            self.signal_ids.append((self.ofono, self.ofono.connect("dial-availability-changed", self.on_capability_changed)))
+            self.signal_ids.append((self.ofono, self.ofono.connect("modem-interface-appeared", self.on_modem_interface_appeared)))
+            self.signal_ids.append((self.ofono, self.ofono.connect("emergency-numbers-changed", self.on_emergency_numbers_changed)))
+            self.on_capability_changed()
+            self.restore_ussd_session()
+
+        if self.msgs_page:
+            self.signal_ids.append((self.db, self.db.connect("messages-updated", lambda *args: self.update_unread_badge())))
+
+        if self.eds.is_ready:
+            self.update_unread_badge()
+            self.update_sensitive_actions(True)
+        else:
+            self.update_sensitive_actions(False)
+            self.set_banner_state("syncing", _("Syncing contacts…"), priority=10)
+
+        self.check_own_number()
+        self.check_emergency_setup()
+
+        self.connect("close-request", self.on_close_request)
+        self.connect("map", self.on_window_map)
+        self._initial_check_done = False
+
+        self.signal_ids.append((self.gsettings_mgr.gsettings, self.gsettings_mgr.gsettings.connect("changed::duplicate-resolver-enabled", self.on_duplicate_resolver_setting_changed)))
+
+        self.popup_queue = []
+        self.is_popup_active = False
+        self.pending_conflicts = []
+        self._duplicate_count = 0
+
+
+    def enqueue_popup(self, start_func):
+        self.popup_queue.append(start_func)
+        self.process_popup_queue()
+
+    def process_popup_queue(self):
+        if self.is_popup_active:
+            return
+        if not self.popup_queue:
+            return
+
+        self.is_popup_active = True
+        func = self.popup_queue.pop(0)
+        try:
+            func(self.on_popup_done)
+        except Exception as e:
+            logger.error(f"[MainWindow] Popup task failed: {e}")
+            self.on_popup_done()
+
+    def on_popup_done(self):
+        self.is_popup_active = False
+        self.process_popup_queue()
+
+    def on_window_map(self, *args):
+        if not self._initial_check_done:
+            self._initial_check_done = True
+            self.check_daemon_service()
+            missed_messages_dialog = MissedScheduledMessagesDialog(self)
+            self.enqueue_popup(missed_messages_dialog.check_missed_scheduled_messages)
+
+    def check_daemon_service(self):
+        self.apply_service_presence(not self.app.daemon_missing,
+                                    self.app.core.service_monitor.state)
+
+    def apply_service_presence(self, present, unit_state):
+        if present:
+            self.clear_banner_state("service")
+            return
+        if unit_state == "restarting":
+            self.set_banner_state("service", _("Telephony service is restarting…"), priority=30)
+            return
+        self.set_banner_state("service", _("Telephony service is not running"),
+                              button_label=_("Start"),
+                              action=self.start_service_from_banner,
+                              priority=30)
+
+    def start_service_from_banner(self):
+        self.app.start_service(self.on_daemon_retried)
+
+    def on_daemon_retried(self, started):
+        if started:
+            self.notify_success(_("Telephony service started"))
+
+    def on_close_request(self, *args):
+        self.cleanup()
+        self.app.on_window_destroyed(self)
+        return False
+
+    def cleanup(self):
+        if self._ussd_in_flight or self._ussd_state in ("active", "user-response"):
+            self._ussd_generation += 1
+            self._ussd_in_flight = False
+            self._ussd_state = "idle"
+            if self.ofono:
+                self.ofono.cancel_ussd()
+
+        if self._unread_timer:
+            GLib.source_remove(self._unread_timer)
+            self._unread_timer = None
+
+        for obj, sig_id in self.signal_ids:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.signal_ids.clear()
+
+        if self.history_view:
+            self.history_view.cleanup()
+
+        if self.messages_view:
+            self.messages_view.cleanup()
+
+        if self.contacts_view:
+            self.contacts_view.cleanup()
+
+        if self.dialpad_view:
+            self.dialpad_view.cleanup()
+
+        self.switcher = None
+        self.stack = None
+        self.toast_overlay = None
+
+        self.set_content(None)
+
+    def check_own_number(self):
+        def checked(num):
+            if not num:
+                num = self.gsettings_mgr.get_setting("own_number")
+            if not num:
+                self.show_setup_hint(_("Set your number in Settings"))
+
+        self.app.daemon_client.get_own_number(checked)
+
+    def check_country_code(self):
+        cc = self.gsettings_mgr.get_setting("default_country_code")
+        if cc:
+            utils.set_custom_region(cc)
+            return
+
+        def detected(region):
+            if region:
+                self.gsettings_mgr.set_setting("default_country_code", region)
+                utils.set_custom_region(region)
+            else:
+                self.show_setup_hint(_("Please set Default Country Code in Settings"))
+
+        self.app.daemon_client.detect_region(detected)
+
+    def on_modem_interface_appeared(self, _ofono, interface):
+        if interface != "org.ofono.NetworkRegistration":
+            return
+        if self.gsettings_mgr.get_setting("default_country_code"):
+            return
+        self.check_country_code()
+
+    def check_emergency_setup(self):
+        try:
+            if not get_phosh_emergency_calls():
+                return
+
+            if self.gsettings_mgr.get_emergency_numbers():
+                return
+
+            if not self.ofono or not self.ofono.modem_state_known:
+                return
+
+            if self.ofono.network_emergency_numbers:
+                return
+
+            GLib.idle_add(lambda: self.show_setup_hint(_("Setup Emergency Numbers in Settings")) or False)
+        except Exception as e:
+            logger.warning(f"[MainWindow] Emergency setup check warning: {e}")
+
+    def on_emergency_numbers_changed(self, _mirror):
+        self.check_emergency_setup()
+
+    def setup_actions_menu(self):
+        group = Gio.SimpleActionGroup()
+        entries = (
+            ("resolve-duplicates", self.on_resolve_duplicates_clicked),
+            ("settings", self.on_settings_click),
+            ("reload-contacts", self.on_force_sync_click),
+            ("about", self.on_about_click),
+        )
+        for name, callback in entries:
+            action = Gio.SimpleAction.new(name, None)
+            action.connect("activate", lambda a, p, cb=callback: GLib.idle_add(lambda: cb(None) or False))
+            group.add_action(action)
+            self._menu_actions[name] = action
+        self.insert_action_group("menu", group)
+
+        self._resolve_section = Gio.Menu()
+        main_section = Gio.Menu()
+        main_section.append(_("Settings"), "menu.settings")
+        main_section.append(_("Reload Contacts"), "menu.reload-contacts")
+        main_section.append(_("About"), "menu.about")
+        menu = Gio.Menu()
+        menu.append_section(None, self._resolve_section)
+        menu.append_section(None, main_section)
+        self.actions_btn.set_menu_model(menu)
+
+    def on_about_click(self, _btn):
+        InfoPage.show(self)
+
+    def set_resolve_visible(self, visible):
+        self._resolve_section.remove_all()
+        if visible:
+            self._resolve_section.append(_("Resolve Duplicates"), "menu.resolve-duplicates")
+
+    def update_sensitive_actions(self, sensitive):
+        for name in ("settings", "reload-contacts", "import-export", "blocklist"):
+            if name in self._menu_actions:
+                self._menu_actions[name].set_enabled(sensitive)
+
+    def refresh_calling_controls(self, *args):
+        available = self.ofono.is_dialing_available() if self.ofono else True
+        if self.dialpad_view:
+            self.dialpad_view.set_calling_enabled(available)
+        if self.history_view:
+            self.history_view.set_calling_enabled(available)
+        if self.contacts_view:
+            self.contacts_view.set_calling_enabled(available)
+
+    def toast_target(self):
+        if self.sheet_host.get_open() and self.sheet_toast_overlay is not None:
+            return self.sheet_toast_overlay
+
+        dialog = self.get_visible_dialog()
+        if dialog is not None:
+            overlay = self.find_toast_overlay(dialog.get_child())
+            if overlay is not None:
+                return overlay
+        return self.toast_overlay
+
+    def find_toast_overlay(self, widget):
+        if widget is None:
+            return None
+        if isinstance(widget, Adw.ToastOverlay):
+            return widget
+        child = widget.get_first_child()
+        while child is not None:
+            found = self.find_toast_overlay(child)
+            if found is not None:
+                return found
+            child = child.get_next_sibling()
+        return None
+
+    def set_banner_state(self, key, message, button_label=None, action=None, priority=0):
+        self._banner_states[key] = {"message": message, "button": button_label,
+                                    "action": action, "priority": priority}
+        self.refresh_banner()
+
+    def clear_banner_state(self, key):
+        if self._banner_states.pop(key, None) is not None:
+            self.refresh_banner()
+
+    def refresh_banner(self):
+        if not self._banner_states:
+            self._banner_action = None
+            self.banner.set_revealed(False)
+            return
+
+        state = max(self._banner_states.values(), key=lambda s: s["priority"])
+        self.banner.set_title(state["message"])
+        self.banner.set_button_label(state["button"] or "")
+        self._banner_action = state["action"]
+        self.banner.set_revealed(True)
+
+    def on_banner_action(self, _banner):
+        if self._banner_action:
+            GLib.idle_add(lambda: self._banner_action() or False)
+
+    def show_toast(self, message, timeout=5, priority=None):
+        if self._current_toast is not None and self._current_message == message:
+            return self._current_toast
+
+        if self._current_toast is not None:
+            self._current_toast.dismiss()
+
+        toast = Adw.Toast.new(message)
+        toast.set_timeout(timeout)
+        if priority is not None:
+            toast.set_priority(priority)
+        toast.connect("dismissed", self.on_toast_dismissed, message)
+        self._current_toast = toast
+        self._current_message = message
+        self.toast_target().add_toast(toast)
+        return toast
+
+    def on_toast_dismissed(self, toast, message):
+        if self._current_toast is toast:
+            self._current_toast = None
+            self._current_message = None
+
+    def notify_error(self, message):
+        self.hide_loading()
+        self.show_toast(message, priority=Adw.ToastPriority.HIGH)
+
+    def notify_success(self, message):
+        self.hide_loading()
+        self.show_toast(message)
+
+    def notify_loading(self, message):
+        self.hide_loading()
+        self._loading_toast = self.show_toast(message, timeout=0)
+
+    def hide_loading(self):
+        if self._loading_toast is not None:
+            self._loading_toast.dismiss()
+            self._loading_toast = None
+            self._current_toast = None
+            self._current_message = None
+
+    def show_setup_hint(self, message):
+        if self._setup_hint_shown:
+            return
+        self._setup_hint_shown = True
+        toast = Adw.Toast.new(message)
+        toast.set_timeout(10)
+        toast.set_button_label(_("Settings"))
+        toast.connect("button-clicked", lambda t: GLib.idle_add(lambda: self.on_settings_click(None) or False))
+        self.toast_overlay.add_toast(toast)
+
+    def on_contacts_loaded(self, *args):
+        if self.eds.is_ready:
+            self.clear_banner_state("syncing")
+            if self._manual_sync_active:
+                self._manual_sync_active = False
+                self.notify_success(_("Contacts refreshed"))
+            else:
+                self.hide_loading()
+            self.update_sensitive_actions(True)
+
+    def update_unread_badge(self):
+        if self.msgs_page and self.db:
+            if (self._unread_timer is not None) and self._unread_timer:
+                GLib.source_remove(self._unread_timer)
+            self._unread_timer = GLib.timeout_add(200, self.do_update_unread_badge)
+
+    def do_update_unread_badge(self):
+        self._unread_timer = None
+        if self.msgs_page and self.db:
+            def fetch_unread():
+                count = self.db.get_total_unread_count()
+                GLib.idle_add(lambda: self.msgs_page.set_badge_number(count) or False)
+            run_in_background(fetch_unread)
+        return False
+
+    def on_ofono_status(self, manager, status, message):
+        logger.debug(f"[MainWindow] ofono status {status}: {message}")
+
+    def on_capability_changed(self, *args):
+        if self.ofono.dial_reason in CAPABILITY_BANNER_REASONS:
+            self.set_banner_state("capability", self.ofono.dial_description, priority=20)
+        else:
+            self.clear_banner_state("capability")
+
+    def on_stack_page_changed(self, *args):
+        self.ensure_view(self.stack.get_visible_child_name())
+        self.sync_chat_chrome()
+
+    def sync_chat_chrome(self):
+        is_showing_chat = (self.stack.get_visible_child_name() == "messages"
+                   and self.messages_view is not None
+                   and self.messages_view.is_showing_chat())
+        self.header.set_visible(not is_showing_chat)
+
+    def ensure_view(self, name):
+        placeholder = self._view_pages.get(name)
+        if placeholder is None or placeholder.get_child() is not None:
+            return
+
+        logger.debug(f"[MainWindow] Building view for tab: {name}")
+        if name == "dialpad":
+            self.dialpad_view = DialpadView(self)
+            placeholder.set_child(self.dialpad_view)
+            self.refresh_calling_controls()
+        elif name == "history":
+            self.history_view = HistoryView(self.db, self)
+            placeholder.set_child(self.history_view)
+            self.refresh_calling_controls()
+        elif name == "messages":
+            self.messages_view = MessagesView(self.db, self)
+            placeholder.set_child(self.messages_view)
+        elif name == "contacts":
+            self.contacts_view = ContactsView(self.eds, self)
+            placeholder.set_child(self.contacts_view)
+            self.refresh_calling_controls()
+
+    def open_chat_for_number(self, number):
+        if self.show_messages_mode:
+            self.ensure_view("messages")
+            self.stack.set_visible_child_name("messages")
+            self.messages_view.open_chat(number, number)
+
+    def open_dialpad_with_number(self, number):
+        if self.show_calls_mode:
+            self.ensure_view("dialpad")
+            self.stack.set_visible_child_name("dialpad")
+            self.dialpad_view.entry.set_text(number)
+            self.dialpad_view.entry.set_position(-1)
+
+    def handle_ussd(self, code):
+        if self._ussd_in_flight or self._ussd_state in ("active", "user-response"):
+            self.notify_error(_("A USSD request is already in progress"))
+            return
+        if not self.ofono:
+            self.notify_error(_("Modem not ready"))
+            return
+
+        self._ussd_generation += 1
+        generation = self._ussd_generation
+        self._ussd_in_flight = True
+        self._ussd_state = "active"
+        self._ussd_last_text = ""
+        self.show_ussd_waiting()
+
+        def done(result):
+            if generation != self._ussd_generation:
+                return
+            self._ussd_in_flight = False
+            if not result:
+                self.ofono.cancel_ussd()
+                self.show_ussd_error(_("USSD request failed"))
+                return
+
+            success, response, state = result
+            if not success:
+                if state in ("active", "user-response"):
+                    self.ofono.cancel_ussd()
+                self._ussd_state = "idle"
+                self.show_ussd_error(_("USSD request failed"))
+                return
+
+            self.apply_ussd_result(response, state)
+
+        self.ofono.start_ussd(code, done)
+
+    def restore_ussd_session(self):
+        if not self.ofono:
+            return
+
+        self._ussd_state = self.ofono.ussd_state or "idle"
+        text = self.ofono.ussd_text or ""
+        if self._ussd_state == "user-response":
+            self.show_ussd_request(text)
+        elif self._ussd_state == "active":
+            self.show_ussd_waiting(text)
+
+    def apply_ussd_result(self, text, state):
+        self._ussd_state = state or "idle"
+        text = text or ""
+
+        if self._ussd_state == "user-response":
+            self.show_ussd_request(text)
+        elif self._ussd_state == "active":
+            self.show_ussd_waiting(text)
+        else:
+            self.show_ussd_result(text or _("USSD session ended."))
+
+    def on_ussd_notification(self, _ofono, text):
+        self._ussd_in_flight = False
+        self.show_ussd_result(text or _("USSD session ended."))
+
+    def on_ussd_request(self, _ofono, text):
+        self._ussd_in_flight = False
+        self._ussd_state = "user-response"
+        self.show_ussd_request(text)
+
+    def on_ussd_state_changed(self, _ofono, state):
+        self._ussd_state = state or "idle"
+        if self._ussd_in_flight:
+            return
+        if self._ussd_state == "active":
+            self.show_ussd_waiting(self.ofono.ussd_text or self._ussd_last_text)
+        elif self._ussd_state == "user-response" and not self._ussd_sheet_active:
+            self.show_ussd_request(self.ofono.ussd_text or "")
+
+    def build_ussd_page(self, mode, text=""):
+        toolbar = Adw.ToolbarView()
+        header = Adw.HeaderBar(show_end_title_buttons=False)
+        toolbar.add_top_bar(header)
+
+        box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=16,
+            margin_top=18,
+            margin_bottom=24,
+            margin_start=18,
+            margin_end=18,
+        )
+
+        if text:
+            label = Gtk.Label(
+                label=text,
+                wrap=True,
+                selectable=True,
+                xalign=0,
+                valign=Gtk.Align.START,
+            )
+            box.append(label)
+
+        if mode == "waiting":
+            spinner = Adw.Spinner()
+            spinner.set_halign(Gtk.Align.CENTER)
+            spinner.set_valign(Gtk.Align.CENTER)
+            spinner.set_size_request(48, 48)
+            box.append(spinner)
+
+            waiting = Gtk.Label(
+                label=_("Waiting for USSD response…"),
+                wrap=True,
+                justify=Gtk.Justification.CENTER,
+                halign=Gtk.Align.CENTER,
+            )
+            box.append(waiting)
+
+            cancel = Gtk.Button(label=_("Cancel"))
+            cancel.connect("clicked", lambda _b: self.cancel_ussd_session())
+            box.append(cancel)
+
+        elif mode == "request":
+            self._ussd_response_entry = Gtk.Entry(
+                placeholder_text=_("Enter response")
+            )
+            self._ussd_response_entry.set_hexpand(True)
+            self._ussd_response_entry.connect("activate", lambda _e: self.respond_to_ussd())
+            self._ussd_response_entry.connect("changed", self.on_ussd_response_changed)
+            box.append(self._ussd_response_entry)
+
+            self._ussd_send_button = Gtk.Button(
+                label=_("Send"),
+                css_classes=["suggested-action"],
+            )
+            self._ussd_send_button.set_sensitive(False)
+            self._ussd_send_button.connect("clicked", lambda _b: self.respond_to_ussd())
+            box.append(self._ussd_send_button)
+
+            cancel = Gtk.Button(label=_("Cancel"))
+            cancel.connect("clicked", lambda _b: self.cancel_ussd_session())
+            box.append(cancel)
+
+        else:
+            close = Gtk.Button(label=_("Close"))
+            close.connect("clicked", lambda _b: self.close_ussd_sheet())
+            box.append(close)
+
+        scroll = Gtk.ScrolledWindow(
+            propagate_natural_height=True,
+            vexpand=True,
+            max_content_height=520,
+        )
+        scroll.set_child(box)
+        toolbar.set_content(scroll)
+        return Adw.NavigationPage(title=_("USSD"), child=toolbar)
+
+    def show_ussd_waiting(self, text=""):
+        self._ussd_last_text = text or self._ussd_last_text
+        self._ussd_sheet_active = True
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        present_sheet_page(self, self.build_ussd_page("waiting", self._ussd_last_text), replace=True)
+
+    def show_ussd_request(self, text):
+        self._ussd_last_text = text or ""
+        self._ussd_sheet_active = True
+        present_sheet_page(self, self.build_ussd_page("request", text), replace=True)
+
+    def show_ussd_result(self, text):
+        self._ussd_last_text = text or ""
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = True
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        present_sheet_page(self, self.build_ussd_page("result", self._ussd_last_text), replace=True)
+
+    def show_ussd_error(self, text):
+        self._ussd_last_text = text or ""
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = True
+        present_sheet_page(self, self.build_ussd_page("result", self._ussd_last_text), replace=True)
+
+    def on_ussd_response_changed(self, entry):
+        if self._ussd_send_button is not None:
+            self._ussd_send_button.set_sensitive(bool(entry.get_text().strip()))
+
+    def respond_to_ussd(self):
+        if self._ussd_in_flight or not self.ofono or self._ussd_response_entry is None:
+            return
+
+        response = self._ussd_response_entry.get_text().strip()
+        if not response:
+            return
+
+        generation = self._ussd_generation
+        self._ussd_in_flight = True
+        self._ussd_state = "active"
+        self.show_ussd_waiting()
+
+        def done(result):
+            if generation != self._ussd_generation:
+                return
+            self._ussd_in_flight = False
+            if not result:
+                self.ofono.cancel_ussd()
+                self.show_ussd_error(_("USSD response failed"))
+                return
+
+            success, network_response, state = result
+            if not success:
+                if state in ("active", "user-response"):
+                    self.ofono.cancel_ussd()
+                self._ussd_state = "idle"
+                self.show_ussd_error(_("USSD response failed"))
+                return
+
+            self.apply_ussd_result(network_response, state)
+
+        self.ofono.respond_ussd(response, done)
+
+    def cancel_ussd_session(self):
+        self._ussd_generation += 1
+        self._ussd_in_flight = False
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = False
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+        close_sheet_page(self)
+        if self.ofono:
+            self.ofono.cancel_ussd()
+
+    def close_ussd_sheet(self):
+        self._ussd_sheet_active = False
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+        close_sheet_page(self)
+
+    def on_sheet_open_changed(self, host, _param):
+        if host.get_open() or not self._ussd_sheet_active:
+            return
+
+        should_cancel = self._ussd_in_flight or self._ussd_state in ("active", "user-response")
+        self._ussd_generation += 1
+        self._ussd_in_flight = False
+        self._ussd_sheet_active = False
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+
+        if should_cancel and self.ofono:
+            self._ussd_state = "idle"
+            self.ofono.cancel_ussd()
+
+    def confirm_action(self, title, body, on_confirm):
+        def cb(resp):
+            if resp == "yes":
+                on_confirm()
+        present_alert_sheet(self, title, body,
+                            [("cancel", _("Cancel"), None), ("yes", _("Confirm"), "destructive")],
+                            cb)
+
+    def on_settings_click(self, btn):
+        present_sheet(self, SettingsWindow(self, self.eds, self.ofono))
+
+    def on_duplicate_resolver_setting_changed(self, settings, key):
+        enabled = settings.get_boolean(key)
+        if not enabled:
+            self.set_resolve_visible(False)
+            self.pending_conflicts = []
+            self.clear_banner_state("duplicates")
+        else:
+            if self.contacts_view:
+                self.contacts_view.check_duplicates()
+
+    def update_duplicate_status(self, conflicts):
+        self.pending_conflicts = conflicts
+        count = len(conflicts)
+        previous = self._duplicate_count
+        self._duplicate_count = count
+        resolver_enabled = self.gsettings_mgr.gsettings.get_boolean("duplicate-resolver-enabled")
+
+        if resolver_enabled and count > 0:
+            self.set_resolve_visible(True)
+            if count == previous:
+                return
+
+            message = ngettext(
+                "Found {count} duplicate contact.",
+                "Found {count} duplicate contacts.",
+                count
+            ).format(count=count)
+            self.set_banner_state("duplicates", message, _("Resolve"),
+                                  lambda: self.on_resolve_duplicates_clicked(None))
+        else:
+            self.set_resolve_visible(False)
+            self.clear_banner_state("duplicates")
+
+    def on_resolve_duplicates_clicked(self, btn):
+        if not self.pending_conflicts:
+            return
+        win = DuplicateResolutionWindow(self.pending_conflicts, self.eds, self.daemon, self.on_resolution_done)
+        win.present_standalone(self)
+
+    def on_resolution_done(self):
+        if self.contacts_view:
+            self.contacts_view.check_duplicates()
+
+    def present_blocklist_editor(self, number_preset=None):
+        if not self.eds.is_ready:
+            return
+
+        name_preset = ""
+        if number_preset:
+            contact_name = self.eds.get_contact_name(number_preset)
+            if contact_name:
+                name_preset = contact_name
+        present_sheet_page(self, BlocklistEditor(self.db, self.eds, self,
+                                                 number_preset=number_preset,
+                                                 name_preset=name_preset))
+
+    def on_force_sync_click(self, btn):
+
+        def done(refreshed):
+            if refreshed:
+                self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
+                return
+            self._manual_sync_active = True
+            self.eds.reload()
+
+        self.daemon.refresh_contacts(done)
+
+    def present_edit_contact(self, contact_data=None, number_preset=None):
+        if not self.eds.is_ready:
+            return
+
+        if contact_data is None and number_preset:
+            results = self.eds.search_contacts(number_preset)
+            if not results:
+                pass
+            elif len(results) == 1:
+                contact_data = self.eds.cache.get(results[0][0])
+            else:
+                def offer(books):
+                    book_names = {book["uid"]: book["name"] for book in (books or [])}
+                    self.choose_contact_to_edit(results, book_names)
+
+                self.daemon.get_address_books(offer)
+                return
+
+        self.open_contact_editor(contact_data, number_preset)
+
+    def open_contact_editor(self, contact_data, number_preset):
+        present_sheet_page(self, ContactEditor(self.eds, self, contact_data,
+                                               number_preset=number_preset))
+
+    def choose_contact_to_edit(self, results, book_names):
+        def build(group, window):
+            for res in results:
+                c_data = self.eds.cache.get(res[0])
+                if not c_data:
+                    continue
+
+                add_choice_row(group, window, c_data.get("name", _("Unknown")),
+                               lambda data=c_data: self.present_edit_contact(contact_data=data),
+                               subtitle=book_names.get(c_data.get("source_uid"),
+                                                       _("Unknown Addressbook")),
+                               opens_flow=True)
+
+        present_choice_sheet(self, _("Multiple Contacts Found"), build,
+                             description=_("Which contact would you like to edit?"))
+
+    def present_chat(self, number):
+        if not self.show_messages_mode:
+            logger.info("Messages mode not active. Opening the messages window for chat.")
+            self.get_application().open_messages_chat(number)
+            return
+
+        self.stack.set_visible_child_name("messages")
+        name = self.eds.get_contact_name(number) or number
+        self.messages_view.open_chat(number, name)
+
+    def start_call(self, number, hide_id=False):
+        self.set_focus(None)
+
+        if self.ofono and not self.ofono.is_dialing_available():
+            description = self.ofono.dial_description
+            logger.warning(f"[MainWindow] Not dialling {number}: "
+                           f"{description or "the daemon says calls cannot be placed"}")
+            self.notify_error(description if description else _("Call Failed"))
+            return
+
+        if not self.ofono:
+            logger.warning(f"[MainWindow] Not dialling {number}: no modem mirror")
+            self.notify_error(_("Call Failed"))
+            return
+
+        def done(success):
+            if not success:
+                logger.error(f"[MainWindow] Call failed to {number}")
+
+        logger.info(f"[MainWindow] Asking the daemon to dial {number}")
+        run_in_background(self.ofono.dial, number, on_complete=done, hide_id=hide_id)
+
+    def show_call_details(self, item):
+        page = Adw.NavigationPage(title=_("Call Details"))
+
+        def rebuild(*_args):
+            page.set_child(self.build_call_details(item))
+            return False
+
+        connections = [(self.eds, self.eds.connect("contacts-loaded",
+                                                   lambda *_a: GLib.idle_add(rebuild))),
+                       (self.db, self.db.connect("blocklist-updated",
+                                                 lambda *_a: GLib.idle_add(rebuild)))]
+
+        def on_hidden(p):
+            def check():
+                if p.get_parent() is not None:
+                    return False
+                for obj, handler in connections:
+                    obj.disconnect(handler)
+                connections.clear()
+                return False
+            GLib.idle_add(check)
+
+        page.connect("showing", rebuild)
+        page.connect("hidden", on_hidden)
+        present_sheet_page(self, page)
+
+    def build_call_details(self, item):
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        page = Adw.PreferencesPage()
+        toolbar.set_content(page)
+
+        grp_info = Adw.PreferencesGroup()
+        page.add(grp_info)
+        current_name = self.eds.get_contact_name(item.number) or item.name
+        rows = [(_("Number"), item.number), (_("Name"), current_name),
+                (_("Direction"), call_direction_text(item.direction)),
+                (_("Result"), call_outcome_text(item.direction, item.disconnect_reason)),
+                (_("Date"), item.full_ts), (_("Duration"), item.duration_str)]
+
+        if item.anonymous:
+            rows.append((_("Caller ID"), _("Hidden")))
+        if item.multiparty:
+            rows.append((_("Conference"), _("This call was part of a conference")))
+        if item.transferred:
+            rows.append((_("Transferred"), _("The call was handed to someone else")))
+
+        rows.append((_("Ended"), call_ending_text(item.disconnect_reason, item.direction)))
+
+        for title, value in rows:
+            grp_info.add(Adw.ActionRow(title=title, subtitle=str(value)))
+
+        grp_actions = Adw.PreferencesGroup()
+        page.add(grp_actions)
+
+        def add_action(label, callback, destructive=False, needs_eds=False, opens_flow=False):
+            row = Adw.ActionRow(title=label, activatable=True)
+            if destructive:
+                row.add_css_class("error")
+            if needs_eds and not self.eds.is_ready:
+                row.set_sensitive(False)
+            if opens_flow:
+                row.connect("activated", lambda r: GLib.idle_add(
+                    lambda: callback() or False))
+            else:
+                row.connect("activated", lambda r: GLib.idle_add(
+                    lambda: [close_sheet_page(self), callback()] and False))
+            grp_actions.add(row)
+
+        blocked_list = self.db.get_blocked_numbers()
+        is_blocked_id = None
+        blocked_entry = None
+        norm_item_num = normalize_number(item.number)
+        for entry in blocked_list:
+            if normalize_number(entry["number"]) == norm_item_num:
+                is_blocked_id = entry["id"]
+                blocked_entry = dict(entry)
+                break
+
+        if is_blocked_id:
+            def unblock():
+                present_unblock_choice(self, self.daemon, blocked_entry, "calls",
+                                       lambda: self.notify_success(_("Unblocked")))
+            add_action(_("Unblock Number"), unblock, needs_eds=True, opens_flow=True)
+        else:
+            is_saved = self.eds.get_contact_name(item.number) is not None
+            lbl = _("Edit Contact") if is_saved else _("Add to Contacts")
+            add_action(lbl, lambda: self.present_edit_contact(number_preset=item.number),
+                           needs_eds=True, opens_flow=True)
+
+            if not is_saved:
+                add_action(_("Add to Existing Contact"), lambda: self.on_add_to_existing(item),
+                               needs_eds=True, opens_flow=True)
+                add_action(_("Search Number"), lambda: self.search_number_online(item.number))
+
+        add_action(_("Send Message"), lambda: self.present_chat(item.number))
+        add_action(_("Copy Number"), lambda: self.copy_to_clipboard(item.number))
+
+        if not is_blocked_id:
+            add_action(_("Block Number"), lambda: self.present_blocklist_editor(number_preset=item.number),
+                       opens_flow=True,
+                       destructive=True, needs_eds=True)
+
+        add_action(_("Delete this call"),
+                   lambda: self.confirm_action(
+                       _("Delete Call"),
+                       _("The call with {who} on {when} will be removed from your history.").format(
+                           who=item.name or item.number, when=item.full_ts),
+                       lambda: [close_sheet_page(self),
+                                self.daemon.delete_call_entry(item.id)]),
+                   destructive=True, opens_flow=True)
+
+        return toolbar
+
+    def search_number_online(self, number):
+        clean_num = number.replace("+", "")
+        engine = self.gsettings_mgr.get_setting("unknown_callers_engine") or "duckduckgo"
+        custom_url = self.gsettings_mgr.get_setting("unknown_callers_custom_url") or ""
+
+        search_url = ""
+        encoded_num = urllib.parse.quote(clean_num)
+
+        if engine == "startpage":
+            search_url = f"https://www.startpage.com/do/dsearch?query={encoded_num}"
+        elif engine == "duckduckgo":
+            search_url = f"https://duckduckgo.com/?q={encoded_num}"
+        elif engine == "custom" and custom_url:
+            search_url = custom_url.replace("{number}", encoded_num)
+
+        if search_url:
+            Gio.AppInfo.launch_default_for_uri(search_url, None)
+
+    def copy_to_clipboard(self, text):
+        Gdk.Display.get_default().get_clipboard().set(text)
+        self.notify_success(_("Number copied"))
+
+    def on_add_to_existing(self, item):
+        def cb(result):
+            uid, name = result
+
+            def done(success):
+                if success:
+                    self.notify_success(_("Added to {name}").format(name=name))
+                else:
+                    logger.error(f"[MainWindow] Failed to add number {item.number} to contact {uid}")
+                    self.notify_error(_("Failed to add number"))
+
+            def add_task():
+                vcard = self.eds.build_number_added_vcard(uid, item.number)
+                if not vcard:
+                    return False
+                return self.daemon.save_contact(vcard, uid=uid)[0]
+
+            run_in_background(add_task, on_complete=done)
+
+        picker = ContactPicker(
+            self.eds,
+            self,
+            cb,
+            title=_("Add Number"),
+            action_label=_("Save"),
+            allow_custom_number=False,
+            return_contact_uid=True
+        )
+        present_sheet_page(self, picker)

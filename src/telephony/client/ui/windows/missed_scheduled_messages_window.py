@@ -1,0 +1,167 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from gi.repository import Gtk, GLib, Pango
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+from telephony.shared.utils.datetime_utils import parse_timestamp
+from telephony.client.ui.widgets.chat_bubbles_widget import ChatBubbleFactory
+import json
+import os
+from telephony.client.ui.widgets.common_widget import (present_alert_sheet, close_sheet_page)
+
+
+class MissedScheduledMessagesDialog:
+
+    def __init__(self, app_window):
+        self.app_window = app_window
+        self.db = app_window.db
+        self.eds = app_window.eds
+        self.daemon = app_window.daemon
+
+    def check_missed_scheduled_messages(self, done_callback=None):
+        def done(missed):
+            if not missed:
+                if done_callback:
+                    done_callback()
+                return
+            self.process_missed_message_queue(missed, 0, done_callback)
+
+        self.daemon.get_missed_messages(done)
+
+    def process_missed_message_queue(self, messages, index, done_callback):
+        if index >= len(messages):
+            if done_callback:
+                done_callback()
+            return
+
+        msg = messages[index]
+        mid = msg.get("id")
+        number = msg.get("number") or ""
+        body = msg.get("body") or ""
+        attachments_json = msg.get("attachments") or ""
+        scheduled_ts = msg.get("timestamp") or ""
+        total_count = len(messages)
+        current_count = index + 1
+
+        contact_name = number
+        if "," in number:
+            parts = number.split(",")
+            name = self.db.get_group_name(parts)
+            if name:
+                contact_name = name
+        else:
+            cname = self.eds.get_contact_name(number)
+            if cname:
+                contact_name = cname
+
+        display_name = contact_name if len(contact_name) < 30 else contact_name[:27] + "..."
+        display_body = body if len(body) < 150 else body[:147] + "..."
+
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        main_box.set_margin_top(6)
+        main_box.set_margin_bottom(6)
+        main_box.set_margin_start(12)
+        main_box.set_margin_end(12)
+
+        lbl_to = Gtk.Label(label=_("To: {name}").format(name=display_name))
+        lbl_to.add_css_class("dim-label")
+        lbl_to.set_halign(Gtk.Align.CENTER)
+        main_box.append(lbl_to)
+
+        bubble_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        bubble_box.add_css_class("chat-bubble-scheduled")
+        bubble_box.set_halign(Gtk.Align.CENTER)
+        bubble_box.set_margin_top(4)
+        bubble_box.set_margin_bottom(4)
+
+        media_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        media_box.set_visible(False)
+        bubble_box.append(media_box)
+
+        lbl_msg = Gtk.Label(wrap=True, xalign=0)
+        lbl_msg.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
+        lbl_msg.set_max_width_chars(30)
+        lbl_msg.set_natural_wrap_mode(Gtk.NaturalWrapMode.INHERIT)
+        lbl_msg.set_use_markup(True)
+        lbl_msg.set_lines(4)
+        lbl_msg.set_ellipsize(Pango.EllipsizeMode.END)
+
+        if display_body:
+            final_body = ChatBubbleFactory.linkify(display_body)
+            lbl_msg.set_markup(final_body)
+            lbl_msg.set_visible(True)
+        else:
+            lbl_msg.set_visible(False)
+
+        bubble_box.append(lbl_msg)
+
+        if attachments_json:
+            try:
+                att_list = json.loads(attachments_json)
+                processed_files = []
+                for att in att_list:
+                    real_path = att
+                    if isinstance(att, (list, tuple)) and len(att) > 2:
+                        real_path = att[2]
+                    if os.path.exists(real_path):
+                        processed_files.append({"path": real_path})
+
+                if processed_files:
+                    media_box.set_visible(True)
+                    ChatBubbleFactory.create_attachment_layout(media_box, processed_files, bubble_box, lambda: True)
+            except Exception as ex:
+                logger.error(f"[MissedScheduled] Attachment processing error: {ex}")
+
+        lbl_time = Gtk.Label(css_classes=["chat-time"], xalign=1)
+        if scheduled_ts:
+            try:
+                dt = parse_timestamp(scheduled_ts)
+                short_ts = dt.strftime("%H:%M %d.%m")
+                lbl_time.set_text(_("Scheduled: {time}").format(time=short_ts))
+            except Exception as ex:
+                logger.warning(f"[MissedScheduled] Date parse warning: {ex}")
+                lbl_time.set_text(scheduled_ts)
+
+        bubble_box.append(lbl_time)
+        main_box.append(bubble_box)
+
+        btn_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+
+        btn_send = Gtk.Button(label=_("Send Now"))
+        btn_send.add_css_class("suggested-action")
+
+        def on_send_now(b):
+            close_sheet_page(self.app_window)
+            self.daemon.send_missed_message(mid)
+            self.app_window.notify_success(_("Sending message to {number}...").format(number=number))
+            GLib.idle_add(lambda: self.process_missed_message_queue(messages, index + 1, done_callback))
+
+        btn_send.connect("clicked", lambda b: GLib.idle_add(lambda: on_send_now(b) or False))
+        btn_box.append(btn_send)
+
+        btn_remove = Gtk.Button(label=_("Remove"))
+        btn_remove.add_css_class("destructive-action")
+
+        def on_remove(b):
+            close_sheet_page(self.app_window)
+
+            def removed(_ok):
+                self.app_window.notify_success(_("Message removed"))
+                self.process_missed_message_queue(messages, index + 1, done_callback)
+
+            self.daemon.delete_message(mid, removed)
+
+        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: on_remove(b) or False))
+        btn_box.append(btn_remove)
+
+        main_box.append(btn_box)
+        present_alert_sheet(
+            self.app_window,
+            _("Scheduled ({current}/{total})").format(current=current_count, total=total_count),
+            None, [], lambda answer: None, extra_child=main_box)
+

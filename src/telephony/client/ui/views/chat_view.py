@@ -1,0 +1,1574 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from telephony.client.utils.mms_utils import max_attachment_size
+from telephony.shared.utils.thread_utils import run_in_background
+from telephony.client.ui.widgets.common_widget import (blocked_state_text,
+                                                      present_unblock_choice, present_sheet_page)
+from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
+from telephony.shared.utils.datetime_utils import parse_timestamp
+
+import json
+import os
+import mimetypes
+from gettext import gettext as _
+
+import gi
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango, GObject
+from telephony.shared.utils.log_utils import logger
+
+from telephony.shared.utils.phone_utils import normalize_number, conversation_id
+from telephony.client.utils.model_utils import MessageItem
+from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
+from telephony.client.ui.windows.contact_picker_window import ContactPicker
+from telephony.client.ui.widgets.chat_bubbles_widget import ChatBubbleFactory
+
+LOAD_MORE_BATCH = 50
+MAX_MESSAGES_IN_MEMORY = 200
+SCROLL_HOLD_MS = 150
+LOAD_OLDER_SETTLE_MS = 120
+
+
+class ChatPage(Gtk.Box):
+
+    def __init__(self, db, app_window, number_or_list, messages_view, contact_name="", target_id=None, unread_count=0, prefill_text=None, prefill_attachments=None):
+        self._read_timer = None
+        self._refresh_timer = None
+        self.focus_handler_id = None
+        self.search_timer = None
+        self.search_token = 0
+        self._draft_saved = False
+        """Initialize the ChatPage."""
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.db = db
+        self.app_window = app_window
+        self.messages_view = messages_view
+        self.attachments = []
+        self._recipient_call_btns = []
+        self.media_controller = ChatMediaController(self, self.app_window)
+
+        self.initial_unread_count = unread_count
+
+        if isinstance(number_or_list, str) and "," in number_or_list:
+            self.is_group = True
+            self.recipients = sorted([normalize_number(n.strip()) for n in number_or_list.split(",")])
+            self.number = ",".join(self.recipients)
+        elif isinstance(number_or_list, list):
+            self.is_group = True
+            self.recipients = sorted([normalize_number(n) for n in number_or_list])
+            self.number = ",".join(self.recipients)
+        else:
+            self.is_group = False
+            norm = normalize_number(number_or_list)
+            self.recipients = [norm]
+            self.number = norm
+
+        if not contact_name and any(c.isalpha() for c in self.number):
+            self.contact_name = _("Unknown")
+        else:
+            self.contact_name = contact_name
+
+        if self.contact_name == "Unknown":
+            self.contact_name = _("Unknown")
+
+        self.db_number = self.number
+
+        self.is_loading = True
+        self.is_jumping = False
+        self.is_fetching_older = False
+        self.is_fetching_newer = False
+        self.all_messages_loaded = False
+        self.older_settle_id = None
+        self.scroll_hold_id = None
+        self.scroll_hold_value_id = None
+        self.scroll_hold_timer = None
+        self.target_highlight_id = target_id
+        self._pending_initial_read = False
+
+        self.newest_db_offset = 0
+        self.oldest_db_offset = 0
+
+        if self.app_window:
+            self.focus_handler_id = self.app_window.connect("notify::is-active", lambda obj, pspec: self.on_window_focus_changed(obj, pspec))
+            self.connect("map", self.on_map)
+            self.connect("unmap", self.on_unmap)
+
+        self.db_signals = []
+        self.eds_signals = []
+
+        sig_id = self.db.connect("messages-updated", self.on_messages_updated)
+        self.db_signals.append((self.db, sig_id))
+        self.watch_blocklist()
+
+        self.setup_ui()
+
+        if prefill_text:
+            self.msg_buffer.set_text(prefill_text)
+
+        if prefill_attachments:
+            for p in prefill_attachments:
+                if p not in self.attachments:
+                    self.attachments.append(p)
+            self.refresh_attachment_ui()
+
+        if self.target_highlight_id:
+            self.load_context_for_message(self.target_highlight_id)
+        else:
+            run_in_background(self.initial_load)
+
+    def setup_ui(self):
+        header = Adw.HeaderBar(show_start_title_buttons=True, show_end_title_buttons=True)
+
+        title_text = self.contact_name
+        if title_text == self.number and any(c.isdigit() for c in str(self.number)):
+            title_text = _("Unknown")
+
+        subtitle_text = self.number
+
+        if self.is_group:
+            participant_names = []
+            for num in self.recipients:
+                name = self.app_window.eds.get_display_name(num)
+                if not name:
+                    if not any(c.isalpha() for c in num):
+                        name = _("Unknown")
+                    else:
+                        name = num
+                elif name == "Unknown":
+                    name = _("Unknown")
+                participant_names.append(name)
+
+            full_str = ", ".join(participant_names)
+            subtitle_text = full_str if len(full_str) < 50 else _("{count} Participants").format(count=len(self.recipients))
+        self.plain_subtitle = subtitle_text
+        self.title_widget = Adw.WindowTitle(title=title_text, subtitle=subtitle_text)
+        header.set_title_widget(self.title_widget)
+        self.show_blocked_in_title()
+
+        self.btn_search = Gtk.ToggleButton(icon_name="system-search-symbolic", css_classes=["circular"])
+        header.pack_end(self.btn_search)
+
+        self.btn_menu = Gtk.ToggleButton(icon_name="view-more-symbolic", css_classes=["circular"])
+        header.pack_end(self.btn_menu)
+
+        self.append(header)
+
+        self.details_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_DOWN)
+        self._details_built = False
+        self._block_buttons = {}
+        self._block_labels = {}
+        self.btn_menu.connect("toggled", self.ensure_details_panel)
+        self.btn_menu.bind_property("active", self.details_revealer, "reveal-child", GObject.BindingFlags.BIDIRECTIONAL)
+        self.append(self.details_revealer)
+
+        self.search_bar = Gtk.SearchBar()
+        self.search_entry = Gtk.SearchEntry(hexpand=True)
+        self.search_bar.set_child(self.search_entry)
+        self.search_bar.connect_entry(self.search_entry)
+
+        self.btn_search.bind_property("active", self.search_bar, "search-mode-enabled", GObject.BindingFlags.BIDIRECTIONAL)
+        self.search_entry.connect("search-changed", self.on_search_changed)
+        self.append(self.search_bar)
+
+        def on_btn_search_toggled(btn):
+            if btn.get_active() and self.btn_menu.get_active():
+                self.btn_menu.set_active(False)
+        self.btn_search.connect("toggled", on_btn_search_toggled)
+
+        def on_btn_menu_toggled(btn):
+            if btn.get_active() and self.btn_search.get_active():
+                self.btn_search.set_active(False)
+            if btn.get_active():
+                self.refresh_recipient_call_buttons()
+        self.btn_menu.connect("toggled", on_btn_menu_toggled)
+
+        self.store = Gio.ListStore(item_type=MessageItem)
+
+        self.filter = Gtk.CustomFilter.new(self.filter_func, None)
+        self.filter_model = Gtk.FilterListModel.new(self.store, self.filter)
+
+        self.selection = Gtk.NoSelection(model=self.filter_model)
+
+        factory = Gtk.SignalListItemFactory()
+        factory.connect("setup", self.on_factory_setup)
+        factory.connect("bind", self.on_factory_bind)
+        factory.connect("unbind", ChatBubbleFactory.unbind)
+        factory.connect("teardown", ChatBubbleFactory.teardown)
+
+        self.list_view = Gtk.ListView(model=self.selection, factory=factory)
+        self.scrolled = Gtk.ScrolledWindow(child=self.list_view, vexpand=True)
+        dismiss = Gtk.GestureClick()
+        dismiss.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+
+        def dismiss_top_panels(_gesture, _n_press, _x, _y):
+            if self.btn_menu.get_active():
+                self.btn_menu.set_active(False)
+            if self.btn_search.get_active() and not self.search_entry.get_text():
+                self.btn_search.set_active(False)
+
+        dismiss.connect("pressed", dismiss_top_panels)
+        self.scrolled.add_controller(dismiss)
+
+        self.scrolled.add_css_class("inverted-list")
+
+        self.chat_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.loading_spinner = Adw.Spinner()
+        self.loading_spinner.set_size_request(24, 24)
+        self.loading_spinner.set_margin_top(12)
+        self.loading_spinner.set_margin_bottom(12)
+        self.loading_spinner.set_halign(Gtk.Align.CENTER)
+        self.loading_spinner.set_valign(Gtk.Align.START)
+        self.loading_spinner.set_can_target(False)
+        self.loading_spinner.set_visible(False)
+        spinner_overlay = Gtk.Overlay()
+        spinner_overlay.set_child(self.scrolled)
+        spinner_overlay.add_overlay(self.loading_spinner)
+        self.chat_vbox.append(spinner_overlay)
+
+        self.content_stack = Gtk.Stack()
+        self.content_stack.add_named(Gtk.Box(), "loading")
+        self.content_stack.add_named(self.chat_vbox, "chat")
+
+        self.search_results_list = Gtk.ListBox(css_classes=["boxed-list"])
+        self.search_results_list.set_margin_start(10)
+        self.search_results_list.set_margin_end(10)
+        self.search_results_list.set_margin_top(10)
+        self.search_results_list.set_margin_bottom(10)
+        self.search_results_list.set_selection_mode(Gtk.SelectionMode.NONE)
+        self.search_scrolled = Gtk.ScrolledWindow(child=self.search_results_list)
+        self.content_stack.add_named(self.search_scrolled, "search_results")
+
+        self.content_stack.set_visible_child_name("loading")
+        self.append(self.content_stack)
+
+        self.v_adj = self.scrolled.get_vadjustment()
+        self.v_adj.connect("value-changed", self.on_scroll_changed)
+
+        self.att_scrolled = Gtk.ScrolledWindow()
+        self.att_scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
+        self.att_scrolled.set_min_content_height(40)
+        self.att_scrolled.set_margin_start(10)
+        self.att_scrolled.set_margin_end(10)
+        self.att_scrolled.set_visible(False)
+
+        self.att_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        self.att_scrolled.set_child(self.att_box)
+
+        self.append(self.att_scrolled)
+
+        self._compression_jobs = 0
+        self.compression_spinner = Adw.Spinner()
+        self.compression_spinner.set_size_request(18, 18)
+        self.compression_spinner.set_valign(Gtk.Align.CENTER)
+
+        self.compression_label = Gtk.Label(xalign=0)
+        self.compression_label.add_css_class("dim-label")
+
+        compression_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        compression_box.set_margin_start(12)
+        compression_box.set_margin_end(12)
+        compression_box.set_margin_top(4)
+        compression_box.set_margin_bottom(4)
+        compression_box.append(self.compression_spinner)
+        compression_box.append(self.compression_label)
+
+        self.compression_revealer = Gtk.Revealer()
+        self.compression_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+        self.compression_revealer.set_transition_duration(150)
+        self.compression_revealer.set_child(compression_box)
+        self.compression_revealer.set_reveal_child(False)
+        self.append(self.compression_revealer)
+
+        input_box = Gtk.Box(spacing=6)
+        input_box.set_margin_start(6)
+        input_box.set_margin_end(6)
+        input_box.set_margin_top(6)
+        input_box.set_margin_bottom(6)
+        input_box.set_valign(Gtk.Align.END)
+
+        btn_attach = Gtk.Button(icon_name="pan-up-symbolic", css_classes=["circular", "suggested-action"])
+        btn_attach.connect("clicked", lambda b: GLib.idle_add(lambda: self.media_controller.on_attach_clicked(b) or False))
+        btn_attach.set_valign(Gtk.Align.CENTER)
+        input_box.append(btn_attach)
+
+        self.msg_buffer = Gtk.TextBuffer()
+        self.msg_buffer.connect("changed", self.on_input_changed)
+
+        self.msg_view = Gtk.TextView(buffer=self.msg_buffer)
+        self.msg_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+        self.msg_view.set_accepts_tab(False)
+        self.msg_view.connect("paste-clipboard", self.on_paste_clipboard)
+
+        self.msg_scroll = Gtk.ScrolledWindow()
+        self.msg_scroll.set_child(self.msg_view)
+
+        self.msg_scroll.set_min_content_height(20)
+        self.msg_scroll.set_size_request(-1, 38)
+
+        self.msg_scroll.set_has_frame(False)
+        self.msg_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
+        self.msg_scroll.set_propagate_natural_height(True)
+        self.msg_scroll.set_max_content_height(140)
+
+        self.msg_scroll.set_hexpand(True)
+        self.msg_scroll.set_valign(Gtk.Align.CENTER)
+        self.msg_scroll.add_css_class("chat-input")
+
+        input_box.append(self.msg_scroll)
+
+        key_controller = Gtk.EventControllerKey()
+        key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        key_controller.connect("key-pressed", self.on_key_pressed)
+        self.msg_view.add_controller(key_controller)
+
+        self.btn_send = Gtk.Button(icon_name="mail-send-symbolic", css_classes=["suggested-action", "btn-green", "circular"])
+        self.btn_send.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_send(b) or False))
+        self.btn_send.set_valign(Gtk.Align.CENTER)
+
+        input_box.append(self.btn_send)
+
+        if any(c.isalpha() for c in self.number):
+            self.btn_send.set_sensitive(False)
+            self.msg_view.set_editable(False)
+            self.msg_view.set_cursor_visible(False)
+            btn_attach.set_sensitive(False)
+            self.msg_buffer.set_text(_("Replies not supported for this sender"))
+
+        self.append(input_box)
+
+    def on_factory_setup(self, factory, list_item):
+        ChatBubbleFactory.setup(factory, list_item)
+
+    def on_factory_bind(self, factory, list_item):
+        ChatBubbleFactory.bind(factory, list_item,
+                               delete_callback=self.on_delete_message,
+                               contact_lookup=self.app_window.eds.get_display_name,
+                               add_contact_cb=self.app_window.present_edit_contact,
+                               is_group=self.is_group,
+                               forward_callback=self.on_forward_message,
+                               reschedule_cb=self.on_reschedule_message,
+                               unread_callback=self.on_mark_unread
+                               )
+
+    def on_mark_unread(self, message_id):
+        def done(_result):
+            if (self.messages_view is not None):
+                self.messages_view.close_active_chat()
+
+        self.app_window.daemon.mark_conversation_unread(self.db_number, message_id, done)
+
+    def on_reschedule_message(self, item):
+        if item.status == "failed":
+            self.on_retry_message(item)
+            return
+
+        initial = None
+        if item.scheduled_timestamp:
+            try:
+                dt_p = parse_timestamp(item.scheduled_timestamp)
+                initial = GLib.DateTime.new_local(dt_p.year, dt_p.month, dt_p.day, dt_p.hour, dt_p.minute, dt_p.second)
+            except Exception as e:
+                logger.warning(f"Failed to parse scheduled timestamp: {e}")
+
+        def on_picked(dt):
+            now = GLib.DateTime.new_now_local()
+            if dt.compare(now) <= 0:
+                self.app_window.notify_error(_("Scheduled time must be in the future"))
+                return
+
+            ts_str = dt.format("%Y-%m-%d %H:%M:%S")
+
+            def done(_result):
+                self.reload_chat()
+                self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
+
+            self.app_window.daemon.reschedule_message(item.id, ts_str, done)
+
+        DateTimePicker(
+            parent=self.app_window,
+            title=_("Re-Schedule Message"),
+            include_time=True,
+            initial_date=initial,
+            on_confirm=on_picked
+        )
+
+    def start_load_thread(self):
+        if self.is_fetching_older or not self.app_window.is_active():
+            return False
+
+        self.is_fetching_older = True
+        self.loading_spinner.set_visible(True)
+        run_in_background(self.fetch_older_messages)
+        return False
+
+    def fetch_older_messages(self):
+        try:
+            offset = self.oldest_db_offset
+            limit = LOAD_MORE_BATCH
+            msgs = self.db.get_chat_messages(self.number, limit=limit + 1, offset=offset)
+
+            has_more = False
+            if len(msgs) > limit:
+                has_more = True
+                msgs = msgs[:limit]
+
+            msgs.sort(key=lambda x: x[3] if len(x) > 3 and x[3] else "")
+            GLib.idle_add(self.insert_older_messages, msgs, has_more)
+        except Exception as e:
+            logger.warning(f"[ChatPage] Fetch older messages failed: {e}")
+            GLib.idle_add(self.fetch_older_failed)
+
+    def fetch_older_failed(self):
+        self.is_fetching_older = False
+        self.loading_spinner.set_visible(False)
+        return False
+
+    def hold_scroll_across_load(self, anchor_value):
+        self.release_scroll_hold()
+
+        def on_estimate_changed(_adj):
+            if self.is_jumping or self.is_loading:
+                return
+            if abs(self.v_adj.get_value() - anchor_value) > 0.5:
+                self.v_adj.set_value(anchor_value)
+
+        self.scroll_hold_id = self.v_adj.connect("changed", on_estimate_changed)
+        self.scroll_hold_value_id = self.v_adj.connect("value-changed", on_estimate_changed)
+        self.scroll_hold_timer = GLib.timeout_add(SCROLL_HOLD_MS, self.scroll_hold_expired)
+
+    def scroll_hold_expired(self):
+        self.scroll_hold_timer = None
+        self.drop_scroll_hold_handlers()
+        return False
+
+    def release_scroll_hold(self):
+        if self.scroll_hold_timer is not None:
+            GLib.source_remove(self.scroll_hold_timer)
+            self.scroll_hold_timer = None
+        self.drop_scroll_hold_handlers()
+
+    def drop_scroll_hold_handlers(self):
+        if self.scroll_hold_id is not None:
+            self.v_adj.disconnect(self.scroll_hold_id)
+            self.scroll_hold_id = None
+        if self.scroll_hold_value_id is not None:
+            self.v_adj.disconnect(self.scroll_hold_value_id)
+            self.scroll_hold_value_id = None
+
+    def insert_older_messages(self, msgs, has_more):
+        if self.is_jumping or self.is_loading:
+            self.is_fetching_older = False
+            self.loading_spinner.set_visible(False)
+            return False
+
+        new_items = []
+
+        msgs_reversed = list(reversed(msgs))
+
+        for m in msgs_reversed:
+            msg_id = m[0]
+            subject = m[5] if len(m) > 5 else None
+            att = m[6] if len(m) > 6 else []
+            sender_val = m[7] if len(m) > 7 else "Unknown"
+            sched_ts = m[8] if len(m) > 8 else None
+            new_items.append(MessageItem(msg_id, m[1], m[2], m[3], m[4], subject=subject, attachments=att, sender=sender_val, scheduled_timestamp=sched_ts))
+
+        if not new_items:
+            self.is_fetching_older = False
+            self.loading_spinner.set_visible(False)
+            if not has_more:
+                self.all_messages_loaded = True
+            return False
+
+        anchor_value = self.v_adj.get_value()
+        n_items = self.store.get_n_items()
+        self.store.splice(n_items, 0, new_items)
+        self.hold_scroll_across_load(anchor_value)
+
+        self.oldest_db_offset = self.newest_db_offset + self.store.get_n_items()
+
+        self.is_fetching_older = False
+        self.loading_spinner.set_visible(False)
+
+        if not has_more:
+            self.all_messages_loaded = True
+
+        return False
+
+    def initial_load(self):
+        try:
+            limit = max(50, self.initial_unread_count + 10)
+            msgs = self.db.get_chat_messages(self.number, limit=limit + 1, offset=0)
+
+            draft_msg = None
+            if msgs:
+                drafts = [m for m in msgs if m[4] == "draft"]
+                if drafts:
+                    draft_msg = drafts[0]
+                    msgs = [m for m in msgs if m[4] != "draft"]
+
+            has_more = False
+            if len(msgs) > limit:
+                has_more = True
+                msgs = msgs[:limit]
+
+            msgs.sort(key=lambda x: x[3] if len(x) > 3 and x[3] else "")
+            GLib.idle_add(self.update_initial_ui, msgs, has_more, draft_msg)
+        except Exception as e:
+            logger.error(f"[ChatPage] Initial load failed: {e}")
+            GLib.idle_add(lambda: self.content_stack.set_visible_child_name("chat"))
+
+    def update_initial_ui(self, msgs, has_more, draft_msg=None):
+        items = []
+
+        if draft_msg:
+            has_prefill = self.msg_buffer.get_char_count() > 0 or bool(self.attachments)
+            if not has_prefill:
+                body = draft_msg[2]
+                atts = draft_msg[6]
+                self.msg_buffer.set_text(body if body else "")
+                if atts:
+                    for a in atts:
+                        if a not in self.attachments:
+                            self.attachments.append(a)
+                    self.refresh_attachment_ui()
+
+        if not has_more:
+            self.all_messages_loaded = True
+        else:
+            self.all_messages_loaded = False
+
+        has_unread = False
+        first_unread_index = -1
+        target_index = -1
+
+        for m in msgs:
+            msg_id = m[0]
+            status = m[4]
+            if status == "unread" and not has_unread:
+                has_unread = True
+                items.append(MessageItem(0, "divider", _("— New Messages —"), "", "", is_divider=True))
+                first_unread_index = len(items) - 1
+
+            subject = m[5] if len(m) > 5 else None
+            att = m[6] if len(m) > 6 else []
+            sender_val = m[7] if len(m) > 7 else "Unknown"
+            sched_ts = m[8] if len(m) > 8 else None
+
+            items.append(MessageItem(msg_id, m[1], m[2], m[3], m[4], subject=subject, attachments=att, sender=sender_val, scheduled_timestamp=sched_ts))
+
+            if self.target_highlight_id and msg_id == self.target_highlight_id:
+                target_index = len(items) - 1
+
+        items.reverse()
+        if target_index >= 0:
+            target_index = len(items) - 1 - target_index
+        if first_unread_index >= 0:
+            first_unread_index = len(items) - 1 - first_unread_index
+
+        self.store.remove_all()
+        self.store.splice(0, 0, items)
+
+        self.newest_db_offset = 0
+        self.oldest_db_offset = len(items)
+
+        final_idx = 0
+        if target_index >= 0:
+            final_idx = target_index
+        elif has_unread and first_unread_index >= 0:
+            final_idx = first_unread_index
+
+        self.finalize_loading(final_idx)
+
+    def finalize_loading(self, index):
+        self.content_stack.set_visible_child_name("chat")
+
+        def reveal():
+            n_items = self.selection.get_n_items()
+            if n_items > 0:
+                target = index if 0 <= index < n_items else 0
+                self.list_view.scroll_to(target, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT, None)
+
+            self.is_loading = False
+            if self.app_window.is_active():
+                self.mark_read_debounced()
+            else:
+                self._pending_initial_read = True
+            return False
+
+        GLib.timeout_add(50, reveal)
+
+    def on_search_changed(self, entry):
+        query = entry.get_text().strip()
+        if not query:
+            self.content_stack.set_visible_child_name("chat")
+            return
+
+        self.content_stack.set_visible_child_name("search_results")
+
+        if (self.search_timer is not None) and self.search_timer:
+            GLib.source_remove(self.search_timer)
+        self.search_timer = GLib.timeout_add(200, self.perform_search, query)
+
+    def perform_search(self, query):
+        self.search_token = self.search_token + 1
+        current_token = self.search_token
+
+        def fetch():
+            return self.db.search_messages(query, chat_id=self.db_number, limit=100)
+
+        def on_done(rows):
+            if self.search_token != current_token:
+                return False
+
+            while child := self.search_results_list.get_first_child():
+                self.search_results_list.remove(child)
+
+            if not rows:
+                lbl = Gtk.Label(label=_("No results found in this conversation"), css_classes=["dim-label"])
+                lbl.set_margin_top(20)
+                self.search_results_list.append(lbl)
+                return False
+
+            for r in rows:
+                body = r[1]
+                ts = r[2]
+                msg_id = r[3]
+
+                preview = str(body).replace("\n", " ")
+                if len(preview) > 60:
+                    preview = preview[:60] + "..."
+
+                row = Adw.ActionRow(title=preview, subtitle=str(ts))
+                row.set_activatable(True)
+
+                btn_jump = Gtk.Button(icon_name="go-next-symbolic", css_classes=["flat", "circular"])
+                btn_jump.set_valign(Gtk.Align.CENTER)
+                btn_jump.connect("clicked", lambda b, mid=msg_id: GLib.idle_add(lambda: [self.load_context_for_message(mid), self.content_stack.set_visible_child_name("chat")] and False))
+                row.add_suffix(btn_jump)
+
+                self.search_results_list.append(row)
+
+        def bg_task():
+            try:
+                rows = fetch()
+                GLib.idle_add(on_done, rows)
+            except Exception as e:
+                logger.warning(f"[ChatPage] Search failed: {e}")
+
+        run_in_background(bg_task)
+        self.search_timer = None
+        return False
+
+    def filter_func(self, item, user_data):
+        return True
+
+    def on_input_changed(self, buffer):
+        if buffer.get_line_count() > 3:
+            self.msg_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        else:
+            self.msg_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
+
+    def on_key_pressed(self, _controller, keyval, _keycode, state):
+        if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_ISO_Enter):
+            if state & Gdk.ModifierType.SHIFT_MASK:
+                if self.btn_send.get_sensitive():
+                    self.on_send()
+                return True
+            return False
+        return False
+
+    def ensure_details_panel(self, btn):
+        if not btn.get_active():
+            return
+        if not self._details_built:
+            self._details_built = True
+            self.setup_details_panel()
+            return
+        self.refresh_block_states()
+
+    def watch_blocklist(self):
+        sig_id = self.db.connect("blocklist-updated",
+                                 lambda *_a: GLib.idle_add(self.refresh_block_states))
+        self.db_signals.append((self.db, sig_id))
+
+    def show_blocked_in_title(self):
+        if self.is_group:
+            return
+
+        entry = None
+        for row in self.db.get_blocked_numbers():
+            if normalize_number(row["number"]) == self.number and row["block_messages"]:
+                entry = dict(row)
+                break
+
+        state = blocked_state_text(entry)
+        self.title_widget.set_subtitle(
+            f"{self.plain_subtitle} · {state}" if state else self.plain_subtitle)
+
+    def refresh_block_states(self):
+        self.show_blocked_in_title()
+        if not self._block_buttons:
+            return
+
+        def task():
+            return {normalize_number(entry["number"]): dict(entry)
+                    for entry in self.db.get_blocked_numbers()}
+
+        run_in_background(task, on_complete=self.apply_block_states)
+
+    def apply_block_states(self, blocked):
+        entries = blocked or {}
+        for number, button in self._block_buttons.items():
+            entry = entries.get(normalize_number(number))
+            button.set_css_classes(["circular"] + (["error"] if entry else []))
+            button.set_tooltip_text(
+                _("Unblock this number") if entry else _("Block this number"))
+            button.set_sensitive(self.app_window.eds.is_ready)
+
+            label = self._block_labels.get(number)
+            if label is not None:
+                state = blocked_state_text(entry)
+                label.set_text(f"{number} · {state}" if state else number)
+
+    def conversation_id(self):
+        return conversation_id(self.recipients if self.is_group else self.number)
+
+    def on_mute_toggled(self, row, _pspec):
+        muted = row.get_active()
+        self.app_window.gsettings_mgr.set_conversation_muted(self.conversation_id(), muted)
+        self.db.emit("messages-updated", "", "status")
+
+    def refresh_recipient_call_buttons(self):
+        available = self.app_window.ofono.is_dialing_available() if self.app_window.ofono else True
+        for btn in self._recipient_call_btns:
+            btn.set_sensitive(available)
+
+    def setup_details_panel(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_margin_start(12)
+        box.set_margin_end(12)
+        box.set_margin_top(12)
+        box.set_margin_bottom(12)
+        box.add_css_class("background")
+
+        if self.is_group:
+            lbl = Gtk.Label(label=_("Group Name"), xalign=0, css_classes=["heading"])
+            entry = Gtk.Entry(placeholder_text=_("Set group name..."))
+            current_name = self.contact_name if self.contact_name != ", ".join(self.recipients) else ""
+            entry.set_text(current_name)
+            entry.connect("activate", lambda b: self.on_group_rename(b))
+            box.append(lbl)
+            box.append(entry)
+            box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
+
+        self.sw_mute = Adw.SwitchRow(title=_("Mute This Chat"))
+        self.sw_mute.set_subtitle(_("Messages arrive without a notification"))
+        self.sw_mute.set_active(self.app_window.gsettings_mgr.is_conversation_muted(
+            self.conversation_id()))
+        self.sw_mute.connect("notify::active", self.on_mute_toggled)
+        grp_mute = Adw.PreferencesGroup()
+        grp_mute.add(self.sw_mute)
+        box.append(grp_mute)
+
+        lbl_part = Gtk.Label(label=_("Participants"), xalign=0, css_classes=["heading"])
+        box.append(lbl_part)
+
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_max_content_height(350)
+        scrolled.set_propagate_natural_height(True)
+
+        list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        block_buttons = {}
+        dialing_ok = self.app_window.ofono.is_dialing_available() if self.app_window.ofono else True
+
+        for rec in self.recipients:
+            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, css_classes=["card"])
+
+            inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            card.append(inner)
+
+            name = self.app_window.eds.get_display_name(rec)
+            if not name:
+                if not any(c.isalpha() for c in rec):
+                    name = _("Unknown")
+                else:
+                    name = rec
+            elif name == "Unknown":
+                name = _("Unknown")
+
+            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
+
+            lbl_name = Gtk.Label(label=name, xalign=0, css_classes=["body", "emphasized"])
+            lbl_name.set_ellipsize(Pango.EllipsizeMode.END)
+            vbox.append(lbl_name)
+
+            lbl_num = Gtk.Label(label=rec, xalign=0, css_classes=["caption", "dim-label"])
+            lbl_num.set_ellipsize(Pango.EllipsizeMode.END)
+            vbox.append(lbl_num)
+            self._block_labels[rec] = lbl_num
+
+            inner.append(vbox)
+
+            actions_box = Gtk.Box(spacing=8, halign=Gtk.Align.START)
+
+            is_saved = self.app_window.eds.get_contact_name(rec) is not None
+            icon_edit = "document-edit-symbolic" if is_saved else "contact-new-symbolic"
+            b_edit = Gtk.Button(icon_name=icon_edit, css_classes=["circular", "suggested-action"])
+            b_edit.set_valign(Gtk.Align.CENTER)
+
+            if not self.app_window.eds.is_ready:
+                b_edit.set_sensitive(False)
+
+            actions_box.append(b_edit)
+
+            def handle_edit_click(n=rec):
+                self.btn_menu.set_active(False)
+                GLib.timeout_add(50, lambda: self.app_window.present_edit_contact(number_preset=n) or False)
+            b_edit.connect("clicked", lambda b, n=rec: handle_edit_click(n))
+
+            can_call = not any(c.isalpha() for c in rec)
+            b_call = Gtk.Button(icon_name="call-start-symbolic", css_classes=["circular", "call-btn"])
+            b_call.set_valign(Gtk.Align.CENTER)
+            b_call.set_sensitive(can_call and dialing_ok)
+            actions_box.append(b_call)
+            if can_call:
+                self._recipient_call_btns.append(b_call)
+                b_call.connect("clicked", lambda b, n=rec: GLib.idle_add(lambda: self.app_window.start_call(n) or False))
+
+            b_search = Gtk.Button(icon_name="system-search-symbolic", css_classes=["circular"])
+            b_search.set_valign(Gtk.Align.CENTER)
+            actions_box.append(b_search)
+
+            def handle_search_click(n=rec):
+                self.btn_menu.set_active(False)
+                self.app_window.search_number_online(n)
+            b_search.connect("clicked", lambda b, n=rec: handle_search_click(n))
+
+            b_copy = Gtk.Button(icon_name="edit-copy-symbolic", css_classes=["circular"])
+            b_copy.set_valign(Gtk.Align.CENTER)
+            actions_box.append(b_copy)
+
+            def handle_copy_click(n=rec):
+                self.btn_menu.set_active(False)
+                self.app_window.copy_to_clipboard(n)
+            b_copy.connect("clicked", lambda b, n=rec: handle_copy_click(n))
+
+            b_blk = Gtk.Button(icon_name="action-unavailable-symbolic", css_classes=["circular"])
+            b_blk.set_valign(Gtk.Align.CENTER)
+            b_blk.set_sensitive(False)
+
+            actions_box.append(b_blk)
+            block_buttons[rec] = b_blk
+
+            def toggle_block(btn, number):
+                self.btn_menu.set_active(False)
+
+                def find_entry():
+                    norm_rec = normalize_number(number)
+                    for entry in self.db.get_blocked_numbers():
+                        if normalize_number(entry["number"]) == norm_rec:
+                            return dict(entry)
+                    return None
+
+                def found(entry, target_btn=btn):
+                    if entry is None:
+                        self.app_window.present_blocklist_editor(number_preset=number)
+                        return
+
+                    def unblocked():
+                        self.refresh_block_states()
+                        self.app_window.notify_success(_("Unblocked"))
+
+                    present_unblock_choice(self.app_window, self.app_window.daemon,
+                                           entry, "messages", unblocked)
+
+                run_in_background(find_entry, on_complete=found)
+
+            b_blk.connect("clicked", lambda b, n=rec: toggle_block(b, n))
+
+            inner.append(actions_box)
+            list_box.append(card)
+
+        self._block_buttons = block_buttons
+        self.refresh_block_states()
+
+        scrolled.set_child(list_box)
+        box.append(scrolled)
+
+        box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
+        b_del_all = Gtk.Button(label=_("Delete Conversation"), css_classes=["destructive-action"])
+
+        def handle_del_all(btn):
+            self.btn_menu.set_active(False)
+            GLib.timeout_add(50, lambda: self.on_delete_conversation(btn) or False)
+        b_del_all.connect("clicked", lambda b: GLib.idle_add(lambda: handle_del_all(b) or False))
+        box.append(b_del_all)
+
+        self.details_revealer.set_child(box)
+
+    def on_forward_message(self, item):
+        body = item.body
+        attachments = item.attachments if (item.attachments) else []
+
+        sender_display = item.sender
+        if sender_display == "Me":
+            sender_display = _("Me")
+        elif sender_display == "Unknown":
+            sender_display = _("Unknown")
+        else:
+            name = self.app_window.eds.get_display_name(sender_display)
+            if name:
+                sender_display = name
+                if sender_display == "Unknown":
+                    sender_display = _("Unknown")
+
+        forward_text = _("Forwarded from {sender}:\n{body}").format(sender=sender_display, body=body) if body else _("Forwarded from {sender}").format(sender=sender_display)
+
+        def on_pick(target):
+            self.messages_view.open_chat(target, prefill_text=forward_text, prefill_attachments=attachments)
+
+        picker = ContactPicker(
+            self.app_window.eds,
+            self.app_window,
+            on_pick,
+            title=_("Forward To"),
+            action_label=_("Forward"),
+            allow_custom_number=True,
+            blocked_kind="messages",
+            return_contact_uid=False
+        )
+        present_sheet_page(self.app_window, picker)
+
+    def on_delete_message(self, item_id):
+        def on_confirm_delete():
+            def task():
+                details = self.db.get_message_details(item_id)
+                if details and details[4]:
+                    for path in json.loads(details[4]):
+                        if os.path.exists(path):
+                            try:
+                                os.remove(path)
+                            except Exception as e:
+                                logger.warning(f"[Chat] Attachment delete failed: {e}")
+
+                self.app_window.daemon.delete_message(item_id)
+
+            run_in_background(task)
+
+        self.app_window.confirm_action(_("Delete Message"), _("Are you sure you want to delete this message?"), on_confirm_delete)
+
+    def append_prefill(self, text, attachments=None):
+        if text:
+            start, end = self.msg_buffer.get_bounds()
+            existing = self.msg_buffer.get_text(start, end, True)
+            self.msg_buffer.set_text(f"{existing}\n{text}" if existing.strip() else text)
+
+        if attachments:
+            for p in attachments:
+                if p not in self.attachments:
+                    self.attachments.append(p)
+            self.refresh_attachment_ui()
+
+    def on_messages_updated(self, _db, chat_id, change):
+        if chat_id and chat_id != self.db_number:
+            return
+        if self.is_loading:
+            return
+
+        if change == "insert":
+            self.append_new_messages()
+        elif change == "status":
+            self.sync_message_statuses()
+        elif change == "draft":
+            return
+        else:
+            self.reload_chat()
+
+    def newest_item_id(self):
+        for i in range(self.store.get_n_items()):
+            item = self.store.get_item(i)
+            if item.id:
+                return item.id
+        return 0
+
+    def append_new_messages(self):
+        newest_id = self.newest_item_id()
+
+        def fetch():
+            return self.db.get_chat_messages(self.number, limit=20, offset=0)
+
+        def done(rows):
+            existing_ids = {self.store.get_item(i).id for i in range(self.store.get_n_items())}
+            existing_ids.discard(0)
+            fresh = [m for m in (rows or []) if m[0] > newest_id and m[0] not in existing_ids and m[4] != "draft"]
+            if not fresh:
+                return
+
+            for i in reversed(range(self.store.get_n_items())):
+                item = self.store.get_item(i)
+                if item.id == 0 and not item.is_divider:
+                    self.store.remove(i)
+
+            items = []
+            for m in fresh:
+                subject = m[5] if len(m) > 5 else None
+                att = m[6] if len(m) > 6 else []
+                sender_val = m[7] if len(m) > 7 else "Unknown"
+                sched_ts = m[8] if len(m) > 8 else None
+                items.append(MessageItem(m[0], m[1], m[2], m[3], m[4], subject=subject, attachments=att, sender=sender_val, scheduled_timestamp=sched_ts))
+
+            self.store.splice(0, 0, items)
+
+            if self.v_adj.get_value() <= 20 and self.app_window.is_active():
+                self.scroll_to_bottom()
+                self.mark_read_debounced()
+
+        run_in_background(fetch, on_complete=done)
+
+    def sync_message_statuses(self):
+        def fetch():
+            return self.db.get_chat_messages(self.number, limit=30, offset=0)
+
+        def done(rows):
+            by_id = {m[0]: m[4] for m in rows or []}
+            was_at_bottom = self.v_adj.get_value() <= 20
+            changed = False
+            for i in range(self.store.get_n_items()):
+                item = self.store.get_item(i)
+                if not item.id or item.id not in by_id:
+                    continue
+                new_status = by_id[item.id]
+                if item.status == new_status:
+                    continue
+                replacement = MessageItem(item.id, item.direction, item.body, item.timestamp, new_status,
+                                          subject=item.subject, attachments=item.attachments,
+                                          sender=item.sender, scheduled_timestamp=item.scheduled_timestamp)
+                self.store.splice(i, 1, [replacement])
+                changed = True
+
+            if changed and was_at_bottom:
+                self.scroll_to_bottom()
+
+        run_in_background(fetch, on_complete=done)
+
+    def on_retry_message(self, item):
+        self.app_window.daemon.retry_message(item.id)
+
+    def reload_chat(self):
+        if (self._refresh_timer is not None) and self._refresh_timer:
+            GLib.source_remove(self._refresh_timer)
+        self._refresh_timer = GLib.timeout_add(200, self.do_reload_chat)
+
+    def do_reload_chat(self):
+        self._refresh_timer = None
+        self.store.remove_all()
+        self.content_stack.set_visible_child_name("loading")
+        run_in_background(self.initial_load)
+        return False
+
+    def update_contact_details(self, name):
+        if not name:
+            return
+
+        display_name = name
+        if display_name == self.number:
+            display_name = _("Unknown")
+        elif display_name == "Unknown":
+            display_name = _("Unknown")
+
+        if display_name != self.contact_name:
+            self.contact_name = display_name
+            self.title_widget.set_title(display_name)
+
+    def on_group_rename(self, entry):
+        new_name = entry.get_text().strip()
+        if not new_name:
+            return
+
+        def done(_result):
+            self.contact_name = new_name
+            self.title_widget.set_title(new_name)
+
+        self.app_window.daemon.set_group_name(self.recipients, new_name, done)
+
+    def on_paste_clipboard(self, text_view):
+        if self.media_controller.ingest_clipboard():
+            text_view.stop_emission_by_name("paste-clipboard")
+
+    def remaining_attachment_budget(self):
+        budget = max_attachment_size(self.app_window.gsettings_mgr)
+        used = sum(os.path.getsize(p) for p in self.attachments if os.path.exists(p))
+        return budget - used
+
+    def show_compression_indicator(self, message):
+        self._compression_jobs += 1
+        self.compression_label.set_label(message)
+        self.compression_revealer.set_reveal_child(True)
+
+    def hide_compression_indicator(self):
+        self._compression_jobs = max(0, self._compression_jobs - 1)
+        if self._compression_jobs == 0:
+            self.compression_revealer.set_reveal_child(False)
+
+    def on_attachment_captured(self, path):
+        if not path or path in self.attachments:
+            return
+
+        remaining = self.remaining_attachment_budget()
+        mime, _encoding = mimetypes.guess_type(path)
+        try:
+            oversized = os.path.getsize(path) > remaining
+        except OSError as e:
+            logger.warning(f"[Chat] Attachment size check failed: {e}")
+            oversized = False
+
+        compressing = False
+        if oversized and mime and mime.startswith("image/"):
+            self.show_compression_indicator(_("Compressing image..."))
+            compressing = True
+        elif oversized and mime and mime.startswith("video/"):
+            self.show_compression_indicator(_("Compressing video..."))
+            compressing = True
+
+        self.app_window.daemon.prepare_attachment(
+            path, remaining,
+            lambda reply: self.on_attachment_prepared(reply, path, compressing))
+
+    def on_attachment_prepared(self, reply, source_path, compressing=False):
+        if compressing:
+            self.hide_compression_indicator()
+        if reply is None:
+            self.app_window.notify_error(_("Failed to prepare attachment."))
+            return
+        stored_path, code = reply
+        if stored_path:
+            self.append_attachment(stored_path)
+            if "/tmp/" in source_path:
+                try:
+                    os.remove(source_path)
+                except OSError as e:
+                    logger.debug(f"[Chat] Temp source removal failed: {e}")
+            return
+        errors = {
+            "image-too-large": _("Image is too large to send"),
+            "video-failed": _("Video compression failed"),
+            "too-large": _("File is too large to send via MMS"),
+        }
+        self.app_window.notify_error(errors.get(code, _("Failed to prepare attachment.")))
+
+    def append_attachment(self, path):
+        if path not in self.attachments:
+            self.attachments.append(path)
+            self.refresh_attachment_ui()
+
+    def refresh_attachment_ui(self):
+        while child := self.att_box.get_first_child():
+            self.att_box.remove(child)
+        if not self.attachments:
+            self.att_scrolled.set_visible(False)
+            return
+        self.att_scrolled.set_visible(True)
+        for path in self.attachments:
+            chip = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            chip.add_css_class("att-chip")
+            lbl = Gtk.Label(label=os.path.basename(path))
+            lbl.set_ellipsize(Pango.EllipsizeMode.END)
+            lbl.set_max_width_chars(20)
+            btn_close = Gtk.Button(icon_name="window-close-symbolic", css_classes=["flat", "circular"])
+            btn_close.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.remove_attachment_by_path(p) or False))
+            chip.append(lbl)
+            chip.append(btn_close)
+            self.att_box.append(chip)
+
+    def remove_attachment_by_path(self, path_to_remove):
+        if path_to_remove in self.attachments:
+            self.attachments.remove(path_to_remove)
+            if "/tmp/" in path_to_remove and os.path.exists(path_to_remove):
+                try:
+                    os.remove(path_to_remove)
+                except Exception as e:
+                    logger.warning(f"[Chat] Temp file removal failed: {e}")
+            self.refresh_attachment_ui()
+
+    def load_context_for_message(self, msg_id):
+        self.is_jumping = True
+        self.release_scroll_hold()
+        self.cancel_older_settle()
+
+        def fetch_context():
+            msgs = self.db.get_chat_messages_around(msg_id, limit_before=LOAD_MORE_BATCH,
+                                                    limit_after=LOAD_MORE_BATCH)
+            newer_count = self.db.get_message_offset(msg_id)
+            return msgs, newer_count
+
+        def update_ui(msgs, newer_count):
+            self.store.remove_all()
+
+
+            items = []
+
+            target_index = -1
+
+            for m in msgs:
+                mid = m[0]
+
+                subject = m[5]
+                att = m[6]
+                sender_val = m[7] if len(m) > 7 else "Unknown"
+                if sender_val == "Unknown":
+                    sender_val = _("Unknown")
+                elif sender_val == "Me":
+                    sender_val = _("Me")
+
+                sched_ts = m[8] if len(m) > 8 else None
+
+                item = MessageItem(mid, m[1], m[2], m[3], m[4], subject=subject, attachments=att, sender=sender_val, scheduled_timestamp=sched_ts)
+                items.append(item)
+
+                if mid == msg_id:
+                    target_index = len(items) - 1
+
+            items.reverse()
+            if target_index >= 0:
+                target_index = len(items) - 1 - target_index
+
+            self.store.splice(0, 0, items)
+
+            newer_messages_loaded = 0
+            for m in reversed(msgs):
+                if m[0] == msg_id:
+                    break
+                newer_messages_loaded += 1
+
+            self.newest_db_offset = max(0, newer_count - newer_messages_loaded)
+            self.oldest_db_offset = self.newest_db_offset + len(items)
+
+            def reveal():
+                self.is_loading = False
+                self.content_stack.set_visible_child_name("chat")
+
+                def scroll_after_visible():
+                    n_items = self.selection.get_n_items()
+                    if 0 <= target_index < n_items:
+                        self.list_view.scroll_to(target_index, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT, None)
+
+                    def end_jump():
+                        self.is_jumping = False
+                        return False
+
+                    GLib.timeout_add(300, end_jump)
+                    return False
+
+                GLib.timeout_add(50, scroll_after_visible)
+                return False
+
+            GLib.timeout_add(300, reveal)
+
+        def bg():
+            try:
+                msgs, newer_count = fetch_context()
+                GLib.idle_add(update_ui, msgs, newer_count)
+            except Exception as e:
+                logger.warning(f"[ChatPage] Load context failed: {e}")
+
+        run_in_background(bg)
+
+    def open_schedule_picker(self):
+        buffer = self.msg_view.get_buffer()
+        start, end = buffer.get_bounds()
+        text = buffer.get_text(start, end, True).strip()
+        has_att = len(self.attachments) > 0
+
+        if not text and not has_att:
+            self.app_window.notify_error(_("Nothing to schedule"))
+            return
+
+        def on_picked(dt):
+            now = GLib.DateTime.new_now_local()
+            if dt.compare(now) <= 0:
+                self.app_window.notify_error(_("Scheduled time must be in the future"))
+                return
+
+            ts_str = dt.format("%Y-%m-%d %H:%M:%S")
+            self.on_send(scheduled_timestamp=ts_str)
+
+        DateTimePicker(
+            parent=self.app_window,
+            title=_("Schedule Message"),
+            include_time=True,
+            on_confirm=on_picked
+        )
+
+    def on_send(self, *args, scheduled_timestamp=None):
+        buffer = self.msg_view.get_buffer()
+        start, end = buffer.get_bounds()
+        text = buffer.get_text(start, end, True).strip()
+        has_att = len(self.attachments) > 0
+        if not text and not has_att:
+            return
+
+        self.btn_send.set_sensitive(False)
+        self._draft_saved = True
+        pending_attachments = list(self.attachments)
+        buffer.set_text("")
+        self.attachments = []
+        self.refresh_attachment_ui()
+
+        def done(sent):
+            self.btn_send.set_sensitive(True)
+            if not sent:
+                self.app_window.notify_error(_("Failed to send"))
+                return
+            if scheduled_timestamp:
+                self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
+            self.scroll_to_bottom()
+
+        def send(_draft_cleared):
+            daemon = self.app_window.daemon
+            if scheduled_timestamp:
+                if self.is_group or pending_attachments:
+                    daemon.schedule_mms(self.number, text, pending_attachments,
+                                        scheduled_timestamp, done)
+                    return
+                daemon.schedule_sms(self.number, text, scheduled_timestamp, done)
+                return
+            if self.is_group or pending_attachments:
+                daemon.send_mms(self.number, text, pending_attachments, done)
+                return
+            daemon.send_tracked_sms(self.number, text, done)
+
+        self.app_window.daemon.save_draft(self.number, "", [], send)
+
+    def on_scroll_changed(self, adj):
+        if self.is_loading or self.is_jumping:
+            return
+
+        is_near_older = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
+
+        if is_near_older and not self.all_messages_loaded and not self.is_fetching_older:
+            if self.older_settle_id is not None:
+                GLib.source_remove(self.older_settle_id)
+            self.older_settle_id = GLib.timeout_add(LOAD_OLDER_SETTLE_MS, self.load_older_after_settle)
+
+        self.check_read_status()
+
+    def cancel_older_settle(self):
+        if self.older_settle_id is not None:
+            GLib.source_remove(self.older_settle_id)
+            self.older_settle_id = None
+
+    def load_older_after_settle(self):
+        self.older_settle_id = None
+        if self.is_loading or self.is_jumping:
+            return False
+        if not self.is_fetching_older and not self.all_messages_loaded:
+            self.start_load_thread()
+        return False
+
+    def load_newer_messages(self):
+        if self.is_fetching_newer or self.newest_db_offset <= 0:
+            return
+        if self.is_loading or self.is_jumping:
+            return
+        self.is_fetching_newer = True
+        offset = max(0, self.newest_db_offset - LOAD_MORE_BATCH)
+        limit = self.newest_db_offset - offset
+
+        def fetch():
+            return self.db.get_chat_messages(self.number, limit=limit, offset=offset)
+
+        run_in_background(fetch, on_complete=self.insert_newer_messages,
+                          on_error=self.fetch_newer_failed)
+
+    def fetch_newer_failed(self, error):
+        logger.warning(f"[ChatPage] Fetch newer messages failed: {error}")
+        self.is_fetching_newer = False
+        return False
+
+    def insert_newer_messages(self, msgs):
+        self.is_fetching_newer = False
+        if self.is_jumping or self.is_loading:
+            return False
+        if not msgs:
+            self.newest_db_offset = 0
+            return False
+
+        items = []
+        for m in msgs:
+            items.append(MessageItem(m[0], m[1], m[2], m[3], m[4],
+                                     subject=m[5] if len(m) > 5 else None,
+                                     attachments=m[6] if len(m) > 6 else [],
+                                     sender=m[7] if len(m) > 7 else "Unknown",
+                                     scheduled_timestamp=m[8] if len(m) > 8 else None))
+
+        anchor_value = self.v_adj.get_value()
+        self.store.splice(0, 0, items)
+        self.hold_scroll_across_load(anchor_value)
+        self.newest_db_offset = max(0, self.newest_db_offset - len(items))
+        self.oldest_db_offset = self.newest_db_offset + self.store.get_n_items()
+        return False
+
+    def check_read_status(self):
+        adj = self.v_adj
+        is_at_bottom = adj.get_value() <= 20
+        if not is_at_bottom:
+            return
+        if self.newest_db_offset > 0:
+            self.load_newer_messages()
+            return
+        self.trim_oldest_overflow()
+        if self.app_window.is_active():
+            self.mark_read_debounced()
+
+    def trim_oldest_overflow(self):
+        if self.is_loading or self.is_jumping or self.is_fetching_older:
+            return
+        overflow = self.store.get_n_items() - MAX_MESSAGES_IN_MEMORY
+        if overflow <= 0:
+            return
+        self.store.splice(MAX_MESSAGES_IN_MEMORY, overflow, [])
+        self.oldest_db_offset = self.newest_db_offset + self.store.get_n_items()
+        self.all_messages_loaded = False
+
+    def mark_read_debounced(self):
+        if (self._read_timer is not None) and self._read_timer:
+            GLib.source_remove(self._read_timer)
+        self._read_timer = GLib.timeout_add(200, self.do_mark_read)
+
+    def do_mark_read(self):
+        self.app_window.daemon.mark_thread_read(self.db_number)
+        self.messages_view.check_and_clear_notification(self.db_number)
+
+        self._read_timer = None
+        return False
+
+    def on_window_focus_changed(self, window, param):
+        self.report_active_chat()
+        if not window.is_active():
+            return
+
+        if self._pending_initial_read:
+            self._pending_initial_read = False
+            self.mark_read_debounced()
+        else:
+            self.check_read_status()
+
+    def on_delete_conversation(self, btn):
+        def do_full_delete():
+            target_id = self.number
+            self.messages_view.close_active_chat()
+
+            def task():
+                all_msgs = self.db.get_chat_messages(target_id, limit=100000)
+
+                files_deleted = 0
+                for m in all_msgs:
+                    atts = m[6] if len(m) > 6 else []
+                    for path in atts:
+                        if os.path.exists(path):
+                            try:
+                                os.remove(path)
+                                files_deleted += 1
+                            except Exception as e:
+                                logger.error(f"Failed to delete {path}: {e}")
+
+                logger.info(f"[Delete] Wiped {len(all_msgs)} messages and {files_deleted} files for ID: {target_id}")
+
+                self.app_window.daemon.delete_conversation(target_id)
+
+            run_in_background(task)
+
+        title = _("Delete Group") if self.is_group else _("Delete Conversation")
+        body = _("This will permanently delete the conversation history and all saved media files.")
+        self.app_window.confirm_action(title, body, do_full_delete)
+
+    def scroll_to_bottom(self):
+        self.release_scroll_hold()
+
+        def do():
+            if self.selection.get_n_items() > 0:
+                self.list_view.scroll_to(0, Gtk.ListScrollFlags.NONE, None)
+            return False
+        GLib.idle_add(do)
+
+    def report_active_chat(self):
+        focused = self.get_mapped() and self.app_window and self.app_window.is_active()
+        if focused:
+            self.app_window.ofono.set_active_chat(self.recipients if self.is_group else self.number)
+        else:
+            self.app_window.ofono.set_active_chat(None)
+
+    def on_map(self, widget):
+        self._draft_saved = False
+        self.report_active_chat()
+
+        if self.app_window and self.focus_handler_id is None:
+            self.focus_handler_id = self.app_window.connect("notify::is-active", lambda obj, pspec: self.on_window_focus_changed(obj, pspec))
+
+        if self.db_signals:
+            return
+
+        sig_id = self.db.connect("messages-updated", self.on_messages_updated)
+        self.db_signals.append((self.db, sig_id))
+        self.watch_blocklist()
+
+        if not self.is_loading:
+            self.append_new_messages()
+            self.sync_message_statuses()
+
+    def on_unmap(self, widget):
+        self.report_active_chat()
+        if not self._draft_saved:
+            self.save_draft()
+
+        self.release_scroll_hold()
+        for timer_id in (self._read_timer, self._refresh_timer, self.search_timer, self.older_settle_id):
+            if timer_id:
+                GLib.source_remove(timer_id)
+        self._read_timer = None
+        self._refresh_timer = None
+        self.search_timer = None
+        self.older_settle_id = None
+
+        if self.app_window and (self.focus_handler_id is not None):
+            if self.app_window.handler_is_connected(self.focus_handler_id):
+                try:
+                    self.app_window.disconnect(self.focus_handler_id)
+                except Exception as e:
+                    logger.debug(f"[ChatPage] Disconnect focus handler warning: {e}")
+            self.focus_handler_id = None
+
+        for obj, sig_id in self.db_signals:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.db_signals.clear()
+
+        for obj, sig_id in self.eds_signals:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.eds_signals.clear()
+
+    def save_draft(self):
+        if not self.msg_view.get_editable():
+            return
+
+        buffer = self.msg_view.get_buffer()
+        start, end = buffer.get_bounds()
+        text = buffer.get_text(start, end, True).strip()
+        draft_attachments = list(self.attachments)
+
+        def done(_stored):
+            if text or draft_attachments:
+                logger.info("[ChatPage] Draft saved")
+            if self.messages_view:
+                self.messages_view.refresh_list()
+
+        self.app_window.daemon.save_draft(self.number, text, draft_attachments, done)

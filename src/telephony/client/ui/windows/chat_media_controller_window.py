@@ -1,0 +1,146 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+import os
+from datetime import datetime
+from gi.repository import Gtk, Gdk, GLib
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+
+from telephony.client.ui.widgets.common_widget import present_choice_sheet, add_choice_row, present_sheet_page
+from telephony.client.ui.windows.camera_photo_window import CameraPhoto
+from telephony.client.ui.windows.camera_video_window import CameraVideo
+from telephony.client.ui.windows.sound_recorder_window import SoundRecorder
+
+URI_LIST_MIME = "text/uri-list"
+IMAGE_PASTE_MIMES = ("image/png", "image/jpeg")
+
+
+class ChatMediaController:
+
+    def __init__(self, chat_page, window):
+        self.chat_page = chat_page
+        self.window = window
+
+    def on_attach_clicked(self, btn):
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Take Photo"), self.open_camera,
+                           icon="camera-photo-symbolic", opens_flow=True)
+            add_choice_row(group, sheet, _("Record Video"), self.open_video,
+                           icon="camera-video-symbolic", opens_flow=True)
+            add_choice_row(group, sheet, _("Record Audio"), self.open_audio_recorder,
+                           icon="audio-input-microphone-symbolic", opens_flow=True)
+            add_choice_row(group, sheet, _("Choose File"), self.open_file_chooser,
+                           icon="folder-open-symbolic")
+            if self.clipboard_has_media():
+                add_choice_row(group, sheet, _("Paste"), self.ingest_clipboard,
+                               icon="edit-paste-symbolic")
+            add_choice_row(group, sheet, _("Schedule"), self.chat_page.open_schedule_picker,
+                           icon="alarm-symbolic", opens_flow=True)
+
+        present_choice_sheet(self.window, _("Select Attachment"), build)
+
+    def clipboard_has_media(self):
+        formats = self.window.get_clipboard().get_formats()
+        if formats.contain_mime_type(URI_LIST_MIME) or formats.contain_gtype(Gdk.FileList):
+            return True
+        if formats.contain_gtype(Gdk.Texture):
+            return True
+        return any(formats.contain_mime_type(m) for m in IMAGE_PASTE_MIMES)
+
+    def ingest_clipboard(self):
+        clipboard = self.window.get_clipboard()
+        formats = clipboard.get_formats()
+        if formats.contain_mime_type(URI_LIST_MIME) or formats.contain_gtype(Gdk.FileList):
+            clipboard.read_value_async(Gdk.FileList, GLib.PRIORITY_DEFAULT, None,
+                                       self.on_clipboard_files)
+            return True
+        if formats.contain_gtype(Gdk.Texture) or any(formats.contain_mime_type(m) for m in IMAGE_PASTE_MIMES):
+            clipboard.read_texture_async(None, self.on_clipboard_texture)
+            return True
+        return False
+
+    def on_clipboard_files(self, clipboard, result):
+        try:
+            file_list = clipboard.read_value_finish(result)
+        except GLib.Error as e:
+            logger.warning(f"[MediaController] Clipboard file read failed: {e}")
+            return
+        for file in file_list.get_files():
+            path = file.get_path()
+            if path:
+                self.on_media_captured(None, path)
+            else:
+                logger.debug(f"[MediaController] Skipping non-local clipboard file: {file.get_uri()}")
+
+    def on_clipboard_texture(self, clipboard, result):
+        try:
+            texture = clipboard.read_texture_finish(result)
+        except GLib.Error as e:
+            logger.warning(f"[MediaController] Clipboard image read failed: {e}")
+            return
+        if texture is None:
+            return
+        now = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = os.path.join(GLib.get_tmp_dir(), f"pasted_{now}.png")
+        if not texture.save_to_png(path):
+            logger.error(f"[MediaController] Saving pasted image to {path} failed")
+            return
+        self.on_media_captured(None, path)
+
+    def open_camera(self):
+        try:
+            cam = CameraPhoto(self.window, lambda path: self.on_media_captured(None, path))
+            present_sheet_page(self.window, cam)
+        except Exception as e:
+            logger.error(f"Failed to open camera: {e}")
+            self.show_error(None, _("Could not start the camera."))
+
+    def open_video(self):
+        try:
+            cam = CameraVideo(self.window, lambda path: self.on_media_captured(None, path))
+            present_sheet_page(self.window, cam)
+        except Exception as e:
+            logger.error(f"Failed to open video camera: {e}")
+            self.show_error(None, _("Could not start video recording."))
+
+    def open_audio_recorder(self):
+        try:
+            max_bytes = self.chat_page.remaining_attachment_budget()
+            rec = SoundRecorder(self.window, lambda path: self.on_media_captured(None, path),
+                                max_bytes=max_bytes)
+            present_sheet_page(self.window, rec)
+        except Exception as e:
+            logger.error(f"Failed to open audio recorder: {e}")
+            self.show_error(None, _("Could not start audio recorder."))
+
+    def open_file_chooser(self):
+        dialog = Gtk.FileDialog(title=_("Select Attachment"))
+        dialog.set_modal(True)
+
+        def on_resp(d, r):
+            try:
+                file = d.open_finish(r)
+                if file:
+                    self.on_media_captured(None, file.get_path())
+            except GLib.Error as e:
+                if e.matches(Gtk.DialogError.quark(), Gtk.DialogError.DISMISSED):
+                    logger.debug("[MediaController] File dialog dismissed by user")
+                else:
+                    logger.error(f"File dialog error: {e}")
+            except Exception as e:
+                logger.error(f"File dialog error: {e}")
+
+        dialog.open(self.window, None, on_resp)
+
+    def on_media_captured(self, _source, path):
+        if not path or not os.path.exists(path):
+            return
+        self.chat_page.on_attachment_captured(path)
+
+    def show_error(self, title, message):
+        self.window.notify_error(message)

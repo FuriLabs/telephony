@@ -1,0 +1,1743 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+import datetime
+import json
+from gi.repository import Gio, GLib
+import os
+import re
+from telephony.shared.utils.log_utils import logger
+import uuid
+
+from telephony.shared.utils.thread_utils import run_in_background
+from telephony.shared.utils.phone_utils import get_own_number
+from telephony.shared.utils.region_utils import detect_region
+from telephony.daemon.utils.attachment_utils import prepare_attachment, own_attachments
+from telephony.shared.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
+
+
+def to_variant(value):
+    if isinstance(value, bool):
+        return GLib.Variant("b", value)
+    if isinstance(value, int):
+        return GLib.Variant("i", value)
+    if isinstance(value, float):
+        return GLib.Variant("d", value)
+    return GLib.Variant("s", str(value))
+
+
+DAEMON_INTERFACE_XML = """
+<node>
+  <interface name="io.furios.Telephony.Daemon">
+    <!-- Call operations -->
+    <method name="Dial">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="b" name="hide_id" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="Answer">
+      <arg type="s" name="call_path" direction="in"/>
+    </method>
+    <method name="Hangup">
+      <arg type="s" name="call_path" direction="in"/>
+    </method>
+    <method name="HangupAll">
+    </method>
+    <method name="SwapCalls">
+    </method>
+    <method name="SendDtmf">
+      <arg type="s" name="tones" direction="in"/>
+    </method>
+    <method name="DeclineWithSms">
+      <arg type="s" name="call_path" direction="in"/>
+      <arg type="s" name="sms_text" direction="in"/>
+    </method>
+    <method name="MuteMic">
+    </method>
+    <method name="UnmuteMic">
+    </method>
+    <method name="SetSpeakerphone">
+      <arg type="b" name="enable" direction="in"/>
+    </method>
+
+
+    <!-- SMS operations -->
+    <method name="SendSms">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+
+
+    <method name="ScheduleSms">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="s" name="scheduled_timestamp" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="ScheduleMms">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="s" name="attachments" direction="in"/>
+      <arg type="s" name="scheduled_timestamp" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="SendMms">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="s" name="attachments_json" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+
+    <method name="DeleteMessage">
+      <arg type="i" name="msg_id" direction="in"/>
+    </method>
+    <method name="DeleteConversation">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="MarkThreadAsRead">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="MarkConversationUnread">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="i" name="msg_id" direction="in"/>
+    </method>
+    <method name="SaveDraft">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="s" name="attachments_json" direction="in"/>
+    </method>
+    <method name="RescheduleMessage">
+      <arg type="i" name="msg_id" direction="in"/>
+      <arg type="s" name="scheduled_timestamp" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="RetryMessage">
+      <arg type="i" name="msg_id" direction="in"/>
+    </method>
+    <method name="SendTrackedSms">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="DeleteCallHistoryEntry">
+      <arg type="i" name="call_id" direction="in"/>
+    </method>
+    <method name="UpdateHistoryNames">
+      <arg type="s" name="numbers_json" direction="in"/>
+      <arg type="s" name="new_name" direction="in"/>
+    </method>
+
+    <!-- Data Retrieval (returns JSON strings for simplicity) -->
+
+    <!-- Clear/Delete operations -->
+    <method name="ClearMessages">
+    </method>
+    <method name="SetGroupName">
+      <arg type="s" name="recipients" direction="in"/>
+      <arg type="s" name="new_name" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="ClearGroupNames">
+    </method>
+    <method name="ClearBlocklist">
+    </method>
+    <method name="ClearContacts">
+      <arg type="s" name="source_uid" direction="in"/>
+    </method>
+
+    <method name="ClearEverything">
+      <arg type="s" name="source_uid" direction="in"/>
+    </method>
+    <method name="DeleteAddressBook">
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="CreateAddressBook">
+      <arg type="s" name="name" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+
+    <!-- Import operations -->
+    <method name="ImportChatty">
+      <arg type="s" name="db_path" direction="in"/>
+      <arg type="s" name="mms_path" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="msg" direction="out"/>
+    </method>
+    <method name="ImportLocalCalls">
+      <arg type="s" name="db_path" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="msg" direction="out"/>
+    </method>
+    <method name="ImportAndroidSms">
+      <arg type="s" name="file_path" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="msg" direction="out"/>
+    </method>
+    <method name="ImportAndroidCalls">
+      <arg type="s" name="file_path" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="msg" direction="out"/>
+    </method>
+    <method name="ImportIosSms">
+      <arg type="s" name="file_path" direction="in"/>
+      <arg type="s" name="manifest_path" direction="in"/>
+      <arg type="s" name="backup_dir" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="msg" direction="out"/>
+    </method>
+    <method name="ImportIosCalls">
+      <arg type="s" name="file_path" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="msg" direction="out"/>
+    </method>
+
+    <method name="ClearCallHistory">
+    </method>
+    <method name="GetCallHistory">
+      <arg type="i" name="limit" direction="in"/>
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="GetConversations">
+      <arg type="i" name="limit" direction="in"/>
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="GetMessages">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="i" name="limit" direction="in"/>
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="GetContacts">
+      <arg type="s" name="query" direction="in"/>
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="GetActiveCalls">
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+
+
+    <!-- Settings operations -->
+    <method name="GetSetting">
+      <arg type="s" name="key" direction="in"/>
+      <arg type="s" name="value" direction="out"/>
+    </method>
+    <method name="SetSetting">
+      <arg type="s" name="key" direction="in"/>
+      <arg type="s" name="value" direction="in"/>
+    </method>
+    <!-- Blocklist operations -->
+    <method name="GetBlocklist">
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="AddBlockedNumber">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="note" direction="in"/>
+      <arg type="b" name="block_calls" direction="in"/>
+      <arg type="b" name="block_messages" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="SetBlockedNumberFlags">
+      <arg type="s" name="bid" direction="in"/>
+      <arg type="b" name="block_calls" direction="in"/>
+      <arg type="b" name="block_messages" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="UpdateBlockedNumber">
+      <arg type="s" name="bid" direction="in"/>
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="note" direction="in"/>
+      <arg type="b" name="block_calls" direction="in"/>
+      <arg type="b" name="block_messages" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="ImportBlocklist">
+      <arg type="s" name="json_data" direction="in"/>
+      <arg type="u" name="added" direction="out"/>
+      <arg type="u" name="updated" direction="out"/>
+    </method>
+    <method name="RemoveBlockedNumber">
+      <arg type="s" name="bid" direction="in"/>
+    </method>
+
+    <!-- Scheduled Messages operations -->
+    <method name="GetMissedMessages">
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="SendMissedMessage">
+      <arg type="i" name="msg_id" direction="in"/>
+    </method>
+
+    <!-- Contact operations -->
+    <method name="GetAddressBooks">
+      <arg type="s" name="json_data" direction="out"/>
+    </method>
+    <method name="SetAddressBookPriority">
+      <arg type="s" name="uid_list_json" direction="in"/>
+    </method>
+    <method name="ImportContacts">
+      <arg type="s" name="vcard_data" direction="in"/>
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="i" name="count" direction="out"/>
+    </method>
+    <method name="ExportContacts">
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="s" name="vcard_data" direction="out"/>
+    </method>
+    <method name="AddContact">
+      <arg type="s" name="name" direction="in"/>
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="SaveContact">
+      <arg type="s" name="vcard" direction="in"/>
+      <arg type="s" name="uid" direction="in"/>
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="reason" direction="out"/>
+    </method>
+    <method name="DeleteContacts">
+      <arg type="s" name="uids_json" direction="in"/>
+    </method>
+    <method name="RefreshContacts">
+      <arg type="i" name="count" direction="out"/>
+    </method>
+    <method name="ModifyContact">
+      <arg type="s" name="uid" direction="in"/>
+      <arg type="s" name="name" direction="in"/>
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="DeleteContact">
+      <arg type="s" name="uid" direction="in"/>
+    </method>
+
+    <!-- Signals -->
+    <signal name="IncomingCall">
+      <arg type="s" name="call_path"/>
+      <arg type="s" name="number"/>
+    </signal>
+    <signal name="CallChanged">
+      <arg type="s" name="call_path"/>
+      <arg type="s" name="state"/>
+    </signal>
+    <signal name="CallRemoved">
+      <arg type="s" name="call_path"/>
+    </signal>
+    <signal name="IncomingSms">
+      <arg type="s" name="number"/>
+      <arg type="s" name="text"/>
+    </signal>
+    <signal name="MessagesChanged">
+      <arg type="s" name="number"/>
+      <arg type="s" name="reason"/>
+    </signal>
+    <signal name="ContactsChanged"/>
+    <signal name="AddressBooksChanged"/>
+    <signal name="BlocklistChanged"/>
+    <signal name="HistoryChanged"/>
+    <method name="GetTelephonyState">
+      <arg type="a{sv}" name="state" direction="out"/>
+    </method>
+    <method name="SetActiveChat">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="ImportSimContacts">
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="i" name="count" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="DisableAllForwarding">
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="DisableAllBarrings">
+      <arg type="s" name="password" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="ChangeBarringPassword">
+      <arg type="s" name="old_password" direction="in"/>
+      <arg type="s" name="new_password" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="GetOwnNumber">
+      <arg type="s" name="number" direction="out"/>
+    </method>
+    <method name="RequestRecovery">
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="reason" direction="out"/>
+    </method>
+    <method name="ClearNotification">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="PrepareAttachment">
+      <arg type="s" name="source_path" direction="in"/>
+      <arg type="i" name="max_bytes" direction="in"/>
+      <arg type="s" name="path" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="SilenceRing">
+    </method>
+    <method name="SetAudioRoute">
+      <arg type="s" name="route" direction="in"/>
+    </method>
+    <method name="SetInputRoute">
+      <arg type="s" name="route" direction="in"/>
+    </method>
+    <method name="SetDeliveryReports">
+      <arg type="b" name="enabled" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="GetAudioRoutes">
+      <arg type="a(sb)" name="outputs" direction="out"/>
+      <arg type="a(sb)" name="inputs" direction="out"/>
+    </method>
+    <method name="DetectRegion">
+      <arg type="s" name="region" direction="out"/>
+    </method>
+    <signal name="NetworkServiceChanged">
+      <arg type="s" name="service"/>
+      <arg type="s" name="name"/>
+      <arg type="s" name="value"/>
+    </signal>
+    <signal name="CapabilityChanged">
+      <arg type="b" name="can_dial"/>
+      <arg type="s" name="reason"/>
+      <arg type="s" name="description"/>
+    </signal>
+    <signal name="ModemStateChanged">
+      <arg type="a{sv}" name="state"/>
+    </signal>
+    <signal name="VoicemailChanged">
+      <arg type="b" name="waiting"/>
+      <arg type="i" name="count"/>
+    </signal>
+    <signal name="AudioRouteChanged">
+      <arg type="a{sv}" name="state"/>
+    </signal>
+    <signal name="UssdReceived">
+      <arg type="s" name="text"/>
+    </signal>
+    <signal name="UssdRequestReceived">
+      <arg type="s" name="text"/>
+    </signal>
+    <signal name="UssdStateChanged">
+      <arg type="s" name="state"/>
+    </signal>
+    <signal name="RecoveryStateChanged">
+      <arg type="b" name="active"/>
+      <arg type="s" name="message"/>
+      <arg type="b" name="failed"/>
+    </signal>
+    <method name="StartUssd">
+      <arg type="s" name="command" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="response" direction="out"/>
+      <arg type="s" name="state" direction="out"/>
+    </method>
+    <method name="RespondUssd">
+      <arg type="s" name="response" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="network_response" direction="out"/>
+      <arg type="s" name="state" direction="out"/>
+    </method>
+    <method name="CancelUssd">
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="CallAction">
+      <arg type="s" name="action" direction="in"/>
+      <arg type="s" name="argument" direction="in"/>
+      <arg type="b" name="ok" direction="out"/>
+    </method>
+    <method name="GetNetworkProperties">
+      <arg type="s" name="service" direction="in"/>
+      <arg type="a{sv}" name="properties" direction="out"/>
+    </method>
+    <method name="SetNetworkProperty">
+      <arg type="s" name="service" direction="in"/>
+      <arg type="s" name="name" direction="in"/>
+      <arg type="v" name="value" direction="in"/>
+      <arg type="s" name="password" direction="in"/>
+      <arg type="s" name="error" direction="out"/>
+    </method>
+    <method name="GetRecoveryState">
+      <arg type="b" name="active" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+      <arg type="b" name="failed" direction="out"/>
+    </method>
+  </interface>
+</node>
+"""
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
+
+class TelephonyDaemonDBus:
+    def __init__(self, app, db, ofono, eds):
+        self.app = app
+        self.db = db
+        self.ofono = ofono
+        self.eds = eds
+
+        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self.node_info = Gio.DBusNodeInfo.new_for_xml(DAEMON_INTERFACE_XML)
+        self.interface_info = self.node_info.interfaces[0]
+
+        self.reg_id = self.bus.register_object(
+            DAEMON_OBJECT_PATH,
+            self.interface_info,
+            self.handle_method_call,
+            None, None
+        )
+        logger.info(f"TelephonyDaemonDBus registered on Session Bus at {DAEMON_OBJECT_PATH} (id {self.reg_id})")
+
+        if self.ofono:
+            self.ofono.connect("call-added", self.on_call_added)
+            self.ofono.connect("call-changed", self.on_call_changed)
+            self.ofono.connect("call-removed", self.on_call_removed)
+            self.ofono.connect("incoming-message", self.on_incoming_message)
+            self.ofono.connect("dial-availability-changed", self.on_dial_availability_changed)
+            self.ofono.connect("connection-status", self.on_modem_presence_changed)
+            self.ofono.connect("modem-interface-appeared", self.on_modem_presence_changed)
+            self.ofono.connect("voicemail-changed", self.on_voicemail_changed)
+            self.ofono.connect("ussd-notification", self.on_ussd_received)
+            self.ofono.connect("ussd-request", self.on_ussd_request_received)
+            self.ofono.connect("ussd-state-changed", self.on_ussd_state_changed)
+            self.ofono.connect("network-service-changed", self.on_network_service_changed)
+
+        if self.app and self.app.call_audio:
+            self.app.call_audio.connect("audio-state-applied",
+                                        lambda *_args: self.emit_audio_route())
+
+    def on_call_added(self, manager, path, props):
+        number = props.get("number", "Unknown")
+        self.emit_signal("IncomingCall", GLib.Variant("(ss)", (path, number)))
+
+    def on_call_changed(self, manager, path, state):
+        self.emit_signal("CallChanged", GLib.Variant("(ss)", (path, state)))
+
+    def on_call_removed(self, manager, path):
+        self.emit_signal("CallRemoved", GLib.Variant("(s)", (path,)))
+
+    def on_incoming_message(self, manager, number, body):
+        self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
+
+    def on_dial_availability_changed(self, _manager, _available):
+        self.emit_capability()
+
+    def emit_capability(self):
+        can_dial, reason, description = self.ofono.capability_state()
+        self.emit_signal("CapabilityChanged", GLib.Variant("(bss)", (can_dial, reason, description)))
+
+    def on_modem_presence_changed(self, _manager, *_args):
+        state = self.ofono.modem_state()
+        packed = {
+            "present": GLib.Variant("b", state["present"]),
+            "online": GLib.Variant("b", state["online"]),
+            "interfaces": GLib.Variant("as", state["interfaces"]),
+            "emergency_numbers": GLib.Variant("as", state["emergency_numbers"]),
+        }
+        self.emit_signal("ModemStateChanged", GLib.Variant("(a{sv})", (packed,)))
+        self.emit_capability()
+
+    def on_voicemail_changed(self, _manager, waiting, count):
+        self.emit_signal("VoicemailChanged", GLib.Variant("(bi)", (waiting, count)))
+
+    def on_ussd_received(self, _manager, text):
+        self.emit_signal("UssdReceived", GLib.Variant("(s)", (text,)))
+
+    def on_ussd_request_received(self, _manager, text):
+        self.emit_signal("UssdRequestReceived", GLib.Variant("(s)", (text,)))
+
+    def on_ussd_state_changed(self, _manager, state):
+        self.emit_signal("UssdStateChanged", GLib.Variant("(s)", (state,)))
+
+    def emit_audio_route(self):
+        audio = self.ofono.audio
+        packed = {
+            "speaker": GLib.Variant("b", audio.current_route == "speaker"),
+            "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "route": GLib.Variant("s", audio.current_route),
+            "input": GLib.Variant("s", audio.current_input),
+        }
+        self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
+
+    def on_network_service_changed(self, _manager, service, name, value):
+        self.emit_signal("NetworkServiceChanged", GLib.Variant("(sss)", (service, name, str(value))))
+
+    def handle_getownnumber(self, parameters, invocation):
+        run_in_background(get_own_number,
+                          on_complete=lambda num: invocation.return_value(GLib.Variant("(s)", (num or "",))))
+
+    def handle_detectregion(self, parameters, invocation):
+        run_in_background(detect_region,
+                          on_complete=lambda region: invocation.return_value(GLib.Variant("(s)", (region or "",))))
+
+    def handle_requestrecovery(self, parameters, invocation):
+        state = {"resolved": False}
+
+        def resolve(success, reason=""):
+            if state["resolved"]:
+                return
+            state["resolved"] = True
+            invocation.return_value(GLib.Variant("(bs)", (bool(success), reason or "")))
+
+        started = self.app.request_auto_recovery(on_done=resolve)
+        if not started:
+            resolve(False)
+
+    def handle_clearnotification(self, parameters, invocation):
+        number = parameters.unpack()[0]
+        self.app.clear_notification(number)
+        invocation.return_value(None)
+
+    def handle_prepareattachment(self, parameters, invocation):
+        source_path, max_bytes = parameters.unpack()
+
+        def task():
+            return prepare_attachment(source_path, max_bytes)
+
+        def done(result):
+            path, message = result if result else (None, "error")
+            invocation.return_value(GLib.Variant("(ss)", (path or "", message)))
+
+        def failed(error):
+            logger.error(f"[Daemon] Attachment preparation failed: {error}")
+            invocation.return_value(GLib.Variant("(ss)", ("", str(error))))
+
+        run_in_background(task, on_complete=done, on_error=failed)
+
+    def handle_startussd(self, params, invocation):
+        command = params.unpack()[0]
+
+        def done(result):
+            if not result:
+                invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
+                return
+            response, state = result
+            invocation.return_value(GLib.Variant("(bss)", (True, response or "", state or "idle")))
+
+        self.ofono.start_ussd(command, done)
+
+    def handle_respondussd(self, params, invocation):
+        response = params.unpack()[0]
+
+        def done(result):
+            if not result:
+                invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
+                return
+            network_response, state = result
+            invocation.return_value(GLib.Variant(
+                "(bss)", (True, network_response or "", state or "idle")))
+
+        self.ofono.respond_ussd(response, done)
+
+    def handle_cancelussd(self, _params, invocation):
+        self.ofono.cancel_ussd()
+        invocation.return_value(GLib.Variant("(b)", (True,)))
+
+    def handle_callaction(self, params, invocation):
+        action, argument = params.unpack()
+
+        def done(ok, error):
+            if not ok:
+                logger.error(f"[Daemon] Call action {action} failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        actions = {
+            "create_multiparty": lambda: self.ofono.create_multiparty(done),
+            "hangup_multiparty": lambda: self.ofono.hangup_multiparty(done),
+            "transfer": lambda: self.ofono.transfer_call(done),
+            "private_chat": lambda: self.ofono.private_chat(argument, done),
+        }
+        handler = actions.get(action)
+        if handler is None:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+
+        handler()
+
+    def handle_getnetworkproperties(self, params, invocation):
+        service = params.unpack()[0]
+
+        def done(props):
+            packed = {k: GLib.Variant("s", str(v)) for k, v in (props or {}).items()}
+            invocation.return_value(GLib.Variant("(a{sv})", (packed,)))
+
+        self.ofono.get_service_properties(service, done)
+
+    def handle_setnetworkproperty(self, params, invocation):
+        service, name, value, password = params.unpack()
+
+        def done(ok, error):
+            if not ok:
+                logger.error(f"[Daemon] Network property write failed: {error}")
+            invocation.return_value(GLib.Variant("(s)", ("" if ok else (error or "failed"),)))
+
+        if service == "barring" and password:
+            self.ofono.set_barring_property(name, value, password, done)
+            return
+
+        self.ofono.set_service_property(service, name, value, done)
+
+    def handle_getrecoverystate(self, parameters, invocation):
+        active, message, failed = self.app.recovery_state
+        invocation.return_value(GLib.Variant("(bsb)", (active, message, failed)))
+
+    def handle_gettelephonystate(self, parameters, invocation):
+        can_dial, reason, description = self.ofono.capability_state()
+        modem = self.ofono.modem_state()
+        audio = self.ofono.audio
+        recovery_active, recovery_message, recovery_failed = self.app.recovery_state
+        calls = {path: GLib.Variant("a{sv}", {k: to_variant(v) for k, v in props.items()})
+                 for path, props in self.ofono.calls_snapshot().items()}
+        state = {
+            "calls": GLib.Variant("a{sv}", calls),
+            "can_dial": GLib.Variant("b", can_dial),
+            "dial_reason": GLib.Variant("s", reason),
+            "dial_description": GLib.Variant("s", description),
+            "modem_present": GLib.Variant("b", modem["present"]),
+            "modem_online": GLib.Variant("b", modem["online"]),
+            "interfaces": GLib.Variant("as", modem["interfaces"]),
+            "emergency_numbers": GLib.Variant("as", modem["emergency_numbers"]),
+            "voicemail_waiting": GLib.Variant("b", self.ofono.voicemail_waiting),
+            "voicemail_count": GLib.Variant("i", self.ofono.voicemail_count),
+            "voicemail_mailbox": GLib.Variant("s", self.ofono.voicemail_mailbox),
+            "ussd_state": GLib.Variant("s", self.ofono.ussd_state or "idle"),
+            "ussd_text": GLib.Variant("s", self.ofono.ussd_text or ""),
+            "speaker": GLib.Variant("b", audio.current_route == "speaker"),
+            "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "route": GLib.Variant("s", audio.current_route),
+            "input": GLib.Variant("s", audio.current_input),
+            "recovery_active": GLib.Variant("b", recovery_active),
+            "recovery_message": GLib.Variant("s", recovery_message),
+            "recovery_failed": GLib.Variant("b", recovery_failed),
+        }
+        invocation.return_value(GLib.Variant("(a{sv})", (state,)))
+
+    def handle_setactivechat(self, parameters, invocation):
+        number = parameters.unpack()[0]
+        self.ofono.set_active_chat(number if number else None)
+        invocation.return_value(None)
+
+    def reply_ss_result(self, invocation, result):
+        ok, error = result if result else (False, "no reply")
+        invocation.return_value(GLib.Variant("(bs)", (ok, error or "")))
+
+    def handle_disableallforwarding(self, parameters, invocation):
+        self.ofono.disable_all_forwarding(
+            lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
+
+    def handle_disableallbarrings(self, parameters, invocation):
+        password = parameters.unpack()[0]
+        self.ofono.disable_all_barrings(
+            password, lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
+
+    def handle_changebarringpassword(self, parameters, invocation):
+        old, new = parameters.unpack()
+        self.ofono.change_barring_password(
+            old, new, lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
+
+    def handle_importsimcontacts(self, parameters, invocation):
+        source_uid = parameters.unpack()[0]
+
+        if self.is_protected_source(source_uid, "[DBus] Refusing SIM import to {name}"):
+            invocation.return_value(GLib.Variant("(is)", (-1, "protected-book")))
+            return
+
+        def task():
+            return self.ofono.import_sim_contacts()
+
+        def done(vcard_data):
+            if vcard_data is None:
+                invocation.return_value(GLib.Variant("(is)", (-1, "sim-read-failed")))
+                return
+            vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
+            if not vcards:
+                invocation.return_value(GLib.Variant("(is)", (0, "empty")))
+                return
+            self.save_vcards_in_turn(
+                vcards, source_uid,
+                lambda count: invocation.return_value(GLib.Variant("(is)", (count, ""))))
+
+        def failed(error):
+            logger.error(f"[Daemon] Reading the SIM phonebook failed: {error}")
+            invocation.return_value(GLib.Variant("(is)", (-1, "sim-read-failed")))
+
+        run_in_background(task, on_complete=done, on_error=failed)
+
+    def emit_signal(self, signal_name, parameters):
+        self.bus.emit_signal(
+            None,
+            DAEMON_OBJECT_PATH,
+            DAEMON_INTERFACE,
+            signal_name,
+            parameters
+        )
+
+    def handle_method_call(self, connection, sender, object_path, interface_name, method_name, parameters, invocation):
+        handlers = {
+            "Dial": self.handle_dial,
+            "Answer": self.handle_answer,
+            "Hangup": self.handle_hangup,
+            "HangupAll": self.handle_hangupall,
+            "SwapCalls": self.handle_swapcalls,
+            "MuteMic": self.handle_mutemic,
+            "UnmuteMic": self.handle_unmutemic,
+            "SetSpeakerphone": self.handle_setspeakerphone,
+            "SendDtmf": self.handle_senddtmf,
+            "DeclineWithSms": self.handle_declinewithsms,
+            "ScheduleSms": self.handle_schedulesms,
+            "ScheduleMms": self.handle_schedulemms,
+            "SendSms": self.handle_sendsms,
+            "StartUssd": self.handle_startussd,
+            "RespondUssd": self.handle_respondussd,
+            "CancelUssd": self.handle_cancelussd,
+            "CallAction": self.handle_callaction,
+            "GetNetworkProperties": self.handle_getnetworkproperties,
+            "SetNetworkProperty": self.handle_setnetworkproperty,
+            "GetRecoveryState": self.handle_getrecoverystate,
+            "GetTelephonyState": self.handle_gettelephonystate,
+            "SetActiveChat": self.handle_setactivechat,
+            "ImportSimContacts": self.handle_importsimcontacts,
+            "DisableAllForwarding": self.handle_disableallforwarding,
+            "DisableAllBarrings": self.handle_disableallbarrings,
+            "ChangeBarringPassword": self.handle_changebarringpassword,
+            "GetOwnNumber": self.handle_getownnumber,
+            "DetectRegion": self.handle_detectregion,
+            "RequestRecovery": self.handle_requestrecovery,
+            "ClearNotification": self.handle_clearnotification,
+            "PrepareAttachment": self.handle_prepareattachment,
+            "SilenceRing": self.handle_silencering,
+            "SetAudioRoute": self.handle_setaudioroute,
+            "SetInputRoute": self.handle_setinputroute,
+            "SetDeliveryReports": self.handle_setdeliveryreports,
+            "GetAudioRoutes": self.handle_getaudioroutes,
+            "DeleteMessage": self.handle_deletemessage,
+            "DeleteConversation": self.handle_deleteconversation,
+            "MarkThreadAsRead": self.handle_markthreadasread,
+            "MarkConversationUnread": self.handle_markconversationunread,
+            "SaveDraft": self.handle_savedraft,
+            "RescheduleMessage": self.handle_reschedulemessage,
+            "RetryMessage": self.handle_retrymessage,
+            "SendTrackedSms": self.handle_sendtrackedsms,
+            "DeleteCallHistoryEntry": self.handle_deletecallhistoryentry,
+            "UpdateHistoryNames": self.handle_updatehistorynames,
+            "ClearMessages": self.handle_clearmessages,
+            "SetGroupName": self.handle_setgroupname,
+            "ClearGroupNames": self.handle_cleargroupnames,
+            "ClearBlocklist": self.handle_clearblocklist,
+            "ClearContacts": self.handle_clearcontacts,
+
+            "ClearEverything": self.handle_cleareverything,
+            "DeleteAddressBook": self.handle_deleteaddressbook,
+            "CreateAddressBook": self.handle_createaddressbook,
+            "ImportChatty": self.handle_importchatty,
+            "ImportLocalCalls": self.handle_importlocalcalls,
+            "ImportAndroidSms": self.handle_importandroidsms,
+            "ImportAndroidCalls": self.handle_importandroidcalls,
+            "ImportIosSms": self.handle_importiossms,
+            "ImportIosCalls": self.handle_importioscalls,
+            "ClearCallHistory": self.handle_clearcallhistory,
+            "GetCallHistory": self.handle_getcallhistory,
+            "GetConversations": self.handle_getconversations,
+            "GetMessages": self.handle_getmessages,
+            "GetContacts": self.handle_getcontacts,
+            "GetActiveCalls": self.handle_getactivecalls,
+            "SendMms": self.handle_sendmms,
+            "GetSetting": self.handle_getsetting,
+            "SetSetting": self.handle_setsetting,
+            "GetBlocklist": self.handle_getblocklist,
+            "AddBlockedNumber": self.handle_addblockednumber,
+            "SetBlockedNumberFlags": self.handle_setblockednumberflags,
+            "UpdateBlockedNumber": self.handle_updateblockednumber,
+            "ImportBlocklist": self.handle_importblocklist,
+            "RemoveBlockedNumber": self.handle_removeblockednumber,
+            "GetMissedMessages": self.handle_getmissedmessages,
+            "SendMissedMessage": self.handle_sendmissedmessage,
+            "GetAddressBooks": self.handle_getaddressbooks,
+            "SetAddressBookPriority": self.handle_setaddressbookpriority,
+            "ImportContacts": self.handle_importcontacts,
+            "ExportContacts": self.handle_exportcontacts,
+            "AddContact": self.handle_addcontact,
+            "SaveContact": self.handle_savecontact,
+            "DeleteContact": self.handle_deletecontact,
+            "DeleteContacts": self.handle_deletecontacts,
+            "RefreshContacts": self.handle_refreshcontacts,
+            "ModifyContact": self.handle_modifycontact,
+        }
+        handler = handlers.get(method_name)
+        if handler:
+            try:
+                logger.info(f"DBus Method Call: {method_name} from {sender}")
+                handler(parameters, invocation)
+            except Exception as e:
+                logger.error(f"[DBusService] Exception handling {method_name}: {e}")
+                invocation.return_dbus_error("org.telephony.Error.Failed", str(e))
+        else:
+            logger.warning(f"[DBusService] Unhandled method: {method_name}")
+            invocation.return_dbus_error("org.freedesktop.DBus.Error.UnknownMethod", f"Method {method_name} is not implemented")
+
+    def handle_dial(self, parameters, invocation):
+        number, hide_id = parameters.unpack()
+        state = {"resolved": False}
+
+        def on_result(success, message):
+            if state["resolved"]:
+                return
+            state["resolved"] = True
+            invocation.return_value(GLib.Variant("(bs)", (success, message)))
+
+        def do_dial():
+            try:
+                self.ofono.dial(number, hide_id=hide_id, on_result=on_result)
+            except Exception as e:
+                logger.error(f"[DBusService] Dial failed: {e}")
+                on_result(False, str(e))
+
+        GLib.idle_add(do_dial)
+
+    def handle_answer(self, parameters, invocation):
+        call_path = parameters.unpack()[0]
+        if self.ofono:
+            if not call_path:
+                for p, data in self.ofono.active_calls.items():
+                    if data.get("state") in ["incoming", "waiting"]:
+                        call_path = p
+                        break
+            if call_path:
+                self.ofono.answer_call(call_path)
+        invocation.return_value(None)
+
+    def handle_hangup(self, parameters, invocation):
+        call_path = parameters.unpack()[0]
+        if self.ofono:
+            if not call_path:
+                for p, data in self.ofono.active_calls.items():
+                    call_path = p
+                    break
+            if call_path:
+                self.ofono.hangup_call(call_path)
+        invocation.return_value(None)
+
+    def handle_hangupall(self, parameters, invocation):
+        if self.ofono:
+            self.ofono.hangup_all()
+        invocation.return_value(None)
+
+    def handle_swapcalls(self, parameters, invocation):
+        if self.ofono:
+            self.ofono.swap_calls()
+        invocation.return_value(None)
+
+    def handle_mutemic(self, parameters, invocation):
+        self.app.call_audio.set_mic_muted(True)
+        invocation.return_value(None)
+
+    def handle_unmutemic(self, parameters, invocation):
+        self.app.call_audio.set_mic_muted(False)
+        invocation.return_value(None)
+
+    def handle_setspeakerphone(self, parameters, invocation):
+        enable = parameters.unpack()[0]
+        self.app.call_audio.set_route("speaker" if enable else "earpiece")
+        invocation.return_value(None)
+
+    def handle_silencering(self, parameters, invocation):
+        self.app.call_audio.silence_ring()
+        invocation.return_value(None)
+
+    def handle_setaudioroute(self, parameters, invocation):
+        route = parameters.unpack()[0]
+        self.app.call_audio.set_route(route)
+        invocation.return_value(None)
+
+    def handle_setinputroute(self, parameters, invocation):
+        route = parameters.unpack()[0]
+        self.app.call_audio.set_input(route)
+        invocation.return_value(None)
+
+    def handle_setdeliveryreports(self, parameters, invocation):
+        enabled = parameters.unpack()[0]
+
+        def verdict(errors):
+            return (not errors, "; ".join(errors) if errors else None)
+
+        def sms_done(sms_result):
+            sms_ok, sms_error = sms_result if sms_result else (False, "failed")
+            errors = [] if sms_ok else [f"SMS: {sms_error or "failed"}"]
+
+            if not (self.app and self.app.mms):
+                self.reply_ss_result(invocation, verdict(errors))
+                return
+
+            def mms_done(mms_ok, mms_error):
+                if not mms_ok:
+                    errors.append(f"MMS: {mms_error or "failed"}")
+                self.reply_ss_result(invocation, verdict(errors))
+
+            self.app.mms.set_delivery_reports(enabled, mms_done)
+
+        self.ofono.set_delivery_reports(enabled, sms_done)
+
+    def handle_getaudioroutes(self, parameters, invocation):
+        def fetch():
+            outputs = [(r["id"], bool(r.get("available", True)))
+                       for r in self.ofono.audio.get_available_outputs()]
+            inputs = [(r["id"], bool(r.get("available", True)))
+                      for r in self.ofono.audio.get_available_inputs()]
+            return (outputs, inputs)
+
+        def done(result):
+            outputs, inputs = result if result else ([], [])
+            invocation.return_value(GLib.Variant("(a(sb)a(sb))", (outputs, inputs)))
+
+        def failed(error):
+            logger.error(f"[Daemon] Listing audio routes failed: {error}")
+            invocation.return_value(GLib.Variant("(a(sb)a(sb))", ([], [])))
+
+        run_in_background(fetch, on_complete=done, on_error=failed)
+
+    def handle_senddtmf(self, parameters, invocation):
+        tones = parameters.unpack()[0]
+        if self.ofono:
+            self.ofono.send_dtmf(tones)
+        invocation.return_value(None)
+
+    def handle_declinewithsms(self, parameters, invocation):
+        call_path, sms_text = parameters.unpack()
+        if self.ofono:
+            if not call_path:
+                for p, data in self.ofono.active_calls.items():
+                    call_path = p
+                    break
+            if call_path:
+                call_info = self.ofono.active_calls.get(call_path)
+                number = call_info.get("number") if call_info else None
+                self.ofono.hangup_call(call_path)
+                if number and sms_text:
+                    self.ofono.send_quick_response(number, sms_text)
+        invocation.return_value(None)
+
+    def normalize_schedule_timestamp(self, ts):
+        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+            try:
+                return datetime.datetime.strptime(ts, fmt).strftime("%Y-%m-%d %H:%M:%S")
+            except ValueError as e:
+                logger.debug(f"[DBus] Schedule timestamp {ts} does not match {fmt}: {e}")
+        return None
+
+    def handle_schedulesms(self, parameters, invocation):
+        number, text, scheduled_timestamp = parameters.unpack()
+        success = False
+        scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
+        if scheduled_timestamp and self.app and self.app.scheduler:
+            row_id = self.db.add_message(number, "outgoing", text, status="scheduled", attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
+            self.app.scheduler.add_cron(row_id, scheduled_timestamp)
+            success = True
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def handle_schedulemms(self, parameters, invocation):
+        number, text, attachments_json, scheduled_timestamp = parameters.unpack()
+        attachments = []
+        try:
+            if attachments_json:
+                attachments = own_attachments(json.loads(attachments_json))
+        except Exception as e:
+            logger.warning(f"Failed to parse attachments: {e}")
+
+        success = False
+        scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
+        if scheduled_timestamp and self.app and self.app.scheduler:
+            row_id = self.db.add_message(number, "outgoing", text, status="scheduled", attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
+            self.app.scheduler.add_cron(row_id, scheduled_timestamp)
+            success = True
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def handle_sendsms(self, parameters, invocation):
+        number, text = parameters.unpack()
+        success = False
+        if self.ofono:
+            row_id = self.db.add_message(number, "outgoing", text, status="draft", attachments=[], sender="Me")
+            success = self.ofono.send_sms(number, text)
+            if success:
+                self.db.update_message_schedule(row_id, status="sent", timestamp=None)
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def handle_deletemessage(self, parameters, invocation):
+        msg_id = parameters.unpack()[0]
+        if self.db:
+            self.db.delete_message(msg_id)
+        if self.app and self.app.scheduler:
+            self.app.scheduler.remove_cron(msg_id)
+        invocation.return_value(None)
+
+    def handle_deleteconversation(self, parameters, invocation):
+        number = parameters.unpack()[0]
+        if self.db:
+            self.db.delete_conversation(number)
+        if self.app and self.app.scheduler:
+            self.app.scheduler.schedule_next_run()
+        invocation.return_value(None)
+
+    def handle_markthreadasread(self, parameters, invocation):
+        number = parameters.unpack()[0]
+        if self.db:
+            self.db.mark_conversation_read(number)
+        invocation.return_value(None)
+
+    def handle_markconversationunread(self, parameters, invocation):
+        number, msg_id = parameters.unpack()
+        if not self.db:
+            invocation.return_value(None)
+            return
+        self.run_task_then_reply(
+            invocation, lambda: self.db.mark_conversation_unread_from_message(number, msg_id))
+
+    def handle_savedraft(self, parameters, invocation):
+        number, text, attachments_json = parameters.unpack()
+        attachments = []
+        try:
+            if attachments_json:
+                attachments = json.loads(attachments_json)
+        except Exception as e:
+            logger.warning(f"[DBus] Failed to parse draft attachments: {e}")
+
+        def task():
+            self.db.delete_drafts(number)
+            if text or attachments:
+                self.db.add_message(number, "outgoing", text, status="draft",
+                                    attachments=attachments, sender="Me")
+
+        if not self.db:
+            invocation.return_value(None)
+            return
+        self.run_task_then_reply(invocation, task)
+
+    def handle_reschedulemessage(self, parameters, invocation):
+        msg_id, scheduled_timestamp = parameters.unpack()
+        success = False
+        scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
+        if scheduled_timestamp and self.db:
+            success = bool(self.db.update_message_schedule(
+                msg_id, status="scheduled", timestamp=scheduled_timestamp))
+            if success and self.app and self.app.scheduler:
+                self.app.scheduler.add_cron(msg_id, scheduled_timestamp)
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def handle_retrymessage(self, parameters, invocation):
+        msg_id = parameters.unpack()[0]
+
+        def task():
+            details = self.db.get_message_details(msg_id)
+            if not details:
+                logger.warning(f"[DBus] Retry asked for unknown message {msg_id}")
+                return
+            _mid, number, body, subject, attachments_json, _status = details
+            attachments = []
+            try:
+                if attachments_json:
+                    attachments = json.loads(attachments_json)
+            except Exception as e:
+                logger.warning(f"[DBus] Failed to parse retry attachments: {e}")
+
+            self.db.update_message_status(msg_id, "sending")
+            is_group = "," in number
+            if is_group or attachments or subject:
+                if self.app and self.app.mms:
+                    targets = [n.strip() for n in number.split(",")] if is_group else [number]
+                    self.app.mms.send_mms_tracked(targets, body, attachments, msg_id)
+                else:
+                    self.db.update_message_status(msg_id, "failed")
+            elif self.ofono:
+                self.ofono.send_sms_tracked(number, body, msg_id)
+            else:
+                self.db.update_message_status(msg_id, "failed")
+
+        if not self.db:
+            invocation.return_value(None)
+            return
+        self.run_task_then_reply(invocation, task)
+
+    def handle_sendtrackedsms(self, parameters, invocation):
+        number, text = parameters.unpack()
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Tracked SMS send failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.ofono:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.ofono.send_quick_response, number, text,
+                          on_complete=done, on_error=failed)
+
+    def handle_deletecallhistoryentry(self, parameters, invocation):
+        call_id = parameters.unpack()[0]
+        if self.db:
+            self.db.delete_call_by_id(call_id)
+        invocation.return_value(None)
+
+    def handle_updatehistorynames(self, parameters, invocation):
+        numbers_json, new_name = parameters.unpack()
+        numbers = []
+        try:
+            if numbers_json:
+                numbers = json.loads(numbers_json)
+        except Exception as e:
+            logger.warning(f"[DBus] Failed to parse history numbers: {e}")
+
+        if not numbers or not self.db:
+            invocation.return_value(None)
+            return
+        self.run_task_then_reply(
+            invocation, lambda: self.db.update_history_names(numbers, new_name=new_name or None))
+
+    def handle_clearmessages(self, parameters, invocation):
+        if self.db:
+            self.db.clear_messages()
+        invocation.return_value(None)
+
+    def handle_setgroupname(self, parameters, invocation):
+        recipients, new_name = parameters.unpack()
+        success = False
+        if self.db:
+            recipients_list = [r.strip() for r in recipients.split(",") if r.strip()]
+            if recipients_list:
+                success = bool(self.db.set_group_name(recipients_list, new_name))
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def handle_cleargroupnames(self, parameters, invocation):
+        if self.db:
+            self.db.clear_group_names()
+        invocation.return_value(None)
+
+    def handle_clearblocklist(self, parameters, invocation):
+        if self.db:
+            self.db.clear_blocklist()
+        invocation.return_value(None)
+
+    def is_protected_source(self, source_uid, log_template):
+        if not self.eds:
+            return False
+        sources = self.eds.get_sources_info()
+        for s in sources:
+            if s.get("uid") == source_uid and s.get("name") == "Andromeda Contacts":
+                logger.warning(log_template.format(name="Andromeda Contacts"))
+                return True
+        return False
+
+    def is_protected_contact_source(self, source_uid):
+        with self.eds.sources_lock:
+            info = self.eds.sources.get(source_uid)
+        if info:
+            return info.get("name") == "Andromeda Contacts"
+        for item in self.eds.get_sources_info():
+            if item.get("uid") == source_uid:
+                return item.get("name") == "Andromeda Contacts"
+        return False
+
+    def is_protected_contact(self, contact, uid, verb):
+        if self.is_protected_contact_source(contact.get("source_uid")):
+            logger.warning(f"[DBus] Refusing to {verb} Andromeda Contact {uid} via CLI")
+            return True
+        return False
+
+    def delete_unprotected_contacts(self):
+        with self.eds.cache_lock:
+            cached_items = list(self.eds.cache.items())
+
+        uids_to_delete = []
+        for uid, contact in cached_items:
+            if not self.is_protected_contact_source(contact.get("source_uid")):
+                uids_to_delete.append(uid)
+
+        for uid in uids_to_delete:
+            self.eds.delete_contact(uid)
+
+    def clear_contacts_task(self, source_uid, is_protected):
+        if not self.eds:
+            return
+        if not source_uid:
+            self.delete_unprotected_contacts()
+        elif not is_protected:
+            self.eds.delete_all_contacts(source_uid=source_uid)
+
+    def run_task_then_reply(self, invocation, task):
+        def done(_result):
+            invocation.return_value(None)
+
+        def failed(error):
+            logger.error(f"[DBus] Background task failed: {error}")
+            invocation.return_value(None)
+
+        run_in_background(task, on_complete=done, on_error=failed)
+
+    def handle_clearcontacts(self, parameters, invocation):
+        source_uid = parameters.unpack()[0]
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
+        self.run_task_then_reply(invocation, lambda: self.clear_contacts_task(source_uid, is_protected))
+
+    def handle_cleareverything(self, parameters, invocation):
+        source_uid = parameters.unpack()[0]
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
+
+        def task():
+            if self.db:
+                self.db.clear_everything()
+            self.clear_contacts_task(source_uid, is_protected)
+            try:
+                cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
+                if os.path.exists(cfg):
+                    os.remove(cfg)
+            except Exception as e:
+                logger.warning(f"[DBus] Config removal failed: {e}")
+
+        self.run_task_then_reply(invocation, task)
+
+    def handle_createaddressbook(self, parameters, invocation):
+        name = parameters.unpack()[0]
+
+        def task():
+            if not self.eds or not name:
+                return False
+            return self.eds.create_local_addressbook(name)
+
+        def done(success):
+            invocation.return_value(GLib.Variant("(b)", (bool(success),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Create address book failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        run_in_background(task, on_complete=done, on_error=failed)
+
+    def handle_deleteaddressbook(self, parameters, invocation):
+        source_uid = parameters.unpack()[0]
+        success = False
+
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to delete {name}")
+
+        if not is_protected and self.eds:
+            success = self.eds.delete_addressbook(source_uid)
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def run_import(self, invocation, task):
+        def done(result):
+            success, msg = result
+            invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+
+        def failed(error):
+            logger.error(f"[DBus] Import failed: {error}")
+            invocation.return_value(GLib.Variant("(bs)", (False, str(error))))
+
+        if not self.db:
+            invocation.return_value(GLib.Variant("(bs)", (False, "")))
+            return
+        run_in_background(task, on_complete=done, on_error=failed)
+
+    def handle_importchatty(self, parameters, invocation):
+        from telephony.daemon.utils.importer_local_utils import import_local_chatty
+        db_path, mms_path = parameters.unpack()
+        self.run_import(invocation, lambda: import_local_chatty(self.db, db_path or None, mms_path or None))
+
+    def handle_importlocalcalls(self, parameters, invocation):
+        from telephony.daemon.utils.importer_local_utils import import_local_calls
+        db_path = parameters.unpack()[0]
+        self.run_import(invocation, lambda: import_local_calls(self.db, db_path or None))
+
+    def handle_importandroidsms(self, parameters, invocation):
+        from telephony.daemon.utils.importer_android_utils import import_android_sms
+        file_path = parameters.unpack()[0]
+        self.run_import(invocation, lambda: import_android_sms(self.db, file_path))
+
+    def handle_importandroidcalls(self, parameters, invocation):
+        from telephony.daemon.utils.importer_android_utils import import_android_calls
+        file_path = parameters.unpack()[0]
+        self.run_import(invocation, lambda: import_android_calls(self.db, file_path))
+
+    def handle_importiossms(self, parameters, invocation):
+        from telephony.daemon.utils.importer_ios_utils import import_ios_sms
+        file_path, manifest_path, backup_dir = parameters.unpack()
+        self.run_import(invocation, lambda: import_ios_sms(
+            self.db, file_path, manifest_path or None, backup_dir or None))
+
+    def handle_importioscalls(self, parameters, invocation):
+        from telephony.daemon.utils.importer_ios_utils import import_ios_calls
+        file_path = parameters.unpack()[0]
+        self.run_import(invocation, lambda: import_ios_calls(self.db, file_path))
+
+    def handle_clearcallhistory(self, parameters, invocation):
+        if self.db:
+            self.db.clear_history()
+        invocation.return_value(None)
+
+    def handle_getcallhistory(self, parameters, invocation):
+        limit = parameters.unpack()[0]
+        rows = self.db.get_history(limit=limit) if self.db else []
+        data = [{**r, "anonymous": bool(r["anonymous"]), "multiparty": bool(r["multiparty"]),
+                 "transferred": bool(r["transferred"])} for r in rows]
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
+
+    def handle_getconversations(self, parameters, invocation):
+        limit = parameters.unpack()[0]
+        rows = self.db.get_conversations(limit=limit) if self.db else []
+        data = [{"id": r[4], "number": r[0], "direction": "unknown", "body": r[1], "timestamp": r[2], "unread_count": r[3]} for r in rows]
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
+
+    def handle_getmessages(self, parameters, invocation):
+        number, limit = parameters.unpack()
+        rows = self.db.get_chat_messages(number, limit=limit) if self.db else []
+        data = [{"id": r[0], "direction": r[1], "body": r[2], "status": r[4], "timestamp": r[3]} for r in rows]
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
+
+    def handle_getcontacts(self, parameters, invocation):
+        query = parameters.unpack()[0]
+        rows = self.db.search_contacts(query) if self.db else []
+        data = [{"uid": r[0], "name": f"{r[1]} {r[2]}".strip(), "numbers": [p[0] for p in r[3]] if r[3] else []} for r in rows]
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
+
+    def handle_getactivecalls(self, parameters, invocation):
+        calls = []
+        if self.ofono:
+            for path, data in self.ofono.active_calls.items():
+                calls.append({"path": path, "number": data.get("number"), "state": data.get("state"), "direction": data.get("direction")})
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(calls, cls=DateTimeEncoder),)))
+
+    def handle_sendmms(self, parameters, invocation):
+        number, text, attachments_json = parameters.unpack()
+        attachments = []
+        try:
+            if attachments_json:
+                attachments = own_attachments(json.loads(attachments_json))
+        except Exception as e:
+            logger.warning(f"Failed to parse attachments: {e}")
+
+        success = False
+        if self.app and self.app.mms:
+            numbers = [n.strip() for n in number.split(",") if n.strip()]
+            row_id = self.db.add_message(number, "outgoing", text, status="sending", attachments=attachments, sender="Me")
+            self.app.mms.send_mms_tracked(numbers, text, attachments, row_id)
+            success = True
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def handle_getsetting(self, parameters, invocation):
+        key = parameters.unpack()[0]
+        value = ""
+        if self.app and self.app.gsettings_mgr:
+            val = self.app.gsettings_mgr.get_setting(key)
+            if val is not None:
+                if isinstance(val, (list, dict, bool)):
+                    value = json.dumps(val)
+                else:
+                    value = str(val)
+        invocation.return_value(GLib.Variant("(s)", (value,)))
+
+    def handle_setsetting(self, parameters, invocation):
+        key, value = parameters.unpack()
+        key = key.replace("_", "-")
+        if self.app and self.app.gsettings_mgr:
+            schema = self.app.gsettings_mgr.gsettings.get_property("settings-schema")
+            if not schema or not schema.has_key(key):
+                invocation.return_error_literal(Gio.dbus_error_quark(), Gio.DBusError.INVALID_ARGS, f"Unknown setting: {key}")
+                return
+            key_type = schema.get_key(key).get_value_type().dup_string()
+
+            try:
+                if key_type == "b":
+                    parsed_val = value.lower() in ["true", "1", "yes"]
+                    self.app.gsettings_mgr.gsettings.set_boolean(key, parsed_val)
+                elif key_type == "i":
+                    self.app.gsettings_mgr.gsettings.set_int(key, int(value))
+                elif key_type in ["as", "aa{ss}"]:
+                    parsed_val = json.loads(value)
+                    self.app.gsettings_mgr.set_setting(key, parsed_val)
+                else:
+                    self.app.gsettings_mgr.set_setting(key, value)
+            except Exception as e:
+                logger.error(f"Failed to parse and set advanced setting: {e}")
+                invocation.return_error_literal(Gio.dbus_error_quark(), Gio.DBusError.INVALID_ARGS, str(e))
+                return
+
+        invocation.return_value(None)
+
+    def handle_getblocklist(self, parameters, invocation):
+        rows = self.db.get_blocked_numbers() if self.db else []
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(rows),)))
+
+    def handle_addblockednumber(self, parameters, invocation):
+        number, note, block_calls, block_messages = parameters.unpack()
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Block number failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.db:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.db.block_number, number, note, block_calls, block_messages,
+                          on_complete=done, on_error=failed)
+
+    def handle_setblockednumberflags(self, parameters, invocation):
+        bid, block_calls, block_messages = parameters.unpack()
+        ok = self.db.set_blocked_flags(bid, block_calls, block_messages) if self.db else False
+        invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+    def handle_updateblockednumber(self, parameters, invocation):
+        bid, number, note, block_calls, block_messages = parameters.unpack()
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Update blocked number failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.db:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.db.update_blocked_number, bid, number, note,
+                          block_calls, block_messages, on_complete=done, on_error=failed)
+
+    def handle_importblocklist(self, parameters, invocation):
+        added = 0
+        updated = 0
+        if self.db:
+            try:
+                entries = json.loads(parameters.unpack()[0])
+                if not isinstance(entries, list):
+                    raise ValueError(f"expected a list of entries, got {type(entries).__name__}")
+                added, updated = self.db.import_blocklist(
+                    [e for e in entries if isinstance(e, dict)])
+            except Exception as e:
+                logger.error(f"[DBus] Blocklist import unreadable: {e}")
+        invocation.return_value(GLib.Variant("(uu)", (added, updated)))
+
+    def handle_removeblockednumber(self, parameters, invocation):
+        bid = parameters.unpack()[0]
+        if self.db:
+            try:
+                self.db.unblock_number(int(bid))
+            except ValueError as e:
+                logger.debug(f"ValueError in unblock_number: {e}")
+        invocation.return_value(None)
+
+    def handle_getmissedmessages(self, parameters, invocation):
+        data = []
+        if self.app and self.app.scheduler:
+            missed = self.app.scheduler.get_missed_messages()
+            data = [{"id": m[0], "number": m[1], "body": m[2], "subject": m[3],
+                     "attachments": m[4] or "[]", "timestamp": m[5]} for m in missed]
+        else:
+            logger.debug("[DBus] Cannot get missed messages: scheduler not available")
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
+
+    def handle_sendmissedmessage(self, parameters, invocation):
+        msg_id = parameters.unpack()[0]
+        if self.app and self.app.scheduler:
+            missed = self.app.scheduler.get_missed_messages()
+            target = next((m for m in missed if m[0] == msg_id), None)
+            if target:
+                self.app.scheduler.process_message(target)
+        else:
+            logger.debug("[DBus] Cannot send missed message: scheduler not available")
+        invocation.return_value(None)
+
+    def handle_getaddressbooks(self, parameters, invocation):
+        sources = []
+        if self.eds:
+            sources = self.eds.get_sources_info()
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(sources),)))
+
+    def handle_setaddressbookpriority(self, parameters, invocation):
+        uid_list_json = parameters.unpack()[0]
+        if self.eds:
+            try:
+                uid_list = json.loads(uid_list_json)
+                sources = self.eds.get_sources_info()
+                new_config = []
+                for uid in uid_list:
+                    s = next((x for x in sources if x["uid"] == uid), None)
+                    if s:
+                        new_config.append(s)
+                if new_config:
+                    self.eds.update_sources_config(new_config)
+            except Exception as e:
+                logger.error(f"Failed to parse addressbook priorities: {e}")
+        invocation.return_value(None)
+
+    def handle_importcontacts(self, parameters, invocation):
+        vcard_data, source_uid = parameters.unpack()
+
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to import to {name} via CLI")
+
+        if is_protected or not self.eds:
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+            return
+
+        vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
+        self.save_vcards_in_turn(
+            vcards, source_uid,
+            lambda count: invocation.return_value(GLib.Variant("(i)", (count,))))
+
+    def save_vcards_in_turn(self, vcards, source_uid, on_done):
+        state = {"index": 0, "count": 0}
+
+        def save_next():
+            if state["index"] >= len(vcards):
+                on_done(state["count"])
+                return
+
+            vcard = vcards[state["index"]]
+            state["index"] += 1
+            self.eds.save_contact_async(
+                vcard, saved, source_uid=source_uid if source_uid else None)
+
+        def saved(ok):
+            if ok:
+                state["count"] += 1
+            save_next()
+
+        save_next()
+
+    def handle_exportcontacts(self, parameters, invocation):
+        source_uid = parameters.unpack()[0]
+
+        def fetch():
+            if not self.db:
+                return ""
+            vcards = self.db.get_all_vcards(source_uid if source_uid else None)
+            return "".join(v + "\n" for v in vcards)
+
+        def done(full_content):
+            invocation.return_value(GLib.Variant("(s)", (full_content,)))
+
+        def failed(error):
+            logger.error(f"[DBus] Export contacts failed: {error}")
+            invocation.return_value(GLib.Variant("(s)", ("",)))
+
+        run_in_background(fetch, on_complete=done, on_error=failed)
+
+    def handle_addcontact(self, parameters, invocation):
+        name, number = parameters.unpack()
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        uid = str(uuid.uuid4())
+        vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
+        self.eds.save_contact_async(vcard_data, lambda _ok: invocation.return_value(None))
+
+    def handle_savecontact(self, parameters, invocation):
+        vcard, uid, source_uid = parameters.unpack()
+
+        if uid:
+            with self.eds.cache_lock:
+                contact = self.eds.cache.get(uid)
+            if contact and self.is_protected_contact_source(contact.get("source_uid")):
+                logger.warning(f"[DBus] Refusing to modify protected contact {uid}")
+                invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
+                return
+        if source_uid and self.is_protected_contact_source(source_uid):
+            logger.warning(f"[DBus] Refusing to write into protected source {source_uid}")
+            invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
+            return
+
+        def done(ok, reason):
+            invocation.return_value(GLib.Variant("(bs)", (bool(ok), reason)))
+
+        if not self.eds:
+            invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
+            return
+        self.eds.save_contact_with_reason_async(vcard, done, uid=uid or None,
+                                                source_uid=source_uid or None)
+
+    def handle_deletecontacts(self, parameters, invocation):
+        uids_json = parameters.unpack()[0]
+        uids = []
+        try:
+            if uids_json:
+                uids = json.loads(uids_json)
+        except Exception as e:
+            logger.warning(f"[DBus] Failed to parse contact uids: {e}")
+
+        if not uids or not self.eds:
+            invocation.return_value(None)
+            return
+
+        self.delete_contacts_in_turn(uids, lambda: invocation.return_value(None))
+
+    def delete_contacts_in_turn(self, uids, on_done):
+        remaining = list(uids)
+
+        def delete_next(*_args):
+            while remaining:
+                uid = remaining.pop(0)
+                with self.eds.cache_lock:
+                    contact = self.eds.cache.get(uid)
+                if contact and self.is_protected_contact(contact, uid, "delete"):
+                    continue
+                self.eds.delete_contact_async(uid, delete_next)
+                return
+            on_done()
+
+        delete_next()
+
+    def handle_refreshcontacts(self, parameters, invocation):
+        def done(count):
+            invocation.return_value(GLib.Variant("(i)", (int(count or 0),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Backend refresh failed: {error}")
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+
+        if not self.eds:
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+            return
+        run_in_background(self.eds.refresh_backends, on_complete=done, on_error=failed)
+
+    def handle_deletecontact(self, parameters, invocation):
+        uid = parameters.unpack()[0]
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        with self.eds.cache_lock:
+            contact = self.eds.cache.get(uid)
+        if contact and self.is_protected_contact(contact, uid, "delete"):
+            invocation.return_value(None)
+            return
+
+        self.eds.delete_contact_async(uid, lambda _ok: invocation.return_value(None))
+
+    def handle_modifycontact(self, parameters, invocation):
+        uid, name, number = parameters.unpack()
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        with self.eds.cache_lock:
+            contact = self.eds.cache.get(uid)
+        if contact and self.is_protected_contact(contact, uid, "modify"):
+            invocation.return_value(None)
+            return
+
+        vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
+        self.eds.save_contact_async(vcard_data, lambda _ok: invocation.return_value(None), uid=uid)

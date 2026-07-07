@@ -1,0 +1,347 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+import os
+import shutil
+from gi.repository import Gtk, Adw, GLib
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+
+from telephony.shared.utils.phone_utils import normalize_number
+from telephony.shared.utils.thread_utils import run_in_background
+from telephony.client.ui.widgets.common_widget import (blocked_entries_for, blocked_entry_for,
+                                                      confirm_unblock_and_add,
+                                                      populate_contact_search_results,
+                                                      translate_phone_label)
+
+
+class CustomToneListWindow(Adw.NavigationPage):
+
+    def __init__(self, parent, gsettings_mgr, eds, mode="sms"):
+        self.grp_list = None
+        title = _("Individual SMS Notifications") if mode == "sms" else _("Individual Ringtones")
+        super().__init__(title=title)
+        self.gsettings_mgr = gsettings_mgr
+        self.eds = eds
+        self.mode = mode
+        self.app_window = parent.main_window
+
+        self.local_tones = []
+        try:
+            current = self.gsettings_mgr.get_notification_override_sms_custom_tone_contacts() if mode == "sms" else self.gsettings_mgr.get_notification_override_call_custom_contacts()
+            if current:
+                for c in current:
+                    self.local_tones.append(c.copy())
+        except Exception as e:
+            logger.error(f"[CustomTone] Failed to load initial data: {e}")
+
+        view = Adw.ToolbarView()
+        self.set_child(view)
+
+        header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
+
+        btn_save = Gtk.Button(label=_("Save"))
+        btn_save.add_css_class("suggested-action")
+        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save_clicked(b) or False))
+        header.pack_end(btn_save)
+
+        view.add_top_bar(header)
+
+        self.overlay = Adw.ToastOverlay()
+        view.set_content(self.overlay)
+
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.overlay.set_child(main_box)
+
+        search_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        search_box.set_margin_start(12)
+        search_box.set_margin_end(12)
+        search_box.set_margin_top(12)
+        search_box.set_margin_bottom(6)
+
+        self.search_entry = Gtk.SearchEntry(placeholder_text=_("Find contact to add..."))
+        search_box.append(self.search_entry)
+
+        self.search_timer = None
+        self.search_token = 0
+        self._source_map = {}
+        run_in_background(self.load_source_map)
+
+        main_box.append(search_box)
+
+        info_text = _("Select a contact and choose a custom sound file (.ogg or .oga). The file will be copied to your local storage.")
+        lbl_info = Gtk.Label(label=info_text, wrap=True)
+        lbl_info.add_css_class("dim-label")
+        lbl_info.set_margin_start(12)
+        lbl_info.set_margin_end(12)
+        lbl_info.set_margin_bottom(12)
+        lbl_info.set_xalign(0)
+        main_box.append(lbl_info)
+
+        self.stack = Gtk.Stack()
+        self.stack.set_vexpand(True)
+        main_box.append(self.stack)
+
+        self.page_list = Adw.PreferencesPage()
+        self.grp_list = Adw.PreferencesGroup()
+        self.page_list.add(self.grp_list)
+        self.stack.add_named(self.page_list, "list")
+
+        self.search_results_list = Gtk.ListBox(css_classes=["boxed-list"])
+        self.search_results_list.set_margin_start(12)
+        self.search_results_list.set_margin_end(12)
+        self.search_results_list.set_margin_top(12)
+        self.search_results_list.set_margin_bottom(12)
+        self.search_results_list.set_selection_mode(Gtk.SelectionMode.NONE)
+
+        scroll_search = Gtk.ScrolledWindow()
+        scroll_search.set_child(self.search_results_list)
+        self.stack.add_named(scroll_search, "search")
+
+        self.stack.set_visible_child_name("list")
+
+        self.search_entry.connect("search-changed", self.on_search_changed)
+        self.search_results_list.connect("row-activated", self.on_result_activated)
+
+        self.eds_signals = []
+        self.db_signals = []
+        self.connect_external_signals()
+
+        self.connect("map", self.on_map)
+        self.connect("unmap", self.on_unmap)
+
+        self.refresh_list()
+
+    def connect_external_signals(self):
+        if self.db_signals:
+            return
+        if self.app_window is not None:
+            sig_id = self.app_window.db.connect("blocklist-updated", lambda *args: GLib.idle_add(self.refresh_list))
+            self.db_signals.append((self.app_window.db, sig_id))
+
+    def on_map(self, widget):
+        self.connect_external_signals()
+        self.refresh_list()
+
+    def on_unmap(self, widget):
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+            self.search_timer = None
+
+        for obj, sig_id in self.eds_signals:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.eds_signals.clear()
+
+        for obj, sig_id in self.db_signals:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.db_signals.clear()
+
+    def close(self):
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav and nav.get_visible_page() is self:
+            nav.pop()
+
+    def on_save_clicked(self, btn):
+        if self.mode == "sms":
+            self.gsettings_mgr.set_notification_override_sms_custom_tone_contacts(self.local_tones)
+        else:
+            self.gsettings_mgr.set_notification_override_call_custom_contacts(self.local_tones)
+        GLib.idle_add(lambda: self.close() or False)
+
+    def refresh_list(self):
+        if (self.grp_list is not None) and self.grp_list:
+            self.page_list.remove(self.grp_list)
+
+        self.grp_list = Adw.PreferencesGroup()
+        self.page_list.add(self.grp_list)
+
+        for c in self.local_tones:
+            self.create_tone_row(c)
+
+    def create_tone_row(self, tone_data):
+        name = tone_data.get("name", _("Unknown"))
+        number = tone_data.get("number", "")
+        path = tone_data.get("path", "")
+
+        filename = os.path.basename(path)
+
+        row = Adw.ActionRow(title=name, subtitle=f"{number}\n{filename}")
+        row.set_title_lines(1)
+        row.set_subtitle_lines(2)
+
+        btn_edit = Gtk.Button(icon_name="document-edit-symbolic")
+        btn_edit.add_css_class("flat")
+        btn_edit.add_css_class("circular")
+        btn_edit.set_tooltip_text(_("Edit"))
+        btn_edit.connect("clicked", lambda b: self.on_edit_tone(tone_data))
+        row.add_suffix(btn_edit)
+
+        btn_del = Gtk.Button(icon_name="user-trash-symbolic")
+        btn_del.add_css_class("flat")
+        btn_del.add_css_class("circular")
+        btn_del.set_tooltip_text(_("Remove"))
+        btn_del.connect("clicked", lambda b: self.delete_tone(tone_data))
+
+        row.add_suffix(btn_del)
+        self.grp_list.add(row)
+
+    def on_edit_tone(self, tone_data):
+        self.open_audio_picker(tone_data)
+
+    def delete_tone(self, tone_data):
+        target_num = normalize_number(tone_data.get("number", ""))
+        self.local_tones = [c for c in self.local_tones if normalize_number(c.get("number", "")) != target_num]
+
+        GLib.idle_add(lambda: self.refresh_list())
+
+    def load_source_map(self):
+        names = {}
+        for source in self.eds.get_sources_info():
+            names[source["uid"]] = source["name"]
+        self._source_map = names
+
+    def on_search_changed(self, entry):
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+            self.search_timer = None
+
+        self.search_timer = GLib.timeout_add(200, self.perform_search)
+
+    def perform_search(self):
+        self.search_timer = None
+        query = self.search_entry.get_text().strip()
+        if not query:
+            self.stack.set_visible_child_name("list")
+            return False
+
+        self.stack.set_visible_child_name("search")
+
+        self.search_token += 1
+        current_token = self.search_token
+
+        def done(contacts):
+            if self.search_token != current_token:
+                return
+            self.build_search_results(contacts or [], query)
+
+        run_in_background(self.eds.search_contacts, query, on_complete=done)
+        return False
+
+    def is_result_added(self, normalized_number):
+        for existing in self.local_tones:
+            if normalize_number(existing.get("number", "")) == normalized_number:
+                return True
+        return False
+
+    def build_search_results(self, contacts, query):
+        populate_contact_search_results(
+            self.search_results_list,
+            contacts,
+            self.eds,
+            is_added=self.is_result_added,
+            on_add=lambda row: self.on_result_activated(None, row),
+            blocked_entries=blocked_entries_for(self.app_window.db, self.domain()),
+            translate_label=translate_phone_label,
+            unknown_name=_("Unknown"),
+            source_map=self._source_map)
+
+    def blocked_entry(self, number):
+        return blocked_entry_for(self.app_window.db, number, self.domain())
+
+    def domain(self):
+        return "messages" if self.mode == "sms" else "calls"
+
+    def on_result_activated(self, listbox, row):
+        if not row.get_sensitive():
+            return
+
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
+        if data is None:
+            return
+
+        entry = self.blocked_entry(data.get("number"))
+        if entry is not None:
+            confirm_unblock_and_add(
+                self.app_window, self.app_window.daemon, entry, self.domain(),
+                lambda: self.open_audio_picker(data))
+            return
+
+        self.open_audio_picker(data)
+
+    def open_audio_picker(self, contact_data):
+        dialog = Gtk.FileChooserNative(
+            title=_("Select Tone for {name}").format(name=contact_data.get("name")),
+            transient_for=self.get_root(),
+            action=Gtk.FileChooserAction.OPEN,
+            accept_label=_("Select"),
+            cancel_label=_("Cancel")
+        )
+
+        filter_audio = Gtk.FileFilter()
+        filter_audio.set_name(_("Supported Audio (OGG)"))
+        filter_audio.add_mime_type("audio/ogg")
+        filter_audio.add_mime_type("application/ogg")
+        filter_audio.add_pattern("*.oga")
+        filter_audio.add_pattern("*.ogg")
+
+        dialog.add_filter(filter_audio)
+
+        def on_response(d, response):
+            if response == Gtk.ResponseType.ACCEPT:
+                f = d.get_file()
+                path = f.get_path()
+                if path:
+                    self.process_selected_file(contact_data, path)
+            GLib.idle_add(lambda: d.destroy() or False)
+
+        dialog.connect("response", on_response)
+        dialog.show()
+
+    def process_selected_file(self, contact_data, src_path):
+        target_dir = os.path.expanduser("~/.local/share/telephony/sounds")
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir, exist_ok=True)
+
+        norm_num = normalize_number(contact_data.get("number", ""))
+        ext = os.path.splitext(src_path)[1].lower()
+        if ext not in [".ogg", ".oga"]:
+            self.overlay.add_toast(Adw.Toast.new(_("Only .ogg or .oga files are supported")))
+            return
+
+        suffix = "sms" if self.mode == "sms" else "ringtone"
+        new_filename = f"{norm_num}-{suffix}{ext}"
+        dest_path = os.path.join(target_dir, new_filename)
+
+        try:
+            shutil.copy2(src_path, dest_path)
+        except Exception as e:
+            logger.error(f"[CustomTone] Copy failed: {e}")
+            self.overlay.add_toast(Adw.Toast.new(_("Failed to copy audio file")))
+            return
+
+        self.local_tones = [t for t in self.local_tones if normalize_number(t.get("number", "")) != norm_num]
+
+        new_entry = {
+            "name": contact_data.get("name"),
+            "number": norm_num,
+            "path": dest_path
+        }
+
+        self.local_tones.insert(0, new_entry)
+
+        def update_ui():
+            self.search_entry.set_text("")
+            self.stack.set_visible_child_name("list")
+            self.refresh_list()
+            return False
+
+        GLib.idle_add(update_ui)

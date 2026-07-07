@@ -1,0 +1,6 @@
+[Unit]
+Description=Telephony service failure notice
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/telephony-cli service-failed

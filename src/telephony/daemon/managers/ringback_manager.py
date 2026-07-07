@@ -1,0 +1,315 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+import os
+import threading
+
+from telephony.shared.utils.log_utils import logger
+
+from gi.repository import GObject, GLib, Gio
+
+from telephony.shared.utils.gst_utils import get_gst
+from telephony.shared.utils.thread_utils import run_in_background
+
+DEFAULT_TONE = "/usr/share/sounds/freedesktop/stereo/phone-outgoing-calling.oga"
+LOOP_DELAY_MS = 1500
+
+
+class RingbackManager(GObject.Object):
+    """
+    Manages ringback tone generation for outgoing calls using GStreamer playbin and PulseAudio.
+    """
+
+    def __init__(self, ofono_manager, gsettings_mgr=None):
+        super().__init__()
+        self.ofono = ofono_manager
+        self.gsettings_mgr = gsettings_mgr
+
+        self.pipeline = None
+        self.bus = None
+        self.bus_handler_ids = []
+        self.current_call_path = None
+        self.active_sound_file = None
+        self.loop_timer_id = None
+        self.starting = False
+        self.ringback_wanted = False
+
+        self.pulse_client = None
+        self.sink_module_id = None
+        self.loopback_module_id = None
+        self.modules_loaded = False
+        self._modules_lock = threading.Lock()
+
+        self.session_bus = None
+        try:
+            self.session_bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        except Exception as e:
+            logger.error(f"[RingbackManager] Session bus init failed: {e}")
+
+        self.ofono.connect("call-added", self.on_call_added)
+        self.ofono.connect("call-changed", self.on_call_changed)
+        self.ofono.connect("call-removed", self.on_call_removed)
+        self.ofono.connect("connection-status", self.on_connection_status)
+        self.ofono.connect("hangup-requested", self.on_hangup_requested)
+
+        logger.info("[RingbackManager] Initialized successfully.")
+
+    def on_connection_status(self, _manager, status, _msg):
+        if status in ("offline", "error"):
+            self.stop_ringback()
+            self.current_call_path = None
+
+    def on_hangup_requested(self, _manager):
+        self.stop_ringback()
+
+    def on_call_added(self, _manager, path, data):
+        self.pause_mpris_players()
+        state = data.get("state", "")
+        if data.get("direction") != "outgoing" or state not in ("dialing", "alerting"):
+            return
+
+        logger.info(f"[RingbackManager] Outgoing call detected: {path} (State: {state})")
+        self.current_call_path = path
+        self.check_call_state(state)
+
+    def on_call_changed(self, _manager, path, state):
+        if path != self.current_call_path:
+            return
+        logger.debug(f"[RingbackManager] Call state changed: {state}")
+        self.check_call_state(state)
+
+    def on_call_removed(self, _manager, path):
+        if path != self.current_call_path:
+            return
+        logger.info(f"[RingbackManager] Call removed: {path}. Stopping ringback.")
+        self.stop_ringback()
+        self.current_call_path = None
+
+    def check_call_state(self, state):
+        if state in ["dialing", "alerting"]:
+            self.start_ringback()
+        elif state in ["active", "disconnected", "incoming"]:
+            logger.info(f"[RingbackManager] Call state '{state}' requires stopping ringback.")
+            self.stop_ringback()
+
+    def ensure_pulse_modules_loaded(self):
+        """Load PulseAudio modules if not already loaded; runs on a worker thread. pulsectl is imported here rather than at module scope so an idle process never maps it."""
+        import pulsectl
+        with self._modules_lock:
+            try:
+                if self.modules_loaded and self.pulse_client:
+                    return True
+
+                logger.info("[RingbackManager] Loading PulseAudio modules...")
+                self.pulse_client = pulsectl.Pulse("telephony-ringback")
+
+                primary_sink = self.ofono.audio.get_primary_sink(self.pulse_client)
+                if primary_sink is None:
+                    logger.error("[RingbackManager] No primary audio sink available.")
+                    self.unload_modules_locked()
+                    return False
+
+                mod1 = self.pulse_client.module_load("module-null-sink", "sink_name=call_injector")
+                self.sink_module_id = int(mod1)
+                logger.info(f"[RingbackManager] Loaded null-sink: {self.sink_module_id}")
+
+                mod2 = self.pulse_client.module_load("module-loopback", f"source=call_injector.monitor sink={primary_sink.name}")
+                self.loopback_module_id = int(mod2)
+                logger.info(f"[RingbackManager] Loaded loopback: {self.loopback_module_id} -> {primary_sink.name}")
+
+                self.modules_loaded = True
+                return True
+            except Exception as e:
+                logger.error(f"[RingbackManager] Failed to load pulse modules: {e}")
+                self.unload_modules_locked()
+                return False
+
+    def ensure_pulse_modules_unloaded(self):
+        with self._modules_lock:
+            self.unload_modules_locked()
+
+    def unload_modules_locked(self):
+        try:
+            if self.pulse_client:
+                if self.loopback_module_id is not None:
+                    try:
+                        self.pulse_client.module_unload(self.loopback_module_id)
+                        logger.info(f"[RingbackManager] Unloaded loopback module: {self.loopback_module_id}")
+                    except Exception as e:
+                        logger.warning(f"[RingbackManager] Unload loopback failed: {e}")
+
+                if self.sink_module_id is not None:
+                    try:
+                        self.pulse_client.module_unload(self.sink_module_id)
+                        logger.info(f"[RingbackManager] Unloaded sink module: {self.sink_module_id}")
+                    except Exception as e:
+                        logger.warning(f"[RingbackManager] Unload sink failed: {e}")
+
+                self.pulse_client.close()
+        except Exception as e:
+            logger.error(f"[RingbackManager] Unload pulse modules error: {e}")
+        finally:
+            self.pulse_client = None
+            self.loopback_module_id = None
+            self.sink_module_id = None
+            self.modules_loaded = False
+
+    def start_ringback(self):
+        if self.pipeline or self.starting:
+            return
+
+        enabled_str = self.gsettings_mgr.get_setting("ringback_enabled")
+        if enabled_str != "true":
+            logger.info("[RingbackManager] Ringback disabled in settings.")
+            return
+
+        self.starting = True
+        self.ringback_wanted = True
+
+        def loaded(ok):
+            self.starting = False
+            if not self.ringback_wanted:
+                if ok:
+                    run_in_background(self.ensure_pulse_modules_unloaded)
+                return
+            if not ok:
+                logger.error("[RingbackManager] Cannot start ringback: Pulse modules failed.")
+                return
+            if not self.pipeline:
+                self.start_pipeline()
+
+        def failed(error):
+            self.starting = False
+            logger.error(f"[RingbackManager] Pulse module load failed: {error}")
+
+        run_in_background(self.ensure_pulse_modules_loaded, on_complete=loaded, on_error=failed)
+
+    def start_pipeline(self):
+        Gst = get_gst()
+        custom_file = self.gsettings_mgr.get_setting("ringback_custom_file")
+
+        self.active_sound_file = DEFAULT_TONE
+        if custom_file and os.path.exists(custom_file):
+            self.active_sound_file = custom_file
+
+        logger.info(f"[RingbackManager] Starting playback for: {self.active_sound_file}")
+
+        try:
+            self.pipeline = Gst.ElementFactory.make("playbin", "ringback-player")
+            if not self.pipeline:
+                logger.error("[RingbackManager] Failed to create playbin element.")
+                self.stop_ringback()
+                return
+
+            pulse_sink = Gst.ElementFactory.make("pulsesink", "ringback-sink")
+            if not pulse_sink:
+                logger.error("[RingbackManager] Failed to create pulsesink element.")
+                self.stop_ringback()
+                return
+
+            pulse_sink.set_property("device", "call_injector")
+            self.pipeline.set_property("audio-sink", pulse_sink)
+
+            uri = f"file://{self.active_sound_file}"
+            self.pipeline.set_property("uri", uri)
+
+            self.bus = self.pipeline.get_bus()
+            self.bus.add_signal_watch()
+            self.bus_handler_ids = [
+                self.bus.connect("message::eos", self.on_eos),
+                self.bus.connect("message::error", self.on_error),
+            ]
+
+            ret = self.pipeline.set_state(Gst.State.PLAYING)
+            if ret == Gst.StateChangeReturn.FAILURE:
+                logger.error("[RingbackManager] Failed to set pipeline to PLAYING.")
+                self.stop_ringback()
+            else:
+                logger.info("[RingbackManager] Pipeline started successfully.")
+
+        except Exception as e:
+            logger.error(f"[RingbackManager] Start ringback error: {e}")
+            self.stop_ringback()
+
+    def stop_ringback(self):
+        self.ringback_wanted = False
+        if self.loop_timer_id:
+            GLib.source_remove(self.loop_timer_id)
+            self.loop_timer_id = None
+
+        if self.bus:
+            for handler_id in self.bus_handler_ids:
+                try:
+                    self.bus.disconnect(handler_id)
+                except Exception as e:
+                    logger.debug(f"[RingbackManager] Bus disconnect error (ignorable): {e}")
+            self.bus_handler_ids = []
+            try:
+                self.bus.remove_signal_watch()
+            except Exception as e:
+                logger.debug(f"[RingbackManager] Bus watch removal error (ignorable): {e}")
+            self.bus = None
+
+        if self.pipeline:
+            logger.info("[RingbackManager] Stopping pipeline.")
+            self.pipeline.set_state(get_gst().State.NULL)
+            self.pipeline = None
+
+        if self.modules_loaded or self.pulse_client:
+            run_in_background(self.ensure_pulse_modules_unloaded)
+
+    def on_eos(self, bus, msg):
+        logger.info("[RingbackManager] EOS reached. Pausing for loop delay.")
+        if self.pipeline:
+            self.pipeline.set_state(get_gst().State.PAUSED)
+            self.loop_timer_id = GLib.timeout_add(LOOP_DELAY_MS, self.restart_loop)
+
+    def restart_loop(self):
+        self.loop_timer_id = None
+        if self.pipeline:
+            logger.debug("[RingbackManager] Restarting loop...")
+            Gst = get_gst()
+            if not self.pipeline.seek_simple(Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, 0):
+                logger.warning("[RingbackManager] Seek failed during loop restart.")
+                self.pipeline.set_state(Gst.State.NULL)
+                self.pipeline.set_state(Gst.State.PLAYING)
+            else:
+                self.pipeline.set_state(Gst.State.PLAYING)
+        return False
+
+    def on_error(self, bus, msg):
+        err, debug = msg.parse_error()
+        logger.error(f"[RingbackManager] Pipeline error: {err} - {debug}")
+        self.stop_ringback()
+
+    def pause_mpris_players(self):
+        def listed(bus, result, _data):
+            try:
+                names = bus.call_finish(result).unpack()[0]
+            except GLib.Error as e:
+                logger.warning(f"[RingbackManager] Pause MPRIS warning: {e}")
+                return
+            for name in names:
+                if name.startswith("org.mpris.MediaPlayer2"):
+                    self.send_pause(name)
+
+        self.session_bus.call(
+            "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+            "ListNames", None, GLib.VariantType("(as)"), Gio.DBusCallFlags.NONE,
+            -1, None, listed, None)
+
+    def send_pause(self, bus_name):
+        def paused(bus, result, _data):
+            try:
+                bus.call_finish(result)
+                logger.info(f"[RingbackManager] Paused player: {bus_name}")
+            except GLib.Error as e:
+                logger.warning(f"[RingbackManager] Pause player {bus_name} failed: {e}")
+
+        self.session_bus.call(
+            bus_name, "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player",
+            "Pause", None, None, Gio.DBusCallFlags.NONE, -1, None, paused, None)

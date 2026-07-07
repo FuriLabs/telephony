@@ -1,0 +1,140 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from gi.repository import Gtk, Pango
+from gettext import gettext as _
+from telephony.shared.utils.phone_utils import conversation_id, normalize_number
+
+
+class ConversationRowFactory:
+
+    @staticmethod
+    def setup(factory, list_item):
+        stack = Gtk.Stack()
+
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        row.set_margin_start(12)
+        row.set_margin_end(12)
+        row.set_margin_top(6)
+        row.set_margin_bottom(6)
+
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        vbox.set_hexpand(True)
+
+        top_line = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+
+        lbl_name = Gtk.Label(xalign=0, css_classes=["heading"])
+        lbl_name.set_hexpand(True)
+        lbl_name.set_ellipsize(Pango.EllipsizeMode.END)
+
+        lbl_date = Gtk.Label(css_classes=["caption", "dim-label"])
+        lbl_date.set_halign(Gtk.Align.END)
+
+        top_line.append(lbl_name)
+        top_line.append(lbl_date)
+
+        lbl_number = Gtk.Label(xalign=0, css_classes=["tiny-label", "dim-label"])
+        lbl_number.set_ellipsize(Pango.EllipsizeMode.END)
+
+        btm_line = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+
+        lbl_msg = Gtk.Label(xalign=0, css_classes=["caption"])
+        lbl_msg.set_hexpand(True)
+        lbl_msg.set_ellipsize(Pango.EllipsizeMode.END)
+        lbl_msg.set_max_width_chars(30)
+
+        img_muted = Gtk.Image(icon_name="audio-volume-muted-symbolic", css_classes=["dim-label"])
+        img_muted.set_pixel_size(14)
+        img_muted.set_visible(False)
+
+        img_blocked = Gtk.Image(icon_name="action-unavailable-symbolic", css_classes=["marker-rejected"])
+        img_blocked.set_pixel_size(14)
+        img_blocked.set_visible(False)
+
+        lbl_badge = Gtk.Label(css_classes=["numeric", "badge"])
+        lbl_badge.set_visible(False)
+
+        btm_line.append(lbl_msg)
+        btm_line.append(img_muted)
+        btm_line.append(img_blocked)
+        btm_line.append(lbl_badge)
+
+        vbox.append(top_line)
+        vbox.append(lbl_number)
+        vbox.append(btm_line)
+
+        btn_open = Gtk.Button(icon_name="go-next-symbolic", valign=Gtk.Align.CENTER)
+        btn_open.add_css_class("flat")
+
+        row.append(vbox)
+        row.append(btn_open)
+        stack.add_named(row, "standard")
+
+        list_item.set_child(stack)
+        list_item.widgets = {
+            "stack": stack,
+            "name": lbl_name, "date": lbl_date, "msg": lbl_msg,
+            "badge": lbl_badge, "btn": btn_open, "num": lbl_number,
+            "muted": img_muted, "blocked": img_blocked
+        }
+
+    @staticmethod
+    def bind(factory, list_item, muted_ids=(), show_numbers=True, blocked_numbers=()):
+        if list_item.get_child() is None:
+            ConversationRowFactory.setup(factory, list_item)
+
+        item = list_item.get_item()
+        w = list_item.widgets
+        stack = w["stack"]
+
+        stack.set_visible_child_name("standard")
+
+        display_name = item.name if item.name else item.number
+        if display_name == item.number and any(c.isdigit() for c in str(item.number)):
+            display_name = _("Unknown")
+
+        if not show_numbers and not item.has_name:
+            display_name = item.number
+
+        w["name"].set_text(display_name)
+        w["num"].set_text(item.number)
+        w["num"].set_visible(show_numbers)
+
+        if "," in str(item.number):
+            w["date"].set_text(_("{time} • Group").format(time=item.display_time))
+        else:
+            w["date"].set_text(item.display_time)
+
+        body_preview = " ".join(item.last_msg.split()) if item.last_msg else ""
+        if item.status == "draft":
+            body_preview = _("Draft: {message}").format(message=body_preview)
+            w["msg"].add_css_class("dim-label")
+            w["msg"].add_css_class("italic")
+        else:
+            w["msg"].remove_css_class("dim-label")
+            w["msg"].remove_css_class("italic")
+
+        w["msg"].set_text(body_preview)
+        w["muted"].set_visible(conversation_id(item.number) in muted_ids)
+        w["blocked"].set_visible(any(normalize_number(part) in blocked_numbers
+                                     for part in str(item.number).split(",") if part))
+
+        if item.unread_count > 0:
+            w["badge"].set_text(str(item.unread_count))
+            w["badge"].set_visible(True)
+            w["name"].add_css_class("accent")
+        else:
+            w["badge"].set_visible(False)
+            w["name"].remove_css_class("accent")
+
+        w["btn"].set_sensitive(False)
+
+    @staticmethod
+    def teardown(factory, list_item):
+        if (list_item.get_child() is not None):
+            list_item.widgets = None
+        list_item.set_child(None)

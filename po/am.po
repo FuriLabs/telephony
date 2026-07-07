@@ -1,0 +1,3149 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 03:32+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: am\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/telephony/app.py:599 src/telephony/app.py:717
+msgid "Modem unavailable"
+msgstr "ሞደም አይገኝም"
+
+#: src/telephony/app.py:600
+msgid "Calls are not possible until the modem recovers."
+msgstr "ሞደሙ እስኪመለስ ድረስ ጥሪዎች አይቻሉም።"
+
+#: src/telephony/app.py:602 src/telephony/app.py:720
+#: src/telephony/backend/managers/lockscreen_manager.py:87
+#: src/telephony/ui/windows/advanced_settings_window.py:177
+#: src/telephony/ui/windows/incall_window.py:272
+#: src/telephony/ui/windows/incall_window.py:850
+#: src/telephony/ui/windows/incall_window.py:870
+#: src/telephony/ui/windows/modem_recovery_window.py:40
+msgid "Modem Recovery"
+msgstr "የሞደም መልሶ ማግኘት"
+
+#: src/telephony/app.py:655
+msgid "Network registration denied"
+msgstr "የአውታረ መረብ ምዝገባ ተከልክሏል"
+
+#: src/telephony/app.py:656
+msgid "The network rejected this SIM. Contact your operator."
+msgstr "አውታረ መረቡ ይህን SIM ውድቅ አድርጎታል። ኦፕሬተርዎን ያነጋግሩ።"
+
+#: src/telephony/app.py:694
+msgid "SIM PIN required"
+msgstr "የSIM PIN ያስፈልጋል"
+
+#: src/telephony/app.py:695
+msgid "Calls and messages stay offline until the SIM is unlocked."
+msgstr "SIM እስኪከፈት ድረስ ጥሪዎች እና መልዕክቶች ከመስመር ውጭ ይቆያሉ።"
+
+#: src/telephony/app.py:718 src/telephony/ui/windows/incall_window.py:869
+msgid "Could not restore the modem. Please reboot the phone."
+msgstr "ሞደሙን መልሶ ማግኘት አልተቻለም። እባክዎ ስልኩን ዳግም ያስነሱ።"
+
+#: src/telephony/app.py:786 src/telephony/app.py:859
+#: src/telephony/ui/views/history_view.py:284
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} አዲስ መልዕክት"
+msgstr[1] "{count} አዲስ መልዕክቶች"
+
+#: src/telephony/app.py:788 src/telephony/ui/views/history_view.py:286
+msgid "New voicemail"
+msgstr "አዲስ የድምፅ መልዕክት"
+
+#: src/telephony/app.py:794 src/telephony/app.py:829
+msgid "Call Back"
+msgstr "ተመልሰኝ"
+
+#: src/telephony/app.py:798 src/telephony/ui/views/history_view.py:288
+msgid "Voicemail"
+msgstr "የድምፅ መልዕክት"
+
+#: src/telephony/app.py:818 src/telephony/app.py:852
+#: src/telephony/backend/managers/database_manager.py:1049
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:368
+#: src/telephony/ui/main_window.py:673 src/telephony/ui/views/chat_view.py:87
+#: src/telephony/ui/views/chat_view.py:92
+#: src/telephony/ui/views/chat_view.py:145
+#: src/telephony/ui/views/chat_view.py:155
+#: src/telephony/ui/views/chat_view.py:159
+#: src/telephony/ui/views/chat_view.py:727
+#: src/telephony/ui/views/chat_view.py:731
+#: src/telephony/ui/views/chat_view.py:842
+#: src/telephony/ui/views/chat_view.py:848
+#: src/telephony/ui/views/chat_view.py:1016
+#: src/telephony/ui/views/chat_view.py:1018
+#: src/telephony/ui/views/chat_view.py:1215
+#: src/telephony/ui/views/dialpad_view.py:171
+#: src/telephony/ui/views/history_view.py:436
+#: src/telephony/ui/views/messages_view.py:378
+#: src/telephony/ui/views/messages_view.py:381
+#: src/telephony/ui/views/messages_view.py:452
+#: src/telephony/ui/views/messages_view.py:456
+#: src/telephony/ui/views/messages_view.py:546
+#: src/telephony/ui/views/messages_view.py:883
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: src/telephony/ui/widgets/history_rows_widget.py:127
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:181
+#: src/telephony/ui/windows/custom_tone_list_window.py:264
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:222
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:202
+#: src/telephony/ui/windows/incall_window.py:434
+#: src/telephony/ui/windows/incall_window.py:447
+#: src/telephony/ui/windows/incall_window.py:571
+#: src/telephony/ui/windows/incall_window.py:647
+#: src/telephony/ui/windows/trusted_actions_list_window.py:352
+#: src/telephony/ui/windows/trusted_actions_list_window.py:472
+msgid "Unknown"
+msgstr "ያልታወቀ"
+
+#: src/telephony/app.py:822
+msgid "Missed Call"
+msgstr "ያመለጠ ጥሪ"
+
+#: src/telephony/app.py:863
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "ክፈት"
+
+#: src/telephony/app.py:867
+msgid "Call"
+msgstr "ደውል"
+
+#: src/telephony/backend/managers/database_manager.py:1032
+#: src/telephony/backend/managers/eds_manager.py:818
+#: src/telephony/ui/views/messages_view.py:372
+#: src/telephony/ui/views/messages_view.py:443
+msgid "Blocked Number"
+msgstr "የተቆለፈ ቁጥር"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency Mode"
+msgstr "የአደጋ ሁኔታ"
+
+#: src/telephony/backend/managers/emergency_manager.py:121
+msgid "Emergency calls only."
+msgstr "የአደጋ ጥሪ ብቻ።"
+
+#: src/telephony/backend/managers/emergency_manager.py:122
+msgid "Start Emergency Process"
+msgstr "የአደጋ ሂደትን ጀምር"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+#: src/telephony/ui/main_window.py:515 src/telephony/ui/main_window.py:706
+#: src/telephony/ui/views/history_view.py:85
+#: src/telephony/ui/views/messages_view.py:125
+#: src/telephony/ui/windows/advanced_settings_window.py:49
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:89
+#: src/telephony/ui/windows/camera_video_window.py:100
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/contact_picker_window.py:47
+#: src/telephony/ui/windows/custom_tone_list_window.py:57
+#: src/telephony/ui/windows/custom_tone_list_window.py:285
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: src/telephony/ui/windows/import_export_window.py:74
+#: src/telephony/ui/windows/import_export_window.py:171
+#: src/telephony/ui/windows/import_export_window.py:197
+#: src/telephony/ui/windows/import_export_window.py:311
+#: src/telephony/ui/windows/import_export_window.py:340
+#: src/telephony/ui/windows/import_export_window.py:441
+#: src/telephony/ui/windows/import_export_window.py:501
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/settings_window.py:467
+#: src/telephony/ui/windows/settings_window.py:966
+#: src/telephony/ui/windows/settings_window.py:996
+#: src/telephony/ui/windows/sound_recorder_window.py:96
+#: src/telephony/ui/windows/trusted_actions_list_window.py:124
+#: src/telephony/ui/windows/trusted_actions_list_window.py:535
+#: src/telephony/ui/windows/trusted_actions_list_window.py:628
+#: src/telephony/ui/windows/trusted_actions_list_window.py:649
+msgid "Cancel"
+msgstr "ሰርዝ"
+
+#: src/telephony/backend/managers/emergency_manager.py:135
+msgid "Return to Lockscreen"
+msgstr "ወደ ሎክስክሪን ተመለስ"
+
+#: src/telephony/backend/managers/emergency_manager.py:136
+msgid "Back"
+msgstr "ተመለስ"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "No Numbers Configured"
+msgstr "ምንም ቁጥሮች አልተዘጋጁም"
+
+#: src/telephony/backend/managers/emergency_manager.py:140
+msgid "Set numbers in Settings."
+msgstr "ቁጥሮችን በሴቲንግስ አዘጋጁ።"
+
+#: src/telephony/backend/managers/emergency_manager.py:151
+#, python-brace-format
+msgid "Call {number}"
+msgstr "{number}ን ይደውሉ"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+msgid "Confirm Emergency Call"
+msgstr "የአደጋ ጥሪን ያረጋግጡ"
+
+#: src/telephony/backend/managers/emergency_manager.py:165
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "{name}ን እደውል?"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🟢 Yes, Call"
+msgstr "🟢 አዎ፣ ደውል"
+
+#: src/telephony/backend/managers/emergency_manager.py:167
+msgid "🔴 No, Return"
+msgstr "🔴 አይ፣ ተመለስ"
+
+#: src/telephony/backend/managers/location_manager.py:67
+msgid "Initializing location services..."
+msgstr "የቦታ አገልግሎቶችን እየጀመርን ነው..."
+
+#: src/telephony/backend/managers/location_manager.py:134
+msgid "Waiting for location service..."
+msgstr "የቦታ አገልግሎትን እየጠበቅን ነው..."
+
+#: src/telephony/backend/managers/location_manager.py:151
+msgid "Waiting for satellite fix..."
+msgstr "የሳተላይት ግንኙነትን እየጠበቅን ነው..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:82
+#: src/telephony/ui/windows/incall_window.py:269
+msgid "Modem Stuck"
+msgstr "ሞደም ተጣብቆታል"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Call failed to disconnect."
+msgstr "ጥሪው መቋረጥ አልተቻለም።"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:85
+msgid "Telephony Emergency"
+msgstr "የቴሌፎኒ አደጋ"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:187
+#: src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "ቴሌፎኒ - ግብዣ"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:188
+#: src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "🟢 ግብዣ፦ {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:189
+#: src/telephony/ui/windows/incall_window.py:48
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Incoming Call..."
+msgstr "ጥሪ በመጣ..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:192
+#: src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁 ቀይር"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 መልስ"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:195
+#: src/telephony/backend/managers/lockscreen_manager.py:208
+#: src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 አቁም"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:200
+#: src/telephony/ui/windows/incall_window.py:49
+msgid "Waiting..."
+msgstr "በመጠበቅ ላይ..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "ቴሌፎኒ - በመያዣ"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (በማቆም ላይ)"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "ጥሪ በመያዣ ላይ..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁 ቀጥል"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "ቴሌፎኒ - ንቁ ጥሪ"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "🟢 ንቁ: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "ንቁ ጥሪ"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴 ሁሉን አቋርጥ"
+
+#: src/telephony/backend/managers/ofono_manager.py:799
+#: src/telephony/backend/managers/ofono_manager.py:803
+#: src/telephony/backend/managers/ofono_manager.py:945
+#: src/telephony/ui/main_window.py:500
+msgid "Modem not ready"
+msgstr "ሞደም ዝግ ነው"
+
+#: src/telephony/backend/managers/ofono_manager.py:817
+msgid "Cannot dial while in another call"
+msgstr "በሌላ ጥሪ ላይ እያለህ መደወል አይቻልም"
+
+#: src/telephony/backend/managers/ofono_manager.py:822
+#: src/telephony/ui/main_window.py:736
+msgid "Please wait, the previous call is still ending"
+msgstr "እባክዎ ይጠብቁ፣ ያለፈው ጥሪ ገና በመጠናቀቅ ላይ ነው"
+
+#: src/telephony/backend/managers/ofono_manager.py:834
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "የመደወል ስህተት: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:963
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "መላክ አልተቻለም: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1060
+msgid "Not supported"
+msgstr "አይደግፍም"
+
+#: src/telephony/backend/managers/ofono_manager.py:1065
+#: src/telephony/ui/windows/camera_photo_window.py:205
+#: src/telephony/ui/windows/camera_photo_window.py:290
+#: src/telephony/ui/windows/camera_photo_window.py:319
+#: src/telephony/ui/windows/camera_photo_window.py:361
+#: src/telephony/ui/windows/camera_video_window.py:243
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "ስህተት: {e}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1117
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "እባክዎ ከ {prefix} በፊት 60 ሰከንድ ይጠብቁ።"
+
+#: src/telephony/backend/managers/ofono_manager.py:1317
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr " (ትክክለኛነት: {acc}m)"
+
+#: src/telephony/backend/managers/ofono_manager.py:1319
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "እዚህ ነኝ: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_manager.py:1327
+msgid "Failed to obtain location after trying all methods."
+msgstr "በሁሉም ዘዴ ከሞከርን በኋላ አካባቢ መያዝ አልተቻለም።"
+
+#: src/telephony/backend/utils/exporter_android_utils.py:135
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "{count} መልዕክቶችን ወደ XML በተሳካ ሁኔታ አስወግድኩ።"
+
+#: src/telephony/backend/utils/exporter_android_utils.py:201
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "{count} ጥሪዎችን ወደ XML በተሳካ ሁኔታ አስወግድኩ።"
+
+#: src/telephony/backend/utils/exporter_local_utils.py:88
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "{count} መልዕክቶችን ወደ Chatty ዳታቤዝ አስወግድኩ።"
+
+#: src/telephony/backend/utils/exporter_local_utils.py:144
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "{count} ጥሪዎችን ወደ Gnome Calls ዳታቤዝ አስወግድኩ።"
+
+#: src/telephony/backend/utils/exporter_local_utils.py:161
+msgid "Source database not found."
+msgstr "የምንጭ ዳታቤዝ አልተገኘም።"
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Exported Telephony database successfully."
+msgstr "የቴሌፎኒ ዳታቤዝ በተሳካ ሁኔታ ተላክ።"
+
+#: src/telephony/backend/utils/importer_android_utils.py:34
+#: src/telephony/backend/utils/importer_android_utils.py:140
+#: src/telephony/backend/utils/importer_ios_utils.py:38
+#: src/telephony/backend/utils/importer_ios_utils.py:209
+#: src/telephony/ui/windows/camera_photo_window.py:331
+msgid "File not found."
+msgstr "ፋይሉ አልተገኘም።"
+
+#: src/telephony/backend/utils/importer_android_utils.py:131
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "ከ Android ባከፕ {count} መልዕክቶች ተመጥተዋል።"
+
+#: src/telephony/backend/utils/importer_android_utils.py:207
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "ከ Android ባከፕ {count} ተደውሎች ተመጥተዋል።"
+
+#: src/telephony/backend/utils/importer_ios_utils.py:67
+msgid "Could not find messages table in iOS database."
+msgstr "በ iOS ዳታቤዝ ውስጥ የመልዕክት ሰንጠረዥ ማግኘት አልተቻለም።"
+
+#: src/telephony/backend/utils/importer_ios_utils.py:74
+msgid "Failed to read iOS SMS database structure."
+msgstr "የ iOS SMS ዳታቤዝ መዋቅር ማንበብ አልተሳካም።"
+
+#: src/telephony/backend/utils/importer_ios_utils.py:200
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "{count} መልዕክቶችን ከ iOS ባክክ አስመጣሁ።"
+
+#: src/telephony/backend/utils/importer_ios_utils.py:234
+msgid "Could not find call history table in iOS database."
+msgstr "በ iOS ዳታቤዝ ውስጥ የጥሪ ታሪክ ሰንጠረዥ ማግኘት አልተቻለም።"
+
+#: src/telephony/backend/utils/importer_ios_utils.py:241
+msgid "Failed to read iOS Calls database structure."
+msgstr "የ iOS Calls ዳታቤዝ መዋቅር ማንበብ አልተሳካም።"
+
+#: src/telephony/backend/utils/importer_ios_utils.py:306
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "{count} ጥሪዎችን ከ iOS ባክክ አስመጣሁ።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:32
+msgid "Chatty database not found."
+msgstr "የ Chatty ዳታቤዝ አልተገኘም።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:54
+msgid "Could not find messages table in Chatty database."
+msgstr "በ Chatty ዳታቤዝ ውስጥ የመልዕክት ሰንጠረዥ ማግኘት አልተቻለም።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:61
+msgid "Failed to read Chatty database structure."
+msgstr "የ Chatty ዳታቤዝ መዋቅር ማንበብ አልተሳካም።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:125
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "{count} መልዕክቶችን ከ Chatty አስመጣሁ።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:135
+msgid "Calls database not found."
+msgstr "የጥሪዎች ዳታቤዝ አልተገኘም።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:155
+msgid "Could not find call history table in Calls database."
+msgstr "በ Calls ዳታቤዝ ውስጥ የጥሪ ታሪክ ሰንጠረዥ ማግኘት አልተቻለም።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:162
+msgid "Failed to read Calls database structure."
+msgstr "የ Calls ዳታቤዝ መዋቅር ማንበብ አልተሳካም።"
+
+#: src/telephony/backend/utils/importer_local_utils.py:216
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "{count} ተደውሎች ተመጥተዋል።"
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0 ሰ"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}ሰ {m}ደ"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}ደ {s}ሰ"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}ሰ"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "ተለፎኒ"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "ዳይልፓድ"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "ታሪክ"
+
+#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/views/messages_view.py:67
+#: src/telephony/ui/windows/settings_window.py:666
+msgid "Messages"
+msgstr "መልዕክቶች"
+
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:667
+msgid "Contacts"
+msgstr "ኮንታክቶች"
+
+#: src/telephony/ui/main_window.py:169
+msgid "Syncing Contacts..."
+msgstr "ኮንታክቶች በመስማማት ላይ..."
+
+#: src/telephony/ui/main_window.py:263
+msgid "Set your number in Settings"
+msgstr "ቁጥርዎን በሴቲንግስ ውስጥ ያቀናብሩ"
+
+#: src/telephony/ui/main_window.py:279 src/telephony/ui/main_window.py:284
+msgid "Please set Default Country Code in Settings"
+msgstr "እባክዎ የዲፎልት የአገር ኮድ በሴቲንግስ ውስጥ ያዘጋጁ"
+
+#: src/telephony/ui/main_window.py:304
+msgid "Setup Emergency Numbers in Settings"
+msgstr "የአደጋ ጊዜ ቁጥሮችን በሴቲንግስ ውስጥ ያቀናብሩ"
+
+#: src/telephony/ui/main_window.py:320
+msgid "Resolve Duplicates"
+msgstr "ድብልቅ ኮንታክቶችን ያስተካክሉ"
+
+#: src/telephony/ui/main_window.py:326
+#: src/telephony/ui/windows/settings_window.py:44
+msgid "Settings"
+msgstr "ቅንብሮች"
+
+#: src/telephony/ui/main_window.py:331
+msgid "Reload Contacts"
+msgstr "ኮንታክቶችን እንደገና ይጫኑ"
+
+#: src/telephony/ui/main_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "መግባት / መላክ"
+
+#: src/telephony/ui/main_window.py:346 src/telephony/ui/main_window.py:580
+msgid "Blocklist"
+msgstr "የተቆለፈ ዝርዝር"
+
+#: src/telephony/ui/main_window.py:439
+msgid "Modem Connected"
+msgstr "ሞደም ተገናኝቷል"
+
+#: src/telephony/ui/main_window.py:441
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "የሞደም ስህተት: {message}"
+
+#: src/telephony/ui/main_window.py:490
+msgid "Sending USSD..."
+msgstr "USSD በመላክ ላይ..."
+
+#: src/telephony/ui/main_window.py:505
+msgid "USSD Result"
+msgstr "የ USSD ውጤት"
+
+#: src/telephony/ui/main_window.py:507
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:913
+#: src/telephony/ui/windows/settings_window.py:518
+#: src/telephony/ui/windows/settings_window.py:530
+#: src/telephony/ui/windows/settings_window.py:890
+msgid "OK"
+msgstr "እሺ"
+
+#: src/telephony/ui/main_window.py:516
+#: src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "አረጋግጥ"
+
+#: src/telephony/ui/main_window.py:552
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "{count} ድብልቅ ኮንታክት ተገኝቷል። ሜኑን ይመልከቱ።"
+msgstr[1] "{count} ድብልቅ ኮንታክቶች ተገኝተዋል። ሜኑን ይመልከቱ።"
+
+#: src/telephony/ui/main_window.py:577 src/telephony/ui/main_window.py:651
+msgid "Contacts syncing..."
+msgstr "ኮንታክቶች በመስማማት ላይ..."
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:864
+#: src/telephony/ui/windows/advanced_settings_window.py:230
+#: src/telephony/ui/windows/chat_media_controller_window.py:150
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:401
+#: src/telephony/ui/windows/settings_window.py:434
+#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:504
+#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:1029
+msgid "Close"
+msgstr "ዝጋ"
+
+#: src/telephony/ui/main_window.py:623
+msgid "Syncing address books..."
+msgstr "የአድራሻ ደብተሮች በማመሳሰል ላይ..."
+
+#: src/telephony/ui/main_window.py:633 src/telephony/ui/main_window.py:638
+#: src/telephony/ui/main_window.py:643
+msgid "Reloading Contacts..."
+msgstr "እየተጫኑ ነው የእውቂያዎች..."
+
+#: src/telephony/ui/main_window.py:636
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "ለ {count} የአድራሻ ደብተሮች ማመሳሰል ተጀምሯል"
+
+#: src/telephony/ui/main_window.py:661
+msgid "Multiple Contacts Found"
+msgstr "ብዙ እውቂያዎች ተገኝተዋል"
+
+#: src/telephony/ui/main_window.py:662
+msgid "Which contact would you like to edit?"
+msgstr "የትኛውን እውቂያ ማስተካከል ትፈልጋለህ?"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Unknown Addressbook"
+msgstr "ያልታወቀ አድረስቡክ"
+
+#: src/telephony/ui/main_window.py:738 src/telephony/ui/main_window.py:745
+#: src/telephony/ui/main_window.py:751
+msgid "Call Failed"
+msgstr "ጥሪው አልተሳካም"
+
+#: src/telephony/ui/main_window.py:741
+msgid "Calling (Anonymous)..."
+msgstr "በመደወል ላይ (አናኒሞስ)..."
+
+#: src/telephony/ui/main_window.py:741
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "በመደወል ላይ {number}..."
+
+#: src/telephony/ui/main_window.py:757
+msgid "Call Details"
+msgstr "የጥሪ ዝርዝሮች"
+
+#: src/telephony/ui/main_window.py:758
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"ቁጥር: {number}\n"
+"ስም: {name}\n"
+"ቀን: {date}\n"
+"ቆይታ: {duration}"
+
+#: src/telephony/ui/main_window.py:774
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Unblock Number"
+msgstr "ቁጥሩን አንቀሳቅስ"
+
+#: src/telephony/ui/main_window.py:780 src/telephony/ui/views/chat_view.py:797
+msgid "Unblocked"
+msgstr "ክፍት ሆኗል"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/windows/contact_editor_window.py:416
+msgid "Edit Contact"
+msgstr "ኮንታክት አርትዕ"
+
+#: src/telephony/ui/main_window.py:788
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "ወደ ኮንታክቶች አክል"
+
+#: src/telephony/ui/main_window.py:799
+msgid "Add to Existing Contact"
+msgstr "ወደ ነባር እውቂያ መጨመር"
+
+#: src/telephony/ui/main_window.py:808
+#: src/telephony/ui/windows/incall_window.py:223
+msgid "Search Number"
+msgstr "ቁጥር ፈልግ"
+
+#: src/telephony/ui/main_window.py:832
+msgid "Send Message"
+msgstr "መልዕክት ላክ"
+
+#: src/telephony/ui/main_window.py:837
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "ቁጥር ቅዳ"
+
+#: src/telephony/ui/main_window.py:842
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "ቁጥር መቆለፍ"
+
+#: src/telephony/ui/main_window.py:855
+msgid "Delete this call"
+msgstr "ይህን ጥሪ ሰርዝ"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Delete Call"
+msgstr "ጥሪ ሰርዝ"
+
+#: src/telephony/ui/main_window.py:860
+msgid "Remove this call?"
+msgstr "ይህን ጥሪ ልሰርዝ?"
+
+#: src/telephony/ui/main_window.py:874
+msgid "Number copied"
+msgstr "ቁጥሩ ተቀድቷል"
+
+#: src/telephony/ui/main_window.py:880
+#: src/telephony/ui/windows/contact_editor_window.py:807
+msgid "Saving contact..."
+msgstr "ኮንታክት በመቀመጥ ላይ..."
+
+#: src/telephony/ui/main_window.py:884
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "ወደ {name} ታክሏል"
+
+#: src/telephony/ui/main_window.py:887
+msgid "Failed to add number"
+msgstr "ቁጥሩን መጨመር አልተሳካም"
+
+#: src/telephony/ui/main_window.py:895
+#: src/telephony/ui/windows/contact_editor_window.py:205
+#: src/telephony/ui/windows/settings_window.py:236
+msgid "Add Number"
+msgstr "ቁጥር ጨምር"
+
+#: src/telephony/ui/main_window.py:896
+#: src/telephony/ui/windows/advanced_settings_window.py:53
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:148
+#: src/telephony/ui/windows/custom_tone_list_window.py:61
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:75
+#: src/telephony/ui/windows/settings_window.py:967
+#: src/telephony/ui/windows/trusted_actions_list_window.py:129
+#: src/telephony/ui/windows/trusted_actions_list_window.py:539
+msgid "Save"
+msgstr "አስቀምጥ"
+
+#: src/telephony/ui/views/chat_view.py:136
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "ለ {count} ተቀባዮች ረቂቅ"
+
+#: src/telephony/ui/views/chat_view.py:163
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} ተሳታፊዎች"
+
+#: src/telephony/ui/views/chat_view.py:312
+msgid "Replies not supported for this sender"
+msgstr "ለዚህ ላኪ መመለስ አይደግፍም"
+
+#: src/telephony/ui/views/chat_view.py:358
+#: src/telephony/ui/views/chat_view.py:1285
+msgid "Scheduled time must be in the future"
+msgstr "የታቀደው ጊዜ ወደፊት መሆን አለበት"
+
+#: src/telephony/ui/views/chat_view.py:367
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "እንደገና ታቀደ ለ {time}"
+
+#: src/telephony/ui/views/chat_view.py:374
+msgid "Re-Schedule Message"
+msgstr "መልዕክት እንደገና መመደብ"
+
+#: src/telephony/ui/views/chat_view.py:509
+#: src/telephony/ui/views/chat_view.py:580
+msgid "— New Messages —"
+msgstr "— አዲስ መልዕክቶች —"
+
+#: src/telephony/ui/views/chat_view.py:618
+msgid "No results found in this conversation"
+msgstr "በዚህ ውይይት ምንም ውጤት አልተገኘም"
+
+#: src/telephony/ui/views/chat_view.py:696
+msgid "Group Name"
+msgstr "የቡድን ስም"
+
+#: src/telephony/ui/views/chat_view.py:697
+msgid "Set group name..."
+msgstr "የቡድን ስም አዘጋጅ..."
+
+#: src/telephony/ui/views/chat_view.py:705
+msgid "Participants"
+msgstr "ተሳታፊዎች"
+
+#: src/telephony/ui/views/chat_view.py:823
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Conversation"
+msgstr "ውይይቱን ሰርዝ"
+
+#: src/telephony/ui/views/chat_view.py:840
+#: src/telephony/ui/views/chat_view.py:1217
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "እኔ"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"ከ{sender} ተላልፏል:\n"
+"{body}"
+
+#: src/telephony/ui/views/chat_view.py:850
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "ከ{sender} ተላልፏል"
+
+#: src/telephony/ui/views/chat_view.py:859
+msgid "Forward To"
+msgstr "ወደ ፊት ላክ"
+
+#: src/telephony/ui/views/chat_view.py:860
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "ፊት ላክ"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Delete Message"
+msgstr "መልዕክቱን ሰርዝ"
+
+#: src/telephony/ui/views/chat_view.py:885
+msgid "Are you sure you want to delete this message?"
+msgstr "ይህን መልዕክት ማስወገድ እንደምትፈልግ እርግጠኛ ነህ?"
+
+#: src/telephony/ui/views/chat_view.py:1033
+msgid "Group renamed"
+msgstr "ቡድኑ ተሰየመ"
+
+#: src/telephony/ui/views/chat_view.py:1063
+msgid "Compressing image..."
+msgstr "ምስል በመጠቅለያ ላይ..."
+
+#: src/telephony/ui/views/chat_view.py:1065
+msgid "Image is too large to send"
+msgstr "ምስሉ ለመላክ በጣም ትልቅ ነው"
+
+#: src/telephony/ui/views/chat_view.py:1067
+msgid "Compressing video..."
+msgstr "ቪዲዮ በመጠቅለያ ላይ..."
+
+#: src/telephony/ui/views/chat_view.py:1069
+msgid "Video compression failed"
+msgstr "የቪዲዮ መጠቅለያ አልተሳካም"
+
+#: src/telephony/ui/views/chat_view.py:1071
+msgid "File is too large to send via MMS"
+msgstr "ፋይሉ በ MMS ለመላክ በጣም ትልቅ ነው"
+
+#: src/telephony/ui/views/chat_view.py:1279
+msgid "Nothing to schedule"
+msgstr "ምንም የሚያቀድም ነገር የለም"
+
+#: src/telephony/ui/views/chat_view.py:1293
+msgid "Schedule Message"
+msgstr "መልዕክት አቀድ"
+
+#: src/telephony/ui/views/chat_view.py:1353
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "መልዕክቱ ለ{time} ታቀድሏል"
+
+#: src/telephony/ui/views/chat_view.py:1354
+#: src/telephony/ui/views/chat_view.py:1360
+msgid "[Attachment]"
+msgstr "[አባሪ]"
+
+#: src/telephony/ui/views/chat_view.py:1451
+msgid "Delete Group"
+msgstr "ቡድን ሰርዝ"
+
+#: src/telephony/ui/views/chat_view.py:1452
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr "ይህ የውይይቱን ታሪክ እና የተቀማጭ ሚዲያ ፋይሎች በቋሚነት ያጠፋል።"
+
+#: src/telephony/ui/views/contacts_view.py:64
+msgid "Search contacts"
+msgstr "ኮንታክቶችን ፈልግ"
+
+#: src/telephony/ui/views/contacts_view.py:439
+msgid "Call Anonymous"
+msgstr "አናኒሞስን ደውል"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "ቁጥር አስገባ"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:162
+msgid "Telephony Smart Dialpad at your service"
+msgstr "ተለፎኒ ስማርት ዳይልፓድ በአገልግሎትዎ ላይ ነው"
+
+#: src/telephony/ui/views/dialpad_view.py:259
+msgid "Invalid number in clipboard"
+msgstr "ትክክል ያልሆነ ቁጥር በክሊፕቦርድ ውስጥ ተገኝቷል"
+
+#: src/telephony/ui/views/dialpad_view.py:261
+msgid "Invalid number"
+msgstr "ትክክል ያልሆነ ቁጥር"
+
+#: src/telephony/ui/views/history_view.py:129
+msgid "All"
+msgstr "ሁሉም"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Any duration"
+msgstr " люб ጊዜ"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "Unanswered"
+msgstr "ያልተመለሰ"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1s - 60s"
+msgstr "1ሰ - 60ሰ"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "1-3 mins"
+msgstr "1-3 ደቂቃ"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "3-10 mins"
+msgstr "3-10 ደቂቃ"
+
+#: src/telephony/ui/views/history_view.py:186
+msgid "> 15 mins"
+msgstr "> 15 ደቂቃ"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Any date"
+msgstr " люб ቀን"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Today"
+msgstr "ዛሬ"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 3 days"
+msgstr "ያለፉት 3 ቀናት"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 14 days"
+msgstr "ያለፉት 14 ቀናት"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 30 days"
+msgstr "ያለፉት 30 ቀናት"
+
+#: src/telephony/ui/views/history_view.py:206
+msgid "Last 60 days"
+msgstr "ያለፉት 60 ቀናት"
+
+#: src/telephony/ui/views/messages_view.py:117
+#: src/telephony/ui/views/messages_view.py:590
+msgid "Search Contacts..."
+msgstr "ኮንታክቶች ፈልግ..."
+
+#: src/telephony/ui/views/messages_view.py:235
+msgid "All Messages"
+msgstr "ሁሉም መልዕክቶች"
+
+#: src/telephony/ui/views/messages_view.py:236
+msgid "Unread Messages"
+msgstr "ያልተነበቡ መልዕክቶች"
+
+#: src/telephony/ui/views/messages_view.py:237
+msgid "Unknown Numbers"
+msgstr "ያልታወቁ ቁጥሮች"
+
+#: src/telephony/ui/views/messages_view.py:238
+msgid "Saved Contacts"
+msgstr "ተቀማጭ ኮንታክቶች"
+
+#: src/telephony/ui/views/messages_view.py:239
+msgid "Group Messages"
+msgstr "የቡድን መልዕክቶች"
+
+#: src/telephony/ui/views/messages_view.py:240
+msgid "Individual Messages"
+msgstr "የብቻ መልዕክቶች"
+
+#: src/telephony/ui/views/messages_view.py:241
+msgid "Alphabetical Senders"
+msgstr "በፊደል የተደረደሩ ላኪዎች"
+
+#: src/telephony/ui/views/messages_view.py:337
+#: src/telephony/ui/views/messages_view.py:459
+msgid "[Multimedia Message]"
+msgstr "[የብዙሀን መልዕክት]"
+
+#: src/telephony/ui/views/messages_view.py:594
+msgid "Search Messages..."
+msgstr "መልዕክቶች ፈልግ..."
+
+#: src/telephony/ui/views/messages_view.py:636
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "ጀምር ({count})"
+
+#: src/telephony/ui/views/messages_view.py:643
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "ክፈት ({count})"
+
+#: src/telephony/ui/views/messages_view.py:715
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "ቁጥር ጨምር: {number}"
+
+#: src/telephony/ui/views/messages_view.py:748
+msgid "Group chat"
+msgstr "የቡድን ውይይት"
+
+#: src/telephony/ui/views/messages_view.py:756
+#: src/telephony/ui/widgets/common_widget.py:100
+msgid "No contacts found"
+msgstr "ምንም ኮንታክቶች አልተገኙም"
+
+#: src/telephony/ui/views/messages_view.py:871
+msgid "No results found"
+msgstr "ምንም ውጤት አልተገኘም"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "ጽሁፍ ቅዳ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "እንደገና አቅድ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "እንደ አልተነበበ ምልክት አድርግ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:839
+#: src/telephony/ui/windows/settings_window.py:997
+msgid "Delete"
+msgstr "ሰርዝ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "እንደገና ላክ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "ታቅዷል: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "መላክ አልተሳካም"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "በመላክ ላይ..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "በ… ክፈት"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "ቅዳ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "እንደ… አስቀምጥ"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "በ… ክፈት..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "ፋይልን እንዴት እንደሚቀመጥ"
+
+#: src/telephony/ui/widgets/common_widget.py:29
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Mobile"
+msgstr "ሞባይል"
+
+#: src/telephony/ui/widgets/common_widget.py:30
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Work"
+msgstr "ስራ"
+
+#: src/telephony/ui/widgets/common_widget.py:31
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Home"
+msgstr "ቤት"
+
+#: src/telephony/ui/widgets/common_widget.py:32
+#: src/telephony/ui/windows/contact_editor_window.py:431
+msgid "Fax"
+msgstr "ፋክስ"
+
+#: src/telephony/ui/widgets/common_widget.py:33
+#: src/telephony/ui/windows/contact_editor_window.py:431
+#: src/telephony/ui/windows/contact_editor_window.py:439
+msgid "Other"
+msgstr "ሌላ"
+
+#: src/telephony/ui/widgets/common_widget.py:34
+msgid "Main"
+msgstr "ዋና"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "ሁሉንም ጥሪ አቁም"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "ጥሪውን አቋርጥ"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • ቡድን"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "ረቂቅ፡ {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:33
+#: src/telephony/ui/windows/settings_window.py:385
+msgid "Advanced Settings"
+msgstr "የላቀ ቅንብሮች"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "በመጫን ላይ..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "ቅንብሮችን ማጫን ችግር ተፈጥሯል: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:132
+msgid "Secret SMS Triggers"
+msgstr "የሚሰወሩ የSMS ተነሳሽዎች"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:135
+#: src/telephony/ui/windows/trusted_actions_list_window.py:92
+msgid "Set \"Find my Telephony\""
+msgstr "\"Find my Telephony\" አቀናብር"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:141
+#: src/telephony/ui/windows/trusted_actions_list_window.py:94
+msgid "Set \"Trusted Callback\""
+msgstr "\"Trusted Callback\" አቀናብር"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:147
+#: src/telephony/ui/windows/trusted_actions_list_window.py:96
+msgid "Set \"SMS -Relay\""
+msgstr "\"SMS -Relay\" አቀናብር"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+#: src/telephony/ui/windows/trusted_actions_list_window.py:98
+msgid "Set \"SMS -tmate\""
+msgstr "\"SMS -tmate\" አቀናብር"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:159
+#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+msgid "Set \"SMS Switch Lock Device\""
+msgstr "\"SMS Switch Lock Device\" አቀናብር"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:167
+#: src/telephony/ui/windows/advanced_settings_window.py:229
+msgid "Automatic Modem Recovery"
+msgstr "ራስ-ሰር የሞደም መልሶ ማግኘት"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Data Management"
+msgstr "የውሂብ አስተዳደር"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:200
+msgid "Authentication cancelled"
+msgstr "ማረጋገጫው ተሰርዟል"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:206
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "የAuth ችግር: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:213
+msgid "Advanced Settings Applied"
+msgstr "የላቀ ቅንብሮች ተተግብረዋል"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:222
+msgid ""
+"When the modem stops responding, the phone quietly runs the recovery steps "
+"by itself: phone service restart, radio restart, modem power cycle, firmware "
+"restart and re-enabling a disabled radio. The phone is never rebooted "
+"automatically. If nothing helps you are asked to reboot. When this is off, "
+"the Modem Recovery window opens instead so you can run the steps yourself."
+msgstr ""
+"ሞደሙ ምላሽ መስጠት ሲያቆም ስልኩ የመልሶ ማግኘት ደረጃዎቹን በጸጥታ በራሱ ያከናውናል፦ የስልክ አገልግሎት ዳግም "
+"ማስጀመር፣ የሬዲዮ ዳግም ማስጀመር፣ የሞደም ኃይል ዑደት፣ የሞደም ፈርምዌር ዳግም ማስጀመር እና የተሰናከለ ሬዲዮን "
+"እንደገና ማንቃት። ስልኩ በራስ-ሰር በጭራሽ ዳግም አይነሳም። ምንም ካልረዳ ዳግም እንዲያስነሱ ይጠየቃሉ። ይህ ጠፍቶ "
+"ሲሆን በምትኩ የሞደም መልሶ ማግኘት መስኮቱ ይከፈታል፤ ስለዚህ ደረጃዎቹን እራስዎ ማከናወን ይችላሉ።"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "የቁጥር ዝርዝሮች"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "ከዚህ ቁጥር የሚመጡ ጥሪዎች በራስ-ሰር ይተወዳዳሉ።"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:835
+msgid "Number"
+msgstr "ቁጥር"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "ማስታወሻ (አማራጭ)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "ድብልቅ"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "ይህ ቁጥር አስቀድሞ ታግዷል።"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "የዳታቤዝ ስህተት"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "ወደ ብሎክሊስት ማስቀመጥ አልተሳካም።"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:893
+msgid "Conflict"
+msgstr "ግጭት"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"ቁጥሩ በብሎክሊስት እና በኮንታክትስ በአንድ ጊዜ መሆን አይችልም።\n"
+"\n"
+"መቆለፍ ብትቀጥል ከኮንታክትስ ውስጥ እንዲወጣ ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "አዎ፣ ታግድ"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "ታግዷቸው ያሉ ቁጥሮች"
+
+#: src/telephony/ui/windows/blocklist_window.py:147
+msgid "No notes"
+msgstr "ምንም ማስታወሻ የለም"
+
+#: src/telephony/ui/windows/blocklist_window.py:161
+msgid "Are you sure you want to unblock this number?"
+msgstr "በእርግጥ ይህን ቁጥር ከብሎክ ማውጣት ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/blocklist_window.py:174
+msgid "Unblocked number"
+msgstr "ቁጥሩ ተፈታ"
+
+#: src/telephony/ui/windows/camera_photo_window.py:48
+msgid "Take Picture"
+msgstr "ፎቶ እወስድ"
+
+#: src/telephony/ui/windows/camera_photo_window.py:160
+#: src/telephony/ui/windows/camera_video_window.py:202
+#: src/telephony/ui/windows/sound_recorder_window.py:181
+msgid "Retake"
+msgstr "እንደገና አንስ"
+
+#: src/telephony/ui/windows/camera_photo_window.py:165
+msgid "Attach Photo"
+msgstr "ፎቶ አያይዝ"
+
+#: src/telephony/ui/windows/camera_video_window.py:61
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "ቪዲዮ አቅርብ"
+
+#: src/telephony/ui/windows/camera_video_window.py:207
+msgid "Attach Video"
+msgstr "ቪዲዮ አያይዝ"
+
+#: src/telephony/ui/windows/camera_video_window.py:336
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "ቪዲዮ መቅረጥ አልተሳካም፦ {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:416
+msgid "Recording failed (File empty)."
+msgstr "መቅዳት አልተሳካም (ፋይሉ ባዶ ነው)."
+
+#: src/telephony/ui/windows/camera_video_window.py:420
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "ትልቅ ቪዲዮ ({size}KB). በመላክ ጊዜ ይጨመርማል."
+
+#: src/telephony/ui/windows/camera_video_window.py:437
+msgid "Cannot play empty file."
+msgstr "ባዶ ፋይል መጫወት አይቻልም."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "ፎቶ አንስ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "ድምፅ አቅርብ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "ፋይል ምረጥ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "መርሐ ግብር"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "የካሜራ ችግኝ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "ካሜራውን ጀምሮ አልቻለም።"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "የቪዲዮ ቅሪብ ጀምሮ አልቻለም።"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Audio Error"
+msgstr "የድምፅ ችግኝ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:99
+msgid "Could not start audio recorder."
+msgstr "የድምፅ መቅረጫውን ጀምሮ አልቻለም።"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:103
+msgid "Select Attachment"
+msgstr "አባሪ ምረጥ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Attachment Error"
+msgstr "የአባሪ ችግኝ"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:144
+msgid "Failed to prepare attachment."
+msgstr "አባሪውን ለመዘጋጀት አልተሳካም።"
+
+#: src/telephony/ui/windows/contact_editor_window.py:38
+#: src/telephony/ui/windows/contact_editor_window.py:423
+msgid "Contact Details"
+msgstr "የመገኛ ዝርዝሮች"
+
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:194
+msgid "Edit"
+msgstr "አርትዕ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Identity"
+msgstr "መለያ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:165
+#: src/telephony/ui/windows/contact_editor_window.py:183
+msgid "Favorite"
+msgstr "የምወደው"
+
+#: src/telephony/ui/windows/contact_editor_window.py:173
+msgid "Full Name"
+msgstr "ሙሉ ስም"
+
+#: src/telephony/ui/windows/contact_editor_window.py:179
+msgid "Name"
+msgstr "ስም"
+
+#: src/telephony/ui/windows/contact_editor_window.py:183
+#: src/telephony/ui/windows/trusted_actions_list_window.py:629
+msgid "Yes"
+msgstr "አዎ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:189
+msgid "Phone Numbers"
+msgstr "የስልክ ቁጥሮች"
+
+#: src/telephony/ui/windows/contact_editor_window.py:216
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "የኢሜይል አድራሻዎች"
+
+#: src/telephony/ui/windows/contact_editor_window.py:226
+msgid "Add Email"
+msgstr "ኢሜይል ጨምር"
+
+#: src/telephony/ui/windows/contact_editor_window.py:237
+msgid "Additional Details"
+msgstr "ተጨማሪ ዝርዝሮች"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Organization"
+msgstr "ድርጅት"
+
+#: src/telephony/ui/windows/contact_editor_window.py:240
+msgid "Job Title"
+msgstr "የስራ መደብ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Address"
+msgstr "አድራሻ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:241
+msgid "Notes"
+msgstr "ማስታወሻዎች"
+
+#: src/telephony/ui/windows/contact_editor_window.py:242
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "ድህረ ገጽ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:267
+#: src/telephony/ui/windows/contact_editor_window.py:272
+msgid "Birthday"
+msgstr "የትውልድ ቀን"
+
+#: src/telephony/ui/windows/contact_editor_window.py:268
+#: src/telephony/ui/windows/contact_editor_window.py:275
+msgid "Anniversary"
+msgstr "አመታት የጋብቻ ቀን"
+
+#: src/telephony/ui/windows/contact_editor_window.py:284
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Delete Contact"
+msgstr "ኮንታክት ሰርዝ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:295
+#: src/telephony/ui/windows/settings_window.py:174
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Address Books"
+msgstr "የአድራሻ መጽሐፍት"
+
+#: src/telephony/ui/windows/contact_editor_window.py:315
+msgid "Unknown Source"
+msgstr "ያልታወቀ ምንጭ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:339
+#: src/telephony/ui/windows/contact_editor_window.py:377
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "ቀን ምረጥ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:350
+msgid "Clear Date"
+msgstr "ቀን አፅዳ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:392
+#, python-brace-format
+msgid "Select {title}"
+msgstr " {title} ምረጥ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:402
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "{title} ቅዳ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/trusted_actions_list_window.py:603
+msgid "Copied to clipboard"
+msgstr "ወደ ቅንጥብ ተቀድቷል"
+
+#: src/telephony/ui/windows/contact_editor_window.py:541
+msgid "Export Contact"
+msgstr "ኮንታክት ላክ"
+
+#: src/telephony/ui/windows/contact_editor_window.py:560
+msgid "Are you sure you want to delete this contact?"
+msgstr "እርግጠኛ ነህ ይህን ኮንታክት መሰረዝ ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:573
+msgid "Deleting contact..."
+msgstr "ኮንታክት በመሰረዝ ላይ..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:791
+#: src/telephony/ui/windows/contact_editor_window.py:881
+msgid "Failed to save contact"
+msgstr "እውቂያን ማስቀመጥ አልተሳካም"
+
+#: src/telephony/ui/windows/contact_editor_window.py:876
+msgid "Contact saved"
+msgstr "ኮንታክት ተቀምጧል"
+
+#: src/telephony/ui/windows/contact_editor_window.py:894
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"ቁጥሩ በብሎክሊስት እና በኮንታክቶች ላይ በአንድ ጊዜ መሆን አይችልም።\n"
+"\n"
+"መክፈት እና ቁጥሩን ወደ ኮንታክቶች ለመጨመር መቀጠል ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:898
+msgid "Yes, Add to Contacts"
+msgstr "አዎ፣ ወደ ኮንታክቶች አክል"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "ኮንታክት ምረጥ"
+
+#: src/telephony/ui/windows/contact_picker_window.py:63
+msgid "Name or Number"
+msgstr "ስም ወይም ቁጥር"
+
+#: src/telephony/ui/windows/contact_picker_window.py:199
+msgid "No number"
+msgstr "ቁጥር የለም"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:356
+msgid "Individual SMS Notifications"
+msgstr "የተናጠል SMS ማሳወቂያዎች"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:32
+#: src/telephony/ui/windows/settings_window.py:367
+msgid "Individual Ringtones"
+msgstr "የተናጠል የስልክ ድምጾች"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:74
+msgid "Find contact to add..."
+msgstr "ለመጨመር ኮንታክት ፈልግ..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:82
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"ኮንታክት ምረጥ እና የተለየ ድምጽ ፋይል (.ogg ወይም .oga) ይምረጡ። ፋይሉ ወደ የአካባቢ ማከማቻዎ ይቀየራል።"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:201
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "አስወግድ"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:217
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "ብጁ ድምጽ ተወግዷል (ለመያዝ ማስቀመጥ ይጫኑ)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:281
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "ለ{name} ድምጽ ምረጥ"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:284
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Select"
+msgstr "ምረጥ"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:289
+msgid "Supported Audio (OGG)"
+msgstr "የተደገፈ ድምጽ (OGG)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:317
+msgid "Only .ogg or .oga files are supported"
+msgstr "ብቻ .ogg ወይም .oga ፋይሎች ይደገፋሉ"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:328
+msgid "Failed to copy audio file"
+msgstr "የድምጽ ፋይል ኮፒ መድረስ አልተሳካም"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:348
+msgid "Custom tone added"
+msgstr "ብጁ ድምጽ ታክሏል"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "የውሂብ ትዕዛዝ አስተዳደር"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "የቋሚ ማጥፋት የሚፈልጉትን ውሂብ ይምረጡ።"
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "የመደወያ ታሪክ ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "ሁሉንም መልዕክቶች ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "ሁሉንም የቡድን ስሞች ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "የተከለከሉ ዝርዝር ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "ሁሉንም እውቂያዎች ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:994
+msgid "Delete Address Book"
+msgstr "የአድራሻ ደብተር ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "እርስዎ ያሉትን ሁሉ ይሰርዙ"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "እርግጠኛ ነህ? ይህ ተመልሶ ማድረግ አይቻልም."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "ይህ ሁሉንም SMS/MMS እና አባሪዎች ያስወግዳል."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "የቡድን ስሞችን ሰርዝ"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "ሁሉንም ብጁ የቡድን ቻት ስሞች እንደገና እንዲጀምሩ?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "ሁሉንም ቁጥሮች ከመከልከል እንደሚፈቱ?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "ሊሰረዙ የሚችሉ የአድራሻ ደብተሮች የሉም"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "ሊሰረዙ የሚችሉ ብጁ የአድራሻ ደብተሮች የሉም."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"የትኛውን የአድራሻ ደብተር ለዘላለም መሰረዝ ትፈልጋለህ?\n"
+"\n"
+"ከስርዓቱ ሙሉ ተወግዶ ይጠፋል."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:995
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "በእርግጥ የ'{name}' የአድራሻ ደብተርን ለዘላለም መሰረዝ ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "ሁሉንም ይሰርዙ"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr "የውሂብ ጎታ፣ የቅንብር ፋይሎች እና ኮንታክቶችን ማጽዳት? መተግበሪያው ይቀስቃል."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "በእርግጥ ሁሉንም ሰዎች ከአድራሻ ደብተርህ ማስወገድ ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "የትኛውን የአድራሻ ደብተር እንዲጸዱ መምረጥ:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "ሁሉም የአድራሻ ደብተሮች"
+
+#: src/telephony/ui/windows/data_management_window.py:218
+msgid "Call History Deleted"
+msgstr "የጥሪ ታሪክ ተሰርዟል"
+
+#: src/telephony/ui/windows/data_management_window.py:222
+msgid "Deleting messages..."
+msgstr "መልዕክቶችን በመሰረዝ ላይ..."
+
+#: src/telephony/ui/windows/data_management_window.py:228
+msgid "Messages & Attachments Deleted"
+msgstr "መልዕክቶች እና አባሪዎች ተሰርዘዋል"
+
+#: src/telephony/ui/windows/data_management_window.py:234
+msgid "Group Names Reset"
+msgstr "የቡድን ስሞች ተቀይረዋል"
+
+#: src/telephony/ui/windows/data_management_window.py:239
+msgid "Blocklist Cleared"
+msgstr "የመከልከያ ዝርዝር ተጸድቷል"
+
+#: src/telephony/ui/windows/data_management_window.py:243
+msgid "Deleting contacts..."
+msgstr "ኮንታክቶችን በመሰረዝ ላይ..."
+
+#: src/telephony/ui/windows/data_management_window.py:249
+msgid "Contacts Deleted"
+msgstr "ኮንታክቶች ተሰርዘዋል"
+
+#: src/telephony/ui/windows/data_management_window.py:257
+msgid "Deleting address book..."
+msgstr "አድራሻ ደብተርን በመሰረዝ ላይ..."
+
+#: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:1015
+msgid "Address Book Deleted"
+msgstr "አድራሻ ደብተሩ ተሰርዘዋል"
+
+#: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:1013
+msgid "Failed to delete Address Book"
+msgstr "አድራሻ ደብተሩን መሰረዝ አልተቻለም"
+
+#: src/telephony/ui/windows/data_management_window.py:270
+msgid "Wiping Database..."
+msgstr "ዳታቤዝን በመጥረግ ላይ..."
+
+#: src/telephony/ui/windows/data_management_window.py:283
+msgid "App Reset Complete"
+msgstr "የመተግበሪያው ማቀናበር ተጠናቀቀ"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "ዓመት"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "ወር"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "ሰዓት"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "ደቂቃ"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:338
+#: src/telephony/ui/windows/settings_window.py:527
+msgid "Notification Overrides"
+msgstr "የማሳወቂያ ማሻሻያዎች"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:162
+msgid "Find and add contacts..."
+msgstr "ኮንታክቶችን ፈልገህ አክል..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:78
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"በዚህ ዝርዝር ያሉ ኮንታክቶች ስልኩ በሳይለንት ወይም በ Do Not Disturb ቢሆንም ማሳወቂያዎች በሙሉ ድምፅ "
+"ይጫወታሉ።"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "የተደጋጋሚ ኮንታክት"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "ሁሉንም ያዋህዱ"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "ኮንታክቶችን በመዋሃድ ላይ..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "የቀረው ግጭት: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} ወደ ኮንታክቶች ተቀምጧል:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "የአድራሻ ደብተር: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "ይህን አቆይ፣ የተደጋጋሚዎችን አስወግድ"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "ይህን አቆይ፣ የተደጋጋሚዎችን ያዋህዱ"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "በመዋሃድ ላይ {current}/{total}..."
+
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"መለያየት፣ መቀየር፣ መጫን (ETL).\n"
+"የውሂብ ምንጭ ወይም መድረሻ ይምረጡ."
+
+#: src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "ከ vCard የተጠቃሚ መረጃ መግባት"
+
+#: src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "ተጠቃሚዎችን ወደ vCard መላክ"
+
+#: src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "ተጠቃሚዎችን ከ SIM ካርድ መግባት"
+
+#: src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "ከአካባቢ Chatty መግባት"
+
+#: src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "ከአካባቢ ጥሪዎች መግባት"
+
+#: src/telephony/ui/windows/import_export_window.py:67
+#: src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "ከ Android መግባት"
+
+#: src/telephony/ui/windows/import_export_window.py:68
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "ከ iOS መግባት"
+
+#: src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "ጥሪዎች ወይም መልዕክቶች መላክ"
+
+#: src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "ተጠቃሚዎችን ከ SIM በመግባት..."
+
+#: src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "ለ SIM መግባት ሞደም አልተገኘም"
+
+#: src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "በ SIM ካርድ ላይ ተጠቃሚ አልተገኘም።"
+
+#: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "{count} ተጠቃሚዎችን ከ SIM አስመጣሁ።"
+
+#: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "የ SIM መግባት አልተሳካም: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Chatty በመግባት..."
+
+#: src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "ጥሪዎች በመግባት..."
+
+#: src/telephony/ui/windows/import_export_window.py:159
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "አማራጭ ይምረጡ:"
+
+#: src/telephony/ui/windows/import_export_window.py:169
+#: src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "የ SMS/MMS ፋይል ይምረጡ"
+
+#: src/telephony/ui/windows/import_export_window.py:170
+#: src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "የጥሪ ታሪክ ፋይል ይምረጡ"
+
+#: src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "ቀጥታ የ USB መግባት (የሚመከር)"
+
+#: src/telephony/ui/windows/import_export_window.py:211
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr "ምንም የ iOS አይነት መሣሪያ አልተገኘም። እባክዎ አይፎንዎን በ USB ያገናኙ።"
+
+#: src/telephony/ui/windows/import_export_window.py:214
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr "የእቃው እምነት አልተሰጠም። እባክህ አይፎንህን ክፈት እና ‘Trust’ ብለህ ተቅናሽ."
+
+#: src/telephony/ui/windows/import_export_window.py:217
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "ባከፕ ከአይፎን በመውጣት ላይ… ይህ ረጅም ጊዜ ሊወስድ ይችላል!"
+
+#: src/telephony/ui/windows/import_export_window.py:225
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "የUSB ባከፕ አልተሳካም: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:230
+msgid "No SMS database found in backup."
+msgstr "በባከፕ ውስጥ የSMS ዳታቤዝ አልተገኘም።"
+
+#: src/telephony/ui/windows/import_export_window.py:231
+msgid "No Call History database found in backup."
+msgstr "በባከፕ ውስጥ የመደወያ ታሪክ ዳታቤዝ አልተገኘም።"
+
+#: src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone SMS..."
+msgstr "የአይፎን SMS በመግባት ላይ…"
+
+#: src/telephony/ui/windows/import_export_window.py:238
+msgid "Importing iPhone Calls..."
+msgstr "የአይፎን መደወያዎች በመግባት ላይ…"
+
+#: src/telephony/ui/windows/import_export_window.py:247
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "በiOS ኢምፖርት ላይ ስህተት ተፈጥሯል: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:255
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "ፋይል ምረጥ"
+
+#: src/telephony/ui/windows/import_export_window.py:258
+msgid "XML Files"
+msgstr "XML ፋይሎች"
+
+#: src/telephony/ui/windows/import_export_window.py:272
+#: src/telephony/ui/windows/import_export_window.py:463
+msgid "Importing..."
+msgstr "በመግባት ላይ…"
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Export Data"
+msgstr "ውሂብ ማውጣት"
+
+#: src/telephony/ui/windows/import_export_window.py:296
+msgid "Select destination format:"
+msgstr "የመውጣት ፎርማት ምረጥ:"
+
+#: src/telephony/ui/windows/import_export_window.py:306
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - Chatty/Calls"
+
+#: src/telephony/ui/windows/import_export_window.py:307
+msgid "Linux - Telephony"
+msgstr "ሊኑክስ - ቴሌፎን"
+
+#: src/telephony/ui/windows/import_export_window.py:308
+msgid "Android"
+msgstr "Android"
+
+#: src/telephony/ui/windows/import_export_window.py:309
+msgid "iOS"
+msgstr "iOS"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "ወደ {fmt} መላክ"
+
+#: src/telephony/ui/windows/import_export_window.py:319
+msgid "What do you want to export?"
+msgstr "ምን ማውጣት ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/import_export_window.py:326
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"ማስታወሻ: ይህ ወደ ውጭ መላክ የAndroid ቅርጸት ይጠቀማል። ይህን ፋይል ወደ iOS መሣሪያ ሲያስገቡ እባክዎ "
+"\"Import From Android\" የሚለውን አማራጭ ይጠቀሙ።"
+
+#: src/telephony/ui/windows/import_export_window.py:337
+msgid "Messages (SMS/MMS)"
+msgstr "መልዕክቶች (SMS/MMS)"
+
+#: src/telephony/ui/windows/import_export_window.py:338
+msgid "Call History"
+msgstr "የመደወያ ታሪክ"
+
+#: src/telephony/ui/windows/import_export_window.py:348
+msgid "Export File"
+msgstr "ፋይል ማውጣት"
+
+#: src/telephony/ui/windows/import_export_window.py:374
+msgid "Exporting..."
+msgstr "በመላክ ላይ..."
+
+#: src/telephony/ui/windows/import_export_window.py:408
+msgid "Import VCard"
+msgstr "VCard ማስገባት"
+
+#: src/telephony/ui/windows/import_export_window.py:410
+msgid "VCard Files"
+msgstr "የ VCard ፋይሎች"
+
+#: src/telephony/ui/windows/import_export_window.py:429
+#: src/telephony/ui/windows/import_export_window.py:493
+msgid "No enabled address books found"
+msgstr "ምንም የተነሳ የአድራሻ ደብተር አልተገኘም"
+
+#: src/telephony/ui/windows/import_export_window.py:437
+msgid "Select Address Book"
+msgstr "አድራሻ ደብተር ምረጥ"
+
+#: src/telephony/ui/windows/import_export_window.py:438
+msgid "Where do you want to import contacts?"
+msgstr "ኮንታክቶችን ወዴት ማስገባት ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr " {count} ኮንታክቶች ተመጥተዋል"
+
+#: src/telephony/ui/windows/import_export_window.py:481
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "ማስገባት አልተሳካም: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:535
+msgid "Export Contacts"
+msgstr "ኮንታክቶች ማውጣት"
+
+#: src/telephony/ui/windows/import_export_window.py:498
+msgid "Which address book do you want to export?"
+msgstr "የትኛውን አድራሻ ደብተር ማውጣት ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/import_export_window.py:509
+msgid "Export All Address Books"
+msgstr "ሁሉንም አድራሻ ደብተሮች ማውጣት"
+
+#: src/telephony/ui/windows/import_export_window.py:558
+msgid "No contacts found to export"
+msgstr "ለመላክ የሚገባ ኮንታክት አልተገኘም"
+
+#: src/telephony/ui/windows/import_export_window.py:570
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "{count} ኮንታክቶች ተላኩ"
+
+#: src/telephony/ui/windows/import_export_window.py:573
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "የመላክ ስህተት: {e}"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "መልዕክቶችን አስመጣ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "የጥሪ ታሪክ አስመጣ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "በምርጫ ላይ በመጠበቅ ላይ..."
+
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "ከየት መግባት ትፈልጋለህ?"
+
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "የስርዓት ዳታቤዝ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "ከአካባቢ Chatty ተከላ መግባት"
+
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "ከአካባቢ Calls ተከላ መግባት"
+
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "አስመጣ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "ብጁ የዳታቤዝ ባክአፕ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "የተላከ SQLite DB ፋይል ምረጥ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "የዳታቤዝ ፋይል ምረጥ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "የMMS አባሪዎች (አማራጭ)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "የMMS ፎልደር ባከፕ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "ምስሎች/ቪዲዮዎች ያሉበትን ዳይሬክቶሪ ምረጥ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "ፎልደር ምረጥ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "አባሪዎችን ዝለል"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "SMS እና ቴክስቶችን ብቻ አስመጣ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "ዝለል"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "የMMS ፎልደር ምረጥ"
+
+#: src/telephony/ui/windows/incall_window.py:44
+msgid "Active"
+msgstr "ንቁ"
+
+#: src/telephony/ui/windows/incall_window.py:45
+msgid "On Hold"
+msgstr "በመያዣ ላይ"
+
+#: src/telephony/ui/windows/incall_window.py:46
+msgid "Dialing..."
+msgstr "በመደወል ላይ..."
+
+#: src/telephony/ui/windows/incall_window.py:47
+msgid "Alerting..."
+msgstr "በማቃጨል ላይ..."
+
+#: src/telephony/ui/windows/incall_window.py:50
+msgid "Disconnected"
+msgstr "ተቋርጧል"
+
+#: src/telephony/ui/windows/incall_window.py:58
+#: src/telephony/ui/windows/settings_window.py:301
+msgid "Earpiece"
+msgstr "የጆሮ ማዳመጫ"
+
+#: src/telephony/ui/windows/incall_window.py:59
+#: src/telephony/ui/windows/settings_window.py:302
+msgid "Speaker"
+msgstr "ስፒከር"
+
+#: src/telephony/ui/windows/incall_window.py:60
+#: src/telephony/ui/windows/settings_window.py:303
+msgid "Wired Headset"
+msgstr "ባለገመድ የጆሮ ማዳመጫ"
+
+#: src/telephony/ui/windows/incall_window.py:61
+#: src/telephony/ui/windows/settings_window.py:304
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: src/telephony/ui/windows/incall_window.py:69
+msgid "Microphone"
+msgstr "ማይክሮፎን"
+
+#: src/telephony/ui/windows/incall_window.py:70
+msgid "Wired Mic"
+msgstr "ባለገመድ ማይክሮፎን"
+
+#: src/telephony/ui/windows/incall_window.py:71
+msgid "Bluetooth Mic"
+msgstr "የBluetooth ማይክሮፎን"
+
+#: src/telephony/ui/windows/incall_window.py:228
+msgid "Hangup and Send SMS"
+msgstr "ጥሪን አቋርጥ እና ኤስኤምኤስ ላክ"
+
+#: src/telephony/ui/windows/incall_window.py:231
+#: src/telephony/ui/windows/incall_window.py:668
+msgid "Silence"
+msgstr "ጸጥ አድርግ"
+
+#: src/telephony/ui/windows/incall_window.py:232
+msgid "Decline"
+msgstr "ውድቅ አድርግ"
+
+#: src/telephony/ui/windows/incall_window.py:233
+msgid "Accept"
+msgstr "ተቀበል"
+
+#: src/telephony/ui/windows/incall_window.py:253
+msgid "Mute"
+msgstr "ድምጸ-ከል"
+
+#: src/telephony/ui/windows/incall_window.py:254
+msgid "Keypad"
+msgstr "የቁልፍ ሰሌዳ"
+
+#: src/telephony/ui/windows/incall_window.py:255
+msgid "Hold"
+msgstr "አቆይ"
+
+#: src/telephony/ui/windows/incall_window.py:270
+#: src/telephony/ui/windows/incall_window.py:849
+msgid "The call failed to disconnect."
+msgstr "ጥሪው መቋረጥ አልተቻለም።"
+
+#: src/telephony/ui/windows/incall_window.py:349
+#: src/telephony/ui/windows/incall_window.py:925
+msgid "Output"
+msgstr "ውጤት"
+
+#: src/telephony/ui/windows/incall_window.py:364
+#: src/telephony/ui/windows/incall_window.py:944
+msgid "Input"
+msgstr "ግቤት"
+
+#: src/telephony/ui/windows/incall_window.py:508
+msgid "Silenced Incoming Call"
+msgstr "የገባ ጥሪ ተዝማሚ ተደርጓል"
+
+#: src/telephony/ui/windows/incall_window.py:660
+msgid "Swap"
+msgstr "ቀያይር"
+
+#: src/telephony/ui/windows/incall_window.py:664
+msgid "Answer"
+msgstr "መልስ"
+
+#: src/telephony/ui/windows/incall_window.py:672
+msgid "Message"
+msgstr "መልዕክት"
+
+#: src/telephony/ui/windows/incall_window.py:678
+msgid "Answering holds the current call"
+msgstr "መልስ መስጠት አሁን ያለውን ጥሪ ያቆያል"
+
+#: src/telephony/ui/windows/incall_window.py:695
+#: src/telephony/ui/windows/settings_window.py:264
+msgid "I can't talk right now."
+msgstr "አሁን መናገር አልችልም።"
+
+#: src/telephony/ui/windows/incall_window.py:858
+msgid "Recovering modem..."
+msgstr "ሞደም መልሶ በማግኘት ላይ..."
+
+#: src/telephony/ui/windows/incall_window.py:910
+#: src/telephony/ui/windows/settings_window.py:947
+msgid "Not connected"
+msgstr "አልተገናኘም"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "ስለ ቴሌፎኒ"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr "ለ FLX1 እና FLX1s የተዘጋጀ ፈጣን የስልክ ዳይለር እና መልዕክት መላኪያ ነው።"
+
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "ስሪት"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "ዲቨሎፐር"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "ፈቃድ"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "ሊንኮች"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "የችግኝ መከታተያ"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "ችግኞችን ሪፖርት ማድረግ ወይም ባህሪዎችን መጠየቅ"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "ታቅዷል ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "ለ: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "አሁን ላክ"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "መልዕክቱ ተወግዷል"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "መልዕክት ወደ {number} በመላክ ላይ..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:67
+msgid ""
+"Steps are tried from gentlest to strongest. Each one is verified before the "
+"next unlocks."
+msgstr "ደረጃዎች ከቀላሉ እስከ ጠንካራው ይሞከራሉ። ቀጣዩ ከመከፈቱ በፊት እያንዳንዱ ይረጋገጣል።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Phone service restart"
+msgstr "የስልክ አገልግሎት ዳግም ማስጀመር"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:73
+msgid "Restarts the ofono service that manages the modem."
+msgstr "ሞደሙን የሚያስተዳድረውን የofono አገልግሎት እንደገና ያስጀምራል።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Radio restart"
+msgstr "የሬዲዮ ዳግም ማስጀመር"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:74
+msgid "Turns the radio off and back on, like flight mode."
+msgstr "ሬዲዮውን አጥፍቶ መልሶ ያበራል፣ እንደ የበረራ ሁነታ።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Modem power cycle"
+msgstr "የሞደም ኃይል ዑደት"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:75
+msgid "Powers the modem down and back up."
+msgstr "ሞደሙን አጥፍቶ መልሶ ያበራል።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Modem firmware restart"
+msgstr "የሞደም ፈርምዌር ዳግም ማስጀመር"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:76
+msgid "Restarts the vendor modem firmware."
+msgstr "የአምራቹን የሞደም ፈርምዌር እንደገና ያስጀምራል።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Re-enable radio"
+msgstr "ሬዲዮን እንደገና ማንቃት"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:77
+msgid "Fixes a radio left disabled by an unclean shutdown."
+msgstr "ባልተስተካከለ መዘጋት ምክንያት ተሰናክሎ የቀረውን ሬዲዮ ያስተካክላል።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Reboot phone"
+msgstr "ስልኩን ዳግም አስነሳ"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:78
+msgid "Opens the system power menu. Last resort."
+msgstr "የስርዓቱን የኃይል ምናሌ ይከፍታል። የመጨረሻ አማራጭ።"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:87
+msgid "Try"
+msgstr "ሞክር"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:97
+msgid "Save Modem Logs"
+msgstr "የሞደም ምዝግብ ማስታወሻዎችን አስቀምጥ"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:111
+#: src/telephony/ui/windows/modem_recovery_window.py:178
+msgid "Did not help"
+msgstr "አልረዳም"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:129
+msgid "Waiting for the modem..."
+msgstr "ሞደሙን በመጠበቅ ላይ..."
+
+#: src/telephony/ui/windows/modem_recovery_window.py:171
+#: src/telephony/ui/windows/modem_recovery_window.py:174
+msgid "Modem recovered"
+msgstr "ሞደም ተመልሷል"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:203
+#, python-brace-format
+msgid "Logs saved to {path}"
+msgstr "ምዝግብ ማስታወሻዎች ወደ {path} ተቀምጠዋል"
+
+#: src/telephony/ui/windows/modem_recovery_window.py:205
+msgid "Saving logs failed"
+msgstr "ምዝግብ ማስታወሻዎችን ማስቀመጥ አልተሳካም"
+
+#: src/telephony/ui/windows/settings_window.py:93
+#: src/telephony/ui/windows/settings_window.py:450
+msgid "Ringback Tone"
+msgstr "የመደወያ ድምጽ"
+
+#: src/telephony/ui/windows/settings_window.py:96
+msgid "Enable Local Ringback"
+msgstr "የአካባቢ መደወያ ድምጽ አንቃ"
+
+#: src/telephony/ui/windows/settings_window.py:111
+msgid "Selected Tone"
+msgstr "የተመረጠ ድምጽ"
+
+#: src/telephony/ui/windows/settings_window.py:114
+#: src/telephony/ui/windows/settings_window.py:411
+msgid "System Default"
+msgstr "የስርዓት ነባሪ"
+
+#: src/telephony/ui/windows/settings_window.py:141
+msgid "SIM Settings"
+msgstr "የSIM ቅንብሮች"
+
+#: src/telephony/ui/windows/settings_window.py:144
+msgid "My Number"
+msgstr "የእኔ ቁጥር"
+
+#: src/telephony/ui/windows/settings_window.py:145
+msgid "My Number (International Format)"
+msgstr "የቁጥር መለያዬ (ዓለም አቀፍ ፎርማት)"
+
+#: src/telephony/ui/windows/settings_window.py:151
+#: src/telephony/ui/windows/settings_window.py:152
+#: src/telephony/ui/windows/settings_window.py:398
+msgid "Default Country Code"
+msgstr "ነባሪ የአገር ኮድ"
+
+#: src/telephony/ui/windows/settings_window.py:167
+msgid "Voicemail Number"
+msgstr "የድምፅ መልዕክት ቁጥር"
+
+#: src/telephony/ui/windows/settings_window.py:186
+msgid "Address Book Info"
+msgstr "የአድራሻ ደብተር መረጃ"
+
+#: src/telephony/ui/windows/settings_window.py:194
+msgid "Default Address Book"
+msgstr "ነባሪ የአድራሻ ደብተር"
+
+#: src/telephony/ui/windows/settings_window.py:200
+msgid "Duplicate Resolver"
+msgstr "የድግግሞሽ መፍቻ"
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr "ድግግሞሽ ቁጥሮችን ፈልጎ በኮንታክትስ እይታ ላይ የመፍትሄ ባነር እንዲታይ አሳይ."
+
+#: src/telephony/ui/windows/settings_window.py:211
+#: src/telephony/ui/windows/settings_window.py:963
+msgid "Add Local Address Book"
+msgstr "የአካባቢ የአድራሻ ደብተር አክል"
+
+#: src/telephony/ui/windows/settings_window.py:225
+msgid "Lockscreen Emergency"
+msgstr "የሎክስክሪን አደጋ ጊዜ"
+
+#: src/telephony/ui/windows/settings_window.py:228
+msgid "Show Emergency Button"
+msgstr "የአደጋ ጊዜ ቁልፍ አሳይ"
+
+#: src/telephony/ui/windows/settings_window.py:233
+msgid "Emergency Numbers"
+msgstr "የአደጋ ጊዜ ቁጥሮች"
+
+#: src/telephony/ui/windows/settings_window.py:250
+msgid "Quick Response"
+msgstr "ቀላል ምላሽ"
+
+#: src/telephony/ui/windows/settings_window.py:253
+msgid "Add Decline Message"
+msgstr "የመቀበል አልባ መልዕክት አክል"
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Messaging"
+msgstr "መልዕክት መላላክ"
+
+#: src/telephony/ui/windows/settings_window.py:280
+#: src/telephony/ui/windows/settings_window.py:431
+msgid "MMS Size Limit"
+msgstr "የMMS መጠን ገደብ"
+
+#: src/telephony/ui/windows/settings_window.py:288
+#: src/telephony/ui/windows/settings_window.py:887
+msgid "Call Volume"
+msgstr "የጥሪ ድምጽ መጠን"
+
+#: src/telephony/ui/windows/settings_window.py:319
+msgid "Notification Exceptions"
+msgstr "የማሳወቂያ ልዩነቶች"
+
+#: src/telephony/ui/windows/settings_window.py:322
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Repeated Calls Bypass"
+msgstr "የተደጋጋሚ ጥሪ መዘርፍ"
+
+#: src/telephony/ui/windows/settings_window.py:324
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr "ተመሳሳይ ቁጥር በ5 ደቂቃ ውስጥ 3 ጊዜ ከደወለ ከፍተኛ ድምጽ እንዲጫወት አስገድድ."
+
+#: src/telephony/ui/windows/settings_window.py:339
+msgid "Manage contacts that always play sound"
+msgstr "ሁልጊዜ ድምጽ የሚጫወቱ ኮንታክቶችን አስተዳድር"
+
+#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:360
+#: src/telephony/ui/windows/settings_window.py:371
+msgid "Manage"
+msgstr "አስተዳድር"
+
+#: src/telephony/ui/windows/settings_window.py:358
+msgid "Set custom notification sounds for specific contacts"
+msgstr "ለተወሰኑ ኮንታክቶች የተለየ የማሳወቂያ ድምጽ መዘጋጀት"
+
+#: src/telephony/ui/windows/settings_window.py:369
+msgid "Set custom ringtones for specific contacts"
+msgstr "ለተወሰኑ ኮንታክቶች የተለየ የስልክ ድምጽ መዘጋጀት"
+
+#: src/telephony/ui/windows/settings_window.py:394
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"ነባሪ የአገር ኮድ ዓለም አቀፍ ቅድሚያ ኮድ ያልተካተቱ ቁጥሮችን ለመቅረጽ ይጠቅማል (ለምሳሌ +358).\n"
+"\n"
+"ባዶ ብትተውት ስርዓቱ ከSIM ካርድዎ ወይም ከኔትዎርክዎ በራሱ ለመለየት ይሞክራል.\n"
+"\n"
+"እዚህ በ2-የፊደል ISO የክልል ኮድ (ለምሳሌ US, FI, DE) ወይም የመደወያ ኮድ (ለምሳሌ +358, 358, +1, "
+"1) በመግባት በእጅ መተካት ትችላለህ."
+
+#: src/telephony/ui/windows/settings_window.py:422
+msgid ""
+"Carriers limit how large a multimedia message can be. Images and videos you "
+"attach are automatically compressed to fit under this limit before sending.\n"
+"\n"
+"600 kB is a safe default for most carriers. Pick a smaller value if your "
+"messages fail to send, or a larger one if you know your carrier allows it."
+msgstr ""
+"አገልግሎት አቅራቢዎች የመልቲሚዲያ መልዕክት ምን ያህል ትልቅ ሊሆን እንደሚችል ይገድባሉ። የሚያያይዟቸው ምስሎች እና "
+"ቪዲዮዎች ከመላካቸው በፊት ከዚህ ገደብ በታች እንዲሆኑ በራስ-ሰር ይጨመቃሉ።\n"
+"\n"
+"600 kB ለአብዛኞቹ አገልግሎት አቅራቢዎች አስተማማኝ ነባሪ ነው። መልዕክቶችዎ መላክ ካልቻሉ ትንሽ እሴት ይምረጡ፣ "
+"ወይም አገልግሎት አቅራቢዎ እንደሚፈቅድ ካወቁ ትልቅ እሴት ይምረጡ።"
+
+#: src/telephony/ui/windows/settings_window.py:443
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"የሪንግባክ ቶን ማለት የውጣ ጥሪ ሲመለስ እየጠበቅክ የምትሰማው ያ ቱት-ቱት-ቱት ድምፅ ነው። አንዳንድ ካሪየሮች እንዲሰራ "
+"አያደርጉትም ስለዚህ እዚህ በእጅ ማመንጨት እንችላለን።\n"
+"\n"
+"የራስህን የሙዚቃ ፋይል መምረጥ ትችላለህ፣ ወይም የስርዓቱን መደበኛ ቶን እንዲጠቀም ማጽዳት ትችላለህ።"
+
+#: src/telephony/ui/windows/settings_window.py:463
+msgid "Select Ringback Tone"
+msgstr "የሪንግባክ ቶን መምረጫ"
+
+#: src/telephony/ui/windows/settings_window.py:471
+msgid "Audio Files"
+msgstr "የኦዲዮ ፋይሎች"
+
+#: src/telephony/ui/windows/settings_window.py:497
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"በቴሌፎኒ ጋር ለመጠቀም የሚፈልጉትን አድረስ ቦኮች ይምረጡ እና ቅድሚያቸውን በተለያዩ ደረጃዎች ያዘጋጁ። ከላይ ያለው "
+"አድረስ ቦክ ከፍተኛ ቅድሚያ አለው እና ቁጥሩ በብዙ ቦኮች ውስጥ ቢገኝ እሱ ይመረጣል። የተደጋጋሚ ቁጥሮችን ለመቆጣጠር "
+"ከታች ያለውን Duplicate Resolver መቀየሪያ መጠቀም ትችላለህ፣ እንኳን ቢቦድም ለተሻለ ተሞክሮ መንቃትን "
+"እንመክራለን።"
+
+#: src/telephony/ui/windows/settings_window.py:516
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"ካስጀመረ ከሆነ፣ ተመሳሳይ የስልክ ቁጥር በ5 ደቂቃ ውስጥ 3 ጊዜ ካደወህ፣ ሶስተኛው (እና በዚያ ጊዜ ውስጥ የሚቀጥሉት) "
+"ጥሪ ስልኩን በከፍተኛ ድምፅ እንዲያደው ያስገድዳል፣ ሳይለይ ወይም Do Not Disturb ቢሆንም።"
+
+#: src/telephony/ui/windows/settings_window.py:528
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"ስልኩ በሳይለይ ወይም Do Not Disturb ቢሆንም ሁልጊዜ ሙሉ ድምፅ ማሳወቂያ የሚጫወቱ እንዲሆኑ የምትመርጣቸውን "
+"ተገናኝቷል ያሉ ኮንታክቶችን ይምረጡ።"
+
+#: src/telephony/ui/windows/settings_window.py:549
+msgid "Unknown Callers"
+msgstr "ያልታወቁ ደዋዮች"
+
+#: src/telephony/ui/windows/settings_window.py:554
+msgid "Unknown Callers Action"
+msgstr "የያልታወቁ ደዋዮች እርምጃ"
+
+#: src/telephony/ui/windows/settings_window.py:556
+msgid "Applies also to hidden numbers."
+msgstr "ተደብቀው የሚመጡ ቁጥሮችንም ይመለከታል።"
+
+#: src/telephony/ui/windows/settings_window.py:559
+msgid "Do Nothing"
+msgstr "ምንም አታድርግ"
+
+#: src/telephony/ui/windows/settings_window.py:560
+msgid "Block Completely"
+msgstr "ፍጹም አግድ"
+
+#: src/telephony/ui/windows/settings_window.py:561
+msgid "Silence and Hide UI"
+msgstr "ዝም ብሎ እና UI ደብቅ"
+
+#: src/telephony/ui/windows/settings_window.py:562
+msgid "Silence Only"
+msgstr "ዝም ብሎ ብቻ"
+
+#: src/telephony/ui/windows/settings_window.py:570
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr "ለያልታወቁ ደዋዮች በInCall መስኮት እና በCall History የፍለጋ ቁልፍ መጨመር"
+
+#: src/telephony/ui/windows/settings_window.py:576
+msgid "Search Engine"
+msgstr "የፍለጋ ማሽን"
+
+#: src/telephony/ui/windows/settings_window.py:580
+#: src/telephony/ui/windows/settings_window.py:585
+msgid "Custom URL"
+msgstr "ብጁ ዩአርኤል"
+
+#: src/telephony/ui/windows/settings_window.py:635
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"ለያልታወቁ ቁጥሮች ፍለጋ ለማድረግ የምትጠቀምበትን URL አስገባ። '{number}' የተጠራውን ቦታ የመደወያው ቁጥር "
+"እንዲተካ ያካትት።\n"
+"\n"
+"ለምሳሌ፦ https://mysearch.com/?q={number}\n"
+"\n"
+"በጥሪ ላይ የፍለጋ ቁልፉን በምትጫንበት ጊዜ '{number}' በእውነተኛው ቁጥር እንዲተካ እና በመደበኛ ብራውዘርህ "
+"እንዲከፈት እንደምንለው እንቀይራለን።"
+
+#: src/telephony/ui/windows/settings_window.py:639
+msgid "Custom Search URL"
+msgstr "ብጁ ፍለጋ URL"
+
+#: src/telephony/ui/windows/settings_window.py:660
+msgid "Desktop Shortcuts"
+msgstr "የዴስክቶፕ አቋራጮች"
+
+#: src/telephony/ui/windows/settings_window.py:665
+msgid "Calls"
+msgstr "ጥሪዎች"
+
+#: src/telephony/ui/windows/settings_window.py:831
+msgid "Name (e.g. Mom)"
+msgstr "ስም (ለምሳሌ እናት)"
+
+#: src/telephony/ui/windows/settings_window.py:888
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"ይህ ለእያንዳንዱ ውፅዓት የጥሪ ድምጽ መጠን ነው። ደረጃው ጥሪ ሲገናኝ እና በጥሪ ጊዜ ውፅዓቱ ሲቀየር በራስ-ሰር "
+"ይተገበራል፣ የማንሸራተቻ ለውጦችም ወዲያውኑ ይሰማሉ። ሃርድዌሩ ደረጃዎችን በሰፋፊ እርምጃዎች ይተገብራል፣ የጆሮ "
+"ማዳመጫውም በፍጹም ሙሉ በሙሉ ጸጥ አይልም። የBluetooth ደረጃ ለሚመጣው የማዘዋወር ድጋፍ ይቀመጣል።"
+
+#: src/telephony/ui/windows/settings_window.py:897
+msgid "Decline Message"
+msgstr "የመቀበል አልባ መልዕክት"
+
+#: src/telephony/ui/windows/settings_window.py:940
+msgid "System Default (Always Enabled)"
+msgstr "የስርዓት ነባሪ (ሁልጊዜ እየተነሳ ይሆናል)"
+
+#: src/telephony/ui/windows/settings_window.py:942
+msgid "Synced from Andromeda"
+msgstr "ከ Andromeda የተመሳሰለ"
+
+#: src/telephony/ui/windows/settings_window.py:945
+msgid "Connected"
+msgstr "ተገናኝቷል"
+
+#: src/telephony/ui/windows/settings_window.py:946
+msgid "Connecting..."
+msgstr "በመገናኘት ላይ..."
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Login required"
+msgstr "መግባት ያስፈልጋል"
+
+#: src/telephony/ui/windows/settings_window.py:949
+msgid "Connection failed (SSL)"
+msgstr "ግንኙነት አልተሳካም (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:964
+msgid "Address book name"
+msgstr "የአድራሻ ደብተር ስም"
+
+#: src/telephony/ui/windows/settings_window.py:985
+msgid "Could not create address book"
+msgstr "የአድራሻ ደብተር መፍጠር አልተቻለም"
+
+#: src/telephony/ui/windows/settings_window.py:987
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "የአድራሻ ደብተር '{name}' ተፈጥሯል"
+
+#: src/telephony/ui/windows/settings_window.py:1076
+msgid "Personal Address Book"
+msgstr "የግል አድራሻ ደብተር"
+
+#: src/telephony/ui/windows/settings_window.py:1077
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr "ይህ አድራሻ ደብተር በስርዓት ቅንብሮች ካምረጡት ጋር ወደ Andromeda ይተያያያል።"
+
+#: src/telephony/ui/windows/settings_window.py:1085
+msgid "Andromeda Contacts"
+msgstr "የAndromeda ኮንታክቶች"
+
+#: src/telephony/ui/windows/settings_window.py:1086
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr "ይህ አድራሻ ደብተር በስርዓት ቅንብሮች ካምረጡት ጋር ከAndromeda ይመጣል።"
+
+#: src/telephony/ui/windows/settings_window.py:1230
+msgid "Settings Saved"
+msgstr "ቅንብሮች ተቀምጠዋል"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:59
+msgid "Voice Message"
+msgstr "የድምፅ መልዕክት"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:117
+msgid "Tap to Record"
+msgstr "ለመቅዳት ተቃኝ"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:174
+msgid "Attach Voice Note"
+msgstr "የድምፅ ማስታወቂያ አያይዝ"
+
+#: src/telephony/ui/windows/sound_recorder_window.py:305
+#, python-brace-format
+msgid "Recording is too large for MMS (Max {size}). Please retake shorter."
+msgstr "ቅጂው ለMMS በጣም ትልቅ ነው (ከፍተኛ {size})። እባክዎ አጠር አድርገው እንደገና ይቅዱ።"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:142
+msgid "Enable Feature"
+msgstr "ባህሪን አንቃ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:171
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"ኮንታክቶች ምስጢራዊ የSMS መልዕክት በመላክ እርምጃ ሊነሱ ይችላሉ። ከታች ኮንታክቶችን ጨምር እና ምስጢራዊ ቃላቸውን "
+"አዘጋጅ።"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:174
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"የታመኑ ኮንታክቶች ምስጢራዊ የSMS መልዕክት በመላክ አካባቢህን ማመልከት ይችላሉ። ይህ ባህሪ እንዲሰራ TOTP ግዴታ "
+"ነው። ከታች ኮንታክቶችን ጨምር እና ሚስጥራዊ የሚያነሳሳቸውን ቃል አዘጋጅ። የናሙና አብነት: 'SECRET TOTP' "
+"የእውነተኛ ህይወት ናሙና: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:177
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"የታመኑ ኮንታክቶች ምስጢራዊ የSMS መልዕክት በመላክ በዝምታ መደወል ሊነሱ ይችላሉ። ይህ ባህሪ እንዲሰራ TOTP ግዴታ "
+"ነው። ከታች ኮንታክቶችን ጨምር እና ሚስጥራዊ የሚያነሳሳቸውን ቃል አዘጋጅ። የናሙና አብነት: 'SECRET TOTP' "
+"የእውነተኛ ህይወት ናሙና: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:180
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"የታመኑ ኮንታክቶች የSMS መላላኪያ ሊልኩ ይችላሉ። ይህ ባህሪ እንዲሰራ TOTP ግዴታ ነው። ከታች ኮንታክቶችን ጨምር "
+"እና ሚስጥራዊ የሚያነሳሳቸውን ቃል አዘጋጅ። የናሙና አብነት: 'SECRET TOTP +1234567890 MESSAGE' "
+"የእውነተኛ ህይወት ናሙና: 'Gorilla 123456 +1234567890 Hello'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:183
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"የታመኑ ኮንታክቶች በሚስጥራዊ SMS መልዕክት tmate SSH ሴሽን ጀምሮ የSSH መዳረሻ ስትሪንግ ሊቀበሉ ይችላሉ። ይህ "
+"ባህሪ እንዲሰራ TOTP ግዴታ ነው። ከታች ኮንታክቶችን ጨምር እና ሚስጥራዊ የሚያነሳሳቸውን ቃል አዘጋጅ። የናሙና "
+"አብነት: 'SECRET TOTP' የእውነተኛ ህይወት ናሙና: 'Gorilla 123456'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:186
+msgid ""
+"Trusted contacts can lock your device: the SIM PIN is changed to a new one "
+"and locked, and the phone powers off. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"የታመኑ ኮንታክቶች መሳሪያዎን ሊቆልፉ ይችላሉ፦ የSIM PIN ወደ አዲስ PIN ተቀይሮ ይቆለፋል፣ ስልኩም ይጠፋል። ይህ "
+"ባህሪ እንዲሰራ TOTP ግዴታ ነው። ከታች ኮንታክቶችን ጨምር እና ሚስጥራዊ የሚያነሳሳቸውን ቃል አዘጋጅ። የናሙና "
+"አብነት: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' የእውነተኛ ህይወት "
+"ናሙና: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:303
+msgid "View or edit TOTP"
+msgstr "TOTP ይመልከቱ ወይም ያርትዑ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:305
+msgid "Setup TOTP"
+msgstr "TOTP ያዋቅሩ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:380
+msgid "Secret message"
+msgstr "ሚስጥራዊ መልዕክት"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Remove Contact"
+msgstr "ኮንታክትን አስወግድ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Contact removed (Click Save to commit)"
+msgstr "ኮንታክት ተወግዷል (ለመያዝ Save ጠቅ በል)"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:490
+msgid "Contact already in trusted list"
+msgstr "ኮንታክቱ ቀድሞውኑ በታመኑ ዝርዝር ውስጥ ነው"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:504
+msgid "Contact added"
+msgstr "ኮንታክት ተጨምሯል"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+msgid "TOTP Setup"
+msgstr "የTOTP ማቀናበሪያ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:568
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"ይህንን ኮድ ለታመነ ኮንታክት ያጋሩ። እንደ Gnome Authenticator ወዳለ የማረጋገጫ መተግበሪያ ሊጨምሩት "
+"ይገባል።\n"
+"\n"
+"በእጅ የሚያስገቡ ከሆነ፣ የሚከተሉት ቅንብሮች መኖራቸውን ያረጋግጡ:\n"
+"• ስልተ-ቀመር: SHA1\n"
+"• አሃዞች: 6\n"
+"• የጊዜ ርዝመት: 60 ሰከንዶች\n"
+"\n"
+"እያንዳንዱ እርምጃ የራሱ ኮድ አለው። በSMS እርምጃ በሚያነሳሱበት ጊዜ፣ አሁን ያለውን የ6-አሃዝ ኮድ ከማረጋገጫ "
+"መተግበሪያቸው ከቁልፍ ቃሉ በኋላ ማከል አለባቸው።"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:597
+msgid "Copy TOTP key"
+msgstr "የTOTP ቁልፍ ቅዳ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:608
+#: src/telephony/ui/windows/trusted_actions_list_window.py:650
+msgid "Regenerate"
+msgstr "እንደገና አመንጭ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+msgid "Remove current TOTP"
+msgstr "የአሁኑን TOTP አስወግድ"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:624
+msgid "Remove TOTP Key?"
+msgstr "የTOTP ቁልፍን ላስወግድ?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:625
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr "የTOTP ቁልፍን ለማስወገድ እርግጠኛ ነዎት? ይህ እርምጃ የTOTP ማረጋገጫን ለዚህ ባህሪ ያቦዝናል።"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:645
+msgid "Regenerate Code?"
+msgstr "ኮዱን እንደገና ላመንጭ?"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr "ይህ በኮንታክትዎ የማረጋገጫ መተግበሪያ ውስጥ ያለውን የአሁኑን ኮድ ያጠፋል። እርግጠኛ ነዎት?"
+
+#~ msgid ""
+#~ "When the modem stops responding, the phone quietly runs the recovery "
+#~ "steps by itself: radio restart, modem power cycle, firmware restart and "
+#~ "re-enabling a disabled radio. The phone is never rebooted automatically. "
+#~ "If nothing helps you are asked to reboot. When this is off, the Modem "
+#~ "Recovery window opens instead so you can run the steps yourself."
+#~ msgstr ""
+#~ "ሞደሙ ምላሽ መስጠት ሲያቆም ስልኩ የመልሶ ማግኘት ደረጃዎቹን በጸጥታ በራሱ ያከናውናል፦ የሬዲዮ ዳግም ማስጀመር፣ "
+#~ "የሞደም ኃይል ዑደት፣ የሞደም ፈርምዌር ዳግም ማስጀመር እና የተሰናከለ ሬዲዮን እንደገና ማንቃት። ስልኩ በራስ-ሰር "
+#~ "በጭራሽ ዳግም አይነሳም። ምንም ካልረዳ ዳግም እንዲያስነሱ ይጠየቃሉ። ይህ ጠፍቶ ሲሆን በምትኩ የሞደም መልሶ ማግኘት "
+#~ "መስኮቱ ይከፈታል፤ ስለዚህ ደረጃዎቹን እራስዎ ማከናወን ይችላሉ።"
+
+#~ msgid "🔴 Reboot Modem"
+#~ msgstr "🔴 ሞደም እንደገና አስጀምር"
+
+#~ msgid "Recover"
+#~ msgstr "አስመልስ"
+
+#~ msgid "Restart Modem"
+#~ msgstr "ሞደሙን እንደገና አስጀምር"
+
+#~ msgid "Restarting Modem..."
+#~ msgstr "ሞደሙን  занደገና እየጀመረ ነው..."
+
+#~ msgid "Restarting RIL..."
+#~ msgstr "RIL በመጀመር ላይ..."
+
+#~ msgid "Restored!"
+#~ msgstr "ተመልሷል!"
+
+#~ msgid "Failed. Reboot Device."
+#~ msgstr "አልተሳካም። መሣሪያውን እንደገና አስጀምር።"
+
+#, python-brace-format
+#~ msgid "Verifying... {attempt}"
+#~ msgstr "በማረጋገጥ ላይ... {attempt}"
+
+#~ msgid "Set \"SMS Switch Wipe Device\""
+#~ msgstr "\"SMS Switch Wipe Device\" አቀናብር"
+
+#~ msgid "Automatic"
+#~ msgstr "ራስ-ሰር"
+
+#~ msgid ""
+#~ "Carriers limit how large a multimedia message can be. Images and videos "
+#~ "you attach are automatically compressed to fit under this limit before "
+#~ "sending.\n"
+#~ "\n"
+#~ "Automatic uses the limit reported by the phone's MMS service, which is "
+#~ "right for most carriers. Pick a smaller value if your messages fail to "
+#~ "send, or a larger one if you know your carrier allows it."
+#~ msgstr ""
+#~ "አገልግሎት አቅራቢዎች የመልቲሚዲያ መልዕክት ምን ያህል ትልቅ ሊሆን እንደሚችል ይገድባሉ። የሚያያይዟቸው ምስሎች እና "
+#~ "ቪዲዮዎች ከመላካቸው በፊት ከዚህ ገደብ በታች እንዲሆኑ በራስ-ሰር ይጨመቃሉ።\n"
+#~ "\n"
+#~ "ራስ-ሰር በስልኩ የMMS አገልግሎት የተገለጸውን ገደብ ይጠቀማል፣ ይህም ለአብዛኞቹ አገልግሎት አቅራቢዎች ትክክል "
+#~ "ነው። መልዕክቶችዎ መላክ ካልቻሉ ትንሽ እሴት ይምረጡ፣ ወይም አገልግሎት አቅራቢዎ እንደሚፈቅድ ካወቁ ትልቅ እሴት "
+#~ "ይምረጡ።"
+
+#~ msgid ""
+#~ "Trusted contacts can wipe your device. TOTP is mandatory for this feature "
+#~ "to work. Add contacts below and set their secret trigger phrase. Example "
+#~ "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real "
+#~ "life example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+#~ msgstr ""
+#~ "የታመኑ ኮንታክቶች መሳሪያዎን ሊያጠፉ ይችላሉ። ይህ ባህሪ እንዲሰራ TOTP ግዴታ ነው። ከታች ኮንታክቶችን ጨምር "
+#~ "እና ሚስጥራዊ የሚያነሳሳቸውን ቃል አዘጋጅ። የናሙና አብነት: 'SECRET TOTP SIM_CURRENT_PIN "
+#~ "SIM_NEW_PIN SUDO_PASSWORD' የእውነተኛ ህይወት ናሙና: 'Gorilla 123456 0000 1234 "
+#~ "SupportYourLocalFootball'"
+
+#~ msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+#~ msgstr "መቅዳቱ ለ MMS ብዛት ብዙ ነው (ከ600KB በታች)። እባክህ አጭር ተድገህ አንስተው።"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 መልእክትና መጨረሻ"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} በመያዣ አስቀመጠን"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 እምቢ"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "Micን አንሳ"
+
+#~ msgid "MuteMic"
+#~ msgstr "ማቆሚያ ማይክ"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "ስፒከር ዝግ"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "ስፒከር ክፍት"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "ማጉላትን ፍቀድ"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr "ማንሸራተቻዎች ከ100% በላይ እንዲሄዱ ፍቀድ። የተጎላ ድምጽ ሊዛባ ይችላል።"
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "ይህ ጥሪ ሲገናኝ ለተመረጠው ውፅዓት የሚተገበረው መሰረታዊ የሃርድዌር ድምጽ መጠን ነው። በጥሪ ጊዜ የድምጽ አዝራሮች "
+#~ "በዚህ መሰረታዊ ደረጃ ላይ ጥቃቅን ማስተካከያ ብቻ ያደርጋሉ፣ ስለዚህ መሰረቱ 0% ከሆነ ጥሪው ምንም ቢሆን ጸጥ "
+#~ "ይላል። ከ100% በላይ የሆኑ እሴቶች የሶፍትዌር ማጉላት ይጠቀማሉ እና ድምጽን ሊያዛቡ ይችላሉ። የባለገመድ የጆሮ "
+#~ "ማዳመጫ እና የBluetooth ደረጃዎች ለሚመጣው የማዘዋወር ድጋፍ ተቀምጠዋል።"
+
+#~ msgid "Mute Microphone"
+#~ msgstr "ማይክሮፎን ማቆሚያ"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "ለ {number} መላክ አልተቻለም"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "ብጁ ቅንብሮች ሰርዝ"
+
+#~ msgid "Delete Settings"
+#~ msgstr "ቅንብሮችን ሰርዝ"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "ሁሉንም ብጁ ቅንብሮች እንዲጸዱ? የአደጋ ጊዜ ቁጥሮች ይጠፋሉ."
+
+#~ msgid "Settings cleared"
+#~ msgstr "ቅንብሮች ተጸድተዋል"
+
+#~ msgid "Error saving settings"
+#~ msgstr "ቅንብሮችን ማስቀመጥ ተሳክቶ አልተገባም"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "የTOTP ማቀናበሪያ አሳይ"
+
+#~ msgid "Failed to send message"
+#~ msgstr "መልዕክት መላክ አልተሳካም"
+
+#~ msgid "Switching address book..."
+#~ msgstr "አድራሻ ደብተር በመቀየር ላይ..."

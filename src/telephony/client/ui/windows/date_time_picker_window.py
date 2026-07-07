@@ -1,0 +1,181 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from gi.repository import Gtk, Adw, GLib
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+
+from telephony.client.ui.widgets.common_widget import present_sheet_page, close_sheet_page
+
+CONTENT_MARGIN = 16
+BOTTOM_MARGIN = 24
+TIME_ENTRY_CHARS = 3
+
+
+def format_value(value):
+    return f"{int(value):02d}"
+
+
+class DateTimePicker:
+
+    def __init__(self, parent, title=None, initial_date=None, include_time=False, on_confirm=None):
+        self.parent = parent
+        self.title = title if title else _("Select Date")
+        self.include_time = include_time
+        self.callback = on_confirm
+        self._entry_sync_guard = False
+        self._confirmed = False
+
+        self.selected_date = initial_date if initial_date else GLib.DateTime.new_now_local()
+
+        self.toolbar = Adw.ToolbarView()
+        header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
+
+        btn_cancel = Gtk.Button(label=_("Cancel"))
+        btn_cancel.connect("clicked", lambda x: GLib.idle_add(lambda: close_sheet_page(self.window) or False))
+        header.pack_start(btn_cancel)
+
+        btn_confirm = Gtk.Button(label=_("Confirm"))
+        btn_confirm.add_css_class("suggested-action")
+        btn_confirm.connect("clicked", lambda x: GLib.idle_add(lambda: self.on_confirm() or False))
+        header.pack_end(btn_confirm)
+
+        self.toolbar.add_top_bar(header)
+
+        self.build_ui()
+        self.window = self.parent.get_root()
+        present_sheet_page(self.window,
+                           Adw.NavigationPage(title=self.title, child=self.toolbar))
+
+    def build_ui(self):
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        main_box.set_margin_top(CONTENT_MARGIN)
+        main_box.set_margin_start(CONTENT_MARGIN)
+        main_box.set_margin_end(CONTENT_MARGIN)
+        main_box.set_margin_bottom(BOTTOM_MARGIN)
+
+        self.calendar_widget = Gtk.Calendar()
+        self.calendar_widget.set_show_day_names(True)
+        self.calendar_widget.select_day(self.selected_date)
+        self.calendar_widget.add_css_class("card")
+        main_box.append(self.calendar_widget)
+
+        if self.include_time:
+            time_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+            time_row.set_halign(Gtk.Align.CENTER)
+            time_row.set_margin_top(10)
+
+            self.adj_hour = Gtk.Adjustment(
+                value=self.selected_date.get_hour(),
+                lower=0,
+                upper=23,
+                step_increment=1,
+                page_increment=6,
+                page_size=0
+            )
+            time_row.append(self.build_stepper(_("Hour"), self.adj_hour))
+
+            self.adj_min = Gtk.Adjustment(
+                value=self.selected_date.get_minute(),
+                lower=0,
+                upper=59,
+                step_increment=1,
+                page_increment=10,
+                page_size=0
+            )
+            time_row.append(self.build_stepper(_("Minute"), self.adj_min))
+
+            main_box.append(time_row)
+
+        self.toolbar.set_content(main_box)
+
+    def build_stepper(self, title, adjustment):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        lbl = Gtk.Label(label=title, css_classes=["dim-label"])
+        lbl.set_halign(Gtk.Align.CENTER)
+        box.append(lbl)
+
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, css_classes=["linked"])
+
+        btn_down = Gtk.Button(icon_name="list-remove-symbolic", focus_on_click=False)
+        btn_down.connect("clicked", lambda b: self.step(adjustment, -adjustment.get_step_increment()))
+        row.append(btn_down)
+
+        entry = Gtk.Entry(
+            text=format_value(adjustment.get_value()),
+            xalign=0.5,
+            width_chars=TIME_ENTRY_CHARS,
+            max_width_chars=TIME_ENTRY_CHARS,
+            input_purpose=Gtk.InputPurpose.DIGITS
+        )
+        entry.connect("changed", self.on_entry_changed, adjustment)
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect("leave", self.on_entry_unfocused, entry, adjustment)
+        entry.add_controller(focus_controller)
+        adjustment.connect("value-changed", self.on_value_changed, entry)
+        row.append(entry)
+
+        btn_up = Gtk.Button(icon_name="list-add-symbolic", focus_on_click=False)
+        btn_up.connect("clicked", lambda b: self.step(adjustment, adjustment.get_step_increment()))
+        row.append(btn_up)
+
+        box.append(row)
+        return box
+
+    def step(self, adjustment, delta):
+        value = adjustment.get_value() + delta
+        if value > adjustment.get_upper():
+            value = adjustment.get_lower()
+        elif value < adjustment.get_lower():
+            value = adjustment.get_upper()
+        adjustment.set_value(value)
+
+    def on_value_changed(self, adjustment, entry):
+        if self._entry_sync_guard:
+            return
+        self._entry_sync_guard = True
+        entry.set_text(format_value(adjustment.get_value()))
+        self._entry_sync_guard = False
+
+    def on_entry_changed(self, entry, adjustment):
+        if self._entry_sync_guard:
+            return
+        text = entry.get_text()
+        if not text.isdigit():
+            return
+        value = min(max(int(text), adjustment.get_lower()), adjustment.get_upper())
+        self._entry_sync_guard = True
+        adjustment.set_value(value)
+        self._entry_sync_guard = False
+
+    def on_entry_unfocused(self, controller, entry, adjustment):
+        self._entry_sync_guard = True
+        entry.set_text(format_value(adjustment.get_value()))
+        self._entry_sync_guard = False
+
+    def on_confirm(self):
+        if self._confirmed:
+            return
+        self._confirmed = True
+        try:
+            date = self.calendar_widget.get_date()
+            y, m, d = date.get_year(), date.get_month(), date.get_day_of_month()
+
+            h, mn = 0, 0
+            if self.include_time:
+                h = int(self.adj_hour.get_value())
+                mn = int(self.adj_min.get_value())
+
+            final_dt = GLib.DateTime.new_local(y, m, d, h, mn, 0)
+        except Exception as e:
+            logger.error(f"DateTime selection error: {e}")
+            close_sheet_page(self.window)
+            return
+
+        close_sheet_page(self.window)
+        if self.callback:
+            self.callback(final_dt)

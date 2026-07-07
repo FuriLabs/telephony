@@ -1,0 +1,889 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from telephony.shared.utils.datetime_utils import parse_timestamp
+
+from gi.repository import Gtk, Adw, Gio, GLib, Pango
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+
+from telephony.shared.constants import SCROLL_SETTLE_MS
+from telephony.shared.utils.phone_utils import normalize_number
+from telephony.client.utils.contact_display_utils import resolve_contact_name
+from telephony.client.utils.locale_utils import get_date_format
+from telephony.client.ui.widgets.messages_rows_widget import ConversationRowFactory
+from telephony.client.ui.views.chat_view import ChatPage
+from telephony.client.ui.widgets.common_widget import DataLoader
+from telephony.shared.utils.thread_utils import run_in_background
+from telephony.client.utils.model_utils import ConversationItem
+
+TOP_STICK_THRESHOLD_PX = 48
+
+
+class MessagesView(Adw.Bin):
+
+    def __init__(self, db, app_window):
+        self._refresh_timer = None
+        """Initialize the messages view."""
+        super().__init__()
+        self.db = db
+        self.app_window = app_window
+        self.nav_view = Adw.NavigationView()
+        self.set_child(self.nav_view)
+
+        self.active_chat_number = None
+        self.active_chat_page = None
+        self.load_token = 0
+        self.search_timer = None
+        self.search_mode = "contacts"
+        self.contact_search_token = 0
+        self.message_search_token = 0
+        self._row_update_seq = {}
+
+        self.page_limit = 50
+        self.page_offset = 0
+        self.is_fetching = False
+        self.last_fetch_has_more = False
+        self.scroll_settle_id = None
+
+        self.selected_recipients = set()
+        self._is_programmatic_update = False
+
+        self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+        self.blocked_numbers = self.load_blocked_numbers()
+        self.show_numbers = self.app_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false"
+
+        self.signal_ids = []
+        self.signal_ids.append((self.db, self.db.connect("messages-updated", self.on_messages_updated)))
+        self.signal_ids.append((self.db, self.db.connect("blocklist-updated", lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
+        gsettings = self.app_window.gsettings_mgr.gsettings
+        self.signal_ids.append((gsettings, gsettings.connect("changed::muted_conversations", self.on_muted_changed)))
+        self.signal_ids.append((gsettings, gsettings.connect("changed::show-numbers-in-message-list", self.on_show_numbers_changed)))
+        if self.app_window.eds:
+            self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect("contacts-loaded", lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
+
+        self.main_page = Adw.NavigationPage(tag="main_list")
+        self.main_page.set_title(_("Messages"))
+        self.setup_list_page()
+        self.active_filter = "all"
+        self.nav_view.add(self.main_page)
+        self.nav_view.connect("notify::visible-page", self.on_visible_page_changed)
+
+    def is_showing_chat(self):
+        return self.nav_view.get_visible_page() is not self.main_page
+
+    def on_visible_page_changed(self, *args):
+        self.app_window.sync_chat_chrome()
+
+    def cleanup(self):
+        self.load_token += 1
+        for timer_id in (self.search_timer, self._refresh_timer, self.scroll_settle_id):
+            if timer_id:
+                GLib.source_remove(timer_id)
+        self.search_timer = None
+        self._refresh_timer = None
+        self.scroll_settle_id = None
+
+        for obj, sig_id in self.signal_ids:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.signal_ids.clear()
+
+        if self.model:
+            self.model.remove_all()
+
+    def setup_list_page(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
+        header_box = Gtk.Box(spacing=8)
+        header_box.set_margin_start(10)
+        header_box.set_margin_end(10)
+        header_box.set_margin_top(10)
+        header_box.set_margin_bottom(10)
+
+        self.search_entry = Gtk.SearchEntry(placeholder_text=_("Search Contacts..."))
+        self.search_entry.set_hexpand(True)
+        self.search_entry.connect("search-changed", self.on_search_changed)
+        header_box.append(self.search_entry)
+
+        self.action_box = Gtk.Box(spacing=6)
+        self.action_box.set_visible(False)
+
+        self.btn_cancel = Gtk.Button(icon_name="process-stop-symbolic", label=_("Cancel"), css_classes=["destructive-action"])
+        self.btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_cancel_clicked(b) or False))
+        self.action_box.append(self.btn_cancel)
+
+        self.btn_compose = Gtk.Button(icon_name="mail-send-symbolic", css_classes=["suggested-action"])
+        self.btn_compose.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_compose_clicked(b) or False))
+        self.action_box.append(self.btn_compose)
+
+        header_box.append(self.action_box)
+
+        self.toggle_box = Gtk.Box(spacing=4)
+        self.btn_contacts = Gtk.Button(icon_name="system-users-symbolic", css_classes=["suggested-action"])
+        self.btn_contacts.add_css_class("circular")
+        self.btn_contacts.connect("clicked", lambda b: GLib.idle_add(lambda: self.set_search_mode("contacts") or False))
+        self.btn_msgs = Gtk.Button(icon_name="mail-unread-symbolic")
+        self.btn_msgs.add_css_class("circular")
+        self.btn_msgs.connect("clicked", lambda b: GLib.idle_add(lambda: self.set_search_mode("messages") or False))
+        self.toggle_box.append(self.btn_contacts)
+        self.toggle_box.append(self.btn_msgs)
+        header_box.append(self.toggle_box)
+
+        self.btn_filter = Gtk.MenuButton(icon_name="view-more-symbolic")
+        self.btn_filter.add_css_class("circular")
+        self.setup_filter_popover()
+        header_box.append(self.btn_filter)
+
+        box.append(header_box)
+
+        self.content_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        self.content_stack.set_vexpand(True)
+
+        self.model = Gio.ListStore(item_type=ConversationItem)
+        self.selection = Gtk.NoSelection(model=self.model)
+
+        factory = Gtk.SignalListItemFactory()
+        factory.connect("setup", ConversationRowFactory.setup)
+        factory.connect("bind", self.on_bind_row)
+
+        self.list_view = Gtk.ListView(model=self.selection, factory=factory)
+        self.list_view.set_single_click_activate(True)
+        self.list_view.connect("activate", lambda lv, pos: self.on_activate_conv(lv, pos))
+
+        self.scrolled = Gtk.ScrolledWindow(child=self.list_view)
+        self.scrolled.set_vexpand(True)
+        self.v_adj = self.scrolled.get_vadjustment()
+        self.v_adj.connect("value-changed", self.on_scroll_changed)
+
+        self.spinner = Adw.Spinner()
+        self.spinner.set_halign(Gtk.Align.CENTER)
+        self.spinner.set_valign(Gtk.Align.CENTER)
+        self.spinner.set_size_request(32, 32)
+        self.spinner.set_margin_top(12)
+        self.spinner.set_margin_bottom(12)
+        self.spinner.set_visible(False)
+
+        self.list_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.list_vbox.append(self.scrolled)
+        self.list_vbox.append(self.spinner)
+
+        self.content_stack.add_named(self.list_vbox, "conversations")
+
+        self.results_list = Gtk.ListBox(css_classes=["boxed-list"])
+        self.results_list.set_margin_start(10)
+        self.results_list.set_margin_end(10)
+        self.results_list.set_margin_top(10)
+        self.results_list.set_margin_bottom(10)
+        self.results_list.set_selection_mode(Gtk.SelectionMode.NONE)
+
+        self.content_stack.add_named(Gtk.ScrolledWindow(child=self.results_list), "search_results")
+
+        box.append(self.content_stack)
+        self.main_page.set_child(box)
+        self.refresh_list()
+
+    def on_filter_action(self, action, value):
+        action.set_state(value)
+        self.active_filter = value.get_string()
+        self.update_filter_visuals()
+        self.refresh_list()
+
+    def reset_filter(self):
+        self.active_filter = "all"
+        self._filter_action.set_state(GLib.Variant("s", "all"))
+        self.update_filter_visuals()
+
+    def update_filter_visuals(self):
+        icons = {
+            "all": "view-more-symbolic",
+            "unread": "mail-unread-symbolic",
+            "unknown": "user-not-tracked-symbolic",
+            "saved": "contact-new-symbolic",
+            "group": "system-users-symbolic",
+            "individual": "avatar-default-symbolic",
+            "alphabetical": "format-text-direction-ltr-symbolic"
+        }
+        icon_name = icons.get(self.active_filter, "view-more-symbolic")
+        self.btn_filter.set_icon_name(icon_name)
+
+        if self.active_filter == "all":
+            self.btn_filter.remove_css_class("suggested-action")
+        else:
+            self.btn_filter.add_css_class("suggested-action")
+
+    def setup_filter_popover(self):
+        group = Gio.SimpleActionGroup()
+        self._filter_action = Gio.SimpleAction.new_stateful(
+            "filter", GLib.VariantType.new("s"), GLib.Variant("s", "all"))
+        self._filter_action.connect("activate", self.on_filter_action)
+        group.add_action(self._filter_action)
+        self.insert_action_group("msgs", group)
+
+        opts = [
+            (_("All Messages"), "all"),
+            (_("Unread Messages"), "unread"),
+            (_("Unknown Numbers"), "unknown"),
+            (_("Saved Contacts"), "saved"),
+            (_("Group Messages"), "group"),
+            (_("Individual Messages"), "individual"),
+            (_("Alphabetical Senders"), "alphabetical")
+        ]
+
+        menu = Gio.Menu()
+        for lbl, val in opts:
+            item = Gio.MenuItem.new(lbl, None)
+            item.set_action_and_target_value("msgs.filter", GLib.Variant("s", val))
+            menu.append_item(item)
+        self.btn_filter.set_menu_model(menu)
+
+    def check_and_clear_notification(self, number):
+        try:
+            if self.app_window and self.app_window.app is not None:
+                self.app_window.app.clear_notification(number)
+        except Exception as e:
+            logger.warning(f"[Messages] Notification clear warning: {e}")
+        return number
+
+    def on_scroll_changed(self, adj):
+        if self.is_fetching or not self.last_fetch_has_more:
+            return
+        is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
+        if not is_at_bottom:
+            return
+        if self.scroll_settle_id is not None:
+            GLib.source_remove(self.scroll_settle_id)
+        self.scroll_settle_id = GLib.timeout_add(SCROLL_SETTLE_MS, self.fetch_after_settle)
+
+    def fetch_after_settle(self):
+        self.scroll_settle_id = None
+        self.start_fetch()
+        return False
+
+    def on_messages_updated(self, _db, chat_id, change):
+        if (not chat_id or change not in ("insert", "status")
+                or self.active_filter != "all" or self.search_entry.get_text().strip()):
+            self.refresh_list()
+            return
+
+        seq = self._row_update_seq.get(chat_id, 0) + 1
+        self._row_update_seq[chat_id] = seq
+        run_in_background(self.db.get_conversation_summary, chat_id,
+                          on_complete=lambda summary: self.apply_row_update(chat_id, summary, change, seq))
+
+    def apply_row_update(self, chat_id, summary, change, seq):
+        if seq != self._row_update_seq.get(chat_id):
+            return
+        if summary is None:
+            self.refresh_list()
+            return
+
+        old_item = None
+        idx = -1
+        for i in range(self.model.get_n_items()):
+            item = self.model.get_item(i)
+            if item.number == chat_id:
+                idx = i
+                old_item = item
+                break
+
+        if old_item is None:
+            self.refresh_list()
+            return
+
+        body, ts, status, unread = summary
+        if not body:
+            body = _("[Multimedia Message]")
+
+        new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status,
+                                    has_name=old_item.has_name)
+        target = 0 if change == "insert" else idx
+        if target == idx:
+            self.model.splice(idx, 1, [new_item])
+            return
+        was_at_top = self.v_adj.get_value() < TOP_STICK_THRESHOLD_PX
+        self.model.remove(idx)
+        self.model.insert(target, new_item)
+        if target == 0 and was_at_top:
+            GLib.idle_add(self.stick_to_top)
+
+
+    def stick_to_top(self):
+        self.v_adj.set_value(self.v_adj.get_lower())
+        return False
+
+    def load_blocked_numbers(self):
+        if not self.db:
+            return set()
+        return {normalize_number(entry["number"])
+                for entry in self.db.get_blocked_numbers()
+                if entry["block_messages"]}
+
+    def refresh_list(self):
+        if (self._refresh_timer is not None) and self._refresh_timer:
+            GLib.source_remove(self._refresh_timer)
+        self._refresh_timer = GLib.timeout_add(200, self.do_refresh_list)
+
+    def do_refresh_list(self):
+        self._refresh_timer = None
+        if self.active_chat_number and self.active_chat_page:
+            self.update_active_chat_title()
+
+        self.load_token += 1
+        self.page_offset = 0
+        self.start_fetch()
+        return False
+
+    def update_active_chat_title(self):
+        target = self.active_chat_number
+        name = None
+
+        if isinstance(target, list):
+            custom_name = self.db.get_group_name(target)
+            if custom_name:
+                name = custom_name
+        else:
+            norm = normalize_number(target)
+            if self.db.is_blocked(norm, kind="any"):
+                name = _("Blocked Number")
+            else:
+                custom_name = self.db.get_group_name([target])
+                if custom_name:
+                    name = custom_name
+                else:
+                    name = self.app_window.eds.get_display_name(target) or _("Unknown")
+
+        if name == "Unknown":
+            name = _("Unknown")
+
+        if name and self.active_chat_page:
+            self.active_chat_page.update_contact_details(name)
+
+    def start_fetch(self):
+        current_token = self.load_token
+        self.is_fetching = True
+        self.spinner.set_visible(True)
+
+        def bg_fetch():
+            limit = self.page_limit
+            if self.page_offset == 0:
+                try:
+                    count = self.db.get_total_unread_count()
+                    limit = max(50, count + 10)
+                except Exception as e:
+                    logger.warning(f"[MessagesView] Unread count error: {e}")
+            return self.fetch_and_process(self.page_offset, limit=limit)
+
+        DataLoader.load_data(
+            fetch_func=bg_fetch,
+            model_add_func=self.add_chunk,
+            model=self.model,
+            check_token_func=lambda: self.load_token == current_token,
+            clear_on_first_chunk=(self.page_offset == 0)
+        )
+
+    def fetch_and_process(self, offset, limit=None):
+        current_limit = limit if limit is not None else self.page_limit
+        raw_rows = self.db.get_conversations(limit=current_limit + 1, offset=offset, filter_type=self.active_filter)
+        contact_map = self.db.get_contacts_lookup_map()
+        group_names = self.db.get_all_group_names()
+        blocked_numbers = {normalize_number(b["number"]) for b in self.db.get_blocked_numbers()}
+
+        processed = []
+        has_more = False
+
+        if len(raw_rows) > current_limit:
+            has_more = True
+            raw_rows = raw_rows[:current_limit]
+
+        for r in raw_rows:
+            num, body, ts, unread, status = r[0], r[1], r[2], r[3], r[5]
+
+            has_name = True
+
+            if "," in num:
+                recipients = [n.strip() for n in num.split(",")]
+                custom_name = group_names.get(num)
+
+                if custom_name:
+                    name = custom_name
+                else:
+                    display_names = []
+                    for rc in recipients:
+                        resolved = resolve_contact_name(contact_map, rc)
+                        display_names.append(resolved if resolved else rc)
+                    name = ", ".join(display_names)
+            else:
+                norm = normalize_number(num)
+                if norm in blocked_numbers:
+                    name = _("Blocked Number")
+                else:
+                    custom_name = group_names.get(num)
+                    if custom_name:
+                        name = custom_name
+                    else:
+                        name = resolve_contact_name(contact_map, num)
+                        if not name:
+                            has_name = False
+                            if any(c.isalpha() for c in num):
+                                name = _("Unknown")
+                            else:
+                                name = num
+                        elif name == "Unknown":
+                            has_name = False
+                            name = _("Unknown")
+
+            if not body:
+                body = _("[Multimedia Message]")
+
+            processed.append({
+                "number": num,
+                "name": name,
+                "has_name": has_name,
+                "body": body,
+                "ts": ts,
+                "unread": unread,
+                "status": status
+            })
+
+        self.last_fetch_has_more = has_more
+
+        return processed
+
+    def add_chunk(self, model, items):
+        self.is_fetching = False
+        self.list_view.set_opacity(1)
+
+        real_items_count = 0
+        new_conv_items = []
+
+        for d in items:
+            real_items_count += 1
+            new_conv_items.append(ConversationItem(
+                d["number"], d["name"], d["body"], d["ts"], d["unread"], status=d.get("status"),
+                has_name=d.get("has_name", False)
+            ))
+
+        if new_conv_items:
+            model.splice(model.get_n_items(), 0, new_conv_items)
+
+        self.page_offset += real_items_count
+
+        self.spinner.set_visible(False)
+
+        return False
+
+    def on_muted_changed(self, _settings, _key):
+        self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+        self.blocked_numbers = self.load_blocked_numbers()
+        self.refresh_list()
+
+    def on_show_numbers_changed(self, _settings, _key):
+        self.show_numbers = self.app_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false"
+        self.refresh_list()
+
+    def on_bind_row(self, factory, list_item):
+        ConversationRowFactory.bind(factory, list_item, self.muted_ids,
+                                    self.show_numbers, self.blocked_numbers)
+
+    def on_activate_conv(self, lv, pos):
+        item = self.model.get_item(pos)
+        self.open_chat(item.number, item.name)
+
+    def close_active_chat(self):
+        self.reset_search_ui()
+        self.reset_filter()
+        GLib.idle_add(lambda: self.nav_view.pop() or False)
+
+    def open_chat(self, number_or_list, name=None, target_msg_id=None, prefill_text=None, prefill_attachments=None):
+        canonical_target = number_or_list
+        if isinstance(number_or_list, str) and "," in number_or_list:
+            canonical_target = sorted([n.strip() for n in number_or_list.split(",")])
+        elif isinstance(number_or_list, list):
+            canonical_target = sorted(number_or_list)
+
+        if isinstance(canonical_target, list):
+            target_number = canonical_target
+            chat_tag = f"chat_{"_".join(target_number)}"
+
+            grp_id = ",".join(target_number)
+            self.check_and_clear_notification(grp_id)
+
+            custom_name = self.db.get_group_name(target_number)
+            if custom_name:
+                name = custom_name
+            elif not name:
+                names = []
+                for n in target_number:
+                    names.append(self.app_window.eds.get_display_name(n) or n)
+                name = ", ".join(names)
+        else:
+            target_number = self.check_and_clear_notification(canonical_target)
+            chat_tag = f"chat_{target_number}"
+            custom_name = self.db.get_group_name([target_number])
+            if custom_name:
+                name = custom_name
+            elif not name or name == target_number:
+                name = self.app_window.eds.get_display_name(target_number) or target_number
+
+        if name == "Unknown":
+            name = _("Unknown")
+
+        if self.active_chat_number == target_number and not target_msg_id:
+            if (prefill_text or prefill_attachments) and self.active_chat_page:
+                self.active_chat_page.append_prefill(prefill_text, prefill_attachments)
+            return
+
+        self.nav_view.pop_to_page(self.main_page)
+
+        unread_count = 0
+        if not target_msg_id:
+            unread_count = self.db.get_unread_count(target_number)
+
+        page = Adw.NavigationPage(title=name, tag=chat_tag)
+
+        self.active_chat_number = target_number
+
+        self.active_chat_page = ChatPage(self.db, self.app_window, target_number, self, name, target_msg_id, unread_count=unread_count, prefill_text=prefill_text, prefill_attachments=prefill_attachments)
+
+        page.set_child(self.active_chat_page)
+
+        created_page = self.active_chat_page
+
+        def on_pop(p):
+            if self.active_chat_page is created_page:
+                self.active_chat_number = None
+                self.active_chat_page = None
+                self.app_window.ofono.set_active_chat(None)
+                self.reset_search_ui()
+                self.reset_filter()
+                self.refresh_list()
+
+        page.connect("hidden", on_pop)
+        page.set_focusable(True)
+        self.nav_view.push(page)
+
+        self.app_window.ofono.set_active_chat(target_number)
+
+    def set_search_mode(self, mode):
+        self.search_mode = mode
+        if mode == "contacts":
+            self.btn_contacts.add_css_class("suggested-action")
+            self.btn_msgs.remove_css_class("suggested-action")
+            self.search_entry.set_placeholder_text(_("Search Contacts..."))
+        else:
+            self.btn_contacts.remove_css_class("suggested-action")
+            self.btn_msgs.add_css_class("suggested-action")
+            self.search_entry.set_placeholder_text(_("Search Messages..."))
+        self.on_search_changed(self.search_entry)
+
+    def on_search_changed(self, entry):
+        if self._is_programmatic_update:
+            return
+
+        text = entry.get_text().strip()
+        count = len(self.selected_recipients)
+
+        self.update_compose_button()
+
+        if not text and count == 0:
+            self.content_stack.set_visible_child_name("conversations")
+            return
+
+        self.content_stack.set_visible_child_name("search_results")
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+        self.search_timer = GLib.timeout_add(200, self.do_search_debounced)
+
+    def do_search_debounced(self):
+        self.search_timer = None
+        query = self.search_entry.get_text()
+        if self.search_mode == "contacts":
+            self.perform_contact_search(query)
+        else:
+            self.perform_message_search(query)
+        return False
+
+    def update_compose_button(self):
+        count = len(self.selected_recipients)
+        if count == 0:
+            self.action_box.set_visible(False)
+            self.toggle_box.set_visible(True)
+            return
+
+        self.action_box.set_visible(True)
+        self.toggle_box.set_visible(False)
+        self.btn_compose.set_label(_("Start ({count})").format(count=count))
+
+        recipients = list(self.selected_recipients)
+        target = recipients[0] if count == 1 else recipients
+
+        def done(exists):
+            if exists and self.selected_recipients == set(recipients):
+                self.btn_compose.set_label(_("Open ({count})").format(count=count))
+
+        run_in_background(self.db.has_conversation, target, on_complete=done)
+
+    def on_compose_clicked(self, btn):
+        if not self.selected_recipients:
+            return
+        recipients = list(self.selected_recipients)
+
+        self.reset_search_ui()
+
+        if len(recipients) == 1:
+            self.open_chat(recipients[0], None)
+        else:
+            self.open_chat(recipients, None)
+
+    def on_cancel_clicked(self, btn):
+        self.reset_search_ui()
+
+    def reset_search_ui(self):
+        self._is_programmatic_update = True
+        self.selected_recipients.clear()
+        self.search_entry.set_text("")
+        self._is_programmatic_update = False
+
+        self.content_stack.set_visible_child_name("conversations")
+        self.action_box.set_visible(False)
+        self.toggle_box.set_visible(True)
+
+    def toggle_selection(self, number, check_btn=None, clear_search=False):
+        if number in self.selected_recipients:
+            self.selected_recipients.remove(number)
+            if check_btn:
+                with check_btn.handler_block(check_btn.handler_id):
+                    check_btn.set_active(False)
+        else:
+            self.selected_recipients.add(number)
+            if check_btn:
+                with check_btn.handler_block(check_btn.handler_id):
+                    check_btn.set_active(True)
+
+        if clear_search:
+            self._is_programmatic_update = True
+            self.search_entry.set_text("")
+            self._is_programmatic_update = False
+
+        self.update_compose_button()
+
+    def perform_contact_search(self, query):
+        self.contact_search_token = self.contact_search_token + 1
+        current_token = self.contact_search_token
+
+        norm_query = normalize_number(query)
+
+        manual_entry_row = None
+        if norm_query and len(norm_query) >= 2:
+            row_box = Gtk.Box(spacing=12)
+            row_box.set_margin_start(8)
+            row_box.set_margin_end(8)
+            row_box.set_margin_top(8)
+            row_box.set_margin_bottom(8)
+
+            chk = Gtk.CheckButton()
+            chk.set_active(norm_query in self.selected_recipients)
+            chk.handler_id = chk.connect("toggled", lambda b: GLib.idle_add(lambda: self.toggle_selection(norm_query, b, clear_search=True) or False))
+            row_box.append(chk)
+
+            lbl = Gtk.Label(label=_("Add Number: {number}").format(number=norm_query), xalign=0, hexpand=True, css_classes=["heading"])
+            lbl.set_ellipsize(Pango.EllipsizeMode.END)
+            row_box.append(lbl)
+
+            row = Gtk.ListBoxRow()
+            row.set_child(row_box)
+            ctrl = Gtk.GestureClick()
+            ctrl.connect("released", lambda c, n, x, y: GLib.idle_add(lambda: self.toggle_selection(norm_query, chk, clear_search=True) or False))
+            row.add_controller(ctrl)
+            manual_entry_row = row
+
+        def bg_fetch():
+            res = self.app_window.eds.search_contacts(query, limit=30)
+            s_map = {}
+            if self.app_window.eds and (self.app_window.eds is not None):
+                sources = self.app_window.eds.get_sources_info()
+                for s in sources:
+                    s_map[s["uid"]] = s["name"]
+            convs = self.search_conversations(query, res)
+            return res, s_map, convs
+
+        def on_done(results, source_map, conversations):
+            if self.contact_search_token != current_token:
+                return False
+
+            while c := self.results_list.get_first_child():
+                self.results_list.remove(c)
+
+            if manual_entry_row:
+                self.results_list.append(manual_entry_row)
+
+            for conv_id, display_name, is_group in conversations:
+                row = Adw.ActionRow(title=display_name)
+                row.set_subtitle(_("Group chat") if is_group else conv_id)
+                row.set_activatable(True)
+                row.add_prefix(Gtk.Image.new_from_icon_name("chat-message-new-symbolic"))
+                row.connect("activated", lambda r, cid=conv_id: GLib.idle_add(
+                    lambda: [self.reset_search_ui(), self.open_chat(cid, None)] and False))
+                self.results_list.append(row)
+
+            if not results and not conversations:
+                lbl = Gtk.Label(label=_("No contacts found"), css_classes=["dim-label", "caption"])
+                lbl.set_margin_top(20)
+                self.results_list.append(lbl)
+                return False
+
+            for res in results:
+                name = f"{res[1]} {res[2]}".strip()
+                source_uid = res[6] if len(res) > 6 else None
+
+                for (num, label) in res[3]:
+                    norm_num = normalize_number(num)
+
+                    row = Gtk.ListBoxRow()
+                    box = Gtk.Box(spacing=12)
+                    box.set_margin_start(8)
+                    box.set_margin_end(8)
+                    box.set_margin_top(8)
+                    box.set_margin_bottom(8)
+
+                    chk = Gtk.CheckButton()
+                    chk.set_active(norm_num in self.selected_recipients)
+                    chk.handler_id = chk.connect("toggled", lambda b, n=norm_num: GLib.idle_add(lambda: self.toggle_selection(n, b) or False))
+                    box.append(chk)
+
+                    vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+                    lbl_name = Gtk.Label(label=name, xalign=0, css_classes=["heading"])
+                    lbl_name.set_ellipsize(Pango.EllipsizeMode.END)
+                    said = f"{label}: {norm_num}"
+                    if norm_num in self.blocked_numbers:
+                        said = f"{said} · {_("Messages blocked")}"
+                    lbl_num = Gtk.Label(label=said, xalign=0, css_classes=["caption", "dim-label"])
+                    lbl_num.set_ellipsize(Pango.EllipsizeMode.END)
+
+                    vbox.append(lbl_name)
+                    vbox.append(lbl_num)
+
+                    if source_uid and source_uid in source_map:
+                        s_name = source_map[source_uid]
+                        lbl_source = Gtk.Label(label=s_name, xalign=0, css_classes=["tiny-label"])
+                        lbl_source.set_ellipsize(Pango.EllipsizeMode.END)
+                        vbox.append(lbl_source)
+
+                    box.append(vbox)
+                    row.set_child(box)
+
+                    ctrl = Gtk.GestureClick()
+                    ctrl.connect("released", lambda c, n, x, y, b=chk, nm=norm_num: GLib.idle_add(lambda: self.toggle_selection(nm, b) or False))
+                    row.add_controller(ctrl)
+                    self.results_list.append(row)
+            return False
+
+        def bg_task():
+            res, s_map, convs = bg_fetch()
+            GLib.idle_add(lambda: on_done(res, s_map, convs))
+
+        run_in_background(bg_task)
+
+    def search_conversations(self, query, contact_results):
+        q = query.strip().lower()
+        if not q:
+            return []
+
+        group_names = self.db.get_all_group_names()
+        conv_ids = self.db.get_conversation_ids()
+        norm_query = normalize_number(query)
+
+        contact_numbers = set()
+        for res in contact_results or []:
+            for (num, _lbl) in res[3]:
+                n = normalize_number(num)
+                if n:
+                    contact_numbers.add(n)
+
+        matches = []
+        for conv_id in conv_ids:
+            custom = group_names.get(conv_id, "")
+            is_group = "," in conv_id
+            participants = [p.strip() for p in conv_id.split(",")] if is_group else [conv_id]
+
+            hit = False
+            if custom and q in custom.lower():
+                hit = True
+            elif norm_query and len(norm_query) >= 3 and any(norm_query in p for p in participants):
+                hit = is_group
+            elif is_group and contact_numbers and any(p in contact_numbers for p in participants):
+                hit = True
+
+            if hit:
+                display = custom
+                if not display:
+                    names = [self.app_window.eds.get_display_name(p) or p for p in participants]
+                    display = ", ".join(names)
+                matches.append((conv_id, display, is_group))
+
+            if len(matches) >= 10:
+                break
+
+        return matches
+
+    def perform_message_search(self, query):
+        self.message_search_token = self.message_search_token + 1
+        current_token = self.message_search_token
+
+        def bg_fetch():
+            results = self.db.search_messages(query)
+            contact_map = self.db.get_contacts_lookup_map()
+            return results, contact_map
+
+        def on_done(results, contact_map):
+            if self.message_search_token != current_token:
+                return False
+
+            while c := self.results_list.get_first_child():
+                self.results_list.remove(c)
+
+            if not results:
+                lbl = Gtk.Label(label=_("No results found"), css_classes=["dim-label", "caption"])
+                lbl.set_margin_top(20)
+                self.results_list.append(lbl)
+                return False
+
+            for r in results:
+                number, body, ts, msg_id = r[0], r[1], r[2], r[3]
+                name = resolve_contact_name(contact_map, number)
+                if not name:
+                    name = number
+
+                if name == "Unknown":
+                    name = _("Unknown")
+
+                preview = str(body).replace("\n", " ")
+                if len(preview) > 40:
+                    preview = preview[:40] + "..."
+
+                row = Adw.ActionRow(title=name, subtitle=preview)
+                date_str = str(ts).split(" ")[0]
+                try:
+                    dt = parse_timestamp(str(ts))
+                    date_str = dt.strftime(get_date_format())
+                except Exception as e:
+                    logger.debug(f"[MessagesView] Date format failed for {ts}: {e}")
+                row.add_suffix(Gtk.Label(label=date_str, css_classes=["caption", "dim-label"]))
+
+                btn = Gtk.Button(icon_name="go-next-symbolic", css_classes=["flat"])
+                btn.connect("clicked", lambda b, n=number, mid=msg_id: GLib.idle_add(lambda: self.open_chat(n, None, target_msg_id=mid) or False))
+
+                row.add_suffix(btn)
+                self.results_list.append(row)
+            return False
+
+        def bg_task():
+            res, c_map = bg_fetch()
+            GLib.idle_add(lambda: on_done(res, c_map))
+
+        run_in_background(bg_task)

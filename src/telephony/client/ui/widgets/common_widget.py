@@ -1,0 +1,646 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from telephony.shared.utils.thread_utils import run_in_background
+from telephony.shared.utils.phone_utils import normalize_number
+
+from gi.repository import Gtk, Adw, GLib
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+from telephony.shared.constants import SHEET_CONTENT_WIDTH, ALERT_SHEET_SPACING, ALERT_SHEET_MARGIN
+
+LIST_CHUNK_SIZE = 20
+INFO_SHEET_MAX_HEIGHT = 520
+
+
+def install_sheet_host(window):
+    content = window.get_content()
+    window.set_content(None)
+
+    host = Adw.BottomSheet()
+    host.set_modal(True)
+    host.set_content(content)
+    window.set_content(host)
+    window.sheet_toast_overlay = None
+    return host
+
+
+def present_sheet(window, child):
+    overlay = Adw.ToastOverlay()
+    overlay.set_child(child)
+    window.sheet_toast_overlay = overlay
+    window.sheet_host.set_sheet(overlay)
+    window.sheet_host.set_open(True)
+
+
+def present_alert_sheet(window, heading, body, responses, on_response, extra_child=None):
+    """Ask a question in the window's sheet. ``responses`` contains ``(id, label, appearance)`` tuples, where appearance is ``None``, ``suggested`` or ``destructive``."""
+    host = window.sheet_host
+    showing = sheet_navigation(host.get_sheet()) if host.get_open() else None
+
+    toolbar = Adw.ToolbarView()
+    header = Adw.HeaderBar()
+    if showing is None:
+        btn_cancel = Gtk.Button(label=_("Cancel"))
+        btn_cancel.connect("clicked", lambda _b: GLib.idle_add(
+            lambda: close_sheet(window) or False))
+        header.pack_start(btn_cancel)
+    toolbar.add_top_bar(header)
+
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=ALERT_SHEET_SPACING,
+                  margin_top=ALERT_SHEET_MARGIN, margin_bottom=ALERT_SHEET_MARGIN,
+                  margin_start=ALERT_SHEET_MARGIN, margin_end=ALERT_SHEET_MARGIN)
+
+    if body:
+        label = Gtk.Label(label=body, wrap=True, xalign=0, valign=Gtk.Align.START)
+        box.append(label)
+
+    if extra_child is not None:
+        box.append(extra_child)
+
+    for response_id, label_text, appearance in responses:
+        button = Gtk.Button(label=label_text)
+        if appearance:
+            button.add_css_class(f"{appearance}-action")
+        button.connect("clicked", lambda _b, rid=response_id: GLib.idle_add(
+            lambda: [close_sheet_page(window), on_response(rid)] and False))
+        box.append(button)
+
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, vexpand=True,
+                                max_content_height=INFO_SHEET_MAX_HEIGHT)
+    scroll.set_child(box)
+    natural_height = box.measure(Gtk.Orientation.VERTICAL, SHEET_CONTENT_WIDTH)[1]
+    scroll.set_min_content_height(min(natural_height, INFO_SHEET_MAX_HEIGHT))
+    toolbar.set_content(scroll)
+
+    present_sheet_page(window, Adw.NavigationPage(title=heading, child=toolbar))
+
+
+def blocked_state_text(entry):
+    if entry is None:
+        return ""
+    if entry["block_calls"] and entry["block_messages"]:
+        return _("Blocked")
+    if entry["block_calls"]:
+        return _("Calls blocked")
+    return _("Messages blocked")
+
+
+def blocked_entries_for(db, context):
+    if not db:
+        return {}
+    key = "block_calls" if context == "calls" else "block_messages"
+    return {normalize_number(entry["number"]): dict(entry)
+            for entry in db.get_blocked_numbers() if entry[key]}
+
+
+def blocked_entry_for(db, number, context):
+    if not db:
+        return None
+    wanted = normalize_number(number)
+    if not wanted:
+        return None
+    for entry in db.get_blocked_numbers():
+        if normalize_number(entry["number"]) != wanted:
+            continue
+        if entry["block_calls"] if context == "calls" else entry["block_messages"]:
+            return dict(entry)
+        return None
+    return None
+
+
+def release_block_domain(daemon, entry, context, on_done):
+    other = entry["block_messages"] if context == "calls" else entry["block_calls"]
+    if not other:
+        daemon.remove_blocked_number(entry["id"])
+        on_done()
+        return
+
+    keep_calls = False if context == "calls" else bool(entry["block_calls"])
+    keep_messages = bool(entry["block_messages"]) if context == "calls" else False
+    daemon.set_blocked_number_flags(entry["id"], keep_calls, keep_messages)
+    on_done()
+
+
+def confirm_unblock_and_add(window, daemon, entry, context, on_added):
+    body = (_("Calls from this number are blocked, so this would have no "
+              "effect until the block is lifted.") if context == "calls"
+            else _("Messages from this number are blocked, so this would have "
+                   "no effect until the block is lifted."))
+    label = (_("Unblock Calls and Add") if context == "calls"
+             else _("Unblock Messages and Add"))
+
+    def answered(answer):
+        if answer != "unblock":
+            return
+        release_block_domain(daemon, entry, context, on_added)
+
+    present_alert_sheet(window, entry["number"], body,
+                        [("cancel", _("Cancel"), None), ("unblock", label, None)],
+                        answered)
+
+
+def present_unblock_choice(window, daemon, entry, context, on_done):
+    standing = [half for half in ("calls", "messages") if entry[f"block_{half}"]]
+
+    responses = []
+    if len(standing) > 1:
+        for half in standing:
+            if context not in (None, half):
+                continue
+            responses.append((half, _("Unblock Calls Only") if half == "calls"
+                              else _("Unblock Messages Only"), None))
+        responses.append(("all", _("Unblock Everything"), None))
+        if context == "calls":
+            body = _("This number is also blocked for messages.")
+        elif context == "messages":
+            body = _("This number is also blocked for calls.")
+        else:
+            body = _("This number is blocked for both calls and messages.")
+    else:
+        responses.append(("all", _("Unblock"), None))
+        body = (_("Calls from this number are blocked.") if standing == ["calls"]
+                else _("Messages from this number are blocked."))
+
+    responses.insert(0, ("cancel", _("Cancel"), None))
+
+    def answered(answer):
+        if answer == "all":
+            daemon.remove_blocked_number(entry["id"])
+            on_done()
+            return
+        if answer in ("calls", "messages"):
+            release_block_domain(daemon, entry, answer, on_done)
+
+    present_alert_sheet(window, entry["number"], body, responses, answered)
+
+
+def sheet_navigation(widget):
+    if widget is None:
+        return None
+    if isinstance(widget, Adw.NavigationView):
+        return widget
+
+    child = widget.get_first_child()
+    while child is not None:
+        found = sheet_navigation(child)
+        if found is not None:
+            return found
+        child = child.get_next_sibling()
+    return None
+
+
+def present_sheet_page(window, page, replace=False):
+    page.set_focusable(True)
+    host = window.sheet_host
+    nav = sheet_navigation(host.get_sheet()) if host.get_open() else None
+    if nav is not None:
+        own_height = page.get_size_request()[1]
+        page.set_size_request(-1, max(nav.get_height(), own_height))
+        if replace:
+            nav.replace([page])
+            return
+        nav.push(page)
+        return
+
+    nav = Adw.NavigationView()
+    nav.add(page)
+    present_sheet(window, nav)
+
+
+def close_sheet_page(window):
+    nav = sheet_navigation(window.sheet_host.get_sheet())
+    if nav is not None:
+        visible = nav.get_visible_page()
+        if visible is not None and nav.get_previous_page(visible) is not None:
+            nav.pop()
+            return
+    close_sheet(window)
+
+
+def on_sheet_closed(window, callback):
+    state = {"id": None}
+
+    def watch(host, _param):
+        if host.get_open():
+            return
+        host.disconnect(state["id"])
+        callback()
+
+    state["id"] = window.sheet_host.connect("notify::open", watch)
+
+
+def close_sheet(window):
+    window.sheet_host.set_open(False)
+
+
+def stay_a_sheet(dialog):
+    dialog.set_presentation_mode(Adw.DialogPresentationMode.BOTTOM_SHEET)
+
+
+def present_choice_sheet(parent, title, build_rows, description=None):
+    """Show a bottom sheet with a single group of choice rows. build_rows(group, sheet) fills the group; rows close the sheet themselves when picked."""
+    window = parent.get_root()
+
+    toolbar = Adw.ToolbarView()
+    toolbar.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
+
+    page = Adw.PreferencesPage()
+    group = Adw.PreferencesGroup()
+    if description:
+        group.set_description(description)
+    page.add(group)
+    toolbar.set_content(page)
+
+    build_rows(group, window)
+    present_sheet_page(window, Adw.NavigationPage(title=title, child=toolbar))
+    return window
+
+
+def choice_row(group, label, callback, dismiss, subtitle=None, destructive=False, icon=None):
+    row = Adw.ActionRow(title=label, activatable=True)
+    if subtitle:
+        row.set_subtitle(subtitle)
+    if icon:
+        row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+    if destructive:
+        row.add_css_class("error")
+    row.connect("activated", lambda r: GLib.idle_add(
+        lambda: [dismiss(), callback()] and False))
+    group.add(row)
+    return row
+
+
+def add_choice_row(group, window, label, callback, subtitle=None, destructive=False,
+                   icon=None, opens_flow=False):
+    dismiss = (lambda: None) if opens_flow else (lambda: close_sheet_page(window))
+    return choice_row(group, label, callback, dismiss,
+                       subtitle=subtitle, destructive=destructive, icon=icon)
+
+
+def build_info_sheet(title, text, selectable=False):
+    toolbar = Adw.ToolbarView()
+    toolbar.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
+
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=INFO_SHEET_MAX_HEIGHT)
+    lbl = Gtk.Label(label=text, wrap=True, xalign=0, selectable=selectable, valign=Gtk.Align.START)
+    lbl.set_margin_top(4)
+    lbl.set_margin_bottom(24)
+    lbl.set_margin_start(16)
+    lbl.set_margin_end(16)
+    scroll.set_child(lbl)
+    natural_height = lbl.measure(Gtk.Orientation.VERTICAL, SHEET_CONTENT_WIDTH)[1]
+    scroll.set_min_content_height(min(natural_height, INFO_SHEET_MAX_HEIGHT))
+    toolbar.set_content(scroll)
+    return Adw.NavigationPage(title=title, child=toolbar)
+
+
+def present_info_sheet(parent, title, text):
+    present_sheet_page(parent.get_root(), build_info_sheet(title, text))
+
+
+def build_selector_row(title, on_select=None):
+    row = Adw.ExpanderRow(title=title)
+    row._selected_index = 0
+    row._option_rows = []
+    row._option_checks = []
+    row._on_select = on_select
+    return row
+
+
+def set_selector_options(row, labels, selected_index):
+    for option in row._option_rows:
+        row.remove(option)
+    row._option_rows = []
+    row._option_checks = []
+    for i, name in enumerate(labels):
+        option = Adw.ActionRow(title=name, activatable=True)
+        check = Gtk.Image.new_from_icon_name("object-select-symbolic")
+        check.set_visible(i == selected_index)
+        option.add_suffix(check)
+        option.connect("activated", lambda r, i=i: GLib.idle_add(
+            lambda: pick_selector_option(row, i) or False))
+        row.add_row(option)
+        row._option_rows.append(option)
+        row._option_checks.append(check)
+    row._selected_index = selected_index
+    if labels:
+        row.set_subtitle(labels[selected_index])
+
+
+def pick_selector_option(row, index):
+    row._selected_index = index
+    row.set_subtitle(row._option_rows[index].get_title())
+    for i, check in enumerate(row._option_checks):
+        check.set_visible(i == index)
+    row.set_expanded(False)
+    if row._on_select:
+        row._on_select(index)
+
+
+def build_nav_row(title, subtitle, callback, icon=None, destructive=False):
+    row = Adw.ActionRow(title=title, activatable=True)
+    if subtitle:
+        row.set_subtitle(subtitle)
+    if icon:
+        row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+    if destructive:
+        row.add_css_class("error")
+    row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+    row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
+    return row
+
+
+class EntryListGroup(Adw.PreferencesGroup):
+
+    def __init__(self, title, fields, add_label, empty_label,
+                 on_add, on_delete, on_update=None, on_error=None):
+        super().__init__(title=title)
+        self.fields = fields
+        self.add_label = add_label
+        self.empty_label = empty_label
+        self.on_add = on_add
+        self.on_delete = on_delete
+        self.on_update = on_update
+        self.on_error = on_error
+        self.entries = []
+        self._rows = []
+        self._add_row = None
+        self._add_entries = {}
+        self._empty_row = None
+
+    def set_entries(self, entries):
+        self.entries = list(entries)
+        self.rebuild()
+
+    def rebuild(self):
+        for row in self._rows:
+            self.remove(row)
+        self._rows = []
+        if self._add_row is not None:
+            self.remove(self._add_row)
+        if self._empty_row is not None:
+            self.remove(self._empty_row)
+            self._empty_row = None
+
+        self._add_row = self.build_add_row()
+        self.add(self._add_row)
+
+        if not self.entries:
+            self._empty_row = Adw.ActionRow(title=self.empty_label)
+            self._empty_row.add_css_class("dim-label")
+            self.add(self._empty_row)
+            return
+
+        for entry in self.entries:
+            row = self.build_entry_row(entry)
+            self.add(row)
+            self._rows.append(row)
+
+    def build_field_row(self, field, value=""):
+        row = Adw.EntryRow(title=field["label"])
+        row.set_text(value or "")
+        if field.get("purpose"):
+            row.set_input_purpose(field["purpose"])
+        return row
+
+    def build_add_row(self):
+        expander = Adw.ExpanderRow(title=self.add_label)
+        expander.add_prefix(Gtk.Image.new_from_icon_name("list-add-symbolic"))
+
+        self._add_entries = {}
+        for field in self.fields:
+            entry = self.build_field_row(field)
+            self._add_entries[field["key"]] = entry
+            expander.add_row(entry)
+
+        action = Adw.ActionRow(title=self.add_label, activatable=True)
+        action.add_css_class("accent")
+        action.connect("activated", lambda r: GLib.idle_add(lambda: self.commit_add(expander) or False))
+        expander.add_row(action)
+
+        def sync(*_args):
+            action.set_sensitive(self.are_values_complete(self._add_entries))
+
+        def commit_on_enter(_row):
+            if self.are_values_complete(self._add_entries):
+                GLib.idle_add(lambda: self.commit_add(expander) or False)
+
+        for entry in self._add_entries.values():
+            entry.connect("changed", sync)
+            entry.connect("entry-activated", commit_on_enter)
+        sync()
+        return expander
+
+    def are_values_complete(self, entries):
+        for field in self.fields:
+            if field.get("required") and not entries[field["key"]].get_text().strip():
+                return False
+        return True
+
+    def read_values(self, entries):
+        return {key: entry.get_text().strip() for key, entry in entries.items()}
+
+    def commit_add(self, expander):
+        values = self.read_values(self._add_entries)
+        ok, error = self.on_add(values)
+        if not ok:
+            if error and self.on_error:
+                self.on_error(error)
+            return
+        expander.set_expanded(False)
+        for entry in self._add_entries.values():
+            entry.set_text("")
+
+    def build_entry_row(self, entry):
+        primary = entry.get(self.fields[0]["key"], "")
+        expander = Adw.ExpanderRow(title=primary or self.empty_label)
+        if len(self.fields) > 1:
+            expander.set_subtitle(entry.get(self.fields[1]["key"], ""))
+
+        field_entries = {}
+        for field in self.fields:
+            row = self.build_field_row(field, entry.get(field["key"], ""))
+            if self.on_update:
+                row.set_show_apply_button(True)
+                row.connect("apply", lambda r, e=entry, fe=field_entries, ex=expander:
+                            GLib.idle_add(lambda: self.commit_update(e, fe, ex) or False))
+            else:
+                row.set_editable(False)
+            field_entries[field["key"]] = row
+            expander.add_row(row)
+
+        delete = Adw.ActionRow(title=_("Delete"), activatable=True)
+        delete.add_css_class("error")
+        delete.connect("activated", lambda r, e=entry: GLib.idle_add(lambda: self.on_delete(e) or False))
+        expander.add_row(delete)
+        return expander
+
+    def commit_update(self, entry, field_entries, expander):
+        values = self.read_values(field_entries)
+        if not self.are_values_complete(field_entries):
+            return
+        ok, error = self.on_update(entry, values)
+        if not ok:
+            if error and self.on_error:
+                self.on_error(error)
+            return
+        expander.set_title(values.get(self.fields[0]["key"], ""))
+        if len(self.fields) > 1:
+            expander.set_subtitle(values.get(self.fields[1]["key"], ""))
+
+
+def translate_phone_label(label):
+    LABELS = {
+        "Mobile": _("Mobile"),
+        "Work": _("Work"),
+        "Home": _("Home"),
+        "Fax": _("Fax"),
+        "Other": _("Other"),
+        "Main": _("Main")
+    }
+    return LABELS.get(label, label)
+
+
+def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown", source_map=None, blocked_entries=None):
+    blocked_entries = blocked_entries or {}
+    while child := results_list.get_first_child():
+        results_list.remove(child)
+
+    has_results = False
+
+    if source_map is None:
+        source_map = {}
+        if eds:
+            sources = eds.get_sources_info()
+            for s in sources:
+                source_map[s["uid"]] = s["name"]
+
+    if contacts:
+        for c in contacts:
+            first = c[1]
+            last = c[2]
+            phones = c[3]
+            source_uid = c[6] if len(c) > 6 else None
+
+            first_name = first or ""
+            last_name = last or ""
+            full_name = f"{first_name} {last_name}".strip() or unknown_name
+
+            for ph_num, ph_label in phones:
+                shown_label = translate_label(ph_label) if translate_label else ph_label
+                subtitle_text = f"{ph_num} ({shown_label})"
+
+                if source_uid and source_uid in source_map:
+                    s_name = source_map[source_uid]
+                    subtitle_text += f"\n{s_name}"
+
+                entry = blocked_entries.get(normalize_number(ph_num))
+                if entry is not None:
+                    subtitle_text = f"{ph_num} ({shown_label}) · {blocked_state_text(entry)}"
+                    if source_uid and source_uid in source_map:
+                        subtitle_text += f"\n{source_map[source_uid]}"
+
+                row = Adw.ActionRow(title=full_name, subtitle=subtitle_text)
+                row.set_subtitle_lines(2)
+                row.contact_data = {"name": full_name, "number": ph_num}
+
+                if entry is not None:
+                    mark = Gtk.Image.new_from_icon_name("action-unavailable-symbolic")
+                    mark.set_pixel_size(14)
+                    mark.add_css_class("marker-rejected")
+                    mark.set_valign(Gtk.Align.CENTER)
+                    row.add_suffix(mark)
+
+                norm_ph = normalize_number(ph_num)
+                if is_added(norm_ph):
+                    row.set_sensitive(False)
+                    row.add_suffix(Gtk.Image(icon_name="object-select-symbolic"))
+                else:
+                    btn_add = Gtk.Button(icon_name="list-add-symbolic")
+                    btn_add.add_css_class("flat")
+                    btn_add.add_css_class("circular")
+                    btn_add.set_valign(Gtk.Align.CENTER)
+                    btn_add.connect("clicked", lambda b, r=row: on_add(r))
+                    row.add_suffix(btn_add)
+
+                results_list.append(row)
+                has_results = True
+
+    if not has_results:
+        lbl = Gtk.Label(label=_("No contacts found"))
+        lbl.add_css_class("dim-label")
+        lbl.set_margin_top(20)
+        results_list.append(lbl)
+
+
+class DataLoader:
+
+    @staticmethod
+    def load_data(fetch_func, model_add_func, model, check_token_func=None, on_finish=None, clear_on_first_chunk=True):
+        def task():
+            try:
+                if check_token_func and not check_token_func():
+                    return
+                processed_items = fetch_func()
+
+                if not processed_items:
+                    def update_empty():
+                        if check_token_func and not check_token_func():
+                            return False
+                        if clear_on_first_chunk:
+                            model.remove_all()
+                        if model_add_func:
+                            model_add_func(model, [])
+                        return False
+                    GLib.idle_add(update_empty)
+                    if on_finish and callable(on_finish):
+                        GLib.idle_add(on_finish)
+                    return
+
+                chunk_size = LIST_CHUNK_SIZE
+                state = {"idx": 0, "is_first_chunk": True}
+
+                def process_next_chunk():
+                    if check_token_func and not check_token_func():
+                        return False
+
+                    idx = state["idx"]
+                    if idx >= len(processed_items):
+                        if on_finish and callable(on_finish):
+                            on_finish()
+                        return False
+
+                    if state["is_first_chunk"] and clear_on_first_chunk:
+                        model.remove_all()
+
+                    chunk = processed_items[idx:idx + chunk_size]
+                    if chunk:
+                        model_add_func(model, chunk)
+
+                    state["is_first_chunk"] = False
+                    state["idx"] += chunk_size
+                    return True
+
+                GLib.idle_add(process_next_chunk)
+            except Exception as e:
+                logger.error(f"Data loading error: {e}")
+        run_in_background(task)
+
+
+def wire_blocklist_switch_locks(sw_calls, sw_messages):
+    def sync(*_args):
+        calls_on = sw_calls.get_active()
+        messages_on = sw_messages.get_active()
+        sw_calls.set_sensitive(messages_on)
+        sw_messages.set_sensitive(calls_on)
+        sw_calls.set_subtitle("" if messages_on else _("Last block — remove the number with the trash can"))
+        sw_messages.set_subtitle("" if calls_on else _("Last block — remove the number with the trash can"))
+
+    sw_calls.connect("notify::active", sync)
+    sw_messages.connect("notify::active", sync)
+    sync()

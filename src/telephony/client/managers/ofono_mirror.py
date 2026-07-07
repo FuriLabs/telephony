@@ -1,0 +1,421 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from dataclasses import dataclass
+from gi.repository import GObject, Gio, GLib
+from gettext import gettext as _
+
+from telephony.shared.utils.log_utils import logger
+from telephony.shared.utils.phone_utils import normalize_number
+from telephony.client.services.daemon_client import DaemonClient
+from telephony.shared.constants import DAEMON_BUS_NAME
+
+RESEED_DEBOUNCE_MS = 80
+
+
+@dataclass
+class MirrorAudioState:
+
+    voice_profile_active: bool = False
+    current_route: str = "earpiece"
+    current_input: str = "mic"
+    mic_muted: bool = False
+
+
+USSD_CALL_TIMEOUT_MS = 100000
+
+
+class OfonoMirror(GObject.Object):
+
+    __gsignals__ = {
+        "audio-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        "connection-status": (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
+        "action-error": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "call-added": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
+        "call-removed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "call-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
+        "dial-availability-changed": (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
+        "voicemail-changed": (GObject.SignalFlags.RUN_FIRST, None, (bool, int)),
+        "modem-interface-appeared": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "ussd-notification": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "ussd-request": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "ussd-state-changed": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        "network-service-changed": (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
+        "emergency-numbers-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
+    }
+
+    def __init__(self, gsettings_mgr=None, daemon_client=None):
+        super().__init__()
+        self.gsettings_mgr = gsettings_mgr
+        self.daemon = daemon_client if daemon_client is not None else DaemonClient()
+        self.audio = MirrorAudioState()
+        self.active_calls = {}
+        self.can_dial = False
+        self.dial_reason = "starting"
+        self.dial_description = ""
+        self.modem_present = False
+        self.modem_online = False
+        self.interfaces = set()
+        self.network_emergency_numbers = set()
+        self.modem_state_known = False
+        self.voicemail_waiting = False
+        self.voicemail_count = 0
+        self.voicemail_mailbox = ""
+        self.ussd_state = "idle"
+        self.ussd_text = ""
+        self._reseed_id = 0
+
+        for signal_name, handler in (
+                ("IncomingCall", self.on_sig_call_added),
+                ("CallChanged", self.on_sig_call_changed),
+                ("CallRemoved", self.on_sig_call_removed),
+                ("CapabilityChanged", self.on_sig_capability),
+                ("ModemStateChanged", self.on_sig_modem_state),
+                ("VoicemailChanged", self.on_sig_voicemail),
+                ("AudioRouteChanged", self.on_sig_audio),
+                ("UssdReceived", self.on_sig_ussd),
+                ("UssdRequestReceived", self.on_sig_ussd_request),
+                ("UssdStateChanged", self.on_sig_ussd_state),
+                ("NetworkServiceChanged", self.on_sig_network_service)):
+            self.daemon.subscribe(signal_name, handler)
+
+        Gio.bus_watch_name(
+            Gio.BusType.SESSION, DAEMON_BUS_NAME, Gio.BusNameWatcherFlags.NONE,
+            self.on_owner_appeared, self.on_owner_vanished)
+
+    def on_owner_appeared(self, _connection, _name, _owner):
+        self.schedule_reseed()
+
+    def on_owner_vanished(self, _connection, _name):
+        self.apply_capability(False, "service-down", _("Telephony service is not running"))
+
+    def schedule_reseed(self):
+        if self._reseed_id:
+            return
+        self._reseed_id = GLib.timeout_add(RESEED_DEBOUNCE_MS, self.start_reseed)
+
+    def start_reseed(self):
+        self._reseed_id = 0
+        self.daemon.get_telephony_state(self.apply_state)
+        return GLib.SOURCE_REMOVE
+
+    def apply_state(self, state):
+        if state is None:
+            return
+        calls = state.get("calls", {})
+        old_calls = self.active_calls
+        self.active_calls = calls
+        for path, props in calls.items():
+            if path not in old_calls:
+                self.emit("call-added", path, props)
+            elif props.get("state") != old_calls[path].get("state"):
+                self.emit("call-changed", path, props.get("state", ""))
+        for path in old_calls:
+            if path not in calls:
+                self.emit("call-removed", path)
+
+        self.apply_capability(state.get("can_dial", False),
+                               state.get("dial_reason", ""),
+                               state.get("dial_description", ""))
+        self.apply_modem_state(state.get("modem_present", False),
+                                state.get("modem_online", False),
+                                state.get("interfaces", []),
+                                state.get("emergency_numbers", []))
+
+        waiting = state.get("voicemail_waiting", False)
+        count = state.get("voicemail_count", 0)
+        if (waiting, count) != (self.voicemail_waiting, self.voicemail_count):
+            self.voicemail_waiting = waiting
+            self.voicemail_count = count
+            self.emit("voicemail-changed", waiting, count)
+        self.voicemail_mailbox = state.get("voicemail_mailbox", "")
+        self.apply_audio_state(state)
+        self.apply_ussd_snapshot(
+            state.get("ussd_state", "idle"),
+            state.get("ussd_text", ""),
+        )
+
+    def apply_capability(self, can_dial, reason, description):
+        self.can_dial = can_dial
+        self.dial_reason = reason
+        self.dial_description = description
+        self.audio.voice_profile_active = (reason == "call-ending")
+        self.emit("dial-availability-changed", can_dial)
+
+    def apply_modem_state(self, present, online, interfaces, emergency_numbers):
+        numbers = set(emergency_numbers)
+        numbers_moved = numbers != self.network_emergency_numbers or not self.modem_state_known
+        self.network_emergency_numbers = numbers
+        self.modem_state_known = True
+        new_interfaces = set(interfaces)
+        added = new_interfaces - self.interfaces
+        presence_changed = present != self.modem_present
+        self.modem_present = present
+        self.modem_online = online
+        self.interfaces = new_interfaces
+        for iface in sorted(added):
+            self.emit("modem-interface-appeared", iface)
+        if presence_changed:
+            self.emit("connection-status",
+                      "connected" if present else "disconnected", "")
+        if numbers_moved:
+            self.emit("emergency-numbers-changed")
+
+    def on_sig_call_added(self, *args):
+        self.schedule_reseed()
+
+    def on_sig_call_changed(self, *args):
+        path, state = args[5].unpack()
+        if path in self.active_calls:
+            self.active_calls[path]["state"] = state
+        self.emit("call-changed", path, state)
+        self.schedule_reseed()
+
+    def on_sig_call_removed(self, *args):
+        path = args[5].unpack()[0]
+        if self.active_calls.pop(path, None) is not None:
+            self.emit("call-removed", path)
+        self.schedule_reseed()
+
+    def on_sig_capability(self, *args):
+        self.apply_capability(*args[5].unpack())
+
+    def on_sig_modem_state(self, *args):
+        state = args[5].unpack()[0]
+        self.apply_modem_state(state.get("present", False),
+                                state.get("online", False),
+                                state.get("interfaces", []),
+                                state.get("emergency_numbers", []))
+
+    def on_sig_voicemail(self, *args):
+        waiting, count = args[5].unpack()
+        self.voicemail_waiting = waiting
+        self.voicemail_count = count
+        self.emit("voicemail-changed", waiting, count)
+        self.schedule_reseed()
+
+    def on_sig_audio(self, *args):
+        state = args[5].unpack()[0]
+        self.apply_audio_state(state)
+
+    def apply_audio_state(self, state):
+        self.audio.current_route = state.get("route") or ("speaker" if state.get("speaker") else "earpiece")
+        self.audio.current_input = state.get("input") or "mic"
+        self.audio.mic_muted = bool(state.get("mic_muted"))
+        self.emit("audio-changed")
+
+    def on_sig_ussd(self, *args):
+        text = args[5].unpack()[0]
+        self.ussd_text = text or ""
+        self.emit("ussd-notification", text)
+
+    def on_sig_ussd_request(self, *args):
+        text = args[5].unpack()[0]
+        self.ussd_state = "user-response"
+        self.ussd_text = text or ""
+        self.emit("ussd-request", text)
+
+    def on_sig_ussd_state(self, *args):
+        state = args[5].unpack()[0] or "idle"
+        self.ussd_state = state
+        if state == "idle":
+            self.ussd_text = ""
+        self.emit("ussd-state-changed", state)
+
+    def apply_ussd_snapshot(self, state, text):
+        state = state or "idle"
+        text = text or ""
+        state_changed = state != self.ussd_state
+        text_changed = text != self.ussd_text
+
+        self.ussd_state = state
+        self.ussd_text = text if state != "idle" else ""
+
+        if state_changed:
+            self.emit("ussd-state-changed", state)
+        if state == "user-response" and self.ussd_text and (state_changed or text_changed):
+            self.emit("ussd-request", self.ussd_text)
+
+    def on_sig_network_service(self, *args):
+        service, name, value = args[5].unpack()
+        self.emit("network-service-changed", service, name,
+                  self.restore_service_value(name, value))
+
+    def is_dialing_available(self):
+        return self.can_dial
+
+    def has_modem_interface(self, interface):
+        return interface in self.interfaces
+
+    def dial(self, number, hide_id=False, on_result=None):
+        self.daemon.dial(number, hide_id, self.on_remote_dial_done)
+        return True
+
+    def on_remote_dial_done(self, reply):
+        if reply is None:
+            logger.warning("[OfonoMirror] Dial went unanswered: the daemon is not running")
+            self.emit("action-error", _("Telephony service is not running"))
+            return
+        success, message = reply
+        if not success:
+            logger.warning(f"[OfonoMirror] Daemon refused the dial: {message or "no reason given"}")
+            self.emit("action-error", message if message else _("Modem not ready"))
+
+    def answer_call(self, target_path):
+        self.daemon.call_async("Answer", GLib.Variant("(s)", (target_path,)))
+
+    def hangup_call(self, path):
+        self.daemon.call_async("Hangup", GLib.Variant("(s)", (path,)))
+
+    def hangup_all(self):
+        self.daemon.call_async("HangupAll", None)
+
+    def swap_calls(self):
+        self.daemon.call_async("SwapCalls", None)
+
+    def send_dtmf(self, tones):
+        self.daemon.call_async("SendDtmf", GLib.Variant("(s)", (tones,)))
+
+    def ask_call_action(self, action, argument, callback):
+        """Ask the owner for a call action and report (ok, reason). callback may be None for the actions nobody waits on, like hanging up a conference, where there is nothing to say if the network refuses beyond what the call list already shows."""
+        def done(reply):
+            if callback is None:
+                return
+            ok = bool(reply and reply[0])
+            callback((ok, None if ok else "refused"))
+
+        self.daemon.call_with_reply(
+            "CallAction", GLib.Variant("(ss)", (action, argument)), done)
+
+    def create_multiparty(self, callback=None):
+        self.ask_call_action("create_multiparty", "", callback)
+
+    def hangup_multiparty(self, callback=None):
+        self.ask_call_action("hangup_multiparty", "", callback)
+
+    def private_chat(self, path, callback=None):
+        self.ask_call_action("private_chat", path, callback)
+
+    def transfer_call(self, callback=None):
+        self.ask_call_action("transfer", "", callback)
+
+    def send_quick_response(self, number, text):
+        self.daemon.send_tracked_sms(number, text)
+        return True
+
+    def take_ussd_reply(self, reply, callback):
+        if not reply:
+            callback(None)
+            return
+        success, response, state = reply
+        self.ussd_state = state or "idle"
+        self.ussd_text = (response or "") if self.ussd_state != "idle" else ""
+        callback((bool(success), response, self.ussd_state))
+
+    def start_ussd(self, command, callback):
+        self.daemon.call_with_reply(
+            "StartUssd", GLib.Variant("(s)", (command,)),
+            lambda reply: self.take_ussd_reply(reply, callback),
+            timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def respond_ussd(self, response, callback):
+        self.daemon.call_with_reply(
+            "RespondUssd", GLib.Variant("(s)", (response,)),
+            lambda reply: self.take_ussd_reply(reply, callback),
+            timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def cancel_ussd(self, callback=None):
+        def done(reply):
+            success = bool(reply and reply[0])
+            if success:
+                self.ussd_state = "idle"
+                self.ussd_text = ""
+            if callback is not None:
+                callback(success)
+
+        self.daemon.call_with_reply(
+            "CancelUssd", None, done, timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def set_active_chat(self, number):
+        self.daemon.set_active_chat(self.normalize_chat_target(number))
+
+    def normalize_chat_target(self, number):
+        if not number:
+            return ""
+        if isinstance(number, list):
+            return ",".join(sorted(normalize_number(n) for n in number))
+        if "," in number:
+            return number
+        return normalize_number(number)
+
+    def get_service_properties(self, service, callback):
+        def done(reply):
+            if reply is None:
+                callback(None)
+                return
+            callback({k: self.restore_service_value(k, v) for k, v in reply[0].items()})
+
+        self.daemon.call_with_reply(
+            "GetNetworkProperties", GLib.Variant("(s)", (service,)), done)
+
+    def restore_service_value(self, name, packed):
+        text = packed if isinstance(packed, str) else str(packed)
+        if name.endswith("Timeout"):
+            try:
+                return int(text)
+            except ValueError:
+                return 0
+        return text
+
+    def set_service_property(self, service, name, value, callback):
+        self.ask_network_write(service, name, value, "", callback)
+
+    def set_barring_property(self, name, value, password, callback):
+        self.ask_network_write("barring", name, value, password, callback)
+
+    def ask_network_write(self, service, name, value, password, callback):
+        packed_value = (
+            GLib.Variant("q", value)
+            if isinstance(value, int) and not isinstance(value, bool)
+            else GLib.Variant("s", str(value))
+        )
+
+        def done(reply):
+            if reply is None:
+                callback((False, "no reply"))
+                return
+            error = reply[0]
+            callback((not error, error or None))
+
+        self.daemon.call_with_reply(
+            "SetNetworkProperty",
+            GLib.Variant("(ssvs)", (service, name, packed_value, password or "")),
+            done)
+
+    def take_network_reply(self, reply, callback):
+        if reply is None:
+            callback((False, "no reply"))
+            return
+        callback((reply[0], None if reply[0] else (reply[1] or "refused")))
+
+    def change_barring_password(self, old, new, callback):
+        self.daemon.change_barring_password(
+            old, new, lambda reply: self.take_network_reply(reply, callback))
+
+    def disable_all_forwarding(self, callback):
+        self.daemon.disable_all_forwarding(
+            lambda reply: self.take_network_reply(reply, callback))
+
+    def disable_all_barrings(self, password, callback):
+        self.daemon.disable_all_barrings(
+            password, lambda reply: self.take_network_reply(reply, callback))
+
+    def set_delivery_reports(self, enabled):
+        reply = self.daemon.set_delivery_reports(enabled)
+        if reply is None:
+            return (False, "no reply")
+        return (reply[0], None if reply[0] else (reply[1] or "refused"))

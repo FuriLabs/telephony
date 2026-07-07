@@ -1,0 +1,164 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+"""CLI commands for Management."""
+
+from gettext import gettext as _
+from gi.repository import GLib, Gio
+from telephony.cli.cli_utils import get_proxy
+from telephony.shared.utils.translation_utils import install_i18n
+
+NOTIFICATIONS_BUS = "org.freedesktop.Notifications"
+NOTIFICATIONS_PATH = "/org/freedesktop/Notifications"
+URGENCY_CRITICAL = 2
+
+
+def cmd_clear_messages(args):
+    proxy = get_proxy()
+    proxy.call_sync("ClearMessages", None, Gio.DBusCallFlags.NONE, -1, None)
+    print("Messages cleared.")
+
+
+def cmd_clear_groups(args):
+    proxy = get_proxy()
+    proxy.call_sync("ClearGroupNames", None, Gio.DBusCallFlags.NONE, -1, None)
+    print("Group names cleared.")
+
+
+def cmd_clear_blocklist(args):
+    proxy = get_proxy()
+    proxy.call_sync("ClearBlocklist", None, Gio.DBusCallFlags.NONE, -1, None)
+    print("Blocklist cleared.")
+
+
+def cmd_clear_contacts(args):
+    proxy = get_proxy()
+    proxy.call_sync("ClearContacts", GLib.Variant("(s)", (args.source_uid or "",)), Gio.DBusCallFlags.NONE, -1, None)
+    print("Contacts cleared.")
+
+
+def cmd_clear_everything(args):
+    proxy = get_proxy()
+    proxy.call_sync("ClearEverything", GLib.Variant("(s)", (args.source_uid or "",)), Gio.DBusCallFlags.NONE, -1, None)
+    print("Everything cleared.")
+
+
+def cmd_delete_addressbook(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("DeleteAddressBook", GLib.Variant("(s)", (args.source_uid,)), Gio.DBusCallFlags.NONE, -1, None)
+    success = res.unpack()[0]
+    if success:
+        print(f"Address book {args.source_uid} deleted.")
+    else:
+        print(f"Failed to delete address book {args.source_uid}.")
+
+
+def cmd_import_chatty(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportChatty", GLib.Variant("(ss)", (args.db_path, args.mms_path)), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
+def cmd_import_local_calls(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportLocalCalls", GLib.Variant("(s)", (args.db_path,)), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
+def cmd_import_android_sms(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportAndroidSms", GLib.Variant("(s)", (args.file_path,)), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
+def cmd_import_android_calls(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportAndroidCalls", GLib.Variant("(s)", (args.file_path,)), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
+def cmd_import_ios_sms(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportIosSms", GLib.Variant("(sss)", (args.file_path, "", "")), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
+def cmd_import_ios_calls(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportIosCalls", GLib.Variant("(s)", (args.file_path,)), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
+def cmd_service_failed(args):
+    install_i18n()
+    bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+    hints = {"urgency": GLib.Variant("y", URGENCY_CRITICAL)}
+    bus.call_sync(
+        NOTIFICATIONS_BUS, NOTIFICATIONS_PATH, NOTIFICATIONS_BUS, "Notify",
+        GLib.Variant("(susssasa{sv}i)", (
+            "Telephony", 0, "dialog-error-symbolic",
+            _("Telephony service is not running"),
+            _("Incoming calls and messages are not received. Open the app to start it again."),
+            [], hints, 0)),
+        None, Gio.DBusCallFlags.NONE, -1, None)
+
+
+def setup_parsers(subparsers):
+    p_sf = subparsers.add_parser("service-failed", help="Show the service-failure notice (run by systemd OnFailure)")
+    p_sf.set_defaults(func=cmd_service_failed)
+
+    p_cm = subparsers.add_parser("clear-messages", help="Clear all messages")
+    p_cm.set_defaults(func=cmd_clear_messages)
+
+    p_cg = subparsers.add_parser("clear-groups", help="Clear all custom group names")
+    p_cg.set_defaults(func=cmd_clear_groups)
+
+    p_cb = subparsers.add_parser("clear-blocklist", help="Clear the blocklist")
+    p_cb.set_defaults(func=cmd_clear_blocklist)
+
+    p_cc = subparsers.add_parser("clear-contacts", help="Clear contacts")
+    p_cc.add_argument("--source-uid", type=str, default="", help="Specific address book UID")
+    p_cc.set_defaults(func=cmd_clear_contacts)
+
+    p_ce = subparsers.add_parser("clear-everything", help="Clear EVERYTHING (database, settings, contacts)")
+    p_ce.add_argument("--source-uid", type=str, default="", help="Specific address book UID for contacts deletion")
+    p_ce.set_defaults(func=cmd_clear_everything)
+
+    p_da = subparsers.add_parser("delete-addressbook", help="Delete an address book permanently")
+    p_da.add_argument("source_uid", type=str, help="Address book UID to delete")
+    p_da.set_defaults(func=cmd_delete_addressbook)
+
+    p_ic = subparsers.add_parser("import-chatty", help="Import Chatty database")
+    p_ic.add_argument("db_path", type=str, help="Path to chatty.db")
+    p_ic.add_argument("mms_path", type=str, help="Path to mms attachments dir")
+    p_ic.set_defaults(func=cmd_import_chatty)
+
+    p_ilc = subparsers.add_parser("import-local-calls", help="Import Calls database")
+    p_ilc.add_argument("db_path", type=str, help="Path to records.db")
+    p_ilc.set_defaults(func=cmd_import_local_calls)
+
+    p_ias = subparsers.add_parser("import-android-sms", help="Import Android SMS XML")
+    p_ias.add_argument("file_path", type=str, help="Path to XML file")
+    p_ias.set_defaults(func=cmd_import_android_sms)
+
+    p_iac = subparsers.add_parser("import-android-calls", help="Import Android Calls XML")
+    p_iac.add_argument("file_path", type=str, help="Path to XML file")
+    p_iac.set_defaults(func=cmd_import_android_calls)
+
+    p_iis = subparsers.add_parser("import-ios-sms", help="Import iOS SMS DB")
+    p_iis.add_argument("file_path", type=str, help="Path to sqlite DB")
+    p_iis.set_defaults(func=cmd_import_ios_sms)
+
+    p_iic = subparsers.add_parser("import-ios-calls", help="Import iOS Calls DB")
+    p_iic.add_argument("file_path", type=str, help="Path to sqlite DB")
+    p_iic.set_defaults(func=cmd_import_ios_calls)

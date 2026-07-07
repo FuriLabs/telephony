@@ -1,0 +1,100 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+from gi.repository import Gtk, Adw, GLib
+from telephony.shared.utils.log_utils import logger
+from gettext import gettext as _
+
+from telephony.shared.utils.phone_utils import normalize_number
+from telephony.client.ui.widgets.common_widget import (wire_blocklist_switch_locks,
+                                                      close_sheet_page)
+
+
+class BlocklistEditor(Adw.NavigationPage):
+
+    def __init__(self, db_manager, eds_manager, parent_window, number_preset=None, name_preset=None):
+        super().__init__(title=_("Block Number"))
+        self.set_size_request(-1, 400)
+
+        self.db = db_manager
+        self.eds = eds_manager
+        self.app_window = parent_window
+        self.daemon = parent_window.daemon
+
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.set_child(content)
+
+        header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
+
+        btn_cancel = Gtk.Button(label=_("Cancel"))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False))
+        header.pack_start(btn_cancel)
+
+        btn_save = Gtk.Button(label=_("Save"))
+        btn_save.add_css_class("suggested-action")
+        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save(b) or False))
+        header.pack_end(btn_save)
+
+        content.append(header)
+
+        page = Adw.PreferencesPage()
+        grp = Adw.PreferencesGroup()
+        grp.set_title(_("Number Details"))
+        grp.set_description(_("Calls from this number will be automatically rejected."))
+        page.add(grp)
+        content.append(page)
+
+        self.entry_num = Adw.EntryRow(title=_("Number"))
+        self.entry_num.set_input_purpose(Gtk.InputPurpose.PHONE)
+        if number_preset:
+            self.entry_num.set_text(number_preset)
+
+        grp.add(self.entry_num)
+
+        self.entry_note = Adw.EntryRow(title=_("Note (Optional)"))
+        if name_preset:
+            self.entry_note.set_text(name_preset)
+
+        grp.add(self.entry_note)
+        self.sw_calls = Adw.SwitchRow(title=_("Block Calls"), active=True)
+        self.sw_calls.add_prefix(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
+        grp.add(self.sw_calls)
+        self.sw_messages = Adw.SwitchRow(title=_("Block Messages"), active=True)
+        self.sw_messages.add_prefix(Gtk.Image.new_from_icon_name("mail-unread-symbolic"))
+        grp.add(self.sw_messages)
+        wire_blocklist_switch_locks(self.sw_calls, self.sw_messages)
+
+    def on_save(self, btn):
+        raw_num = self.entry_num.get_text().strip()
+        note = self.entry_note.get_text().strip()
+
+        if not raw_num:
+            return
+
+        norm_num = normalize_number(raw_num)
+
+        if self.db.is_blocked(norm_num, kind="any"):
+            logger.warning(f"[Blocklist] Block rejected: Number {norm_num} is already blocked.")
+            self.show_error(_("Duplicate"), _("This number is already blocked."))
+            return
+
+        block_calls = bool(self.sw_calls and self.sw_calls.get_active())
+        block_messages = bool(self.sw_messages and self.sw_messages.get_active())
+
+        block_calls = self.sw_calls.get_active()
+        block_messages = self.sw_messages.get_active()
+
+        def done(success):
+            if success:
+                close_sheet_page(self.get_root())
+                return
+            self.show_error(_("Database Error"), _("Failed to save to blocklist."))
+
+        self.daemon.add_blocked_number(norm_num, note, block_calls, block_messages, done)
+
+    def show_error(self, title, msg):
+        self.app_window.notify_error(msg)

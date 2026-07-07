@@ -1,0 +1,346 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Furi Labs
+#
+# Authors:
+# Bardia Moshiri <bardia@furilabs.com>
+# Alaraajavamma <aki@urheiluaki.fi>
+
+import datetime
+import os
+import subprocess
+import time
+from telephony.shared.utils.log_utils import logger
+from telephony.shared.constants import DAEMON_BUS_NAME
+from gi.repository import Gio, GLib
+
+DAEMON_WAIT_TRIES = 20
+DAEMON_WAIT_STEP_SECONDS = 0.5
+
+
+def systemd_manager(bus_type):
+    bus = Gio.bus_get_sync(bus_type, None)
+    return Gio.DBusProxy.new_sync(
+        bus, Gio.DBusProxyFlags.NONE, None,
+        "org.freedesktop.systemd1",
+        "/org/freedesktop/systemd1",
+        "org.freedesktop.systemd1.Manager",
+        None
+    )
+
+
+def systemd_unit_action(method, service_name, bus_type):
+    systemd_manager(bus_type).call_sync(
+        method,
+        GLib.Variant("(ss)", (service_name, "replace")),
+        Gio.DBusCallFlags.NONE,
+        -1,
+        None
+    )
+
+
+def start_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
+    try:
+        systemd_unit_action("StartUnit", service_name, bus_type)
+        logger.info(f"Started service: {service_name}")
+    except Exception as e:
+        logger.error(f"Failed to start systemd service {service_name}: {e}")
+
+
+def stop_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
+    try:
+        systemd_unit_action("StopUnit", service_name, bus_type)
+        logger.info(f"Stopped service: {service_name}")
+    except Exception as e:
+        logger.error(f"Failed to stop systemd service {service_name}: {e}")
+
+
+def restart_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
+    try:
+        systemd_unit_action("RestartUnit", service_name, bus_type)
+        logger.info(f"Restarted service: {service_name}")
+    except Exception as e:
+        logger.error(f"Failed to restart systemd service {service_name}: {e}")
+
+
+def is_systemd_service_active(service_name, bus_type=Gio.BusType.SESSION):
+    try:
+        result = systemd_manager(bus_type).call_sync(
+            "GetUnit",
+            GLib.Variant("(s)", (service_name,)),
+            Gio.DBusCallFlags.NONE,
+            -1,
+            None
+        )
+        unit_path = result.unpack()[0]
+
+        bus = Gio.bus_get_sync(bus_type, None)
+        unit_proxy = Gio.DBusProxy.new_sync(
+            bus, Gio.DBusProxyFlags.NONE, None,
+            "org.freedesktop.systemd1",
+            unit_path,
+            "org.freedesktop.DBus.Properties",
+            None
+        )
+        state_variant = unit_proxy.call_sync(
+            "Get",
+            GLib.Variant("(ss)", ("org.freedesktop.systemd1.Unit", "ActiveState")),
+            Gio.DBusCallFlags.NONE,
+            -1,
+            None
+        )
+        state = state_variant.unpack()[0]
+        return state == "active"
+    except Exception as e:
+        logger.debug(f"Failed to check systemd service active state for {service_name}: {e}")
+        return False
+
+
+def get_phosh_emergency_calls():
+    source = Gio.SettingsSchemaSource.get_default()
+    if not source:
+        return []
+    try:
+        schema = source.lookup("sm.puri.phosh.emergency-calls", True)
+        if schema and schema.has_key("enabled"):
+            settings = Gio.Settings(schema_id="sm.puri.phosh.emergency-calls")
+            enabled = settings.get_boolean("enabled")
+            if enabled:
+                return ["io.furios.Telephony.Emergency"]
+            return []
+        return []
+    except Exception as e:
+        logger.warning(f"Could not read phosh emergency calls: {e}")
+        return []
+
+
+def set_phosh_emergency_calls(enabled):
+    source = Gio.SettingsSchemaSource.get_default()
+    if not source:
+        return
+    try:
+        schema = source.lookup("sm.puri.phosh.emergency-calls", True)
+        if schema and schema.has_key("enabled"):
+            settings = Gio.Settings(schema_id="sm.puri.phosh.emergency-calls")
+            settings.set_boolean("enabled", enabled)
+    except Exception as e:
+        logger.warning(f"Could not write phosh emergency calls: {e}")
+
+
+def get_feedbackd_profile():
+    try:
+        settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd")
+        return settings.get_string("profile")
+    except Exception as e:
+        logger.warning(f"Could not read feedbackd profile: {e}")
+        return "full"
+
+
+def set_feedbackd_profile(profile_name):
+    try:
+        settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd")
+        settings.set_string("profile", profile_name)
+    except Exception as e:
+        logger.warning(f"Could not write feedbackd profile: {e}")
+
+
+def is_location_enabled():
+    try:
+        bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+        proxy = Gio.DBusProxy.new_sync(bus, Gio.DBusProxyFlags.NONE, None,
+                                       "org.freedesktop.GeoClue2",
+                                       "/org/freedesktop/GeoClue2/Manager",
+                                       "org.freedesktop.DBus.Properties",
+                                       None)
+        inUse = proxy.Get("(ss)", "org.freedesktop.GeoClue2.Manager", "InUse")
+        return bool(inUse)
+    except Exception as e:
+        logger.warning(f"Failed to check location status: {e}")
+        return False
+
+
+def enable_location():
+    try:
+        settings = Gio.Settings(schema_id="org.gnome.system.location")
+        settings.set_boolean("enabled", True)
+    except Exception as e:
+        logger.warning(f"Could not enable location: {e}")
+
+
+OFONO_BUS_NAME = "org.ofono"
+OFONO_WAIT_TRIES = 20
+OFONO_WAIT_STEP_SECONDS = 0.5
+
+
+def restart_ofono_service():
+    """Restart the system ofono service; blocking, call from a worker. ofono is a system unit, so this goes to the system manager rather than the session one every other service here lives on."""
+    restart_systemd_service("ofono.service", Gio.BusType.SYSTEM)
+
+
+def wait_for_ofono():
+    bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+    for _ in range(OFONO_WAIT_TRIES):
+        try:
+            res = bus.call_sync(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                "NameHasOwner", GLib.Variant("(s)", (OFONO_BUS_NAME,)),
+                GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
+            if res.unpack()[0]:
+                return
+        except Exception as e:
+            logger.debug(f"[SystemUtils] ofono name check failed: {e}")
+        time.sleep(OFONO_WAIT_STEP_SECONDS)
+    logger.warning("[SystemUtils] ofono did not answer within the wait")
+
+
+def is_ofono_on_bus():
+    try:
+        bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+        res = bus.call_sync(
+            "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+            "NameHasOwner", GLib.Variant("(s)", (OFONO_BUS_NAME,)),
+            GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
+        return bool(res.unpack()[0])
+    except Exception as e:
+        logger.debug(f"[SystemUtils] Could not ask for ofono on the bus: {e}")
+        return False
+
+
+def is_ril_running():
+    return getprop("init.svc.vendor.ril-daemon-mtk") == "running"
+
+
+def restart_modemmanager():
+    restart_systemd_service("ModemManager.service", Gio.BusType.SYSTEM)
+
+
+def getprop(name):
+    try:
+        result = subprocess.run(["getprop", name], capture_output=True, text=True)
+        return result.stdout.strip()
+    except Exception as e:
+        logger.debug(f"Could not read the property {name}: {e}")
+        return ""
+
+
+def is_vendor_radio_disabled():
+    return getprop("persist.vendor.radio.disabled") == "1"
+
+
+def is_gsd_airplane_mode():
+    try:
+        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        proxy = Gio.DBusProxy.new_sync(
+            bus, Gio.DBusProxyFlags.DO_NOT_AUTO_START, None,
+            "org.gnome.SettingsDaemon.Rfkill",
+            "/org/gnome/SettingsDaemon/Rfkill",
+            "org.gnome.SettingsDaemon.Rfkill",
+            None
+        )
+        airplane_mode = proxy.get_cached_property("AirplaneMode")
+        return bool(airplane_mode.unpack()) if airplane_mode else False
+    except Exception as e:
+        logger.debug(f"Could not read the airplane mode state: {e}")
+        return False
+
+def setprop(name, value):
+    try:
+        subprocess.run(["setprop", name, value], check=False)
+    except Exception as e:
+        logger.error(f"Failed to set the property {name}: {e}")
+
+
+def restart_ril_modem():
+    setprop("ctl.restart", "vendor.ril-daemon-mtk")
+
+
+def save_modem_logs():
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    target_dir = os.path.expanduser("~/Documents")
+    os.makedirs(target_dir, exist_ok=True)
+    path = os.path.join(target_dir, f"modem-logs-{stamp}.txt")
+
+    sections = (
+        ("=== journalctl ofono ===", ["journalctl", "-b", "-u", "ofono", "--no-pager", "-n", "3000"]),
+        ("=== journalctl telephony ===", ["journalctl", "--user", "-b", "-u", "telephony.service", "--no-pager", "-n", "1000"]),
+        ("=== logcat radio ===", ["logcat", "-b", "radio", "-d", "-t", "3000"]),
+    )
+
+    wrote_any = False
+    with open(path, "w") as f:
+        for header, cmd in sections:
+            f.write(header + "\n")
+            try:
+                out = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                f.write(out.stdout or "")
+                if out.stderr:
+                    f.write(out.stderr)
+                wrote_any = wrote_any or bool(out.stdout)
+            except Exception as e:
+                logger.warning(f"[SystemUtils] Log capture failed for {cmd[0]}: {e}")
+                f.write(f"capture failed: {e}\n")
+            f.write("\n")
+
+    if not wrote_any:
+        logger.error("[SystemUtils] Modem log capture produced no output")
+        return None
+    return path
+
+
+def wtype(*args):
+    try:
+        subprocess.run(["wtype", *args], check=False)
+    except Exception as e:
+        logger.error(f"Input simulation failed: {e}")
+
+
+def press_power_button():
+    wtype("-k", "XF86PowerOff")
+
+
+def launch_desktop_uri(desktop_file, uri):
+    app_info = Gio.DesktopAppInfo.new(desktop_file)
+    if not app_info:
+        logger.error(f"[Launch] {desktop_file} is missing, cannot open {uri}")
+        return False
+    try:
+        app_info.launch_uris([uri], None)
+        return True
+    except Exception as e:
+        logger.error(f"[Launch] Could not launch {desktop_file}: {e}")
+        return False
+
+
+def is_daemon_bus_running():
+    bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+    res = bus.call_sync(
+        "org.freedesktop.DBus",
+        "/org/freedesktop/DBus",
+        "org.freedesktop.DBus",
+        "NameHasOwner",
+        GLib.Variant("(s)", (DAEMON_BUS_NAME,)),
+        GLib.VariantType("(b)"),
+        Gio.DBusCallFlags.NONE,
+        -1,
+        None
+    )
+    return res.unpack()[0]
+
+
+def ensure_daemon_running():
+    if is_daemon_bus_running():
+        logger.info("[Service] Daemon already running (D-Bus). Skipping systemd check.")
+        return
+    try:
+        if not is_systemd_service_active("telephony.service"):
+            logger.info("[Service] Telephony service not running. Starting it...")
+            start_systemd_service("telephony.service")
+
+        logger.info("[Service] Waiting for the telephony daemon to appear on the bus...")
+        for _ in range(DAEMON_WAIT_TRIES):
+            if is_daemon_bus_running():
+                logger.info("[Service] Daemon is now running.")
+                return
+            time.sleep(DAEMON_WAIT_STEP_SECONDS)
+        logger.warning("[Service] Daemon did not appear; the windows will say so.")
+    except Exception as e:
+        logger.warning(f"[Service] Failed to check/start systemd service: {e}")
