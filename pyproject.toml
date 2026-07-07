@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "furios-app-telephony"
+version = "1.00"
+description = "A GTK4/Libadwaita Dialer for Phosh using oFono"
+authors = [
+  { name = "alaraajavamma", email = "aki@urheiluaki.fi" },
+]
+dependencies = [
+  "phonenumbers",
+  "PyGObject",
+  "loguru",
+  "pulsectl",
+  "dbus-python",
+  "pyotp",
+  "qrcode",
+  "Pillow",
+  "python-magic",
+  "av",
+]
+requires-python = ">=3.8"
+
+[project.scripts]
+telephony = "telephony.main:main"
+telephony-cli = "telephony.cli.cli_main:main"

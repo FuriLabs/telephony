@@ -1,0 +1,40 @@
+Source: furios-app-telephony
+Section: utils
+Priority: optional
+Maintainer: alaraajavamma <aki@urheiluaki.fi>
+Build-Depends: debhelper-compat (= 13), dh-python, python3-all, python3-setuptools, pybuild-plugin-pyproject, python3-pytest, python3-pyflakes
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: furios-app-telephony
+Architecture: all
+Breaks: phofono, telephony
+Replaces: phofono, telephony
+Depends: ${python3:Depends}, ${misc:Depends},
+         python3-gi,
+         python3-phonenumbers,
+         python3-pillow,
+         python3-dbus,
+         python3-loguru,
+         python3-pulsectl,
+         python3-pyotp,
+         python3-qrcode,
+         gir1.2-gtk-4.0,
+         wtype,
+         gir1.2-adw-1,
+         gir1.2-ebook-1.2,
+         gir1.2-ebookcontacts-1.2,
+         gir1.2-lfb-0.0,
+         gir1.2-edataserver-1.2,
+         gir1.2-geoclue-2.0,
+         gir1.2-gstreamer-1.0,
+         gir1.2-secret-1,
+         python3-magic,
+         python3-av,
+         python3-gst-1.0,
+         sound-theme-freedesktop,
+         libimobiledevice-utils,
+         tmate
+Description: GTK4 Dialer for Linux Phones
+ A simple dialer using oFono backend, supporting VCard import/export
+ and system contact synchronization and full sms, mms support.

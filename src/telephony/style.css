@@ -1,0 +1,261 @@
+/* Global transitions for interactive elements to ensure smooth animations when hovering or clicking buttons */
+.call-btn, .call-btn-small, .secondary-btn, .gray-btn, .destructive-action, .suggested-action, .pill {
+transition: all 0.1s ease-in-out;
+}
+
+/* Call button styling: Used for primary call actions like the big dial button on the dialpad. Uses a distinct green color. */
+.call-btn { background: #2ec27e; color: white; border-radius: 9999px; }
+.call-btn:hover { background: #26a269; }
+.call-btn:active { background: #1a7f50; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+
+/* Small call button styling: Used for quick call actions within lists, such as the call history or contact rows. */
+.call-btn-small { background: #2ec27e; color: white; padding: 0px; min-height: 24px; min-width: 24px; border-radius: 9999px; }
+.call-btn-small:hover { background: #26a269; }
+.call-btn-small:active { background: #1a7f50; transform: scale(0.90); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+
+/* Secondary and gray button styling: Used for non-primary actions like info buttons or filter toggles. Blends with the theme background. */
+.secondary-btn, .gray-btn { background-color: alpha(@theme_fg_color, 0.08); color: @theme_fg_color; padding: 0px; border-radius: 9999px; }
+.secondary-btn:hover, .gray-btn:hover { background-color: alpha(@theme_fg_color, 0.15); }
+.secondary-btn:active, .gray-btn:active { background-color: alpha(@theme_fg_color, 0.3); transform: scale(0.95); }
+
+/* Destructive action button styling: Red buttons used for irreversible or critical actions like hanging up a call or deleting data. */
+.destructive-action { background-color: #e01b24; color: white; }
+.destructive-action:hover { background-color: #c01c28; }
+.destructive-action:active { background-color: #a0131a; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+
+/* Suggested action button styling: Blue buttons for primary user actions, such as sending a message or saving a contact. */
+.suggested-action { background-color: #3584e4; color: white; }
+.suggested-action:active { background-color: #1c71d8; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+
+/* Icons colors for call history indicators: Differentiates missed (red), incoming (green), outgoing (green), and cancelled (red) calls. */
+.call-icon-missed { color: #e01b24; }
+.call-icon-incoming { color: #2ec27e; }
+.call-icon-outgoing { color: #2ec27e; }
+.call-icon-cancelled { color: #e01b24; }
+.icon-blue { color: #3584e4; }
+.icon-red { color: #e01b24; }
+
+/* General utility classes for layouts: Compact buttons, dimming secondary text, tiny fonts for timestamps, blue accents, and pill-shaped borders. */
+.compact-btn { padding-top: 0px; padding-bottom: 0px; min-height: 20px; }
+.dim-label { opacity: 0.7; font-size: 0.9em; }
+.tiny-label { opacity: 0.6; font-size: 0.75em; }
+.accent { color: #3584e4; font-weight: bold; }
+.pill { border-radius: 12px; }
+
+/* Chat bubbles styling: Defines incoming (gray, rounded top-left), outgoing (blue, rounded top-right), and scheduled (yellow) message bubbles. */
+.chat-bubble-in { background: #deddda; color: black; border-radius: 15px 15px 15px 0px; padding: 6px 10px; }
+.chat-bubble-out { background: #3584e4; color: white; border-radius: 15px 15px 0px 15px; padding: 6px 10px; }
+.chat-bubble-scheduled { background: #f5c211; color: black; border-radius: 15px 15px 0px 15px; padding: 6px 10px; }
+.chat-time { font-size: 0.75em; opacity: 0.6; margin-top: 2px; }
+
+/* In-app notification toast styling: For temporary alerts shown to the user (errors in red, success in green, info in blue). */
+.app-notification { font-weight: bold; }
+.notif-error { background-color: #e01b24; color: white; padding: 8px 16px; border-radius: 99px; }
+.notif-success { background-color: #2ec27e; color: white; padding: 8px 16px; border-radius: 99px; }
+.notif-info { background-color: #3584e4; color: white; padding: 8px 16px; border-radius: 99px; }
+
+/* Round button styling: Creates circular buttons often used in action toolbars or floating actions, with specific color variants. */
+.round-btn {
+    border-radius: 50%;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0;
+    margin: 0;
+}
+.success-btn { background-color: #2ec27e; color: white; }
+.suggested-btn { background-color: #3584e4; color: white; }
+.destructive-btn { background-color: #e01b24; color: white; }
+
+/* Chat input field styling: Defines the appearance of the message composition area, including borders, rounding, and focus states. */
+.chat-input {
+    background-color: @view_bg_color;
+    border: 1px solid alpha(@window_fg_color, 0.15);
+    border-radius: 10px;
+    padding: 9px 9px;
+    transition: border-color 200ms ease-in-out;
+}
+.chat-input:focus-within {
+    border-color: @accent_color;
+}
+.chat-input textview {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Attachment chip styling: Defines the appearance of media or file attachment previews within the chat input or message flow. */
+.att-chip {
+    background-color: alpha(@window_fg_color, 0.08);
+    border-radius: 6px;
+    padding: 4px 8px;
+    margin-right: 6px;
+}
+
+/* Load more button styling: Used at the bottom of paginated lists (like chat history) to fetch older entries. */
+.load-more-btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Fix for GTK Stack minimum size to prevent UI scaling issues when stacks are empty or hidden. */
+stack {
+    min-width: 0px;
+    min-height: 0px;
+}
+
+/* Action button blue variants: Provides distinct shades of blue for secondary actions without overlapping the primary theme accent. */
+.action-blue-mid {
+    background-color: #5e9ce0;
+    color: white;
+}
+.action-blue-light {
+    background-color: #99c1f1;
+    color: black;
+}
+
+/* Mini chat bubble styling: Used for small inline previews of messages, typically inside dialogs or popovers. */
+.mini-bubble {
+    margin-bottom: 8px;
+}
+
+/* Popover menu header styling: Formats section titles inside popover menus with uppercase, spaced letters, and dim colors. */
+.menu-header {
+    font-weight: bold;
+    font-size: 10px;
+    color: alpha(currentColor, 0.6);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Fullscreen fader styling: A completely black overlay used to turn the screen black during a call when the proximity sensor is triggered. */
+.black-fader { background-color: black; }
+
+/* Card container styling: Groups related information together visually with a subtle background and rounded corners. */
+.card {
+    background-color: alpha(@theme_fg_color, 0.08);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+/* Active blue state: Highlights selected items (e.g. in a list or grid) with a solid blue background and border. */
+.blue-active { background-color: #3584e4; color: white; border: 1px solid #78aeed; }
+
+/* Specific green button styling: For buttons requiring a green color outside of call actions, with custom press animations. */
+.btn-green {
+    background-color: #2ec27e; color: white;
+    transition: background-color 0.1s, transform 0.1s;
+}
+
+/* Interaction transitions for various buttons: Ensures responsive visual feedback (scaling down or changing color) when pressing elements. */
+.destructive-action, .circular, .dialpad-btn {
+    transition: background-color 0.1s, transform 0.1s;
+}
+.btn-green:active { background-color: #1a633f; transform: scale(0.94); }
+.destructive-action:active { background-color: #811d1d; transform: scale(0.94); }
+.circular:active { background-color: alpha(@theme_fg_color, 0.1); transform: translateY(2px); }
+.dialpad-btn:active { background-color: #3584e4; color: white; }
+
+/* Transparent background button: Removes padding and background for pure icon buttons. */
+.bg-btn { padding: 0; }
+
+/* Error message box styling: A visually distinct dark red container for displaying critical errors. */
+.error-box { background-color: #3d1414; border-radius: 15px; padding: 20px; }
+.error-title { font-weight: 800; font-size: 24px; color: #ff7b7b; }
+
+/* Utility class for rounded corners: standardizes the corner radius across various custom elements. */
+.rounded-corners {
+    border-radius: 12px;
+}
+
+/* Attachment preview tile: A square or rectangular area with a subtle background used to show thumbnails for images or videos. */
+.attachment-tile {
+    background-color: alpha(@theme_fg_color, 0.1);
+    border-radius: 12px;
+}
+
+/* Shadow for white icons on bright backgrounds: Adds a subtle drop shadow to ensure white icons remain visible over varying background colors or images. */
+.icon-white-shadow {
+    color: white;
+    text-shadow: 0px 1px 3px rgba(0,0,0,0.8);
+}
+
+/* View switcher styling: Customizes the main navigation tabs, highlighting the active tab and dimming inactive ones while removing default borders. */
+viewswitcher button:checked {
+    opacity: 1;
+    font-weight: bold;
+}
+viewswitcher button:not(:checked) {
+    opacity: 0.5;
+    font-weight: normal;
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+}
+viewswitcher button:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* Voice recorder button styling: A large red circular button used to initiate audio recording, with scaled-up icon inside. */
+.record-button {
+    border-radius: 9999px;
+    background-color: #e01b24;
+    color: white;
+    padding: 0;
+}
+.record-button:active {
+    background-color: #a51d2d;
+}
+.record-button image {
+    -gtk-icon-transform: scale(2.0);
+}
+
+/* Camera shutter button styling: A large white circular button with a thick border, imitating a physical camera shutter button. */
+.shutter-button {
+    border-radius: 9999px;
+    background-color: white;
+    color: black;
+    padding: 0;
+    border: 4px solid #dedede;
+}
+.shutter-button:active {
+    background-color: #cccccc;
+}
+.shutter-button image {
+    -gtk-icon-transform: scale(1.5);
+}
+
+/* Camera video record button styling: A red circular button with a thick border used specifically for starting video capture. */
+.video-record-button {
+    border-radius: 9999px;
+    background-color: #e01b24;
+    color: white;
+    padding: 0;
+    border: 4px solid #dedede;
+}
+.video-record-button:active {
+    background-color: #a51d2d;
+}
+.video-record-button image {
+    -gtk-icon-transform: scale(2.0);
+}
+
+/* Styling for 'All' filter button in history: Modifies the padding and rounding of the history view's primary filter button. */
+.all-button-history {
+    border-radius: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+/* Yellow action button styling: Used for scheduling messages matching the scheduled message bubble color. */
+.yellow-action { background-color: #f5c211; color: black; }
+.yellow-action:active { background-color: #e5b300; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+
+.inverted-list {
+    transform: scaleY(-1);
+}
+.inverted-row {
+    transform: scaleY(-1);
+}

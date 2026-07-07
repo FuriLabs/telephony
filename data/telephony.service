@@ -1,0 +1,19 @@
+[Unit]
+Description=Telephony Background Service
+After=graphical-session.target
+BindsTo=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+
+# Start App
+ExecStart=/usr/bin/telephony --start-monitoring
+
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical-session.target
