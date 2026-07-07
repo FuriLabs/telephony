@@ -75,7 +75,7 @@ sudo apt install git build-essential debhelper dh-python python3-all python3-set
 1. Clone the repository:
 
 ```bash 
-git clone https://gitlab.com/Alaraajavamma/telephony.git
+git clone https://github.com/FuriLabs/telephony.git
 ```
 ```bash 
 cd telephony

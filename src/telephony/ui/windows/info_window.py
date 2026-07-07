@@ -99,8 +99,8 @@ class InfoPage:
         links_group.add(
             link_row(
                 _("Website"),
-                "gitlab.com/Alaraajavamma/telephony",
-                "https://gitlab.com/Alaraajavamma/telephony"
+                "github.com/FuriLabs/telephony",
+                "https://github.com/FuriLabs/telephony""
             )
         )
 
@@ -108,7 +108,7 @@ class InfoPage:
             link_row(
                 _("Issue Tracker"),
                 _("Report bugs or request features"),
-                "https://gitlab.com/Alaraajavamma/telephony/issues"
+                "https://github.com/FuriLabs/telephony/issues"
             )
         )
 
