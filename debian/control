@@ -8,8 +8,7 @@ Rules-Requires-Root: no
 
 Package: furios-app-telephony
 Architecture: all
-Breaks: phofono, telephony
-Replaces: phofono, telephony
+Conflicts: gnome-calls, ofono-toned, callaudiod
 Depends: ${python3:Depends}, ${misc:Depends},
          python3-gi,
          python3-phonenumbers,
