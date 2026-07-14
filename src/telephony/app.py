@@ -84,10 +84,11 @@ class App(Adw.Application):
     def _setup_feedbackd(self):
         """Setup feedbackd application profiles."""
         def task():
+            source = Gio.SettingsSchemaSource.get_default()
+            if not source:
+                return
+
             try:
-                source = Gio.SettingsSchemaSource.get_default()
-                if not source:
-                    return
                 schema = source.lookup("org.sigxcpu.feedbackd", True)
                 if not schema or not schema.has_key('allow-important'):
                     logger.debug("org.sigxcpu.feedbackd schema or allow-important key missing")
@@ -105,9 +106,6 @@ class App(Adw.Application):
                 logger.warning(f"Failed to setup feedbackd allow-important: {e}")
 
             try:
-                source = Gio.SettingsSchemaSource.get_default()
-                if not source:
-                    return
                 schema = source.lookup("org.sigxcpu.feedbackd.application", True)
                 if not schema or not schema.has_key("profile"):
                     logger.debug("org.sigxcpu.feedbackd.application schema or profile key missing")
@@ -382,8 +380,8 @@ class App(Adw.Application):
         """Handle incoming SMS."""
         is_chat_open = False
 
+        priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
         try:
-            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
             norm_sender = normalize_number(number)
             for p in priority_list:
                 p_num = normalize_number(p.get("number", ""))
@@ -393,17 +391,13 @@ class App(Adw.Application):
                     GLib.timeout_add_seconds(1, lambda: self.notification_manager.audio.force_max_feedback() or False)
                     GLib.timeout_add_seconds(5, lambda: self.notification_manager.audio.force_max_feedback(restore=True) or False)
                     break
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Exception checking DND bypass: {e}")
 
         for win in self.get_windows():
             if isinstance(win, MainWindow):
-                try:
-                    if win.handle_new_message(number, body, []):
-                        is_chat_open = True
-                except TypeError:
-                    if win.handle_new_message(number, body):
-                        is_chat_open = True
+                if win.handle_new_message(number, body):
+                    is_chat_open = True
 
         if not is_chat_open:
             self.broadcast_notification(number, body)
@@ -450,8 +444,8 @@ class App(Adw.Application):
         is_chat_open = False
 
         if real_sender:
+            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
             try:
-                priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
                 norm_sender = normalize_number(real_sender)
                 for p in priority_list:
                     p_num = normalize_number(p.get("number", ""))
@@ -466,13 +460,8 @@ class App(Adw.Application):
 
         for win in self.get_windows():
             if isinstance(win, MainWindow):
-                try:
-                    if win.handle_new_message(chat_id, preview_text, attachments, real_sender):
-                        is_chat_open = True
-                except TypeError:
-                    logger.info("Fallback: Window does not support real_sender yet")
-                    if win.handle_new_message(chat_id, preview_text, attachments):
-                        is_chat_open = True
+                if win.handle_new_message(chat_id, preview_text, attachments, real_sender):
+                    is_chat_open = True
 
         if not is_chat_open:
             sender_to_show = real_sender if real_sender else chat_id
@@ -482,8 +471,8 @@ class App(Adw.Application):
 
     def _get_custom_sms_tone(self, number):
         """Check for a custom SMS tone for the given number."""
+        tones = self.gsettings_mgr.get_notification_override_sms_custom_tone_contacts()
         try:
-            tones = self.gsettings_mgr.get_notification_override_sms_custom_tone_contacts()
             norm = normalize_number(number)
             for t in tones:
                 if normalize_number(t.get("number", "")) == norm:
