@@ -21,6 +21,10 @@ import re
 from loguru import logger
 import uuid
 
+from telephony.backend.utils.importer_local_utils import import_local_chatty, import_local_calls
+from telephony.backend.utils.importer_android_utils import import_android_sms, import_android_calls
+from telephony.backend.utils.importer_ios_utils import import_ios_sms, import_ios_calls
+
 DAEMON_INTERFACE_XML = """
 <node>
   <interface name="io.furios.Telephony.Daemon">
@@ -302,16 +306,13 @@ class TelephonyDaemonDBus:
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
 
     def emit_signal(self, signal_name, parameters):
-        try:
-            self.bus.emit_signal(
-                None,
-                "/io/furios/Telephony/Daemon",
-                "io.furios.Telephony.Daemon",
-                signal_name,
-                parameters
-            )
-        except Exception as e:
-            logger.error(f"Error emitting DBus signal {signal_name}: {e}")
+        self.bus.emit_signal(
+            None,
+            "/io/furios/Telephony/Daemon",
+            "io.furios.Telephony.Daemon",
+            signal_name,
+            parameters
+        )
 
     def _handle_method_call(self, connection, sender, object_path, interface_name, method_name, parameters, invocation):
         """Route incoming D-Bus method calls to the appropriate handler."""
@@ -430,20 +431,20 @@ class TelephonyDaemonDBus:
 
     def _handle_mutemic(self, parameters, invocation):
         """Handle MuteMic command."""
-        if self.app and hasattr(self.app, 'audio_mgr'):
+        if self.app and self.app.audio_mgr:
             self.app.audio_mgr.set_microphone_mute(True)
         invocation.return_value(None)
 
     def _handle_unmutemic(self, parameters, invocation):
         """Handle UnmuteMic command."""
-        if self.app and hasattr(self.app, 'audio_mgr'):
+        if self.app and self.app.audio_mgr:
             self.app.audio_mgr.set_microphone_mute(False)
         invocation.return_value(None)
 
     def _handle_setspeakerphone(self, parameters, invocation):
         """Handle SetSpeakerphone command."""
         enable = parameters.unpack()[0]
-        if self.app and hasattr(self.app, 'audio_mgr'):
+        if self.app and self.app.audio_mgr:
             self.app.audio_mgr.set_speakerphone(enable)
         invocation.return_value(None)
 
@@ -477,7 +478,7 @@ class TelephonyDaemonDBus:
         """Handle ScheduleSms command."""
         number, text, scheduled_timestamp = parameters.unpack()
         success = False
-        if self.app and hasattr(self.app, 'scheduler'):
+        if self.app and self.app.scheduler:
             row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
@@ -494,7 +495,7 @@ class TelephonyDaemonDBus:
             logger.warning(f"Failed to parse attachments: {e}")
 
         success = False
-        if self.app and hasattr(self.app, 'scheduler'):
+        if self.app and self.app.scheduler:
             row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
@@ -566,7 +567,7 @@ class TelephonyDaemonDBus:
         if source_uid == "system-address-book":
             is_protected = True
             logger.warning("[DBus] Refusing to clear system-address-book via CLI")
-        elif self.eds and hasattr(self.eds, 'get_sources_info'):
+        elif self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
@@ -581,7 +582,7 @@ class TelephonyDaemonDBus:
                 protected = False
                 if c_source_uid == "system-address-book":
                     protected = True
-                elif hasattr(self.eds, 'sources') and c_source_uid in self.eds.sources and self.eds.sources[c_source_uid].get('name') == "Andromeda Contacts":
+                elif self.eds.sources and c_source_uid in self.eds.sources and self.eds.sources[c_source_uid].get('name') == "Andromeda Contacts":
                     protected = True
 
                 if not protected:
@@ -592,7 +593,7 @@ class TelephonyDaemonDBus:
             invocation.return_value(None)
             return
 
-        if not is_protected and self.eds and hasattr(self.eds, 'delete_all_contacts'):
+        if not is_protected and self.eds:
             self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
         invocation.return_value(None)
 
@@ -612,7 +613,7 @@ class TelephonyDaemonDBus:
         if source_uid == "system-address-book":
             is_protected = True
             logger.warning("[DBus] Refusing to clear system-address-book via CLI")
-        elif self.eds and hasattr(self.eds, 'get_sources_info'):
+        elif self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
@@ -627,7 +628,7 @@ class TelephonyDaemonDBus:
                 protected = False
                 if c_source_uid == "system-address-book":
                     protected = True
-                elif hasattr(self.eds, 'sources') and c_source_uid in self.eds.sources and self.eds.sources[c_source_uid].get('name') == "Andromeda Contacts":
+                elif self.eds.sources and c_source_uid in self.eds.sources and self.eds.sources[c_source_uid].get('name') == "Andromeda Contacts":
                     protected = True
 
                 if not protected:
@@ -635,7 +636,7 @@ class TelephonyDaemonDBus:
 
             for uid in uids_to_delete:
                 self.eds.remove_contact(uid)
-        elif not is_protected and self.eds and hasattr(self.eds, 'delete_all_contacts'):
+        elif not is_protected and self.eds:
             self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
         try:
             cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
@@ -654,7 +655,7 @@ class TelephonyDaemonDBus:
         if source_uid == "system-address-book":
             is_protected = True
             logger.warning("[DBus] Refusing to delete system-address-book")
-        elif self.eds and hasattr(self.eds, 'get_sources_info'):
+        elif self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
@@ -662,7 +663,7 @@ class TelephonyDaemonDBus:
                     logger.warning("[DBus] Refusing to delete Andromeda Contacts")
                     break
 
-        if not is_protected and self.eds and hasattr(self.eds, 'delete_addressbook'):
+        if not is_protected and self.eds:
             success = self.eds.delete_addressbook(source_uid)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
@@ -672,7 +673,6 @@ class TelephonyDaemonDBus:
         success = False
         msg = ""
         if self.db:
-            from telephony.backend.utils.importer_local_utils import import_local_chatty
             success, msg = import_local_chatty(self.db, db_path, mms_path)
         invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
@@ -682,7 +682,6 @@ class TelephonyDaemonDBus:
         success = False
         msg = ""
         if self.db:
-            from telephony.backend.utils.importer_local_utils import import_local_calls
             success, msg = import_local_calls(self.db, db_path)
         invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
@@ -692,7 +691,6 @@ class TelephonyDaemonDBus:
         success = False
         msg = ""
         if self.db:
-            from telephony.backend.utils.importer_android_utils import import_android_sms
             success, msg = import_android_sms(self.db, file_path)
         invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
@@ -702,7 +700,6 @@ class TelephonyDaemonDBus:
         success = False
         msg = ""
         if self.db:
-            from telephony.backend.utils.importer_android_utils import import_android_calls
             success, msg = import_android_calls(self.db, file_path)
         invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
@@ -712,7 +709,6 @@ class TelephonyDaemonDBus:
         success = False
         msg = ""
         if self.db:
-            from telephony.backend.utils.importer_ios_utils import import_ios_sms
             success, msg = import_ios_sms(self.db, file_path)
         invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
@@ -722,7 +718,6 @@ class TelephonyDaemonDBus:
         success = False
         msg = ""
         if self.db:
-            from telephony.backend.utils.importer_ios_utils import import_ios_calls
             success, msg = import_ios_calls(self.db, file_path)
         invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
@@ -779,7 +774,7 @@ class TelephonyDaemonDBus:
             logger.warning(f"Failed to parse attachments: {e}")
 
         success = False
-        if self.app and hasattr(self.app, 'mms'):
+        if self.app and self.app.mms:
             numbers = [n.strip() for n in number.split(',') if n.strip()]
             row_id = self.db.add_message(number, 'outgoing', text, status='draft', subject=None, attachments=attachments, sender="Me")
             success = self.app.mms.send_mms(numbers, text, attachments)
@@ -791,7 +786,7 @@ class TelephonyDaemonDBus:
         """Handle GetSetting command."""
         key = parameters.unpack()[0]
         value = ""
-        if self.app and hasattr(self.app, 'gsettings_mgr'):
+        if self.app and self.app.gsettings_mgr:
             val = self.app.gsettings_mgr.get_setting(key)
             if val is not None:
                 if isinstance(val, (list, dict, bool)):
@@ -803,7 +798,7 @@ class TelephonyDaemonDBus:
     def _handle_setsetting(self, parameters, invocation):
         """Handle SetSetting command."""
         key, value = parameters.unpack()
-        if self.app and hasattr(self.app, 'gsettings_mgr'):
+        if self.app and self.app.gsettings_mgr:
             schema = self.app.gsettings_mgr.gsettings.get_property('settings-schema')
             if schema and schema.has_key(key):
                 key_type = schema.get_key(key).get_value_type().dup_string()
@@ -845,14 +840,14 @@ class TelephonyDaemonDBus:
         if self.db:
             try:
                 self.db.remove_blocked_number(int(bid))
-            except ValueError:
-                pass
+            except ValueError as e:
+                logger.debug(f"ValueError in remove_blocked_number: {e}")
         invocation.return_value(None)
 
     def _handle_getmissedmessages(self, parameters, invocation):
         """Handle GetMissedMessages command."""
         data = []
-        if self.app and hasattr(self.app, 'scheduler'):
+        if self.app and self.app.scheduler:
             missed = self.app.scheduler.get_missed_messages()
             data = [{"id": m[0], "number": m[1], "body": m[2], "timestamp": m[5]} for m in missed]
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
@@ -860,7 +855,7 @@ class TelephonyDaemonDBus:
     def _handle_sendmissedmessage(self, parameters, invocation):
         """Handle SendMissedMessage command."""
         msg_id = parameters.unpack()[0]
-        if self.app and hasattr(self.app, 'scheduler'):
+        if self.app and self.app.scheduler:
             missed = self.app.scheduler.get_missed_messages(buffer_minutes=14400)
             target = next((m for m in missed if m[0] == msg_id), None)
             if target:
@@ -901,7 +896,7 @@ class TelephonyDaemonDBus:
         if source_uid == "system-address-book":
             is_protected = True
             logger.warning("[DBus] Refusing to import to system-address-book via CLI")
-        elif self.eds and hasattr(self.eds, 'get_sources_info'):
+        elif self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
@@ -953,7 +948,7 @@ class TelephonyDaemonDBus:
                     logger.warning(f"[DBus] Refusing to delete system-address-book Contact {uid} via CLI")
                     invocation.return_value(None)
                     return
-                if hasattr(self.eds, 'sources') and s_uid and s_uid in self.eds.sources and self.eds.sources[s_uid].get('name') == "Andromeda Contacts":
+                if self.eds.sources and s_uid and s_uid in self.eds.sources and self.eds.sources[s_uid].get('name') == "Andromeda Contacts":
                     logger.warning(f"[DBus] Refusing to delete Andromeda Contact {uid} via CLI")
                     invocation.return_value(None)
                     return
@@ -971,7 +966,7 @@ class TelephonyDaemonDBus:
                     logger.warning(f"[DBus] Refusing to modify system-address-book Contact {uid} via CLI")
                     invocation.return_value(None)
                     return
-                if hasattr(self.eds, 'sources') and s_uid and s_uid in self.eds.sources and self.eds.sources[s_uid].get('name') == "Andromeda Contacts":
+                if self.eds.sources and s_uid and s_uid in self.eds.sources and self.eds.sources[s_uid].get('name') == "Andromeda Contacts":
                     logger.warning(f"[DBus] Refusing to modify Andromeda Contact {uid} via CLI")
                     invocation.return_value(None)
                     return
