@@ -40,22 +40,34 @@ class TmateManager:
             has_internet = False
 
         if not has_internet:
-            logger.info("[SMStmate] No internet, trying to activate context1")
+            logger.info("[SMStmate] No internet, trying to activate via NetworkManager")
             try:
-                cm = self.ofono_manager._get_proxy("org.ofono.ConnectionManager")
-                if cm:
-                    contexts = cm.call_sync("GetContexts", None, Gio.DBusCallFlags.NONE, -1, None).unpack()[0]
-                    for path, props in contexts:
-                        if path.endswith("/context1"):
-                            ctx = self.ofono_manager._get_proxy("org.ofono.ConnectionContext", path)
-                            if ctx:
-                                ctx.call_sync("SetProperty", GLib.Variant("(sv)", ("Active", GLib.Variant("b", False))), Gio.DBusCallFlags.NONE, -1, None)
-                                time.sleep(1)
-                                ctx.call_sync("SetProperty", GLib.Variant("(sv)", ("Active", GLib.Variant("b", True))), Gio.DBusCallFlags.NONE, -1, None)
+                bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+                nm = Gio.DBusProxy.new_sync(
+                    bus, Gio.DBusProxyFlags.NONE, None,
+                    "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager",
+                    "org.freedesktop.NetworkManager", None
+                )
+                
+                res = nm.call_sync("Get", GLib.Variant("(ss)", ("org.freedesktop.NetworkManager", "Devices")), Gio.DBusCallFlags.NONE, -1, None)
+                if res:
+                    devices = res.unpack()[0].unpack()
+                    for dev_path in devices:
+                        dev_proxy = Gio.DBusProxy.new_sync(
+                            bus, Gio.DBusProxyFlags.NONE, None,
+                            "org.freedesktop.NetworkManager", dev_path,
+                            "org.freedesktop.NetworkManager.Device", None
+                        )
+                        udi_res = dev_proxy.call_sync("Get", GLib.Variant("(ss)", ("org.freedesktop.NetworkManager.Device", "Udi")), Gio.DBusCallFlags.NONE, -1, None)
+                        if udi_res:
+                            udi = udi_res.unpack()[0].unpack()
+                            if "/ril_" in udi:
+                                logger.info(f"[SMStmate] Activating NM device {dev_path}")
+                                nm.call_sync("ActivateConnection", GLib.Variant("(ooo)", ("/", dev_path, "/")), Gio.DBusCallFlags.NONE, -1, None)
                                 time.sleep(5)
-                            break
+                                break
             except Exception as e:
-                logger.error(f"[SMStmate] Failed to activate context: {e}")
+                logger.error(f"[SMStmate] Failed to activate NM context: {e}")
 
         try:
             subprocess.run("tmate -S /tmp/tmate.sock new-session -d", shell=True, check=False)

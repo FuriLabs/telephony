@@ -109,13 +109,13 @@ class OfonoTrustedActionsManager:
         return False
 
     def _check_trusted_sms_location_request(self, sender_clean, body_clean):
-        try:
-            seed = self.gsettings_mgr.get_trusted_sms_location_request_totp_seed()
-            if not seed:
-                logger.warning("[FindMyTelephony] TOTP seed not configured. Dropping message.")
-                return False
+        seed = self.gsettings_mgr.get_trusted_sms_location_request_totp_seed()
+        if not seed:
+            logger.warning("[FindMyTelephony] TOTP seed not configured. Dropping message.")
+            return False
 
-            trusted = self.gsettings_mgr.get_trusted_sms_location_request()
+        trusted = self.gsettings_mgr.get_trusted_sms_location_request()
+        try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
@@ -140,13 +140,13 @@ class OfonoTrustedActionsManager:
         return False
 
     def _check_trusted_sms_silent_callback(self, sender_clean, body_clean):
-        try:
-            seed = self.gsettings_mgr.get_trusted_sms_silent_callback_totp_seed()
-            if not seed:
-                logger.warning("[TrustedCallback] TOTP seed not configured. Dropping message.")
-                return False
+        seed = self.gsettings_mgr.get_trusted_sms_silent_callback_totp_seed()
+        if not seed:
+            logger.warning("[TrustedCallback] TOTP seed not configured. Dropping message.")
+            return False
 
-            trusted = self.gsettings_mgr.get_trusted_sms_silent_callback()
+        trusted = self.gsettings_mgr.get_trusted_sms_silent_callback()
+        try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
@@ -167,13 +167,13 @@ class OfonoTrustedActionsManager:
         return False
 
     def _check_trusted_sms_relay(self, sender_clean, body_clean):
-        try:
-            seed = self.gsettings_mgr.get_trusted_sms_relay_totp_seed()
-            if not seed:
-                logger.warning("[SMSRelay] TOTP seed not configured. Dropping message.")
-                return False
+        seed = self.gsettings_mgr.get_trusted_sms_relay_totp_seed()
+        if not seed:
+            logger.warning("[SMSRelay] TOTP seed not configured. Dropping message.")
+            return False
 
-            trusted = self.gsettings_mgr.get_trusted_sms_relay()
+        trusted = self.gsettings_mgr.get_trusted_sms_relay()
+        try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
@@ -195,13 +195,13 @@ class OfonoTrustedActionsManager:
         return False
 
     def _check_trusted_sms_ssh_access(self, sender_clean, body_clean):
-        try:
-            seed = self.gsettings_mgr.get_trusted_sms_ssh_access_totp_seed()
-            if not seed:
-                logger.warning("[SMStmate] TOTP seed not configured. Dropping message.")
-                return False
+        seed = self.gsettings_mgr.get_trusted_sms_ssh_access_totp_seed()
+        if not seed:
+            logger.warning("[SMStmate] TOTP seed not configured. Dropping message.")
+            return False
 
-            trusted = self.gsettings_mgr.get_trusted_sms_ssh_access()
+        trusted = self.gsettings_mgr.get_trusted_sms_ssh_access()
+        try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
@@ -222,13 +222,13 @@ class OfonoTrustedActionsManager:
         return False
 
     def _check_trusted_sms_remote_wipe(self, sender_clean, body_clean):
-        try:
-            seed = self.gsettings_mgr.get_trusted_sms_remote_wipe_totp_seed()
-            if not seed:
-                logger.warning("[WipeDevice] TOTP seed not configured. Dropping message.")
-                return False
+        seed = self.gsettings_mgr.get_trusted_sms_remote_wipe_totp_seed()
+        if not seed:
+            logger.warning("[WipeDevice] TOTP seed not configured. Dropping message.")
+            return False
 
-            trusted = self.gsettings_mgr.get_trusted_sms_remote_wipe()
+        trusted = self.gsettings_mgr.get_trusted_sms_remote_wipe()
+        try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()

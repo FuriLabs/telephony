@@ -64,6 +64,11 @@ class TelephonyAudioManager:
         self.last_knock_time = 0
         self.knock_pipeline = None
 
+        self._pre_max_fb_profile = None
+        self._pre_max_mute = None
+        self._pre_max_vol = None
+        self._pre_max_sink_name = None
+
         self.is_near = False
         self.proximity_claimed = False
         self.sensor_proxy = None
@@ -79,22 +84,21 @@ class TelephonyAudioManager:
             )
             self.sensor_proxy.connect("g-properties-changed", self._on_sensor_changed)
 
-            try:
-                res = self.sensor_proxy.get_connection().call_sync(
-                    self.sensor_proxy.get_name(),
-                    self.sensor_proxy.get_object_path(),
-                    "org.freedesktop.DBus.Properties",
-                    "Get",
-                    GLib.Variant('(ss)', ("net.hadess.SensorProxy", "ProximityNear")),
-                    GLib.VariantType('(v)'),
-                    Gio.DBusCallFlags.NONE,
-                    -1,
-                    None
-                )
-                if res:
-                    val = res.unpack()[0]
-                    self.is_near = val.get_boolean()
-            except Exception:
+            res = self.sensor_proxy.get_connection().call_sync(
+                self.sensor_proxy.get_name(),
+                self.sensor_proxy.get_object_path(),
+                "org.freedesktop.DBus.Properties",
+                "Get",
+                GLib.Variant('(ss)', ("net.hadess.SensorProxy", "ProximityNear")),
+                GLib.VariantType('(v)'),
+                Gio.DBusCallFlags.NONE,
+                -1,
+                None
+            )
+            if res:
+                val = res.unpack()[0]
+                self.is_near = val.get_boolean()
+            else:
                 cached = self.sensor_proxy.get_cached_property("ProximityNear")
                 if cached:
                     self.is_near = cached.get_boolean()
@@ -290,7 +294,6 @@ class TelephonyAudioManager:
     def set_input_route(self, mode="mic"):
         """Route input audio to mic or dummy routes."""
         logger.info(f"[Audio] Setting input route: {mode}")
-        pass
 
     def get_available_outputs(self):
         """Return a list of available output routes."""
@@ -372,12 +375,12 @@ class TelephonyAudioManager:
         """
         if restore:
             try:
-                if hasattr(self, '_pre_max_fb_profile') and self._pre_max_fb_profile:
+                if self._pre_max_fb_profile:
                     set_feedbackd_profile(self._pre_max_fb_profile)
                     self._pre_max_fb_profile = None
 
                 with pulsectl.Pulse('telephony-audio') as pulse:
-                    target_sink_name = getattr(self, '_pre_max_sink_name', None)
+                    target_sink_name = self._pre_max_sink_name
                     sink = None
                     if target_sink_name:
                         try:
@@ -390,11 +393,11 @@ class TelephonyAudioManager:
                         sink = pulse.get_sink_by_name(info.default_sink_name)
 
                     if sink:
-                        if hasattr(self, '_pre_max_mute') and self._pre_max_mute is not None:
+                        if self._pre_max_mute is not None:
                             pulse.sink_mute(sink.index, self._pre_max_mute)
                             self._pre_max_mute = None
 
-                        if hasattr(self, '_pre_max_vol') and self._pre_max_vol is not None:
+                        if self._pre_max_vol is not None:
                             pulse.volume_set_all_chans(sink, self._pre_max_vol)
                             self._pre_max_vol = None
 
@@ -406,7 +409,7 @@ class TelephonyAudioManager:
                 logger.error(f"[Audio] Restore volume failed: {e}")
             return
 
-        if getattr(self, '_pre_max_fb_profile', None) is not None:
+        if self._pre_max_fb_profile is not None:
             logger.debug("[Audio] Force max feedback already active, skipping state save.")
         else:
             self._pre_max_fb_profile = get_feedbackd_profile()
@@ -421,13 +424,13 @@ class TelephonyAudioManager:
                 sink = pulse.get_sink_by_name(info.default_sink_name)
 
                 if sink:
-                    if getattr(self, '_pre_max_sink_name', None) is None:
+                    if self._pre_max_sink_name is None:
                         self._pre_max_sink_name = sink.name
 
-                    if getattr(self, '_pre_max_mute', None) is None:
+                    if self._pre_max_mute is None:
                         self._pre_max_mute = sink.mute
 
-                    if getattr(self, '_pre_max_vol', None) is None:
+                    if self._pre_max_vol is None:
                         if sink.volume.values:
                             self._pre_max_vol = max(sink.volume.values) / 65536.0
                         else:
