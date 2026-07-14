@@ -161,8 +161,7 @@ class ChatPage(Gtk.Box):
 
             full_str = ", ".join(participant_names)
             subtitle_text = full_str if len(full_str) < 50 else _("{count} Participants").format(count=len(self.recipients))
-
-        self.title_widget = Adw.WindowTitle(title=GLib.markup_escape_text(title_text), subtitle=subtitle_text)
+        self.title_widget = Adw.WindowTitle(title=title_text, subtitle=subtitle_text)
         header.set_title_widget(self.title_widget)
 
         self.btn_search = Gtk.ToggleButton(icon_name="system-search-symbolic", css_classes=["circular"])
@@ -882,7 +881,7 @@ class ChatPage(Gtk.Box):
 
         if display_name != self.contact_name:
             self.contact_name = display_name
-            self.title_widget.set_title(GLib.markup_escape_text(display_name))
+            self.title_widget.set_title(display_name)
 
     def on_group_rename(self, entry):
         """Handle group renaming."""

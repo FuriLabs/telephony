@@ -267,22 +267,16 @@ class CustomToneListWindow(Adw.Window):
                 last_name = last or ""
                 full_name = f"{first_name} {last_name}".strip() or _("Unknown")
 
-                safe_name = GLib.markup_escape_text(full_name)
-
                 for ph_num, ph_label in phones:
-                    safe_num = GLib.markup_escape_text(ph_num)
-
                     translated_label = self._translate_label(ph_label)
-                    safe_lbl = GLib.markup_escape_text(translated_label)
 
-                    subtitle_text = f"{safe_num} ({safe_lbl})"
+                    subtitle_text = f"{ph_num} ({translated_label})"
 
                     if source_uid and source_uid in source_map:
                         s_name = source_map[source_uid]
-                        safe_s_name = GLib.markup_escape_text(s_name)
-                        subtitle_text += f"\n{safe_s_name}"
+                        subtitle_text += f"\n{s_name}"
 
-                    row = Adw.ActionRow(title=safe_name, subtitle=subtitle_text)
+                    row = Adw.ActionRow(title=full_name, subtitle=subtitle_text)
                     row.set_subtitle_lines(2)
 
                     row.contact_data = {"name": full_name, "number": ph_num}

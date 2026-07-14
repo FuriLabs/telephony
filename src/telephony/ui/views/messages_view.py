@@ -513,8 +513,7 @@ class MessagesView(Adw.Bin):
             except Exception as e:
                 logger.warning(f"[MessagesView] Unread count loop error: {e}")
 
-        safe_name = GLib.markup_escape_text(name)
-        page = Adw.NavigationPage(title=safe_name, tag=chat_tag)
+        page = Adw.NavigationPage(title=name, tag=chat_tag)
 
         self.active_chat_number = target_number
 
