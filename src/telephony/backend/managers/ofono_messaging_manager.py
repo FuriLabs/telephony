@@ -21,7 +21,7 @@ from ..utils.phone_utils import normalize_number
 import time
 
 
-class OfonoMessagingMixin:
+class OfonoMessagingManager:
     def send_sms(self, number, text):
         """Send an SMS message."""
         if not self.msg_proxy:

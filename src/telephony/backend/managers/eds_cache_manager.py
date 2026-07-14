@@ -16,7 +16,7 @@
 from ..utils.phone_utils import normalize_number
 
 
-class EdsCacheMixin:
+class EdsCacheManager:
     def _rebuild_lookup_map(self):
         """Rebuild the phone number lookup map based on current cache and ranks."""
         with self.sources_lock:

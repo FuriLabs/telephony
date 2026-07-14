@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .mms_parser_manager import MmsParserMixin
+from .mms_parser_manager import MmsParserManager
 
 
 import mimetypes
@@ -30,7 +30,7 @@ NOTIFY_DBUS_PATH = "/org/freedesktop/Notifications"
 NOTIFY_INTERFACE = "org.freedesktop.Notifications"
 
 
-class MmsManager(GObject.Object, MmsParserMixin):
+class MmsManager(GObject.Object, MmsParserManager):
     """
     Manages MMS sending, receiving, and storage, interfacing with ofono and mmsd.
     """

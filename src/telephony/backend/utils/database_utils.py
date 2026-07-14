@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .db_calls_utils import DbCallsMixin
-from .db_messages_utils import DbMessagesMixin
-from .db_blocklist_utils import DbBlocklistMixin
-from .db_contacts_utils import DbContactsMixin
+from .db_calls_utils import DbCallsUtils
+from .db_messages_utils import DbMessagesUtils
+from .db_blocklist_utils import DbBlocklistUtils
+from .db_contacts_utils import DbContactsUtils
 
 from .thread_utils import run_in_background
 from .phone_utils import normalize_number
@@ -31,7 +31,7 @@ from gi.repository import GLib, GObject
 from loguru import logger
 
 
-class DatabaseManager(GObject.Object, DbCallsMixin, DbMessagesMixin, DbBlocklistMixin, DbContactsMixin):
+class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklistUtils, DbContactsUtils):
     """
     Manages SQLite databases for settings, calls, messages, contacts, and blocklist.
     """
@@ -343,18 +343,10 @@ class DatabaseManager(GObject.Object, DbCallsMixin, DbMessagesMixin, DbBlocklist
         except Exception as e:
             logger.error(f"[DB] Clear History Error: {e}")
 
-    def clear_settings(self):
-        """Delete all settings."""
-        try:
-            return True
-        except Exception as e:
-            logger.error(f"[DB] Clear Settings Error: {e}")
-            return False
 
     def clear_everything(self):
         """Clear all data from all databases."""
         self.clear_messages()
-        self.clear_settings()
 
         try:
             with self.lock:

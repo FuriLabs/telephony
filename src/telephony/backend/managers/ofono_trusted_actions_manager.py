@@ -21,7 +21,7 @@ from ..utils.phone_utils import normalize_number
 import time
 
 
-class OfonoTrustedActionsMixin:
+class OfonoTrustedActionsManager:
     def _check_rate_limit(self, sender_clean, prefix):
         now = time.time()
         if not hasattr(self, 'trusted_trigger_history'):

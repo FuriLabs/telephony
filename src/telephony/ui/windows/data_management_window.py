@@ -50,7 +50,7 @@ class DataManagementDialog:
         box.append(make_red_button(_("Delete Blocklist"), self.ask_clear_blocklist))
         box.append(make_red_button(_("Delete All Contacts"), self.ask_clear_contacts))
         box.append(make_red_button(_("Delete Address Book"), self.ask_delete_addressbook))
-        box.append(make_red_button(_("Delete Custom Settings"), self.ask_clear_settings))
+
 
         sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         sep.set_margin_top(10)
@@ -104,10 +104,6 @@ class DataManagementDialog:
     def ask_clear_contacts(self):
         """Ask to clear contacts."""
         self._prompt_delete_contacts_source(self._do_clear_contacts)
-
-    def ask_clear_settings(self):
-        """Ask to clear settings."""
-        self._confirm_destructive(_("Delete Settings"), _("Clear all custom settings? Emergency numbers will be lost."), self._do_clear_settings)
 
     def ask_delete_addressbook(self):
         """Ask to delete an entire address book."""
@@ -274,15 +270,6 @@ class DataManagementDialog:
                 else:
                     GLib.idle_add(lambda: self.app_window.notify_error(_("Failed to delete Address Book")))
         run_in_background(task)
-
-    def _do_clear_settings(self):
-        """Clear settings action."""
-        try:
-            self.db.clear_settings()
-            self.app_window.notify_success(_("Settings cleared"))
-        except Exception as e:
-            logger.error(f"[DataManagement] Clear settings failed: {e}")
-            self.app_window.notify_error(_("Error: {e}").format(e=e))
 
     def _do_clear_everything(self, source_uid=None):
         """Clear everything action."""

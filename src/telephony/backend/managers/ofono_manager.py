@@ -13,9 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .ofono_calls_manager import OfonoCallsMixin
-from .ofono_messaging_manager import OfonoMessagingMixin
-from .ofono_trusted_actions_manager import OfonoTrustedActionsMixin
+from .ofono_calls_manager import OfonoCallsManager
+from .ofono_messaging_manager import OfonoMessagingManager
+from .ofono_trusted_actions_manager import OfonoTrustedActionsManager
 
 
 import time
@@ -33,7 +33,7 @@ from .callback_manager import CallbackManager
 from .relay_manager import RelayManager
 
 
-class OfonoManager(GObject.Object, OfonoCallsMixin, OfonoMessagingMixin, OfonoTrustedActionsMixin):
+class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, OfonoTrustedActionsManager):
     """
     Manages voice calls, SMS, and USSD via ofono.
     """

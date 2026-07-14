@@ -21,16 +21,16 @@ from gi.repository import GLib
 from .phone_utils import normalize_number
 
 
-class DbContactsMixin:
+class DbContactsUtils:
     def get_contacts_lookup_map(self):
         """Get the current contact lookup map."""
         return self.eds.lookup_map if self.eds else {}
 
     def search_contacts(self, query="", limit=None, offset=0):
         """Search contacts via EDS."""
+        if not self.eds:
+            return []
         try:
-            if not self.eds:
-                return []
             return self.eds.search_contacts(query, limit=limit, offset=offset)
         except Exception as e:
             logger.error(f"[DB] Search contacts error: {e}")

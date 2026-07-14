@@ -22,7 +22,7 @@ from gi.repository import GLib
 from .phone_utils import normalize_number
 
 
-class DbCallsMixin:
+class DbCallsUtils:
     def add_call(self, number, _name_ignored, direction, duration=0):
         """Add a call entry to history."""
         def task():
@@ -125,9 +125,9 @@ class DbCallsMixin:
 
     def update_history_names(self, numbers, new_name=None):
         """Update the name in call history for specific numbers."""
+        if not numbers:
+            return
         try:
-            if not numbers:
-                return
             with self.lock:
                 c = self.conn_calls.cursor()
                 placeholders = ",".join("?" * len(numbers))

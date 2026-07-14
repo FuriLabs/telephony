@@ -114,8 +114,7 @@ DAEMON_INTERFACE_XML = """
     <method name="ClearContacts">
       <arg type="s" name="source_uid" direction="in"/>
     </method>
-    <method name="ClearSettings">
-    </method>
+
     <method name="ClearEverything">
       <arg type="s" name="source_uid" direction="in"/>
     </method>
@@ -338,7 +337,7 @@ class TelephonyDaemonDBus:
             "ClearGroupNames": self._handle_cleargroupnames,
             "ClearBlocklist": self._handle_clearblocklist,
             "ClearContacts": self._handle_clearcontacts,
-            "ClearSettings": self._handle_clearsettings,
+
             "ClearEverything": self._handle_cleareverything,
             "DeleteAddressBook": self._handle_deleteaddressbook,
             "ImportChatty": self._handle_importchatty,
@@ -597,11 +596,6 @@ class TelephonyDaemonDBus:
             self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
         invocation.return_value(None)
 
-    def _handle_clearsettings(self, parameters, invocation):
-        """Handle ClearSettings command."""
-        if self.db:
-            self.db.clear_settings()
-        invocation.return_value(None)
 
     def _handle_cleareverything(self, parameters, invocation):
         """Handle ClearEverything command."""

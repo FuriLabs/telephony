@@ -33,7 +33,7 @@ def _cached_json_loads(data):
         return []
 
 
-class DbMessagesMixin:
+class DbMessagesUtils:
     def add_message(self, remote_number, direction, body, status="unread", subject=None, attachments=[], sender=None, scheduled_timestamp=None):
         """Add a message to the database."""
         if not remote_number or not direction:
@@ -128,9 +128,9 @@ class DbMessagesMixin:
 
     def delete_scheduled_messages(self, ids_list):
         """Delete multiple scheduled messages by ID."""
+        if not ids_list:
+            return True
         try:
-            if not ids_list:
-                return True
             with self.lock:
                 c = self.conn_messages.cursor()
                 placeholders = ",".join("?" * len(ids_list))

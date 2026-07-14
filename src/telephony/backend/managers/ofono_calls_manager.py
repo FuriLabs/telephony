@@ -20,7 +20,7 @@ from gettext import gettext as _
 from ..utils.phone_utils import normalize_number
 
 
-class OfonoCallsMixin:
+class OfonoCallsManager:
     def _sync_existing_calls(self):
         """Sync existing calls from the modem."""
         if not self.voice_proxy:

@@ -23,7 +23,7 @@ from ..utils.phone_utils import normalize_number, get_system_region
 from ..utils.vcard_utils import unfold_vcard
 
 
-class EdsContactsMixin:
+class EdsContactsManager:
     def get_contact_name(self, number):
         """Look up a contact name by phone number."""
         norm = normalize_number(number)

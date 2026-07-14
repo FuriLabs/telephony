@@ -21,7 +21,7 @@ from gi.repository import GLib
 from .phone_utils import normalize_number
 
 
-class DbBlocklistMixin:
+class DbBlocklistUtils:
     def add_blocked_number(self, number, note=""):
         """Add a number to the blocklist."""
         try:

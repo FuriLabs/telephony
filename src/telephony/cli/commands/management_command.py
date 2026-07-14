@@ -47,13 +47,6 @@ def cmd_clear_contacts(args):
     print("Contacts cleared.")
 
 
-def cmd_clear_settings(args):
-    """Execute the clear settings command."""
-    proxy = get_proxy()
-    proxy.call_sync("ClearSettings", None, Gio.DBusCallFlags.NONE, -1, None)
-    print("Settings cleared.")
-
-
 def cmd_clear_everything(args):
     """Execute the clear everything command."""
     proxy = get_proxy()
@@ -134,9 +127,6 @@ def setup_parsers(subparsers):
     p_cc = subparsers.add_parser("clear-contacts", help="Clear contacts")
     p_cc.add_argument("--source-uid", type=str, default="", help="Specific address book UID")
     p_cc.set_defaults(func=cmd_clear_contacts)
-
-    p_cs = subparsers.add_parser("clear-settings", help="Clear custom settings")
-    p_cs.set_defaults(func=cmd_clear_settings)
 
     p_ce = subparsers.add_parser("clear-everything", help="Clear EVERYTHING (database, settings, contacts)")
     p_ce.add_argument("--source-uid", type=str, default="", help="Specific address book UID for contacts deletion")

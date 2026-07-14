@@ -27,7 +27,7 @@ import re
 from loguru import logger
 
 
-class MmsParserMixin:
+class MmsParserManager:
     def _parse_and_store(self, path, props):
         """Parse message content and attachments, and store in database."""
         try:

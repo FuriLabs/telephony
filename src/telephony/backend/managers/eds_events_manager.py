@@ -21,7 +21,7 @@ from ..utils.phone_utils import normalize_number
 from ..utils.vcard_utils import parse_contact_safe
 
 
-class EdsEventsMixin:
+class EdsEventsManager:
     def _handle_backend_update(self, contacts, source_uid):
         """Handle updates from the EDS backend for a specific source."""
         if source_uid not in self.sources:

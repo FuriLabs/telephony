@@ -28,7 +28,7 @@ from loguru import logger
 from ..utils.phone_utils import normalize_number
 
 
-class EdsSourcesMixin:
+class EdsSourcesManager:
     def _init_backend(self):
         """Initialize EDS backend connection."""
         try:

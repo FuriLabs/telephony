@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .eds_sources_manager import EdsSourcesMixin
-from .eds_cache_manager import EdsCacheMixin
-from .eds_events_manager import EdsEventsMixin
-from .eds_contacts_manager import EdsContactsMixin
+from .eds_sources_manager import EdsSourcesManager
+from .eds_cache_manager import EdsCacheManager
+from .eds_events_manager import EdsEventsManager
+from .eds_contacts_manager import EdsContactsManager
 
 from ...backend.utils.thread_utils import run_in_background
 
@@ -30,7 +30,7 @@ gi.require_version('EBook', '1.2')
 from gi.repository import GLib, GObject
 
 
-class EdsManager(GObject.Object, EdsSourcesMixin, EdsCacheMixin, EdsEventsMixin, EdsContactsMixin):
+class EdsManager(GObject.Object, EdsSourcesManager, EdsCacheManager, EdsEventsManager, EdsContactsManager):
     """
     Manages contact data via Evolution Data Server (EDS).
     Supports multiple address books with ranking.
