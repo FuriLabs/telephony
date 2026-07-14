@@ -844,6 +844,8 @@ class TelephonyDaemonDBus:
         if self.app and self.app.scheduler:
             missed = self.app.scheduler.get_missed_messages()
             data = [{"id": m[0], "number": m[1], "body": m[2], "timestamp": m[5]} for m in missed]
+        else:
+            logger.debug("[DBus] Cannot get missed messages: scheduler not available")
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
     def _handle_sendmissedmessage(self, parameters, invocation):
@@ -854,6 +856,8 @@ class TelephonyDaemonDBus:
             target = next((m for m in missed if m[0] == msg_id), None)
             if target:
                 self.app.scheduler._process_message(target)
+        else:
+            logger.debug("[DBus] Cannot send missed message: scheduler not available")
         invocation.return_value(None)
 
     def _handle_getaddressbooks(self, parameters, invocation):

@@ -88,22 +88,24 @@ def detect_region():
     Returns None if detection fails.
     """
     try:
+        modem_path = None
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
-        manager = None
-        app = Gio.Application.get_default()
-        if app and getattr(app, 'ofono_mgr', None) and app.ofono_mgr.ofono:
-            manager = app.ofono_mgr.ofono.manager_proxy
 
-        if not manager:
+        app = Gio.Application.get_default()
+        if app and getattr(app, 'ofono', None) and app.ofono.modem_path:
+            modem_path = app.ofono.modem_path
+        else:
             manager = Gio.DBusProxy.new_sync(
                 bus, Gio.DBusProxyFlags.NONE, None,
                 "org.ofono", "/", "org.ofono.Manager", None)
 
-        result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
-        modems = result.unpack()[0]
+            result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
+            modems = result.unpack()[0]
 
-        if modems:
-            modem_path = modems[0][0]
+            if modems:
+                modem_path = modems[0][0]
+
+        if modem_path:
             net_proxy = Gio.DBusProxy.new_sync(
                 bus, Gio.DBusProxyFlags.NONE, None,
                 "org.ofono", modem_path, "org.ofono.NetworkRegistration", None)
