@@ -122,9 +122,15 @@ def get_own_number():
     """
     try:
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
-        manager = Gio.DBusProxy.new_sync(
-            bus, Gio.DBusProxyFlags.NONE, None,
-            "org.ofono", "/", "org.ofono.Manager", None)
+        manager = None
+        app = Gio.Application.get_default()
+        if app and getattr(app, 'ofono_mgr', None) and app.ofono_mgr.ofono:
+            manager = app.ofono_mgr.ofono.manager_proxy
+
+        if not manager:
+            manager = Gio.DBusProxy.new_sync(
+                bus, Gio.DBusProxyFlags.NONE, None,
+                "org.ofono", "/", "org.ofono.Manager", None)
         result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
         modems = result.unpack()[0]
         if modems:
