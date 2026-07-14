@@ -49,10 +49,11 @@ class EmergencyService(GObject.Object):
 
     def _init_settings_monitor(self):
         """Initialize GSettings monitor."""
+        source = Gio.SettingsSchemaSource.get_default()
+        if not source:
+            return
+            
         try:
-            source = Gio.SettingsSchemaSource.get_default()
-            if not source:
-                return
             schema = source.lookup("sm.puri.phosh.emergency-calls", True)
             if not schema or not schema.has_key("enabled"):
                 logger.debug("sm.puri.phosh.emergency-calls schema or enabled key missing")
