@@ -35,6 +35,8 @@ class SettingsWindow(Adw.Window):
     """Main settings window for the application."""
 
     def __init__(self, main_window, eds_manager, ofono_manager):
+        self.source_rows = None
+        self.sources_state = None
         """Initialize Settings Window."""
         super().__init__(title=_("Settings"))
 
@@ -785,7 +787,7 @@ class SettingsWindow(Adw.Window):
                     break
             self.row_default_ab.thaw_notify()
 
-        if hasattr(self, 'source_rows'):
+        if (self.source_rows is not None):
             for r in self.source_rows:
                 self.grp_contacts.remove(r)
 
@@ -929,7 +931,7 @@ class SettingsWindow(Adw.Window):
         self.main_window.gsettings_mgr.set_setting(
             "unknown_callers_custom_url", self.entry_uc_custom.get_text())
 
-        if hasattr(self, 'sources_state'):
+        if (self.sources_state is not None):
             self.eds.update_sources_config(self.sources_state)
 
             for item in self.sources_state:

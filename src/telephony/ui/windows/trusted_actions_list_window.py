@@ -27,6 +27,9 @@ class TrustedActionsListWindow(Adw.Window):
     """Window to manage the list of trusted actions/contacts."""
 
     def __init__(self, parent, db, eds, mode="trusted_sms_location_request"):
+        self.grp_list = None
+        self.gsettings_handler_id = None
+        self.totp_btn = None
         try:
             self.mode = mode
             self.gsettings_mgr = db
@@ -232,7 +235,7 @@ class TrustedActionsListWindow(Adw.Window):
                     self.enable_switch.set_active(is_active)
 
     def _update_totp_button_label(self):
-        if not hasattr(self, 'totp_btn'):
+        if not (self.totp_btn is not None):
             return
 
         secret = self.gsettings_mgr.secret_manager.get_secret(self.mode)
@@ -242,7 +245,7 @@ class TrustedActionsListWindow(Adw.Window):
             self.totp_btn.set_label(_("Setup TOTP"))
 
     def _on_unmap(self, widget):
-        if hasattr(self, 'gsettings_handler_id') and self.gsettings_mgr.gsettings.handler_is_connected(self.gsettings_handler_id):
+        if (self.gsettings_handler_id is not None) and self.gsettings_mgr.gsettings.handler_is_connected(self.gsettings_handler_id):
             self.gsettings_mgr.gsettings.disconnect(self.gsettings_handler_id)
 
         for obj, sig_id in self.eds_signals:
@@ -266,7 +269,7 @@ class TrustedActionsListWindow(Adw.Window):
 
     def _refresh_list(self):
         """Refresh the list of contacts."""
-        if hasattr(self, "grp_list") and self.grp_list:
+        if (self.grp_list is not None) and self.grp_list:
             self.page_list.remove(self.grp_list)
 
         self.grp_list = Adw.PreferencesGroup()

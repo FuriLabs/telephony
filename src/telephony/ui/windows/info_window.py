@@ -100,7 +100,7 @@ class InfoPage:
             link_row(
                 _("Website"),
                 "github.com/FuriLabs/telephony",
-                "https://github.com/FuriLabs/telephony""
+                "https://github.com/FuriLabs/telephony"
             )
         )
 

@@ -26,6 +26,7 @@ class DialpadView(Adw.Bin):
     """View for dialing phone numbers."""
 
     def __init__(self, app_window):
+        self._lookup_timer = None
         """Initialize the DialpadView."""
         super().__init__()
         self.app_window = app_window
@@ -135,7 +136,7 @@ class DialpadView(Adw.Bin):
 
     def _update_info_label(self, entry, param):
         """Update the info label based on input."""
-        if hasattr(self, '_lookup_timer') and self._lookup_timer:
+        if (self._lookup_timer is not None) and self._lookup_timer:
             GLib.source_remove(self._lookup_timer)
         self._lookup_timer = GLib.timeout_add(200, self._perform_lookup)
 
@@ -241,7 +242,7 @@ class DialpadView(Adw.Bin):
                     self.entry.set_text(new_text)
                     self.entry.set_position(pos + len(valid_number))
                 else:
-                    if hasattr(self.app_window, "notify_error"):
+                    if (self.app_window and self.app_window.notify_error is not None):
                         self.app_window.notify_error(_("Invalid number in clipboard"))
                     else:
                         self.app_window.add_toast(Adw.Toast(title=_("Invalid number")))

@@ -46,6 +46,8 @@ class MainWindow(Adw.Window):
     """The main application window containing the stack of views (History, Dialpad, Messages, Contacts)."""
 
     def __init__(self, application, ofono_manager, db_manager, eds_manager, mms_manager=None, gsettings_mgr=None, show_calls=False, show_messages=False, show_contacts=False):
+        self._unread_timer = None
+        self.btn_set = None
         """Initialize the main window."""
         super().__init__(application=application)
         self.app = application
@@ -328,7 +330,7 @@ class MainWindow(Adw.Window):
 
     def _update_sensitive_actions(self, sensitive):
         """Enable or disable actions based on readiness."""
-        if hasattr(self, 'btn_set'):
+        if (self.btn_set is not None):
             self.btn_set.set_sensitive(sensitive)
             self.btn_sync.set_sensitive(sensitive)
             self.btn_imp_exp.set_sensitive(sensitive)
@@ -370,7 +372,7 @@ class MainWindow(Adw.Window):
     def update_unread_badge(self):
         """Update the unread messages badge number."""
         if self.msgs_page and self.db:
-            if hasattr(self, '_unread_timer') and self._unread_timer:
+            if (self._unread_timer is not None) and self._unread_timer:
                 GLib.source_remove(self._unread_timer)
             self._unread_timer = GLib.timeout_add(200, self._do_update_unread_badge)
 

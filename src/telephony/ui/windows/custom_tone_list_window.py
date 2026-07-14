@@ -26,6 +26,7 @@ class CustomToneListWindow(Adw.Window):
     """Window to manage the list of contacts with custom tones (SMS or Ringtone)."""
 
     def __init__(self, parent, db, eds, mode="sms"):
+        self.grp_list = None
         try:
             title = _("Individual SMS Notifications") if mode == "sms" else _("Individual Ringtones")
             super().__init__(title=title, transient_for=parent, modal=True)
@@ -156,7 +157,7 @@ class CustomToneListWindow(Adw.Window):
 
     def _refresh_list(self):
         """Refresh the list of configured tones."""
-        if hasattr(self, "grp_list") and self.grp_list:
+        if (self.grp_list is not None) and self.grp_list:
             self.page_list.remove(self.grp_list)
 
         self.grp_list = Adw.PreferencesGroup()

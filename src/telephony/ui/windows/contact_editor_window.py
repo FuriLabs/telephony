@@ -27,6 +27,9 @@ class ContactEditor(Adw.Window):
     """Window for editing or viewing contact details."""
 
     def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None):
+        self.btn_save = None
+        self.source_toggles = None
+        self.switch_fav = None
         """Initialize the Contact Editor."""
         super().__init__(title=_("Contact Details"))
         self.eds = eds_manager
@@ -358,7 +361,7 @@ class ContactEditor(Adw.Window):
             row._selected_date = date
             lbl_widget.set_label(date.format("%Y-%m-%d"))
             lbl_widget.remove_css_class("dim-label")
-            if hasattr(self, "btn_save"):
+            if (self.btn_save is not None):
                 self.btn_save.set_sensitive(True)
 
         DateTimePicker(
@@ -622,7 +625,7 @@ class ContactEditor(Adw.Window):
         if self.anniv_row._selected_date:
             lines.append(f"ANNIVERSARY:{self.anniv_row._selected_date.format('%Y-%m-%d')}")
 
-        if hasattr(self, 'switch_fav') and self.switch_fav.get_active():
+        if (self.switch_fav is not None) and self.switch_fav.get_active():
             lines.append("X-FOLKS-FAVOURITE:true")
 
         lines.append("END:VCARD")
@@ -646,7 +649,7 @@ class ContactEditor(Adw.Window):
             'phones': phones_to_save,
             'emails': emails,
             'vcard': vcard,
-            'is_fav': hasattr(self, 'switch_fav') and self.switch_fav.get_active()
+            'is_fav': (self.switch_fav is not None) and self.switch_fav.get_active()
         }
 
     def on_save(self, btn, force=False):
@@ -669,7 +672,7 @@ class ContactEditor(Adw.Window):
             blocked_conflict = None
 
             selected_sources = []
-            if hasattr(self, 'source_toggles'):
+            if (self.source_toggles is not None):
                 for uid, row in self.source_toggles.items():
                     if row.get_active():
                         selected_sources.append(uid)

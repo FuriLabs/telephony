@@ -25,6 +25,7 @@ class ContactPicker(Adw.Window):
     """Window for selecting a contact from the list."""
 
     def __init__(self, eds, parent_window, on_picked, title=None, action_label=None, allow_custom_number=True, return_contact_uid=False):
+        self.source_map = None
         """Initialize the Contact Picker."""
         display_title = title if title else _("Pick Contact")
         display_action = action_label if action_label else _("Open")
@@ -190,7 +191,7 @@ class ContactPicker(Adw.Window):
         else:
             phone_lbl.set_text(_("No number"))
 
-        if item.source_uid and hasattr(self, 'source_map'):
+        if item.source_uid and (self.source_map is not None):
             s_name = self.source_map.get(item.source_uid)
             if s_name:
                 source_lbl.set_text(s_name)

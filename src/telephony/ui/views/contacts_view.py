@@ -29,6 +29,8 @@ class ContactsView(Adw.Bin):
     """View displaying the list of contacts."""
 
     def __init__(self, db, app_window):
+        self._refresh_timer = None
+        self.source_map = None
         """Initialize the ContactsView."""
         super().__init__()
         self.db = db
@@ -66,7 +68,7 @@ class ContactsView(Adw.Bin):
         self.btn_add.connect("clicked", lambda b: GLib.idle_add(lambda: self.app_window.present_edit_contact() or False))
         header.append(self.btn_add)
 
-        if hasattr(self.app_window, 'eds') and not self.app_window.eds.is_ready:
+        if (self.app_window and self.app_window.eds is not None) and not self.app_window.eds.is_ready:
             self.btn_add.set_sensitive(False)
 
         box.append(header)
@@ -103,7 +105,7 @@ class ContactsView(Adw.Bin):
         self.set_child(box)
 
         self.connect("map", self.on_map)
-        if hasattr(self.app_window, 'eds'):
+        if (self.app_window and self.app_window.eds is not None):
             self.app_window.eds.connect('source-switched', self.on_source_switched)
 
         self.refresh()
@@ -111,7 +113,7 @@ class ContactsView(Adw.Bin):
     def _update_source_map(self):
         """Update local map of source UIDs to names."""
         self.source_map = {}
-        if hasattr(self.app_window, 'eds'):
+        if (self.app_window and self.app_window.eds is not None):
             sources = self.app_window.eds.get_sources_info()
             for s in sources:
                 self.source_map[s['uid']] = s['name']
@@ -356,7 +358,7 @@ class ContactsView(Adw.Bin):
             btn_edit.set_sensitive(True)
 
         name_lbl.set_text(item.full_name)
-        if hasattr(item, 'is_favorite'):
+        if (getattr(item, 'is_favorite', None) is not None):
             star.set_visible(item.is_favorite)
         else:
             star.set_visible(False)
@@ -372,7 +374,7 @@ class ContactsView(Adw.Bin):
         else:
             num_lbl.set_visible(False)
 
-        if item.source_uid and hasattr(self, 'source_map'):
+        if item.source_uid and (self.source_map is not None):
             s_name = self.source_map.get(item.source_uid)
             if s_name:
                 source_lbl.set_text(s_name)
@@ -383,7 +385,7 @@ class ContactsView(Adw.Bin):
             source_lbl.set_visible(False)
 
         for btn in [btn_msg, btn_edit, btn_call]:
-            if hasattr(btn, "handler_id") and btn.handler_is_connected(btn.handler_id):
+            if (getattr(btn, 'handler_id', None) is not None) and btn.handler_is_connected(btn.handler_id):
                 btn.disconnect(btn.handler_id)
 
         btn_call.handler_id = btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_call_click(b, phones) or False))
@@ -492,7 +494,7 @@ class ContactsView(Adw.Bin):
 
     def refresh(self, query="", on_done=None):
         """Reload contact list."""
-        if hasattr(self, '_refresh_timer') and self._refresh_timer:
+        if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
         self._refresh_timer = GLib.timeout_add(200, self._do_refresh, query, on_done)
 

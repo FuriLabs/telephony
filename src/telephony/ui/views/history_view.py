@@ -31,6 +31,8 @@ class HistoryView(Adw.Bin):
     """View displaying call history with filtering options."""
 
     def __init__(self, db_manager, app_window):
+        self._refresh_timer = None
+        self.search_timer = None
         """Initialize the HistoryView."""
         super().__init__()
         self.db = db_manager
@@ -267,7 +269,7 @@ class HistoryView(Adw.Bin):
 
     def refresh_data(self):
         """Reload the history data."""
-        if hasattr(self, '_refresh_timer') and self._refresh_timer:
+        if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
         self._refresh_timer = GLib.timeout_add(200, self._do_refresh_data)
 
@@ -307,7 +309,7 @@ class HistoryView(Adw.Bin):
         """Handle search input changes."""
         text = entry.get_text().strip()
         self.search_query = text
-        if hasattr(self, 'search_timer') and self.search_timer:
+        if (self.search_timer is not None) and self.search_timer:
             GLib.source_remove(self.search_timer)
         self.search_timer = GLib.timeout_add(200, self._trigger_search)
 
@@ -460,7 +462,7 @@ class HistoryView(Adw.Bin):
     def cleanup(self):
         """Cleanup resources before destruction."""
         self.load_token += 1
-        if hasattr(self, 'search_timer') and self.search_timer:
+        if (self.search_timer is not None) and self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
 

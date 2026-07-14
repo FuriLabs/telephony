@@ -21,6 +21,7 @@ class BlocklistView(Adw.Bin):
     """View for managing blocked numbers."""
 
     def __init__(self, db, app_window):
+        self._refresh_timer = None
         """Initialize the Blocklist View."""
         super().__init__()
         self.db = db
@@ -70,7 +71,7 @@ class BlocklistView(Adw.Bin):
 
     def refresh(self):
         """Reload the blocklist from DB."""
-        if hasattr(self, '_refresh_timer') and self._refresh_timer:
+        if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
         self._refresh_timer = GLib.timeout_add(200, self._do_refresh)
 

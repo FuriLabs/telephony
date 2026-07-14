@@ -25,6 +25,7 @@ class DndBypassContactsListWindow(Adw.Window):
     """Window to manage the list of priority contacts (Notification Override)."""
 
     def __init__(self, parent, db, eds):
+        self.grp_list = None
         try:
             super().__init__(title=_("Notification Overrides"), transient_for=parent, modal=True)
             self.gsettings_mgr = db
@@ -120,7 +121,7 @@ class DndBypassContactsListWindow(Adw.Window):
 
     def _refresh_list(self):
         """Refresh the list of contacts."""
-        if hasattr(self, "grp_list") and self.grp_list:
+        if (self.grp_list is not None) and self.grp_list:
             self.page_list.remove(self.grp_list)
 
         self.grp_list = Adw.PreferencesGroup()

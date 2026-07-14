@@ -83,7 +83,7 @@ class ConversationRowFactory:
     @staticmethod
     def bind(factory, list_item):
         """Bind data to the conversation row widgets."""
-        if not hasattr(list_item, "widgets"):
+        if not (getattr(list_item, 'widgets', None) is not None):
             ConversationRowFactory.setup(factory, list_item)
 
         item = list_item.get_item()
@@ -128,6 +128,6 @@ class ConversationRowFactory:
     @staticmethod
     def teardown(factory, list_item):
         """Teardown the conversation row widgets."""
-        if hasattr(list_item, "widgets"):
+        if (getattr(list_item, 'widgets', None) is not None):
             list_item.widgets = None
         list_item.set_child(None)

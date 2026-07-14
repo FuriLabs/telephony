@@ -51,6 +51,10 @@ class ChatPage(Gtk.Box):
     """Page displaying the chat conversation history and input area."""
 
     def __init__(self, db, app_window, number_or_list, messages_view, contact_name="", target_id=None, unread_count=0, prefill_text=None, prefill_attachments=None):
+        self._read_timer = None
+        self._refresh_timer = None
+        self.focus_handler_id = None
+        self.search_timer = None
         """Initialize the ChatPage."""
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.db = db
@@ -326,7 +330,7 @@ class ChatPage(Gtk.Box):
         """Mark conversation as unread from specific message ID upwards."""
         self.db.mark_conversation_unread_from_message(self.db_number, message_id)
 
-        if hasattr(self.messages_view, 'close_active_chat'):
+        if (self.messages_view is not None):
             self.messages_view.close_active_chat()
 
     def on_reschedule_message(self, item):
@@ -347,7 +351,7 @@ class ChatPage(Gtk.Box):
 
             ts_str = dt.format("%Y-%m-%d %H:%M:%S")
             self.db.update_message_schedule(item.id, status="scheduled", timestamp=ts_str)
-            if hasattr(self.app_window, "scheduler"):
+            if (self.app_window and self.app_window.scheduler is not None):
                 self.app_window.scheduler.add_cron(item.id, ts_str)
             self._reload_chat()
             self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
@@ -571,7 +575,7 @@ class ChatPage(Gtk.Box):
 
         self.content_stack.set_visible_child_name("search_results")
 
-        if hasattr(self, 'search_timer') and self.search_timer:
+        if (self.search_timer is not None) and self.search_timer:
             GLib.source_remove(self.search_timer)
         self.search_timer = GLib.timeout_add(200, self.perform_search, query)
 
@@ -780,7 +784,7 @@ class ChatPage(Gtk.Box):
     def on_forward_message(self, item):
         """Handle forwarding a message."""
         body = item.body
-        attachments = item.attachments if hasattr(item, 'attachments') else []
+        attachments = item.attachments if (getattr(item, 'attachments', None) is not None) else []
 
         sender_display = item.sender
         if sender_display == "Me":
@@ -846,7 +850,7 @@ class ChatPage(Gtk.Box):
                     break
 
             self.db.delete_message(item_id)
-            if hasattr(self.app_window, "scheduler"):
+            if (self.app_window and self.app_window.scheduler is not None):
                 self.app_window.scheduler.remove_cron(item_id)
             self._reload_chat()
 
@@ -854,7 +858,7 @@ class ChatPage(Gtk.Box):
 
     def _reload_chat(self):
         """Reload the chat conversation."""
-        if hasattr(self, '_refresh_timer') and self._refresh_timer:
+        if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
         self._refresh_timer = GLib.timeout_add(200, self._do_reload_chat)
 
@@ -1097,7 +1101,7 @@ class ChatPage(Gtk.Box):
 
         self._draft_saved = True
 
-        if hasattr(self.db, 'delete_drafts'):
+        if (self.db is not None):
             self.db.delete_drafts(self.number)
 
         self.btn_send.set_sensitive(False)
@@ -1121,7 +1125,7 @@ class ChatPage(Gtk.Box):
 
         if scheduled_timestamp:
             row_id = self.db.add_message(self.number, 'outgoing', text, status='scheduled', subject=None, attachments=final_attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
-            if hasattr(self.app_window, "scheduler"):
+            if (self.app_window and self.app_window.scheduler is not None):
                 self.app_window.scheduler.add_cron(row_id, scheduled_timestamp)
             self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
 
@@ -1179,7 +1183,7 @@ class ChatPage(Gtk.Box):
 
     def _mark_read_debounced(self):
         """Trigger mark read with debounce."""
-        if hasattr(self, '_read_timer') and self._read_timer:
+        if (self._read_timer is not None) and self._read_timer:
             GLib.source_remove(self._read_timer)
         self._read_timer = GLib.timeout_add(200, self._do_mark_read)
 
@@ -1219,7 +1223,7 @@ class ChatPage(Gtk.Box):
 
             for m in all_msgs:
                 if m[4] == 'scheduled':
-                    if hasattr(self.app_window, "scheduler"):
+                    if (self.app_window and self.app_window.scheduler is not None):
                         self.app_window.scheduler.remove_cron(m[0])
 
             self.db.delete_conversation(target_id)
@@ -1244,7 +1248,7 @@ class ChatPage(Gtk.Box):
         if not getattr(self, '_draft_saved', False):
             self._save_draft()
 
-        if self.app_window and hasattr(self, 'focus_handler_id'):
+        if self.app_window and (self.focus_handler_id is not None):
             if self.app_window.handler_is_connected(self.focus_handler_id):
                 try:
                     self.app_window.disconnect(self.focus_handler_id)

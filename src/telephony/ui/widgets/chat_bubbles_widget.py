@@ -187,7 +187,7 @@ class ChatBubbleFactory:
     @staticmethod
     def bind(factory, list_item, delete_callback=None, contact_lookup=None, add_contact_cb=None, is_group=False, forward_callback=None, reschedule_cb=None, unread_callback=None):
         """Bind data to the chat bubble widgets."""
-        if not hasattr(list_item, "widgets"):
+        if not (getattr(list_item, 'widgets', None) is not None):
             return
 
         w = list_item.widgets
@@ -219,7 +219,7 @@ class ChatBubbleFactory:
         processed_files = []
         new_paths_sig = []
 
-        if hasattr(item, 'attachments') and item.attachments:
+        if (getattr(item, 'attachments', None) is not None) and item.attachments:
             for idx, att_path in enumerate(item.attachments):
                 real_path = att_path
                 if isinstance(att_path, list) or isinstance(att_path, tuple):
@@ -271,7 +271,7 @@ class ChatBubbleFactory:
 
             if not sender_name and add_contact_cb and sender_num and check_unknown:
                 target_w["actions"][3].set_visible(True)
-                if hasattr(target_w["actions"][3], "h"):
+                if (getattr(target_w["actions"][3], 'h', None) is not None):
                     target_w["actions"][3].disconnect(target_w["actions"][3].h)
 
                 def _add_contact_action():
@@ -536,7 +536,7 @@ class ChatBubbleFactory:
         """Connect actions to the bubble menu."""
         b_copy, b_copy_num, b_del, _, b_fwd, b_resched, btn_unread = w["actions"]
 
-        if hasattr(b_copy, "h"):
+        if (getattr(b_copy, 'h', None) is not None):
             b_copy.disconnect(b_copy.h)
 
         def _copy_action():
@@ -556,7 +556,7 @@ class ChatBubbleFactory:
 
         if found_number:
             b_copy_num.set_visible(True)
-            if hasattr(b_copy_num, "h"):
+            if (getattr(b_copy_num, 'h', None) is not None):
                 b_copy_num.disconnect(b_copy_num.h)
 
             def _copy_num_action():
@@ -570,7 +570,7 @@ class ChatBubbleFactory:
         else:
             b_copy_num.set_visible(False)
 
-        if hasattr(b_fwd, "h"):
+        if (getattr(b_fwd, 'h', None) is not None):
             b_fwd.disconnect(b_fwd.h)
 
         def _fwd_action():
@@ -583,7 +583,7 @@ class ChatBubbleFactory:
             lambda x: ChatBubbleFactory._safe_run(_fwd_action, "Forward failed")
         )
 
-        if hasattr(b_del, "h"):
+        if (getattr(b_del, 'h', None) is not None):
             b_del.disconnect(b_del.h)
 
         def _del_action():
@@ -598,7 +598,7 @@ class ChatBubbleFactory:
 
         if item.status == "scheduled" and reschedule_cb:
             b_resched.set_visible(True)
-            if hasattr(b_resched, "h"):
+            if (getattr(b_resched, 'h', None) is not None):
                 b_resched.disconnect(b_resched.h)
 
             def _resched_action():
@@ -614,7 +614,7 @@ class ChatBubbleFactory:
 
         if item.direction == "incoming":
             btn_unread.set_visible(True)
-            if hasattr(btn_unread, "h"):
+            if (getattr(btn_unread, 'h', None) is not None):
                 btn_unread.disconnect(btn_unread.h)
 
             def _unread_action():
@@ -740,7 +740,7 @@ class ChatBubbleFactory:
     @staticmethod
     def unbind(factory, list_item):
         """Unbind data and free expensive resources when row leaves viewport."""
-        if not hasattr(list_item, "widgets"):
+        if not (getattr(list_item, 'widgets', None) is not None):
             return
 
         w = list_item.widgets
@@ -760,9 +760,9 @@ class ChatBubbleFactory:
     @staticmethod
     def teardown(factory, list_item):
         """Teardown the chat bubble widgets."""
-        if hasattr(list_item, "widgets") and list_item.widgets:
+        if (getattr(list_item, 'widgets', None) is not None) and list_item.widgets:
             for w in list_item.widgets.values():
-                if hasattr(w, "unparent"):
+                if (getattr(w, 'unparent', None) is not None):
                     w.unparent()
             list_item.widgets = None
         list_item.set_child(None)

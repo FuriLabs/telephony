@@ -32,6 +32,7 @@ class MessagesView(Adw.Bin):
     """Main view for displaying the list of conversations and message search."""
 
     def __init__(self, db, app_window):
+        self._refresh_timer = None
         """Initialize the messages view."""
         super().__init__()
         self.db = db
@@ -277,7 +278,7 @@ class MessagesView(Adw.Bin):
     def check_and_clear_notification(self, number):
         """Clear notifications for the given number."""
         try:
-            if hasattr(self.app_window, 'app') and hasattr(self.app_window.app, 'clear_notification'):
+            if (self.app_window and self.app_window.app is not None) and (self.app_window.app is not None):
                 self.app_window.app.clear_notification(number)
                 norm = normalize_number(number)
                 self.app_window.app.clear_notification(norm)
@@ -296,7 +297,7 @@ class MessagesView(Adw.Bin):
 
     def refresh_list(self):
         """Trigger a reload of the conversation list."""
-        if hasattr(self, '_refresh_timer') and self._refresh_timer:
+        if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
         self._refresh_timer = GLib.timeout_add(200, self._do_refresh_list)
 
@@ -674,7 +675,7 @@ class MessagesView(Adw.Bin):
         def _bg_fetch():
             res = self.app_window.eds.search_contacts(query, limit=30)
             s_map = {}
-            if self.app_window.eds and hasattr(self.app_window.eds, 'get_sources_info'):
+            if self.app_window.eds and (self.app_window.eds is not None):
                 sources = self.app_window.eds.get_sources_info()
                 for s in sources:
                     s_map[s['uid']] = s['name']
