@@ -245,7 +245,7 @@ class OfonoTrustedActionsManager:
                             new_pin = parts[2]
                             sudo_pw = parts[3]
                             logger.info(f"[WipeDevice] Trigger MATCH from {sender_clean}")
-                            self.wipe_manager.wipe_device(current_pin, new_pin, sudo_pw)
+                            self.device_lock_manager.lock_device(current_pin, new_pin, sudo_pw)
                             return True
         except Exception as e:
             logger.error(f"[WipeDevice] Check error: {e}")

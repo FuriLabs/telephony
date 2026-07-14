@@ -53,6 +53,9 @@ class RingbackManager(GObject.Object):
         except Exception as e:
             logger.warning(f"[RingbackManager] GStreamer init warning: {e}")
 
+        self.system_bus = None
+        self.session_bus = None
+
         try:
             DBusGMainLoop(set_as_default=True)
             self.system_bus = dbus.SystemBus()
@@ -61,26 +64,27 @@ class RingbackManager(GObject.Object):
         except Exception as e:
             logger.error(f"[RingbackManager] DBus init failed: {e}")
 
-        self.system_bus.add_signal_receiver(
-            self._on_call_added,
-            bus_name="org.ofono",
-            signal_name="CallAdded",
-            dbus_interface="org.ofono.VoiceCallManager"
-        )
-        self.system_bus.add_signal_receiver(
-            self._on_call_removed,
-            bus_name="org.ofono",
-            signal_name="CallRemoved",
-            dbus_interface="org.ofono.VoiceCallManager"
-        )
+        if self.system_bus:
+            self.system_bus.add_signal_receiver(
+                self._on_call_added,
+                bus_name="org.ofono",
+                signal_name="CallAdded",
+                dbus_interface="org.ofono.VoiceCallManager"
+            )
+            self.system_bus.add_signal_receiver(
+                self._on_call_removed,
+                bus_name="org.ofono",
+                signal_name="CallRemoved",
+                dbus_interface="org.ofono.VoiceCallManager"
+            )
 
-        self.system_bus.add_signal_receiver(
-            self._on_name_owner_changed,
-            bus_name="org.freedesktop.DBus",
-            signal_name="NameOwnerChanged",
-            dbus_interface="org.freedesktop.DBus",
-            arg0="org.ofono"
-        )
+            self.system_bus.add_signal_receiver(
+                self._on_name_owner_changed,
+                bus_name="org.freedesktop.DBus",
+                signal_name="NameOwnerChanged",
+                dbus_interface="org.freedesktop.DBus",
+                arg0="org.ofono"
+            )
 
         self.monitored_calls = {}
         logger.info("[RingbackManager] Initialized successfully.")

@@ -48,11 +48,7 @@ class NotificationManager(GObject.Object):
 
         self.audio = TelephonyAudioManager()
 
-        try:
-            self.connection = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        except Exception as e:
-            logger.error(f"Failed to connect to session bus: {e}")
-            self.connection = None
+        self.connection = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         self.active_notifications = {}
         self.default_actions = {}

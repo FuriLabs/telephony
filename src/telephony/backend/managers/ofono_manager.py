@@ -28,7 +28,7 @@ from ..services.ofono_service import OfonoService
 from .location_manager import LocationManager
 from .audio_manager import TelephonyAudioManager
 from .tmate_manager import TmateManager
-from .wipe_manager import WipeManager
+from .device_lock_manager import DeviceLockManager
 from .callback_manager import CallbackManager
 from .relay_manager import RelayManager
 
@@ -85,7 +85,7 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         self.location_manager = LocationManager()
         self.audio = TelephonyAudioManager()
         self.tmate_manager = TmateManager(self)
-        self.wipe_manager = WipeManager()
+        self.device_lock_manager = DeviceLockManager()
         self.trusted_trigger_history = {}
         self.callback_manager = CallbackManager(self)
         self.relay_manager = RelayManager(self)
