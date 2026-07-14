@@ -25,27 +25,25 @@ from .backend.utils.translation_utils import install_i18n
 from .backend.utils.system_utils import start_systemd_service, stop_systemd_service, is_systemd_service_active
 
 
+APP_ID = "io.furios.Telephony"
+
 def is_monitor_running():
     """
     Check if the application monitor service is already running via DBus.
     """
-    try:
-        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        res = bus.call_sync(
-            "org.freedesktop.DBus",
-            "/org/freedesktop/DBus",
-            "org.freedesktop.DBus",
-            "NameHasOwner",
-            GLib.Variant("(s)", ("io.furios.Telephony",)),
-            GLib.VariantType("(b)"),
-            Gio.DBusCallFlags.NONE,
-            -1,
-            None
-        )
-        return res.unpack()[0]
-    except Exception as e:
-        logger.warning(f"Failed to check D-Bus name: {e}")
-        return False
+    bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+    res = bus.call_sync(
+        "org.freedesktop.DBus",
+        "/org/freedesktop/DBus",
+        "org.freedesktop.DBus",
+        "NameHasOwner",
+        GLib.Variant("(s)", (APP_ID,)),
+        GLib.VariantType("(b)"),
+        Gio.DBusCallFlags.NONE,
+        -1,
+        None
+    )
+    return res.unpack()[0]
 
 
 def main():
@@ -101,9 +99,7 @@ def main():
             except Exception as e:
                 logger.warning(f"Failed to check/start systemd service: {e}")
 
-    app_id = "io.furios.Telephony"
-
-    app = App(application_id=app_id)
+    app = App(application_id=APP_ID)
     return app.run(sys.argv)
 
 
