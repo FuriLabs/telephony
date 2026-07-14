@@ -112,10 +112,10 @@ def is_systemd_service_active(service_name):
 
 
 def get_phosh_emergency_calls():
+    source = Gio.SettingsSchemaSource.get_default()
+    if not source:
+        return []
     try:
-        source = Gio.SettingsSchemaSource.get_default()
-        if not source:
-            return []
         schema = source.lookup("sm.puri.phosh.emergency-calls", True)
         if schema and schema.has_key("enabled"):
             settings = Gio.Settings(schema_id="sm.puri.phosh.emergency-calls")
@@ -130,10 +130,10 @@ def get_phosh_emergency_calls():
 
 
 def set_phosh_emergency_calls(enabled):
+    source = Gio.SettingsSchemaSource.get_default()
+    if not source:
+        return
     try:
-        source = Gio.SettingsSchemaSource.get_default()
-        if not source:
-            return
         schema = source.lookup("sm.puri.phosh.emergency-calls", True)
         if schema and schema.has_key("enabled"):
             settings = Gio.Settings(schema_id="sm.puri.phosh.emergency-calls")
