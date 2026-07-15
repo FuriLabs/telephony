@@ -383,7 +383,7 @@ class LockScreenManager:
             del self.respawn_timers[path]
 
         if path == "stuck_modem":
-            if self.is_locked and getattr(self.window, "in_error_mode", False):
+            if self.is_locked and self.window.in_error_mode:
                 self.show_stuck_notification()
             return False
 

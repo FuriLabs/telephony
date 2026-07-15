@@ -26,6 +26,7 @@ class DndBypassContactsListWindow(Adw.Window):
 
     def __init__(self, parent, db, eds):
         self.grp_list = None
+        self.search_token = 0
         try:
             super().__init__(title=_("Notification Overrides"), transient_for=parent, modal=True)
             self.gsettings_mgr = db
@@ -177,7 +178,7 @@ class DndBypassContactsListWindow(Adw.Window):
 
         self.stack.set_visible_child_name("search")
 
-        self.search_token = getattr(self, 'search_token', 0) + 1
+        self.search_token += 1
         current_token = self.search_token
 
         def _bg_fetch():

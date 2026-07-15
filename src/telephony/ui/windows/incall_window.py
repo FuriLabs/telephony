@@ -45,7 +45,7 @@ class InCallWindow(Gtk.Window):
 
     def __init__(self, gsettings_mgr, ofono_manager, eds_manager, db_manager):
         """Initialize the InCallWindow."""
-        if getattr(self, '_initialized', False):
+        if self._initialized:
             return
         super().__init__(title="Telephony", modal=False)
         self.set_icon_name("io.furios.Telephony.Calls")

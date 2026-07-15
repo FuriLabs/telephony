@@ -32,6 +32,40 @@ class TrustedActionsListWindow(Adw.Window):
         self.totp_btn = None
         try:
             self.mode = mode
+            self.get_contacts_func = None
+            self.set_contacts_func = None
+            self.get_enabled_func = None
+            self.set_enabled_func = None
+            self.get_seed_func = None
+            self.set_seed_func = None
+            self.remove_seed_func = None
+
+            if self.mode == "trusted_sms_location_request":
+                self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_location_request
+                self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_location_request
+                self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_location_request_enabled
+                self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_location_request_enabled
+            elif self.mode == "trusted_sms_silent_callback":
+                self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_silent_callback
+                self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_silent_callback
+                self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_silent_callback_enabled
+                self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_silent_callback_enabled
+            elif self.mode == "trusted_sms_relay":
+                self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_relay
+                self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_relay
+                self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_relay_enabled
+                self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_relay_enabled
+            elif self.mode == "trusted_sms_ssh_access":
+                self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_ssh_access
+                self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_ssh_access
+                self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_ssh_access_enabled
+                self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_ssh_access_enabled
+            elif self.mode == "trusted_sms_remote_wipe":
+                self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_remote_wipe
+                self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_remote_wipe
+                self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_remote_wipe_enabled
+                self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_remote_wipe_enabled
+
             self.gsettings_mgr = db
             self.eds = eds
             self.app_window = parent.parent_win.main_window if hasattr(parent, 'parent_win') else (
@@ -52,7 +86,7 @@ class TrustedActionsListWindow(Adw.Window):
 
             self.local_contacts = []
             try:
-                current = getattr(self.gsettings_mgr, f"get_{self.mode}")()
+                current = self.get_contacts_func() if self.get_contacts_func else None
                 if current:
                     for c in current:
                         self.local_contacts.append(c.copy())
@@ -193,7 +227,7 @@ class TrustedActionsListWindow(Adw.Window):
                     'contact-removed', lambda *args: GLib.idle_add(self._refresh_list))
                 self.eds_signals.append((self.eds, sig_id))
 
-            if getattr(self, "app_window", None) and hasattr(self.app_window, "db"):
+            if self.app_window is not None and hasattr(self.app_window, "db"):
                 sig_id = self.app_window.db.connect(
                     'blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
                 self.db_signals.append((self.app_window.db, sig_id))
@@ -202,7 +236,7 @@ class TrustedActionsListWindow(Adw.Window):
 
             self._refresh_list()
 
-            enabled_getter = getattr(self.gsettings_mgr, f"get_{self.mode}_enabled", None)
+            enabled_getter = self.get_enabled_func
             if enabled_getter:
                 self.enable_switch.set_active(enabled_getter())
                 self._update_visibility()
@@ -216,7 +250,7 @@ class TrustedActionsListWindow(Adw.Window):
 
     def _on_enable_switch_toggled(self, switch, gparam):
         is_active = switch.get_active()
-        setter = getattr(self.gsettings_mgr, f"set_{self.mode}_enabled", None)
+        setter = self.set_enabled_func
         if setter:
             setter(is_active)
         self._update_visibility()
@@ -228,7 +262,7 @@ class TrustedActionsListWindow(Adw.Window):
     def _on_gsettings_changed(self, settings, key):
         expected_key = self.mode.replace("_", "-") + "-enabled"
         if key == expected_key:
-            enabled_getter = getattr(self.gsettings_mgr, f"get_{self.mode}_enabled", None)
+            enabled_getter = self.get_enabled_func
             if enabled_getter:
                 is_active = enabled_getter()
                 if self.enable_switch.get_active() != is_active:
@@ -264,7 +298,8 @@ class TrustedActionsListWindow(Adw.Window):
 
     def _on_save_clicked(self, btn):
         """Handle save button click."""
-        getattr(self.gsettings_mgr, f"set_{self.mode}")(self.local_contacts)
+        if self.set_contacts_func:
+            self.set_contacts_func(self.local_contacts)
         GLib.idle_add(lambda: self.close() or False)
 
     def _refresh_list(self):
@@ -367,7 +402,7 @@ class TrustedActionsListWindow(Adw.Window):
 
         self.stack.set_visible_child_name("search")
 
-        self.search_token = getattr(self, 'search_token', 0) + 1
+        self.search_token += 1
         current_token = self.search_token
 
         def _bg_fetch():
@@ -500,7 +535,7 @@ class TrustedActionsListWindow(Adw.Window):
 
     def _show_totp_setup(self):
         """Show the TOTP setup dialog."""
-        seed_getter = getattr(self.gsettings_mgr, f"get_{self.mode}_totp_seed", None)
+        seed_getter = self.get_seed_func
         if not seed_getter:
             return
 
@@ -534,7 +569,7 @@ class TrustedActionsListWindow(Adw.Window):
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
         def _on_save(b):
-            seed_setter = getattr(self.gsettings_mgr, f"set_{self.mode}_totp_seed", None)
+            seed_setter = self.set_seed_func
             if seed_setter:
                 seed_setter(seed)
             dialog.close()
@@ -625,7 +660,7 @@ class TrustedActionsListWindow(Adw.Window):
 
         def on_response(dialog, response):
             if response == "remove":
-                remover = getattr(self.gsettings_mgr, f"remove_{self.mode}_totp_seed", None)
+                remover = self.remove_seed_func
                 if remover:
                     remover()
                 self._update_totp_button_label()

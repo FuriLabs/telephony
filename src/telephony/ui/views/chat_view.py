@@ -365,7 +365,7 @@ class ChatPage(Gtk.Box):
 
     def _start_load_thread(self):
         """Start thread to load older messages."""
-        if getattr(self, "is_fetching_older", False) or not self.app_window.is_active():
+        if self.is_fetching_older or not self.app_window.is_active():
             return False
 
         self.is_fetching_older = True
@@ -580,7 +580,7 @@ class ChatPage(Gtk.Box):
 
     def perform_search(self, query):
         """Execute message search."""
-        self.search_token = getattr(self, 'search_token', 0) + 1
+        self.search_token = self.search_token + 1
         current_token = self.search_token
 
         def _fetch():
@@ -783,7 +783,7 @@ class ChatPage(Gtk.Box):
     def on_forward_message(self, item):
         """Handle forwarding a message."""
         body = item.body
-        attachments = item.attachments if (getattr(item, 'attachments', None) is not None) else []
+        attachments = item.attachments if (item.attachments) else []
 
         sender_display = item.sender
         if sender_display == "Me":
@@ -1162,13 +1162,13 @@ class ChatPage(Gtk.Box):
 
     def on_scroll_changed(self, adj):
         """Handle scroll position change to mark read or fetch older."""
-        if self.is_loading or getattr(self, "is_jumping", False):
+        if self.is_loading or self.is_jumping:
             return
 
         is_near_older = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
 
-        if is_near_older and not getattr(self, "all_messages_loaded", False):
-            if not getattr(self, "is_fetching_older", False):
+        if is_near_older and not self.all_messages_loaded:
+            if not self.is_fetching_older:
                 self._start_load_thread()
 
         self.check_read_status()
@@ -1244,7 +1244,7 @@ class ChatPage(Gtk.Box):
 
     def on_unmap(self, widget):
         """Cleanup on widget unmap."""
-        if not getattr(self, '_draft_saved', False):
+        if not self._draft_saved:
             self._save_draft()
 
         if self.app_window and (self.focus_handler_id is not None):

@@ -642,7 +642,7 @@ class MessagesView(Adw.Bin):
 
     def perform_contact_search(self, query):
         """Search for contacts matching the query."""
-        self.contact_search_token = getattr(self, 'contact_search_token', 0) + 1
+        self.contact_search_token = self.contact_search_token + 1
         current_token = self.contact_search_token
 
         norm_query = normalize_number(query)
@@ -747,7 +747,7 @@ class MessagesView(Adw.Bin):
 
     def perform_message_search(self, query):
         """Search for messages matching the query."""
-        self.message_search_token = getattr(self, 'message_search_token', 0) + 1
+        self.message_search_token = self.message_search_token + 1
         current_token = self.message_search_token
 
         def _bg_fetch():

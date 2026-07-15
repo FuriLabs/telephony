@@ -92,7 +92,7 @@ def detect_region():
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
 
         app = Gio.Application.get_default()
-        if app and getattr(app, 'ofono', None) and app.ofono.modem_path:
+        if app and app.ofono is not None and app.ofono.modem_path:
             modem_path = app.ofono.modem_path
         else:
             manager = Gio.DBusProxy.new_sync(

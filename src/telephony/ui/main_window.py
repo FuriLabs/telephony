@@ -48,6 +48,7 @@ class MainWindow(Adw.Window):
     def __init__(self, application, ofono_manager, db_manager, eds_manager, mms_manager=None, gsettings_mgr=None, show_calls=False, show_messages=False, show_contacts=False):
         self._unread_timer = None
         self.btn_set = None
+        self.in_error_mode = False
         """Initialize the main window."""
         super().__init__(application=application)
         self.app = application

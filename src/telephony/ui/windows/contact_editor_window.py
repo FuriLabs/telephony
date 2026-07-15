@@ -30,6 +30,7 @@ class ContactEditor(Adw.Window):
         self.btn_save = None
         self.source_toggles = None
         self.switch_fav = None
+        self._saving_in_progress = False
         """Initialize the Contact Editor."""
         super().__init__(title=_("Contact Details"))
         self.eds = eds_manager
@@ -655,7 +656,7 @@ class ContactEditor(Adw.Window):
     def on_save(self, btn, force=False):
         """Save contact changes."""
         if not force:
-            if getattr(self, '_saving_in_progress', False):
+            if self._saving_in_progress:
                 return
             self._saving_in_progress = True
 

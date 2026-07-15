@@ -103,13 +103,13 @@ class HistoryRowFactory:
     def bind(self, factory, list_item):
         """Bind data to the history row widgets."""
         item = list_item.get_item()
-        if not (getattr(list_item, 'widgets', None) is not None):
+        if list_item.get_child() is None:
             self.setup(factory, list_item)
 
         w = list_item.widgets
         stack = w["stack"]
 
-        if getattr(item, 'is_divider', False):
+        if item.is_divider:
             stack.set_visible_child_name("divider")
             w["div_lbl"].set_text(item.label or "—")
             return
@@ -144,9 +144,9 @@ class HistoryRowFactory:
         else:
             w["icon"].set_from_icon_name("call-start-symbolic")
 
-        if (getattr(w["call_btn"], 'handler_id', None) is not None) and w["call_btn"].handler_is_connected(w["call_btn"].handler_id):
+        if (w["call_btn"].handler_id is not None) and w["call_btn"].handler_is_connected(w["call_btn"].handler_id):
             w["call_btn"].disconnect(w["call_btn"].handler_id)
-        if (getattr(w["info_btn"], 'handler_id', None) is not None) and w["info_btn"].handler_is_connected(w["info_btn"].handler_id):
+        if (w["info_btn"].handler_id is not None) and w["info_btn"].handler_is_connected(w["info_btn"].handler_id):
             w["info_btn"].disconnect(w["info_btn"].handler_id)
 
         w["call_btn"].handler_id = w["call_btn"].connect("clicked", lambda b: GLib.idle_add(lambda: self.on_call_click(b, item.number) or False))
@@ -154,16 +154,16 @@ class HistoryRowFactory:
 
     def unbind(self, factory, list_item):
         """Unbind data from the history row widgets."""
-        if (getattr(list_item, 'widgets', None) is not None):
+        if (list_item.get_child() is not None):
             w = list_item.widgets
-            if (getattr(w["call_btn"], 'handler_id', None) is not None) and w["call_btn"].handler_is_connected(w["call_btn"].handler_id):
+            if (w["call_btn"].handler_id is not None) and w["call_btn"].handler_is_connected(w["call_btn"].handler_id):
                 w["call_btn"].disconnect(w["call_btn"].handler_id)
-            if (getattr(w["info_btn"], 'handler_id', None) is not None) and w["info_btn"].handler_is_connected(w["info_btn"].handler_id):
+            if (w["info_btn"].handler_id is not None) and w["info_btn"].handler_is_connected(w["info_btn"].handler_id):
                 w["info_btn"].disconnect(w["info_btn"].handler_id)
 
     def teardown(self, factory, list_item):
         """Teardown the history row widgets."""
-        if (getattr(list_item, 'widgets', None) is not None):
+        if (list_item.get_child() is not None):
             list_item.widgets = None
         list_item.set_child(None)
 

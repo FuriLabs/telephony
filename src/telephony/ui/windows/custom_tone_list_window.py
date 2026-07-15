@@ -122,7 +122,7 @@ class CustomToneListWindow(Adw.Window):
                 sig_id = self.eds.connect('contact-removed', lambda *args: GLib.idle_add(self._refresh_list))
                 self.eds_signals.append((self.eds, sig_id))
 
-            if getattr(self, "app_window", None) and hasattr(self.app_window, "db"):
+            if self.app_window is not None and hasattr(self.app_window, "db"):
                 sig_id = self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
                 self.db_signals.append((self.app_window.db, sig_id))
 

@@ -324,6 +324,10 @@ class ContactsView(Adw.Bin):
         ctrl.connect("pressed", lambda g, n, x, y: GLib.idle_add(lambda: self.on_call_right_click(g, n, x, y) or False))
         btn_call.add_controller(ctrl)
 
+        for btn in [btn_msg, btn_edit, btn_call]:
+            btn.handler_id = None
+            btn.phones_data = []
+            
         actions.append(btn_msg)
         actions.append(btn_edit)
         actions.append(btn_call)
@@ -358,7 +362,7 @@ class ContactsView(Adw.Bin):
             btn_edit.set_sensitive(True)
 
         name_lbl.set_text(item.full_name)
-        if (getattr(item, 'is_favorite', None) is not None):
+        if item.is_favorite:
             star.set_visible(item.is_favorite)
         else:
             star.set_visible(False)
@@ -385,7 +389,7 @@ class ContactsView(Adw.Bin):
             source_lbl.set_visible(False)
 
         for btn in [btn_msg, btn_edit, btn_call]:
-            if (getattr(btn, 'handler_id', None) is not None) and btn.handler_is_connected(btn.handler_id):
+            if (btn.handler_id is not None) and btn.handler_is_connected(btn.handler_id):
                 btn.disconnect(btn.handler_id)
 
         btn_call.handler_id = btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_call_click(b, phones) or False))
@@ -411,7 +415,7 @@ class ContactsView(Adw.Bin):
     def on_call_right_click(self, gesture, _n_press, x, y):
         """Handle right click on call button."""
         btn = gesture.get_widget()
-        phones = getattr(btn, "phones_data", [])
+        phones = btn.phones_data
         if not phones:
             return
 
@@ -533,7 +537,7 @@ class ContactsView(Adw.Bin):
         )
 
     def add_chunk(self, model, items):
-        self.is_fetching = not getattr(self, "last_fetch_has_more", False)
+        self.is_fetching = not self.last_fetch_has_more
 
         real_items_count = 0
         new_items = []
