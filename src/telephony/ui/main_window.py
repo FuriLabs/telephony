@@ -99,22 +99,28 @@ class MainWindow(Adw.Window):
         self.messages_view = None
         self.dialpad_view = None
         self.msgs_page = None
+        self._view_pages = {}
+
+        def add_lazy_page(name, title, icon):
+            placeholder = Adw.Bin()
+            page = self.stack.add_titled(placeholder, name, title)
+            page.set_icon_name(icon)
+            self._view_pages[name] = placeholder
+            return page
 
         if self.show_calls_mode:
-            self.dialpad_view = DialpadView(self)
-            self.stack.add_titled(self.dialpad_view, "dialpad", _("Dialpad")).set_icon_name("input-dialpad-symbolic")
-
-            self.history_view = HistoryView(self.db, self)
-            self.stack.add_titled(self.history_view, "history", _("History")).set_icon_name("document-open-recent-symbolic")
+            add_lazy_page("dialpad", _("Dialpad"), "input-dialpad-symbolic")
+            add_lazy_page("history", _("History"), "document-open-recent-symbolic")
 
         if self.show_messages_mode:
-            self.messages_view = MessagesView(self.db, self)
-            self.msgs_page = self.stack.add_titled(self.messages_view, "messages", _("Messages"))
-            self.msgs_page.set_icon_name("mail-message-new-symbolic")
+            self.msgs_page = add_lazy_page("messages", _("Messages"), "mail-message-new-symbolic")
 
         if self.show_contacts_mode:
-            self.contacts_view = ContactsView(self.eds, self)
-            self.stack.add_titled(self.contacts_view, "contacts", _("Contacts")).set_icon_name("system-users-symbolic")
+            add_lazy_page("contacts", _("Contacts"), "system-users-symbolic")
+
+        self.stack.connect("notify::visible-child-name",
+                           lambda *a: self._ensure_view(self.stack.get_visible_child_name()))
+        self._ensure_view(self.stack.get_visible_child_name())
 
         self.stack.set_vexpand(True)
         main_vbox.append(self.stack)
@@ -392,6 +398,26 @@ class MainWindow(Adw.Window):
         elif status == 'error':
             self.notify_error(_("Modem Error: {message}").format(message=message))
 
+    def _ensure_view(self, name):
+        """Construct the view for a stack page on first use."""
+        placeholder = self._view_pages.get(name)
+        if placeholder is None or placeholder.get_child() is not None:
+            return
+
+        logger.debug(f"[MainWindow] Building view for tab: {name}")
+        if name == "dialpad":
+            self.dialpad_view = DialpadView(self)
+            placeholder.set_child(self.dialpad_view)
+        elif name == "history":
+            self.history_view = HistoryView(self.db, self)
+            placeholder.set_child(self.history_view)
+        elif name == "messages":
+            self.messages_view = MessagesView(self.db, self)
+            placeholder.set_child(self.messages_view)
+        elif name == "contacts":
+            self.contacts_view = ContactsView(self.eds, self)
+            placeholder.set_child(self.contacts_view)
+
     def handle_new_message(self, sender, body, attachments=[], real_sender=None):
         """Handle new message injection into UI."""
         if not self.messages_view:
@@ -401,13 +427,15 @@ class MainWindow(Adw.Window):
 
     def open_chat_for_number(self, number):
         """Switch to messages view and open chat."""
-        if self.show_messages_mode and self.messages_view:
+        if self.show_messages_mode:
+            self._ensure_view("messages")
             self.stack.set_visible_child_name("messages")
             self.messages_view.open_chat(number, number)
 
     def open_dialpad_with_number(self, number):
         """Switch to dialpad and pre-fill number."""
-        if self.show_calls_mode and self.dialpad_view:
+        if self.show_calls_mode:
+            self._ensure_view("dialpad")
             self.stack.set_visible_child_name("dialpad")
             self.dialpad_view.entry.set_text(number)
             self.dialpad_view.entry.set_position(-1)

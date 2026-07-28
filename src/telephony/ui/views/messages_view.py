@@ -54,7 +54,7 @@ class MessagesView(Adw.Bin):
         self.selected_recipients = set()
         self._is_programmatic_update = False
 
-        self.db.connect('messages-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
+        self.db.connect('messages-updated', self._on_messages_updated)
         self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
         if self.app_window.eds:
             self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
@@ -292,6 +292,44 @@ class MessagesView(Adw.Bin):
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
         if is_at_bottom:
             self._start_fetch()
+
+    def _on_messages_updated(self, _db, chat_id, change):
+        """React to message database changes, updating single rows when possible."""
+        if (not chat_id or change not in ("insert", "status")
+                or self.active_filter != "all" or self.search_entry.get_text().strip()):
+            self.refresh_list()
+            return
+
+        run_in_background(self.db.get_conversation_summary, chat_id,
+                          on_complete=lambda summary: self._apply_row_update(chat_id, summary, change))
+
+    def _apply_row_update(self, chat_id, summary, change):
+        """Update a single conversation row in place from a fresh summary."""
+        if summary is None:
+            self.refresh_list()
+            return
+
+        old_item = None
+        idx = -1
+        for i in range(self.model.get_n_items()):
+            item = self.model.get_item(i)
+            if item.number == chat_id:
+                idx = i
+                old_item = item
+                break
+
+        if old_item is None:
+            self.refresh_list()
+            return
+
+        body, ts, status, unread = summary
+        if not body:
+            body = _("[Multimedia Message]")
+
+        new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status)
+        target = 0 if change == "insert" else idx
+        self.model.remove(idx)
+        self.model.insert(target, new_item)
 
     def refresh_list(self):
         """Trigger a reload of the conversation list."""

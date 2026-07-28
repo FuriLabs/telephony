@@ -44,6 +44,21 @@ class DbMessagesUtils:
             logger.error(f"[DB] Conversation exists check error: {e}")
             return False
 
+    def get_conversation_summary(self, number):
+        """Return the latest message and unread count for one conversation."""
+        try:
+            chat_id = self._normalize_chat_id(number)
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute('''SELECT body, timestamp, status,
+                                    (SELECT COUNT(*) FROM messages WHERE remote_number=? AND status='unread' AND direction='incoming')
+                             FROM messages WHERE remote_number=?
+                             ORDER BY timestamp DESC, id DESC LIMIT 1''', (chat_id, chat_id))
+                return c.fetchone()
+        except Exception as e:
+            logger.error(f"[DB] Get Conversation Summary Error: {e}")
+            return None
+
     def get_conversation_ids(self):
         """Return all distinct conversation ids."""
         try:
