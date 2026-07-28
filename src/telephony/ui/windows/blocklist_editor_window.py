@@ -18,6 +18,7 @@ from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.thread_utils import run_in_background
 
 
 class BlocklistEditor(Adw.Window):
@@ -85,11 +86,14 @@ class BlocklistEditor(Adw.Window):
             return
 
         def _do_block():
-            if self.db.block_number(norm_num, note):
-                logger.info(f"[Blocklist] Added number: {norm_num}")
-                GLib.idle_add(lambda: self.close() or False)
-            else:
-                self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+            def done(success):
+                if success:
+                    logger.info(f"[Blocklist] Added number: {norm_num}")
+                    self.close()
+                else:
+                    self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+
+            run_in_background(self.db.block_number, norm_num, note, on_complete=done)
 
         if self.eds.search_contacts(norm_num):
             self._confirm_block_remove(raw_num, _do_block)

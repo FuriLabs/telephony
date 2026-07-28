@@ -54,6 +54,7 @@ class EdsManager(GObject.Object, EdsSourcesManager, EdsCacheManager, EdsEventsMa
         self.gsettings_mgr = None
         self.registry = None
         self.is_ready = False
+        self._sources_info_cache = None
 
     def set_db(self, db_manager, gsettings_mgr):
         """Set the database manager reference and start initialization."""

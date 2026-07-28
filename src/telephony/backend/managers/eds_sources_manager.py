@@ -39,7 +39,25 @@ class EdsSourcesManager:
             logger.error(f"[EDS] Registry Init Error: {e}")
             return
 
+        self.registry.connect("source-added", lambda *a: self.invalidate_sources_info())
+        self.registry.connect("source-removed", lambda *a: self.invalidate_sources_info())
+
         self._load_sources_config()
+
+    def invalidate_sources_info(self):
+        """Drop the cached sources info so the next query re-reads the registry."""
+        self._sources_info_cache = None
+
+    def reload(self):
+        """Tear down all source connections and reload configuration and contacts."""
+        def task():
+            with self.sources_lock:
+                for uid in list(self.sources.keys()):
+                    self._remove_source(uid)
+            self.invalidate_sources_info()
+            self._load_sources_config()
+
+        run_in_background(task)
 
     def _load_sources_config(self):
         """Load configuration and initialize sources."""
@@ -243,6 +261,9 @@ class EdsSourcesManager:
 
     def get_sources_info(self):
         """Return list of all sources with their status/rank for Settings UI."""
+        if self._sources_info_cache is not None:
+            return [dict(item) for item in self._sources_info_cache]
+
         try:
             all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
             default_source = self.registry.ref_default_address_book()
@@ -286,6 +307,7 @@ class EdsSourcesManager:
                     })
                     current_rank += 1
 
+            self._sources_info_cache = [dict(item) for item in result]
             return result
 
         except Exception as e:
@@ -300,12 +322,14 @@ class EdsSourcesManager:
         source = self.registry.ref_source(uid)
         if source:
             self.registry.set_default_address_book(source)
+            self.invalidate_sources_info()
             return True
         return False
 
     def update_sources_config(self, new_config_list):
         """Update configuration from Settings UI and reload."""
         self.save_sources_config(new_config_list)
+        self.invalidate_sources_info()
         run_in_background(self._update_sources_task, new_config_list,)
 
     def _update_sources_task(self, new_config_list):
@@ -375,6 +399,7 @@ class EdsSourcesManager:
                     return False
 
                 source.remove_sync(None)
+                self.invalidate_sources_info()
 
                 saved_config_json = self.gsettings_mgr.get_setting("address_book_sources")
                 if saved_config_json:

@@ -770,11 +770,16 @@ class MainWindow(Adw.Window):
         """Handle adding number to an existing contact."""
         def _cb(result):
             uid, name = result
-            if self.eds.add_number_to_contact(uid, item.number):
-                self.notify_success(_("Added to {name}").format(name=name))
-            else:
-                logger.error(f"[MainWindow] Failed to add number {item.number} to contact {uid}")
-                self.notify_error(_("Failed to add number"))
+            self.notify_loading(_("Saving contact..."))
+
+            def done(success):
+                if success:
+                    self.notify_success(_("Added to {name}").format(name=name))
+                else:
+                    logger.error(f"[MainWindow] Failed to add number {item.number} to contact {uid}")
+                    self.notify_error(_("Failed to add number"))
+
+            run_in_background(self.eds.add_number_to_contact, uid, item.number, on_complete=done)
 
         picker = ContactPicker(
             self.eds,

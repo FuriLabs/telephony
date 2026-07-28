@@ -18,6 +18,7 @@ from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number, parse_evolution_e164_param
+from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.vcard_utils import unfold_vcard
 from .date_time_picker_window import DateTimePicker
 from .duplicate_resolution_window import DuplicateResolutionWindow
@@ -554,25 +555,32 @@ class ContactEditor(Adw.Window):
 
     def _do_delete(self):
         """Perform deletion."""
-        if self.uid:
-            contact = self.eds.cache.get(self.uid)
-            numbers = []
-            if contact and 'phones' in contact:
-                numbers = [p[0] for p in contact['phones']]
+        if not self.uid:
+            GLib.idle_add(lambda: self.close() or False)
+            return
 
-            self.main_window.notify_loading(_("Deleting contact..."))
+        contact = self.eds.cache.get(self.uid)
+        numbers = []
+        if contact and 'phones' in contact:
+            numbers = [p[0] for p in contact['phones']]
 
-            if hasattr(self.main_window, 'contacts_view') and self.main_window.contacts_view:
-                self.main_window.contacts_view.search.set_text("")
+        self.main_window.notify_loading(_("Deleting contact..."))
 
+        if hasattr(self.main_window, 'contacts_view') and self.main_window.contacts_view:
+            self.main_window.contacts_view.search.set_text("")
+
+        def task():
             self.eds.delete_contact(self.uid)
-
             if numbers:
                 self.main_window.db.update_history_names(numbers, new_name=None)
-                for num in numbers:
-                    self.main_window.gsettings_mgr.reset_special_list_names(num)
+            return numbers
 
-        GLib.idle_add(lambda: self.close() or False)
+        def done(deleted_numbers):
+            for num in deleted_numbers or []:
+                self.main_window.gsettings_mgr.reset_special_list_names(num)
+            self.close()
+
+        run_in_background(task, on_complete=done)
 
     def _generate_vcard_from_ui(self, phones_to_save):
         """Generate VCard string from UI fields."""
@@ -759,42 +767,60 @@ class ContactEditor(Adw.Window):
             if self.uid and ':' in self.uid:
                 original_source = self.uid.split(':', 1)[0]
 
-            for s_uid in selected_sources:
-                if self.uid and s_uid == original_source:
-                    self.eds.save_contact(final_vcard, self.uid)
-                else:
-                    self.eds.save_contact(final_vcard, source_uid=s_uid)
-
-            try:
-                old_phones = set()
-                if self.vcard_cache:
-                    extracted = self._extract_phones_with_labels()
-                    for p, l in extracted:
-                        n = normalize_number(p)
-                        if n:
-                            old_phones.add(n)
-
-                new_phones = set()
-                for p, l in phones_to_save:
-                    n = normalize_number(p)
-                    if n:
-                        new_phones.add(n)
-
-                removed_phones = old_phones - new_phones
-                for p in removed_phones:
-                    self.main_window.gsettings_mgr.reset_special_list_names(p)
-
-                if self.contact_name != fn:
-                    for p in new_phones:
-                        self.main_window.gsettings_mgr.update_special_list_names(p, fn)
-            except Exception as ex:
-                logger.error(f"[ContactEditor] Special list update error: {ex}")
-
-            GLib.idle_add(lambda: self.close() or False)
+            run_in_background(
+                self._write_contact, final_vcard, phones_to_save,
+                selected_sources, original_source,
+                on_complete=lambda new_phones: self._on_save_finished(fn, new_phones),
+                on_error=self._on_save_failed
+            )
         except Exception as e:
             self._saving_in_progress = False
             self.btn_save.set_sensitive(True)
             logger.error(f"[ContactEditor] On save error: {e}")
+
+    def _write_contact(self, final_vcard, phones_to_save, selected_sources, original_source):
+        """Write the contact to the selected address books off the main thread."""
+        for s_uid in selected_sources:
+            if self.uid and s_uid == original_source:
+                self.eds.save_contact(final_vcard, self.uid)
+            else:
+                self.eds.save_contact(final_vcard, source_uid=s_uid)
+
+        new_phones = set()
+        for p, _lbl in phones_to_save:
+            n = normalize_number(p)
+            if n:
+                new_phones.add(n)
+        return new_phones
+
+    def _on_save_finished(self, fn, new_phones):
+        """Update special lists and close the editor after a successful save."""
+        try:
+            old_phones = set()
+            if self.vcard_cache:
+                for p, _lbl in self._extract_phones_with_labels():
+                    n = normalize_number(p)
+                    if n:
+                        old_phones.add(n)
+
+            for p in old_phones - new_phones:
+                self.main_window.gsettings_mgr.reset_special_list_names(p)
+
+            if self.contact_name != fn:
+                for p in new_phones:
+                    self.main_window.gsettings_mgr.update_special_list_names(p, fn)
+        except Exception as ex:
+            logger.error(f"[ContactEditor] Special list update error: {ex}")
+
+        self._saving_in_progress = False
+        self.close()
+
+    def _on_save_failed(self, error):
+        """Re-enable saving after a failed background save."""
+        self._saving_in_progress = False
+        self.btn_save.set_sensitive(True)
+        self.main_window.notify_error(_("Failed to save contact"))
+        logger.error(f"[ContactEditor] Save failed: {error}")
 
     def _confirm_unblock_add(self, _number_str, on_confirm):
         """Show confirmation to unblock and add to contacts."""
