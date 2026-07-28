@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 12:03+0000\n"
+"POT-Creation-Date: 2026-07-29 02:02+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -13,128 +13,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:91
-msgid "Exported {count} messages to Chatty database."
-msgstr "Chatty дерекқорына {count} хабар экспортталды."
+#: src/telephony/app.py:530 src/telephony/app.py:564
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:398
+#: src/telephony/backend/utils/db_blocklist_utils.py:52
+#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
+#: src/telephony/ui/views/chat_view.py:93
+#: src/telephony/ui/views/chat_view.py:142
+#: src/telephony/ui/views/chat_view.py:152
+#: src/telephony/ui/views/chat_view.py:156
+#: src/telephony/ui/views/chat_view.py:700
+#: src/telephony/ui/views/chat_view.py:704
+#: src/telephony/ui/views/chat_view.py:800
+#: src/telephony/ui/views/chat_view.py:806
+#: src/telephony/ui/views/chat_view.py:965
+#: src/telephony/ui/views/chat_view.py:967
+#: src/telephony/ui/views/chat_view.py:1160
+#: src/telephony/ui/views/dialpad_view.py:158
+#: src/telephony/ui/views/history_view.py:411
+#: src/telephony/ui/views/messages_view.py:363
+#: src/telephony/ui/views/messages_view.py:366
+#: src/telephony/ui/views/messages_view.py:437
+#: src/telephony/ui/views/messages_view.py:441
+#: src/telephony/ui/views/messages_view.py:531
+#: src/telephony/ui/views/messages_view.py:868
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
+#: src/telephony/ui/widgets/history_rows_widget.py:121
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:166
+#: src/telephony/ui/windows/custom_tone_list_window.py:260
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:126
+#: src/telephony/ui/windows/incall_window.py:296
+#: src/telephony/ui/windows/incall_window.py:309
+#: src/telephony/ui/windows/incall_window.py:332
+#: src/telephony/ui/windows/incall_window.py:461
+#: src/telephony/ui/windows/trusted_actions_list_window.py:309
+#: src/telephony/ui/windows/trusted_actions_list_window.py:447
+msgid "Unknown"
+msgstr "Белгісіз"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:147
-msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Gnome Calls дерекқорына {count} қоңырау экспортталды."
+#: src/telephony/app.py:541
+msgid "Call Back"
+msgstr "Кері қоңырау шалу"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:164
-msgid "Source database not found."
-msgstr "Бастапқы дерекқор табылмады."
+#: src/telephony/app.py:571
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} жаңа хабарлама"
+msgstr[1] "{count} жаңа хабарлама"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:167
-msgid "Exported Telephony database successfully."
-msgstr "Телефония дерекқоры сәтті экспортталды."
+#: src/telephony/app.py:575
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Ашық"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:34
-#: src/telephony/backend/utils/importer_ios_utils.py:202
-#: src/telephony/backend/utils/importer_android_utils.py:33
-#: src/telephony/backend/utils/importer_android_utils.py:135
-msgid "File not found."
-msgstr "Файл табылмады."
+#: src/telephony/app.py:579
+msgid "Call"
+msgstr "Қоңырау"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:63
-msgid "Could not find messages table in iOS database."
-msgstr "iOS дерекқорында хабарлар кестесі табылмады."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:70
-msgid "Failed to read iOS SMS database structure."
-msgstr "iOS SMS дерекқор құрылымын оқу мүмкін болмады."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:193
-msgid "Imported {count} messages from iOS backup."
-msgstr "iOS сақтық көшірмесінен {count} хабар импортталды."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:227
-msgid "Could not find call history table in iOS database."
-msgstr "iOS дерекқорында қоңыраулар журналы кестесі табылмады."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:234
-msgid "Failed to read iOS Calls database structure."
-msgstr "iOS қоңыраулары дерекқор құрылымын оқу сәтсіз аяқталды."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:297
-msgid "Imported {count} calls from iOS backup."
-msgstr "iOS сақтық көшірмесінен {count} қоңырау импортталды."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:139
-msgid "Successfully exported {count} messages to XML."
-msgstr "{count} хабар XML форматына сәтті экспортталды."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:205
-msgid "Successfully exported {count} calls to XML."
-msgstr "XML форматына {count} қоңырау сәтті экспортталды."
-
-#: src/telephony/backend/utils/importer_local_utils.py:31
-msgid "Chatty database not found."
-msgstr "Chatty дерекқор табылмады."
-
-#: src/telephony/backend/utils/importer_local_utils.py:53
-msgid "Could not find messages table in Chatty database."
-msgstr "Chatty дерекқорында хабарлар кестесі табылмады."
-
-#: src/telephony/backend/utils/importer_local_utils.py:60
-msgid "Failed to read Chatty database structure."
-msgstr "Chatty дерекқор құрылымын оқу сәтсіз аяқталды."
-
-#: src/telephony/backend/utils/importer_local_utils.py:121
-msgid "Imported {count} messages from Chatty."
-msgstr "Chatty қолданбасынан {count} хабар импортталды."
-
-#: src/telephony/backend/utils/importer_local_utils.py:131
-msgid "Calls database not found."
-msgstr "Қоңыраулар дерекқоры табылмады."
-
-#: src/telephony/backend/utils/importer_local_utils.py:151
-msgid "Could not find call history table in Calls database."
-msgstr "Қоңыраулар дерекқорында қоңыраулар журналы кестесі табылмады."
-
-#: src/telephony/backend/utils/importer_local_utils.py:158
-msgid "Failed to read Calls database structure."
-msgstr "Қоңыраулар дерекқор құрылымын оқу сәтсіз аяқталды."
-
-#: src/telephony/backend/utils/importer_local_utils.py:210
-msgid "Imported {count} calls."
-msgstr "Импортталған {count} қоңырау."
-
-#: src/telephony/backend/utils/importer_android_utils.py:126
-msgid "Imported {count} messages from Android backup."
-msgstr "Android сақтық көшірмесінен {count} хабар импортталды."
-
-#: src/telephony/backend/utils/importer_android_utils.py:200
-msgid "Imported {count} calls from Android backup."
-msgstr "Android сақтық көшірмесінен {count} қоңырау импортталды."
-
-#: src/telephony/backend/utils/model_utils.py:56
-msgid "0s"
-msgstr "0с"
-
-#: src/telephony/backend/utils/model_utils.py:61
-msgid "{h}h {m}m"
-msgstr "{сағ} {мин} мин"
-
-#: src/telephony/backend/utils/model_utils.py:63
-msgid "{m}m {s}s"
-msgstr "{м}м {с}с"
-
-#: src/telephony/backend/utils/model_utils.py:64
-msgid "{s}s"
-msgstr "{s}s"
-
-#: src/telephony/backend/managers/location_manager.py:63
-msgid "Initializing location services..."
-msgstr "Орынды анықтау қызметтері инициализациялануда..."
-
-#: src/telephony/backend/managers/location_manager.py:126
-msgid "Waiting for location service..."
-msgstr "Локация қызметі күтілуде..."
-
-#: src/telephony/backend/managers/location_manager.py:143
-msgid "Waiting for satellite fix..."
-msgstr "Спутникті түзету күтілуде..."
+#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/utils/db_blocklist_utils.py:35
+#: src/telephony/ui/views/messages_view.py:357
+#: src/telephony/ui/views/messages_view.py:428
+msgid "Blocked Number"
+msgstr "Блокталған нөмір"
 
 #: src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency Mode"
@@ -149,40 +97,40 @@ msgid "Start Emergency Process"
 msgstr "Төтенше жағдай процесін бастау"
 
 #: src/telephony/backend/managers/emergency_manager.py:132
-#: src/telephony/ui/windows/data_management_window.py:76
-#: src/telephony/ui/windows/data_management_window.py:138
-#: src/telephony/ui/windows/data_management_window.py:185
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:50
-#: src/telephony/ui/windows/contact_editor_window.py:118
-#: src/telephony/ui/windows/contact_editor_window.py:802
-#: src/telephony/ui/windows/contact_picker_window.py:45
-#: src/telephony/ui/windows/custom_tone_list_window.py:55
-#: src/telephony/ui/windows/custom_tone_list_window.py:332
-#: src/telephony/ui/windows/settings_window.py:64
-#: src/telephony/ui/windows/settings_window.py:356
-#: src/telephony/ui/windows/import_wizard_window.py:48
-#: src/telephony/ui/windows/duplicate_resolution_window.py:60
-#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
+#: src/telephony/ui/views/history_view.py:81
+#: src/telephony/ui/views/messages_view.py:114
+#: src/telephony/ui/windows/advanced_settings_window.py:48
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:69
 #: src/telephony/ui/windows/camera_video_window.py:80
-#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:832
+#: src/telephony/ui/windows/contact_picker_window.py:46
+#: src/telephony/ui/windows/custom_tone_list_window.py:56
+#: src/telephony/ui/windows/custom_tone_list_window.py:319
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
 #: src/telephony/ui/windows/import_export_window.py:74
 #: src/telephony/ui/windows/import_export_window.py:171
 #: src/telephony/ui/windows/import_export_window.py:197
 #: src/telephony/ui/windows/import_export_window.py:307
-#: src/telephony/ui/windows/import_export_window.py:328
-#: src/telephony/ui/windows/import_export_window.py:429
-#: src/telephony/ui/windows/import_export_window.py:489
-#: src/telephony/ui/windows/blocklist_editor_window.py:46
-#: src/telephony/ui/windows/blocklist_editor_window.py:156
+#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:437
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:65
+#: src/telephony/ui/windows/settings_window.py:406
 #: src/telephony/ui/windows/sound_recorder_window.py:70
-#: src/telephony/ui/windows/camera_photo_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:68
-#: src/telephony/ui/windows/trusted_actions_list_window.py:455
-#: src/telephony/ui/windows/trusted_actions_list_window.py:526
-#: src/telephony/ui/windows/trusted_actions_list_window.py:546
-#: src/telephony/ui/views/history_view.py:82
-#: src/telephony/ui/views/messages_view.py:119
-#: src/telephony/ui/main_window.py:440 src/telephony/ui/main_window.py:609
+#: src/telephony/ui/windows/trusted_actions_list_window.py:105
+#: src/telephony/ui/windows/trusted_actions_list_window.py:553
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+#: src/telephony/ui/windows/trusted_actions_list_window.py:667
 msgid "Cancel"
 msgstr "Болдырмау"
 
@@ -203,6 +151,7 @@ msgid "Set numbers in Settings."
 msgstr "Параметрлерде нөмірлерді орнатыңыз."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
 msgid "Call {number}"
 msgstr "{number} қоңырау шалыңыз"
 
@@ -211,6 +160,7 @@ msgid "Confirm Emergency Call"
 msgstr "Жедел қоңырауды растау"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
 msgid "Call {name}?"
 msgstr "{name} дегенге қоңырау шалу керек пе?"
 
@@ -222,8 +172,20 @@ msgstr "🢢 Иә, қоңырау шалыңыз"
 msgid "🔴 No, Return"
 msgstr "🔴 Жоқ, қайту"
 
+#: src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Орынды анықтау қызметтері инициализациялануда..."
+
+#: src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Локация қызметі күтілуде..."
+
+#: src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Спутникті түзету күтілуде..."
+
 #: src/telephony/backend/managers/lockscreen_manager.py:80
-#: src/telephony/ui/windows/incall_window.py:184
+#: src/telephony/ui/windows/incall_window.py:186
 msgid "Modem Stuck"
 msgstr "Модем тұрып қалды"
 
@@ -236,66 +198,22 @@ msgid "Telephony Emergency"
 msgstr "Телефония Төтенше жағдай"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:85
-#: src/telephony/ui/windows/incall_window.py:186
-#: src/telephony/ui/windows/incall_window.py:607
+#: src/telephony/ui/windows/incall_window.py:188
+#: src/telephony/ui/windows/incall_window.py:650
 msgid "🔴 Reboot Modem"
 msgstr "🔴 Модемді қайта жүктеңіз"
-
-#: src/telephony/backend/managers/lockscreen_manager.py:132
-#: src/telephony/backend/managers/lockscreen_manager.py:142
-#: src/telephony/backend/managers/lockscreen_manager.py:398
-#: src/telephony/app.py:513 src/telephony/app.py:547
-#: src/telephony/ui/windows/incall_window.py:124
-#: src/telephony/ui/windows/incall_window.py:294
-#: src/telephony/ui/windows/incall_window.py:307
-#: src/telephony/ui/windows/incall_window.py:330
-#: src/telephony/ui/windows/incall_window.py:454
-#: src/telephony/ui/windows/custom_tone_list_window.py:173
-#: src/telephony/ui/windows/custom_tone_list_window.py:267
-#: src/telephony/ui/windows/duplicate_resolution_window.py:144
-#: src/telephony/ui/windows/blocklist_window.py:155
-#: src/telephony/ui/windows/trusted_actions_list_window.py:221
-#: src/telephony/ui/windows/trusted_actions_list_window.py:343
-#: src/telephony/ui/widgets/history_rows_widget.py:121
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:248
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:253
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:259
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:265
-#: src/telephony/ui/widgets/messages_rows_widget.py:97
-#: src/telephony/ui/views/history_view.py:412
-#: src/telephony/ui/views/messages_view.py:330
-#: src/telephony/ui/views/messages_view.py:333
-#: src/telephony/ui/views/messages_view.py:402
-#: src/telephony/ui/views/messages_view.py:406
-#: src/telephony/ui/views/messages_view.py:496
-#: src/telephony/ui/views/messages_view.py:749
-#: src/telephony/ui/views/chat_view.py:82
-#: src/telephony/ui/views/chat_view.py:87
-#: src/telephony/ui/views/chat_view.py:141
-#: src/telephony/ui/views/chat_view.py:151
-#: src/telephony/ui/views/chat_view.py:155
-#: src/telephony/ui/views/chat_view.py:682
-#: src/telephony/ui/views/chat_view.py:686
-#: src/telephony/ui/views/chat_view.py:783
-#: src/telephony/ui/views/chat_view.py:789
-#: src/telephony/ui/views/chat_view.py:869
-#: src/telephony/ui/views/chat_view.py:871
-#: src/telephony/ui/views/chat_view.py:1000
-#: src/telephony/ui/views/dialpad_view.py:157
-#: src/telephony/ui/main_window.py:576
-msgid "Unknown"
-msgstr "Белгісіз"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:187
 msgid "Telephony - Incoming"
 msgstr "Телефония - кіріс"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 Кіріс: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
-#: src/telephony/ui/windows/incall_window.py:385
+#: src/telephony/ui/windows/incall_window.py:387
 msgid "Incoming Call..."
 msgstr "Кіріс қоңырау..."
 
@@ -326,6 +244,7 @@ msgid "Telephony - On Hold"
 msgstr "Телефония - Күтуде"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
+#, python-brace-format
 msgid "🟠 {name} put as on hold"
 msgstr "🟠 {name} күту режиміне қойылды"
 
@@ -349,6 +268,7 @@ msgid "MuteMic"
 msgstr "Дыбысты өшіру"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (күтуде)"
 
@@ -361,6 +281,7 @@ msgid "Telephony - Active Call"
 msgstr "Телефония - белсенді қоңырау"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
+#, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 Белсенді: {name}"
 
@@ -380,25 +301,10 @@ msgstr "Speaker Off"
 msgid "SpeakerOn"
 msgstr "SpeakerOn"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:35
-msgid "Please wait 60 seconds before triggering {prefix} again."
-msgstr "{префикс} қайта іске қосылмас бұрын 60 секунд күтіңіз."
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:266
-msgid " (Accuracy: {acc}m)"
-msgstr "(Дәлдік: {acc}m)"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:268
-msgid "I am here: {link}{acc_str}"
-msgstr "Мен осындамын: {link}{acc_str}"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:276
-msgid "Failed to obtain location after trying all methods."
-msgstr ""
-"Барлық әдістерді қолданып көргеннен кейін орынды анықтау мүмкін болмады."
-
+#: src/telephony/backend/managers/mms_manager.py:245
 #: src/telephony/backend/managers/ofono_calls_manager.py:39
-#: src/telephony/ui/main_window.py:425
+#: src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: src/telephony/ui/main_window.py:447
 msgid "Modem not ready"
 msgstr "Модем дайын емес"
 
@@ -407,1143 +313,1018 @@ msgid "Cannot dial while in another call"
 msgstr "Басқа қоңырау кезінде теру мүмкін емес"
 
 #: src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
 msgid "Dial Error: {e}"
 msgstr "Теру қатесі: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:50
+#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "Жіберілмеді: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:56
+#: src/telephony/backend/managers/ofono_messaging_manager.py:144
 msgid "Not supported"
 msgstr "Қолдау көрсетілмейді"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:61
-#: src/telephony/ui/windows/data_management_window.py:285
+#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
 msgid "Error: {e}"
 msgstr "Қате: {e}"
 
-#: src/telephony/app.py:524
-msgid "Call Back"
-msgstr "Кері қоңырау шалу"
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, fuzzy, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "{префикс} қайта іске қосылмас бұрын 60 секунд күтіңіз."
 
-#: src/telephony/app.py:554
-msgid "{count} new message"
-msgid_plural "{count} new messages"
-msgstr[0] "{count} жаңа хабарлама"
-msgstr[1] "{count} жаңа хабарлама"
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Дәлдік: {acc}m)"
 
-#: src/telephony/app.py:558
-#: src/telephony/ui/windows/contact_picker_window.py:30
-msgid "Open"
-msgstr "Ашық"
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Мен осындамын: {link}{acc_str}"
 
-#: src/telephony/app.py:562
-msgid "Call"
-msgstr "Қоңырау"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:81
-msgid "Scheduled ({current}/{total})"
-msgstr "Жоспарланған ({current}/{total})"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:90
-msgid "To: {name}"
-msgstr "Кімге: {name}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:144
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:298
-msgid "Scheduled: {time}"
-msgstr "Жоспарланған: {time}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:154
-msgid "Send Now"
-msgstr "Қазір жіберу"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:165
-#: src/telephony/ui/windows/custom_tone_list_window.py:193
-msgid "Remove"
-msgstr "Жою"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:172
-msgid "Message removed"
-msgstr "Хабар жойылды"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-msgid "Sent scheduled message to {number}"
-msgstr "Жоспарланған хабар {number} нөміріне жіберілді"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:222
-msgid "Failed to send to {number}"
-msgstr "{number} нөміріне жіберу мүмкін болмады"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Database Management"
-msgstr "Мәліметтер қорын басқару"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Select data to permanently delete."
-msgstr "Біржола жойылатын деректерді таңдаңыз."
-
-#: src/telephony/ui/windows/data_management_window.py:47
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Delete Call History"
-msgstr "Қоңыраулар тарихын жою"
-
-#: src/telephony/ui/windows/data_management_window.py:48
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "Delete All Messages"
-msgstr "Барлық хабарларды жою"
-
-#: src/telephony/ui/windows/data_management_window.py:49
-msgid "Delete All Group Names"
-msgstr "Барлық топ атауларын жою"
-
-#: src/telephony/ui/windows/data_management_window.py:50
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Delete Blocklist"
-msgstr "Блоктар тізімін жою"
-
-#: src/telephony/ui/windows/data_management_window.py:51
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete All Contacts"
-msgstr "Барлық контактілерді жою"
-
-#: src/telephony/ui/windows/data_management_window.py:52
-#: src/telephony/ui/windows/data_management_window.py:134
-#: src/telephony/ui/windows/data_management_window.py:157
-msgid "Delete Address Book"
-msgstr "Мекенжай кітабын жою"
-
-#: src/telephony/ui/windows/data_management_window.py:53
-msgid "Delete Custom Settings"
-msgstr "Пайдаланушы параметрлерін жою"
-
-#: src/telephony/ui/windows/data_management_window.py:60
-msgid "DELETE EVERYTHING"
-msgstr "БАРЛЫҒЫН ЖОЮ"
-
-#: src/telephony/ui/windows/data_management_window.py:65
-#: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/contact_editor_window.py:98
-#: src/telephony/ui/windows/settings_window.py:318
-#: src/telephony/ui/windows/settings_window.py:342
-#: src/telephony/ui/windows/settings_window.py:393
-#: src/telephony/ui/windows/settings_window.py:531
-#: src/telephony/ui/windows/settings_window.py:764
-#: src/telephony/ui/windows/chat_media_controller_window.py:148
-#: src/telephony/ui/main_window.py:522 src/telephony/ui/main_window.py:756
-msgid "Close"
-msgstr "Жабу"
-
-#: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:728
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:131
-msgid "Delete"
-msgstr "Жою"
-
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Are you sure? This cannot be undone."
-msgstr "Сіз сенімдісіз бе? Бұл әрекетті қайтару мүмкін емес."
-
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "This will delete all SMS/MMS and attachments."
-msgstr "Бұл барлық SMS/MMS және тіркемелерді жояды."
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Delete Group Names"
-msgstr "Топ атауларын жою"
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Reset all custom group chat names?"
-msgstr "Барлық пайдаланушы топтық чат атауларын қалпына келтіру керек пе?"
-
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Unblock all numbers?"
-msgstr "Барлық нөмірлердің бөгеуін алу керек пе?"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Delete Settings"
-msgstr "Параметрлерді жою"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Clear all custom settings? Emergency numbers will be lost."
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
 msgstr ""
-"Барлық реттелетін параметрлерді өшіру керек пе? Жедел жәрдем нөмірлері "
-"жоғалады."
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "No deletable address books"
-msgstr "Жойылатын мекенжай кітаптары жоқ"
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "There are no custom address books that can be deleted."
-msgstr "Жойылатын реттелетін мекенжай кітаптары жоқ."
-
-#: src/telephony/ui/windows/data_management_window.py:135
-msgid ""
-"Which address book do you want to delete permanently?\n"
-"\n"
-"This will wipe it from the system."
-msgstr ""
-"Қай мекенжай кітабын біржола жойғыңыз келеді?\n"
-"\n"
-"Бұл оны жүйеден жояды."
-
-#: src/telephony/ui/windows/data_management_window.py:158
-msgid "Are you sure you want to permanently delete the '{name}' address book?"
-msgstr "\"{name}\" мекенжай кітабын шынымен де біржола жойғыңыз келе ме?"
-
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete EVERYTHING"
-msgstr "БАРЛЫҒЫН ЖОЮ"
-
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Wipe database, config files and contacts? App will reset."
-msgstr ""
-"Дерекқорды, конфигурациялау файлдарын және контактілерді өшіру керек пе? "
-"Қолданба қалпына келтіріледі."
-
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Really delete everyone from your address book?"
-msgstr "Мекенжайлық кітапшаңыздан барлығын шынымен жою керек пе?"
-
-#: src/telephony/ui/windows/data_management_window.py:182
-msgid "Select which address book to clear:"
-msgstr "Қай мекенжай кітабын тазалау керек екенін таңдаңыз:"
-
-#: src/telephony/ui/windows/data_management_window.py:193
-msgid "All Address Books"
-msgstr "Барлық мекенжай кітаптары"
-
-#: src/telephony/ui/windows/data_management_window.py:223
-msgid "Call History Deleted"
-msgstr "Қоңыраулар тарихы жойылды"
-
-#: src/telephony/ui/windows/data_management_window.py:227
-msgid "Deleting messages..."
-msgstr "Хабарлар жойылуда..."
-
-#: src/telephony/ui/windows/data_management_window.py:233
-msgid "Messages & Attachments Deleted"
-msgstr "Хабарлар мен тіркемелер жойылды"
-
-#: src/telephony/ui/windows/data_management_window.py:240
-msgid "Group Names Reset"
-msgstr "Топ атауларын қалпына келтіру"
-
-#: src/telephony/ui/windows/data_management_window.py:246
-msgid "Blocklist Cleared"
-msgstr "Блоктау тізімі тазартылды"
-
-#: src/telephony/ui/windows/data_management_window.py:250
-msgid "Deleting contacts..."
-msgstr "Контактілер жойылуда..."
-
-#: src/telephony/ui/windows/data_management_window.py:257
-msgid "Contacts Deleted"
-msgstr "Контактілер жойылды"
-
-#: src/telephony/ui/windows/data_management_window.py:265
-msgid "Deleting address book..."
-msgstr "Мекенжай кітабы жойылуда..."
-
-#: src/telephony/ui/windows/data_management_window.py:272
-msgid "Address Book Deleted"
-msgstr "Мекенжай кітабы жойылды"
-
-#: src/telephony/ui/windows/data_management_window.py:275
-msgid "Failed to delete Address Book"
-msgstr "Мекенжай кітабын жою мүмкін болмады"
-
-#: src/telephony/ui/windows/data_management_window.py:282
-msgid "Settings cleared"
-msgstr "Параметрлер өшірілді"
-
-#: src/telephony/ui/windows/data_management_window.py:289
-msgid "Wiping Database..."
-msgstr "Дерекқор өшірілуде..."
-
-#: src/telephony/ui/windows/data_management_window.py:303
-msgid "App Reset Complete"
-msgstr "Қолданбаны қалпына келтіру аяқталды"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:28
-#: src/telephony/ui/windows/settings_window.py:255
-#: src/telephony/ui/windows/settings_window.py:416
-msgid "Notification Overrides"
-msgstr "Хабарландыруды қайта анықтау"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:54
-#: src/telephony/ui/windows/contact_editor_window.py:122
-#: src/telephony/ui/windows/custom_tone_list_window.py:59
-#: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/advanced_settings_window.py:56
-#: src/telephony/ui/windows/blocklist_editor_window.py:50
-#: src/telephony/ui/windows/trusted_actions_list_window.py:73
-#: src/telephony/ui/windows/trusted_actions_list_window.py:459
-#: src/telephony/ui/main_window.py:783
-msgid "Save"
-msgstr "Сақтау"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:67
-#: src/telephony/ui/windows/trusted_actions_list_window.py:89
-msgid "Find and add contacts..."
-msgstr "Контактілерді табу және қосу..."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:74
-msgid ""
-"Contacts in this list will always play notifications at full volume, even if "
-"the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Бұл тізімдегі контактілер телефон үнсіз немесе Мазаламау режимінде болса да, "
-"хабарландыруларды әрқашан толық дыбыс деңгейінде ойнатады."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:244
-#: src/telephony/ui/windows/custom_tone_list_window.py:310
-#: src/telephony/ui/windows/trusted_actions_list_window.py:389
-#: src/telephony/ui/views/messages_view.py:681
-msgid "No contacts found"
-msgstr "Ешбір контакт табылмады"
-
-#: src/telephony/ui/windows/info_window.py:28
-msgid "About Telephony"
-msgstr "Телефония туралы"
-
-#: src/telephony/ui/windows/info_window.py:53
-msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
-msgstr ""
-"FLX1 және FLX1 құрылғыларына арналған жылдам телефон тергіші және хабар "
-"алмасу клиенті."
-
-#: src/telephony/ui/windows/info_window.py:71
-msgid "Version"
-msgstr "Нұсқа"
-
-#: src/telephony/ui/windows/info_window.py:72
-msgid "Developer"
-msgstr "Әзірлеуші"
-
-#: src/telephony/ui/windows/info_window.py:73
-msgid "License"
-msgstr "Лицензия"
-
-#: src/telephony/ui/windows/info_window.py:77
-msgid "Links"
-msgstr "Сілтемелер"
-
-#: src/telephony/ui/windows/info_window.py:101
-#: src/telephony/ui/windows/contact_editor_window.py:216
-msgid "Website"
-msgstr "Веб-сайт"
-
-#: src/telephony/ui/windows/info_window.py:109
-msgid "Issue Tracker"
-msgstr "Мәселе бақылаушысы"
-
-#: src/telephony/ui/windows/info_window.py:110
-msgid "Report bugs or request features"
-msgstr "Қателер туралы хабарлау немесе мүмкіндіктерді сұрау"
-
-#: src/telephony/ui/windows/contact_editor_window.py:31
-#: src/telephony/ui/windows/contact_editor_window.py:397
-msgid "Contact Details"
-msgstr "Байланыс мәліметтері"
-
-#: src/telephony/ui/windows/contact_editor_window.py:66
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:236
-#: src/telephony/ui/windows/trusted_actions_list_window.py:312
-#: src/telephony/ui/views/contacts_view.py:122
-msgid "Mobile"
-msgstr "Ұялы"
-
-#: src/telephony/ui/windows/contact_editor_window.py:67
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:237
-#: src/telephony/ui/windows/trusted_actions_list_window.py:313
-#: src/telephony/ui/views/contacts_view.py:123
-msgid "Work"
-msgstr "Жұмыс"
-
-#: src/telephony/ui/windows/contact_editor_window.py:68
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:238
-#: src/telephony/ui/windows/trusted_actions_list_window.py:314
-#: src/telephony/ui/views/contacts_view.py:124
-msgid "Home"
-msgstr "Үй"
-
-#: src/telephony/ui/windows/contact_editor_window.py:69
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:239
-#: src/telephony/ui/windows/trusted_actions_list_window.py:315
-#: src/telephony/ui/views/contacts_view.py:125
-msgid "Fax"
-msgstr "Факс"
-
-#: src/telephony/ui/windows/contact_editor_window.py:70
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:240
-#: src/telephony/ui/windows/trusted_actions_list_window.py:316
-#: src/telephony/ui/views/contacts_view.py:126
-msgid "Other"
-msgstr "Басқа"
-
-#: src/telephony/ui/windows/contact_editor_window.py:71
-#: src/telephony/ui/windows/custom_tone_list_window.py:241
-#: src/telephony/ui/windows/trusted_actions_list_window.py:317
-#: src/telephony/ui/views/contacts_view.py:127
-msgid "Main"
-msgstr "Негізгі"
-
-#: src/telephony/ui/windows/contact_editor_window.py:102
-#: src/telephony/ui/windows/custom_tone_list_window.py:186
-msgid "Edit"
-msgstr "Өңдеу"
-
-#: src/telephony/ui/windows/contact_editor_window.py:136
-msgid "Identity"
-msgstr "Сәйкестік"
-
-#: src/telephony/ui/windows/contact_editor_window.py:139
-#: src/telephony/ui/windows/contact_editor_window.py:157
-msgid "Favorite"
-msgstr "Таңдаулы"
-
-#: src/telephony/ui/windows/contact_editor_window.py:147
-msgid "Full Name"
-msgstr "Толық аты-жөні"
-
-#: src/telephony/ui/windows/contact_editor_window.py:153
-msgid "Name"
-msgstr "Аты"
-
-#: src/telephony/ui/windows/contact_editor_window.py:157
-#: src/telephony/ui/windows/trusted_actions_list_window.py:527
-msgid "Yes"
-msgstr "Иә"
-
-#: src/telephony/ui/windows/contact_editor_window.py:163
-msgid "Phone Numbers"
-msgstr "Телефон нөмірлері"
-
-#: src/telephony/ui/windows/contact_editor_window.py:179
-#: src/telephony/ui/windows/settings_window.py:212
-#: src/telephony/ui/main_window.py:782
-msgid "Add Number"
-msgstr "Нөмір қосу"
-
-#: src/telephony/ui/windows/contact_editor_window.py:190
-#: src/telephony/ui/windows/duplicate_resolution_window.py:159
-msgid "Email Addresses"
-msgstr "Электрондық пошта мекенжайлары"
-
-#: src/telephony/ui/windows/contact_editor_window.py:200
-msgid "Add Email"
-msgstr "Электрондық поштаны қосу"
-
-#: src/telephony/ui/windows/contact_editor_window.py:211
-msgid "Additional Details"
-msgstr "Қосымша мәліметтер"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Organization"
-msgstr "Ұйымдастыру"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Job Title"
-msgstr "Қызмет атауы"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Address"
-msgstr "Мекенжай"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Notes"
-msgstr "Жазбалар"
-
-#: src/telephony/ui/windows/contact_editor_window.py:241
-#: src/telephony/ui/windows/contact_editor_window.py:246
-msgid "Birthday"
-msgstr "Туған күн"
-
-#: src/telephony/ui/windows/contact_editor_window.py:242
-#: src/telephony/ui/windows/contact_editor_window.py:249
-msgid "Anniversary"
-msgstr "Мерейтой"
-
-#: src/telephony/ui/windows/contact_editor_window.py:258
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Delete Contact"
-msgstr "Контактіні жою"
-
-#: src/telephony/ui/windows/contact_editor_window.py:269
-#: src/telephony/ui/windows/settings_window.py:161
-#: src/telephony/ui/windows/settings_window.py:390
-msgid "Address Books"
-msgstr "Мекенжай кітаптары"
-
-#: src/telephony/ui/windows/contact_editor_window.py:289
-msgid "Unknown Source"
-msgstr "Белгісіз дереккөз"
-
-#: src/telephony/ui/windows/contact_editor_window.py:313
-#: src/telephony/ui/windows/contact_editor_window.py:351
-#: src/telephony/ui/windows/date_time_picker_window.py:29
-msgid "Select Date"
-msgstr "Күнді таңдаңыз"
-
-#: src/telephony/ui/windows/contact_editor_window.py:324
-msgid "Clear Date"
-msgstr "Өшіру күні"
-
-#: src/telephony/ui/windows/contact_editor_window.py:366
-msgid "Select {title}"
-msgstr "{title} таңдаңыз"
-
-#: src/telephony/ui/windows/contact_editor_window.py:376
-msgid "Copy {title}"
-msgstr "{title} көшіру"
-
-#: src/telephony/ui/windows/contact_editor_window.py:385
-msgid "Copied to clipboard"
-msgstr "Буферге көшірілді"
-
-#: src/telephony/ui/windows/contact_editor_window.py:390
-#: src/telephony/ui/main_window.py:680
-msgid "Edit Contact"
-msgstr "Контактіні өңдеу"
-
-#: src/telephony/ui/windows/contact_editor_window.py:530
-msgid "Export Contact"
-msgstr "Контактіні экспорттау"
-
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Are you sure you want to delete this contact?"
-msgstr "Осы контактіні шынымен жойғыңыз келе ме?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:559
-msgid "Deleting contact..."
-msgstr "Контакт жойылуда..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:745
-msgid "Saving contact..."
-msgstr "Контакт сақталуда..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:798
-#: src/telephony/ui/windows/blocklist_editor_window.py:152
-msgid "Conflict"
-msgstr "Қақтығыс"
-
-#: src/telephony/ui/windows/contact_editor_window.py:799
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Unblocking and add the number to Contacts?"
-msgstr ""
-"Нөмір блоктау тізімінде де, контактілерде де болуы мүмкін емес.\n"
-"\n"
-"Блоктан шығаруды жалғастырып, нөмірді Контактілерге қосқыңыз келе ме?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:803
-msgid "Yes, Add to Contacts"
-msgstr "Иә, контактілерге қосыңыз"
-
-#: src/telephony/ui/windows/contact_editor_window.py:818
-#: src/telephony/ui/windows/settings_window.py:407
-#: src/telephony/ui/windows/settings_window.py:419
-#: src/telephony/ui/windows/blocklist_editor_window.py:172
-#: src/telephony/ui/main_window.py:432
-msgid "OK"
-msgstr "Жарайды"
-
-#: src/telephony/ui/windows/contact_picker_window.py:29
-msgid "Pick Contact"
-msgstr "Контакт таңдаңыз"
-
-#: src/telephony/ui/windows/contact_picker_window.py:61
-msgid "Name or Number"
-msgstr "Аты немесе нөмірі"
-
-#: src/telephony/ui/windows/contact_picker_window.py:191
-msgid "No number"
-msgstr "Нөмір жоқ"
-
-#: src/telephony/ui/windows/incall_window.py:145
-#: src/telephony/ui/main_window.py:700
-msgid "Search Number"
-msgstr "Іздеу нөмірі"
-
-#: src/telephony/ui/windows/incall_window.py:150
-msgid "Hangup and Send SMS"
-msgstr "Қою және SMS жіберу"
-
-#: src/telephony/ui/windows/incall_window.py:185
-msgid "The call failed to disconnect."
-msgstr "Қоңырауды ажырату мүмкін болмады."
-
-#: src/telephony/ui/windows/incall_window.py:218
-#: src/telephony/ui/windows/incall_window.py:626
-msgid "Output"
-msgstr "Шығару"
-
-#: src/telephony/ui/windows/incall_window.py:233
-#: src/telephony/ui/windows/incall_window.py:654
-msgid "Input"
-msgstr "Енгізу"
-
-#: src/telephony/ui/windows/incall_window.py:385
-msgid "Silenced Incoming Call"
-msgstr "Дыбыссыз кіріс қоңырау"
-
-#: src/telephony/ui/windows/incall_window.py:494
-#: src/telephony/ui/windows/incall_window.py:741
-#: src/telephony/ui/windows/settings_window.py:231
-msgid "I can't talk right now."
-msgstr "Мен қазір сөйлесе алмаймын."
-
-#: src/telephony/ui/windows/incall_window.py:580
-msgid "Restarting RIL..."
-msgstr "RIL қайта іске қосылуда..."
-
-#: src/telephony/ui/windows/incall_window.py:592
-msgid "Restored!"
-msgstr "Қалпына келтірілді!"
-
-#: src/telephony/ui/windows/incall_window.py:598
-msgid "Failed. Reboot Device."
-msgstr "Сәтсіз. Құрылғыны қайта жүктеңіз."
-
-#: src/telephony/ui/windows/incall_window.py:600
-msgid "Verifying... {attempt}"
-msgstr "Тексерілуде... {attrept}"
-
-#: src/telephony/ui/windows/incall_window.py:659
-msgid "Mute Microphone"
-msgstr "Микрофонның дыбысын өшіру"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:273
-msgid "Individual SMS Notifications"
-msgstr "Жеке SMS хабарламалары"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:284
-msgid "Individual Ringtones"
-msgstr "Жеке рингтондар"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:72
-msgid "Find contact to add..."
-msgstr "Қосу үшін контактіні табыңыз..."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:79
-msgid ""
-"Select a contact and choose a custom sound file (.ogg or .oga). The file "
-"will be copied to your local storage."
-msgstr ""
-"Контактіні таңдап, реттелетін дыбыс файлын таңдаңыз (.ogg немесе .oga). Файл "
-"жергілікті жадыңызға көшіріледі."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:209
-msgid "Custom tone removed (Click Save to commit)"
-msgstr "Арнаулы тон жойылды (Орындау үшін Сақтау түймесін басыңыз)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:328
-msgid "Select Tone for {name}"
-msgstr "{name} үшін үнді таңдаңыз"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:331
-#: src/telephony/ui/windows/settings_window.py:355
-msgid "Select"
-msgstr "таңдаңыз"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:336
-msgid "Supported Audio (OGG)"
-msgstr "Қолдау көрсетілетін аудио (OGG)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:364
-msgid "Only .ogg or .oga files are supported"
-msgstr "Тек .ogg немесе .oga файлдарына қолдау көрсетіледі"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:375
-msgid "Failed to copy audio file"
-msgstr "Аудио файлды көшіру мүмкін болмады"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:395
-msgid "Custom tone added"
-msgstr "Арнаулы тон қосылды"
-
-#: src/telephony/ui/windows/settings_window.py:39
-#: src/telephony/ui/main_window.py:295
-msgid "Settings"
-msgstr "Параметрлер"
-
-#: src/telephony/ui/windows/settings_window.py:87
-#: src/telephony/ui/windows/settings_window.py:339
-msgid "Ringback Tone"
-msgstr "Кері қоңырау үні"
-
-#: src/telephony/ui/windows/settings_window.py:90
-msgid "Enable Local Ringback"
-msgstr "Жергілікті кері қоңырауды қосыңыз"
-
-#: src/telephony/ui/windows/settings_window.py:105
-msgid "Selected Tone"
-msgstr "Таңдалған үн"
-
-#: src/telephony/ui/windows/settings_window.py:108
-#: src/telephony/ui/windows/settings_window.py:328
-msgid "System Default"
-msgstr "Жүйе әдепкі"
-
-#: src/telephony/ui/windows/settings_window.py:135
-msgid "SIM Settings"
-msgstr "SIM параметрлері"
-
-#: src/telephony/ui/windows/settings_window.py:138
-msgid "My Number"
-msgstr "Менің нөмірім"
-
-#: src/telephony/ui/windows/settings_window.py:139
-msgid "My Number (International Format)"
-msgstr "Менің нөмірім (халықаралық формат)"
-
-#: src/telephony/ui/windows/settings_window.py:145
-#: src/telephony/ui/windows/settings_window.py:146
-#: src/telephony/ui/windows/settings_window.py:315
-msgid "Default Country Code"
-msgstr "Әдепкі ел коды"
-
-#: src/telephony/ui/windows/settings_window.py:172
-msgid "Address Book Info"
-msgstr "Мекенжай кітабы туралы ақпарат"
-
-#: src/telephony/ui/windows/settings_window.py:180
-msgid "Default Address Book"
-msgstr "Әдепкі мекенжай кітабы"
-
-#: src/telephony/ui/windows/settings_window.py:186
-msgid "Duplicate Resolver"
-msgstr "Қайталанатын шешуші"
-
-#: src/telephony/ui/windows/settings_window.py:188
-msgid ""
-"Scan for duplicate numbers and show a resolution banner in the Contacts view."
-msgstr ""
-"Қайталанатын нөмірлерді іздеңіз және Контактілер көрінісінде ажыратымдылық "
-"баннерін көрсетіңіз."
-
-#: src/telephony/ui/windows/settings_window.py:201
-msgid "Lockscreen Emergency"
-msgstr "Экранды құлыптау төтенше жағдай"
-
-#: src/telephony/ui/windows/settings_window.py:204
-msgid "Show Emergency Button"
-msgstr "Төтенше жағдай түймешігін көрсету"
-
-#: src/telephony/ui/windows/settings_window.py:209
-msgid "Emergency Numbers"
-msgstr "Төтенше нөмірлер"
-
-#: src/telephony/ui/windows/settings_window.py:226
-msgid "Quick Response"
-msgstr "Жылдам жауап"
-
-#: src/telephony/ui/windows/settings_window.py:229
-msgid "Decline Message"
-msgstr "Хабарламадан бас тарту"
-
-#: src/telephony/ui/windows/settings_window.py:236
-msgid "Notification Exceptions"
-msgstr "Хабарландырудан ерекше жағдайлар"
-
-#: src/telephony/ui/windows/settings_window.py:239
-#: src/telephony/ui/windows/settings_window.py:404
-msgid "Repeated Calls Bypass"
-msgstr "Қайталанатын қоңырауларды айналып өту"
-
-#: src/telephony/ui/windows/settings_window.py:241
-msgid "If the same number calls 3 times in 5 minutes, force max volume."
-msgstr ""
-"Егер бір нөмір 5 минут ішінде 3 рет қоңырау шалса, максималды дыбыс деңгейін "
-"күшейтіңіз."
-
-#: src/telephony/ui/windows/settings_window.py:256
-msgid "Manage contacts that always play sound"
-msgstr "Әрқашан дыбыс шығаратын контактілерді басқарыңыз"
-
-#: src/telephony/ui/windows/settings_window.py:265
-#: src/telephony/ui/windows/settings_window.py:277
-#: src/telephony/ui/windows/settings_window.py:288
-msgid "Manage"
-msgstr "Басқару"
-
-#: src/telephony/ui/windows/settings_window.py:275
-msgid "Set custom notification sounds for specific contacts"
-msgstr "Арнайы контактілер үшін реттелетін хабарландыру дыбыстарын орнатыңыз"
-
-#: src/telephony/ui/windows/settings_window.py:286
-msgid "Set custom ringtones for specific contacts"
-msgstr "Арнайы контактілер үшін реттелетін қоңырау үндерін орнатыңыз"
-
-#: src/telephony/ui/windows/settings_window.py:302
-#: src/telephony/ui/windows/advanced_settings_window.py:33
-msgid "Advanced Settings"
-msgstr "Қосымша параметрлер"
-
-#: src/telephony/ui/windows/settings_window.py:311
-msgid ""
-"The Default Country Code is used to format numbers that don't include an "
-"international prefix (e.g., +358).\n"
-"\n"
-"If left empty, the system tries to detect it automatically from your SIM "
-"card or network.\n"
-"\n"
-"You can manually override it here by entering a 2-letter ISO region code (e."
-"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
-msgstr ""
-"Әдепкі ел коды халықаралық префиксі жоқ сандарды пішімдеу үшін пайдаланылады "
-"(мысалы, +358).\n"
-"\n"
-"Бос қалдырсаңыз, жүйе оны SIM картаңыздан немесе желіден автоматты түрде "
-"анықтауға тырысады.\n"
-"\n"
-"Оны мұнда 2 әріпті ISO аймақ кодын (мысалы, АҚШ, FI, DE) немесе қоңырау "
-"кодын (мысалы, +358, 358, +1, 1) енгізу арқылы қолмен қайта анықтауға болады."
-
-#: src/telephony/ui/windows/settings_window.py:332
-msgid ""
-"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
-"outgoing call to be answered. Some carriers don't generate it so we have "
-"option to generate it manually here. \n"
-"\n"
-"You can select your own music file, or clear it to use the standard system "
-"tone."
-msgstr ""
-"Кері қоңырау үні - шығыс қоңырауға жауап беруді күту кезінде шығарылатын "
-"дыбыс (өте-өте). Кейбір тасымалдаушылар оны жасамайды, сондықтан бізде оны "
-"қолмен жасау мүмкіндігі бар. \n"
-"\n"
-"Сіз өзіңіздің музыкалық файлыңызды таңдай аласыз немесе стандартты жүйе үнін "
-"пайдалану үшін оны өшіре аласыз."
-
-#: src/telephony/ui/windows/settings_window.py:352
-msgid "Select Ringback Tone"
-msgstr "Кері қоңырау үнін таңдаңыз"
-
-#: src/telephony/ui/windows/settings_window.py:360
-msgid "Audio Files"
-msgstr "Аудио файлдар"
-
-#: src/telephony/ui/windows/settings_window.py:386
-msgid ""
-"Select the address books to use with Telephony and arrange them in order of "
-"priority. The topmost address book has the highest priority and will be "
-"preferred if a number is found in multiple address books. You can use the "
-"Duplicate Resolver toggle below to help manage duplicates, but even if "
-"disabled, we encourage enabling it for a better experience."
-msgstr ""
-"Телефониямен бірге пайдалану үшін мекенжай кітаптарын таңдап, оларды "
-"басымдық ретімен реттеңіз. Ең жоғарғы мекенжайлық кітап ең жоғары басымдыққа "
-"ие және сан бірнеше мекенжай кітаптарында табылған жағдайда таңдалады. "
-"Көшірмелерді басқаруға көмектесу үшін төмендегі Көшірме шешуші ауыстырып-"
-"қосқышын пайдалануға болады, бірақ өшірілген болса да, жақсырақ тәжірибе "
-"үшін оны қосуды ұсынамыз."
-
-#: src/telephony/ui/windows/settings_window.py:405
-msgid ""
-"When enabled, if the same phone number calls you 3 times within 5 minutes, "
-"the third call (and subsequent ones within the window) will force the phone "
-"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
-msgstr ""
-"Қосылған кезде, бір телефон нөмірі сізге 5 минут ішінде 3 рет қоңырау шалса, "
-"үшінші қоңырау (және терезедегі кейінгі қоңыраулар) үнсіз немесе Мазаламау "
-"режимдерін айналып өтіп, телефонды максималды дыбыс деңгейінде шырылдауға "
-"мәжбүр етеді."
-
-#: src/telephony/ui/windows/settings_window.py:417
-msgid ""
-"Choose contacts that will always play notifications at full volume, even "
-"when the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Телефон үнсіз немесе Мазаламау режимінде болса да, әрқашан толық дыбыс "
-"деңгейінде хабарландыруларды ойнататын контактілерді таңдаңыз."
-
-#: src/telephony/ui/windows/settings_window.py:438
-msgid "Unknown Callers"
-msgstr "Белгісіз қоңырау шалушылар"
-
-#: src/telephony/ui/windows/settings_window.py:443
-msgid "Unknown Callers Action"
-msgstr "Белгісіз қоңырау шалушылар әрекеті"
-
-#: src/telephony/ui/windows/settings_window.py:445
-msgid "Applies also to hidden numbers."
-msgstr "Жасырын сандарға да қолданылады."
-
-#: src/telephony/ui/windows/settings_window.py:448
-msgid "Do Nothing"
-msgstr "Ештеңе жасама"
-
-#: src/telephony/ui/windows/settings_window.py:449
-msgid "Block Completely"
-msgstr "Толығымен блоктау"
-
-#: src/telephony/ui/windows/settings_window.py:450
-msgid "Silence and Hide UI"
-msgstr "Үнсіздік және пайдаланушы интерфейсін жасыру"
-
-#: src/telephony/ui/windows/settings_window.py:451
-msgid "Silence Only"
-msgstr "Тек үнсіздік"
-
-#: src/telephony/ui/windows/settings_window.py:459
-msgid "Add Search button to InCall window and Call History for unknown callers"
-msgstr ""
-"InCall терезесіне іздеу түймесін және белгісіз қоңырау шалушылар үшін "
-"қоңыраулар журналына қосыңыз"
-
-#: src/telephony/ui/windows/settings_window.py:465
-msgid "Search Engine"
-msgstr "Іздеу жүйесі"
-
-#: src/telephony/ui/windows/settings_window.py:469
-#: src/telephony/ui/windows/settings_window.py:474
-msgid "Custom URL"
-msgstr "Арнаулы URL"
-
-#: src/telephony/ui/windows/settings_window.py:524
-msgid ""
-"Enter the URL you want to use for searching unknown numbers. Include "
-"'{number}' in the URL where the caller's phone number should go.\n"
-"\n"
-"For example: https://mysearch.com/?q={number}\n"
-"\n"
-"When you tap the search button during a call, we will replace '{number}' "
-"with the actual phone number and open it in your default browser."
-msgstr ""
-"Белгісіз сандарды іздеу үшін пайдаланғыңыз келетін URL мекенжайын енгізіңіз. "
-"Қоңырау шалушының телефон нөмірі баратын URL мекенжайына \"{number}\" "
-"қосыңыз.\n"
-"\n"
-"Мысалы: https://mysearch.com/?q={number}\n"
-"\n"
-"Қоңырау кезінде іздеу түймесін түрткенде, біз \"{number}\" нөмірін нақты "
-"телефон нөмірімен ауыстырамыз және оны әдепкі браузерде ашамыз."
-
-#: src/telephony/ui/windows/settings_window.py:528
-msgid "Custom Search URL"
-msgstr "Арнаулы іздеу URL мекенжайы"
-
-#: src/telephony/ui/windows/settings_window.py:549
-msgid "Desktop Shortcuts"
-msgstr "Жұмыс үстеліндегі таңбашалар"
-
-#: src/telephony/ui/windows/settings_window.py:554
-msgid "Calls"
-msgstr "Қоңыраулар"
-
-#: src/telephony/ui/windows/settings_window.py:555
+"Барлық әдістерді қолданып көргеннен кейін орынды анықтау мүмкін болмады."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "{count} хабар XML форматына сәтті экспортталды."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "XML форматына {count} қоңырау сәтті экспортталды."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Chatty дерекқорына {count} хабар экспортталды."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Gnome Calls дерекқорына {count} қоңырау экспортталды."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Бастапқы дерекқор табылмады."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Телефония дерекқоры сәтті экспортталды."
+
+#: src/telephony/backend/utils/importer_android_utils.py:33
+#: src/telephony/backend/utils/importer_android_utils.py:138
+#: src/telephony/backend/utils/importer_ios_utils.py:34
+#: src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Файл табылмады."
+
+#: src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Android сақтық көшірмесінен {count} хабар импортталды."
+
+#: src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Android сақтық көшірмесінен {count} қоңырау импортталды."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "iOS дерекқорында хабарлар кестесі табылмады."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "iOS SMS дерекқор құрылымын оқу мүмкін болмады."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "iOS сақтық көшірмесінен {count} хабар импортталды."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "iOS дерекқорында қоңыраулар журналы кестесі табылмады."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "iOS қоңыраулары дерекқор құрылымын оқу сәтсіз аяқталды."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "iOS сақтық көшірмесінен {count} қоңырау импортталды."
+
+#: src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Chatty дерекқор табылмады."
+
+#: src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Chatty дерекқорында хабарлар кестесі табылмады."
+
+#: src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Chatty дерекқор құрылымын оқу сәтсіз аяқталды."
+
+#: src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Chatty қолданбасынан {count} хабар импортталды."
+
+#: src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Қоңыраулар дерекқоры табылмады."
+
+#: src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr "Қоңыраулар дерекқорында қоңыраулар журналы кестесі табылмады."
+
+#: src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Қоңыраулар дерекқор құрылымын оқу сәтсіз аяқталды."
+
+#: src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Импортталған {count} қоңырау."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0с"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, fuzzy, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{сағ} {мин} мин"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, fuzzy, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{м}м {с}с"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Телефония"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Теру тақтасы"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Тарих"
+
+#: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:63
-#: src/telephony/ui/main_window.py:109
+#: src/telephony/ui/windows/settings_window.py:605
 msgid "Messages"
 msgstr "Хабарламалар"
 
-#: src/telephony/ui/windows/settings_window.py:556
-#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:606
 msgid "Contacts"
 msgstr "Контактілер"
 
-#: src/telephony/ui/windows/settings_window.py:720
-msgid "Name (e.g. Mom)"
-msgstr "Аты (мысалы, анам)"
+#: src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Контактілер синхрондалуда..."
 
-#: src/telephony/ui/windows/settings_window.py:724
-#: src/telephony/ui/windows/blocklist_editor_window.py:64
-msgid "Number"
-msgstr "Сан"
+#: src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Нөміріңізді \"Параметрлер\" бөлімінен орнатыңыз"
 
-#: src/telephony/ui/windows/settings_window.py:799
-msgid "System Default (Always Enabled)"
-msgstr "Жүйенің әдепкі мәні (әрдайым қосулы)"
+#: src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Параметрлерде әдепкі ел кодын орнатыңыз"
 
-#: src/telephony/ui/windows/settings_window.py:810
-msgid "Personal Address Book"
-msgstr "Жеке мекенжай кітабы"
+#: src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Параметрлерде жедел жәрдем нөмірлерін орнату"
 
-#: src/telephony/ui/windows/settings_window.py:811
-msgid ""
-"This is the address book that will be synced to Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Бұл жүйе параметрлерінде мұны таңдасаңыз, Andromeda бағдарламасымен "
-"синхрондалатын мекенжай кітабы."
+#: src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Көшірмелерді шешу"
 
-#: src/telephony/ui/windows/settings_window.py:819
-msgid "Andromeda Contacts"
-msgstr "Andromeda контактілері"
+#: src/telephony/ui/main_window.py:295
+#: src/telephony/ui/windows/settings_window.py:40
+msgid "Settings"
+msgstr "Параметрлер"
 
-#: src/telephony/ui/windows/settings_window.py:820
-msgid ""
-"This is the address book that will be synced from Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Бұл жүйе параметрлерінде мұны таңдасаңыз, Andromeda қолданбасынан "
-"синхрондалатын мекенжай кітабы."
+#: src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "Контактілерді қайта жүктеңіз"
 
-#: src/telephony/ui/windows/settings_window.py:940
-msgid "Settings Saved"
-msgstr "Параметрлер сақталды"
+#: src/telephony/ui/main_window.py:305
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Импорт/Экспорт"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Messages"
-msgstr "Хабарламаларды импорттау"
+#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Блоктар тізімі"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Call History"
-msgstr "Қоңыраулар тарихын импорттау"
+#: src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Модем қосылған"
 
-#: src/telephony/ui/windows/import_wizard_window.py:70
-msgid "Waiting for selection..."
-msgstr "Таңдауды күтуде..."
+#: src/telephony/ui/main_window.py:391
+#, fuzzy, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Модем қатесі: {хабарлама}"
 
-#: src/telephony/ui/windows/import_wizard_window.py:93
-msgid "Where do you want to import from?"
-msgstr "Қайдан импорттағыңыз келеді?"
+#: src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "USSD жіберілуде..."
 
-#: src/telephony/ui/windows/import_wizard_window.py:101
-msgid "System Database"
-msgstr "Жүйелік деректер қоры"
+#: src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "USSD нәтижесі"
 
-#: src/telephony/ui/windows/import_wizard_window.py:103
-msgid "Import from local Chatty installation"
-msgstr "Жергілікті Chatty орнатуынан импорттау"
+#: src/telephony/ui/main_window.py:454
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:848
+#: src/telephony/ui/windows/settings_window.py:457
+#: src/telephony/ui/windows/settings_window.py:469
+#: src/telephony/ui/windows/settings_window.py:815
+msgid "OK"
+msgstr "Жарайды"
 
-#: src/telephony/ui/windows/import_wizard_window.py:105
-msgid "Import from local Calls installation"
-msgstr "Жергілікті қоңыраулар орнатуынан импорттау"
-
-#: src/telephony/ui/windows/import_wizard_window.py:107
-msgid "Import"
-msgstr "Импорттау"
-
-#: src/telephony/ui/windows/import_wizard_window.py:114
-msgid "Custom Database Backup"
-msgstr "Теңшелетін дерекқордың сақтық көшірмесі"
-
-#: src/telephony/ui/windows/import_wizard_window.py:115
-msgid "Select an exported SQLite DB file"
-msgstr "Экспортталған SQLite DB файлын таңдаңыз"
-
-#: src/telephony/ui/windows/import_wizard_window.py:117
-#: src/telephony/ui/windows/import_export_window.py:251
-msgid "Select File"
-msgstr "Файлды таңдаңыз"
-
-#: src/telephony/ui/windows/import_wizard_window.py:142
-msgid "Select Database File"
-msgstr "Деректер қоры файлын таңдаңыз"
-
-#: src/telephony/ui/windows/import_wizard_window.py:160
-msgid "MMS Attachments (Optional)"
-msgstr "MMS тіркемелері (қосымша)"
-
-#: src/telephony/ui/windows/import_wizard_window.py:168
-msgid "MMS Folder Backup"
-msgstr "MMS қалтасының сақтық көшірмесі"
-
-#: src/telephony/ui/windows/import_wizard_window.py:169
-msgid "Select the directory containing images/videos"
-msgstr "Суреттер/бейнелер бар каталогты таңдаңыз"
-
-#: src/telephony/ui/windows/import_wizard_window.py:171
-msgid "Select Folder"
-msgstr "Қалта таңдаңыз"
-
-#: src/telephony/ui/windows/import_wizard_window.py:178
-msgid "Skip Attachments"
-msgstr "Тіркемелерді өткізіп жіберу"
-
-#: src/telephony/ui/windows/import_wizard_window.py:179
-msgid "Import SMS and texts only"
-msgstr "Тек SMS және мәтіндерді импорттау"
-
-#: src/telephony/ui/windows/import_wizard_window.py:185
-msgid "Skip"
-msgstr "Өткізіп жіберу"
-
-#: src/telephony/ui/windows/import_wizard_window.py:195
-msgid "Select MMS Folder"
-msgstr "MMS қалтасын таңдаңыз"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:36
-msgid "Duplicate Contact"
-msgstr "Қайталанатын контакт"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:64
-msgid "Merge all"
-msgstr "Барлығын біріктіру"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:88
-msgid "Merging Contacts..."
-msgstr "Контактілерді біріктіру..."
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:107
-msgid "Remaining conflicts: {count}"
-msgstr "Қалған қайшылықтар: {count}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:126
-msgid "{number} is saved to contacts:"
-msgstr "{number} контактілерге сақталады:"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:141
-msgid "Address Book: {name}"
-msgstr "Мекенжай кітабы: {name}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:162
-msgid "Keep this, Remove duplicates"
-msgstr "Осыны сақтаңыз, Көшірмелерді жойыңыз"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:168
-msgid "Keep this, Merge duplicates"
-msgstr "Осыны сақтаңыз, Көшірмелерді біріктіріңіз"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:326
-msgid "Merging {current}/{total}..."
-msgstr "{current}/{total} біріктірілуде..."
-
+#: src/telephony/ui/main_window.py:463
 #: src/telephony/ui/windows/date_time_picker_window.py:41
-#: src/telephony/ui/main_window.py:441
 msgid "Confirm"
 msgstr "Растау"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:62
-msgid "Year"
-msgstr "Жыл"
+#: src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "{count} қайталанатын контакт табылды. Мәзірді тексеріңіз."
+msgstr[1] "{count} қайталанатын контакт табылды. Мәзірді тексеріңіз."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:81
-msgid "Month"
-msgstr "Ай"
+#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Контактілер синхрондалуда..."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:116
-msgid "Hour"
-msgstr "Сағат"
+#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
+#: src/telephony/ui/windows/chat_media_controller_window.py:148
+#: src/telephony/ui/windows/contact_editor_window.py:103
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:368
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:443
+#: src/telephony/ui/windows/settings_window.py:581
+#: src/telephony/ui/windows/settings_window.py:858
+msgid "Close"
+msgstr "Жабу"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:135
-msgid "Minute"
-msgstr "Минут"
+#: src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Контактілер қайта жүктелуде..."
+
+#: src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "Бірнеше контакт табылды"
+
+#: src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Қай контактіні өңдегіңіз келеді?"
+
+#: src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Белгісіз мекенжай кітапшасы"
+
+#: src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "Қоңырау шалуда (анонимді)..."
+
+#: src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "{number} қоңырау шалуда..."
+
+#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Қоңырау орындалмады"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Қоңырау туралы мәліметтер"
+
+#: src/telephony/ui/main_window.py:676
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Сан: {number}\n"
+"Аты: {name}\n"
+"Күні: {date}\n"
+"Ұзақтығы: {duration}"
+
+#: src/telephony/ui/main_window.py:692
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "Нөмірді блоктан шығару"
+
+#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+msgid "Unblocked"
+msgstr "Бұғаудан шығарылды"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "Контактіні өңдеу"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+msgid "Add to Contacts"
+msgstr "Контактілерге қосу"
+
+#: src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Бар контактіге қосыңыз"
+
+#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/windows/incall_window.py:147
+msgid "Search Number"
+msgstr "Іздеу нөмірі"
+
+#: src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Хабар жіберу"
+
+#: src/telephony/ui/main_window.py:755
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+msgid "Copy Number"
+msgstr "Нөмірді көшіру"
+
+#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Блок нөмірі"
+
+#: src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Бұл қоңырауды жойыңыз"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Қоңырауды жою"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Бұл қоңырауды жою керек пе?"
+
+#: src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Нөмір көшірілді"
+
+#: src/telephony/ui/main_window.py:798
+#: src/telephony/ui/windows/contact_editor_window.py:757
+msgid "Saving contact..."
+msgstr "Контакт сақталуда..."
+
+#: src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "{name} тізіміне қосылды"
+
+#: src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Нөмірді қосу мүмкін болмады"
+
+#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/windows/contact_editor_window.py:184
+#: src/telephony/ui/windows/settings_window.py:213
+msgid "Add Number"
+msgstr "Нөмір қосу"
+
+#: src/telephony/ui/main_window.py:814
+#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:60
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:110
+#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+msgid "Save"
+msgstr "Сақтау"
+
+#: src/telephony/ui/views/chat_view.py:133
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "{count} алушыға нобай"
+
+#: src/telephony/ui/views/chat_view.py:160
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} Қатысушылар"
+
+#: src/telephony/ui/views/chat_view.py:306
+msgid "Replies not supported for this sender"
+msgstr "Бұл жіберуші үшін жауаптарға қолдау көрсетілмейді"
+
+#: src/telephony/ui/views/chat_view.py:350
+#: src/telephony/ui/views/chat_view.py:1230
+msgid "Scheduled time must be in the future"
+msgstr "Жоспарланған уақыт болашақта болуы керек"
+
+#: src/telephony/ui/views/chat_view.py:358
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "{time} қайта жоспарланған"
+
+#: src/telephony/ui/views/chat_view.py:362
+msgid "Re-Schedule Message"
+msgstr "Хабарды қайта жоспарлау"
+
+#: src/telephony/ui/views/chat_view.py:497
+#: src/telephony/ui/views/chat_view.py:562
+msgid "— New Messages —"
+msgstr "— Жаңа хабарламалар —"
+
+#: src/telephony/ui/views/chat_view.py:600
+msgid "No results found in this conversation"
+msgstr "Бұл әңгімеде нәтижелер табылмады"
+
+#: src/telephony/ui/views/chat_view.py:672
+msgid "Group Name"
+msgstr "Топ атауы"
+
+#: src/telephony/ui/views/chat_view.py:673
+msgid "Set group name..."
+msgstr "Топ атауын орнату..."
+
+#: src/telephony/ui/views/chat_view.py:681
+msgid "Participants"
+msgstr "Қатысушылар"
+
+#: src/telephony/ui/views/chat_view.py:781
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Conversation"
+msgstr "Сөйлесуді жою"
+
+#: src/telephony/ui/views/chat_view.py:798
+#: src/telephony/ui/views/chat_view.py:1162
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+msgid "Me"
+msgstr "Мен"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, fuzzy, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"{sender} жіберген:\n"
+"{дене}"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "{sender} жіберген"
+
+#: src/telephony/ui/views/chat_view.py:817
+msgid "Forward To"
+msgstr "Алға жіберу"
+
+#: src/telephony/ui/views/chat_view.py:818
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+msgid "Forward"
+msgstr "Алға"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Delete Message"
+msgstr "Хабарды жою"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Are you sure you want to delete this message?"
+msgstr "Бұл хабарды шынымен жойғыңыз келе ме?"
+
+#: src/telephony/ui/views/chat_view.py:980
+msgid "Group renamed"
+msgstr "Топ атауы өзгертілді"
+
+#: src/telephony/ui/views/chat_view.py:1008
+#, fuzzy
+msgid "Compressing image..."
+msgstr "Бейне қысылуда..."
+
+#: src/telephony/ui/views/chat_view.py:1010
+msgid "Image is too large to send"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1012
+msgid "Compressing video..."
+msgstr "Бейне қысылуда..."
+
+#: src/telephony/ui/views/chat_view.py:1014
+msgid "Video compression failed"
+msgstr "Бейнені қысу сәтсіз аяқталды"
+
+#: src/telephony/ui/views/chat_view.py:1016
+msgid "File is too large to send via MMS"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1224
+msgid "Nothing to schedule"
+msgstr "Жоспарлауға ештеңе жоқ"
+
+#: src/telephony/ui/views/chat_view.py:1238
+msgid "Schedule Message"
+msgstr "Хабарламаны жоспарлау"
+
+#: src/telephony/ui/views/chat_view.py:1277
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Хабар {time} уақытына жоспарланған"
+
+#: src/telephony/ui/views/chat_view.py:1280
+#: src/telephony/ui/views/chat_view.py:1298
+msgid "[Attachment]"
+msgstr "[Тіркеме]"
+
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Group"
+msgstr "Топты жою"
+
+#: src/telephony/ui/views/chat_view.py:1388
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Бұл сөйлесу журналын және барлық сақталған медиа файлдарын біржола жояды."
+
+#: src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Контактілерді іздеу"
+
+#: src/telephony/ui/views/contacts_view.py:119
+#: src/telephony/ui/windows/contact_editor_window.py:71
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:229
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Mobile"
+msgstr "Ұялы"
+
+#: src/telephony/ui/views/contacts_view.py:120
+#: src/telephony/ui/windows/contact_editor_window.py:72
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:230
+#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+msgid "Work"
+msgstr "Жұмыс"
+
+#: src/telephony/ui/views/contacts_view.py:121
+#: src/telephony/ui/windows/contact_editor_window.py:73
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:231
+#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+msgid "Home"
+msgstr "Үй"
+
+#: src/telephony/ui/views/contacts_view.py:122
+#: src/telephony/ui/windows/contact_editor_window.py:74
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:232
+#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+msgid "Fax"
+msgstr "Факс"
+
+#: src/telephony/ui/views/contacts_view.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:75
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:233
+#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+msgid "Other"
+msgstr "Басқа"
+
+#: src/telephony/ui/views/contacts_view.py:124
+#: src/telephony/ui/windows/contact_editor_window.py:76
+#: src/telephony/ui/windows/custom_tone_list_window.py:234
+#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+msgid "Main"
+msgstr "Негізгі"
+
+#: src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Анонимді қоңырау шалыңыз"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Нөмірді енгізіңіз"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Телефония Smart теру тақтасы сіздің қызметіңізде"
+
+#: src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Буфердегі нөмір жарамсыз"
+
+#: src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Жарамсыз нөмір"
+
+#: src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "Барлығы"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "Кез келген ұзақтығы"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Жауапсыз"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 мин"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 мин"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 мин"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "Кез келген күн"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Бүгін"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "Соңғы 3 күн"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "Соңғы 14 күн"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "Соңғы 30 күн"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "Соңғы 60 күн"
+
+#: src/telephony/ui/views/messages_view.py:106
+#: src/telephony/ui/views/messages_view.py:575
+msgid "Search Contacts..."
+msgstr "Контактілерді іздеу..."
+
+#: src/telephony/ui/views/messages_view.py:224
+msgid "All Messages"
+msgstr "Барлық хабарлар"
+
+#: src/telephony/ui/views/messages_view.py:225
+msgid "Unread Messages"
+msgstr "Оқылмаған хабарлар"
+
+#: src/telephony/ui/views/messages_view.py:226
+msgid "Unknown Numbers"
+msgstr "Белгісіз сандар"
+
+#: src/telephony/ui/views/messages_view.py:227
+msgid "Saved Contacts"
+msgstr "Сақталған контактілер"
+
+#: src/telephony/ui/views/messages_view.py:228
+msgid "Group Messages"
+msgstr "Топтық хабарламалар"
+
+#: src/telephony/ui/views/messages_view.py:229
+msgid "Individual Messages"
+msgstr "Жеке хабарламалар"
+
+#: src/telephony/ui/views/messages_view.py:230
+msgid "Alphabetical Senders"
+msgstr "Алфавиттік жіберушілер"
+
+#: src/telephony/ui/views/messages_view.py:322
+#: src/telephony/ui/views/messages_view.py:444
+msgid "[Multimedia Message]"
+msgstr "[Мультимедиа хабарламасы]"
+
+#: src/telephony/ui/views/messages_view.py:579
+msgid "Search Messages..."
+msgstr "Хабарларды іздеу..."
+
+#: src/telephony/ui/views/messages_view.py:621
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Бастау ({count})"
+
+#: src/telephony/ui/views/messages_view.py:628
+#, fuzzy, python-brace-format
+msgid "Open ({count})"
+msgstr "Бастау ({count})"
+
+#: src/telephony/ui/views/messages_view.py:700
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Нөмірді қосу: {number}"
+
+#: src/telephony/ui/views/messages_view.py:733
+#, fuzzy
+msgid "Group chat"
+msgstr "Топ атауы"
+
+#: src/telephony/ui/views/messages_view.py:741
+#: src/telephony/ui/windows/custom_tone_list_window.py:297
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+msgid "No contacts found"
+msgstr "Ешбір контакт табылмады"
+
+#: src/telephony/ui/views/messages_view.py:856
+msgid "No results found"
+msgstr "Нәтиже табылмады"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+msgid "Copy Text"
+msgstr "Мәтінді көшіру"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+msgid "Re-Schedule"
+msgstr "Қайта жоспарлау"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+msgid "Mark as Unread"
+msgstr "Оқылмаған деп белгілеңіз"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:778
+msgid "Delete"
+msgstr "Жою"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Жоспарланған: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#, fuzzy
+msgid "Failed to send"
+msgstr "Жіберілмеді: {e}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#, fuzzy
+msgid "Sending..."
+msgstr "USSD жіберілуде..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+msgid "Open with"
+msgstr "-мен ашыңыз"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+msgid "Copy"
+msgstr "Көшіру"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+msgid "Save as"
+msgstr "Басқаша сақтау"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
+msgid "Retry Send"
+msgstr ""
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+msgid "Open With..."
+msgstr "Ашу..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+msgid "Save File As"
+msgstr "Файлды басқаша сақтау"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:48
+msgid "Hangup All Calls"
+msgstr "Барлық қоңырауларды өшіру"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Топ"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, fuzzy, python-brace-format
+msgid "Draft: {message}"
+msgstr "Нобай: ​​{хабарлама}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:32
+#: src/telephony/ui/windows/settings_window.py:352
+msgid "Advanced Settings"
+msgstr "Қосымша параметрлер"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:65
+msgid "Loading..."
+msgstr "Жүктелуде..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:102
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Параметрлерді жүктеу қатесі: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:110
+msgid "Secret SMS Triggers"
+msgstr "Құпия SMS триггерлері"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:113
+#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+msgid "Set \"Find my Telephony\""
+msgstr "«Телефониямды табу» параметрін орнату"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:119
+#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+msgid "Set \"Trusted Callback\""
+msgstr "«Сенімді кері қоңырауды» орнату"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+msgid "Set \"SMS -Relay\""
+msgstr "«SMS-Реле» орнату"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:131
+#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+msgid "Set \"SMS -tmate\""
+msgstr "\"SMS -tmate\" орнату"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:137
+#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "\"SMS коммутаторын өшіру құрылғысын\" орнату"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:145
+msgid "Restart Modem"
+msgstr "Модемді қайта іске қосыңыз"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+msgid "Data Management"
+msgstr "Деректерді басқару"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Аутентификациядан бас тартылды"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:172
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Авторизация қатесі: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:180
+msgid "Advanced Settings Applied"
+msgstr "Қосымша параметрлер қолданылды"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Restarting Modem..."
+msgstr "Модем қайта іске қосылуда..."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Нөмір мәліметтері"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Бұл нөмірден қоңыраулар автоматты түрде қабылданбайды."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:774
+msgid "Number"
+msgstr "Сан"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Ескертпе (қосымша)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Көшірме"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Бұл нөмір әлдеқашан бұғатталған."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Деректер базасының қатесі"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Блоктау тізіміне сақтау мүмкін болмады."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:828
+msgid "Conflict"
+msgstr "Қақтығыс"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Нөмір блоктау тізімінде де, контактілерде де болуы мүмкін емес.\n"
+"\n"
+"Блоктауды жалғастырып, нөмірді контактілерден өшіргіңіз келе ме?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Иә, Блок"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Блокталған нөмірлер"
+
+#: src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "Жазбалар жоқ"
+
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Бұл нөмірді бұғаттауды шынымен алғыңыз келе ме?"
+
+#: src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Блоктан шығарылған нөмір"
+
+#: src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Суретке түсіру"
+
+#: src/telephony/ui/windows/camera_photo_window.py:140
+#: src/telephony/ui/windows/camera_video_window.py:172
+#: src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Қайта алу"
+
+#: src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Фотосуретті тіркеңіз"
+
+#: src/telephony/ui/windows/camera_video_window.py:47
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Бейне жазу"
+
+#: src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Бейнені тіркеңіз"
+
+#: src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Бейне жазылмады: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Жазу сәтсіз аяқталды (файл бос)."
+
+#: src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Үлкен бейне ({size} КБ). Жіберу кезінде қысылады."
+
+#: src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Бос файлды ойнату мүмкін емес."
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:60
 msgid "Take Photo"
 msgstr "Фотоға түсіру"
-
-#: src/telephony/ui/windows/chat_media_controller_window.py:61
-#: src/telephony/ui/windows/camera_video_window.py:47
-msgid "Record Video"
-msgstr "Бейне жазу"
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:62
 msgid "Record Audio"
@@ -1590,101 +1371,455 @@ msgstr "Тіркеме қатесі"
 msgid "Failed to prepare attachment."
 msgstr "Тіркеме дайындалмады."
 
-#: src/telephony/ui/windows/camera_video_window.py:172
-#: src/telephony/ui/windows/sound_recorder_window.py:144
-#: src/telephony/ui/windows/camera_photo_window.py:141
-msgid "Retake"
-msgstr "Қайта алу"
+#: src/telephony/ui/windows/contact_editor_window.py:36
+#: src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Байланыс мәліметтері"
 
-#: src/telephony/ui/windows/camera_video_window.py:177
-msgid "Attach Video"
-msgstr "Бейнені тіркеңіз"
+#: src/telephony/ui/windows/contact_editor_window.py:107
+#: src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "Өңдеу"
 
-#: src/telephony/ui/windows/camera_video_window.py:314
-msgid "Failed to record video: {error_msg}"
-msgstr "Бейне жазылмады: {error_msg}"
+#: src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Сәйкестік"
 
-#: src/telephony/ui/windows/camera_video_window.py:384
-msgid "Recording failed (File empty)."
-msgstr "Жазу сәтсіз аяқталды (файл бос)."
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "Таңдаулы"
 
-#: src/telephony/ui/windows/camera_video_window.py:388
-msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Үлкен бейне ({size} КБ). Жіберу кезінде қысылады."
+#: src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Толық аты-жөні"
 
-#: src/telephony/ui/windows/camera_video_window.py:405
-msgid "Cannot play empty file."
-msgstr "Бос файлды ойнату мүмкін емес."
+#: src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Аты"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:69
-msgid "Loading..."
-msgstr "Жүктелуде..."
+#: src/telephony/ui/windows/contact_editor_window.py:162
+#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+msgid "Yes"
+msgstr "Иә"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:106
-msgid "Error loading settings: {e}"
-msgstr "Параметрлерді жүктеу қатесі: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Телефон нөмірлері"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:114
-msgid "Secret SMS Triggers"
-msgstr "Құпия SMS триггерлері"
+#: src/telephony/ui/windows/contact_editor_window.py:195
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "Электрондық пошта мекенжайлары"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:117
-#: src/telephony/ui/windows/trusted_actions_list_window.py:36
-msgid "Set \"Find my Telephony\""
-msgstr "«Телефониямды табу» параметрін орнату"
+#: src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "Электрондық поштаны қосу"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:123
-#: src/telephony/ui/windows/trusted_actions_list_window.py:38
-msgid "Set \"Trusted Callback\""
-msgstr "«Сенімді кері қоңырауды» орнату"
+#: src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Қосымша мәліметтер"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:129
-#: src/telephony/ui/windows/trusted_actions_list_window.py:40
-msgid "Set \"SMS -Relay\""
-msgstr "«SMS-Реле» орнату"
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Ұйымдастыру"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:135
-#: src/telephony/ui/windows/trusted_actions_list_window.py:42
-msgid "Set \"SMS -tmate\""
-msgstr "\"SMS -tmate\" орнату"
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Қызмет атауы"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:141
-#: src/telephony/ui/windows/trusted_actions_list_window.py:44
-msgid "Set \"SMS Switch Wipe Device\""
-msgstr "\"SMS коммутаторын өшіру құрылғысын\" орнату"
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Мекенжай"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:149
-msgid "Restart Modem"
-msgstr "Модемді қайта іске қосыңыз"
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Жазбалар"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:157
-msgid "Data Management"
-msgstr "Деректерді басқару"
+#: src/telephony/ui/windows/contact_editor_window.py:221
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Веб-сайт"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:173
-msgid "Authentication cancelled"
-msgstr "Аутентификациядан бас тартылды"
+#: src/telephony/ui/windows/contact_editor_window.py:246
+#: src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Туған күн"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:176
-msgid "Auth error: {e}"
-msgstr "Авторизация қатесі: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:247
+#: src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "Мерейтой"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:198
-msgid "Advanced Settings Applied"
-msgstr "Қосымша параметрлер қолданылды"
+#: src/telephony/ui/windows/contact_editor_window.py:263
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Delete Contact"
+msgstr "Контактіні жою"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:202
-msgid "Error saving settings"
-msgstr "Параметрлерді сақтау қатесі"
+#: src/telephony/ui/windows/contact_editor_window.py:274
+#: src/telephony/ui/windows/settings_window.py:162
+#: src/telephony/ui/windows/settings_window.py:440
+msgid "Address Books"
+msgstr "Мекенжай кітаптары"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:206
-msgid "Restarting Modem..."
-msgstr "Модем қайта іске қосылуда..."
+#: src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Белгісіз дереккөз"
 
-#: src/telephony/ui/windows/import_export_window.py:43
-#: src/telephony/ui/main_window.py:305
-msgid "Import / Export"
-msgstr "Импорт/Экспорт"
+#: src/telephony/ui/windows/contact_editor_window.py:318
+#: src/telephony/ui/windows/contact_editor_window.py:356
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Күнді таңдаңыз"
+
+#: src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "Өшіру күні"
+
+#: src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "{title} таңдаңыз"
+
+#: src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "{title} көшіру"
+
+#: src/telephony/ui/windows/contact_editor_window.py:390
+#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+msgid "Copied to clipboard"
+msgstr "Буферге көшірілді"
+
+#: src/telephony/ui/windows/contact_editor_window.py:535
+msgid "Export Contact"
+msgstr "Контактіні экспорттау"
+
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Are you sure you want to delete this contact?"
+msgstr "Осы контактіні шынымен жойғыңыз келе ме?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:567
+msgid "Deleting contact..."
+msgstr "Контакт жойылуда..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:822
+#, fuzzy
+msgid "Failed to save contact"
+msgstr "Блоктау тізіміне сақтау мүмкін болмады."
+
+#: src/telephony/ui/windows/contact_editor_window.py:829
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Нөмір блоктау тізімінде де, контактілерде де болуы мүмкін емес.\n"
+"\n"
+"Блоктан шығаруды жалғастырып, нөмірді Контактілерге қосқыңыз келе ме?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:833
+msgid "Yes, Add to Contacts"
+msgstr "Иә, контактілерге қосыңыз"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Контакт таңдаңыз"
+
+#: src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "Аты немесе нөмірі"
+
+#: src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "Нөмір жоқ"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:323
+msgid "Individual SMS Notifications"
+msgstr "Жеке SMS хабарламалары"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:334
+msgid "Individual Ringtones"
+msgstr "Жеке рингтондар"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "Қосу үшін контактіні табыңыз..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Контактіні таңдап, реттелетін дыбыс файлын таңдаңыз (.ogg немесе .oga). Файл "
+"жергілікті жадыңызға көшіріледі."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:186
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Жою"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Арнаулы тон жойылды (Орындау үшін Сақтау түймесін басыңыз)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "{name} үшін үнді таңдаңыз"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:318
+#: src/telephony/ui/windows/settings_window.py:405
+msgid "Select"
+msgstr "таңдаңыз"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:323
+msgid "Supported Audio (OGG)"
+msgstr "Қолдау көрсетілетін аудио (OGG)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:351
+msgid "Only .ogg or .oga files are supported"
+msgstr "Тек .ogg немесе .oga файлдарына қолдау көрсетіледі"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:362
+msgid "Failed to copy audio file"
+msgstr "Аудио файлды көшіру мүмкін болмады"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:382
+msgid "Custom tone added"
+msgstr "Арнаулы тон қосылды"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Мәліметтер қорын басқару"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Біржола жойылатын деректерді таңдаңыз."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Қоңыраулар тарихын жою"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Барлық хабарларды жою"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Барлық топ атауларын жою"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Блоктар тізімін жою"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Барлық контактілерді жою"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Мекенжай кітабын жою"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "БАРЛЫҒЫН ЖОЮ"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Сіз сенімдісіз бе? Бұл әрекетті қайтару мүмкін емес."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Бұл барлық SMS/MMS және тіркемелерді жояды."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Топ атауларын жою"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Барлық пайдаланушы топтық чат атауларын қалпына келтіру керек пе?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Барлық нөмірлердің бөгеуін алу керек пе?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Жойылатын мекенжай кітаптары жоқ"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Жойылатын реттелетін мекенжай кітаптары жоқ."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Қай мекенжай кітабын біржола жойғыңыз келеді?\n"
+"\n"
+"Бұл оны жүйеден жояды."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "\"{name}\" мекенжай кітабын шынымен де біржола жойғыңыз келе ме?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "БАРЛЫҒЫН ЖОЮ"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"Дерекқорды, конфигурациялау файлдарын және контактілерді өшіру керек пе? "
+"Қолданба қалпына келтіріледі."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Мекенжайлық кітапшаңыздан барлығын шынымен жою керек пе?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Қай мекенжай кітабын тазалау керек екенін таңдаңыз:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Барлық мекенжай кітаптары"
+
+#: src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Қоңыраулар тарихы жойылды"
+
+#: src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "Хабарлар жойылуда..."
+
+#: src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Хабарлар мен тіркемелер жойылды"
+
+#: src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "Топ атауларын қалпына келтіру"
+
+#: src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Блоктау тізімі тазартылды"
+
+#: src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Контактілер жойылуда..."
+
+#: src/telephony/ui/windows/data_management_window.py:253
+msgid "Contacts Deleted"
+msgstr "Контактілер жойылды"
+
+#: src/telephony/ui/windows/data_management_window.py:261
+msgid "Deleting address book..."
+msgstr "Мекенжай кітабы жойылуда..."
+
+#: src/telephony/ui/windows/data_management_window.py:268
+msgid "Address Book Deleted"
+msgstr "Мекенжай кітабы жойылды"
+
+#: src/telephony/ui/windows/data_management_window.py:271
+msgid "Failed to delete Address Book"
+msgstr "Мекенжай кітабын жою мүмкін болмады"
+
+#: src/telephony/ui/windows/data_management_window.py:276
+msgid "Wiping Database..."
+msgstr "Дерекқор өшірілуде..."
+
+#: src/telephony/ui/windows/data_management_window.py:290
+msgid "App Reset Complete"
+msgstr "Қолданбаны қалпына келтіру аяқталды"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "Жыл"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Ай"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Сағат"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Минут"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Notification Overrides"
+msgstr "Хабарландыруды қайта анықтау"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+msgid "Find and add contacts..."
+msgstr "Контактілерді табу және қосу..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Бұл тізімдегі контактілер телефон үнсіз немесе Мазаламау режимінде болса да, "
+"хабарландыруларды әрқашан толық дыбыс деңгейінде ойнатады."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Қайталанатын контакт"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Барлығын біріктіру"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Контактілерді біріктіру..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Қалған қайшылықтар: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} контактілерге сақталады:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Мекенжай кітабы: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Осыны сақтаңыз, Көшірмелерді жойыңыз"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Осыны сақтаңыз, Көшірмелерді біріктіріңіз"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "{current}/{total} біріктірілуде..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1741,10 +1876,12 @@ msgid "No contacts found on SIM card."
 msgstr "SIM картасынан контактілер табылмады."
 
 #: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "SIM картасынан {count} контакт импортталды."
 
 #: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "SIM картасын импорттау сәтсіз аяқталды: {e}"
 
@@ -1789,6 +1926,7 @@ msgstr ""
 "iPhone құрылғысынан сақтық көшірме алынуда... Бұл көп уақыт алуы мүмкін!"
 
 #: src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "USB сақтық көшірмесі орындалмады: {e}"
 
@@ -1809,15 +1947,21 @@ msgid "Importing iPhone Calls..."
 msgstr "iPhone қоңыраулары импортталуда..."
 
 #: src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "iOS импорттау кезіндегі қате: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:251
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Файлды таңдаңыз"
 
 #: src/telephony/ui/windows/import_export_window.py:254
 msgid "XML Files"
 msgstr "XML файлдары"
 
 #: src/telephony/ui/windows/import_export_window.py:268
-#: src/telephony/ui/windows/import_export_window.py:451
+#: src/telephony/ui/windows/import_export_window.py:459
 msgid "Importing..."
 msgstr "Импорттауда..."
 
@@ -1846,6 +1990,7 @@ msgid "iOS"
 msgstr "iOS"
 
 #: src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
 msgid "Export to {fmt}"
 msgstr "{fmt} файлына экспорттау"
 
@@ -1853,131 +1998,608 @@ msgstr "{fmt} файлына экспорттау"
 msgid "What do you want to export?"
 msgstr "Нені экспорттағыңыз келеді?"
 
-#: src/telephony/ui/windows/import_export_window.py:325
+#: src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+
+#: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
 msgstr "Хабарламалар (SMS/MMS)"
 
-#: src/telephony/ui/windows/import_export_window.py:326
+#: src/telephony/ui/windows/import_export_window.py:334
 msgid "Call History"
 msgstr "Қоңыраулар тарихы"
 
-#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:344
 msgid "Export File"
 msgstr "Файлды экспорттау"
 
-#: src/telephony/ui/windows/import_export_window.py:362
+#: src/telephony/ui/windows/import_export_window.py:370
 msgid "Exporting..."
 msgstr "Экспорттауда..."
 
-#: src/telephony/ui/windows/import_export_window.py:396
+#: src/telephony/ui/windows/import_export_window.py:404
 msgid "Import VCard"
 msgstr "VCard импорттау"
 
-#: src/telephony/ui/windows/import_export_window.py:398
+#: src/telephony/ui/windows/import_export_window.py:406
 msgid "VCard Files"
 msgstr "VCard файлдары"
 
-#: src/telephony/ui/windows/import_export_window.py:417
-#: src/telephony/ui/windows/import_export_window.py:481
+#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:489
 msgid "No enabled address books found"
 msgstr "Қосылған мекенжай кітаптары табылмады"
 
-#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:433
 msgid "Select Address Book"
 msgstr "Мекенжай кітабын таңдаңыз"
 
-#: src/telephony/ui/windows/import_export_window.py:426
+#: src/telephony/ui/windows/import_export_window.py:434
 msgid "Where do you want to import contacts?"
 msgstr "Контактілерді қай жерде импорттағыңыз келеді?"
 
-#: src/telephony/ui/windows/import_export_window.py:465
+#: src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "{count} контакт импортталды"
 
-#: src/telephony/ui/windows/import_export_window.py:469
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
 msgid "Import failed: {e}"
 msgstr "Импорттау орындалмады: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:485
-#: src/telephony/ui/windows/import_export_window.py:523
+#: src/telephony/ui/windows/import_export_window.py:493
+#: src/telephony/ui/windows/import_export_window.py:531
 msgid "Export Contacts"
 msgstr "Контактілерді экспорттау"
 
-#: src/telephony/ui/windows/import_export_window.py:486
+#: src/telephony/ui/windows/import_export_window.py:494
 msgid "Which address book do you want to export?"
 msgstr "Қай мекенжай кітабын экспорттағыңыз келеді?"
 
-#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:505
 msgid "Export All Address Books"
 msgstr "Барлық мекенжай кітаптарын экспорттау"
 
-#: src/telephony/ui/windows/import_export_window.py:551
+#: src/telephony/ui/windows/import_export_window.py:559
 msgid "No contacts found to export"
 msgstr "Экспортталатын контактілер табылмады"
 
-#: src/telephony/ui/windows/import_export_window.py:567
+#: src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "{count} контакт экспортталды"
 
-#: src/telephony/ui/windows/import_export_window.py:570
+#: src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
 msgid "Export error: {e}"
 msgstr "Экспорт қатесі: {e}"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:33
-#: src/telephony/ui/main_window.py:734
-msgid "Block Number"
-msgstr "Блок нөмірі"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Хабарламаларды импорттау"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:59
-msgid "Number Details"
-msgstr "Нөмір мәліметтері"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Қоңыраулар тарихын импорттау"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:60
-msgid "Calls from this number will be automatically rejected."
-msgstr "Бұл нөмірден қоңыраулар автоматты түрде қабылданбайды."
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Таңдауды күтуде..."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:71
-msgid "Note (Optional)"
-msgstr "Ескертпе (қосымша)"
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Қайдан импорттағыңыз келеді?"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:124
-#: src/telephony/ui/windows/blocklist_editor_window.py:142
-#: src/telephony/ui/views/messages_view.py:324
-#: src/telephony/ui/views/messages_view.py:393
-msgid "Blocked Number"
-msgstr "Блокталған нөмір"
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Жүйелік деректер қоры"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Database Error"
-msgstr "Деректер базасының қатесі"
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Жергілікті Chatty орнатуынан импорттау"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Failed to save to blocklist."
-msgstr "Блоктау тізіміне сақтау мүмкін болмады."
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Жергілікті қоңыраулар орнатуынан импорттау"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "Duplicate"
-msgstr "Көшірме"
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Импорттау"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "This number is already blocked."
-msgstr "Бұл нөмір әлдеқашан бұғатталған."
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Теңшелетін дерекқордың сақтық көшірмесі"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:153
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Blocking and remove the number from Contacts?"
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Экспортталған SQLite DB файлын таңдаңыз"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Деректер қоры файлын таңдаңыз"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS тіркемелері (қосымша)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "MMS қалтасының сақтық көшірмесі"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Суреттер/бейнелер бар каталогты таңдаңыз"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Қалта таңдаңыз"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Тіркемелерді өткізіп жіберу"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Тек SMS және мәтіндерді импорттау"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Өткізіп жіберу"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "MMS қалтасын таңдаңыз"
+
+#: src/telephony/ui/windows/incall_window.py:152
+msgid "Hangup and Send SMS"
+msgstr "Қою және SMS жіберу"
+
+#: src/telephony/ui/windows/incall_window.py:187
+msgid "The call failed to disconnect."
+msgstr "Қоңырауды ажырату мүмкін болмады."
+
+#: src/telephony/ui/windows/incall_window.py:220
+#: src/telephony/ui/windows/incall_window.py:669
+msgid "Output"
+msgstr "Шығару"
+
+#: src/telephony/ui/windows/incall_window.py:235
+#: src/telephony/ui/windows/incall_window.py:697
+msgid "Input"
+msgstr "Енгізу"
+
+#: src/telephony/ui/windows/incall_window.py:387
+msgid "Silenced Incoming Call"
+msgstr "Дыбыссыз кіріс қоңырау"
+
+#: src/telephony/ui/windows/incall_window.py:503
+#: src/telephony/ui/windows/settings_window.py:241
+msgid "I can't talk right now."
+msgstr "Мен қазір сөйлесе алмаймын."
+
+#: src/telephony/ui/windows/incall_window.py:626
+msgid "Restarting RIL..."
+msgstr "RIL қайта іске қосылуда..."
+
+#: src/telephony/ui/windows/incall_window.py:635
+msgid "Restored!"
+msgstr "Қалпына келтірілді!"
+
+#: src/telephony/ui/windows/incall_window.py:641
+msgid "Failed. Reboot Device."
+msgstr "Сәтсіз. Құрылғыны қайта жүктеңіз."
+
+#: src/telephony/ui/windows/incall_window.py:643
+#, fuzzy, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "Тексерілуде... {attrept}"
+
+#: src/telephony/ui/windows/incall_window.py:702
+msgid "Mute Microphone"
+msgstr "Микрофонның дыбысын өшіру"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Телефония туралы"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgstr ""
-"Нөмір блоктау тізімінде де, контактілерде де болуы мүмкін емес.\n"
-"\n"
-"Блоктауды жалғастырып, нөмірді контактілерден өшіргіңіз келе ме?"
+"FLX1 және FLX1 құрылғыларына арналған жылдам телефон тергіші және хабар "
+"алмасу клиенті."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:157
-msgid "Yes, Block"
-msgstr "Иә, Блок"
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Нұсқа"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Әзірлеуші"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Лицензия"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Сілтемелер"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Мәселе бақылаушысы"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Қателер туралы хабарлау немесе мүмкіндіктерді сұрау"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Жоспарланған ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "Кімге: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Қазір жіберу"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Хабар жойылды"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, fuzzy, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Жоспарланған хабар {number} нөміріне жіберілді"
+
+#: src/telephony/ui/windows/settings_window.py:88
+#: src/telephony/ui/windows/settings_window.py:389
+msgid "Ringback Tone"
+msgstr "Кері қоңырау үні"
+
+#: src/telephony/ui/windows/settings_window.py:91
+msgid "Enable Local Ringback"
+msgstr "Жергілікті кері қоңырауды қосыңыз"
+
+#: src/telephony/ui/windows/settings_window.py:106
+msgid "Selected Tone"
+msgstr "Таңдалған үн"
+
+#: src/telephony/ui/windows/settings_window.py:109
+#: src/telephony/ui/windows/settings_window.py:378
+msgid "System Default"
+msgstr "Жүйе әдепкі"
+
+#: src/telephony/ui/windows/settings_window.py:136
+msgid "SIM Settings"
+msgstr "SIM параметрлері"
+
+#: src/telephony/ui/windows/settings_window.py:139
+msgid "My Number"
+msgstr "Менің нөмірім"
+
+#: src/telephony/ui/windows/settings_window.py:140
+msgid "My Number (International Format)"
+msgstr "Менің нөмірім (халықаралық формат)"
+
+#: src/telephony/ui/windows/settings_window.py:146
+#: src/telephony/ui/windows/settings_window.py:147
+#: src/telephony/ui/windows/settings_window.py:365
+msgid "Default Country Code"
+msgstr "Әдепкі ел коды"
+
+#: src/telephony/ui/windows/settings_window.py:173
+msgid "Address Book Info"
+msgstr "Мекенжай кітабы туралы ақпарат"
+
+#: src/telephony/ui/windows/settings_window.py:181
+msgid "Default Address Book"
+msgstr "Әдепкі мекенжай кітабы"
+
+#: src/telephony/ui/windows/settings_window.py:187
+msgid "Duplicate Resolver"
+msgstr "Қайталанатын шешуші"
+
+#: src/telephony/ui/windows/settings_window.py:189
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr ""
+"Қайталанатын нөмірлерді іздеңіз және Контактілер көрінісінде ажыратымдылық "
+"баннерін көрсетіңіз."
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid "Lockscreen Emergency"
+msgstr "Экранды құлыптау төтенше жағдай"
+
+#: src/telephony/ui/windows/settings_window.py:205
+msgid "Show Emergency Button"
+msgstr "Төтенше жағдай түймешігін көрсету"
+
+#: src/telephony/ui/windows/settings_window.py:210
+msgid "Emergency Numbers"
+msgstr "Төтенше нөмірлер"
+
+#: src/telephony/ui/windows/settings_window.py:227
+msgid "Quick Response"
+msgstr "Жылдам жауап"
+
+#: src/telephony/ui/windows/settings_window.py:230
+#, fuzzy
+msgid "Add Decline Message"
+msgstr "Хабарламадан бас тарту"
+
+#: src/telephony/ui/windows/settings_window.py:245
+#: src/telephony/ui/windows/settings_window.py:812
+#, fuzzy
+msgid "Call Volume"
+msgstr "{number} қоңырау шалыңыз"
+
+#: src/telephony/ui/windows/settings_window.py:257
+msgid "Allow Amplification"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:259
+msgid "Let sliders go above 100%. Amplified audio may distort."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Earpiece"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:269
+#, fuzzy
+msgid "Speaker"
+msgstr "SpeakerOn"
+
+#: src/telephony/ui/windows/settings_window.py:270
+msgid "Wired Headset"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:271
+msgid "Bluetooth"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:286
+msgid "Notification Exceptions"
+msgstr "Хабарландырудан ерекше жағдайлар"
+
+#: src/telephony/ui/windows/settings_window.py:289
+#: src/telephony/ui/windows/settings_window.py:454
+msgid "Repeated Calls Bypass"
+msgstr "Қайталанатын қоңырауларды айналып өту"
+
+#: src/telephony/ui/windows/settings_window.py:291
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr ""
+"Егер бір нөмір 5 минут ішінде 3 рет қоңырау шалса, максималды дыбыс деңгейін "
+"күшейтіңіз."
+
+#: src/telephony/ui/windows/settings_window.py:306
+msgid "Manage contacts that always play sound"
+msgstr "Әрқашан дыбыс шығаратын контактілерді басқарыңыз"
+
+#: src/telephony/ui/windows/settings_window.py:315
+#: src/telephony/ui/windows/settings_window.py:327
+#: src/telephony/ui/windows/settings_window.py:338
+msgid "Manage"
+msgstr "Басқару"
+
+#: src/telephony/ui/windows/settings_window.py:325
+msgid "Set custom notification sounds for specific contacts"
+msgstr "Арнайы контактілер үшін реттелетін хабарландыру дыбыстарын орнатыңыз"
+
+#: src/telephony/ui/windows/settings_window.py:336
+msgid "Set custom ringtones for specific contacts"
+msgstr "Арнайы контактілер үшін реттелетін қоңырау үндерін орнатыңыз"
+
+#: src/telephony/ui/windows/settings_window.py:361
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Әдепкі ел коды халықаралық префиксі жоқ сандарды пішімдеу үшін пайдаланылады "
+"(мысалы, +358).\n"
+"\n"
+"Бос қалдырсаңыз, жүйе оны SIM картаңыздан немесе желіден автоматты түрде "
+"анықтауға тырысады.\n"
+"\n"
+"Оны мұнда 2 әріпті ISO аймақ кодын (мысалы, АҚШ, FI, DE) немесе қоңырау "
+"кодын (мысалы, +358, 358, +1, 1) енгізу арқылы қолмен қайта анықтауға болады."
+
+#: src/telephony/ui/windows/settings_window.py:382
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Кері қоңырау үні - шығыс қоңырауға жауап беруді күту кезінде шығарылатын "
+"дыбыс (өте-өте). Кейбір тасымалдаушылар оны жасамайды, сондықтан бізде оны "
+"қолмен жасау мүмкіндігі бар. \n"
+"\n"
+"Сіз өзіңіздің музыкалық файлыңызды таңдай аласыз немесе стандартты жүйе үнін "
+"пайдалану үшін оны өшіре аласыз."
+
+#: src/telephony/ui/windows/settings_window.py:402
+msgid "Select Ringback Tone"
+msgstr "Кері қоңырау үнін таңдаңыз"
+
+#: src/telephony/ui/windows/settings_window.py:410
+msgid "Audio Files"
+msgstr "Аудио файлдар"
+
+#: src/telephony/ui/windows/settings_window.py:436
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Телефониямен бірге пайдалану үшін мекенжай кітаптарын таңдап, оларды "
+"басымдық ретімен реттеңіз. Ең жоғарғы мекенжайлық кітап ең жоғары басымдыққа "
+"ие және сан бірнеше мекенжай кітаптарында табылған жағдайда таңдалады. "
+"Көшірмелерді басқаруға көмектесу үшін төмендегі Көшірме шешуші ауыстырып-"
+"қосқышын пайдалануға болады, бірақ өшірілген болса да, жақсырақ тәжірибе "
+"үшін оны қосуды ұсынамыз."
+
+#: src/telephony/ui/windows/settings_window.py:455
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Қосылған кезде, бір телефон нөмірі сізге 5 минут ішінде 3 рет қоңырау шалса, "
+"үшінші қоңырау (және терезедегі кейінгі қоңыраулар) үнсіз немесе Мазаламау "
+"режимдерін айналып өтіп, телефонды максималды дыбыс деңгейінде шырылдауға "
+"мәжбүр етеді."
+
+#: src/telephony/ui/windows/settings_window.py:467
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Телефон үнсіз немесе Мазаламау режимінде болса да, әрқашан толық дыбыс "
+"деңгейінде хабарландыруларды ойнататын контактілерді таңдаңыз."
+
+#: src/telephony/ui/windows/settings_window.py:488
+msgid "Unknown Callers"
+msgstr "Белгісіз қоңырау шалушылар"
+
+#: src/telephony/ui/windows/settings_window.py:493
+msgid "Unknown Callers Action"
+msgstr "Белгісіз қоңырау шалушылар әрекеті"
+
+#: src/telephony/ui/windows/settings_window.py:495
+msgid "Applies also to hidden numbers."
+msgstr "Жасырын сандарға да қолданылады."
+
+#: src/telephony/ui/windows/settings_window.py:498
+msgid "Do Nothing"
+msgstr "Ештеңе жасама"
+
+#: src/telephony/ui/windows/settings_window.py:499
+msgid "Block Completely"
+msgstr "Толығымен блоктау"
+
+#: src/telephony/ui/windows/settings_window.py:500
+msgid "Silence and Hide UI"
+msgstr "Үнсіздік және пайдаланушы интерфейсін жасыру"
+
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Silence Only"
+msgstr "Тек үнсіздік"
+
+#: src/telephony/ui/windows/settings_window.py:509
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr ""
+"InCall терезесіне іздеу түймесін және белгісіз қоңырау шалушылар үшін "
+"қоңыраулар журналына қосыңыз"
+
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Search Engine"
+msgstr "Іздеу жүйесі"
+
+#: src/telephony/ui/windows/settings_window.py:519
+#: src/telephony/ui/windows/settings_window.py:524
+msgid "Custom URL"
+msgstr "Арнаулы URL"
+
+#: src/telephony/ui/windows/settings_window.py:574
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Белгісіз сандарды іздеу үшін пайдаланғыңыз келетін URL мекенжайын енгізіңіз. "
+"Қоңырау шалушының телефон нөмірі баратын URL мекенжайына \"{number}\" "
+"қосыңыз.\n"
+"\n"
+"Мысалы: https://mysearch.com/?q={number}\n"
+"\n"
+"Қоңырау кезінде іздеу түймесін түрткенде, біз \"{number}\" нөмірін нақты "
+"телефон нөмірімен ауыстырамыз және оны әдепкі браузерде ашамыз."
+
+#: src/telephony/ui/windows/settings_window.py:578
+msgid "Custom Search URL"
+msgstr "Арнаулы іздеу URL мекенжайы"
+
+#: src/telephony/ui/windows/settings_window.py:599
+msgid "Desktop Shortcuts"
+msgstr "Жұмыс үстеліндегі таңбашалар"
+
+#: src/telephony/ui/windows/settings_window.py:604
+msgid "Calls"
+msgstr "Қоңыраулар"
+
+#: src/telephony/ui/windows/settings_window.py:770
+msgid "Name (e.g. Mom)"
+msgstr "Аты (мысалы, анам)"
+
+#: src/telephony/ui/windows/settings_window.py:813
+msgid ""
+"This is the base hardware volume applied to the selected output when a call "
+"connects. The volume buttons during a call only adjust fine-tuning on top of "
+"this base level, so if the base is 0% the call stays silent no matter what. "
+"Values above 100% use software amplification and may distort audio. Wired "
+"Headset and Bluetooth levels are stored for upcoming routing support."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:822
+msgid "Decline Message"
+msgstr "Хабарламадан бас тарту"
+
+#: src/telephony/ui/windows/settings_window.py:893
+msgid "System Default (Always Enabled)"
+msgstr "Жүйенің әдепкі мәні (әрдайым қосулы)"
+
+#: src/telephony/ui/windows/settings_window.py:904
+msgid "Personal Address Book"
+msgstr "Жеке мекенжай кітабы"
+
+#: src/telephony/ui/windows/settings_window.py:905
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Бұл жүйе параметрлерінде мұны таңдасаңыз, Andromeda бағдарламасымен "
+"синхрондалатын мекенжай кітабы."
+
+#: src/telephony/ui/windows/settings_window.py:913
+msgid "Andromeda Contacts"
+msgstr "Andromeda контактілері"
+
+#: src/telephony/ui/windows/settings_window.py:914
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Бұл жүйе параметрлерінде мұны таңдасаңыз, Andromeda қолданбасынан "
+"синхрондалатын мекенжай кітабы."
+
+#: src/telephony/ui/windows/settings_window.py:1039
+msgid "Settings Saved"
+msgstr "Параметрлер сақталды"
 
 #: src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
@@ -1995,36 +2617,11 @@ msgstr "Дауыстық жазбаны тіркеңіз"
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
 msgstr "Жазу MMS үшін тым үлкен (макс. 600 КБ). Қысқарақ қайталаңыз."
 
-#: src/telephony/ui/windows/blocklist_window.py:37
-msgid "Blocked Numbers"
-msgstr "Блокталған нөмірлер"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+msgid "Enable Feature"
+msgstr ""
 
-#: src/telephony/ui/windows/blocklist_window.py:127
-msgid "No notes"
-msgstr "Жазбалар жоқ"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-#: src/telephony/ui/main_window.py:665
-msgid "Unblock Number"
-msgstr "Нөмірді блоктан шығару"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-msgid "Are you sure you want to unblock this number?"
-msgstr "Бұл нөмірді бұғаттауды шынымен алғыңыз келе ме?"
-
-#: src/telephony/ui/windows/blocklist_window.py:157
-msgid "Unblocked number"
-msgstr "Блоктан шығарылған нөмір"
-
-#: src/telephony/ui/windows/camera_photo_window.py:41
-msgid "Take Picture"
-msgstr "Суретке түсіру"
-
-#: src/telephony/ui/windows/camera_photo_window.py:146
-msgid "Attach Photo"
-msgstr "Фотосуретті тіркеңіз"
-
-#: src/telephony/ui/windows/trusted_actions_list_window.py:97
+#: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
 "Contacts can trigger an action by sending a secret SMS message. Add contacts "
 "below and set their secret trigger phrase."
@@ -2032,7 +2629,7 @@ msgstr ""
 "Контактілер құпия SMS хабарламасын жіберу арқылы әрекетті бастауы мүмкін. "
 "Төменде контактілерді қосып, олардың құпия триггер фразасын орнатыңыз."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+#: src/telephony/ui/windows/trusted_actions_list_window.py:154
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
 "TOTP is mandatory for this feature to work. Add contacts below and set their "
@@ -2041,10 +2638,10 @@ msgid ""
 msgstr ""
 "Сенімді контактілер құпия SMS хабарламасын жіберу арқылы орналасқан "
 "жеріңізді сұрай алады. Бұл мүмкіндік жұмыс істеуі үшін TOTP міндетті. "
-"Төменде контактілерді қосып, олардың құпия триггер фразасын орнатыңыз. "
-"Мысал үлгісі: 'SECRET TOTP' Нақты өмірден мысал: 'Gorilla 123456'"
+"Төменде контактілерді қосып, олардың құпия триггер фразасын орнатыңыз. Мысал "
+"үлгісі: 'SECRET TOTP' Нақты өмірден мысал: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:103
+#: src/telephony/ui/windows/trusted_actions_list_window.py:157
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -2053,10 +2650,10 @@ msgid ""
 msgstr ""
 "Сенімді контактілер құпия SMS хабарламасын жіберу арқылы кері қоңырауды "
 "үнсіз іске қоса алады. Бұл мүмкіндік жұмыс істеуі үшін TOTP міндетті. "
-"Төменде контактілерді қосып, олардың құпия триггер фразасын орнатыңыз. "
-"Мысал үлгісі: 'SECRET TOTP' Нақты өмірден мысал: 'Gorilla 123456'"
+"Төменде контактілерді қосып, олардың құпия триггер фразасын орнатыңыз. Мысал "
+"үлгісі: 'SECRET TOTP' Нақты өмірден мысал: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:106
+#: src/telephony/ui/windows/trusted_actions_list_window.py:160
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
@@ -2065,10 +2662,10 @@ msgid ""
 msgstr ""
 "Сенімді контактілер SMS релесін жібере алады. Бұл мүмкіндік жұмыс істеуі "
 "үшін TOTP міндетті. Төменде контактілерді қосып, олардың құпия триггер "
-"фразасын орнатыңыз. Мысал үлгісі: 'SECRET TOTP +1234567890 MESSAGE' "
-"Нақты өмірден мысал: 'Gorilla 123456 +1234567890 Hello'"
+"фразасын орнатыңыз. Мысал үлгісі: 'SECRET TOTP +1234567890 MESSAGE' Нақты "
+"өмірден мысал: 'Gorilla 123456 +1234567890 Hello'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:109
+#: src/telephony/ui/windows/trusted_actions_list_window.py:163
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -2076,51 +2673,56 @@ msgid ""
 "template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
 msgstr ""
 "Сенімді контактілер tmate SSH сеансын бастап, құпия SMS хабарламасын жіберу "
-"арқылы SSH қатынас жолын ала алады. Бұл мүмкіндік жұмыс істеуі үшін TOTP міндетті. "
-"Төменде контактілерді қосып, олардың құпия триггер фразасын орнатыңыз. "
-"Мысал үлгісі: 'SECRET TOTP' Нақты өмірден мысал: 'Gorilla 123456'"
+"арқылы SSH қатынас жолын ала алады. Бұл мүмкіндік жұмыс істеуі үшін TOTP "
+"міндетті. Төменде контактілерді қосып, олардың құпия триггер фразасын "
+"орнатыңыз. Мысал үлгісі: 'SECRET TOTP' Нақты өмірден мысал: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:112
+#: src/telephony/ui/windows/trusted_actions_list_window.py:166
 msgid ""
 "Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
 "work. Add contacts below and set their secret trigger phrase. Example "
 "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
 "example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
 msgstr ""
-"Сенімді контактілер құрылғыңызды өшіре алады. Бұл мүмкіндік жұмыс істеуі үшін "
-"TOTP міндетті. Төменде контактілерді қосып, олардың құпия триггер фразасын "
-"орнатыңыз. Мысал үлгісі: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' "
-"Нақты өмірден мысал: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+"Сенімді контактілер құрылғыңызды өшіре алады. Бұл мүмкіндік жұмыс істеуі "
+"үшін TOTP міндетті. Төменде контактілерді қосып, олардың құпия триггер "
+"фразасын орнатыңыз. Мысал үлгісі: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN "
+"SUDO_PASSWORD' Нақты өмірден мысал: 'Gorilla 123456 0000 1234 "
+"SupportYourLocalFootball'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:132
-msgid "Show TOTP Setup"
-msgstr "TOTP орнатуын көрсету"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+msgid "View or edit TOTP"
+msgstr ""
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:249
+#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+msgid "Setup TOTP"
+msgstr ""
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
 msgstr "Құпия хабар"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:261
+#: src/telephony/ui/windows/trusted_actions_list_window.py:349
 msgid "Remove Contact"
 msgstr "Контактіні жою"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:285
+#: src/telephony/ui/windows/trusted_actions_list_window.py:373
 msgid "Contact removed (Click Save to commit)"
 msgstr "Контакт жойылды (Орындау үшін Сақтау түймесін басыңыз)"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:410
+#: src/telephony/ui/windows/trusted_actions_list_window.py:508
 msgid "Contact already in trusted list"
 msgstr "Сенімді тізімдегі контакт бұрыннан бар"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:424
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
 msgid "Contact added"
 msgstr "Контакт қосылды"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:442
+#: src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "TOTP Setup"
 msgstr "TOTP орнату"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:483
+#: src/telephony/ui/windows/trusted_actions_list_window.py:586
 msgid ""
 "Share this code with your trusted contact. They should add it to an "
 "authenticator app such as Gnome Authenticator.\n"
@@ -2144,20 +2746,25 @@ msgstr ""
 "Әр әрекеттің өз коды бар. SMS арқылы әрекетті бастағанда, олар кілт сөзден "
 "кейін аутентификатордан ағымдағы 6 таңбалы кодты қосуы керек."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:506
-#: src/telephony/ui/windows/trusted_actions_list_window.py:547
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#, fuzzy
+msgid "Copy TOTP key"
+msgstr "Мәтінді көшіру"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:626
+#: src/telephony/ui/windows/trusted_actions_list_window.py:668
 msgid "Regenerate"
 msgstr "Қайта жасау"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:513
+#: src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Remove current TOTP"
 msgstr "Ағымдағы TOTP-ты жою"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+#: src/telephony/ui/windows/trusted_actions_list_window.py:642
 msgid "Remove TOTP Key?"
 msgstr "TOTP кілтін жою керек пе?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:523
+#: src/telephony/ui/windows/trusted_actions_list_window.py:643
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
@@ -2165,479 +2772,43 @@ msgstr ""
 "TOTP кілтін шынымен жойғыңыз келе ме? Бұл әрекет осы мүмкіндік үшін TOTP "
 "растауын өшіреді."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:542
+#: src/telephony/ui/windows/trusted_actions_list_window.py:663
 msgid "Regenerate Code?"
 msgstr "Кодты қайта жасау керек пе?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:543
+#: src/telephony/ui/windows/trusted_actions_list_window.py:664
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr ""
-"Бұл контактінің аутентификация қолданбасындағы ағымдағы кодты жарамсыз етеді. "
-"Сенімдісіз бе?"
+"Бұл контактінің аутентификация қолданбасындағы ағымдағы кодты жарамсыз "
+"етеді. Сенімдісіз бе?"
 
-#: src/telephony/ui/widgets/incall_elements_widget.py:48
-msgid "Hangup All Calls"
-msgstr "Барлық қоңырауларды өшіру"
+#~ msgid "Failed to send to {number}"
+#~ msgstr "{number} нөміріне жіберу мүмкін болмады"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:123
-msgid "Copy Text"
-msgstr "Мәтінді көшіру"
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Пайдаланушы параметрлерін жою"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
-#: src/telephony/ui/main_window.py:729
-msgid "Copy Number"
-msgstr "Нөмірді көшіру"
+#~ msgid "Delete Settings"
+#~ msgstr "Параметрлерді жою"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:125
-#: src/telephony/ui/main_window.py:680
-msgid "Add to Contacts"
-msgstr "Контактілерге қосу"
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr ""
+#~ "Барлық реттелетін параметрлерді өшіру керек пе? Жедел жәрдем нөмірлері "
+#~ "жоғалады."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
-msgid "Re-Schedule"
-msgstr "Қайта жоспарлау"
+#~ msgid "Settings cleared"
+#~ msgstr "Параметрлер өшірілді"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:129
-#: src/telephony/ui/views/chat_view.py:801
-msgid "Forward"
-msgstr "Алға"
+#~ msgid "Error saving settings"
+#~ msgstr "Параметрлерді сақтау қатесі"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:130
-msgid "Mark as Unread"
-msgstr "Оқылмаған деп белгілеңіз"
+#~ msgid "Show TOTP Setup"
+#~ msgstr "TOTP орнатуын көрсету"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:263
-#: src/telephony/ui/views/chat_view.py:781
-#: src/telephony/ui/views/chat_view.py:1002
-msgid "Me"
-msgstr "Мен"
+#~ msgid "Failed to send message"
+#~ msgstr "Хабарды жіберу мүмкін болмады"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:526
-msgid "Open with"
-msgstr "-мен ашыңыз"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:527
-msgid "Copy"
-msgstr "Көшіру"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:528
-msgid "Save as"
-msgstr "Басқаша сақтау"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:670
-msgid "Open With..."
-msgstr "Ашу..."
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:691
-msgid "Save File As"
-msgstr "Файлды басқаша сақтау"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:103
-msgid "{time} • Group"
-msgstr "{time} • Топ"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:109
-msgid "Draft: {message}"
-msgstr "Нобай: ​​{хабарлама}"
-
-#: src/telephony/ui/views/history_view.py:126
-msgid "All"
-msgstr "Барлығы"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Any duration"
-msgstr "Кез келген ұзақтығы"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Unanswered"
-msgstr "Жауапсыз"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1s - 60s"
-msgstr "1s - 60s"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1-3 mins"
-msgstr "1-3 мин"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "3-10 mins"
-msgstr "3-10 мин"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "> 15 mins"
-msgstr "> 15 мин"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Any date"
-msgstr "Кез келген күн"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Today"
-msgstr "Бүгін"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 3 days"
-msgstr "Соңғы 3 күн"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 14 days"
-msgstr "Соңғы 14 күн"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 30 days"
-msgstr "Соңғы 30 күн"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 60 days"
-msgstr "Соңғы 60 күн"
-
-#: src/telephony/ui/views/messages_view.py:111
-#: src/telephony/ui/views/messages_view.py:545
-msgid "Search Contacts..."
-msgstr "Контактілерді іздеу..."
-
-#: src/telephony/ui/views/messages_view.py:229
-msgid "All Messages"
-msgstr "Барлық хабарлар"
-
-#: src/telephony/ui/views/messages_view.py:230
-msgid "Unread Messages"
-msgstr "Оқылмаған хабарлар"
-
-#: src/telephony/ui/views/messages_view.py:231
-msgid "Unknown Numbers"
-msgstr "Белгісіз сандар"
-
-#: src/telephony/ui/views/messages_view.py:232
-msgid "Saved Contacts"
-msgstr "Сақталған контактілер"
-
-#: src/telephony/ui/views/messages_view.py:233
-msgid "Group Messages"
-msgstr "Топтық хабарламалар"
-
-#: src/telephony/ui/views/messages_view.py:234
-msgid "Individual Messages"
-msgstr "Жеке хабарламалар"
-
-#: src/telephony/ui/views/messages_view.py:235
-msgid "Alphabetical Senders"
-msgstr "Алфавиттік жіберушілер"
-
-#: src/telephony/ui/views/messages_view.py:409
-msgid "[Multimedia Message]"
-msgstr "[Мультимедиа хабарламасы]"
-
-#: src/telephony/ui/views/messages_view.py:549
-msgid "Search Messages..."
-msgstr "Хабарларды іздеу..."
-
-#: src/telephony/ui/views/messages_view.py:562
-#: src/telephony/ui/views/messages_view.py:636
-msgid "Start ({count})"
-msgstr "Бастау ({count})"
-
-#: src/telephony/ui/views/messages_view.py:661
-msgid "Add Number: {number}"
-msgstr "Нөмірді қосу: {number}"
-
-#: src/telephony/ui/views/messages_view.py:735
-msgid "No results found"
-msgstr "Нәтиже табылмады"
-
-#: src/telephony/ui/views/chat_view.py:132
-msgid "Draft to {count} recipients"
-msgstr "{count} алушыға нобай"
-
-#: src/telephony/ui/views/chat_view.py:159
-msgid "{count} Participants"
-msgstr "{count} Қатысушылар"
-
-#: src/telephony/ui/views/chat_view.py:305
-msgid "Replies not supported for this sender"
-msgstr "Бұл жіберуші үшін жауаптарға қолдау көрсетілмейді"
-
-#: src/telephony/ui/views/chat_view.py:345
-#: src/telephony/ui/views/chat_view.py:1070
-msgid "Scheduled time must be in the future"
-msgstr "Жоспарланған уақыт болашақта болуы керек"
-
-#: src/telephony/ui/views/chat_view.py:353
-msgid "Rescheduled for {time}"
-msgstr "{time} қайта жоспарланған"
-
-#: src/telephony/ui/views/chat_view.py:357
-msgid "Re-Schedule Message"
-msgstr "Хабарды қайта жоспарлау"
-
-#: src/telephony/ui/views/chat_view.py:493
-#: src/telephony/ui/views/chat_view.py:556
-msgid "— New Messages —"
-msgstr "— Жаңа хабарламалар —"
-
-#: src/telephony/ui/views/chat_view.py:588
-msgid "No results found in this conversation"
-msgstr "Бұл әңгімеде нәтижелер табылмады"
-
-#: src/telephony/ui/views/chat_view.py:654
-msgid "Group Name"
-msgstr "Топ атауы"
-
-#: src/telephony/ui/views/chat_view.py:655
-msgid "Set group name..."
-msgstr "Топ атауын орнату..."
-
-#: src/telephony/ui/views/chat_view.py:663
-msgid "Participants"
-msgstr "Қатысушылар"
-
-#: src/telephony/ui/views/chat_view.py:749 src/telephony/ui/main_window.py:672
-msgid "Unblocked"
-msgstr "Бұғаудан шығарылды"
-
-#: src/telephony/ui/views/chat_view.py:764
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Conversation"
-msgstr "Сөйлесуді жою"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid ""
-"Forwarded from {sender}:\n"
-"{body}"
-msgstr ""
-"{sender} жіберген:\n"
-"{дене}"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid "Forwarded from {sender}"
-msgstr "{sender} жіберген"
-
-#: src/telephony/ui/views/chat_view.py:800
-msgid "Forward To"
-msgstr "Алға жіберу"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Delete Message"
-msgstr "Хабарды жою"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Are you sure you want to delete this message?"
-msgstr "Бұл хабарды шынымен жойғыңыз келе ме?"
-
-#: src/telephony/ui/views/chat_view.py:884
-msgid "Group renamed"
-msgstr "Топ атауы өзгертілді"
-
-#: src/telephony/ui/views/chat_view.py:899
-msgid "Compressing video..."
-msgstr "Бейне қысылуда..."
-
-#: src/telephony/ui/views/chat_view.py:904
-msgid "Video compression failed"
-msgstr "Бейнені қысу сәтсіз аяқталды"
-
-#: src/telephony/ui/views/chat_view.py:1064
-msgid "Nothing to schedule"
-msgstr "Жоспарлауға ештеңе жоқ"
-
-#: src/telephony/ui/views/chat_view.py:1078
-msgid "Schedule Message"
-msgstr "Хабарламаны жоспарлау"
-
-#: src/telephony/ui/views/chat_view.py:1120
-msgid "Message scheduled for {time}"
-msgstr "Хабар {time} уақытына жоспарланған"
-
-#: src/telephony/ui/views/chat_view.py:1123
-#: src/telephony/ui/views/chat_view.py:1149
-msgid "[Attachment]"
-msgstr "[Тіркеме]"
-
-#: src/telephony/ui/views/chat_view.py:1140
-msgid "Failed to send message"
-msgstr "Хабарды жіберу мүмкін болмады"
-
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Group"
-msgstr "Топты жою"
-
-#: src/telephony/ui/views/chat_view.py:1224
-msgid ""
-"This will permanently delete the conversation history and all saved media "
-"files."
-msgstr ""
-"Бұл сөйлесу журналын және барлық сақталған медиа файлдарын біржола жояды."
-
-#: src/telephony/ui/views/contacts_view.py:61
-msgid "Search contacts"
-msgstr "Контактілерді іздеу"
-
-#: src/telephony/ui/views/contacts_view.py:424
-msgid "Call Anonymous"
-msgstr "Анонимді қоңырау шалыңыз"
-
-#: src/telephony/ui/views/dialpad_view.py:40
-msgid "Enter number"
-msgstr "Нөмірді енгізіңіз"
-
-#: src/telephony/ui/views/dialpad_view.py:47
-#: src/telephony/ui/views/dialpad_view.py:148
-msgid "Telephony Smart Dialpad at your service"
-msgstr "Телефония Smart теру тақтасы сіздің қызметіңізде"
-
-#: src/telephony/ui/views/dialpad_view.py:245
-msgid "Invalid number in clipboard"
-msgstr "Буфердегі нөмір жарамсыз"
-
-#: src/telephony/ui/views/dialpad_view.py:247
-msgid "Invalid number"
-msgstr "Жарамсыз нөмір"
-
-#: src/telephony/ui/main_window.py:78
-msgid "Telephony"
-msgstr "Телефония"
-
-#: src/telephony/ui/main_window.py:102
-msgid "Dialpad"
-msgstr "Теру тақтасы"
-
-#: src/telephony/ui/main_window.py:105
-msgid "History"
-msgstr "Тарих"
-
-#: src/telephony/ui/main_window.py:147
-msgid "Switching address book..."
-msgstr "Мекенжай кітабы ауыстырылуда..."
-
-#: src/telephony/ui/main_window.py:156
-msgid "Syncing Contacts..."
-msgstr "Контактілер синхрондалуда..."
-
-#: src/telephony/ui/main_window.py:245
-msgid "Set your number in Settings"
-msgstr "Нөміріңізді \"Параметрлер\" бөлімінен орнатыңыз"
-
-#: src/telephony/ui/main_window.py:260
-msgid "Please set Default Country Code in Settings"
-msgstr "Параметрлерде әдепкі ел кодын орнатыңыз"
-
-#: src/telephony/ui/main_window.py:273
-msgid "Setup Emergency Numbers in Settings"
-msgstr "Параметрлерде жедел жәрдем нөмірлерін орнату"
-
-#: src/telephony/ui/main_window.py:289
-msgid "Resolve Duplicates"
-msgstr "Көшірмелерді шешу"
-
-#: src/telephony/ui/main_window.py:300
-msgid "Reload Contacts"
-msgstr "Контактілерді қайта жүктеңіз"
-
-#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:505
-msgid "Blocklist"
-msgstr "Блоктар тізімі"
-
-#: src/telephony/ui/main_window.py:389
-msgid "Modem Connected"
-msgstr "Модем қосылған"
-
-#: src/telephony/ui/main_window.py:391
-msgid "Modem Error: {message}"
-msgstr "Модем қатесі: {хабарлама}"
-
-#: src/telephony/ui/main_window.py:415
-msgid "Sending USSD..."
-msgstr "USSD жіберілуде..."
-
-#: src/telephony/ui/main_window.py:430
-msgid "USSD Result"
-msgstr "USSD нәтижесі"
-
-#: src/telephony/ui/main_window.py:477
-msgid "Found {count} duplicate contact. Check menu."
-msgid_plural "Found {count} duplicate contacts. Check menu."
-msgstr[0] "{count} қайталанатын контакт табылды. Мәзірді тексеріңіз."
-msgstr[1] "{count} қайталанатын контакт табылды. Мәзірді тексеріңіз."
-
-#: src/telephony/ui/main_window.py:502 src/telephony/ui/main_window.py:554
-msgid "Contacts syncing..."
-msgstr "Контактілер синхрондалуда..."
-
-#: src/telephony/ui/main_window.py:548
-msgid "Reloading Contacts..."
-msgstr "Контактілер қайта жүктелуде..."
-
-#: src/telephony/ui/main_window.py:564
-msgid "Multiple Contacts Found"
-msgstr "Бірнеше контакт табылды"
-
-#: src/telephony/ui/main_window.py:565
-msgid "Which contact would you like to edit?"
-msgstr "Қай контактіні өңдегіңіз келеді?"
-
-#: src/telephony/ui/main_window.py:578
-msgid "Unknown Addressbook"
-msgstr "Белгісіз мекенжай кітапшасы"
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling (Anonymous)..."
-msgstr "Қоңырау шалуда (анонимді)..."
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling {number}..."
-msgstr "{number} қоңырау шалуда..."
-
-#: src/telephony/ui/main_window.py:644
-msgid "Call Failed"
-msgstr "Қоңырау орындалмады"
-
-#: src/telephony/ui/main_window.py:648
-msgid "Call Details"
-msgstr "Қоңырау туралы мәліметтер"
-
-#: src/telephony/ui/main_window.py:649
-msgid ""
-"Number: {number}\n"
-"Name: {name}\n"
-"Date: {date}\n"
-"Duration: {duration}"
-msgstr ""
-"Сан: {number}\n"
-"Аты: {name}\n"
-"Күні: {date}\n"
-"Ұзақтығы: {duration}"
-
-#: src/telephony/ui/main_window.py:691
-msgid "Add to Existing Contact"
-msgstr "Бар контактіге қосыңыз"
-
-#: src/telephony/ui/main_window.py:724
-msgid "Send Message"
-msgstr "Хабар жіберу"
-
-#: src/telephony/ui/main_window.py:747
-msgid "Delete this call"
-msgstr "Бұл қоңырауды жойыңыз"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Delete Call"
-msgstr "Қоңырауды жою"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Remove this call?"
-msgstr "Бұл қоңырауды жою керек пе?"
-
-#: src/telephony/ui/main_window.py:766
-msgid "Number copied"
-msgstr "Нөмір көшірілді"
-
-#: src/telephony/ui/main_window.py:773
-msgid "Added to {name}"
-msgstr "{name} тізіміне қосылды"
-
-#: src/telephony/ui/main_window.py:776
-msgid "Failed to add number"
-msgstr "Нөмірді қосу мүмкін болмады"
+#~ msgid "Switching address book..."
+#~ msgstr "Мекенжай кітабы ауыстырылуда..."

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 12:03+0000\n"
+"POT-Creation-Date: 2026-07-29 02:02+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -13,128 +13,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:91
-msgid "Exported {count} messages to Chatty database."
-msgstr "Na-export ang {count} na mga mensahe sa Chatty database."
+#: src/telephony/app.py:530 src/telephony/app.py:564
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:398
+#: src/telephony/backend/utils/db_blocklist_utils.py:52
+#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
+#: src/telephony/ui/views/chat_view.py:93
+#: src/telephony/ui/views/chat_view.py:142
+#: src/telephony/ui/views/chat_view.py:152
+#: src/telephony/ui/views/chat_view.py:156
+#: src/telephony/ui/views/chat_view.py:700
+#: src/telephony/ui/views/chat_view.py:704
+#: src/telephony/ui/views/chat_view.py:800
+#: src/telephony/ui/views/chat_view.py:806
+#: src/telephony/ui/views/chat_view.py:965
+#: src/telephony/ui/views/chat_view.py:967
+#: src/telephony/ui/views/chat_view.py:1160
+#: src/telephony/ui/views/dialpad_view.py:158
+#: src/telephony/ui/views/history_view.py:411
+#: src/telephony/ui/views/messages_view.py:363
+#: src/telephony/ui/views/messages_view.py:366
+#: src/telephony/ui/views/messages_view.py:437
+#: src/telephony/ui/views/messages_view.py:441
+#: src/telephony/ui/views/messages_view.py:531
+#: src/telephony/ui/views/messages_view.py:868
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
+#: src/telephony/ui/widgets/history_rows_widget.py:121
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:166
+#: src/telephony/ui/windows/custom_tone_list_window.py:260
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:126
+#: src/telephony/ui/windows/incall_window.py:296
+#: src/telephony/ui/windows/incall_window.py:309
+#: src/telephony/ui/windows/incall_window.py:332
+#: src/telephony/ui/windows/incall_window.py:461
+#: src/telephony/ui/windows/trusted_actions_list_window.py:309
+#: src/telephony/ui/windows/trusted_actions_list_window.py:447
+msgid "Unknown"
+msgstr "Hindi kilala"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:147
-msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Na-export ang {count} na mga tawag sa database ng Gnome Calls."
+#: src/telephony/app.py:541
+msgid "Call Back"
+msgstr "Tumawag muli"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:164
-msgid "Source database not found."
-msgstr "Hindi nahanap ang source database."
+#: src/telephony/app.py:571
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} bagong mensahe"
+msgstr[1] "{count} bagong mensahe"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:167
-msgid "Exported Telephony database successfully."
-msgstr "Matagumpay na na-export ang Telephony database."
+#: src/telephony/app.py:575
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Bukas"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:34
-#: src/telephony/backend/utils/importer_ios_utils.py:202
-#: src/telephony/backend/utils/importer_android_utils.py:33
-#: src/telephony/backend/utils/importer_android_utils.py:135
-msgid "File not found."
-msgstr "Hindi nahanap ang file."
+#: src/telephony/app.py:579
+msgid "Call"
+msgstr "Tumawag"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:63
-msgid "Could not find messages table in iOS database."
-msgstr "Hindi mahanap ang talahanayan ng mga mensahe sa database ng iOS."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:70
-msgid "Failed to read iOS SMS database structure."
-msgstr "Nabigong basahin ang istraktura ng database ng iOS SMS."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:193
-msgid "Imported {count} messages from iOS backup."
-msgstr "Nag-import ng {count} na mga mensahe mula sa iOS backup."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:227
-msgid "Could not find call history table in iOS database."
-msgstr "Hindi mahanap ang talahanayan ng history ng tawag sa database ng iOS."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:234
-msgid "Failed to read iOS Calls database structure."
-msgstr "Nabigong basahin ang istraktura ng database ng iOS Calls."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:297
-msgid "Imported {count} calls from iOS backup."
-msgstr "Nag-import ng {count} na mga tawag mula sa iOS backup."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:139
-msgid "Successfully exported {count} messages to XML."
-msgstr "Matagumpay na na-export ang {count} na mensahe sa XML."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:205
-msgid "Successfully exported {count} calls to XML."
-msgstr "Matagumpay na na-export ang {count} na mga tawag sa XML."
-
-#: src/telephony/backend/utils/importer_local_utils.py:31
-msgid "Chatty database not found."
-msgstr "Hindi nahanap ang chatty database."
-
-#: src/telephony/backend/utils/importer_local_utils.py:53
-msgid "Could not find messages table in Chatty database."
-msgstr "Hindi mahanap ang talahanayan ng mga mensahe sa Chatty database."
-
-#: src/telephony/backend/utils/importer_local_utils.py:60
-msgid "Failed to read Chatty database structure."
-msgstr "Nabigong basahin ang Chatty database structure."
-
-#: src/telephony/backend/utils/importer_local_utils.py:121
-msgid "Imported {count} messages from Chatty."
-msgstr "Nag-import ng {count} na mga mensahe mula kay Chatty."
-
-#: src/telephony/backend/utils/importer_local_utils.py:131
-msgid "Calls database not found."
-msgstr "Hindi nakita ang database ng mga tawag."
-
-#: src/telephony/backend/utils/importer_local_utils.py:151
-msgid "Could not find call history table in Calls database."
-msgstr "Hindi mahanap ang talahanayan ng history ng tawag sa database ng Mga Tawag."
-
-#: src/telephony/backend/utils/importer_local_utils.py:158
-msgid "Failed to read Calls database structure."
-msgstr "Nabigong basahin ang istraktura ng database ng Mga Tawag."
-
-#: src/telephony/backend/utils/importer_local_utils.py:210
-msgid "Imported {count} calls."
-msgstr "Mga na-import na {count} na tawag."
-
-#: src/telephony/backend/utils/importer_android_utils.py:126
-msgid "Imported {count} messages from Android backup."
-msgstr "Nag-import ng {count} na mensahe mula sa Android backup."
-
-#: src/telephony/backend/utils/importer_android_utils.py:200
-msgid "Imported {count} calls from Android backup."
-msgstr "Nag-import ng {count} na mga tawag mula sa Android backup."
-
-#: src/telephony/backend/utils/model_utils.py:56
-msgid "0s"
-msgstr "0s"
-
-#: src/telephony/backend/utils/model_utils.py:61
-msgid "{h}h {m}m"
-msgstr "{h}h {m}m"
-
-#: src/telephony/backend/utils/model_utils.py:63
-msgid "{m}m {s}s"
-msgstr "{m}m {s}s"
-
-#: src/telephony/backend/utils/model_utils.py:64
-msgid "{s}s"
-msgstr "{s}s"
-
-#: src/telephony/backend/managers/location_manager.py:63
-msgid "Initializing location services..."
-msgstr "Sinisimulan ang mga serbisyo sa lokasyon..."
-
-#: src/telephony/backend/managers/location_manager.py:126
-msgid "Waiting for location service..."
-msgstr "Naghihintay para sa serbisyo sa lokasyon..."
-
-#: src/telephony/backend/managers/location_manager.py:143
-msgid "Waiting for satellite fix..."
-msgstr "Naghihintay ng satellite fix..."
+#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/utils/db_blocklist_utils.py:35
+#: src/telephony/ui/views/messages_view.py:357
+#: src/telephony/ui/views/messages_view.py:428
+msgid "Blocked Number"
+msgstr "Naka-block na Numero"
 
 #: src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency Mode"
@@ -149,40 +97,40 @@ msgid "Start Emergency Process"
 msgstr "Simulan ang Proseso ng Emergency"
 
 #: src/telephony/backend/managers/emergency_manager.py:132
-#: src/telephony/ui/windows/data_management_window.py:76
-#: src/telephony/ui/windows/data_management_window.py:138
-#: src/telephony/ui/windows/data_management_window.py:185
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:50
-#: src/telephony/ui/windows/contact_editor_window.py:118
-#: src/telephony/ui/windows/contact_editor_window.py:802
-#: src/telephony/ui/windows/contact_picker_window.py:45
-#: src/telephony/ui/windows/custom_tone_list_window.py:55
-#: src/telephony/ui/windows/custom_tone_list_window.py:332
-#: src/telephony/ui/windows/settings_window.py:64
-#: src/telephony/ui/windows/settings_window.py:356
-#: src/telephony/ui/windows/import_wizard_window.py:48
-#: src/telephony/ui/windows/duplicate_resolution_window.py:60
-#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
+#: src/telephony/ui/views/history_view.py:81
+#: src/telephony/ui/views/messages_view.py:114
+#: src/telephony/ui/windows/advanced_settings_window.py:48
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:69
 #: src/telephony/ui/windows/camera_video_window.py:80
-#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:832
+#: src/telephony/ui/windows/contact_picker_window.py:46
+#: src/telephony/ui/windows/custom_tone_list_window.py:56
+#: src/telephony/ui/windows/custom_tone_list_window.py:319
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
 #: src/telephony/ui/windows/import_export_window.py:74
 #: src/telephony/ui/windows/import_export_window.py:171
 #: src/telephony/ui/windows/import_export_window.py:197
 #: src/telephony/ui/windows/import_export_window.py:307
-#: src/telephony/ui/windows/import_export_window.py:328
-#: src/telephony/ui/windows/import_export_window.py:429
-#: src/telephony/ui/windows/import_export_window.py:489
-#: src/telephony/ui/windows/blocklist_editor_window.py:46
-#: src/telephony/ui/windows/blocklist_editor_window.py:156
+#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:437
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:65
+#: src/telephony/ui/windows/settings_window.py:406
 #: src/telephony/ui/windows/sound_recorder_window.py:70
-#: src/telephony/ui/windows/camera_photo_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:68
-#: src/telephony/ui/windows/trusted_actions_list_window.py:455
-#: src/telephony/ui/windows/trusted_actions_list_window.py:526
-#: src/telephony/ui/windows/trusted_actions_list_window.py:546
-#: src/telephony/ui/views/history_view.py:82
-#: src/telephony/ui/views/messages_view.py:119
-#: src/telephony/ui/main_window.py:440 src/telephony/ui/main_window.py:609
+#: src/telephony/ui/windows/trusted_actions_list_window.py:105
+#: src/telephony/ui/windows/trusted_actions_list_window.py:553
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+#: src/telephony/ui/windows/trusted_actions_list_window.py:667
 msgid "Cancel"
 msgstr "Kanselahin"
 
@@ -203,6 +151,7 @@ msgid "Set numbers in Settings."
 msgstr "Itakda ang mga numero sa Mga Setting."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
 msgid "Call {number}"
 msgstr "Tumawag sa {number}"
 
@@ -211,6 +160,7 @@ msgid "Confirm Emergency Call"
 msgstr "Kumpirmahin ang Emergency na Tawag"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
 msgid "Call {name}?"
 msgstr "Tawagan si {name}?"
 
@@ -222,8 +172,20 @@ msgstr "🟢 Oo, Tumawag"
 msgid "🔴 No, Return"
 msgstr "🔴 Hindi, Bumalik"
 
+#: src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Sinisimulan ang mga serbisyo sa lokasyon..."
+
+#: src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Naghihintay para sa serbisyo sa lokasyon..."
+
+#: src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Naghihintay ng satellite fix..."
+
 #: src/telephony/backend/managers/lockscreen_manager.py:80
-#: src/telephony/ui/windows/incall_window.py:184
+#: src/telephony/ui/windows/incall_window.py:186
 msgid "Modem Stuck"
 msgstr "Natigil ang Modem"
 
@@ -236,66 +198,22 @@ msgid "Telephony Emergency"
 msgstr "Emergency sa Telepono"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:85
-#: src/telephony/ui/windows/incall_window.py:186
-#: src/telephony/ui/windows/incall_window.py:607
+#: src/telephony/ui/windows/incall_window.py:188
+#: src/telephony/ui/windows/incall_window.py:650
 msgid "🔴 Reboot Modem"
 msgstr "🔴 I-reboot ang Modem"
-
-#: src/telephony/backend/managers/lockscreen_manager.py:132
-#: src/telephony/backend/managers/lockscreen_manager.py:142
-#: src/telephony/backend/managers/lockscreen_manager.py:398
-#: src/telephony/app.py:513 src/telephony/app.py:547
-#: src/telephony/ui/windows/incall_window.py:124
-#: src/telephony/ui/windows/incall_window.py:294
-#: src/telephony/ui/windows/incall_window.py:307
-#: src/telephony/ui/windows/incall_window.py:330
-#: src/telephony/ui/windows/incall_window.py:454
-#: src/telephony/ui/windows/custom_tone_list_window.py:173
-#: src/telephony/ui/windows/custom_tone_list_window.py:267
-#: src/telephony/ui/windows/duplicate_resolution_window.py:144
-#: src/telephony/ui/windows/blocklist_window.py:155
-#: src/telephony/ui/windows/trusted_actions_list_window.py:221
-#: src/telephony/ui/windows/trusted_actions_list_window.py:343
-#: src/telephony/ui/widgets/history_rows_widget.py:121
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:248
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:253
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:259
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:265
-#: src/telephony/ui/widgets/messages_rows_widget.py:97
-#: src/telephony/ui/views/history_view.py:412
-#: src/telephony/ui/views/messages_view.py:330
-#: src/telephony/ui/views/messages_view.py:333
-#: src/telephony/ui/views/messages_view.py:402
-#: src/telephony/ui/views/messages_view.py:406
-#: src/telephony/ui/views/messages_view.py:496
-#: src/telephony/ui/views/messages_view.py:749
-#: src/telephony/ui/views/chat_view.py:82
-#: src/telephony/ui/views/chat_view.py:87
-#: src/telephony/ui/views/chat_view.py:141
-#: src/telephony/ui/views/chat_view.py:151
-#: src/telephony/ui/views/chat_view.py:155
-#: src/telephony/ui/views/chat_view.py:682
-#: src/telephony/ui/views/chat_view.py:686
-#: src/telephony/ui/views/chat_view.py:783
-#: src/telephony/ui/views/chat_view.py:789
-#: src/telephony/ui/views/chat_view.py:869
-#: src/telephony/ui/views/chat_view.py:871
-#: src/telephony/ui/views/chat_view.py:1000
-#: src/telephony/ui/views/dialpad_view.py:157
-#: src/telephony/ui/main_window.py:576
-msgid "Unknown"
-msgstr "Hindi kilala"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:187
 msgid "Telephony - Incoming"
 msgstr "Telephony - Papasok"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 Papasok: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
-#: src/telephony/ui/windows/incall_window.py:385
+#: src/telephony/ui/windows/incall_window.py:387
 msgid "Incoming Call..."
 msgstr "Papasok na Tawag..."
 
@@ -326,6 +244,7 @@ msgid "Telephony - On Hold"
 msgstr "Telephony - Naka-hold"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
+#, python-brace-format
 msgid "🟠 {name} put as on hold"
 msgstr "🟠 {name} ilagay bilang naka-hold"
 
@@ -349,6 +268,7 @@ msgid "MuteMic"
 msgstr "I-mute ang Mic"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (Naka-hold)"
 
@@ -361,6 +281,7 @@ msgid "Telephony - Active Call"
 msgstr "Telephony - Aktibong Tawag"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
+#, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 Aktibo: {name}"
 
@@ -380,24 +301,10 @@ msgstr "Naka-off ang Speaker"
 msgid "SpeakerOn"
 msgstr "Speaker Naka-on"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:35
-msgid "Please wait 60 seconds before triggering {prefix} again."
-msgstr "Mangyaring maghintay ng 60 segundo bago mag-trigger muli ng {prefix}."
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:266
-msgid " (Accuracy: {acc}m)"
-msgstr "(Katumpakan: {acc}m)"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:268
-msgid "I am here: {link}{acc_str}"
-msgstr "Narito ako: {link}{acc_str}"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:276
-msgid "Failed to obtain location after trying all methods."
-msgstr "Nabigong makuha ang lokasyon pagkatapos subukan ang lahat ng pamamaraan."
-
+#: src/telephony/backend/managers/mms_manager.py:245
 #: src/telephony/backend/managers/ofono_calls_manager.py:39
-#: src/telephony/ui/main_window.py:425
+#: src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: src/telephony/ui/main_window.py:447
 msgid "Modem not ready"
 msgstr "Hindi handa ang modem"
 
@@ -406,1136 +313,1021 @@ msgid "Cannot dial while in another call"
 msgstr "Hindi ma-dial habang nasa isa pang tawag"
 
 #: src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
 msgid "Dial Error: {e}"
 msgstr "Error sa Pag-dial: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:50
+#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "Nabigong ipadala ang: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:56
+#: src/telephony/backend/managers/ofono_messaging_manager.py:144
 msgid "Not supported"
 msgstr "Hindi suportado"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:61
-#: src/telephony/ui/windows/data_management_window.py:285
+#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
 msgid "Error: {e}"
 msgstr "Error: {e}"
 
-#: src/telephony/app.py:524
-msgid "Call Back"
-msgstr "Tumawag muli"
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Mangyaring maghintay ng 60 segundo bago mag-trigger muli ng {prefix}."
 
-#: src/telephony/app.py:554
-msgid "{count} new message"
-msgid_plural "{count} new messages"
-msgstr[0] "{count} bagong mensahe"
-msgstr[1] "{count} bagong mensahe"
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Katumpakan: {acc}m)"
 
-#: src/telephony/app.py:558
-#: src/telephony/ui/windows/contact_picker_window.py:30
-msgid "Open"
-msgstr "Bukas"
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Narito ako: {link}{acc_str}"
 
-#: src/telephony/app.py:562
-msgid "Call"
-msgstr "Tumawag"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:81
-msgid "Scheduled ({current}/{total})"
-msgstr "Naka-iskedyul ({current}/{total})"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:90
-msgid "To: {name}"
-msgstr "Para kay: {name}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:144
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:298
-msgid "Scheduled: {time}"
-msgstr "Naka-iskedyul: {time}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:154
-msgid "Send Now"
-msgstr "Ipadala na"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:165
-#: src/telephony/ui/windows/custom_tone_list_window.py:193
-msgid "Remove"
-msgstr "Alisin"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:172
-msgid "Message removed"
-msgstr "Inalis ang mensahe"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-msgid "Sent scheduled message to {number}"
-msgstr "Nagpadala ng nakaiskedyul na mensahe sa {number}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:222
-msgid "Failed to send to {number}"
-msgstr "Nabigong ipadala sa {number}"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Database Management"
-msgstr "Pamamahala ng Database"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Select data to permanently delete."
-msgstr "Pumili ng data na permanenteng tatanggalin."
-
-#: src/telephony/ui/windows/data_management_window.py:47
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Delete Call History"
-msgstr "Tanggalin ang History ng Tawag"
-
-#: src/telephony/ui/windows/data_management_window.py:48
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "Delete All Messages"
-msgstr "Tanggalin ang Lahat ng Mensahe"
-
-#: src/telephony/ui/windows/data_management_window.py:49
-msgid "Delete All Group Names"
-msgstr "Tanggalin ang Lahat ng Pangalan ng Grupo"
-
-#: src/telephony/ui/windows/data_management_window.py:50
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Delete Blocklist"
-msgstr "Tanggalin ang Blocklist"
-
-#: src/telephony/ui/windows/data_management_window.py:51
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete All Contacts"
-msgstr "Tanggalin ang Lahat ng Mga Contact"
-
-#: src/telephony/ui/windows/data_management_window.py:52
-#: src/telephony/ui/windows/data_management_window.py:134
-#: src/telephony/ui/windows/data_management_window.py:157
-msgid "Delete Address Book"
-msgstr "Tanggalin ang Address Book"
-
-#: src/telephony/ui/windows/data_management_window.py:53
-msgid "Delete Custom Settings"
-msgstr "Tanggalin ang Mga Custom na Setting"
-
-#: src/telephony/ui/windows/data_management_window.py:60
-msgid "DELETE EVERYTHING"
-msgstr "I-DELETE LAHAT"
-
-#: src/telephony/ui/windows/data_management_window.py:65
-#: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/contact_editor_window.py:98
-#: src/telephony/ui/windows/settings_window.py:318
-#: src/telephony/ui/windows/settings_window.py:342
-#: src/telephony/ui/windows/settings_window.py:393
-#: src/telephony/ui/windows/settings_window.py:531
-#: src/telephony/ui/windows/settings_window.py:764
-#: src/telephony/ui/windows/chat_media_controller_window.py:148
-#: src/telephony/ui/main_window.py:522 src/telephony/ui/main_window.py:756
-msgid "Close"
-msgstr "Isara"
-
-#: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:728
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:131
-msgid "Delete"
-msgstr "Tanggalin"
-
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Are you sure? This cannot be undone."
-msgstr "Sigurado ka ba? Hindi na ito maaaring bawiin."
-
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "This will delete all SMS/MMS and attachments."
-msgstr "Tatanggalin nito ang lahat ng SMS/MMS at mga attachment."
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Delete Group Names"
-msgstr "Tanggalin ang Mga Pangalan ng Grupo"
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Reset all custom group chat names?"
-msgstr "I-reset ang lahat ng custom na pangalan ng panggrupong chat?"
-
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Unblock all numbers?"
-msgstr "I-unblock ang lahat ng numero?"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Delete Settings"
-msgstr "Tanggalin ang Mga Setting"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Clear all custom settings? Emergency numbers will be lost."
-msgstr "I-clear ang lahat ng custom na setting? Mawawala ang mga emergency number."
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "No deletable address books"
-msgstr "Walang matatanggal na address book"
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "There are no custom address books that can be deleted."
-msgstr "Walang custom na address book na maaaring tanggalin."
-
-#: src/telephony/ui/windows/data_management_window.py:135
-msgid ""
-"Which address book do you want to delete permanently?\n"
-"\n"
-"This will wipe it from the system."
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
 msgstr ""
-"Aling address book ang gusto mong permanenteng tanggalin?\n"
-"\n"
-"Aalisin nito ito mula sa system."
+"Nabigong makuha ang lokasyon pagkatapos subukan ang lahat ng pamamaraan."
 
-#: src/telephony/ui/windows/data_management_window.py:158
-msgid "Are you sure you want to permanently delete the '{name}' address book?"
-msgstr "Sigurado ka bang gusto mong permanenteng tanggalin ang '{name}' address book?"
+#: src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "Matagumpay na na-export ang {count} na mensahe sa XML."
 
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete EVERYTHING"
-msgstr "Tanggalin ang LAHAT"
+#: src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Matagumpay na na-export ang {count} na mga tawag sa XML."
 
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Wipe database, config files and contacts? App will reset."
-msgstr "I-wipe ang database, mga config file at mga contact? Mare-reset ang app."
+#: src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Na-export ang {count} na mga mensahe sa Chatty database."
 
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Really delete everyone from your address book?"
-msgstr "Talagang tanggalin ang lahat sa iyong address book?"
+#: src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Na-export ang {count} na mga tawag sa database ng Gnome Calls."
 
-#: src/telephony/ui/windows/data_management_window.py:182
-msgid "Select which address book to clear:"
-msgstr "Piliin kung aling address book ang i-clear:"
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Hindi nahanap ang source database."
 
-#: src/telephony/ui/windows/data_management_window.py:193
-msgid "All Address Books"
-msgstr "Lahat ng Address Books"
+#: src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Matagumpay na na-export ang Telephony database."
 
-#: src/telephony/ui/windows/data_management_window.py:223
-msgid "Call History Deleted"
-msgstr "Tinanggal ang History ng Tawag"
+#: src/telephony/backend/utils/importer_android_utils.py:33
+#: src/telephony/backend/utils/importer_android_utils.py:138
+#: src/telephony/backend/utils/importer_ios_utils.py:34
+#: src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Hindi nahanap ang file."
 
-#: src/telephony/ui/windows/data_management_window.py:227
-msgid "Deleting messages..."
-msgstr "Tinatanggal ang mga mensahe..."
+#: src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Nag-import ng {count} na mensahe mula sa Android backup."
 
-#: src/telephony/ui/windows/data_management_window.py:233
-msgid "Messages & Attachments Deleted"
-msgstr "Tinanggal ang Mga Mensahe at Attachment"
+#: src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Nag-import ng {count} na mga tawag mula sa Android backup."
 
-#: src/telephony/ui/windows/data_management_window.py:240
-msgid "Group Names Reset"
-msgstr "I-reset ang Mga Pangalan ng Grupo"
+#: src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "Hindi mahanap ang talahanayan ng mga mensahe sa database ng iOS."
 
-#: src/telephony/ui/windows/data_management_window.py:246
-msgid "Blocklist Cleared"
-msgstr "Na-clear ang Blocklist"
+#: src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "Nabigong basahin ang istraktura ng database ng iOS SMS."
 
-#: src/telephony/ui/windows/data_management_window.py:250
-msgid "Deleting contacts..."
-msgstr "Tinatanggal ang mga contact..."
+#: src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Nag-import ng {count} na mga mensahe mula sa iOS backup."
 
-#: src/telephony/ui/windows/data_management_window.py:257
-msgid "Contacts Deleted"
-msgstr "Mga Contact Tinanggal"
+#: src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "Hindi mahanap ang talahanayan ng history ng tawag sa database ng iOS."
 
-#: src/telephony/ui/windows/data_management_window.py:265
-msgid "Deleting address book..."
-msgstr "Tinatanggal ang address book..."
+#: src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "Nabigong basahin ang istraktura ng database ng iOS Calls."
 
-#: src/telephony/ui/windows/data_management_window.py:272
-msgid "Address Book Deleted"
-msgstr "Tinanggal ang Address Book"
+#: src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Nag-import ng {count} na mga tawag mula sa iOS backup."
 
-#: src/telephony/ui/windows/data_management_window.py:275
-msgid "Failed to delete Address Book"
-msgstr "Nabigong tanggalin ang Address Book"
+#: src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Hindi nahanap ang chatty database."
 
-#: src/telephony/ui/windows/data_management_window.py:282
-msgid "Settings cleared"
-msgstr "Na-clear ang mga setting"
+#: src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Hindi mahanap ang talahanayan ng mga mensahe sa Chatty database."
 
-#: src/telephony/ui/windows/data_management_window.py:289
-msgid "Wiping Database..."
-msgstr "Pinupunasan ang Database..."
+#: src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Nabigong basahin ang Chatty database structure."
 
-#: src/telephony/ui/windows/data_management_window.py:303
-msgid "App Reset Complete"
-msgstr "Kumpleto na ang Pag-reset ng App"
+#: src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Nag-import ng {count} na mga mensahe mula kay Chatty."
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:28
-#: src/telephony/ui/windows/settings_window.py:255
-#: src/telephony/ui/windows/settings_window.py:416
-msgid "Notification Overrides"
-msgstr "Mga Override sa Notification"
+#: src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Hindi nakita ang database ng mga tawag."
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:54
-#: src/telephony/ui/windows/contact_editor_window.py:122
-#: src/telephony/ui/windows/custom_tone_list_window.py:59
-#: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/advanced_settings_window.py:56
-#: src/telephony/ui/windows/blocklist_editor_window.py:50
-#: src/telephony/ui/windows/trusted_actions_list_window.py:73
-#: src/telephony/ui/windows/trusted_actions_list_window.py:459
-#: src/telephony/ui/main_window.py:783
-msgid "Save"
-msgstr "I-save"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:67
-#: src/telephony/ui/windows/trusted_actions_list_window.py:89
-msgid "Find and add contacts..."
-msgstr "Maghanap at magdagdag ng mga contact..."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:74
-msgid ""
-"Contacts in this list will always play notifications at full volume, even if "
-"the phone is in Silent or Do Not Disturb mode."
+#: src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
 msgstr ""
-"Ang mga contact sa listahang ito ay palaging magpe-play ng mga notification "
-"sa buong volume, kahit na ang telepono ay nasa Silent o Do Not Disturb mode."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:244
-#: src/telephony/ui/windows/custom_tone_list_window.py:310
-#: src/telephony/ui/windows/trusted_actions_list_window.py:389
-#: src/telephony/ui/views/messages_view.py:681
-msgid "No contacts found"
-msgstr "Walang nakitang mga contact"
-
-#: src/telephony/ui/windows/info_window.py:28
-msgid "About Telephony"
-msgstr "Tungkol sa Telephony"
-
-#: src/telephony/ui/windows/info_window.py:53
-msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
-msgstr "Mabilis na dialer ng telepono at kliyente sa pagmemensahe na idinisenyo para sa FLX1 at FLX1s."
-
-#: src/telephony/ui/windows/info_window.py:71
-msgid "Version"
-msgstr "Bersyon"
-
-#: src/telephony/ui/windows/info_window.py:72
-msgid "Developer"
-msgstr "Developer"
-
-#: src/telephony/ui/windows/info_window.py:73
-msgid "License"
-msgstr "Lisensya"
-
-#: src/telephony/ui/windows/info_window.py:77
-msgid "Links"
-msgstr "Mga link"
-
-#: src/telephony/ui/windows/info_window.py:101
-#: src/telephony/ui/windows/contact_editor_window.py:216
-msgid "Website"
-msgstr "Website"
-
-#: src/telephony/ui/windows/info_window.py:109
-msgid "Issue Tracker"
-msgstr "Tagasubaybay ng Isyu"
-
-#: src/telephony/ui/windows/info_window.py:110
-msgid "Report bugs or request features"
-msgstr "Mag-ulat ng mga bug o humiling ng mga tampok"
-
-#: src/telephony/ui/windows/contact_editor_window.py:31
-#: src/telephony/ui/windows/contact_editor_window.py:397
-msgid "Contact Details"
-msgstr "Mga Detalye ng Pakikipag-ugnayan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:66
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:236
-#: src/telephony/ui/windows/trusted_actions_list_window.py:312
-#: src/telephony/ui/views/contacts_view.py:122
-msgid "Mobile"
-msgstr "Mobile"
-
-#: src/telephony/ui/windows/contact_editor_window.py:67
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:237
-#: src/telephony/ui/windows/trusted_actions_list_window.py:313
-#: src/telephony/ui/views/contacts_view.py:123
-msgid "Work"
-msgstr "Trabaho"
-
-#: src/telephony/ui/windows/contact_editor_window.py:68
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:238
-#: src/telephony/ui/windows/trusted_actions_list_window.py:314
-#: src/telephony/ui/views/contacts_view.py:124
-msgid "Home"
-msgstr "Bahay"
-
-#: src/telephony/ui/windows/contact_editor_window.py:69
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:239
-#: src/telephony/ui/windows/trusted_actions_list_window.py:315
-#: src/telephony/ui/views/contacts_view.py:125
-msgid "Fax"
-msgstr "Fax"
-
-#: src/telephony/ui/windows/contact_editor_window.py:70
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:240
-#: src/telephony/ui/windows/trusted_actions_list_window.py:316
-#: src/telephony/ui/views/contacts_view.py:126
-msgid "Other"
-msgstr "Iba pa"
-
-#: src/telephony/ui/windows/contact_editor_window.py:71
-#: src/telephony/ui/windows/custom_tone_list_window.py:241
-#: src/telephony/ui/windows/trusted_actions_list_window.py:317
-#: src/telephony/ui/views/contacts_view.py:127
-msgid "Main"
-msgstr "Pangunahing"
-
-#: src/telephony/ui/windows/contact_editor_window.py:102
-#: src/telephony/ui/windows/custom_tone_list_window.py:186
-msgid "Edit"
-msgstr "I-edit"
-
-#: src/telephony/ui/windows/contact_editor_window.py:136
-msgid "Identity"
-msgstr "Pagkakakilanlan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:139
-#: src/telephony/ui/windows/contact_editor_window.py:157
-msgid "Favorite"
-msgstr "Paborito"
-
-#: src/telephony/ui/windows/contact_editor_window.py:147
-msgid "Full Name"
-msgstr "Buong Pangalan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:153
-msgid "Name"
-msgstr "Pangalan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:157
-#: src/telephony/ui/windows/trusted_actions_list_window.py:527
-msgid "Yes"
-msgstr "Oo"
-
-#: src/telephony/ui/windows/contact_editor_window.py:163
-msgid "Phone Numbers"
-msgstr "Mga Numero ng Telepono"
-
-#: src/telephony/ui/windows/contact_editor_window.py:179
-#: src/telephony/ui/windows/settings_window.py:212
-#: src/telephony/ui/main_window.py:782
-msgid "Add Number"
-msgstr "Magdagdag ng Numero"
-
-#: src/telephony/ui/windows/contact_editor_window.py:190
-#: src/telephony/ui/windows/duplicate_resolution_window.py:159
-msgid "Email Addresses"
-msgstr "Mga Email Address"
-
-#: src/telephony/ui/windows/contact_editor_window.py:200
-msgid "Add Email"
-msgstr "Magdagdag ng Email"
-
-#: src/telephony/ui/windows/contact_editor_window.py:211
-msgid "Additional Details"
-msgstr "Karagdagang Detalye"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Organization"
-msgstr "Organisasyon"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Job Title"
-msgstr "Pamagat ng Trabaho"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Address"
-msgstr "Address"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Notes"
-msgstr "Mga Tala"
-
-#: src/telephony/ui/windows/contact_editor_window.py:241
-#: src/telephony/ui/windows/contact_editor_window.py:246
-msgid "Birthday"
-msgstr "Kaarawan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:242
-#: src/telephony/ui/windows/contact_editor_window.py:249
-msgid "Anniversary"
-msgstr "Anibersaryo"
-
-#: src/telephony/ui/windows/contact_editor_window.py:258
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Delete Contact"
-msgstr "Tanggalin ang Contact"
-
-#: src/telephony/ui/windows/contact_editor_window.py:269
-#: src/telephony/ui/windows/settings_window.py:161
-#: src/telephony/ui/windows/settings_window.py:390
-msgid "Address Books"
-msgstr "Mga Address Books"
-
-#: src/telephony/ui/windows/contact_editor_window.py:289
-msgid "Unknown Source"
-msgstr "Hindi kilalang Pinagmulan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:313
-#: src/telephony/ui/windows/contact_editor_window.py:351
-#: src/telephony/ui/windows/date_time_picker_window.py:29
-msgid "Select Date"
-msgstr "Piliin ang Petsa"
-
-#: src/telephony/ui/windows/contact_editor_window.py:324
-msgid "Clear Date"
-msgstr "I-clear ang Petsa"
-
-#: src/telephony/ui/windows/contact_editor_window.py:366
-msgid "Select {title}"
-msgstr "Piliin ang {title}"
-
-#: src/telephony/ui/windows/contact_editor_window.py:376
-msgid "Copy {title}"
-msgstr "Kopyahin ang {title}"
-
-#: src/telephony/ui/windows/contact_editor_window.py:385
-msgid "Copied to clipboard"
-msgstr "Kinopya sa clipboard"
-
-#: src/telephony/ui/windows/contact_editor_window.py:390
-#: src/telephony/ui/main_window.py:680
-msgid "Edit Contact"
-msgstr "I-edit ang Contact"
-
-#: src/telephony/ui/windows/contact_editor_window.py:530
-msgid "Export Contact"
-msgstr "I-export ang Contact"
-
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Are you sure you want to delete this contact?"
-msgstr "Sigurado ka bang gusto mong tanggalin ang contact na ito?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:559
-msgid "Deleting contact..."
-msgstr "Tinatanggal ang contact..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:745
-msgid "Saving contact..."
-msgstr "Sine-save ang contact..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:798
-#: src/telephony/ui/windows/blocklist_editor_window.py:152
-msgid "Conflict"
-msgstr "Salungatan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:799
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Unblocking and add the number to Contacts?"
-msgstr ""
-"Ang numero ay hindi maaaring nasa Blocklist at Contacts.\n"
-"\n"
-"Gusto mo bang magpatuloy sa Pag-unblock at idagdag ang numero sa Mga Contact?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:803
-msgid "Yes, Add to Contacts"
-msgstr "Oo, Idagdag sa Mga Contact"
-
-#: src/telephony/ui/windows/contact_editor_window.py:818
-#: src/telephony/ui/windows/settings_window.py:407
-#: src/telephony/ui/windows/settings_window.py:419
-#: src/telephony/ui/windows/blocklist_editor_window.py:172
-#: src/telephony/ui/main_window.py:432
-msgid "OK"
-msgstr "OK"
-
-#: src/telephony/ui/windows/contact_picker_window.py:29
-msgid "Pick Contact"
-msgstr "Pumili ng Contact"
-
-#: src/telephony/ui/windows/contact_picker_window.py:61
-msgid "Name or Number"
-msgstr "Pangalan o Numero"
-
-#: src/telephony/ui/windows/contact_picker_window.py:191
-msgid "No number"
-msgstr "Walang numero"
-
-#: src/telephony/ui/windows/incall_window.py:145
-#: src/telephony/ui/main_window.py:700
-msgid "Search Number"
-msgstr "Numero ng Paghahanap"
-
-#: src/telephony/ui/windows/incall_window.py:150
-msgid "Hangup and Send SMS"
-msgstr "Mag-hangup at Magpadala ng SMS"
-
-#: src/telephony/ui/windows/incall_window.py:185
-msgid "The call failed to disconnect."
-msgstr "Nabigong madiskonekta ang tawag."
-
-#: src/telephony/ui/windows/incall_window.py:218
-#: src/telephony/ui/windows/incall_window.py:626
-msgid "Output"
-msgstr "Output"
-
-#: src/telephony/ui/windows/incall_window.py:233
-#: src/telephony/ui/windows/incall_window.py:654
-msgid "Input"
-msgstr "Input"
-
-#: src/telephony/ui/windows/incall_window.py:385
-msgid "Silenced Incoming Call"
-msgstr "Pinatahimik ang Papasok na Tawag"
-
-#: src/telephony/ui/windows/incall_window.py:494
-#: src/telephony/ui/windows/incall_window.py:741
-#: src/telephony/ui/windows/settings_window.py:231
-msgid "I can't talk right now."
-msgstr "Hindi ako makapagsalita ngayon."
-
-#: src/telephony/ui/windows/incall_window.py:580
-msgid "Restarting RIL..."
-msgstr "Nire-restart ang RIL..."
-
-#: src/telephony/ui/windows/incall_window.py:592
-msgid "Restored!"
-msgstr "Naibalik!"
-
-#: src/telephony/ui/windows/incall_window.py:598
-msgid "Failed. Reboot Device."
-msgstr "Nabigo. I-reboot ang Device."
-
-#: src/telephony/ui/windows/incall_window.py:600
-msgid "Verifying... {attempt}"
-msgstr "Bine-verify... {attempt}"
-
-#: src/telephony/ui/windows/incall_window.py:659
-msgid "Mute Microphone"
-msgstr "I-mute ang Mikropono"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:273
-msgid "Individual SMS Notifications"
-msgstr "Mga Indibidwal na Notification sa SMS"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:284
-msgid "Individual Ringtones"
-msgstr "Mga Indibidwal na Ringtone"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:72
-msgid "Find contact to add..."
-msgstr "Maghanap ng contact na idaragdag..."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:79
-msgid ""
-"Select a contact and choose a custom sound file (.ogg or .oga). The file "
-"will be copied to your local storage."
-msgstr ""
-"Pumili ng contact at pumili ng custom na sound file (.ogg o .oga). "
-"Kokopyahin ang file sa iyong lokal na storage."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:209
-msgid "Custom tone removed (Click Save to commit)"
-msgstr "Inalis ang custom na tono (I-click ang I-save para mag-commit)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:328
-msgid "Select Tone for {name}"
-msgstr "Piliin ang Tone para kay {name}"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:331
-#: src/telephony/ui/windows/settings_window.py:355
-msgid "Select"
-msgstr "Pumili"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:336
-msgid "Supported Audio (OGG)"
-msgstr "Sinusuportahang Audio (OGG)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:364
-msgid "Only .ogg or .oga files are supported"
-msgstr "Ang mga .ogg o .oga file lang ang sinusuportahan"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:375
-msgid "Failed to copy audio file"
-msgstr "Nabigong kopyahin ang audio file"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:395
-msgid "Custom tone added"
-msgstr "Idinagdag ang custom na tono"
-
-#: src/telephony/ui/windows/settings_window.py:39
-#: src/telephony/ui/main_window.py:295
-msgid "Settings"
-msgstr "Mga setting"
-
-#: src/telephony/ui/windows/settings_window.py:87
-#: src/telephony/ui/windows/settings_window.py:339
-msgid "Ringback Tone"
-msgstr "Ringback Tone"
-
-#: src/telephony/ui/windows/settings_window.py:90
-msgid "Enable Local Ringback"
-msgstr "Paganahin ang Lokal na Ringback"
-
-#: src/telephony/ui/windows/settings_window.py:105
-msgid "Selected Tone"
-msgstr "Napiling Tono"
-
-#: src/telephony/ui/windows/settings_window.py:108
-#: src/telephony/ui/windows/settings_window.py:328
-msgid "System Default"
-msgstr "System Default"
-
-#: src/telephony/ui/windows/settings_window.py:135
-msgid "SIM Settings"
-msgstr "Mga Setting ng SIM"
-
-#: src/telephony/ui/windows/settings_window.py:138
-msgid "My Number"
-msgstr "Number ko"
-
-#: src/telephony/ui/windows/settings_window.py:139
-msgid "My Number (International Format)"
-msgstr "Aking Numero (International Format)"
-
-#: src/telephony/ui/windows/settings_window.py:145
-#: src/telephony/ui/windows/settings_window.py:146
-#: src/telephony/ui/windows/settings_window.py:315
-msgid "Default Country Code"
-msgstr "Default na Code ng Bansa"
-
-#: src/telephony/ui/windows/settings_window.py:172
-msgid "Address Book Info"
-msgstr "Impormasyon sa Address Book"
-
-#: src/telephony/ui/windows/settings_window.py:180
-msgid "Default Address Book"
-msgstr "Default na Address Book"
-
-#: src/telephony/ui/windows/settings_window.py:186
-msgid "Duplicate Resolver"
-msgstr "Duplicate na Resolver"
-
-#: src/telephony/ui/windows/settings_window.py:188
-msgid ""
-"Scan for duplicate numbers and show a resolution banner in the Contacts view."
-msgstr ""
-"Mag-scan para sa mga duplicate na numero at magpakita ng banner ng "
-"resolusyon sa view ng Mga Contact."
-
-#: src/telephony/ui/windows/settings_window.py:201
-msgid "Lockscreen Emergency"
-msgstr "Emergency ng Lockscreen"
-
-#: src/telephony/ui/windows/settings_window.py:204
-msgid "Show Emergency Button"
-msgstr "Ipakita ang Emergency Button"
-
-#: src/telephony/ui/windows/settings_window.py:209
-msgid "Emergency Numbers"
-msgstr "Mga Numero ng Emergency"
-
-#: src/telephony/ui/windows/settings_window.py:226
-msgid "Quick Response"
-msgstr "Mabilis na Tugon"
-
-#: src/telephony/ui/windows/settings_window.py:229
-msgid "Decline Message"
-msgstr "Tanggihan ang Mensahe"
-
-#: src/telephony/ui/windows/settings_window.py:236
-msgid "Notification Exceptions"
-msgstr "Mga Pagbubukod sa Notification"
-
-#: src/telephony/ui/windows/settings_window.py:239
-#: src/telephony/ui/windows/settings_window.py:404
-msgid "Repeated Calls Bypass"
-msgstr "Paulit-ulit na mga Tawag Bypass"
-
-#: src/telephony/ui/windows/settings_window.py:241
-msgid "If the same number calls 3 times in 5 minutes, force max volume."
-msgstr "Kung ang parehong numero ay tumatawag nang 3 beses sa loob ng 5 minuto, pilitin ang max volume."
-
-#: src/telephony/ui/windows/settings_window.py:256
-msgid "Manage contacts that always play sound"
-msgstr "Pamahalaan ang mga contact na palaging nagpe-play ng tunog"
-
-#: src/telephony/ui/windows/settings_window.py:265
-#: src/telephony/ui/windows/settings_window.py:277
-#: src/telephony/ui/windows/settings_window.py:288
-msgid "Manage"
-msgstr "Pamahalaan"
-
-#: src/telephony/ui/windows/settings_window.py:275
-msgid "Set custom notification sounds for specific contacts"
-msgstr "Magtakda ng mga custom na tunog ng notification para sa mga partikular na contact"
-
-#: src/telephony/ui/windows/settings_window.py:286
-msgid "Set custom ringtones for specific contacts"
-msgstr "Magtakda ng mga custom na ringtone para sa mga partikular na contact"
-
-#: src/telephony/ui/windows/settings_window.py:302
-#: src/telephony/ui/windows/advanced_settings_window.py:33
-msgid "Advanced Settings"
-msgstr "Mga Advanced na Setting"
-
-#: src/telephony/ui/windows/settings_window.py:311
-msgid ""
-"The Default Country Code is used to format numbers that don't include an "
-"international prefix (e.g., +358).\n"
-"\n"
-"If left empty, the system tries to detect it automatically from your SIM "
-"card or network.\n"
-"\n"
-"You can manually override it here by entering a 2-letter ISO region code (e."
-"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
-msgstr ""
-"Ang Default na Country Code ay ginagamit upang i-format ang mga numero na "
-"walang kasamang internasyonal na prefix (hal., +358).\n"
-"\n"
-"Kung iniwang walang laman, susubukan ng system na awtomatikong makita ito "
-"mula sa iyong SIM card o network.\n"
-"\n"
-"Maaari mo itong manual na i-override dito sa pamamagitan ng paglalagay ng 2-"
-"titik na ISO region code (hal. US, FI, DE) o isang calling code (hal. +358, "
-"358, +1, 1)."
-
-#: src/telephony/ui/windows/settings_window.py:332
-msgid ""
-"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
-"outgoing call to be answered. Some carriers don't generate it so we have "
-"option to generate it manually here. \n"
-"\n"
-"You can select your own music file, or clear it to use the standard system "
-"tone."
-msgstr ""
-"Ang ringback tone ay ang tunog na nilalaro (toot-toot-toot) habang "
-"naghihintay na sagutin ang papalabas na tawag. Ang ilang mga carrier ay "
-"hindi gumagawa nito kaya mayroon kaming opsyon na manual itong buuin dito. \n"
-"\n"
-"Maaari mong piliin ang iyong sariling file ng musika, o i-clear ito upang "
-"magamit ang karaniwang tono ng system."
-
-#: src/telephony/ui/windows/settings_window.py:352
-msgid "Select Ringback Tone"
-msgstr "Piliin ang Ringback Tone"
-
-#: src/telephony/ui/windows/settings_window.py:360
-msgid "Audio Files"
-msgstr "Mga Audio File"
-
-#: src/telephony/ui/windows/settings_window.py:386
-msgid ""
-"Select the address books to use with Telephony and arrange them in order of "
-"priority. The topmost address book has the highest priority and will be "
-"preferred if a number is found in multiple address books. You can use the "
-"Duplicate Resolver toggle below to help manage duplicates, but even if "
-"disabled, we encourage enabling it for a better experience."
-msgstr ""
-"Piliin ang mga address book na gagamitin sa Telephony at ayusin ang mga ito "
-"ayon sa priyoridad. Ang pinakamataas na address book ay may pinakamataas na "
-"priyoridad at mas pipiliin kung ang isang numero ay makikita sa maraming "
-"address book. Maaari mong gamitin ang Duplicate Resolver toggle sa ibaba "
-"upang makatulong na pamahalaan ang mga duplicate, ngunit kahit na hindi "
-"pinagana, hinihikayat namin na i-enable ito para sa isang mas mahusay na "
-"karanasan."
-
-#: src/telephony/ui/windows/settings_window.py:405
-msgid ""
-"When enabled, if the same phone number calls you 3 times within 5 minutes, "
-"the third call (and subsequent ones within the window) will force the phone "
-"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
-msgstr ""
-"Kapag pinagana, kung tatawagan ka ng parehong numero ng telepono nang 3 "
-"beses sa loob ng 5 minuto, pipilitin ng pangatlong tawag (at mga kasunod na "
-"tawag sa loob ng window) na tumunog ang telepono sa pinakamataas na volume, "
-"na lumalampas sa mga mode na Silent o Huwag Istorbohin."
-
-#: src/telephony/ui/windows/settings_window.py:417
-msgid ""
-"Choose contacts that will always play notifications at full volume, even "
-"when the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Pumili ng mga contact na palaging magpe-play ng mga notification sa buong "
-"volume, kahit na ang telepono ay nasa Silent o Do Not Disturb mode."
-
-#: src/telephony/ui/windows/settings_window.py:438
-msgid "Unknown Callers"
-msgstr "Mga Hindi Kilalang Tumatawag"
-
-#: src/telephony/ui/windows/settings_window.py:443
-msgid "Unknown Callers Action"
-msgstr "Aksyon ng Mga Hindi Kilalang Tumatawag"
-
-#: src/telephony/ui/windows/settings_window.py:445
-msgid "Applies also to hidden numbers."
-msgstr "Nalalapat din sa mga nakatagong numero."
-
-#: src/telephony/ui/windows/settings_window.py:448
-msgid "Do Nothing"
-msgstr "Walang Gawin"
-
-#: src/telephony/ui/windows/settings_window.py:449
-msgid "Block Completely"
-msgstr "I-block nang Ganap"
-
-#: src/telephony/ui/windows/settings_window.py:450
-msgid "Silence and Hide UI"
-msgstr "Patahimikin at Itago ang UI"
-
-#: src/telephony/ui/windows/settings_window.py:451
-msgid "Silence Only"
-msgstr "Katahimikan Lang"
-
-#: src/telephony/ui/windows/settings_window.py:459
-msgid "Add Search button to InCall window and Call History for unknown callers"
-msgstr "Magdagdag ng Search button sa InCall window at Call History para sa mga hindi kilalang tumatawag"
-
-#: src/telephony/ui/windows/settings_window.py:465
-msgid "Search Engine"
-msgstr "Search Engine"
-
-#: src/telephony/ui/windows/settings_window.py:469
-#: src/telephony/ui/windows/settings_window.py:474
-msgid "Custom URL"
-msgstr "Custom na URL"
-
-#: src/telephony/ui/windows/settings_window.py:524
-msgid ""
-"Enter the URL you want to use for searching unknown numbers. Include "
-"'{number}' in the URL where the caller's phone number should go.\n"
-"\n"
-"For example: https://mysearch.com/?q={number}\n"
-"\n"
-"When you tap the search button during a call, we will replace '{number}' "
-"with the actual phone number and open it in your default browser."
-msgstr ""
-"Ilagay ang URL na gusto mong gamitin para sa paghahanap ng mga hindi "
-"kilalang numero. Isama ang '{number}' sa URL kung saan dapat pumunta ang "
-"numero ng telepono ng tumatawag.\n"
-"\n"
-"Halimbawa: https://mysearch.com/?q={number}\n"
-"\n"
-"Kapag na-tap mo ang search button habang nasa isang tawag, papalitan namin "
-"ang '{number}' ng aktwal na numero ng telepono at bubuksan ito sa iyong "
-"default na browser."
-
-#: src/telephony/ui/windows/settings_window.py:528
-msgid "Custom Search URL"
-msgstr "Custom Search URL"
-
-#: src/telephony/ui/windows/settings_window.py:549
-msgid "Desktop Shortcuts"
-msgstr "Mga Shortcut sa Desktop"
-
-#: src/telephony/ui/windows/settings_window.py:554
-msgid "Calls"
-msgstr "Mga tawag"
-
-#: src/telephony/ui/windows/settings_window.py:555
+"Hindi mahanap ang talahanayan ng history ng tawag sa database ng Mga Tawag."
+
+#: src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Nabigong basahin ang istraktura ng database ng Mga Tawag."
+
+#: src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Mga na-import na {count} na tawag."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}s"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telepono"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Dialpad"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Kasaysayan"
+
+#: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:63
-#: src/telephony/ui/main_window.py:109
+#: src/telephony/ui/windows/settings_window.py:605
 msgid "Messages"
 msgstr "Mga mensahe"
 
-#: src/telephony/ui/windows/settings_window.py:556
-#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:606
 msgid "Contacts"
 msgstr "Mga contact"
 
-#: src/telephony/ui/windows/settings_window.py:720
-msgid "Name (e.g. Mom)"
-msgstr "Pangalan (hal. Nanay)"
+#: src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Sini-sync ang Mga Contact..."
 
-#: src/telephony/ui/windows/settings_window.py:724
-#: src/telephony/ui/windows/blocklist_editor_window.py:64
-msgid "Number"
-msgstr "Numero"
+#: src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Itakda ang iyong numero sa Mga Setting"
 
-#: src/telephony/ui/windows/settings_window.py:799
-msgid "System Default (Always Enabled)"
-msgstr "Default ng System (Palaging Pinagana)"
+#: src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Mangyaring itakda ang Default na Code ng Bansa sa Mga Setting"
 
-#: src/telephony/ui/windows/settings_window.py:810
-msgid "Personal Address Book"
-msgstr "Personal na Address Book"
+#: src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "I-setup ang Mga Numero ng Emergency sa Mga Setting"
 
-#: src/telephony/ui/windows/settings_window.py:811
-msgid ""
-"This is the address book that will be synced to Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Ito ang address book na isi-sync sa Andromeda kung pipiliin mong gawin ito "
-"sa Mga Setting ng System."
+#: src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Lutasin ang mga Duplicate"
 
-#: src/telephony/ui/windows/settings_window.py:819
-msgid "Andromeda Contacts"
-msgstr "Mga Contact sa Andromeda"
+#: src/telephony/ui/main_window.py:295
+#: src/telephony/ui/windows/settings_window.py:40
+msgid "Settings"
+msgstr "Mga setting"
 
-#: src/telephony/ui/windows/settings_window.py:820
-msgid ""
-"This is the address book that will be synced from Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Ito ang address book na isi-sync mula sa Andromeda kung pipiliin mong gawin "
-"ito sa Mga Setting ng System."
+#: src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "I-reload ang Mga Contact"
 
-#: src/telephony/ui/windows/settings_window.py:940
-msgid "Settings Saved"
-msgstr "Na-save ang Mga Setting"
+#: src/telephony/ui/main_window.py:305
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Mag-import / Mag-export"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Messages"
-msgstr "Mag-import ng Mga Mensahe"
+#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Blocklist"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Call History"
-msgstr "Mag-import ng History ng Tawag"
+#: src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Nakakonekta ang Modem"
 
-#: src/telephony/ui/windows/import_wizard_window.py:70
-msgid "Waiting for selection..."
-msgstr "Naghihintay para sa pagpili..."
+#: src/telephony/ui/main_window.py:391
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Error sa Modem: {message}"
 
-#: src/telephony/ui/windows/import_wizard_window.py:93
-msgid "Where do you want to import from?"
-msgstr "Saan mo gustong mag-import?"
+#: src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "Ipinapadala ang USSD..."
 
-#: src/telephony/ui/windows/import_wizard_window.py:101
-msgid "System Database"
-msgstr "Database ng System"
+#: src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "Resulta ng USSD"
 
-#: src/telephony/ui/windows/import_wizard_window.py:103
-msgid "Import from local Chatty installation"
-msgstr "Mag-import mula sa lokal na pag-install ng Chatty"
+#: src/telephony/ui/main_window.py:454
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:848
+#: src/telephony/ui/windows/settings_window.py:457
+#: src/telephony/ui/windows/settings_window.py:469
+#: src/telephony/ui/windows/settings_window.py:815
+msgid "OK"
+msgstr "OK"
 
-#: src/telephony/ui/windows/import_wizard_window.py:105
-msgid "Import from local Calls installation"
-msgstr "Mag-import mula sa pag-install ng lokal na Mga Tawag"
-
-#: src/telephony/ui/windows/import_wizard_window.py:107
-msgid "Import"
-msgstr "Mag-import"
-
-#: src/telephony/ui/windows/import_wizard_window.py:114
-msgid "Custom Database Backup"
-msgstr "Custom na Database Backup"
-
-#: src/telephony/ui/windows/import_wizard_window.py:115
-msgid "Select an exported SQLite DB file"
-msgstr "Pumili ng na-export na SQLite DB file"
-
-#: src/telephony/ui/windows/import_wizard_window.py:117
-#: src/telephony/ui/windows/import_export_window.py:251
-msgid "Select File"
-msgstr "Piliin ang File"
-
-#: src/telephony/ui/windows/import_wizard_window.py:142
-msgid "Select Database File"
-msgstr "Piliin ang File ng Database"
-
-#: src/telephony/ui/windows/import_wizard_window.py:160
-msgid "MMS Attachments (Optional)"
-msgstr "MMS Attachment (Opsyonal)"
-
-#: src/telephony/ui/windows/import_wizard_window.py:168
-msgid "MMS Folder Backup"
-msgstr "Backup ng MMS Folder"
-
-#: src/telephony/ui/windows/import_wizard_window.py:169
-msgid "Select the directory containing images/videos"
-msgstr "Piliin ang direktoryo na naglalaman ng mga larawan/video"
-
-#: src/telephony/ui/windows/import_wizard_window.py:171
-msgid "Select Folder"
-msgstr "Piliin ang Folder"
-
-#: src/telephony/ui/windows/import_wizard_window.py:178
-msgid "Skip Attachments"
-msgstr "Laktawan ang Mga Attachment"
-
-#: src/telephony/ui/windows/import_wizard_window.py:179
-msgid "Import SMS and texts only"
-msgstr "Mag-import ng SMS at mga text lamang"
-
-#: src/telephony/ui/windows/import_wizard_window.py:185
-msgid "Skip"
-msgstr "Laktawan"
-
-#: src/telephony/ui/windows/import_wizard_window.py:195
-msgid "Select MMS Folder"
-msgstr "Piliin ang MMS Folder"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:36
-msgid "Duplicate Contact"
-msgstr "Duplicate na Contact"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:64
-msgid "Merge all"
-msgstr "Pagsamahin ang lahat"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:88
-msgid "Merging Contacts..."
-msgstr "Pinagsasama ang Mga Contact..."
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:107
-msgid "Remaining conflicts: {count}"
-msgstr "Mga natitirang salungatan: {count}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:126
-msgid "{number} is saved to contacts:"
-msgstr "{number} ay naka-save sa mga contact:"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:141
-msgid "Address Book: {name}"
-msgstr "Address Book: {name}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:162
-msgid "Keep this, Remove duplicates"
-msgstr "Panatilihin ito, Alisin ang mga duplicate"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:168
-msgid "Keep this, Merge duplicates"
-msgstr "Panatilihin ito, Pagsamahin ang mga duplicate"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:326
-msgid "Merging {current}/{total}..."
-msgstr "Pinagsasama ang {current}/{total}..."
-
+#: src/telephony/ui/main_window.py:463
 #: src/telephony/ui/windows/date_time_picker_window.py:41
-#: src/telephony/ui/main_window.py:441
 msgid "Confirm"
 msgstr "Kumpirmahin"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:62
-msgid "Year"
-msgstr "taon"
+#: src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "Nakakita ng {count} duplicate na contact. Suriin ang menu."
+msgstr[1] "Nakakita ng {count} duplicate na contact. Suriin ang menu."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:81
-msgid "Month"
-msgstr "buwan"
+#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Nagsi-sync ang mga contact..."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:116
-msgid "Hour"
-msgstr "Oras"
+#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
+#: src/telephony/ui/windows/chat_media_controller_window.py:148
+#: src/telephony/ui/windows/contact_editor_window.py:103
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:368
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:443
+#: src/telephony/ui/windows/settings_window.py:581
+#: src/telephony/ui/windows/settings_window.py:858
+msgid "Close"
+msgstr "Isara"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:135
-msgid "Minute"
-msgstr "minuto"
+#: src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Nire-reload ang Mga Contact..."
+
+#: src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "Maramihang Mga Contact Natagpuan"
+
+#: src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Aling contact ang gusto mong i-edit?"
+
+#: src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Hindi kilalang Addressbook"
+
+#: src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "Tumatawag (Anonymous)..."
+
+#: src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Tinatawagan si {number}..."
+
+#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Nabigo ang tawag"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Mga Detalye ng Tawag"
+
+#: src/telephony/ui/main_window.py:676
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Numero: {number}\n"
+"Pangalan: {name}\n"
+"Petsa: {date}\n"
+"Tagal: {duration}"
+
+#: src/telephony/ui/main_window.py:692
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "I-unblock ang Numero"
+
+#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+msgid "Unblocked"
+msgstr "Na-unblock"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "I-edit ang Contact"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+msgid "Add to Contacts"
+msgstr "Idagdag sa Mga Contact"
+
+#: src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Idagdag sa Umiiral na Contact"
+
+#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/windows/incall_window.py:147
+msgid "Search Number"
+msgstr "Numero ng Paghahanap"
+
+#: src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Magpadala ng Mensahe"
+
+#: src/telephony/ui/main_window.py:755
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+msgid "Copy Number"
+msgstr "Kopyahin ang Numero"
+
+#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "I-block ang Numero"
+
+#: src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Tanggalin ang tawag na ito"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Tanggalin ang Tawag"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Alisin ang tawag na ito?"
+
+#: src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Nakopya ang numero"
+
+#: src/telephony/ui/main_window.py:798
+#: src/telephony/ui/windows/contact_editor_window.py:757
+msgid "Saving contact..."
+msgstr "Sine-save ang contact..."
+
+#: src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Idinagdag sa {name}"
+
+#: src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Nabigong magdagdag ng numero"
+
+#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/windows/contact_editor_window.py:184
+#: src/telephony/ui/windows/settings_window.py:213
+msgid "Add Number"
+msgstr "Magdagdag ng Numero"
+
+#: src/telephony/ui/main_window.py:814
+#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:60
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:110
+#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+msgid "Save"
+msgstr "I-save"
+
+#: src/telephony/ui/views/chat_view.py:133
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Draft sa {count} mga tatanggap"
+
+#: src/telephony/ui/views/chat_view.py:160
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} Mga kalahok"
+
+#: src/telephony/ui/views/chat_view.py:306
+msgid "Replies not supported for this sender"
+msgstr "Hindi sinusuportahan ang mga tugon para sa nagpadalang ito"
+
+#: src/telephony/ui/views/chat_view.py:350
+#: src/telephony/ui/views/chat_view.py:1230
+msgid "Scheduled time must be in the future"
+msgstr "Ang nakaiskedyul na oras ay dapat sa hinaharap"
+
+#: src/telephony/ui/views/chat_view.py:358
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Muling na-iskedyul para sa {time}"
+
+#: src/telephony/ui/views/chat_view.py:362
+msgid "Re-Schedule Message"
+msgstr "Muling Iskedyul ang Mensahe"
+
+#: src/telephony/ui/views/chat_view.py:497
+#: src/telephony/ui/views/chat_view.py:562
+msgid "— New Messages —"
+msgstr "— Mga Bagong Mensahe —"
+
+#: src/telephony/ui/views/chat_view.py:600
+msgid "No results found in this conversation"
+msgstr "Walang nakitang mga resulta sa pag-uusap na ito"
+
+#: src/telephony/ui/views/chat_view.py:672
+msgid "Group Name"
+msgstr "Pangalan ng Grupo"
+
+#: src/telephony/ui/views/chat_view.py:673
+msgid "Set group name..."
+msgstr "Itakda ang pangalan ng grupo..."
+
+#: src/telephony/ui/views/chat_view.py:681
+msgid "Participants"
+msgstr "Mga kalahok"
+
+#: src/telephony/ui/views/chat_view.py:781
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Conversation"
+msgstr "Tanggalin ang Pag-uusap"
+
+#: src/telephony/ui/views/chat_view.py:798
+#: src/telephony/ui/views/chat_view.py:1162
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+msgid "Me"
+msgstr "Ako"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Ipinasa mula sa {sender}:\n"
+"{body}"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Ipinasa mula sa {sender}"
+
+#: src/telephony/ui/views/chat_view.py:817
+msgid "Forward To"
+msgstr "Ipasa Sa"
+
+#: src/telephony/ui/views/chat_view.py:818
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+msgid "Forward"
+msgstr "Pasulong"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Delete Message"
+msgstr "Tanggalin ang Mensahe"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Are you sure you want to delete this message?"
+msgstr "Sigurado ka bang gusto mong tanggalin ang mensaheng ito?"
+
+#: src/telephony/ui/views/chat_view.py:980
+msgid "Group renamed"
+msgstr "Pinalitan ang pangalan ng pangkat"
+
+#: src/telephony/ui/views/chat_view.py:1008
+#, fuzzy
+msgid "Compressing image..."
+msgstr "Kino-compress ang video..."
+
+#: src/telephony/ui/views/chat_view.py:1010
+msgid "Image is too large to send"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1012
+msgid "Compressing video..."
+msgstr "Kino-compress ang video..."
+
+#: src/telephony/ui/views/chat_view.py:1014
+msgid "Video compression failed"
+msgstr "Nabigo ang pag-compression ng video"
+
+#: src/telephony/ui/views/chat_view.py:1016
+msgid "File is too large to send via MMS"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1224
+msgid "Nothing to schedule"
+msgstr "Walang maiiskedyul"
+
+#: src/telephony/ui/views/chat_view.py:1238
+msgid "Schedule Message"
+msgstr "Mag-iskedyul ng Mensahe"
+
+#: src/telephony/ui/views/chat_view.py:1277
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Naka-iskedyul ang mensahe para sa {time}"
+
+#: src/telephony/ui/views/chat_view.py:1280
+#: src/telephony/ui/views/chat_view.py:1298
+msgid "[Attachment]"
+msgstr "[Attachment]"
+
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Group"
+msgstr "Tanggalin ang Grupo"
+
+#: src/telephony/ui/views/chat_view.py:1388
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Permanente nitong tatanggalin ang kasaysayan ng pag-uusap at lahat ng naka-"
+"save na media file."
+
+#: src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Maghanap ng mga contact"
+
+#: src/telephony/ui/views/contacts_view.py:119
+#: src/telephony/ui/windows/contact_editor_window.py:71
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:229
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Mobile"
+msgstr "Mobile"
+
+#: src/telephony/ui/views/contacts_view.py:120
+#: src/telephony/ui/windows/contact_editor_window.py:72
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:230
+#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+msgid "Work"
+msgstr "Trabaho"
+
+#: src/telephony/ui/views/contacts_view.py:121
+#: src/telephony/ui/windows/contact_editor_window.py:73
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:231
+#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+msgid "Home"
+msgstr "Bahay"
+
+#: src/telephony/ui/views/contacts_view.py:122
+#: src/telephony/ui/windows/contact_editor_window.py:74
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:232
+#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+msgid "Fax"
+msgstr "Fax"
+
+#: src/telephony/ui/views/contacts_view.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:75
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:233
+#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+msgid "Other"
+msgstr "Iba pa"
+
+#: src/telephony/ui/views/contacts_view.py:124
+#: src/telephony/ui/windows/contact_editor_window.py:76
+#: src/telephony/ui/windows/custom_tone_list_window.py:234
+#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+msgid "Main"
+msgstr "Pangunahing"
+
+#: src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Tumawag sa Anonymous"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Ipasok ang numero"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Telephony Smart Dialpad sa iyong serbisyo"
+
+#: src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Di-wastong numero sa clipboard"
+
+#: src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Di-wastong numero"
+
+#: src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "Lahat"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "Anumang tagal"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Hindi nasagot"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 min"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 min"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 min"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "Kahit anong date"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Ngayong araw"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "Huling 3 araw"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "Huling 14 na araw"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "Huling 30 araw"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "Huling 60 araw"
+
+#: src/telephony/ui/views/messages_view.py:106
+#: src/telephony/ui/views/messages_view.py:575
+msgid "Search Contacts..."
+msgstr "Maghanap sa Mga Contact..."
+
+#: src/telephony/ui/views/messages_view.py:224
+msgid "All Messages"
+msgstr "Lahat ng Mensahe"
+
+#: src/telephony/ui/views/messages_view.py:225
+msgid "Unread Messages"
+msgstr "Mga Hindi Nabasang Mensahe"
+
+#: src/telephony/ui/views/messages_view.py:226
+msgid "Unknown Numbers"
+msgstr "Mga Hindi Kilalang Numero"
+
+#: src/telephony/ui/views/messages_view.py:227
+msgid "Saved Contacts"
+msgstr "Mga Naka-save na Contact"
+
+#: src/telephony/ui/views/messages_view.py:228
+msgid "Group Messages"
+msgstr "Mga Mensahe ng Grupo"
+
+#: src/telephony/ui/views/messages_view.py:229
+msgid "Individual Messages"
+msgstr "Mga Indibidwal na Mensahe"
+
+#: src/telephony/ui/views/messages_view.py:230
+msgid "Alphabetical Senders"
+msgstr "Mga Alpabetikong Nagpapadala"
+
+#: src/telephony/ui/views/messages_view.py:322
+#: src/telephony/ui/views/messages_view.py:444
+msgid "[Multimedia Message]"
+msgstr "[Multimedia Message]"
+
+#: src/telephony/ui/views/messages_view.py:579
+msgid "Search Messages..."
+msgstr "Maghanap sa Mga Mensahe..."
+
+#: src/telephony/ui/views/messages_view.py:621
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Magsimula ({count})"
+
+#: src/telephony/ui/views/messages_view.py:628
+#, fuzzy, python-brace-format
+msgid "Open ({count})"
+msgstr "Magsimula ({count})"
+
+#: src/telephony/ui/views/messages_view.py:700
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Magdagdag ng Numero: {number}"
+
+#: src/telephony/ui/views/messages_view.py:733
+#, fuzzy
+msgid "Group chat"
+msgstr "Pangalan ng Grupo"
+
+#: src/telephony/ui/views/messages_view.py:741
+#: src/telephony/ui/windows/custom_tone_list_window.py:297
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+msgid "No contacts found"
+msgstr "Walang nakitang mga contact"
+
+#: src/telephony/ui/views/messages_view.py:856
+msgid "No results found"
+msgstr "Walang nakitang resulta"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+msgid "Copy Text"
+msgstr "Kopyahin ang Teksto"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+msgid "Re-Schedule"
+msgstr "Muling Iskedyul"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+msgid "Mark as Unread"
+msgstr "Markahan bilang Hindi pa nababasa"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:778
+msgid "Delete"
+msgstr "Tanggalin"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Naka-iskedyul: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#, fuzzy
+msgid "Failed to send"
+msgstr "Nabigong ipadala ang: {e}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#, fuzzy
+msgid "Sending..."
+msgstr "Ipinapadala ang USSD..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+msgid "Open with"
+msgstr "Buksan sa"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+msgid "Copy"
+msgstr "Kopyahin"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+msgid "Save as"
+msgstr "I-save bilang"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
+msgid "Retry Send"
+msgstr ""
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+msgid "Open With..."
+msgstr "Buksan Gamit ang..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+msgid "Save File As"
+msgstr "I-save ang File Bilang"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:48
+msgid "Hangup All Calls"
+msgstr "I-hangup ang Lahat ng Tawag"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Pangkat"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Draft: {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:32
+#: src/telephony/ui/windows/settings_window.py:352
+msgid "Advanced Settings"
+msgstr "Mga Advanced na Setting"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:65
+msgid "Loading..."
+msgstr "Naglo-load..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:102
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Error sa paglo-load ng mga setting: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:110
+msgid "Secret SMS Triggers"
+msgstr "Mga Lihim na SMS Trigger"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:113
+#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+msgid "Set \"Find my Telephony\""
+msgstr "Itakda ang \"Hanapin ang aking Telepono\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:119
+#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+msgid "Set \"Trusted Callback\""
+msgstr "Itakda ang \"Trusted Callback\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+msgid "Set \"SMS -Relay\""
+msgstr "Itakda ang \"SMS -Relay\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:131
+#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+msgid "Set \"SMS -tmate\""
+msgstr "Itakda ang \"SMS -tmate\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:137
+#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "Itakda ang \"SMS Switch Wipe Device\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:145
+msgid "Restart Modem"
+msgstr "I-restart ang Modem"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+msgid "Data Management"
+msgstr "Pamamahala ng Data"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Kinansela ang pagpapatotoo"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:172
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Error sa pagpapatotoo: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:180
+msgid "Advanced Settings Applied"
+msgstr "Inilapat ang Mga Advanced na Setting"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Restarting Modem..."
+msgstr "Nire-restart ang Modem..."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Mga Detalye ng Numero"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Ang mga tawag mula sa numerong ito ay awtomatikong tatanggihan."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:774
+msgid "Number"
+msgstr "Numero"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Tandaan (Opsyonal)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Duplicate"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Naka-block na ang numerong ito."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Error sa Database"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Nabigong i-save sa blocklist."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:828
+msgid "Conflict"
+msgstr "Salungatan"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Ang numero ay hindi maaaring nasa Blocklist at Contacts.\n"
+"\n"
+"Gusto mo bang magpatuloy sa Pag-block at alisin ang numero mula sa Mga "
+"Contact?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Oo, Block"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Mga Naka-block na Numero"
+
+#: src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "Walang notes"
+
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Sigurado ka bang gusto mong i-unblock ang numerong ito?"
+
+#: src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Na-unblock na numero"
+
+#: src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Kumuha ng Larawan"
+
+#: src/telephony/ui/windows/camera_photo_window.py:140
+#: src/telephony/ui/windows/camera_video_window.py:172
+#: src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Muling kunin"
+
+#: src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Maglakip ng Larawan"
+
+#: src/telephony/ui/windows/camera_video_window.py:47
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Mag-record ng Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Mag-attach ng Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Nabigong mag-record ng video: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Nabigo ang pagre-record (Walang laman ang file)."
+
+#: src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Malaking video ({size}KB). I-compress sa ipadala."
+
+#: src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Hindi ma-play ang walang laman na file."
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:60
 msgid "Take Photo"
 msgstr "Kumuha ng Larawan"
-
-#: src/telephony/ui/windows/chat_media_controller_window.py:61
-#: src/telephony/ui/windows/camera_video_window.py:47
-msgid "Record Video"
-msgstr "Mag-record ng Video"
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:62
 msgid "Record Audio"
@@ -1582,101 +1374,455 @@ msgstr "Error sa Attachment"
 msgid "Failed to prepare attachment."
 msgstr "Nabigong maghanda ng attachment."
 
-#: src/telephony/ui/windows/camera_video_window.py:172
-#: src/telephony/ui/windows/sound_recorder_window.py:144
-#: src/telephony/ui/windows/camera_photo_window.py:141
-msgid "Retake"
-msgstr "Muling kunin"
+#: src/telephony/ui/windows/contact_editor_window.py:36
+#: src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Mga Detalye ng Pakikipag-ugnayan"
 
-#: src/telephony/ui/windows/camera_video_window.py:177
-msgid "Attach Video"
-msgstr "Mag-attach ng Video"
+#: src/telephony/ui/windows/contact_editor_window.py:107
+#: src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "I-edit"
 
-#: src/telephony/ui/windows/camera_video_window.py:314
-msgid "Failed to record video: {error_msg}"
-msgstr "Nabigong mag-record ng video: {error_msg}"
+#: src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Pagkakakilanlan"
 
-#: src/telephony/ui/windows/camera_video_window.py:384
-msgid "Recording failed (File empty)."
-msgstr "Nabigo ang pagre-record (Walang laman ang file)."
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "Paborito"
 
-#: src/telephony/ui/windows/camera_video_window.py:388
-msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Malaking video ({size}KB). I-compress sa ipadala."
+#: src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Buong Pangalan"
 
-#: src/telephony/ui/windows/camera_video_window.py:405
-msgid "Cannot play empty file."
-msgstr "Hindi ma-play ang walang laman na file."
+#: src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Pangalan"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:69
-msgid "Loading..."
-msgstr "Naglo-load..."
+#: src/telephony/ui/windows/contact_editor_window.py:162
+#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+msgid "Yes"
+msgstr "Oo"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:106
-msgid "Error loading settings: {e}"
-msgstr "Error sa paglo-load ng mga setting: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Mga Numero ng Telepono"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:114
-msgid "Secret SMS Triggers"
-msgstr "Mga Lihim na SMS Trigger"
+#: src/telephony/ui/windows/contact_editor_window.py:195
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "Mga Email Address"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:117
-#: src/telephony/ui/windows/trusted_actions_list_window.py:36
-msgid "Set \"Find my Telephony\""
-msgstr "Itakda ang \"Hanapin ang aking Telepono\""
+#: src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "Magdagdag ng Email"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:123
-#: src/telephony/ui/windows/trusted_actions_list_window.py:38
-msgid "Set \"Trusted Callback\""
-msgstr "Itakda ang \"Trusted Callback\""
+#: src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Karagdagang Detalye"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:129
-#: src/telephony/ui/windows/trusted_actions_list_window.py:40
-msgid "Set \"SMS -Relay\""
-msgstr "Itakda ang \"SMS -Relay\""
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Organisasyon"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:135
-#: src/telephony/ui/windows/trusted_actions_list_window.py:42
-msgid "Set \"SMS -tmate\""
-msgstr "Itakda ang \"SMS -tmate\""
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Pamagat ng Trabaho"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:141
-#: src/telephony/ui/windows/trusted_actions_list_window.py:44
-msgid "Set \"SMS Switch Wipe Device\""
-msgstr "Itakda ang \"SMS Switch Wipe Device\""
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Address"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:149
-msgid "Restart Modem"
-msgstr "I-restart ang Modem"
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Mga Tala"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:157
-msgid "Data Management"
-msgstr "Pamamahala ng Data"
+#: src/telephony/ui/windows/contact_editor_window.py:221
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Website"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:173
-msgid "Authentication cancelled"
-msgstr "Kinansela ang pagpapatotoo"
+#: src/telephony/ui/windows/contact_editor_window.py:246
+#: src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Kaarawan"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:176
-msgid "Auth error: {e}"
-msgstr "Error sa pagpapatotoo: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:247
+#: src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "Anibersaryo"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:198
-msgid "Advanced Settings Applied"
-msgstr "Inilapat ang Mga Advanced na Setting"
+#: src/telephony/ui/windows/contact_editor_window.py:263
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Delete Contact"
+msgstr "Tanggalin ang Contact"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:202
-msgid "Error saving settings"
-msgstr "Error sa pag-save ng mga setting"
+#: src/telephony/ui/windows/contact_editor_window.py:274
+#: src/telephony/ui/windows/settings_window.py:162
+#: src/telephony/ui/windows/settings_window.py:440
+msgid "Address Books"
+msgstr "Mga Address Books"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:206
-msgid "Restarting Modem..."
-msgstr "Nire-restart ang Modem..."
+#: src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Hindi kilalang Pinagmulan"
 
-#: src/telephony/ui/windows/import_export_window.py:43
-#: src/telephony/ui/main_window.py:305
-msgid "Import / Export"
-msgstr "Mag-import / Mag-export"
+#: src/telephony/ui/windows/contact_editor_window.py:318
+#: src/telephony/ui/windows/contact_editor_window.py:356
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Piliin ang Petsa"
+
+#: src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "I-clear ang Petsa"
+
+#: src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Piliin ang {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Kopyahin ang {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:390
+#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+msgid "Copied to clipboard"
+msgstr "Kinopya sa clipboard"
+
+#: src/telephony/ui/windows/contact_editor_window.py:535
+msgid "Export Contact"
+msgstr "I-export ang Contact"
+
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Are you sure you want to delete this contact?"
+msgstr "Sigurado ka bang gusto mong tanggalin ang contact na ito?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:567
+msgid "Deleting contact..."
+msgstr "Tinatanggal ang contact..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:822
+#, fuzzy
+msgid "Failed to save contact"
+msgstr "Nabigong i-save sa blocklist."
+
+#: src/telephony/ui/windows/contact_editor_window.py:829
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Ang numero ay hindi maaaring nasa Blocklist at Contacts.\n"
+"\n"
+"Gusto mo bang magpatuloy sa Pag-unblock at idagdag ang numero sa Mga Contact?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:833
+msgid "Yes, Add to Contacts"
+msgstr "Oo, Idagdag sa Mga Contact"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Pumili ng Contact"
+
+#: src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "Pangalan o Numero"
+
+#: src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "Walang numero"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:323
+msgid "Individual SMS Notifications"
+msgstr "Mga Indibidwal na Notification sa SMS"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:334
+msgid "Individual Ringtones"
+msgstr "Mga Indibidwal na Ringtone"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "Maghanap ng contact na idaragdag..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Pumili ng contact at pumili ng custom na sound file (.ogg o .oga). "
+"Kokopyahin ang file sa iyong lokal na storage."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:186
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Alisin"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Inalis ang custom na tono (I-click ang I-save para mag-commit)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Piliin ang Tone para kay {name}"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:318
+#: src/telephony/ui/windows/settings_window.py:405
+msgid "Select"
+msgstr "Pumili"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:323
+msgid "Supported Audio (OGG)"
+msgstr "Sinusuportahang Audio (OGG)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:351
+msgid "Only .ogg or .oga files are supported"
+msgstr "Ang mga .ogg o .oga file lang ang sinusuportahan"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:362
+msgid "Failed to copy audio file"
+msgstr "Nabigong kopyahin ang audio file"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:382
+msgid "Custom tone added"
+msgstr "Idinagdag ang custom na tono"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Pamamahala ng Database"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Pumili ng data na permanenteng tatanggalin."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Tanggalin ang History ng Tawag"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Tanggalin ang Lahat ng Mensahe"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Tanggalin ang Lahat ng Pangalan ng Grupo"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Tanggalin ang Blocklist"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Tanggalin ang Lahat ng Mga Contact"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Tanggalin ang Address Book"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "I-DELETE LAHAT"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Sigurado ka ba? Hindi na ito maaaring bawiin."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Tatanggalin nito ang lahat ng SMS/MMS at mga attachment."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Tanggalin ang Mga Pangalan ng Grupo"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "I-reset ang lahat ng custom na pangalan ng panggrupong chat?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "I-unblock ang lahat ng numero?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Walang matatanggal na address book"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Walang custom na address book na maaaring tanggalin."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Aling address book ang gusto mong permanenteng tanggalin?\n"
+"\n"
+"Aalisin nito ito mula sa system."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr ""
+"Sigurado ka bang gusto mong permanenteng tanggalin ang '{name}' address book?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Tanggalin ang LAHAT"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"I-wipe ang database, mga config file at mga contact? Mare-reset ang app."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Talagang tanggalin ang lahat sa iyong address book?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Piliin kung aling address book ang i-clear:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Lahat ng Address Books"
+
+#: src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Tinanggal ang History ng Tawag"
+
+#: src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "Tinatanggal ang mga mensahe..."
+
+#: src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Tinanggal ang Mga Mensahe at Attachment"
+
+#: src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "I-reset ang Mga Pangalan ng Grupo"
+
+#: src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Na-clear ang Blocklist"
+
+#: src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Tinatanggal ang mga contact..."
+
+#: src/telephony/ui/windows/data_management_window.py:253
+msgid "Contacts Deleted"
+msgstr "Mga Contact Tinanggal"
+
+#: src/telephony/ui/windows/data_management_window.py:261
+msgid "Deleting address book..."
+msgstr "Tinatanggal ang address book..."
+
+#: src/telephony/ui/windows/data_management_window.py:268
+msgid "Address Book Deleted"
+msgstr "Tinanggal ang Address Book"
+
+#: src/telephony/ui/windows/data_management_window.py:271
+msgid "Failed to delete Address Book"
+msgstr "Nabigong tanggalin ang Address Book"
+
+#: src/telephony/ui/windows/data_management_window.py:276
+msgid "Wiping Database..."
+msgstr "Pinupunasan ang Database..."
+
+#: src/telephony/ui/windows/data_management_window.py:290
+msgid "App Reset Complete"
+msgstr "Kumpleto na ang Pag-reset ng App"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "taon"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "buwan"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Oras"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "minuto"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Notification Overrides"
+msgstr "Mga Override sa Notification"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+msgid "Find and add contacts..."
+msgstr "Maghanap at magdagdag ng mga contact..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Ang mga contact sa listahang ito ay palaging magpe-play ng mga notification "
+"sa buong volume, kahit na ang telepono ay nasa Silent o Do Not Disturb mode."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Duplicate na Contact"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Pagsamahin ang lahat"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Pinagsasama ang Mga Contact..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Mga natitirang salungatan: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} ay naka-save sa mga contact:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Address Book: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Panatilihin ito, Alisin ang mga duplicate"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Panatilihin ito, Pagsamahin ang mga duplicate"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Pinagsasama ang {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1733,10 +1879,12 @@ msgid "No contacts found on SIM card."
 msgstr "Walang nakitang contact sa SIM card."
 
 #: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "Nag-import ng {count} na mga contact mula sa SIM."
 
 #: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "Nabigo ang pag-import ng SIM: {e}"
 
@@ -1769,17 +1917,24 @@ msgstr "Direktang Pag-import ng USB (Inirerekomenda)"
 
 #: src/telephony/ui/windows/import_export_window.py:207
 msgid "No iOS device detected. Please connect your iPhone via USB."
-msgstr "Walang natukoy na iOS device. Mangyaring ikonekta ang iyong iPhone sa pamamagitan ng USB."
+msgstr ""
+"Walang natukoy na iOS device. Mangyaring ikonekta ang iyong iPhone sa "
+"pamamagitan ng USB."
 
 #: src/telephony/ui/windows/import_export_window.py:210
 msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
-msgstr "Hindi pinagkakatiwalaan ang device. Mangyaring i-unlock ang iyong iPhone at i-tap ang 'Trust'."
+msgstr ""
+"Hindi pinagkakatiwalaan ang device. Mangyaring i-unlock ang iyong iPhone at "
+"i-tap ang 'Trust'."
 
 #: src/telephony/ui/windows/import_export_window.py:213
 msgid "Extracting backup from iPhone... This may take a long time!"
-msgstr "Kinukuha ang backup mula sa iPhone... Maaaring tumagal ito ng mahabang panahon!"
+msgstr ""
+"Kinukuha ang backup mula sa iPhone... Maaaring tumagal ito ng mahabang "
+"panahon!"
 
 #: src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "Nabigo ang USB Backup: {e}"
 
@@ -1800,15 +1955,21 @@ msgid "Importing iPhone Calls..."
 msgstr "Ini-import ang Mga Tawag sa iPhone..."
 
 #: src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "Error sa pag-import ng iOS: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:251
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Piliin ang File"
 
 #: src/telephony/ui/windows/import_export_window.py:254
 msgid "XML Files"
 msgstr "Mga XML File"
 
 #: src/telephony/ui/windows/import_export_window.py:268
-#: src/telephony/ui/windows/import_export_window.py:451
+#: src/telephony/ui/windows/import_export_window.py:459
 msgid "Importing..."
 msgstr "Ini-import..."
 
@@ -1837,6 +1998,7 @@ msgid "iOS"
 msgstr "iOS"
 
 #: src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
 msgid "Export to {fmt}"
 msgstr "I-export sa {fmt}"
 
@@ -1844,132 +2006,613 @@ msgstr "I-export sa {fmt}"
 msgid "What do you want to export?"
 msgstr "Ano ang gusto mong i-export?"
 
-#: src/telephony/ui/windows/import_export_window.py:325
+#: src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+
+#: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
 msgstr "Mga Mensahe (SMS/MMS)"
 
-#: src/telephony/ui/windows/import_export_window.py:326
+#: src/telephony/ui/windows/import_export_window.py:334
 msgid "Call History"
 msgstr "Kasaysayan ng Tawag"
 
-#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:344
 msgid "Export File"
 msgstr "I-export ang File"
 
-#: src/telephony/ui/windows/import_export_window.py:362
+#: src/telephony/ui/windows/import_export_window.py:370
 msgid "Exporting..."
 msgstr "Ini-export..."
 
-#: src/telephony/ui/windows/import_export_window.py:396
+#: src/telephony/ui/windows/import_export_window.py:404
 msgid "Import VCard"
 msgstr "Mag-import ng VCard"
 
-#: src/telephony/ui/windows/import_export_window.py:398
+#: src/telephony/ui/windows/import_export_window.py:406
 msgid "VCard Files"
 msgstr "Mga VCard File"
 
-#: src/telephony/ui/windows/import_export_window.py:417
-#: src/telephony/ui/windows/import_export_window.py:481
+#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:489
 msgid "No enabled address books found"
 msgstr "Walang nakitang naka-enable na address book"
 
-#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:433
 msgid "Select Address Book"
 msgstr "Piliin ang Address Book"
 
-#: src/telephony/ui/windows/import_export_window.py:426
+#: src/telephony/ui/windows/import_export_window.py:434
 msgid "Where do you want to import contacts?"
 msgstr "Saan mo gustong mag-import ng mga contact?"
 
-#: src/telephony/ui/windows/import_export_window.py:465
+#: src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "Nag-import ng {count} na mga contact"
 
-#: src/telephony/ui/windows/import_export_window.py:469
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
 msgid "Import failed: {e}"
 msgstr "Nabigo ang pag-import: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:485
-#: src/telephony/ui/windows/import_export_window.py:523
+#: src/telephony/ui/windows/import_export_window.py:493
+#: src/telephony/ui/windows/import_export_window.py:531
 msgid "Export Contacts"
 msgstr "I-export ang Mga Contact"
 
-#: src/telephony/ui/windows/import_export_window.py:486
+#: src/telephony/ui/windows/import_export_window.py:494
 msgid "Which address book do you want to export?"
 msgstr "Aling address book ang gusto mong i-export?"
 
-#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:505
 msgid "Export All Address Books"
 msgstr "I-export ang Lahat ng Address Books"
 
-#: src/telephony/ui/windows/import_export_window.py:551
+#: src/telephony/ui/windows/import_export_window.py:559
 msgid "No contacts found to export"
 msgstr "Walang nakitang mga contact upang i-export"
 
-#: src/telephony/ui/windows/import_export_window.py:567
+#: src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "Na-export ang {count} na mga contact"
 
-#: src/telephony/ui/windows/import_export_window.py:570
+#: src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
 msgid "Export error: {e}"
 msgstr "Error sa pag-export: {e}"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:33
-#: src/telephony/ui/main_window.py:734
-msgid "Block Number"
-msgstr "I-block ang Numero"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Mag-import ng Mga Mensahe"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:59
-msgid "Number Details"
-msgstr "Mga Detalye ng Numero"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Mag-import ng History ng Tawag"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:60
-msgid "Calls from this number will be automatically rejected."
-msgstr "Ang mga tawag mula sa numerong ito ay awtomatikong tatanggihan."
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Naghihintay para sa pagpili..."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:71
-msgid "Note (Optional)"
-msgstr "Tandaan (Opsyonal)"
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Saan mo gustong mag-import?"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:124
-#: src/telephony/ui/windows/blocklist_editor_window.py:142
-#: src/telephony/ui/views/messages_view.py:324
-#: src/telephony/ui/views/messages_view.py:393
-msgid "Blocked Number"
-msgstr "Naka-block na Numero"
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Database ng System"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Database Error"
-msgstr "Error sa Database"
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Mag-import mula sa lokal na pag-install ng Chatty"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Failed to save to blocklist."
-msgstr "Nabigong i-save sa blocklist."
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Mag-import mula sa pag-install ng lokal na Mga Tawag"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "Duplicate"
-msgstr "Duplicate"
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Mag-import"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "This number is already blocked."
-msgstr "Naka-block na ang numerong ito."
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Custom na Database Backup"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:153
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Blocking and remove the number from Contacts?"
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Pumili ng na-export na SQLite DB file"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Piliin ang File ng Database"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS Attachment (Opsyonal)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "Backup ng MMS Folder"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Piliin ang direktoryo na naglalaman ng mga larawan/video"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Piliin ang Folder"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Laktawan ang Mga Attachment"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Mag-import ng SMS at mga text lamang"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Laktawan"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Piliin ang MMS Folder"
+
+#: src/telephony/ui/windows/incall_window.py:152
+msgid "Hangup and Send SMS"
+msgstr "Mag-hangup at Magpadala ng SMS"
+
+#: src/telephony/ui/windows/incall_window.py:187
+msgid "The call failed to disconnect."
+msgstr "Nabigong madiskonekta ang tawag."
+
+#: src/telephony/ui/windows/incall_window.py:220
+#: src/telephony/ui/windows/incall_window.py:669
+msgid "Output"
+msgstr "Output"
+
+#: src/telephony/ui/windows/incall_window.py:235
+#: src/telephony/ui/windows/incall_window.py:697
+msgid "Input"
+msgstr "Input"
+
+#: src/telephony/ui/windows/incall_window.py:387
+msgid "Silenced Incoming Call"
+msgstr "Pinatahimik ang Papasok na Tawag"
+
+#: src/telephony/ui/windows/incall_window.py:503
+#: src/telephony/ui/windows/settings_window.py:241
+msgid "I can't talk right now."
+msgstr "Hindi ako makapagsalita ngayon."
+
+#: src/telephony/ui/windows/incall_window.py:626
+msgid "Restarting RIL..."
+msgstr "Nire-restart ang RIL..."
+
+#: src/telephony/ui/windows/incall_window.py:635
+msgid "Restored!"
+msgstr "Naibalik!"
+
+#: src/telephony/ui/windows/incall_window.py:641
+msgid "Failed. Reboot Device."
+msgstr "Nabigo. I-reboot ang Device."
+
+#: src/telephony/ui/windows/incall_window.py:643
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "Bine-verify... {attempt}"
+
+#: src/telephony/ui/windows/incall_window.py:702
+msgid "Mute Microphone"
+msgstr "I-mute ang Mikropono"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Tungkol sa Telephony"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgstr ""
-"Ang numero ay hindi maaaring nasa Blocklist at Contacts.\n"
-"\n"
-"Gusto mo bang magpatuloy sa Pag-block at alisin ang numero mula sa Mga "
-"Contact?"
+"Mabilis na dialer ng telepono at kliyente sa pagmemensahe na idinisenyo para "
+"sa FLX1 at FLX1s."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:157
-msgid "Yes, Block"
-msgstr "Oo, Block"
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Bersyon"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Developer"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Lisensya"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Mga link"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Tagasubaybay ng Isyu"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Mag-ulat ng mga bug o humiling ng mga tampok"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Naka-iskedyul ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "Para kay: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Ipadala na"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Inalis ang mensahe"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, fuzzy, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Nagpadala ng nakaiskedyul na mensahe sa {number}"
+
+#: src/telephony/ui/windows/settings_window.py:88
+#: src/telephony/ui/windows/settings_window.py:389
+msgid "Ringback Tone"
+msgstr "Ringback Tone"
+
+#: src/telephony/ui/windows/settings_window.py:91
+msgid "Enable Local Ringback"
+msgstr "Paganahin ang Lokal na Ringback"
+
+#: src/telephony/ui/windows/settings_window.py:106
+msgid "Selected Tone"
+msgstr "Napiling Tono"
+
+#: src/telephony/ui/windows/settings_window.py:109
+#: src/telephony/ui/windows/settings_window.py:378
+msgid "System Default"
+msgstr "System Default"
+
+#: src/telephony/ui/windows/settings_window.py:136
+msgid "SIM Settings"
+msgstr "Mga Setting ng SIM"
+
+#: src/telephony/ui/windows/settings_window.py:139
+msgid "My Number"
+msgstr "Number ko"
+
+#: src/telephony/ui/windows/settings_window.py:140
+msgid "My Number (International Format)"
+msgstr "Aking Numero (International Format)"
+
+#: src/telephony/ui/windows/settings_window.py:146
+#: src/telephony/ui/windows/settings_window.py:147
+#: src/telephony/ui/windows/settings_window.py:365
+msgid "Default Country Code"
+msgstr "Default na Code ng Bansa"
+
+#: src/telephony/ui/windows/settings_window.py:173
+msgid "Address Book Info"
+msgstr "Impormasyon sa Address Book"
+
+#: src/telephony/ui/windows/settings_window.py:181
+msgid "Default Address Book"
+msgstr "Default na Address Book"
+
+#: src/telephony/ui/windows/settings_window.py:187
+msgid "Duplicate Resolver"
+msgstr "Duplicate na Resolver"
+
+#: src/telephony/ui/windows/settings_window.py:189
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr ""
+"Mag-scan para sa mga duplicate na numero at magpakita ng banner ng "
+"resolusyon sa view ng Mga Contact."
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid "Lockscreen Emergency"
+msgstr "Emergency ng Lockscreen"
+
+#: src/telephony/ui/windows/settings_window.py:205
+msgid "Show Emergency Button"
+msgstr "Ipakita ang Emergency Button"
+
+#: src/telephony/ui/windows/settings_window.py:210
+msgid "Emergency Numbers"
+msgstr "Mga Numero ng Emergency"
+
+#: src/telephony/ui/windows/settings_window.py:227
+msgid "Quick Response"
+msgstr "Mabilis na Tugon"
+
+#: src/telephony/ui/windows/settings_window.py:230
+#, fuzzy
+msgid "Add Decline Message"
+msgstr "Tanggihan ang Mensahe"
+
+#: src/telephony/ui/windows/settings_window.py:245
+#: src/telephony/ui/windows/settings_window.py:812
+#, fuzzy
+msgid "Call Volume"
+msgstr "Tumawag sa {number}"
+
+#: src/telephony/ui/windows/settings_window.py:257
+msgid "Allow Amplification"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:259
+msgid "Let sliders go above 100%. Amplified audio may distort."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Earpiece"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:269
+#, fuzzy
+msgid "Speaker"
+msgstr "Speaker Naka-on"
+
+#: src/telephony/ui/windows/settings_window.py:270
+msgid "Wired Headset"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:271
+msgid "Bluetooth"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:286
+msgid "Notification Exceptions"
+msgstr "Mga Pagbubukod sa Notification"
+
+#: src/telephony/ui/windows/settings_window.py:289
+#: src/telephony/ui/windows/settings_window.py:454
+msgid "Repeated Calls Bypass"
+msgstr "Paulit-ulit na mga Tawag Bypass"
+
+#: src/telephony/ui/windows/settings_window.py:291
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr ""
+"Kung ang parehong numero ay tumatawag nang 3 beses sa loob ng 5 minuto, "
+"pilitin ang max volume."
+
+#: src/telephony/ui/windows/settings_window.py:306
+msgid "Manage contacts that always play sound"
+msgstr "Pamahalaan ang mga contact na palaging nagpe-play ng tunog"
+
+#: src/telephony/ui/windows/settings_window.py:315
+#: src/telephony/ui/windows/settings_window.py:327
+#: src/telephony/ui/windows/settings_window.py:338
+msgid "Manage"
+msgstr "Pamahalaan"
+
+#: src/telephony/ui/windows/settings_window.py:325
+msgid "Set custom notification sounds for specific contacts"
+msgstr ""
+"Magtakda ng mga custom na tunog ng notification para sa mga partikular na "
+"contact"
+
+#: src/telephony/ui/windows/settings_window.py:336
+msgid "Set custom ringtones for specific contacts"
+msgstr "Magtakda ng mga custom na ringtone para sa mga partikular na contact"
+
+#: src/telephony/ui/windows/settings_window.py:361
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Ang Default na Country Code ay ginagamit upang i-format ang mga numero na "
+"walang kasamang internasyonal na prefix (hal., +358).\n"
+"\n"
+"Kung iniwang walang laman, susubukan ng system na awtomatikong makita ito "
+"mula sa iyong SIM card o network.\n"
+"\n"
+"Maaari mo itong manual na i-override dito sa pamamagitan ng paglalagay ng 2-"
+"titik na ISO region code (hal. US, FI, DE) o isang calling code (hal. +358, "
+"358, +1, 1)."
+
+#: src/telephony/ui/windows/settings_window.py:382
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Ang ringback tone ay ang tunog na nilalaro (toot-toot-toot) habang "
+"naghihintay na sagutin ang papalabas na tawag. Ang ilang mga carrier ay "
+"hindi gumagawa nito kaya mayroon kaming opsyon na manual itong buuin dito. \n"
+"\n"
+"Maaari mong piliin ang iyong sariling file ng musika, o i-clear ito upang "
+"magamit ang karaniwang tono ng system."
+
+#: src/telephony/ui/windows/settings_window.py:402
+msgid "Select Ringback Tone"
+msgstr "Piliin ang Ringback Tone"
+
+#: src/telephony/ui/windows/settings_window.py:410
+msgid "Audio Files"
+msgstr "Mga Audio File"
+
+#: src/telephony/ui/windows/settings_window.py:436
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Piliin ang mga address book na gagamitin sa Telephony at ayusin ang mga ito "
+"ayon sa priyoridad. Ang pinakamataas na address book ay may pinakamataas na "
+"priyoridad at mas pipiliin kung ang isang numero ay makikita sa maraming "
+"address book. Maaari mong gamitin ang Duplicate Resolver toggle sa ibaba "
+"upang makatulong na pamahalaan ang mga duplicate, ngunit kahit na hindi "
+"pinagana, hinihikayat namin na i-enable ito para sa isang mas mahusay na "
+"karanasan."
+
+#: src/telephony/ui/windows/settings_window.py:455
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Kapag pinagana, kung tatawagan ka ng parehong numero ng telepono nang 3 "
+"beses sa loob ng 5 minuto, pipilitin ng pangatlong tawag (at mga kasunod na "
+"tawag sa loob ng window) na tumunog ang telepono sa pinakamataas na volume, "
+"na lumalampas sa mga mode na Silent o Huwag Istorbohin."
+
+#: src/telephony/ui/windows/settings_window.py:467
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Pumili ng mga contact na palaging magpe-play ng mga notification sa buong "
+"volume, kahit na ang telepono ay nasa Silent o Do Not Disturb mode."
+
+#: src/telephony/ui/windows/settings_window.py:488
+msgid "Unknown Callers"
+msgstr "Mga Hindi Kilalang Tumatawag"
+
+#: src/telephony/ui/windows/settings_window.py:493
+msgid "Unknown Callers Action"
+msgstr "Aksyon ng Mga Hindi Kilalang Tumatawag"
+
+#: src/telephony/ui/windows/settings_window.py:495
+msgid "Applies also to hidden numbers."
+msgstr "Nalalapat din sa mga nakatagong numero."
+
+#: src/telephony/ui/windows/settings_window.py:498
+msgid "Do Nothing"
+msgstr "Walang Gawin"
+
+#: src/telephony/ui/windows/settings_window.py:499
+msgid "Block Completely"
+msgstr "I-block nang Ganap"
+
+#: src/telephony/ui/windows/settings_window.py:500
+msgid "Silence and Hide UI"
+msgstr "Patahimikin at Itago ang UI"
+
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Silence Only"
+msgstr "Katahimikan Lang"
+
+#: src/telephony/ui/windows/settings_window.py:509
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr ""
+"Magdagdag ng Search button sa InCall window at Call History para sa mga "
+"hindi kilalang tumatawag"
+
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Search Engine"
+msgstr "Search Engine"
+
+#: src/telephony/ui/windows/settings_window.py:519
+#: src/telephony/ui/windows/settings_window.py:524
+msgid "Custom URL"
+msgstr "Custom na URL"
+
+#: src/telephony/ui/windows/settings_window.py:574
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Ilagay ang URL na gusto mong gamitin para sa paghahanap ng mga hindi "
+"kilalang numero. Isama ang '{number}' sa URL kung saan dapat pumunta ang "
+"numero ng telepono ng tumatawag.\n"
+"\n"
+"Halimbawa: https://mysearch.com/?q={number}\n"
+"\n"
+"Kapag na-tap mo ang search button habang nasa isang tawag, papalitan namin "
+"ang '{number}' ng aktwal na numero ng telepono at bubuksan ito sa iyong "
+"default na browser."
+
+#: src/telephony/ui/windows/settings_window.py:578
+msgid "Custom Search URL"
+msgstr "Custom Search URL"
+
+#: src/telephony/ui/windows/settings_window.py:599
+msgid "Desktop Shortcuts"
+msgstr "Mga Shortcut sa Desktop"
+
+#: src/telephony/ui/windows/settings_window.py:604
+msgid "Calls"
+msgstr "Mga tawag"
+
+#: src/telephony/ui/windows/settings_window.py:770
+msgid "Name (e.g. Mom)"
+msgstr "Pangalan (hal. Nanay)"
+
+#: src/telephony/ui/windows/settings_window.py:813
+msgid ""
+"This is the base hardware volume applied to the selected output when a call "
+"connects. The volume buttons during a call only adjust fine-tuning on top of "
+"this base level, so if the base is 0% the call stays silent no matter what. "
+"Values above 100% use software amplification and may distort audio. Wired "
+"Headset and Bluetooth levels are stored for upcoming routing support."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:822
+msgid "Decline Message"
+msgstr "Tanggihan ang Mensahe"
+
+#: src/telephony/ui/windows/settings_window.py:893
+msgid "System Default (Always Enabled)"
+msgstr "Default ng System (Palaging Pinagana)"
+
+#: src/telephony/ui/windows/settings_window.py:904
+msgid "Personal Address Book"
+msgstr "Personal na Address Book"
+
+#: src/telephony/ui/windows/settings_window.py:905
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ito ang address book na isi-sync sa Andromeda kung pipiliin mong gawin ito "
+"sa Mga Setting ng System."
+
+#: src/telephony/ui/windows/settings_window.py:913
+msgid "Andromeda Contacts"
+msgstr "Mga Contact sa Andromeda"
+
+#: src/telephony/ui/windows/settings_window.py:914
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ito ang address book na isi-sync mula sa Andromeda kung pipiliin mong gawin "
+"ito sa Mga Setting ng System."
+
+#: src/telephony/ui/windows/settings_window.py:1039
+msgid "Settings Saved"
+msgstr "Na-save ang Mga Setting"
 
 #: src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
@@ -1985,38 +2628,15 @@ msgstr "Maglakip ng Voice Note"
 
 #: src/telephony/ui/windows/sound_recorder_window.py:224
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
-msgstr "Masyadong malaki ang pagre-record para sa MMS (Max 600KB). Mangyaring Kunin muli nang mas maikli."
+msgstr ""
+"Masyadong malaki ang pagre-record para sa MMS (Max 600KB). Mangyaring Kunin "
+"muli nang mas maikli."
 
-#: src/telephony/ui/windows/blocklist_window.py:37
-msgid "Blocked Numbers"
-msgstr "Mga Naka-block na Numero"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+msgid "Enable Feature"
+msgstr ""
 
-#: src/telephony/ui/windows/blocklist_window.py:127
-msgid "No notes"
-msgstr "Walang notes"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-#: src/telephony/ui/main_window.py:665
-msgid "Unblock Number"
-msgstr "I-unblock ang Numero"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-msgid "Are you sure you want to unblock this number?"
-msgstr "Sigurado ka bang gusto mong i-unblock ang numerong ito?"
-
-#: src/telephony/ui/windows/blocklist_window.py:157
-msgid "Unblocked number"
-msgstr "Na-unblock na numero"
-
-#: src/telephony/ui/windows/camera_photo_window.py:41
-msgid "Take Picture"
-msgstr "Kumuha ng Larawan"
-
-#: src/telephony/ui/windows/camera_photo_window.py:146
-msgid "Attach Photo"
-msgstr "Maglakip ng Larawan"
-
-#: src/telephony/ui/windows/trusted_actions_list_window.py:97
+#: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
 "Contacts can trigger an action by sending a secret SMS message. Add contacts "
 "below and set their secret trigger phrase."
@@ -2025,7 +2645,7 @@ msgstr ""
 "pagpapadala ng lihim na mensaheng SMS. Magdagdag ng mga contact sa ibaba at "
 "itakda ang kanilang sikretong trigger na parirala."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+#: src/telephony/ui/windows/trusted_actions_list_window.py:154
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
 "TOTP is mandatory for this feature to work. Add contacts below and set their "
@@ -2038,7 +2658,7 @@ msgstr ""
 "itakda ang kanilang sikretong trigger na parirala. Halimbawang template: "
 "'SECRET TOTP' Halimbawa sa totoong buhay: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:103
+#: src/telephony/ui/windows/trusted_actions_list_window.py:157
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -2047,11 +2667,11 @@ msgid ""
 msgstr ""
 "Maaaring tahimik na mag-trigger ng callback ang mga pinagkakatiwalaang "
 "contact sa pamamagitan ng pagpapadala ng lihim na mensaheng SMS. Mandatoryo "
-"ang TOTP upang gumana ang feature na ito. Magdagdag ng mga contact sa "
-"ibaba at itakda ang kanilang sikretong trigger na parirala. Halimbawang "
-"template: 'SECRET TOTP' Halimbawa sa totoong buhay: 'Gorilla 123456'"
+"ang TOTP upang gumana ang feature na ito. Magdagdag ng mga contact sa ibaba "
+"at itakda ang kanilang sikretong trigger na parirala. Halimbawang template: "
+"'SECRET TOTP' Halimbawa sa totoong buhay: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:106
+#: src/telephony/ui/windows/trusted_actions_list_window.py:160
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
@@ -2061,10 +2681,10 @@ msgstr ""
 "Ang mga pinagkakatiwalaang contact ay maaaring magpadala ng SMS relay. "
 "Mandatoryo ang TOTP upang gumana ang feature na ito. Magdagdag ng mga "
 "contact sa ibaba at itakda ang kanilang sikretong trigger na parirala. "
-"Halimbawang template: 'SECRET TOTP +1234567890 MESSAGE' Halimbawa sa "
-"totoong buhay: 'Gorilla 123456 +1234567890 Hello'"
+"Halimbawang template: 'SECRET TOTP +1234567890 MESSAGE' Halimbawa sa totoong "
+"buhay: 'Gorilla 123456 +1234567890 Hello'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:109
+#: src/telephony/ui/windows/trusted_actions_list_window.py:163
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -2078,7 +2698,7 @@ msgstr ""
 "trigger na parirala. Halimbawang template: 'SECRET TOTP' Halimbawa sa "
 "totoong buhay: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:112
+#: src/telephony/ui/windows/trusted_actions_list_window.py:166
 msgid ""
 "Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
 "work. Add contacts below and set their secret trigger phrase. Example "
@@ -2088,38 +2708,43 @@ msgstr ""
 "Ang mga pinagkakatiwalaang contact ay maaaring i-wipe ang iyong device. "
 "Mandatoryo ang TOTP upang gumana ang feature na ito. Magdagdag ng mga "
 "contact sa ibaba at itakda ang kanilang sikretong trigger na parirala. "
-"Halimbawang template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' "
-"Halimbawa sa totoong buhay: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+"Halimbawang template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN "
+"SUDO_PASSWORD' Halimbawa sa totoong buhay: 'Gorilla 123456 0000 1234 "
+"SupportYourLocalFootball'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:132
-msgid "Show TOTP Setup"
-msgstr "Ipakita ang TOTP Setup"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+msgid "View or edit TOTP"
+msgstr ""
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:249
+#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+msgid "Setup TOTP"
+msgstr ""
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
 msgstr "Lihim na mensahe"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:261
+#: src/telephony/ui/windows/trusted_actions_list_window.py:349
 msgid "Remove Contact"
 msgstr "Alisin ang Contact"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:285
+#: src/telephony/ui/windows/trusted_actions_list_window.py:373
 msgid "Contact removed (Click Save to commit)"
 msgstr "Inalis ang contact (I-click ang I-save para mag-commit)"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:410
+#: src/telephony/ui/windows/trusted_actions_list_window.py:508
 msgid "Contact already in trusted list"
 msgstr "Makipag-ugnayan na sa pinagkakatiwalaang listahan"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:424
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
 msgid "Contact added"
 msgstr "Idinagdag ang contact"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:442
+#: src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "TOTP Setup"
 msgstr "TOTP Setup"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:483
+#: src/telephony/ui/windows/trusted_actions_list_window.py:586
 msgid ""
 "Share this code with your trusted contact. They should add it to an "
 "authenticator app such as Gnome Authenticator.\n"
@@ -2141,23 +2766,28 @@ msgstr ""
 "• Interval: 60 segundo\n"
 "\n"
 "Ang bawat aksyon ay may sariling code. Kapag nagti-trigger ng aksyon sa "
-"pamamagitan ng SMS, dapat nilang idagdag ang kasalukuyang 6-digit na "
-"code mula sa kanilang authenticator pagkatapos ng keyword."
+"pamamagitan ng SMS, dapat nilang idagdag ang kasalukuyang 6-digit na code "
+"mula sa kanilang authenticator pagkatapos ng keyword."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:506
-#: src/telephony/ui/windows/trusted_actions_list_window.py:547
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#, fuzzy
+msgid "Copy TOTP key"
+msgstr "Kopyahin ang Teksto"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:626
+#: src/telephony/ui/windows/trusted_actions_list_window.py:668
 msgid "Regenerate"
 msgstr "Bumuo muli"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:513
+#: src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Remove current TOTP"
 msgstr "Alisin ang kasalukuyang TOTP"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+#: src/telephony/ui/windows/trusted_actions_list_window.py:642
 msgid "Remove TOTP Key?"
 msgstr "Alisin ang TOTP Key?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:523
+#: src/telephony/ui/windows/trusted_actions_list_window.py:643
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
@@ -2165,480 +2795,42 @@ msgstr ""
 "Sigurado ka bang gusto mong alisin ang TOTP key? Ang aksyong ito ay hindi "
 "magpapagana sa pag-verify ng TOTP para sa feature na ito."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:542
+#: src/telephony/ui/windows/trusted_actions_list_window.py:663
 msgid "Regenerate Code?"
 msgstr "Bumuo Muli ng Code?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:543
+#: src/telephony/ui/windows/trusted_actions_list_window.py:664
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr ""
-"Gagawin nitong invalid ang kasalukuyang code sa authenticator app "
-"ng iyong contact. Sigurado ka ba?"
+"Gagawin nitong invalid ang kasalukuyang code sa authenticator app ng iyong "
+"contact. Sigurado ka ba?"
 
-#: src/telephony/ui/widgets/incall_elements_widget.py:48
-msgid "Hangup All Calls"
-msgstr "I-hangup ang Lahat ng Tawag"
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Nabigong ipadala sa {number}"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:123
-msgid "Copy Text"
-msgstr "Kopyahin ang Teksto"
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Tanggalin ang Mga Custom na Setting"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
-#: src/telephony/ui/main_window.py:729
-msgid "Copy Number"
-msgstr "Kopyahin ang Numero"
+#~ msgid "Delete Settings"
+#~ msgstr "Tanggalin ang Mga Setting"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:125
-#: src/telephony/ui/main_window.py:680
-msgid "Add to Contacts"
-msgstr "Idagdag sa Mga Contact"
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr ""
+#~ "I-clear ang lahat ng custom na setting? Mawawala ang mga emergency number."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
-msgid "Re-Schedule"
-msgstr "Muling Iskedyul"
+#~ msgid "Settings cleared"
+#~ msgstr "Na-clear ang mga setting"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:129
-#: src/telephony/ui/views/chat_view.py:801
-msgid "Forward"
-msgstr "Pasulong"
+#~ msgid "Error saving settings"
+#~ msgstr "Error sa pag-save ng mga setting"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:130
-msgid "Mark as Unread"
-msgstr "Markahan bilang Hindi pa nababasa"
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Ipakita ang TOTP Setup"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:263
-#: src/telephony/ui/views/chat_view.py:781
-#: src/telephony/ui/views/chat_view.py:1002
-msgid "Me"
-msgstr "Ako"
+#~ msgid "Failed to send message"
+#~ msgstr "Nabigong magpadala ng mensahe"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:526
-msgid "Open with"
-msgstr "Buksan sa"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:527
-msgid "Copy"
-msgstr "Kopyahin"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:528
-msgid "Save as"
-msgstr "I-save bilang"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:670
-msgid "Open With..."
-msgstr "Buksan Gamit ang..."
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:691
-msgid "Save File As"
-msgstr "I-save ang File Bilang"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:103
-msgid "{time} • Group"
-msgstr "{time} • Pangkat"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:109
-msgid "Draft: {message}"
-msgstr "Draft: {message}"
-
-#: src/telephony/ui/views/history_view.py:126
-msgid "All"
-msgstr "Lahat"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Any duration"
-msgstr "Anumang tagal"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Unanswered"
-msgstr "Hindi nasagot"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1s - 60s"
-msgstr "1s - 60s"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1-3 mins"
-msgstr "1-3 min"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "3-10 mins"
-msgstr "3-10 min"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "> 15 mins"
-msgstr "> 15 min"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Any date"
-msgstr "Kahit anong date"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Today"
-msgstr "Ngayong araw"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 3 days"
-msgstr "Huling 3 araw"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 14 days"
-msgstr "Huling 14 na araw"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 30 days"
-msgstr "Huling 30 araw"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 60 days"
-msgstr "Huling 60 araw"
-
-#: src/telephony/ui/views/messages_view.py:111
-#: src/telephony/ui/views/messages_view.py:545
-msgid "Search Contacts..."
-msgstr "Maghanap sa Mga Contact..."
-
-#: src/telephony/ui/views/messages_view.py:229
-msgid "All Messages"
-msgstr "Lahat ng Mensahe"
-
-#: src/telephony/ui/views/messages_view.py:230
-msgid "Unread Messages"
-msgstr "Mga Hindi Nabasang Mensahe"
-
-#: src/telephony/ui/views/messages_view.py:231
-msgid "Unknown Numbers"
-msgstr "Mga Hindi Kilalang Numero"
-
-#: src/telephony/ui/views/messages_view.py:232
-msgid "Saved Contacts"
-msgstr "Mga Naka-save na Contact"
-
-#: src/telephony/ui/views/messages_view.py:233
-msgid "Group Messages"
-msgstr "Mga Mensahe ng Grupo"
-
-#: src/telephony/ui/views/messages_view.py:234
-msgid "Individual Messages"
-msgstr "Mga Indibidwal na Mensahe"
-
-#: src/telephony/ui/views/messages_view.py:235
-msgid "Alphabetical Senders"
-msgstr "Mga Alpabetikong Nagpapadala"
-
-#: src/telephony/ui/views/messages_view.py:409
-msgid "[Multimedia Message]"
-msgstr "[Multimedia Message]"
-
-#: src/telephony/ui/views/messages_view.py:549
-msgid "Search Messages..."
-msgstr "Maghanap sa Mga Mensahe..."
-
-#: src/telephony/ui/views/messages_view.py:562
-#: src/telephony/ui/views/messages_view.py:636
-msgid "Start ({count})"
-msgstr "Magsimula ({count})"
-
-#: src/telephony/ui/views/messages_view.py:661
-msgid "Add Number: {number}"
-msgstr "Magdagdag ng Numero: {number}"
-
-#: src/telephony/ui/views/messages_view.py:735
-msgid "No results found"
-msgstr "Walang nakitang resulta"
-
-#: src/telephony/ui/views/chat_view.py:132
-msgid "Draft to {count} recipients"
-msgstr "Draft sa {count} mga tatanggap"
-
-#: src/telephony/ui/views/chat_view.py:159
-msgid "{count} Participants"
-msgstr "{count} Mga kalahok"
-
-#: src/telephony/ui/views/chat_view.py:305
-msgid "Replies not supported for this sender"
-msgstr "Hindi sinusuportahan ang mga tugon para sa nagpadalang ito"
-
-#: src/telephony/ui/views/chat_view.py:345
-#: src/telephony/ui/views/chat_view.py:1070
-msgid "Scheduled time must be in the future"
-msgstr "Ang nakaiskedyul na oras ay dapat sa hinaharap"
-
-#: src/telephony/ui/views/chat_view.py:353
-msgid "Rescheduled for {time}"
-msgstr "Muling na-iskedyul para sa {time}"
-
-#: src/telephony/ui/views/chat_view.py:357
-msgid "Re-Schedule Message"
-msgstr "Muling Iskedyul ang Mensahe"
-
-#: src/telephony/ui/views/chat_view.py:493
-#: src/telephony/ui/views/chat_view.py:556
-msgid "— New Messages —"
-msgstr "— Mga Bagong Mensahe —"
-
-#: src/telephony/ui/views/chat_view.py:588
-msgid "No results found in this conversation"
-msgstr "Walang nakitang mga resulta sa pag-uusap na ito"
-
-#: src/telephony/ui/views/chat_view.py:654
-msgid "Group Name"
-msgstr "Pangalan ng Grupo"
-
-#: src/telephony/ui/views/chat_view.py:655
-msgid "Set group name..."
-msgstr "Itakda ang pangalan ng grupo..."
-
-#: src/telephony/ui/views/chat_view.py:663
-msgid "Participants"
-msgstr "Mga kalahok"
-
-#: src/telephony/ui/views/chat_view.py:749 src/telephony/ui/main_window.py:672
-msgid "Unblocked"
-msgstr "Na-unblock"
-
-#: src/telephony/ui/views/chat_view.py:764
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Conversation"
-msgstr "Tanggalin ang Pag-uusap"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid ""
-"Forwarded from {sender}:\n"
-"{body}"
-msgstr ""
-"Ipinasa mula sa {sender}:\n"
-"{body}"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid "Forwarded from {sender}"
-msgstr "Ipinasa mula sa {sender}"
-
-#: src/telephony/ui/views/chat_view.py:800
-msgid "Forward To"
-msgstr "Ipasa Sa"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Delete Message"
-msgstr "Tanggalin ang Mensahe"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Are you sure you want to delete this message?"
-msgstr "Sigurado ka bang gusto mong tanggalin ang mensaheng ito?"
-
-#: src/telephony/ui/views/chat_view.py:884
-msgid "Group renamed"
-msgstr "Pinalitan ang pangalan ng pangkat"
-
-#: src/telephony/ui/views/chat_view.py:899
-msgid "Compressing video..."
-msgstr "Kino-compress ang video..."
-
-#: src/telephony/ui/views/chat_view.py:904
-msgid "Video compression failed"
-msgstr "Nabigo ang pag-compression ng video"
-
-#: src/telephony/ui/views/chat_view.py:1064
-msgid "Nothing to schedule"
-msgstr "Walang maiiskedyul"
-
-#: src/telephony/ui/views/chat_view.py:1078
-msgid "Schedule Message"
-msgstr "Mag-iskedyul ng Mensahe"
-
-#: src/telephony/ui/views/chat_view.py:1120
-msgid "Message scheduled for {time}"
-msgstr "Naka-iskedyul ang mensahe para sa {time}"
-
-#: src/telephony/ui/views/chat_view.py:1123
-#: src/telephony/ui/views/chat_view.py:1149
-msgid "[Attachment]"
-msgstr "[Attachment]"
-
-#: src/telephony/ui/views/chat_view.py:1140
-msgid "Failed to send message"
-msgstr "Nabigong magpadala ng mensahe"
-
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Group"
-msgstr "Tanggalin ang Grupo"
-
-#: src/telephony/ui/views/chat_view.py:1224
-msgid ""
-"This will permanently delete the conversation history and all saved media "
-"files."
-msgstr ""
-"Permanente nitong tatanggalin ang kasaysayan ng pag-uusap at lahat ng naka-"
-"save na media file."
-
-#: src/telephony/ui/views/contacts_view.py:61
-msgid "Search contacts"
-msgstr "Maghanap ng mga contact"
-
-#: src/telephony/ui/views/contacts_view.py:424
-msgid "Call Anonymous"
-msgstr "Tumawag sa Anonymous"
-
-#: src/telephony/ui/views/dialpad_view.py:40
-msgid "Enter number"
-msgstr "Ipasok ang numero"
-
-#: src/telephony/ui/views/dialpad_view.py:47
-#: src/telephony/ui/views/dialpad_view.py:148
-msgid "Telephony Smart Dialpad at your service"
-msgstr "Telephony Smart Dialpad sa iyong serbisyo"
-
-#: src/telephony/ui/views/dialpad_view.py:245
-msgid "Invalid number in clipboard"
-msgstr "Di-wastong numero sa clipboard"
-
-#: src/telephony/ui/views/dialpad_view.py:247
-msgid "Invalid number"
-msgstr "Di-wastong numero"
-
-#: src/telephony/ui/main_window.py:78
-msgid "Telephony"
-msgstr "Telepono"
-
-#: src/telephony/ui/main_window.py:102
-msgid "Dialpad"
-msgstr "Dialpad"
-
-#: src/telephony/ui/main_window.py:105
-msgid "History"
-msgstr "Kasaysayan"
-
-#: src/telephony/ui/main_window.py:147
-msgid "Switching address book..."
-msgstr "Nagpapalit ng address book..."
-
-#: src/telephony/ui/main_window.py:156
-msgid "Syncing Contacts..."
-msgstr "Sini-sync ang Mga Contact..."
-
-#: src/telephony/ui/main_window.py:245
-msgid "Set your number in Settings"
-msgstr "Itakda ang iyong numero sa Mga Setting"
-
-#: src/telephony/ui/main_window.py:260
-msgid "Please set Default Country Code in Settings"
-msgstr "Mangyaring itakda ang Default na Code ng Bansa sa Mga Setting"
-
-#: src/telephony/ui/main_window.py:273
-msgid "Setup Emergency Numbers in Settings"
-msgstr "I-setup ang Mga Numero ng Emergency sa Mga Setting"
-
-#: src/telephony/ui/main_window.py:289
-msgid "Resolve Duplicates"
-msgstr "Lutasin ang mga Duplicate"
-
-#: src/telephony/ui/main_window.py:300
-msgid "Reload Contacts"
-msgstr "I-reload ang Mga Contact"
-
-#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:505
-msgid "Blocklist"
-msgstr "Blocklist"
-
-#: src/telephony/ui/main_window.py:389
-msgid "Modem Connected"
-msgstr "Nakakonekta ang Modem"
-
-#: src/telephony/ui/main_window.py:391
-msgid "Modem Error: {message}"
-msgstr "Error sa Modem: {message}"
-
-#: src/telephony/ui/main_window.py:415
-msgid "Sending USSD..."
-msgstr "Ipinapadala ang USSD..."
-
-#: src/telephony/ui/main_window.py:430
-msgid "USSD Result"
-msgstr "Resulta ng USSD"
-
-#: src/telephony/ui/main_window.py:477
-msgid "Found {count} duplicate contact. Check menu."
-msgid_plural "Found {count} duplicate contacts. Check menu."
-msgstr[0] "Nakakita ng {count} duplicate na contact. Suriin ang menu."
-msgstr[1] "Nakakita ng {count} duplicate na contact. Suriin ang menu."
-
-#: src/telephony/ui/main_window.py:502 src/telephony/ui/main_window.py:554
-msgid "Contacts syncing..."
-msgstr "Nagsi-sync ang mga contact..."
-
-#: src/telephony/ui/main_window.py:548
-msgid "Reloading Contacts..."
-msgstr "Nire-reload ang Mga Contact..."
-
-#: src/telephony/ui/main_window.py:564
-msgid "Multiple Contacts Found"
-msgstr "Maramihang Mga Contact Natagpuan"
-
-#: src/telephony/ui/main_window.py:565
-msgid "Which contact would you like to edit?"
-msgstr "Aling contact ang gusto mong i-edit?"
-
-#: src/telephony/ui/main_window.py:578
-msgid "Unknown Addressbook"
-msgstr "Hindi kilalang Addressbook"
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling (Anonymous)..."
-msgstr "Tumatawag (Anonymous)..."
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling {number}..."
-msgstr "Tinatawagan si {number}..."
-
-#: src/telephony/ui/main_window.py:644
-msgid "Call Failed"
-msgstr "Nabigo ang tawag"
-
-#: src/telephony/ui/main_window.py:648
-msgid "Call Details"
-msgstr "Mga Detalye ng Tawag"
-
-#: src/telephony/ui/main_window.py:649
-msgid ""
-"Number: {number}\n"
-"Name: {name}\n"
-"Date: {date}\n"
-"Duration: {duration}"
-msgstr ""
-"Numero: {number}\n"
-"Pangalan: {name}\n"
-"Petsa: {date}\n"
-"Tagal: {duration}"
-
-#: src/telephony/ui/main_window.py:691
-msgid "Add to Existing Contact"
-msgstr "Idagdag sa Umiiral na Contact"
-
-#: src/telephony/ui/main_window.py:724
-msgid "Send Message"
-msgstr "Magpadala ng Mensahe"
-
-#: src/telephony/ui/main_window.py:747
-msgid "Delete this call"
-msgstr "Tanggalin ang tawag na ito"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Delete Call"
-msgstr "Tanggalin ang Tawag"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Remove this call?"
-msgstr "Alisin ang tawag na ito?"
-
-#: src/telephony/ui/main_window.py:766
-msgid "Number copied"
-msgstr "Nakopya ang numero"
-
-#: src/telephony/ui/main_window.py:773
-msgid "Added to {name}"
-msgstr "Idinagdag sa {name}"
-
-#: src/telephony/ui/main_window.py:776
-msgid "Failed to add number"
-msgstr "Nabigong magdagdag ng numero"
+#~ msgid "Switching address book..."
+#~ msgstr "Nagpapalit ng address book..."

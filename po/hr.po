@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 12:03+0000\n"
+"POT-Creation-Date: 2026-07-29 02:02+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -13,128 +13,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:91
-msgid "Exported {count} messages to Chatty database."
-msgstr "{count} poruka izvezeno u Chatty bazu podataka."
+#: src/telephony/app.py:530 src/telephony/app.py:564
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:398
+#: src/telephony/backend/utils/db_blocklist_utils.py:52
+#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
+#: src/telephony/ui/views/chat_view.py:93
+#: src/telephony/ui/views/chat_view.py:142
+#: src/telephony/ui/views/chat_view.py:152
+#: src/telephony/ui/views/chat_view.py:156
+#: src/telephony/ui/views/chat_view.py:700
+#: src/telephony/ui/views/chat_view.py:704
+#: src/telephony/ui/views/chat_view.py:800
+#: src/telephony/ui/views/chat_view.py:806
+#: src/telephony/ui/views/chat_view.py:965
+#: src/telephony/ui/views/chat_view.py:967
+#: src/telephony/ui/views/chat_view.py:1160
+#: src/telephony/ui/views/dialpad_view.py:158
+#: src/telephony/ui/views/history_view.py:411
+#: src/telephony/ui/views/messages_view.py:363
+#: src/telephony/ui/views/messages_view.py:366
+#: src/telephony/ui/views/messages_view.py:437
+#: src/telephony/ui/views/messages_view.py:441
+#: src/telephony/ui/views/messages_view.py:531
+#: src/telephony/ui/views/messages_view.py:868
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
+#: src/telephony/ui/widgets/history_rows_widget.py:121
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:166
+#: src/telephony/ui/windows/custom_tone_list_window.py:260
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:126
+#: src/telephony/ui/windows/incall_window.py:296
+#: src/telephony/ui/windows/incall_window.py:309
+#: src/telephony/ui/windows/incall_window.py:332
+#: src/telephony/ui/windows/incall_window.py:461
+#: src/telephony/ui/windows/trusted_actions_list_window.py:309
+#: src/telephony/ui/windows/trusted_actions_list_window.py:447
+msgid "Unknown"
+msgstr "Nepoznato"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:147
-msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Izvezeno {count} poziva u Gnome bazu podataka poziva."
+#: src/telephony/app.py:541
+msgid "Call Back"
+msgstr "Povratni poziv"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:164
-msgid "Source database not found."
-msgstr "Izvorna baza podataka nije pronađena."
+#: src/telephony/app.py:571
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} nova poruka"
+msgstr[1] "{count} novih poruka"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:167
-msgid "Exported Telephony database successfully."
-msgstr "Telefonska baza podataka uspješno je izvezena."
+#: src/telephony/app.py:575
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Otvoriti"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:34
-#: src/telephony/backend/utils/importer_ios_utils.py:202
-#: src/telephony/backend/utils/importer_android_utils.py:33
-#: src/telephony/backend/utils/importer_android_utils.py:135
-msgid "File not found."
-msgstr "Datoteka nije pronađena."
+#: src/telephony/app.py:579
+msgid "Call"
+msgstr "Poziv"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:63
-msgid "Could not find messages table in iOS database."
-msgstr "Nije moguće pronaći tablicu poruka u iOS bazi podataka."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:70
-msgid "Failed to read iOS SMS database structure."
-msgstr "Nije uspjelo čitanje strukture iOS SMS baze podataka."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:193
-msgid "Imported {count} messages from iOS backup."
-msgstr "Uvezeno je {count} poruka iz sigurnosne kopije iOS-a."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:227
-msgid "Could not find call history table in iOS database."
-msgstr "Nije moguće pronaći tablicu povijesti poziva u iOS bazi podataka."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:234
-msgid "Failed to read iOS Calls database structure."
-msgstr "Čitanje strukture baze podataka iOS poziva nije uspjelo."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:297
-msgid "Imported {count} calls from iOS backup."
-msgstr "Uvezeno {count} poziva iz sigurnosne kopije iOS-a."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:139
-msgid "Successfully exported {count} messages to XML."
-msgstr "Uspješno izvezeno {count} poruka u XML."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:205
-msgid "Successfully exported {count} calls to XML."
-msgstr "Uspješno izvezeno {count} poziva u XML."
-
-#: src/telephony/backend/utils/importer_local_utils.py:31
-msgid "Chatty database not found."
-msgstr "Chatty baza podataka nije pronađena."
-
-#: src/telephony/backend/utils/importer_local_utils.py:53
-msgid "Could not find messages table in Chatty database."
-msgstr "Nije moguće pronaći tablicu poruka u Chatty bazi podataka."
-
-#: src/telephony/backend/utils/importer_local_utils.py:60
-msgid "Failed to read Chatty database structure."
-msgstr "Neuspješno čitanje Chatty strukture baze podataka."
-
-#: src/telephony/backend/utils/importer_local_utils.py:121
-msgid "Imported {count} messages from Chatty."
-msgstr "Uvezeno {count} poruka iz Chattyja."
-
-#: src/telephony/backend/utils/importer_local_utils.py:131
-msgid "Calls database not found."
-msgstr "Baza poziva nije pronađena."
-
-#: src/telephony/backend/utils/importer_local_utils.py:151
-msgid "Could not find call history table in Calls database."
-msgstr "Nije moguće pronaći tablicu povijesti poziva u bazi podataka poziva."
-
-#: src/telephony/backend/utils/importer_local_utils.py:158
-msgid "Failed to read Calls database structure."
-msgstr "Neuspješno čitanje strukture baze podataka poziva."
-
-#: src/telephony/backend/utils/importer_local_utils.py:210
-msgid "Imported {count} calls."
-msgstr "Uvezeno {count} poziva."
-
-#: src/telephony/backend/utils/importer_android_utils.py:126
-msgid "Imported {count} messages from Android backup."
-msgstr "Uvezeno je {count} poruka iz sigurnosne kopije Androida."
-
-#: src/telephony/backend/utils/importer_android_utils.py:200
-msgid "Imported {count} calls from Android backup."
-msgstr "Uvezeno {count} poziva iz sigurnosne kopije Androida."
-
-#: src/telephony/backend/utils/model_utils.py:56
-msgid "0s"
-msgstr "0s"
-
-#: src/telephony/backend/utils/model_utils.py:61
-msgid "{h}h {m}m"
-msgstr "{h}h {m}m"
-
-#: src/telephony/backend/utils/model_utils.py:63
-msgid "{m}m {s}s"
-msgstr "{m}m {s}s"
-
-#: src/telephony/backend/utils/model_utils.py:64
-msgid "{s}s"
-msgstr "{s}s"
-
-#: src/telephony/backend/managers/location_manager.py:63
-msgid "Initializing location services..."
-msgstr "Pokretanje usluga lokacije..."
-
-#: src/telephony/backend/managers/location_manager.py:126
-msgid "Waiting for location service..."
-msgstr "Čekanje usluge lokacije..."
-
-#: src/telephony/backend/managers/location_manager.py:143
-msgid "Waiting for satellite fix..."
-msgstr "Čeka se satelitski popravak..."
+#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/utils/db_blocklist_utils.py:35
+#: src/telephony/ui/views/messages_view.py:357
+#: src/telephony/ui/views/messages_view.py:428
+msgid "Blocked Number"
+msgstr "Blokiran broj"
 
 #: src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency Mode"
@@ -149,40 +97,40 @@ msgid "Start Emergency Process"
 msgstr "Pokrenite hitni postupak"
 
 #: src/telephony/backend/managers/emergency_manager.py:132
-#: src/telephony/ui/windows/data_management_window.py:76
-#: src/telephony/ui/windows/data_management_window.py:138
-#: src/telephony/ui/windows/data_management_window.py:185
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:50
-#: src/telephony/ui/windows/contact_editor_window.py:118
-#: src/telephony/ui/windows/contact_editor_window.py:802
-#: src/telephony/ui/windows/contact_picker_window.py:45
-#: src/telephony/ui/windows/custom_tone_list_window.py:55
-#: src/telephony/ui/windows/custom_tone_list_window.py:332
-#: src/telephony/ui/windows/settings_window.py:64
-#: src/telephony/ui/windows/settings_window.py:356
-#: src/telephony/ui/windows/import_wizard_window.py:48
-#: src/telephony/ui/windows/duplicate_resolution_window.py:60
-#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
+#: src/telephony/ui/views/history_view.py:81
+#: src/telephony/ui/views/messages_view.py:114
+#: src/telephony/ui/windows/advanced_settings_window.py:48
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:69
 #: src/telephony/ui/windows/camera_video_window.py:80
-#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:832
+#: src/telephony/ui/windows/contact_picker_window.py:46
+#: src/telephony/ui/windows/custom_tone_list_window.py:56
+#: src/telephony/ui/windows/custom_tone_list_window.py:319
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
 #: src/telephony/ui/windows/import_export_window.py:74
 #: src/telephony/ui/windows/import_export_window.py:171
 #: src/telephony/ui/windows/import_export_window.py:197
 #: src/telephony/ui/windows/import_export_window.py:307
-#: src/telephony/ui/windows/import_export_window.py:328
-#: src/telephony/ui/windows/import_export_window.py:429
-#: src/telephony/ui/windows/import_export_window.py:489
-#: src/telephony/ui/windows/blocklist_editor_window.py:46
-#: src/telephony/ui/windows/blocklist_editor_window.py:156
+#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:437
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:65
+#: src/telephony/ui/windows/settings_window.py:406
 #: src/telephony/ui/windows/sound_recorder_window.py:70
-#: src/telephony/ui/windows/camera_photo_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:68
-#: src/telephony/ui/windows/trusted_actions_list_window.py:455
-#: src/telephony/ui/windows/trusted_actions_list_window.py:526
-#: src/telephony/ui/windows/trusted_actions_list_window.py:546
-#: src/telephony/ui/views/history_view.py:82
-#: src/telephony/ui/views/messages_view.py:119
-#: src/telephony/ui/main_window.py:440 src/telephony/ui/main_window.py:609
+#: src/telephony/ui/windows/trusted_actions_list_window.py:105
+#: src/telephony/ui/windows/trusted_actions_list_window.py:553
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+#: src/telephony/ui/windows/trusted_actions_list_window.py:667
 msgid "Cancel"
 msgstr "Otkazati"
 
@@ -203,6 +151,7 @@ msgid "Set numbers in Settings."
 msgstr "Postavite brojeve u Postavkama."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
 msgid "Call {number}"
 msgstr "Nazovi {number}"
 
@@ -211,6 +160,7 @@ msgid "Confirm Emergency Call"
 msgstr "Potvrdite hitni poziv"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
 msgid "Call {name}?"
 msgstr "Nazvati {name}?"
 
@@ -222,8 +172,20 @@ msgstr "🟢 Da, nazovite"
 msgid "🔴 No, Return"
 msgstr "🔴 Ne, Povratak"
 
+#: src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Pokretanje usluga lokacije..."
+
+#: src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Čekanje usluge lokacije..."
+
+#: src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Čeka se satelitski popravak..."
+
 #: src/telephony/backend/managers/lockscreen_manager.py:80
-#: src/telephony/ui/windows/incall_window.py:184
+#: src/telephony/ui/windows/incall_window.py:186
 msgid "Modem Stuck"
 msgstr "Modem se zaglavio"
 
@@ -236,66 +198,22 @@ msgid "Telephony Emergency"
 msgstr "Telefonija Hitna pomoć"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:85
-#: src/telephony/ui/windows/incall_window.py:186
-#: src/telephony/ui/windows/incall_window.py:607
+#: src/telephony/ui/windows/incall_window.py:188
+#: src/telephony/ui/windows/incall_window.py:650
 msgid "🔴 Reboot Modem"
 msgstr "🔴 Ponovno pokrenite modem"
-
-#: src/telephony/backend/managers/lockscreen_manager.py:132
-#: src/telephony/backend/managers/lockscreen_manager.py:142
-#: src/telephony/backend/managers/lockscreen_manager.py:398
-#: src/telephony/app.py:513 src/telephony/app.py:547
-#: src/telephony/ui/windows/incall_window.py:124
-#: src/telephony/ui/windows/incall_window.py:294
-#: src/telephony/ui/windows/incall_window.py:307
-#: src/telephony/ui/windows/incall_window.py:330
-#: src/telephony/ui/windows/incall_window.py:454
-#: src/telephony/ui/windows/custom_tone_list_window.py:173
-#: src/telephony/ui/windows/custom_tone_list_window.py:267
-#: src/telephony/ui/windows/duplicate_resolution_window.py:144
-#: src/telephony/ui/windows/blocklist_window.py:155
-#: src/telephony/ui/windows/trusted_actions_list_window.py:221
-#: src/telephony/ui/windows/trusted_actions_list_window.py:343
-#: src/telephony/ui/widgets/history_rows_widget.py:121
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:248
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:253
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:259
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:265
-#: src/telephony/ui/widgets/messages_rows_widget.py:97
-#: src/telephony/ui/views/history_view.py:412
-#: src/telephony/ui/views/messages_view.py:330
-#: src/telephony/ui/views/messages_view.py:333
-#: src/telephony/ui/views/messages_view.py:402
-#: src/telephony/ui/views/messages_view.py:406
-#: src/telephony/ui/views/messages_view.py:496
-#: src/telephony/ui/views/messages_view.py:749
-#: src/telephony/ui/views/chat_view.py:82
-#: src/telephony/ui/views/chat_view.py:87
-#: src/telephony/ui/views/chat_view.py:141
-#: src/telephony/ui/views/chat_view.py:151
-#: src/telephony/ui/views/chat_view.py:155
-#: src/telephony/ui/views/chat_view.py:682
-#: src/telephony/ui/views/chat_view.py:686
-#: src/telephony/ui/views/chat_view.py:783
-#: src/telephony/ui/views/chat_view.py:789
-#: src/telephony/ui/views/chat_view.py:869
-#: src/telephony/ui/views/chat_view.py:871
-#: src/telephony/ui/views/chat_view.py:1000
-#: src/telephony/ui/views/dialpad_view.py:157
-#: src/telephony/ui/main_window.py:576
-msgid "Unknown"
-msgstr "Nepoznato"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:187
 msgid "Telephony - Incoming"
 msgstr "Telefonija - Dolazni"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 Dolazno: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
-#: src/telephony/ui/windows/incall_window.py:385
+#: src/telephony/ui/windows/incall_window.py:387
 msgid "Incoming Call..."
 msgstr "Dolazni poziv..."
 
@@ -326,6 +244,7 @@ msgid "Telephony - On Hold"
 msgstr "Telefonija - Na čekanju"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
+#, python-brace-format
 msgid "🟠 {name} put as on hold"
 msgstr "🟠 {name} put as on hold"
 
@@ -349,6 +268,7 @@ msgid "MuteMic"
 msgstr "MuteMic"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (Na čekanju)"
 
@@ -361,6 +281,7 @@ msgid "Telephony - Active Call"
 msgstr "Telefonija - Aktivni poziv"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
+#, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 Aktivan: {name}"
 
@@ -380,24 +301,10 @@ msgstr "Zvučnik isključen"
 msgid "SpeakerOn"
 msgstr "Zvučnik uključen"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:35
-msgid "Please wait 60 seconds before triggering {prefix} again."
-msgstr "Pričekajte 60 sekundi prije ponovnog pokretanja {prefix}."
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:266
-msgid " (Accuracy: {acc}m)"
-msgstr "(Točnost: {acc}m)"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:268
-msgid "I am here: {link}{acc_str}"
-msgstr "Ovdje sam: {link}{acc_str}"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:276
-msgid "Failed to obtain location after trying all methods."
-msgstr "Nije uspjelo dobivanje lokacije nakon isprobavanja svih metoda."
-
+#: src/telephony/backend/managers/mms_manager.py:245
 #: src/telephony/backend/managers/ofono_calls_manager.py:39
-#: src/telephony/ui/main_window.py:425
+#: src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: src/telephony/ui/main_window.py:447
 msgid "Modem not ready"
 msgstr "Modem nije spreman"
 
@@ -406,1138 +313,1018 @@ msgid "Cannot dial while in another call"
 msgstr "Ne može birati dok je u drugom pozivu"
 
 #: src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
 msgid "Dial Error: {e}"
 msgstr "Pogreška pri biranju: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:50
+#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "Slanje nije uspjelo: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:56
+#: src/telephony/backend/managers/ofono_messaging_manager.py:144
 msgid "Not supported"
 msgstr "Nije podržano"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:61
-#: src/telephony/ui/windows/data_management_window.py:285
+#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
 msgid "Error: {e}"
 msgstr "Greška: {e}"
 
-#: src/telephony/app.py:524
-msgid "Call Back"
-msgstr "Povratni poziv"
-
-#: src/telephony/app.py:554
-msgid "{count} new message"
-msgid_plural "{count} new messages"
-msgstr[0] "{count} nova poruka"
-msgstr[1] "{count} novih poruka"
-
-#: src/telephony/app.py:558
-#: src/telephony/ui/windows/contact_picker_window.py:30
-msgid "Open"
-msgstr "Otvoriti"
-
-#: src/telephony/app.py:562
-msgid "Call"
-msgstr "Poziv"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:81
-msgid "Scheduled ({current}/{total})"
-msgstr "Zakazano ({current}/{total})"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:90
-msgid "To: {name}"
-msgstr "Za: {name}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:144
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:298
-msgid "Scheduled: {time}"
-msgstr "Planirano: {time}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:154
-msgid "Send Now"
-msgstr "Pošalji sada"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:165
-#: src/telephony/ui/windows/custom_tone_list_window.py:193
-msgid "Remove"
-msgstr "Ukloniti"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:172
-msgid "Message removed"
-msgstr "Poruka uklonjena"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-msgid "Sent scheduled message to {number}"
-msgstr "Poslana zakazana poruka na {number}"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:222
-msgid "Failed to send to {number}"
-msgstr "Slanje na {number} nije uspjelo"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Database Management"
-msgstr "Upravljanje bazom podataka"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Select data to permanently delete."
-msgstr "Odaberite podatke za trajno brisanje."
-
-#: src/telephony/ui/windows/data_management_window.py:47
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Delete Call History"
-msgstr "Izbriši povijest poziva"
-
-#: src/telephony/ui/windows/data_management_window.py:48
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "Delete All Messages"
-msgstr "Izbriši sve poruke"
-
-#: src/telephony/ui/windows/data_management_window.py:49
-msgid "Delete All Group Names"
-msgstr "Izbriši sve nazive grupa"
-
-#: src/telephony/ui/windows/data_management_window.py:50
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Delete Blocklist"
-msgstr "Izbriši popis blokiranih"
-
-#: src/telephony/ui/windows/data_management_window.py:51
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete All Contacts"
-msgstr "Izbriši sve kontakte"
-
-#: src/telephony/ui/windows/data_management_window.py:52
-#: src/telephony/ui/windows/data_management_window.py:134
-#: src/telephony/ui/windows/data_management_window.py:157
-msgid "Delete Address Book"
-msgstr "Izbriši adresar"
-
-#: src/telephony/ui/windows/data_management_window.py:53
-msgid "Delete Custom Settings"
-msgstr "Izbriši prilagođene postavke"
-
-#: src/telephony/ui/windows/data_management_window.py:60
-msgid "DELETE EVERYTHING"
-msgstr "IZBRIŠI SVE"
-
-#: src/telephony/ui/windows/data_management_window.py:65
-#: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/contact_editor_window.py:98
-#: src/telephony/ui/windows/settings_window.py:318
-#: src/telephony/ui/windows/settings_window.py:342
-#: src/telephony/ui/windows/settings_window.py:393
-#: src/telephony/ui/windows/settings_window.py:531
-#: src/telephony/ui/windows/settings_window.py:764
-#: src/telephony/ui/windows/chat_media_controller_window.py:148
-#: src/telephony/ui/main_window.py:522 src/telephony/ui/main_window.py:756
-msgid "Close"
-msgstr "Zatvoriti"
-
-#: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:728
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:131
-msgid "Delete"
-msgstr "Izbrisati"
-
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Are you sure? This cannot be undone."
-msgstr "Jeste li sigurni? Ovo se ne može poništiti."
-
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "This will delete all SMS/MMS and attachments."
-msgstr "Ovo će izbrisati sve SMS/MMS poruke i privitke."
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Delete Group Names"
-msgstr "Izbriši nazive grupa"
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Reset all custom group chat names?"
-msgstr "Poništiti sva imena prilagođenih grupnih chatova?"
-
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Unblock all numbers?"
-msgstr "Deblokirati sve brojeve?"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Delete Settings"
-msgstr "Izbriši postavke"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Clear all custom settings? Emergency numbers will be lost."
-msgstr ""
-"Izbrisati sve prilagođene postavke? Brojevi hitnih službi bit će izgubljeni."
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "No deletable address books"
-msgstr "Nema adresara koji se mogu izbrisati"
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "There are no custom address books that can be deleted."
-msgstr "Ne postoje prilagođeni adresari koji se mogu izbrisati."
-
-#: src/telephony/ui/windows/data_management_window.py:135
-msgid ""
-"Which address book do you want to delete permanently?\n"
-"\n"
-"This will wipe it from the system."
-msgstr ""
-"Koji adresar želite trajno izbrisati?\n"
-"\n"
-"Ovo će ga izbrisati iz sustava."
-
-#: src/telephony/ui/windows/data_management_window.py:158
-msgid "Are you sure you want to permanently delete the '{name}' address book?"
-msgstr "Jeste li sigurni da želite trajno izbrisati adresar '{name}'?"
-
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete EVERYTHING"
-msgstr "Izbriši SVE"
-
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Wipe database, config files and contacts? App will reset."
-msgstr ""
-"Brisati bazu podataka, konfiguracijske datoteke i kontakte? Aplikacija će se "
-"resetirati."
-
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Really delete everyone from your address book?"
-msgstr "Stvarno izbrišete sve iz svog adresara?"
-
-#: src/telephony/ui/windows/data_management_window.py:182
-msgid "Select which address book to clear:"
-msgstr "Odaberite adresar za brisanje:"
-
-#: src/telephony/ui/windows/data_management_window.py:193
-msgid "All Address Books"
-msgstr "Svi adresari"
-
-#: src/telephony/ui/windows/data_management_window.py:223
-msgid "Call History Deleted"
-msgstr "Povijest poziva izbrisana"
-
-#: src/telephony/ui/windows/data_management_window.py:227
-msgid "Deleting messages..."
-msgstr "Brisanje poruka..."
-
-#: src/telephony/ui/windows/data_management_window.py:233
-msgid "Messages & Attachments Deleted"
-msgstr "Poruke i prilozi izbrisani"
-
-#: src/telephony/ui/windows/data_management_window.py:240
-msgid "Group Names Reset"
-msgstr "Imena grupa Reset"
-
-#: src/telephony/ui/windows/data_management_window.py:246
-msgid "Blocklist Cleared"
-msgstr "Popis blokiranih izbrisan"
-
-#: src/telephony/ui/windows/data_management_window.py:250
-msgid "Deleting contacts..."
-msgstr "Brisanje kontakata..."
-
-#: src/telephony/ui/windows/data_management_window.py:257
-msgid "Contacts Deleted"
-msgstr "Kontakti izbrisani"
-
-#: src/telephony/ui/windows/data_management_window.py:265
-msgid "Deleting address book..."
-msgstr "Brisanje adresara..."
-
-#: src/telephony/ui/windows/data_management_window.py:272
-msgid "Address Book Deleted"
-msgstr "Adresar izbrisan"
-
-#: src/telephony/ui/windows/data_management_window.py:275
-msgid "Failed to delete Address Book"
-msgstr "Brisanje adresara nije uspjelo"
-
-#: src/telephony/ui/windows/data_management_window.py:282
-msgid "Settings cleared"
-msgstr "Postavke izbrisane"
-
-#: src/telephony/ui/windows/data_management_window.py:289
-msgid "Wiping Database..."
-msgstr "Brisanje baze podataka..."
-
-#: src/telephony/ui/windows/data_management_window.py:303
-msgid "App Reset Complete"
-msgstr "Resetiranje aplikacije dovršeno"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:28
-#: src/telephony/ui/windows/settings_window.py:255
-#: src/telephony/ui/windows/settings_window.py:416
-msgid "Notification Overrides"
-msgstr "Nadjačavanja obavijesti"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:54
-#: src/telephony/ui/windows/contact_editor_window.py:122
-#: src/telephony/ui/windows/custom_tone_list_window.py:59
-#: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/advanced_settings_window.py:56
-#: src/telephony/ui/windows/blocklist_editor_window.py:50
-#: src/telephony/ui/windows/trusted_actions_list_window.py:73
-#: src/telephony/ui/windows/trusted_actions_list_window.py:459
-#: src/telephony/ui/main_window.py:783
-msgid "Save"
-msgstr "Uštedjeti"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:67
-#: src/telephony/ui/windows/trusted_actions_list_window.py:89
-msgid "Find and add contacts..."
-msgstr "Pronađite i dodajte kontakte..."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:74
-msgid ""
-"Contacts in this list will always play notifications at full volume, even if "
-"the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Kontakti na ovom popisu uvijek će reproducirati obavijesti punom glasnoćom, "
-"čak i ako je telefon u načinu rada Nečujno ili Ne uznemiravaj."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:244
-#: src/telephony/ui/windows/custom_tone_list_window.py:310
-#: src/telephony/ui/windows/trusted_actions_list_window.py:389
-#: src/telephony/ui/views/messages_view.py:681
-msgid "No contacts found"
-msgstr "Nema pronađenih kontakata"
-
-#: src/telephony/ui/windows/info_window.py:28
-msgid "About Telephony"
-msgstr "O telefoniji"
-
-#: src/telephony/ui/windows/info_window.py:53
-msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
-msgstr ""
-"Brzo telefonsko biranje i klijent za razmjenu poruka dizajniran za FLX1 i "
-"FLX1s."
-
-#: src/telephony/ui/windows/info_window.py:71
-msgid "Version"
-msgstr "Verzija"
-
-#: src/telephony/ui/windows/info_window.py:72
-msgid "Developer"
-msgstr "Developer"
-
-#: src/telephony/ui/windows/info_window.py:73
-msgid "License"
-msgstr "Licenca"
-
-#: src/telephony/ui/windows/info_window.py:77
-msgid "Links"
-msgstr "Linkovi"
-
-#: src/telephony/ui/windows/info_window.py:101
-#: src/telephony/ui/windows/contact_editor_window.py:216
-msgid "Website"
-msgstr "Web stranica"
-
-#: src/telephony/ui/windows/info_window.py:109
-msgid "Issue Tracker"
-msgstr "Praćenje problema"
-
-#: src/telephony/ui/windows/info_window.py:110
-msgid "Report bugs or request features"
-msgstr "Prijavite pogreške ili zatražite značajke"
-
-#: src/telephony/ui/windows/contact_editor_window.py:31
-#: src/telephony/ui/windows/contact_editor_window.py:397
-msgid "Contact Details"
-msgstr "Kontakt detalji"
-
-#: src/telephony/ui/windows/contact_editor_window.py:66
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:236
-#: src/telephony/ui/windows/trusted_actions_list_window.py:312
-#: src/telephony/ui/views/contacts_view.py:122
-msgid "Mobile"
-msgstr "Mobilni"
-
-#: src/telephony/ui/windows/contact_editor_window.py:67
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:237
-#: src/telephony/ui/windows/trusted_actions_list_window.py:313
-#: src/telephony/ui/views/contacts_view.py:123
-msgid "Work"
-msgstr "Raditi"
-
-#: src/telephony/ui/windows/contact_editor_window.py:68
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:238
-#: src/telephony/ui/windows/trusted_actions_list_window.py:314
-#: src/telephony/ui/views/contacts_view.py:124
-msgid "Home"
-msgstr "Dom"
-
-#: src/telephony/ui/windows/contact_editor_window.py:69
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:239
-#: src/telephony/ui/windows/trusted_actions_list_window.py:315
-#: src/telephony/ui/views/contacts_view.py:125
-msgid "Fax"
-msgstr "Faks"
-
-#: src/telephony/ui/windows/contact_editor_window.py:70
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:240
-#: src/telephony/ui/windows/trusted_actions_list_window.py:316
-#: src/telephony/ui/views/contacts_view.py:126
-msgid "Other"
-msgstr "ostalo"
-
-#: src/telephony/ui/windows/contact_editor_window.py:71
-#: src/telephony/ui/windows/custom_tone_list_window.py:241
-#: src/telephony/ui/windows/trusted_actions_list_window.py:317
-#: src/telephony/ui/views/contacts_view.py:127
-msgid "Main"
-msgstr "Glavni"
-
-#: src/telephony/ui/windows/contact_editor_window.py:102
-#: src/telephony/ui/windows/custom_tone_list_window.py:186
-msgid "Edit"
-msgstr "Uredi"
-
-#: src/telephony/ui/windows/contact_editor_window.py:136
-msgid "Identity"
-msgstr "Identitet"
-
-#: src/telephony/ui/windows/contact_editor_window.py:139
-#: src/telephony/ui/windows/contact_editor_window.py:157
-msgid "Favorite"
-msgstr "omiljena"
-
-#: src/telephony/ui/windows/contact_editor_window.py:147
-msgid "Full Name"
-msgstr "Puno ime"
-
-#: src/telephony/ui/windows/contact_editor_window.py:153
-msgid "Name"
-msgstr "Ime"
-
-#: src/telephony/ui/windows/contact_editor_window.py:157
-#: src/telephony/ui/windows/trusted_actions_list_window.py:527
-msgid "Yes"
-msgstr "Da"
-
-#: src/telephony/ui/windows/contact_editor_window.py:163
-msgid "Phone Numbers"
-msgstr "Brojevi telefona"
-
-#: src/telephony/ui/windows/contact_editor_window.py:179
-#: src/telephony/ui/windows/settings_window.py:212
-#: src/telephony/ui/main_window.py:782
-msgid "Add Number"
-msgstr "Dodaj broj"
-
-#: src/telephony/ui/windows/contact_editor_window.py:190
-#: src/telephony/ui/windows/duplicate_resolution_window.py:159
-msgid "Email Addresses"
-msgstr "E-mail adrese"
-
-#: src/telephony/ui/windows/contact_editor_window.py:200
-msgid "Add Email"
-msgstr "Dodajte e-poštu"
-
-#: src/telephony/ui/windows/contact_editor_window.py:211
-msgid "Additional Details"
-msgstr "Dodatni detalji"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Organization"
-msgstr "Organizacija"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Job Title"
-msgstr "Naziv radnog mjesta"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Address"
-msgstr "Adresa"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Notes"
-msgstr "Bilješke"
-
-#: src/telephony/ui/windows/contact_editor_window.py:241
-#: src/telephony/ui/windows/contact_editor_window.py:246
-msgid "Birthday"
-msgstr "Rođendan"
-
-#: src/telephony/ui/windows/contact_editor_window.py:242
-#: src/telephony/ui/windows/contact_editor_window.py:249
-msgid "Anniversary"
-msgstr "obljetnica"
-
-#: src/telephony/ui/windows/contact_editor_window.py:258
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Delete Contact"
-msgstr "Izbriši kontakt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:269
-#: src/telephony/ui/windows/settings_window.py:161
-#: src/telephony/ui/windows/settings_window.py:390
-msgid "Address Books"
-msgstr "Adresari"
-
-#: src/telephony/ui/windows/contact_editor_window.py:289
-msgid "Unknown Source"
-msgstr "Nepoznati izvor"
-
-#: src/telephony/ui/windows/contact_editor_window.py:313
-#: src/telephony/ui/windows/contact_editor_window.py:351
-#: src/telephony/ui/windows/date_time_picker_window.py:29
-msgid "Select Date"
-msgstr "Odaberite Datum"
-
-#: src/telephony/ui/windows/contact_editor_window.py:324
-msgid "Clear Date"
-msgstr "Brisanje datuma"
-
-#: src/telephony/ui/windows/contact_editor_window.py:366
-msgid "Select {title}"
-msgstr "Odaberite {title}"
-
-#: src/telephony/ui/windows/contact_editor_window.py:376
-msgid "Copy {title}"
-msgstr "Kopiraj {title}"
-
-#: src/telephony/ui/windows/contact_editor_window.py:385
-msgid "Copied to clipboard"
-msgstr "Kopirano u međuspremnik"
-
-#: src/telephony/ui/windows/contact_editor_window.py:390
-#: src/telephony/ui/main_window.py:680
-msgid "Edit Contact"
-msgstr "Uredi kontakt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:530
-msgid "Export Contact"
-msgstr "Izvoz kontakta"
-
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Are you sure you want to delete this contact?"
-msgstr "Jeste li sigurni da želite izbrisati ovaj kontakt?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:559
-msgid "Deleting contact..."
-msgstr "Brisanje kontakta..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:745
-msgid "Saving contact..."
-msgstr "Spremanje kontakta..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:798
-#: src/telephony/ui/windows/blocklist_editor_window.py:152
-msgid "Conflict"
-msgstr "Sukob"
-
-#: src/telephony/ui/windows/contact_editor_window.py:799
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Unblocking and add the number to Contacts?"
-msgstr ""
-"Broj ne može biti i na popisu blokiranih i u kontaktima.\n"
-"\n"
-"Želite li nastaviti s deblokiranjem i dodati broj u Kontakte?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:803
-msgid "Yes, Add to Contacts"
-msgstr "Da, dodaj u kontakte"
-
-#: src/telephony/ui/windows/contact_editor_window.py:818
-#: src/telephony/ui/windows/settings_window.py:407
-#: src/telephony/ui/windows/settings_window.py:419
-#: src/telephony/ui/windows/blocklist_editor_window.py:172
-#: src/telephony/ui/main_window.py:432
-msgid "OK"
-msgstr "U REDU"
-
-#: src/telephony/ui/windows/contact_picker_window.py:29
-msgid "Pick Contact"
-msgstr "Odaberite kontakt"
-
-#: src/telephony/ui/windows/contact_picker_window.py:61
-msgid "Name or Number"
-msgstr "Ime ili broj"
-
-#: src/telephony/ui/windows/contact_picker_window.py:191
-msgid "No number"
-msgstr "Nema broja"
-
-#: src/telephony/ui/windows/incall_window.py:145
-#: src/telephony/ui/main_window.py:700
-msgid "Search Number"
-msgstr "Traži broj"
-
-#: src/telephony/ui/windows/incall_window.py:150
-msgid "Hangup and Send SMS"
-msgstr "Prekini vezu i pošalji SMS"
-
-#: src/telephony/ui/windows/incall_window.py:185
-msgid "The call failed to disconnect."
-msgstr "Poziv se nije uspio prekinuti."
-
-#: src/telephony/ui/windows/incall_window.py:218
-#: src/telephony/ui/windows/incall_window.py:626
-msgid "Output"
-msgstr "Izlaz"
-
-#: src/telephony/ui/windows/incall_window.py:233
-#: src/telephony/ui/windows/incall_window.py:654
-msgid "Input"
-msgstr "Ulazni"
-
-#: src/telephony/ui/windows/incall_window.py:385
-msgid "Silenced Incoming Call"
-msgstr "Utišani dolazni poziv"
-
-#: src/telephony/ui/windows/incall_window.py:494
-#: src/telephony/ui/windows/incall_window.py:741
-#: src/telephony/ui/windows/settings_window.py:231
-msgid "I can't talk right now."
-msgstr "Ne mogu sada razgovarati."
-
-#: src/telephony/ui/windows/incall_window.py:580
-msgid "Restarting RIL..."
-msgstr "Ponovno pokretanje RIL-a..."
-
-#: src/telephony/ui/windows/incall_window.py:592
-msgid "Restored!"
-msgstr "Obnovljeno!"
-
-#: src/telephony/ui/windows/incall_window.py:598
-msgid "Failed. Reboot Device."
-msgstr "neuspješno Ponovno pokrenite uređaj."
-
-#: src/telephony/ui/windows/incall_window.py:600
-msgid "Verifying... {attempt}"
-msgstr "Provjera... {attempt}"
-
-#: src/telephony/ui/windows/incall_window.py:659
-msgid "Mute Microphone"
-msgstr "Isključi mikrofon"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:273
-msgid "Individual SMS Notifications"
-msgstr "Individualne SMS obavijesti"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:284
-msgid "Individual Ringtones"
-msgstr "Individualne melodije zvona"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:72
-msgid "Find contact to add..."
-msgstr "Pronađite kontakt za dodavanje..."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:79
-msgid ""
-"Select a contact and choose a custom sound file (.ogg or .oga). The file "
-"will be copied to your local storage."
-msgstr ""
-"Odaberite kontakt i odaberite prilagođenu zvučnu datoteku (.ogg ili .oga). "
-"Datoteka će se kopirati u vašu lokalnu pohranu."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:209
-msgid "Custom tone removed (Click Save to commit)"
-msgstr "Prilagođeni ton uklonjen (kliknite Spremi za obvezu)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:328
-msgid "Select Tone for {name}"
-msgstr "Odaberite ton za {name}"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:331
-#: src/telephony/ui/windows/settings_window.py:355
-msgid "Select"
-msgstr "Odaberite"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:336
-msgid "Supported Audio (OGG)"
-msgstr "Podržani zvuk (OGG)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:364
-msgid "Only .ogg or .oga files are supported"
-msgstr "Podržane su samo .ogg ili .oga datoteke"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:375
-msgid "Failed to copy audio file"
-msgstr "Kopiranje audio datoteke nije uspjelo"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:395
-msgid "Custom tone added"
-msgstr "Dodan prilagođeni ton"
-
-#: src/telephony/ui/windows/settings_window.py:39
-#: src/telephony/ui/main_window.py:295
-msgid "Settings"
-msgstr "postavke"
-
-#: src/telephony/ui/windows/settings_window.py:87
-#: src/telephony/ui/windows/settings_window.py:339
-msgid "Ringback Tone"
-msgstr "Ton povratnog zvona"
-
-#: src/telephony/ui/windows/settings_window.py:90
-msgid "Enable Local Ringback"
-msgstr "Omogući lokalni povratni poziv"
-
-#: src/telephony/ui/windows/settings_window.py:105
-msgid "Selected Tone"
-msgstr "Odabrani ton"
-
-#: src/telephony/ui/windows/settings_window.py:108
-#: src/telephony/ui/windows/settings_window.py:328
-msgid "System Default"
-msgstr "Zadane postavke sustava"
-
-#: src/telephony/ui/windows/settings_window.py:135
-msgid "SIM Settings"
-msgstr "SIM postavke"
-
-#: src/telephony/ui/windows/settings_window.py:138
-msgid "My Number"
-msgstr "Moj broj"
-
-#: src/telephony/ui/windows/settings_window.py:139
-msgid "My Number (International Format)"
-msgstr "Moj broj (međunarodni format)"
-
-#: src/telephony/ui/windows/settings_window.py:145
-#: src/telephony/ui/windows/settings_window.py:146
-#: src/telephony/ui/windows/settings_window.py:315
-msgid "Default Country Code"
-msgstr "Zadani kod zemlje"
-
-#: src/telephony/ui/windows/settings_window.py:172
-msgid "Address Book Info"
-msgstr "Informacije o adresaru"
-
-#: src/telephony/ui/windows/settings_window.py:180
-msgid "Default Address Book"
-msgstr "Zadani adresar"
-
-#: src/telephony/ui/windows/settings_window.py:186
-msgid "Duplicate Resolver"
-msgstr "Rješivač duplikata"
-
-#: src/telephony/ui/windows/settings_window.py:188
-msgid ""
-"Scan for duplicate numbers and show a resolution banner in the Contacts view."
-msgstr ""
-"Skenirajte duplikate brojeva i prikažite traku rezolucije u prikazu "
-"kontakata."
-
-#: src/telephony/ui/windows/settings_window.py:201
-msgid "Lockscreen Emergency"
-msgstr "Zaslon za hitne slučajeve"
-
-#: src/telephony/ui/windows/settings_window.py:204
-msgid "Show Emergency Button"
-msgstr "Prikaži gumb za hitne slučajeve"
-
-#: src/telephony/ui/windows/settings_window.py:209
-msgid "Emergency Numbers"
-msgstr "Brojevi hitnih službi"
-
-#: src/telephony/ui/windows/settings_window.py:226
-msgid "Quick Response"
-msgstr "Brzi odgovor"
-
-#: src/telephony/ui/windows/settings_window.py:229
-msgid "Decline Message"
-msgstr "Odbij poruku"
-
-#: src/telephony/ui/windows/settings_window.py:236
-msgid "Notification Exceptions"
-msgstr "Iznimke obavijesti"
-
-#: src/telephony/ui/windows/settings_window.py:239
-#: src/telephony/ui/windows/settings_window.py:404
-msgid "Repeated Calls Bypass"
-msgstr "Zaobilaženje ponovljenih poziva"
-
-#: src/telephony/ui/windows/settings_window.py:241
-msgid "If the same number calls 3 times in 5 minutes, force max volume."
-msgstr "Ako isti broj zove 3 puta u 5 minuta, forsiraj maksimalnu glasnoću."
-
-#: src/telephony/ui/windows/settings_window.py:256
-msgid "Manage contacts that always play sound"
-msgstr "Upravljajte kontaktima koji uvijek reproduciraju zvuk"
-
-#: src/telephony/ui/windows/settings_window.py:265
-#: src/telephony/ui/windows/settings_window.py:277
-#: src/telephony/ui/windows/settings_window.py:288
-msgid "Manage"
-msgstr "Upravljati"
-
-#: src/telephony/ui/windows/settings_window.py:275
-msgid "Set custom notification sounds for specific contacts"
-msgstr "Postavite prilagođene zvukove obavijesti za određene kontakte"
-
-#: src/telephony/ui/windows/settings_window.py:286
-msgid "Set custom ringtones for specific contacts"
-msgstr "Postavite prilagođene melodije zvona za određene kontakte"
-
-#: src/telephony/ui/windows/settings_window.py:302
-#: src/telephony/ui/windows/advanced_settings_window.py:33
-msgid "Advanced Settings"
-msgstr "Napredne postavke"
-
-#: src/telephony/ui/windows/settings_window.py:311
-msgid ""
-"The Default Country Code is used to format numbers that don't include an "
-"international prefix (e.g., +358).\n"
-"\n"
-"If left empty, the system tries to detect it automatically from your SIM "
-"card or network.\n"
-"\n"
-"You can manually override it here by entering a 2-letter ISO region code (e."
-"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
-msgstr ""
-"Zadani kod zemlje koristi se za formatiranje brojeva koji ne uključuju "
-"međunarodni prefiks (npr. +358).\n"
-"\n"
-"Ako je polje prazno, sustav ga pokušava automatski otkriti s vaše SIM "
-"kartice ili mreže.\n"
-"\n"
-"Ovdje ga možete ručno nadjačati unosom 2-slovnog ISO koda regije (npr. US, "
-"FI, DE) ili pozivnog koda (npr. +358, 358, +1, 1)."
-
-#: src/telephony/ui/windows/settings_window.py:332
-msgid ""
-"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
-"outgoing call to be answered. Some carriers don't generate it so we have "
-"option to generate it manually here. \n"
-"\n"
-"You can select your own music file, or clear it to use the standard system "
-"tone."
-msgstr ""
-"Ton povratnog zvona je zvuk koji se reproducira (tu-tu-tu-tu) dok se čeka "
-"odgovor na odlazni poziv. Neki ga operateri ne generiraju pa ga ovdje imamo "
-"opciju ručno generirati. \n"
-"\n"
-"Možete odabrati vlastitu glazbenu datoteku ili je izbrisati da biste "
-"koristili standardni ton sustava."
-
-#: src/telephony/ui/windows/settings_window.py:352
-msgid "Select Ringback Tone"
-msgstr "Odaberite Ringback Tone"
-
-#: src/telephony/ui/windows/settings_window.py:360
-msgid "Audio Files"
-msgstr "Audio datoteke"
-
-#: src/telephony/ui/windows/settings_window.py:386
-msgid ""
-"Select the address books to use with Telephony and arrange them in order of "
-"priority. The topmost address book has the highest priority and will be "
-"preferred if a number is found in multiple address books. You can use the "
-"Duplicate Resolver toggle below to help manage duplicates, but even if "
-"disabled, we encourage enabling it for a better experience."
-msgstr ""
-"Odaberite adresare za korištenje s telefonijom i poredajte ih po prioritetu. "
-"Najviši adresar ima najveći prioritet i imat će prednost ako se broj nalazi "
-"u više adresara. Možete upotrijebiti prekidač za rješavanje duplikata u "
-"nastavku za pomoć pri upravljanju duplikatima, ali čak i ako je onemogućen, "
-"preporučujemo da ga omogućite radi boljeg iskustva."
-
-#: src/telephony/ui/windows/settings_window.py:405
-msgid ""
-"When enabled, if the same phone number calls you 3 times within 5 minutes, "
-"the third call (and subsequent ones within the window) will force the phone "
-"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
-msgstr ""
-"Kada je omogućeno, ako vas isti telefonski broj nazove 3 puta unutar 5 "
-"minuta, treći poziv (i naredni unutar prozora) prisilit će telefon da zvoni "
-"najvećom glasnoćom, zaobilazeći način rada Tiho ili Ne uznemiravaj."
-
-#: src/telephony/ui/windows/settings_window.py:417
-msgid ""
-"Choose contacts that will always play notifications at full volume, even "
-"when the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Odaberite kontakte koji će uvijek reproducirati obavijesti punom glasnoćom, "
-"čak i kada je telefon u načinu Tiho ili Ne uznemiravaj."
-
-#: src/telephony/ui/windows/settings_window.py:438
-msgid "Unknown Callers"
-msgstr "Nepoznati pozivatelji"
-
-#: src/telephony/ui/windows/settings_window.py:443
-msgid "Unknown Callers Action"
-msgstr "Akcija nepoznatih pozivatelja"
-
-#: src/telephony/ui/windows/settings_window.py:445
-msgid "Applies also to hidden numbers."
-msgstr "Primjenjuje se i na skrivene brojeve."
-
-#: src/telephony/ui/windows/settings_window.py:448
-msgid "Do Nothing"
-msgstr "Ne čini ništa"
-
-#: src/telephony/ui/windows/settings_window.py:449
-msgid "Block Completely"
-msgstr "Blokiraj u potpunosti"
-
-#: src/telephony/ui/windows/settings_window.py:450
-msgid "Silence and Hide UI"
-msgstr "Utišaj i sakrij korisničko sučelje"
-
-#: src/telephony/ui/windows/settings_window.py:451
-msgid "Silence Only"
-msgstr "Samo tišina"
-
-#: src/telephony/ui/windows/settings_window.py:459
-msgid "Add Search button to InCall window and Call History for unknown callers"
-msgstr ""
-"Dodajte gumb za pretraživanje prozoru InCall i Povijest poziva za nepoznate "
-"pozivatelje"
-
-#: src/telephony/ui/windows/settings_window.py:465
-msgid "Search Engine"
-msgstr "tražilica"
-
-#: src/telephony/ui/windows/settings_window.py:469
-#: src/telephony/ui/windows/settings_window.py:474
-msgid "Custom URL"
-msgstr "Prilagođeni URL"
-
-#: src/telephony/ui/windows/settings_window.py:524
-msgid ""
-"Enter the URL you want to use for searching unknown numbers. Include "
-"'{number}' in the URL where the caller's phone number should go.\n"
-"\n"
-"For example: https://mysearch.com/?q={number}\n"
-"\n"
-"When you tap the search button during a call, we will replace '{number}' "
-"with the actual phone number and open it in your default browser."
-msgstr ""
-"Unesite URL koji želite koristiti za pretraživanje nepoznatih brojeva. "
-"Uključite '{number}' u URL na koji treba ići telefonski broj pozivatelja.\n"
-"\n"
-"Na primjer: https://mysearch.com/?q={number}\n"
-"\n"
-"Kada dodirnete gumb za pretraživanje tijekom poziva, zamijenit ćemo "
-"'{number}' stvarnim telefonskim brojem i otvoriti ga u vašem zadanom "
-"pregledniku."
-
-#: src/telephony/ui/windows/settings_window.py:528
-msgid "Custom Search URL"
-msgstr "URL prilagođenog pretraživanja"
-
-#: src/telephony/ui/windows/settings_window.py:549
-msgid "Desktop Shortcuts"
-msgstr "Prečaci na radnoj površini"
-
-#: src/telephony/ui/windows/settings_window.py:554
-msgid "Calls"
-msgstr "Pozivi"
-
-#: src/telephony/ui/windows/settings_window.py:555
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Pričekajte 60 sekundi prije ponovnog pokretanja {prefix}."
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Točnost: {acc}m)"
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Ovdje sam: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
+msgstr "Nije uspjelo dobivanje lokacije nakon isprobavanja svih metoda."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "Uspješno izvezeno {count} poruka u XML."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Uspješno izvezeno {count} poziva u XML."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "{count} poruka izvezeno u Chatty bazu podataka."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Izvezeno {count} poziva u Gnome bazu podataka poziva."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Izvorna baza podataka nije pronađena."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Telefonska baza podataka uspješno je izvezena."
+
+#: src/telephony/backend/utils/importer_android_utils.py:33
+#: src/telephony/backend/utils/importer_android_utils.py:138
+#: src/telephony/backend/utils/importer_ios_utils.py:34
+#: src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Datoteka nije pronađena."
+
+#: src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Uvezeno je {count} poruka iz sigurnosne kopije Androida."
+
+#: src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Uvezeno {count} poziva iz sigurnosne kopije Androida."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "Nije moguće pronaći tablicu poruka u iOS bazi podataka."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "Nije uspjelo čitanje strukture iOS SMS baze podataka."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Uvezeno je {count} poruka iz sigurnosne kopije iOS-a."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "Nije moguće pronaći tablicu povijesti poziva u iOS bazi podataka."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "Čitanje strukture baze podataka iOS poziva nije uspjelo."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Uvezeno {count} poziva iz sigurnosne kopije iOS-a."
+
+#: src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Chatty baza podataka nije pronađena."
+
+#: src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Nije moguće pronaći tablicu poruka u Chatty bazi podataka."
+
+#: src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Neuspješno čitanje Chatty strukture baze podataka."
+
+#: src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Uvezeno {count} poruka iz Chattyja."
+
+#: src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Baza poziva nije pronađena."
+
+#: src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr "Nije moguće pronaći tablicu povijesti poziva u bazi podataka poziva."
+
+#: src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Neuspješno čitanje strukture baze podataka poziva."
+
+#: src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Uvezeno {count} poziva."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}s"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telefonija"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Brojčanik"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Povijest"
+
+#: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:63
-#: src/telephony/ui/main_window.py:109
+#: src/telephony/ui/windows/settings_window.py:605
 msgid "Messages"
 msgstr "Poruke"
 
-#: src/telephony/ui/windows/settings_window.py:556
-#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:606
 msgid "Contacts"
 msgstr "Kontakti"
 
-#: src/telephony/ui/windows/settings_window.py:720
-msgid "Name (e.g. Mom)"
-msgstr "Ime (npr. mama)"
+#: src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Sinkronizacija kontakata..."
 
-#: src/telephony/ui/windows/settings_window.py:724
-#: src/telephony/ui/windows/blocklist_editor_window.py:64
-msgid "Number"
-msgstr "Broj"
+#: src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Postavite svoj broj u Postavkama"
 
-#: src/telephony/ui/windows/settings_window.py:799
-msgid "System Default (Always Enabled)"
-msgstr "Zadano za sustav (uvijek omogućeno)"
+#: src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Postavite zadani kod zemlje u Postavkama"
 
-#: src/telephony/ui/windows/settings_window.py:810
-msgid "Personal Address Book"
-msgstr "Osobni adresar"
+#: src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Postavite brojeve hitnih službi u postavkama"
 
-#: src/telephony/ui/windows/settings_window.py:811
-msgid ""
-"This is the address book that will be synced to Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Ovo je adresar koji će se sinkronizirati s Andromedom ako to odaberete u "
-"postavkama sustava."
+#: src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Riješite duplikate"
 
-#: src/telephony/ui/windows/settings_window.py:819
-msgid "Andromeda Contacts"
-msgstr "Andromeda kontakti"
+#: src/telephony/ui/main_window.py:295
+#: src/telephony/ui/windows/settings_window.py:40
+msgid "Settings"
+msgstr "postavke"
 
-#: src/telephony/ui/windows/settings_window.py:820
-msgid ""
-"This is the address book that will be synced from Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Ovo je adresar koji će se sinkronizirati s Andromede ako to odaberete u "
-"postavkama sustava."
+#: src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "Ponovno učitaj kontakte"
 
-#: src/telephony/ui/windows/settings_window.py:940
-msgid "Settings Saved"
-msgstr "Postavke su spremljene"
+#: src/telephony/ui/main_window.py:305
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Uvoz / izvoz"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Messages"
-msgstr "Uvezi poruke"
+#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Popis blokiranih"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Call History"
-msgstr "Uvoz povijesti poziva"
+#: src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Modem povezan"
 
-#: src/telephony/ui/windows/import_wizard_window.py:70
-msgid "Waiting for selection..."
-msgstr "Čeka se odabir..."
+#: src/telephony/ui/main_window.py:391
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Greška modema: {message}"
 
-#: src/telephony/ui/windows/import_wizard_window.py:93
-msgid "Where do you want to import from?"
-msgstr "Odakle želite uvoziti?"
+#: src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "Slanje USSD-a..."
 
-#: src/telephony/ui/windows/import_wizard_window.py:101
-msgid "System Database"
-msgstr "Sustavna baza podataka"
+#: src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "USSD rezultat"
 
-#: src/telephony/ui/windows/import_wizard_window.py:103
-msgid "Import from local Chatty installation"
-msgstr "Uvoz iz lokalne Chatty instalacije"
+#: src/telephony/ui/main_window.py:454
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:848
+#: src/telephony/ui/windows/settings_window.py:457
+#: src/telephony/ui/windows/settings_window.py:469
+#: src/telephony/ui/windows/settings_window.py:815
+msgid "OK"
+msgstr "U REDU"
 
-#: src/telephony/ui/windows/import_wizard_window.py:105
-msgid "Import from local Calls installation"
-msgstr "Uvoz iz instalacije lokalnih poziva"
-
-#: src/telephony/ui/windows/import_wizard_window.py:107
-msgid "Import"
-msgstr "Uvoz"
-
-#: src/telephony/ui/windows/import_wizard_window.py:114
-msgid "Custom Database Backup"
-msgstr "Prilagođena sigurnosna kopija baze podataka"
-
-#: src/telephony/ui/windows/import_wizard_window.py:115
-msgid "Select an exported SQLite DB file"
-msgstr "Odaberite izvezenu SQLite DB datoteku"
-
-#: src/telephony/ui/windows/import_wizard_window.py:117
-#: src/telephony/ui/windows/import_export_window.py:251
-msgid "Select File"
-msgstr "Odaberite Datoteka"
-
-#: src/telephony/ui/windows/import_wizard_window.py:142
-msgid "Select Database File"
-msgstr "Odaberite datoteku baze podataka"
-
-#: src/telephony/ui/windows/import_wizard_window.py:160
-msgid "MMS Attachments (Optional)"
-msgstr "MMS prilozi (nije obavezno)"
-
-#: src/telephony/ui/windows/import_wizard_window.py:168
-msgid "MMS Folder Backup"
-msgstr "Sigurnosna kopija MMS mape"
-
-#: src/telephony/ui/windows/import_wizard_window.py:169
-msgid "Select the directory containing images/videos"
-msgstr "Odaberite direktorij koji sadrži slike/video zapise"
-
-#: src/telephony/ui/windows/import_wizard_window.py:171
-msgid "Select Folder"
-msgstr "Odaberite mapu"
-
-#: src/telephony/ui/windows/import_wizard_window.py:178
-msgid "Skip Attachments"
-msgstr "Preskoči privitke"
-
-#: src/telephony/ui/windows/import_wizard_window.py:179
-msgid "Import SMS and texts only"
-msgstr "Uvezi samo SMS i tekstualne poruke"
-
-#: src/telephony/ui/windows/import_wizard_window.py:185
-msgid "Skip"
-msgstr "Preskočiti"
-
-#: src/telephony/ui/windows/import_wizard_window.py:195
-msgid "Select MMS Folder"
-msgstr "Odaberite MMS mapu"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:36
-msgid "Duplicate Contact"
-msgstr "Duplicirani kontakt"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:64
-msgid "Merge all"
-msgstr "Spoji sve"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:88
-msgid "Merging Contacts..."
-msgstr "Spajanje kontakata..."
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:107
-msgid "Remaining conflicts: {count}"
-msgstr "Preostali sukobi: {count}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:126
-msgid "{number} is saved to contacts:"
-msgstr "{number} je spremljen u kontakte:"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:141
-msgid "Address Book: {name}"
-msgstr "Adresar: {name}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:162
-msgid "Keep this, Remove duplicates"
-msgstr "Zadrži ovo, ukloni duplikate"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:168
-msgid "Keep this, Merge duplicates"
-msgstr "Zadrži ovo, spoji duplikate"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:326
-msgid "Merging {current}/{total}..."
-msgstr "Spajanje {current}/{total}..."
-
+#: src/telephony/ui/main_window.py:463
 #: src/telephony/ui/windows/date_time_picker_window.py:41
-#: src/telephony/ui/main_window.py:441
 msgid "Confirm"
 msgstr "Potvrdi"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:62
-msgid "Year"
-msgstr "Godina"
+#: src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "Pronađen {count} dvostruki kontakt. Provjerite izbornik."
+msgstr[1] "Pronađeno {count} dvostrukih kontakata. Provjerite izbornik."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:81
-msgid "Month"
-msgstr "Mjesec"
+#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Sinkronizacija kontakata..."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:116
-msgid "Hour"
-msgstr "Sat"
+#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
+#: src/telephony/ui/windows/chat_media_controller_window.py:148
+#: src/telephony/ui/windows/contact_editor_window.py:103
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:368
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:443
+#: src/telephony/ui/windows/settings_window.py:581
+#: src/telephony/ui/windows/settings_window.py:858
+msgid "Close"
+msgstr "Zatvoriti"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:135
-msgid "Minute"
-msgstr "Minuta"
+#: src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Ponovno učitavanje kontakata..."
+
+#: src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "Pronađeno je više kontakata"
+
+#: src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Koji kontakt želite urediti?"
+
+#: src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Nepoznati adresar"
+
+#: src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "Zovem (anonimno)..."
+
+#: src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Pozivanje {number}..."
+
+#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Poziv nije uspio"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Detalji poziva"
+
+#: src/telephony/ui/main_window.py:676
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Broj: {number}\n"
+"Ime: {name}\n"
+"Datum: {date}\n"
+"Trajanje: {duration}"
+
+#: src/telephony/ui/main_window.py:692
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "Deblokiraj broj"
+
+#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+msgid "Unblocked"
+msgstr "deblokiran"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "Uredi kontakt"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+msgid "Add to Contacts"
+msgstr "Dodaj u kontakte"
+
+#: src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Dodaj postojećem kontaktu"
+
+#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/windows/incall_window.py:147
+msgid "Search Number"
+msgstr "Traži broj"
+
+#: src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Pošalji poruku"
+
+#: src/telephony/ui/main_window.py:755
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+msgid "Copy Number"
+msgstr "Broj kopije"
+
+#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Broj bloka"
+
+#: src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Izbriši ovaj poziv"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Izbriši poziv"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Ukloniti ovaj poziv?"
+
+#: src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Broj kopiran"
+
+#: src/telephony/ui/main_window.py:798
+#: src/telephony/ui/windows/contact_editor_window.py:757
+msgid "Saving contact..."
+msgstr "Spremanje kontakta..."
+
+#: src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Dodano u {name}"
+
+#: src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Dodavanje broja nije uspjelo"
+
+#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/windows/contact_editor_window.py:184
+#: src/telephony/ui/windows/settings_window.py:213
+msgid "Add Number"
+msgstr "Dodaj broj"
+
+#: src/telephony/ui/main_window.py:814
+#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:60
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:110
+#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+msgid "Save"
+msgstr "Uštedjeti"
+
+#: src/telephony/ui/views/chat_view.py:133
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Skica za {count} primatelja"
+
+#: src/telephony/ui/views/chat_view.py:160
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} sudionika"
+
+#: src/telephony/ui/views/chat_view.py:306
+msgid "Replies not supported for this sender"
+msgstr "Odgovori nisu podržani za ovog pošiljatelja"
+
+#: src/telephony/ui/views/chat_view.py:350
+#: src/telephony/ui/views/chat_view.py:1230
+msgid "Scheduled time must be in the future"
+msgstr "Zakazano vrijeme mora biti u budućnosti"
+
+#: src/telephony/ui/views/chat_view.py:358
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Odgođeno za {time}"
+
+#: src/telephony/ui/views/chat_view.py:362
+msgid "Re-Schedule Message"
+msgstr "Poruka ponovnog rasporeda"
+
+#: src/telephony/ui/views/chat_view.py:497
+#: src/telephony/ui/views/chat_view.py:562
+msgid "— New Messages —"
+msgstr "— Nove poruke —"
+
+#: src/telephony/ui/views/chat_view.py:600
+msgid "No results found in this conversation"
+msgstr "Nema rezultata u ovom razgovoru"
+
+#: src/telephony/ui/views/chat_view.py:672
+msgid "Group Name"
+msgstr "Naziv grupe"
+
+#: src/telephony/ui/views/chat_view.py:673
+msgid "Set group name..."
+msgstr "Postavi naziv grupe..."
+
+#: src/telephony/ui/views/chat_view.py:681
+msgid "Participants"
+msgstr "Sudionici"
+
+#: src/telephony/ui/views/chat_view.py:781
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Conversation"
+msgstr "Izbriši razgovor"
+
+#: src/telephony/ui/views/chat_view.py:798
+#: src/telephony/ui/views/chat_view.py:1162
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+msgid "Me"
+msgstr "Mi"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Forwarded from {sender}:\n"
+"{body}"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Forwarded from {sender}"
+
+#: src/telephony/ui/views/chat_view.py:817
+msgid "Forward To"
+msgstr "Proslijedi na"
+
+#: src/telephony/ui/views/chat_view.py:818
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+msgid "Forward"
+msgstr "Naprijed"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Delete Message"
+msgstr "Izbriši poruku"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Are you sure you want to delete this message?"
+msgstr "Jeste li sigurni da želite izbrisati ovu poruku?"
+
+#: src/telephony/ui/views/chat_view.py:980
+msgid "Group renamed"
+msgstr "Grupa je preimenovana"
+
+#: src/telephony/ui/views/chat_view.py:1008
+#, fuzzy
+msgid "Compressing image..."
+msgstr "Sažimanje videa..."
+
+#: src/telephony/ui/views/chat_view.py:1010
+msgid "Image is too large to send"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1012
+msgid "Compressing video..."
+msgstr "Sažimanje videa..."
+
+#: src/telephony/ui/views/chat_view.py:1014
+msgid "Video compression failed"
+msgstr "Video kompresija nije uspjela"
+
+#: src/telephony/ui/views/chat_view.py:1016
+msgid "File is too large to send via MMS"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1224
+msgid "Nothing to schedule"
+msgstr "Ništa za raspored"
+
+#: src/telephony/ui/views/chat_view.py:1238
+msgid "Schedule Message"
+msgstr "Raspored poruka"
+
+#: src/telephony/ui/views/chat_view.py:1277
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Poruka zakazana za {time}"
+
+#: src/telephony/ui/views/chat_view.py:1280
+#: src/telephony/ui/views/chat_view.py:1298
+msgid "[Attachment]"
+msgstr "[Privitak]"
+
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Group"
+msgstr "Izbriši grupu"
+
+#: src/telephony/ui/views/chat_view.py:1388
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Ovo će trajno izbrisati povijest razgovora i sve spremljene medijske "
+"datoteke."
+
+#: src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Traži kontakte"
+
+#: src/telephony/ui/views/contacts_view.py:119
+#: src/telephony/ui/windows/contact_editor_window.py:71
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:229
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Mobile"
+msgstr "Mobilni"
+
+#: src/telephony/ui/views/contacts_view.py:120
+#: src/telephony/ui/windows/contact_editor_window.py:72
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:230
+#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+msgid "Work"
+msgstr "Raditi"
+
+#: src/telephony/ui/views/contacts_view.py:121
+#: src/telephony/ui/windows/contact_editor_window.py:73
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:231
+#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+msgid "Home"
+msgstr "Dom"
+
+#: src/telephony/ui/views/contacts_view.py:122
+#: src/telephony/ui/windows/contact_editor_window.py:74
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:232
+#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+msgid "Fax"
+msgstr "Faks"
+
+#: src/telephony/ui/views/contacts_view.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:75
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:233
+#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+msgid "Other"
+msgstr "ostalo"
+
+#: src/telephony/ui/views/contacts_view.py:124
+#: src/telephony/ui/windows/contact_editor_window.py:76
+#: src/telephony/ui/windows/custom_tone_list_window.py:234
+#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+msgid "Main"
+msgstr "Glavni"
+
+#: src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Nazovi anonimnu"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Unesite broj"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Telephony Smart Dialpad vama na usluzi"
+
+#: src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Nevažeći broj u međuspremniku"
+
+#: src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Nevažeći broj"
+
+#: src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "Sve"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "Bilo koje trajanje"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Bez odgovora"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 min"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 min"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 minuta"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "Bilo koji datum"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Danas"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "Zadnja 3 dana"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "Zadnjih 14 dana"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "Zadnjih 30 dana"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "Zadnjih 60 dana"
+
+#: src/telephony/ui/views/messages_view.py:106
+#: src/telephony/ui/views/messages_view.py:575
+msgid "Search Contacts..."
+msgstr "Traži kontakte..."
+
+#: src/telephony/ui/views/messages_view.py:224
+msgid "All Messages"
+msgstr "Sve poruke"
+
+#: src/telephony/ui/views/messages_view.py:225
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#: src/telephony/ui/views/messages_view.py:226
+msgid "Unknown Numbers"
+msgstr "Nepoznati brojevi"
+
+#: src/telephony/ui/views/messages_view.py:227
+msgid "Saved Contacts"
+msgstr "Spremljeni kontakti"
+
+#: src/telephony/ui/views/messages_view.py:228
+msgid "Group Messages"
+msgstr "Grupne poruke"
+
+#: src/telephony/ui/views/messages_view.py:229
+msgid "Individual Messages"
+msgstr "Individualne poruke"
+
+#: src/telephony/ui/views/messages_view.py:230
+msgid "Alphabetical Senders"
+msgstr "Abecedni pošiljatelji"
+
+#: src/telephony/ui/views/messages_view.py:322
+#: src/telephony/ui/views/messages_view.py:444
+msgid "[Multimedia Message]"
+msgstr "[Multimedijska poruka]"
+
+#: src/telephony/ui/views/messages_view.py:579
+msgid "Search Messages..."
+msgstr "Traži poruke..."
+
+#: src/telephony/ui/views/messages_view.py:621
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Početak ({count})"
+
+#: src/telephony/ui/views/messages_view.py:628
+#, fuzzy, python-brace-format
+msgid "Open ({count})"
+msgstr "Početak ({count})"
+
+#: src/telephony/ui/views/messages_view.py:700
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Dodaj broj: {number}"
+
+#: src/telephony/ui/views/messages_view.py:733
+#, fuzzy
+msgid "Group chat"
+msgstr "Naziv grupe"
+
+#: src/telephony/ui/views/messages_view.py:741
+#: src/telephony/ui/windows/custom_tone_list_window.py:297
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+msgid "No contacts found"
+msgstr "Nema pronađenih kontakata"
+
+#: src/telephony/ui/views/messages_view.py:856
+msgid "No results found"
+msgstr "Nema pronađenih rezultata"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+msgid "Copy Text"
+msgstr "Kopiraj tekst"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+msgid "Re-Schedule"
+msgstr "Ponovno zakažite"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+msgid "Mark as Unread"
+msgstr "Označi kao nepročitano"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:778
+msgid "Delete"
+msgstr "Izbrisati"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Planirano: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#, fuzzy
+msgid "Failed to send"
+msgstr "Slanje nije uspjelo: {e}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#, fuzzy
+msgid "Sending..."
+msgstr "Slanje USSD-a..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+msgid "Open with"
+msgstr "Otvori s"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+msgid "Copy"
+msgstr "Kopirati"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+msgid "Save as"
+msgstr "Spremi kao"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
+msgid "Retry Send"
+msgstr ""
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+msgid "Open With..."
+msgstr "Otvori pomoću..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+msgid "Save File As"
+msgstr "Spremi datoteku kao"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:48
+msgid "Hangup All Calls"
+msgstr "Prekini sve pozive"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Grupa"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Skica: {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:32
+#: src/telephony/ui/windows/settings_window.py:352
+msgid "Advanced Settings"
+msgstr "Napredne postavke"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:65
+msgid "Loading..."
+msgstr "Učitavanje..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:102
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Pogreška pri učitavanju postavki: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:110
+msgid "Secret SMS Triggers"
+msgstr "Tajni SMS okidači"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:113
+#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+msgid "Set \"Find my Telephony\""
+msgstr "Postavite \"Pronađi moju telefoniju\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:119
+#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+msgid "Set \"Trusted Callback\""
+msgstr "Postavite \"Pouzdani povratni poziv\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+msgid "Set \"SMS -Relay\""
+msgstr "Postavite \"SMS -Relej\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:131
+#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+msgid "Set \"SMS -tmate\""
+msgstr "Postavite \"SMS -tmate\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:137
+#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "Postavite \"SMS Switch Wipe Device\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:145
+msgid "Restart Modem"
+msgstr "Ponovno pokrenite modem"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+msgid "Data Management"
+msgstr "Upravljanje podacima"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Autentifikacija je otkazana"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:172
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Pogreška u autentifikaciji: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:180
+msgid "Advanced Settings Applied"
+msgstr "Primijenjene su napredne postavke"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Restarting Modem..."
+msgstr "Ponovno pokretanje modema..."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Broj pojedinosti"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Pozivi s ovog broja bit će automatski odbijeni."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:774
+msgid "Number"
+msgstr "Broj"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Napomena (nije obavezno)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Duplikat"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Ovaj broj je već blokiran."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Pogreška baze podataka"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Spremanje na popis blokiranih nije uspjelo."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:828
+msgid "Conflict"
+msgstr "Sukob"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Broj ne može biti i na popisu blokiranih i u kontaktima.\n"
+"\n"
+"Želite li nastaviti s blokiranjem i ukloniti broj iz kontakata?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Da, Blokiraj"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Blokirani brojevi"
+
+#: src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "Bez bilješki"
+
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Jeste li sigurni da želite deblokirati ovaj broj?"
+
+#: src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Deblokiran broj"
+
+#: src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Slikaj"
+
+#: src/telephony/ui/windows/camera_photo_window.py:140
+#: src/telephony/ui/windows/camera_video_window.py:172
+#: src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Ponovno snimanje"
+
+#: src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Priloži fotografiju"
+
+#: src/telephony/ui/windows/camera_video_window.py:47
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Snimi video"
+
+#: src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Priloži Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Nije uspjelo snimanje videozapisa: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Snimanje nije uspjelo (Datoteka je prazna)."
+
+#: src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Veliki video ({size}KB). Bit će komprimiran pri slanju."
+
+#: src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Nije moguće reproducirati praznu datoteku."
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:60
 msgid "Take Photo"
 msgstr "Fotografiraj"
-
-#: src/telephony/ui/windows/chat_media_controller_window.py:61
-#: src/telephony/ui/windows/camera_video_window.py:47
-msgid "Record Video"
-msgstr "Snimi video"
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:62
 msgid "Record Audio"
@@ -1584,101 +1371,455 @@ msgstr "Pogreška privitka"
 msgid "Failed to prepare attachment."
 msgstr "Priprema priloga nije uspjela."
 
-#: src/telephony/ui/windows/camera_video_window.py:172
-#: src/telephony/ui/windows/sound_recorder_window.py:144
-#: src/telephony/ui/windows/camera_photo_window.py:141
-msgid "Retake"
-msgstr "Ponovno snimanje"
+#: src/telephony/ui/windows/contact_editor_window.py:36
+#: src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Kontakt detalji"
 
-#: src/telephony/ui/windows/camera_video_window.py:177
-msgid "Attach Video"
-msgstr "Priloži Video"
+#: src/telephony/ui/windows/contact_editor_window.py:107
+#: src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "Uredi"
 
-#: src/telephony/ui/windows/camera_video_window.py:314
-msgid "Failed to record video: {error_msg}"
-msgstr "Nije uspjelo snimanje videozapisa: {error_msg}"
+#: src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Identitet"
 
-#: src/telephony/ui/windows/camera_video_window.py:384
-msgid "Recording failed (File empty)."
-msgstr "Snimanje nije uspjelo (Datoteka je prazna)."
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "omiljena"
 
-#: src/telephony/ui/windows/camera_video_window.py:388
-msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Veliki video ({size}KB). Bit će komprimiran pri slanju."
+#: src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Puno ime"
 
-#: src/telephony/ui/windows/camera_video_window.py:405
-msgid "Cannot play empty file."
-msgstr "Nije moguće reproducirati praznu datoteku."
+#: src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Ime"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:69
-msgid "Loading..."
-msgstr "Učitavanje..."
+#: src/telephony/ui/windows/contact_editor_window.py:162
+#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+msgid "Yes"
+msgstr "Da"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:106
-msgid "Error loading settings: {e}"
-msgstr "Pogreška pri učitavanju postavki: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Brojevi telefona"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:114
-msgid "Secret SMS Triggers"
-msgstr "Tajni SMS okidači"
+#: src/telephony/ui/windows/contact_editor_window.py:195
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "E-mail adrese"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:117
-#: src/telephony/ui/windows/trusted_actions_list_window.py:36
-msgid "Set \"Find my Telephony\""
-msgstr "Postavite \"Pronađi moju telefoniju\""
+#: src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "Dodajte e-poštu"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:123
-#: src/telephony/ui/windows/trusted_actions_list_window.py:38
-msgid "Set \"Trusted Callback\""
-msgstr "Postavite \"Pouzdani povratni poziv\""
+#: src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Dodatni detalji"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:129
-#: src/telephony/ui/windows/trusted_actions_list_window.py:40
-msgid "Set \"SMS -Relay\""
-msgstr "Postavite \"SMS -Relej\""
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Organizacija"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:135
-#: src/telephony/ui/windows/trusted_actions_list_window.py:42
-msgid "Set \"SMS -tmate\""
-msgstr "Postavite \"SMS -tmate\""
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Naziv radnog mjesta"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:141
-#: src/telephony/ui/windows/trusted_actions_list_window.py:44
-msgid "Set \"SMS Switch Wipe Device\""
-msgstr "Postavite \"SMS Switch Wipe Device\""
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Adresa"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:149
-msgid "Restart Modem"
-msgstr "Ponovno pokrenite modem"
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Bilješke"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:157
-msgid "Data Management"
-msgstr "Upravljanje podacima"
+#: src/telephony/ui/windows/contact_editor_window.py:221
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Web stranica"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:173
-msgid "Authentication cancelled"
-msgstr "Autentifikacija je otkazana"
+#: src/telephony/ui/windows/contact_editor_window.py:246
+#: src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Rođendan"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:176
-msgid "Auth error: {e}"
-msgstr "Pogreška u autentifikaciji: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:247
+#: src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "obljetnica"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:198
-msgid "Advanced Settings Applied"
-msgstr "Primijenjene su napredne postavke"
+#: src/telephony/ui/windows/contact_editor_window.py:263
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Delete Contact"
+msgstr "Izbriši kontakt"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:202
-msgid "Error saving settings"
-msgstr "Pogreška pri spremanju postavki"
+#: src/telephony/ui/windows/contact_editor_window.py:274
+#: src/telephony/ui/windows/settings_window.py:162
+#: src/telephony/ui/windows/settings_window.py:440
+msgid "Address Books"
+msgstr "Adresari"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:206
-msgid "Restarting Modem..."
-msgstr "Ponovno pokretanje modema..."
+#: src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Nepoznati izvor"
 
-#: src/telephony/ui/windows/import_export_window.py:43
-#: src/telephony/ui/main_window.py:305
-msgid "Import / Export"
-msgstr "Uvoz / izvoz"
+#: src/telephony/ui/windows/contact_editor_window.py:318
+#: src/telephony/ui/windows/contact_editor_window.py:356
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Odaberite Datum"
+
+#: src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "Brisanje datuma"
+
+#: src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Odaberite {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Kopiraj {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:390
+#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+msgid "Copied to clipboard"
+msgstr "Kopirano u međuspremnik"
+
+#: src/telephony/ui/windows/contact_editor_window.py:535
+msgid "Export Contact"
+msgstr "Izvoz kontakta"
+
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Are you sure you want to delete this contact?"
+msgstr "Jeste li sigurni da želite izbrisati ovaj kontakt?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:567
+msgid "Deleting contact..."
+msgstr "Brisanje kontakta..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:822
+#, fuzzy
+msgid "Failed to save contact"
+msgstr "Spremanje na popis blokiranih nije uspjelo."
+
+#: src/telephony/ui/windows/contact_editor_window.py:829
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Broj ne može biti i na popisu blokiranih i u kontaktima.\n"
+"\n"
+"Želite li nastaviti s deblokiranjem i dodati broj u Kontakte?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:833
+msgid "Yes, Add to Contacts"
+msgstr "Da, dodaj u kontakte"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Odaberite kontakt"
+
+#: src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "Ime ili broj"
+
+#: src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "Nema broja"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:323
+msgid "Individual SMS Notifications"
+msgstr "Individualne SMS obavijesti"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:334
+msgid "Individual Ringtones"
+msgstr "Individualne melodije zvona"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "Pronađite kontakt za dodavanje..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Odaberite kontakt i odaberite prilagođenu zvučnu datoteku (.ogg ili .oga). "
+"Datoteka će se kopirati u vašu lokalnu pohranu."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:186
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Ukloniti"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Prilagođeni ton uklonjen (kliknite Spremi za obvezu)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Odaberite ton za {name}"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:318
+#: src/telephony/ui/windows/settings_window.py:405
+msgid "Select"
+msgstr "Odaberite"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:323
+msgid "Supported Audio (OGG)"
+msgstr "Podržani zvuk (OGG)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:351
+msgid "Only .ogg or .oga files are supported"
+msgstr "Podržane su samo .ogg ili .oga datoteke"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:362
+msgid "Failed to copy audio file"
+msgstr "Kopiranje audio datoteke nije uspjelo"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:382
+msgid "Custom tone added"
+msgstr "Dodan prilagođeni ton"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Upravljanje bazom podataka"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Odaberite podatke za trajno brisanje."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Izbriši povijest poziva"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Izbriši sve poruke"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Izbriši sve nazive grupa"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Izbriši popis blokiranih"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Izbriši sve kontakte"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Izbriši adresar"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "IZBRIŠI SVE"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Jeste li sigurni? Ovo se ne može poništiti."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Ovo će izbrisati sve SMS/MMS poruke i privitke."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Izbriši nazive grupa"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Poništiti sva imena prilagođenih grupnih chatova?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Deblokirati sve brojeve?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Nema adresara koji se mogu izbrisati"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Ne postoje prilagođeni adresari koji se mogu izbrisati."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Koji adresar želite trajno izbrisati?\n"
+"\n"
+"Ovo će ga izbrisati iz sustava."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "Jeste li sigurni da želite trajno izbrisati adresar '{name}'?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Izbriši SVE"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"Brisati bazu podataka, konfiguracijske datoteke i kontakte? Aplikacija će se "
+"resetirati."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Stvarno izbrišete sve iz svog adresara?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Odaberite adresar za brisanje:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Svi adresari"
+
+#: src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Povijest poziva izbrisana"
+
+#: src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "Brisanje poruka..."
+
+#: src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Poruke i prilozi izbrisani"
+
+#: src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "Imena grupa Reset"
+
+#: src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Popis blokiranih izbrisan"
+
+#: src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Brisanje kontakata..."
+
+#: src/telephony/ui/windows/data_management_window.py:253
+msgid "Contacts Deleted"
+msgstr "Kontakti izbrisani"
+
+#: src/telephony/ui/windows/data_management_window.py:261
+msgid "Deleting address book..."
+msgstr "Brisanje adresara..."
+
+#: src/telephony/ui/windows/data_management_window.py:268
+msgid "Address Book Deleted"
+msgstr "Adresar izbrisan"
+
+#: src/telephony/ui/windows/data_management_window.py:271
+msgid "Failed to delete Address Book"
+msgstr "Brisanje adresara nije uspjelo"
+
+#: src/telephony/ui/windows/data_management_window.py:276
+msgid "Wiping Database..."
+msgstr "Brisanje baze podataka..."
+
+#: src/telephony/ui/windows/data_management_window.py:290
+msgid "App Reset Complete"
+msgstr "Resetiranje aplikacije dovršeno"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "Godina"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Mjesec"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Sat"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Minuta"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Notification Overrides"
+msgstr "Nadjačavanja obavijesti"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+msgid "Find and add contacts..."
+msgstr "Pronađite i dodajte kontakte..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Kontakti na ovom popisu uvijek će reproducirati obavijesti punom glasnoćom, "
+"čak i ako je telefon u načinu rada Nečujno ili Ne uznemiravaj."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Duplicirani kontakt"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Spoji sve"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Spajanje kontakata..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Preostali sukobi: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} je spremljen u kontakte:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Adresar: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Zadrži ovo, ukloni duplikate"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Zadrži ovo, spoji duplikate"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Spajanje {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1735,10 +1876,12 @@ msgid "No contacts found on SIM card."
 msgstr "Na SIM kartici nisu pronađeni kontakti."
 
 #: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "Uvezeno {count} kontakata sa SIM-a."
 
 #: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "SIM uvoz nije uspio: {e}"
 
@@ -1782,6 +1925,7 @@ msgid "Extracting backup from iPhone... This may take a long time!"
 msgstr "Izdvajanje sigurnosne kopije s iPhonea... Ovo može potrajati dugo!"
 
 #: src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "USB sigurnosna kopija nije uspjela: {e}"
 
@@ -1802,15 +1946,21 @@ msgid "Importing iPhone Calls..."
 msgstr "Uvoz iPhone poziva..."
 
 #: src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "Pogreška tijekom iOS uvoza: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:251
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Odaberite Datoteka"
 
 #: src/telephony/ui/windows/import_export_window.py:254
 msgid "XML Files"
 msgstr "XML datoteke"
 
 #: src/telephony/ui/windows/import_export_window.py:268
-#: src/telephony/ui/windows/import_export_window.py:451
+#: src/telephony/ui/windows/import_export_window.py:459
 msgid "Importing..."
 msgstr "Uvoz..."
 
@@ -1839,6 +1989,7 @@ msgid "iOS"
 msgstr "iOS"
 
 #: src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
 msgid "Export to {fmt}"
 msgstr "Izvezi u {fmt}"
 
@@ -1846,131 +1997,604 @@ msgstr "Izvezi u {fmt}"
 msgid "What do you want to export?"
 msgstr "Što želite izvesti?"
 
-#: src/telephony/ui/windows/import_export_window.py:325
+#: src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+
+#: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
 msgstr "Poruke (SMS/MMS)"
 
-#: src/telephony/ui/windows/import_export_window.py:326
+#: src/telephony/ui/windows/import_export_window.py:334
 msgid "Call History"
 msgstr "Povijest poziva"
 
-#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:344
 msgid "Export File"
 msgstr "Izvoz datoteke"
 
-#: src/telephony/ui/windows/import_export_window.py:362
+#: src/telephony/ui/windows/import_export_window.py:370
 msgid "Exporting..."
 msgstr "Izvoz..."
 
-#: src/telephony/ui/windows/import_export_window.py:396
+#: src/telephony/ui/windows/import_export_window.py:404
 msgid "Import VCard"
 msgstr "Uvezi VCard"
 
-#: src/telephony/ui/windows/import_export_window.py:398
+#: src/telephony/ui/windows/import_export_window.py:406
 msgid "VCard Files"
 msgstr "VCard datoteke"
 
-#: src/telephony/ui/windows/import_export_window.py:417
-#: src/telephony/ui/windows/import_export_window.py:481
+#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:489
 msgid "No enabled address books found"
 msgstr "Nije pronađen nijedan omogućeni adresar"
 
-#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:433
 msgid "Select Address Book"
 msgstr "Odaberite Adresar"
 
-#: src/telephony/ui/windows/import_export_window.py:426
+#: src/telephony/ui/windows/import_export_window.py:434
 msgid "Where do you want to import contacts?"
 msgstr "Gdje želite uvesti kontakte?"
 
-#: src/telephony/ui/windows/import_export_window.py:465
+#: src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "Uvezeno {count} kontakata"
 
-#: src/telephony/ui/windows/import_export_window.py:469
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
 msgid "Import failed: {e}"
 msgstr "Uvoz nije uspio: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:485
-#: src/telephony/ui/windows/import_export_window.py:523
+#: src/telephony/ui/windows/import_export_window.py:493
+#: src/telephony/ui/windows/import_export_window.py:531
 msgid "Export Contacts"
 msgstr "Izvoz kontakata"
 
-#: src/telephony/ui/windows/import_export_window.py:486
+#: src/telephony/ui/windows/import_export_window.py:494
 msgid "Which address book do you want to export?"
 msgstr "Koji adresar želite izvesti?"
 
-#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:505
 msgid "Export All Address Books"
 msgstr "Izvezi sve adresare"
 
-#: src/telephony/ui/windows/import_export_window.py:551
+#: src/telephony/ui/windows/import_export_window.py:559
 msgid "No contacts found to export"
 msgstr "Nema pronađenih kontakata za izvoz"
 
-#: src/telephony/ui/windows/import_export_window.py:567
+#: src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "Izvezeno {count} kontakata"
 
-#: src/telephony/ui/windows/import_export_window.py:570
+#: src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
 msgid "Export error: {e}"
 msgstr "Pogreška izvoza: {e}"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:33
-#: src/telephony/ui/main_window.py:734
-msgid "Block Number"
-msgstr "Broj bloka"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Uvezi poruke"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:59
-msgid "Number Details"
-msgstr "Broj pojedinosti"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Uvoz povijesti poziva"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:60
-msgid "Calls from this number will be automatically rejected."
-msgstr "Pozivi s ovog broja bit će automatski odbijeni."
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Čeka se odabir..."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:71
-msgid "Note (Optional)"
-msgstr "Napomena (nije obavezno)"
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Odakle želite uvoziti?"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:124
-#: src/telephony/ui/windows/blocklist_editor_window.py:142
-#: src/telephony/ui/views/messages_view.py:324
-#: src/telephony/ui/views/messages_view.py:393
-msgid "Blocked Number"
-msgstr "Blokiran broj"
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Sustavna baza podataka"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Database Error"
-msgstr "Pogreška baze podataka"
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Uvoz iz lokalne Chatty instalacije"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Failed to save to blocklist."
-msgstr "Spremanje na popis blokiranih nije uspjelo."
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Uvoz iz instalacije lokalnih poziva"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "Duplicate"
-msgstr "Duplikat"
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Uvoz"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "This number is already blocked."
-msgstr "Ovaj broj je već blokiran."
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Prilagođena sigurnosna kopija baze podataka"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:153
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Blocking and remove the number from Contacts?"
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Odaberite izvezenu SQLite DB datoteku"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Odaberite datoteku baze podataka"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS prilozi (nije obavezno)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "Sigurnosna kopija MMS mape"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Odaberite direktorij koji sadrži slike/video zapise"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Odaberite mapu"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Preskoči privitke"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Uvezi samo SMS i tekstualne poruke"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Preskočiti"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Odaberite MMS mapu"
+
+#: src/telephony/ui/windows/incall_window.py:152
+msgid "Hangup and Send SMS"
+msgstr "Prekini vezu i pošalji SMS"
+
+#: src/telephony/ui/windows/incall_window.py:187
+msgid "The call failed to disconnect."
+msgstr "Poziv se nije uspio prekinuti."
+
+#: src/telephony/ui/windows/incall_window.py:220
+#: src/telephony/ui/windows/incall_window.py:669
+msgid "Output"
+msgstr "Izlaz"
+
+#: src/telephony/ui/windows/incall_window.py:235
+#: src/telephony/ui/windows/incall_window.py:697
+msgid "Input"
+msgstr "Ulazni"
+
+#: src/telephony/ui/windows/incall_window.py:387
+msgid "Silenced Incoming Call"
+msgstr "Utišani dolazni poziv"
+
+#: src/telephony/ui/windows/incall_window.py:503
+#: src/telephony/ui/windows/settings_window.py:241
+msgid "I can't talk right now."
+msgstr "Ne mogu sada razgovarati."
+
+#: src/telephony/ui/windows/incall_window.py:626
+msgid "Restarting RIL..."
+msgstr "Ponovno pokretanje RIL-a..."
+
+#: src/telephony/ui/windows/incall_window.py:635
+msgid "Restored!"
+msgstr "Obnovljeno!"
+
+#: src/telephony/ui/windows/incall_window.py:641
+msgid "Failed. Reboot Device."
+msgstr "neuspješno Ponovno pokrenite uređaj."
+
+#: src/telephony/ui/windows/incall_window.py:643
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "Provjera... {attempt}"
+
+#: src/telephony/ui/windows/incall_window.py:702
+msgid "Mute Microphone"
+msgstr "Isključi mikrofon"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "O telefoniji"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgstr ""
-"Broj ne može biti i na popisu blokiranih i u kontaktima.\n"
-"\n"
-"Želite li nastaviti s blokiranjem i ukloniti broj iz kontakata?"
+"Brzo telefonsko biranje i klijent za razmjenu poruka dizajniran za FLX1 i "
+"FLX1s."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:157
-msgid "Yes, Block"
-msgstr "Da, Blokiraj"
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Verzija"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Developer"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Licenca"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Linkovi"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Praćenje problema"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Prijavite pogreške ili zatražite značajke"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Zakazano ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "Za: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Pošalji sada"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Poruka uklonjena"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, fuzzy, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Poslana zakazana poruka na {number}"
+
+#: src/telephony/ui/windows/settings_window.py:88
+#: src/telephony/ui/windows/settings_window.py:389
+msgid "Ringback Tone"
+msgstr "Ton povratnog zvona"
+
+#: src/telephony/ui/windows/settings_window.py:91
+msgid "Enable Local Ringback"
+msgstr "Omogući lokalni povratni poziv"
+
+#: src/telephony/ui/windows/settings_window.py:106
+msgid "Selected Tone"
+msgstr "Odabrani ton"
+
+#: src/telephony/ui/windows/settings_window.py:109
+#: src/telephony/ui/windows/settings_window.py:378
+msgid "System Default"
+msgstr "Zadane postavke sustava"
+
+#: src/telephony/ui/windows/settings_window.py:136
+msgid "SIM Settings"
+msgstr "SIM postavke"
+
+#: src/telephony/ui/windows/settings_window.py:139
+msgid "My Number"
+msgstr "Moj broj"
+
+#: src/telephony/ui/windows/settings_window.py:140
+msgid "My Number (International Format)"
+msgstr "Moj broj (međunarodni format)"
+
+#: src/telephony/ui/windows/settings_window.py:146
+#: src/telephony/ui/windows/settings_window.py:147
+#: src/telephony/ui/windows/settings_window.py:365
+msgid "Default Country Code"
+msgstr "Zadani kod zemlje"
+
+#: src/telephony/ui/windows/settings_window.py:173
+msgid "Address Book Info"
+msgstr "Informacije o adresaru"
+
+#: src/telephony/ui/windows/settings_window.py:181
+msgid "Default Address Book"
+msgstr "Zadani adresar"
+
+#: src/telephony/ui/windows/settings_window.py:187
+msgid "Duplicate Resolver"
+msgstr "Rješivač duplikata"
+
+#: src/telephony/ui/windows/settings_window.py:189
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr ""
+"Skenirajte duplikate brojeva i prikažite traku rezolucije u prikazu "
+"kontakata."
+
+#: src/telephony/ui/windows/settings_window.py:202
+msgid "Lockscreen Emergency"
+msgstr "Zaslon za hitne slučajeve"
+
+#: src/telephony/ui/windows/settings_window.py:205
+msgid "Show Emergency Button"
+msgstr "Prikaži gumb za hitne slučajeve"
+
+#: src/telephony/ui/windows/settings_window.py:210
+msgid "Emergency Numbers"
+msgstr "Brojevi hitnih službi"
+
+#: src/telephony/ui/windows/settings_window.py:227
+msgid "Quick Response"
+msgstr "Brzi odgovor"
+
+#: src/telephony/ui/windows/settings_window.py:230
+#, fuzzy
+msgid "Add Decline Message"
+msgstr "Odbij poruku"
+
+#: src/telephony/ui/windows/settings_window.py:245
+#: src/telephony/ui/windows/settings_window.py:812
+#, fuzzy
+msgid "Call Volume"
+msgstr "Nazovi {number}"
+
+#: src/telephony/ui/windows/settings_window.py:257
+msgid "Allow Amplification"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:259
+msgid "Let sliders go above 100%. Amplified audio may distort."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Earpiece"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:269
+#, fuzzy
+msgid "Speaker"
+msgstr "Zvučnik uključen"
+
+#: src/telephony/ui/windows/settings_window.py:270
+msgid "Wired Headset"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:271
+msgid "Bluetooth"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:286
+msgid "Notification Exceptions"
+msgstr "Iznimke obavijesti"
+
+#: src/telephony/ui/windows/settings_window.py:289
+#: src/telephony/ui/windows/settings_window.py:454
+msgid "Repeated Calls Bypass"
+msgstr "Zaobilaženje ponovljenih poziva"
+
+#: src/telephony/ui/windows/settings_window.py:291
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr "Ako isti broj zove 3 puta u 5 minuta, forsiraj maksimalnu glasnoću."
+
+#: src/telephony/ui/windows/settings_window.py:306
+msgid "Manage contacts that always play sound"
+msgstr "Upravljajte kontaktima koji uvijek reproduciraju zvuk"
+
+#: src/telephony/ui/windows/settings_window.py:315
+#: src/telephony/ui/windows/settings_window.py:327
+#: src/telephony/ui/windows/settings_window.py:338
+msgid "Manage"
+msgstr "Upravljati"
+
+#: src/telephony/ui/windows/settings_window.py:325
+msgid "Set custom notification sounds for specific contacts"
+msgstr "Postavite prilagođene zvukove obavijesti za određene kontakte"
+
+#: src/telephony/ui/windows/settings_window.py:336
+msgid "Set custom ringtones for specific contacts"
+msgstr "Postavite prilagođene melodije zvona za određene kontakte"
+
+#: src/telephony/ui/windows/settings_window.py:361
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Zadani kod zemlje koristi se za formatiranje brojeva koji ne uključuju "
+"međunarodni prefiks (npr. +358).\n"
+"\n"
+"Ako je polje prazno, sustav ga pokušava automatski otkriti s vaše SIM "
+"kartice ili mreže.\n"
+"\n"
+"Ovdje ga možete ručno nadjačati unosom 2-slovnog ISO koda regije (npr. US, "
+"FI, DE) ili pozivnog koda (npr. +358, 358, +1, 1)."
+
+#: src/telephony/ui/windows/settings_window.py:382
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Ton povratnog zvona je zvuk koji se reproducira (tu-tu-tu-tu) dok se čeka "
+"odgovor na odlazni poziv. Neki ga operateri ne generiraju pa ga ovdje imamo "
+"opciju ručno generirati. \n"
+"\n"
+"Možete odabrati vlastitu glazbenu datoteku ili je izbrisati da biste "
+"koristili standardni ton sustava."
+
+#: src/telephony/ui/windows/settings_window.py:402
+msgid "Select Ringback Tone"
+msgstr "Odaberite Ringback Tone"
+
+#: src/telephony/ui/windows/settings_window.py:410
+msgid "Audio Files"
+msgstr "Audio datoteke"
+
+#: src/telephony/ui/windows/settings_window.py:436
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Odaberite adresare za korištenje s telefonijom i poredajte ih po prioritetu. "
+"Najviši adresar ima najveći prioritet i imat će prednost ako se broj nalazi "
+"u više adresara. Možete upotrijebiti prekidač za rješavanje duplikata u "
+"nastavku za pomoć pri upravljanju duplikatima, ali čak i ako je onemogućen, "
+"preporučujemo da ga omogućite radi boljeg iskustva."
+
+#: src/telephony/ui/windows/settings_window.py:455
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Kada je omogućeno, ako vas isti telefonski broj nazove 3 puta unutar 5 "
+"minuta, treći poziv (i naredni unutar prozora) prisilit će telefon da zvoni "
+"najvećom glasnoćom, zaobilazeći način rada Tiho ili Ne uznemiravaj."
+
+#: src/telephony/ui/windows/settings_window.py:467
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Odaberite kontakte koji će uvijek reproducirati obavijesti punom glasnoćom, "
+"čak i kada je telefon u načinu Tiho ili Ne uznemiravaj."
+
+#: src/telephony/ui/windows/settings_window.py:488
+msgid "Unknown Callers"
+msgstr "Nepoznati pozivatelji"
+
+#: src/telephony/ui/windows/settings_window.py:493
+msgid "Unknown Callers Action"
+msgstr "Akcija nepoznatih pozivatelja"
+
+#: src/telephony/ui/windows/settings_window.py:495
+msgid "Applies also to hidden numbers."
+msgstr "Primjenjuje se i na skrivene brojeve."
+
+#: src/telephony/ui/windows/settings_window.py:498
+msgid "Do Nothing"
+msgstr "Ne čini ništa"
+
+#: src/telephony/ui/windows/settings_window.py:499
+msgid "Block Completely"
+msgstr "Blokiraj u potpunosti"
+
+#: src/telephony/ui/windows/settings_window.py:500
+msgid "Silence and Hide UI"
+msgstr "Utišaj i sakrij korisničko sučelje"
+
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Silence Only"
+msgstr "Samo tišina"
+
+#: src/telephony/ui/windows/settings_window.py:509
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr ""
+"Dodajte gumb za pretraživanje prozoru InCall i Povijest poziva za nepoznate "
+"pozivatelje"
+
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Search Engine"
+msgstr "tražilica"
+
+#: src/telephony/ui/windows/settings_window.py:519
+#: src/telephony/ui/windows/settings_window.py:524
+msgid "Custom URL"
+msgstr "Prilagođeni URL"
+
+#: src/telephony/ui/windows/settings_window.py:574
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Unesite URL koji želite koristiti za pretraživanje nepoznatih brojeva. "
+"Uključite '{number}' u URL na koji treba ići telefonski broj pozivatelja.\n"
+"\n"
+"Na primjer: https://mysearch.com/?q={number}\n"
+"\n"
+"Kada dodirnete gumb za pretraživanje tijekom poziva, zamijenit ćemo "
+"'{number}' stvarnim telefonskim brojem i otvoriti ga u vašem zadanom "
+"pregledniku."
+
+#: src/telephony/ui/windows/settings_window.py:578
+msgid "Custom Search URL"
+msgstr "URL prilagođenog pretraživanja"
+
+#: src/telephony/ui/windows/settings_window.py:599
+msgid "Desktop Shortcuts"
+msgstr "Prečaci na radnoj površini"
+
+#: src/telephony/ui/windows/settings_window.py:604
+msgid "Calls"
+msgstr "Pozivi"
+
+#: src/telephony/ui/windows/settings_window.py:770
+msgid "Name (e.g. Mom)"
+msgstr "Ime (npr. mama)"
+
+#: src/telephony/ui/windows/settings_window.py:813
+msgid ""
+"This is the base hardware volume applied to the selected output when a call "
+"connects. The volume buttons during a call only adjust fine-tuning on top of "
+"this base level, so if the base is 0% the call stays silent no matter what. "
+"Values above 100% use software amplification and may distort audio. Wired "
+"Headset and Bluetooth levels are stored for upcoming routing support."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:822
+msgid "Decline Message"
+msgstr "Odbij poruku"
+
+#: src/telephony/ui/windows/settings_window.py:893
+msgid "System Default (Always Enabled)"
+msgstr "Zadano za sustav (uvijek omogućeno)"
+
+#: src/telephony/ui/windows/settings_window.py:904
+msgid "Personal Address Book"
+msgstr "Osobni adresar"
+
+#: src/telephony/ui/windows/settings_window.py:905
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ovo je adresar koji će se sinkronizirati s Andromedom ako to odaberete u "
+"postavkama sustava."
+
+#: src/telephony/ui/windows/settings_window.py:913
+msgid "Andromeda Contacts"
+msgstr "Andromeda kontakti"
+
+#: src/telephony/ui/windows/settings_window.py:914
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ovo je adresar koji će se sinkronizirati s Andromede ako to odaberete u "
+"postavkama sustava."
+
+#: src/telephony/ui/windows/settings_window.py:1039
+msgid "Settings Saved"
+msgstr "Postavke su spremljene"
 
 #: src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
@@ -1988,36 +2612,11 @@ msgstr "Priloži glasovnu bilješku"
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
 msgstr "Snimka je prevelika za MMS (maks. 600 KB). Molimo ponovite kraće."
 
-#: src/telephony/ui/windows/blocklist_window.py:37
-msgid "Blocked Numbers"
-msgstr "Blokirani brojevi"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+msgid "Enable Feature"
+msgstr ""
 
-#: src/telephony/ui/windows/blocklist_window.py:127
-msgid "No notes"
-msgstr "Bez bilješki"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-#: src/telephony/ui/main_window.py:665
-msgid "Unblock Number"
-msgstr "Deblokiraj broj"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-msgid "Are you sure you want to unblock this number?"
-msgstr "Jeste li sigurni da želite deblokirati ovaj broj?"
-
-#: src/telephony/ui/windows/blocklist_window.py:157
-msgid "Unblocked number"
-msgstr "Deblokiran broj"
-
-#: src/telephony/ui/windows/camera_photo_window.py:41
-msgid "Take Picture"
-msgstr "Slikaj"
-
-#: src/telephony/ui/windows/camera_photo_window.py:146
-msgid "Attach Photo"
-msgstr "Priloži fotografiju"
-
-#: src/telephony/ui/windows/trusted_actions_list_window.py:97
+#: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
 "Contacts can trigger an action by sending a secret SMS message. Add contacts "
 "below and set their secret trigger phrase."
@@ -2025,7 +2624,7 @@ msgstr ""
 "Kontakti mogu pokrenuti radnju slanjem tajne SMS poruke. Dodajte kontakte u "
 "nastavku i postavite njihov tajni okidač."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+#: src/telephony/ui/windows/trusted_actions_list_window.py:154
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
 "TOTP is mandatory for this feature to work. Add contacts below and set their "
@@ -2037,7 +2636,7 @@ msgstr ""
 "postavite njihov tajni okidač. Primjer predloška: 'TAJNA TOTP' Primjer iz "
 "stvarnog života: 'Gorila 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:103
+#: src/telephony/ui/windows/trusted_actions_list_window.py:157
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -2049,7 +2648,7 @@ msgstr ""
 "nastavku i postavite njihov tajni okidač. Primjer predloška: 'TAJNA TOTP' "
 "Primjer iz stvarnog života: 'Gorila 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:106
+#: src/telephony/ui/windows/trusted_actions_list_window.py:160
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
@@ -2057,11 +2656,11 @@ msgid ""
 "123456 +1234567890 Hello'"
 msgstr ""
 "Pouzdani kontakti mogu poslati SMS prijenos. TOTP je obavezan da bi ova "
-"značajka radila. Dodajte kontakte u nastavku i postavite njihov tajni okidač. "
-"Primjer predloška: 'TAJNA TOTP +1234567890 PORUKA' Primjer iz stvarnog života: "
-"'Gorila 123456 +1234567890 Pozdrav'"
+"značajka radila. Dodajte kontakte u nastavku i postavite njihov tajni "
+"okidač. Primjer predloška: 'TAJNA TOTP +1234567890 PORUKA' Primjer iz "
+"stvarnog života: 'Gorila 123456 +1234567890 Pozdrav'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:109
+#: src/telephony/ui/windows/trusted_actions_list_window.py:163
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -2069,11 +2668,11 @@ msgid ""
 "template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
 msgstr ""
 "Pouzdani kontakti mogu započeti tmate SSH sesiju i primiti SSH pristupni niz "
-"slanjem tajne SMS poruke. TOTP je obavezan da bi ova značajka radila. Dodajte "
-"kontakte u nastavku i postavite njihov tajni okidač. Primjer predloška: "
-"'TAJNA TOTP' Primjer iz stvarnog života: 'Gorila 123456'"
+"slanjem tajne SMS poruke. TOTP je obavezan da bi ova značajka radila. "
+"Dodajte kontakte u nastavku i postavite njihov tajni okidač. Primjer "
+"predloška: 'TAJNA TOTP' Primjer iz stvarnog života: 'Gorila 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:112
+#: src/telephony/ui/windows/trusted_actions_list_window.py:166
 msgid ""
 "Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
 "work. Add contacts below and set their secret trigger phrase. Example "
@@ -2081,39 +2680,44 @@ msgid ""
 "example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
 msgstr ""
 "Pouzdani kontakti mogu obrisati vaš uređaj. TOTP je obavezan da bi ova "
-"značajka radila. Dodajte kontakte u nastavku i postavite njihov tajni okidač. "
-"Primjer predloška: 'TAJNA TOTP SIM_TRENUTNI_PIN SIM_NOVI_PIN SUDO_LOZINKA' "
-"Primjer iz stvarnog života: 'Gorila 123456 0000 1234 PodržiLokalniNogomet'"
+"značajka radila. Dodajte kontakte u nastavku i postavite njihov tajni "
+"okidač. Primjer predloška: 'TAJNA TOTP SIM_TRENUTNI_PIN SIM_NOVI_PIN "
+"SUDO_LOZINKA' Primjer iz stvarnog života: 'Gorila 123456 0000 1234 "
+"PodržiLokalniNogomet'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:132
-msgid "Show TOTP Setup"
-msgstr "Prikaži postavke za TOTP"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+msgid "View or edit TOTP"
+msgstr ""
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:249
+#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+msgid "Setup TOTP"
+msgstr ""
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
 msgstr "Tajna poruka"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:261
+#: src/telephony/ui/windows/trusted_actions_list_window.py:349
 msgid "Remove Contact"
 msgstr "Ukloni kontakt"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:285
+#: src/telephony/ui/windows/trusted_actions_list_window.py:373
 msgid "Contact removed (Click Save to commit)"
 msgstr "Kontakt je uklonjen (kliknite Spremi za obvezu)"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:410
+#: src/telephony/ui/windows/trusted_actions_list_window.py:508
 msgid "Contact already in trusted list"
 msgstr "Kontakt je već na popisu pouzdanih"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:424
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
 msgid "Contact added"
 msgstr "Kontakt je dodan"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:442
+#: src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "TOTP Setup"
 msgstr "Postavke za TOTP"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:483
+#: src/telephony/ui/windows/trusted_actions_list_window.py:586
 msgid ""
 "Share this code with your trusted contact. They should add it to an "
 "authenticator app such as Gnome Authenticator.\n"
@@ -2137,501 +2741,69 @@ msgstr ""
 "Svaka radnja ima svoj kod. Kada pokreću radnju putem SMS-a, nakon ključne "
 "riječi moraju dodati trenutni 6-znamenkasti kod iz svog autentifikatora."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:506
-#: src/telephony/ui/windows/trusted_actions_list_window.py:547
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#, fuzzy
+msgid "Copy TOTP key"
+msgstr "Kopiraj tekst"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:626
+#: src/telephony/ui/windows/trusted_actions_list_window.py:668
 msgid "Regenerate"
 msgstr "Ponovno generiraj"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:513
+#: src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Remove current TOTP"
 msgstr "Ukloni trenutni TOTP"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+#: src/telephony/ui/windows/trusted_actions_list_window.py:642
 msgid "Remove TOTP Key?"
 msgstr "Ukloniti TOTP ključ?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:523
+#: src/telephony/ui/windows/trusted_actions_list_window.py:643
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
 msgstr ""
-"Jeste li sigurni da želite ukloniti TOTP ključ? Ova radnja će onemogućiti TOTP "
-"provjeru za ovu značajku."
+"Jeste li sigurni da želite ukloniti TOTP ključ? Ova radnja će onemogućiti "
+"TOTP provjeru za ovu značajku."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:542
+#: src/telephony/ui/windows/trusted_actions_list_window.py:663
 msgid "Regenerate Code?"
 msgstr "Ponovno generirati kod?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:543
+#: src/telephony/ui/windows/trusted_actions_list_window.py:664
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr ""
-"Ovo će poništiti trenutni kod u aplikaciji za autentifikaciju vašeg kontakta. "
-"Jeste li sigurni?"
+"Ovo će poništiti trenutni kod u aplikaciji za autentifikaciju vašeg "
+"kontakta. Jeste li sigurni?"
 
-#: src/telephony/ui/widgets/incall_elements_widget.py:48
-msgid "Hangup All Calls"
-msgstr "Prekini sve pozive"
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Slanje na {number} nije uspjelo"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:123
-msgid "Copy Text"
-msgstr "Kopiraj tekst"
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Izbriši prilagođene postavke"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
-#: src/telephony/ui/main_window.py:729
-msgid "Copy Number"
-msgstr "Broj kopije"
+#~ msgid "Delete Settings"
+#~ msgstr "Izbriši postavke"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:125
-#: src/telephony/ui/main_window.py:680
-msgid "Add to Contacts"
-msgstr "Dodaj u kontakte"
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr ""
+#~ "Izbrisati sve prilagođene postavke? Brojevi hitnih službi bit će "
+#~ "izgubljeni."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
-msgid "Re-Schedule"
-msgstr "Ponovno zakažite"
+#~ msgid "Settings cleared"
+#~ msgstr "Postavke izbrisane"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:129
-#: src/telephony/ui/views/chat_view.py:801
-msgid "Forward"
-msgstr "Naprijed"
+#~ msgid "Error saving settings"
+#~ msgstr "Pogreška pri spremanju postavki"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:130
-msgid "Mark as Unread"
-msgstr "Označi kao nepročitano"
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Prikaži postavke za TOTP"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:263
-#: src/telephony/ui/views/chat_view.py:781
-#: src/telephony/ui/views/chat_view.py:1002
-msgid "Me"
-msgstr "Mi"
+#~ msgid "Failed to send message"
+#~ msgstr "Slanje poruke nije uspjelo"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:526
-msgid "Open with"
-msgstr "Otvori s"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:527
-msgid "Copy"
-msgstr "Kopirati"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:528
-msgid "Save as"
-msgstr "Spremi kao"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:670
-msgid "Open With..."
-msgstr "Otvori pomoću..."
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:691
-msgid "Save File As"
-msgstr "Spremi datoteku kao"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:103
-msgid "{time} • Group"
-msgstr "{time} • Grupa"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:109
-msgid "Draft: {message}"
-msgstr "Skica: {message}"
-
-#: src/telephony/ui/views/history_view.py:126
-msgid "All"
-msgstr "Sve"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Any duration"
-msgstr "Bilo koje trajanje"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Unanswered"
-msgstr "Bez odgovora"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1s - 60s"
-msgstr "1s - 60s"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1-3 mins"
-msgstr "1-3 min"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "3-10 mins"
-msgstr "3-10 min"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "> 15 mins"
-msgstr "> 15 minuta"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Any date"
-msgstr "Bilo koji datum"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Today"
-msgstr "Danas"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 3 days"
-msgstr "Zadnja 3 dana"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 14 days"
-msgstr "Zadnjih 14 dana"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 30 days"
-msgstr "Zadnjih 30 dana"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 60 days"
-msgstr "Zadnjih 60 dana"
-
-#: src/telephony/ui/views/messages_view.py:111
-#: src/telephony/ui/views/messages_view.py:545
-msgid "Search Contacts..."
-msgstr "Traži kontakte..."
-
-#: src/telephony/ui/views/messages_view.py:229
-msgid "All Messages"
-msgstr "Sve poruke"
-
-#: src/telephony/ui/views/messages_view.py:230
-msgid "Unread Messages"
-msgstr "Nepročitane poruke"
-
-#: src/telephony/ui/views/messages_view.py:231
-msgid "Unknown Numbers"
-msgstr "Nepoznati brojevi"
-
-#: src/telephony/ui/views/messages_view.py:232
-msgid "Saved Contacts"
-msgstr "Spremljeni kontakti"
-
-#: src/telephony/ui/views/messages_view.py:233
-msgid "Group Messages"
-msgstr "Grupne poruke"
-
-#: src/telephony/ui/views/messages_view.py:234
-msgid "Individual Messages"
-msgstr "Individualne poruke"
-
-#: src/telephony/ui/views/messages_view.py:235
-msgid "Alphabetical Senders"
-msgstr "Abecedni pošiljatelji"
-
-#: src/telephony/ui/views/messages_view.py:409
-msgid "[Multimedia Message]"
-msgstr "[Multimedijska poruka]"
-
-#: src/telephony/ui/views/messages_view.py:549
-msgid "Search Messages..."
-msgstr "Traži poruke..."
-
-#: src/telephony/ui/views/messages_view.py:562
-#: src/telephony/ui/views/messages_view.py:636
-msgid "Start ({count})"
-msgstr "Početak ({count})"
-
-#: src/telephony/ui/views/messages_view.py:661
-msgid "Add Number: {number}"
-msgstr "Dodaj broj: {number}"
-
-#: src/telephony/ui/views/messages_view.py:735
-msgid "No results found"
-msgstr "Nema pronađenih rezultata"
-
-#: src/telephony/ui/views/chat_view.py:132
-msgid "Draft to {count} recipients"
-msgstr "Skica za {count} primatelja"
-
-#: src/telephony/ui/views/chat_view.py:159
-msgid "{count} Participants"
-msgstr "{count} sudionika"
-
-#: src/telephony/ui/views/chat_view.py:305
-msgid "Replies not supported for this sender"
-msgstr "Odgovori nisu podržani za ovog pošiljatelja"
-
-#: src/telephony/ui/views/chat_view.py:345
-#: src/telephony/ui/views/chat_view.py:1070
-msgid "Scheduled time must be in the future"
-msgstr "Zakazano vrijeme mora biti u budućnosti"
-
-#: src/telephony/ui/views/chat_view.py:353
-msgid "Rescheduled for {time}"
-msgstr "Odgođeno za {time}"
-
-#: src/telephony/ui/views/chat_view.py:357
-msgid "Re-Schedule Message"
-msgstr "Poruka ponovnog rasporeda"
-
-#: src/telephony/ui/views/chat_view.py:493
-#: src/telephony/ui/views/chat_view.py:556
-msgid "— New Messages —"
-msgstr "— Nove poruke —"
-
-#: src/telephony/ui/views/chat_view.py:588
-msgid "No results found in this conversation"
-msgstr "Nema rezultata u ovom razgovoru"
-
-#: src/telephony/ui/views/chat_view.py:654
-msgid "Group Name"
-msgstr "Naziv grupe"
-
-#: src/telephony/ui/views/chat_view.py:655
-msgid "Set group name..."
-msgstr "Postavi naziv grupe..."
-
-#: src/telephony/ui/views/chat_view.py:663
-msgid "Participants"
-msgstr "Sudionici"
-
-#: src/telephony/ui/views/chat_view.py:749 src/telephony/ui/main_window.py:672
-msgid "Unblocked"
-msgstr "deblokiran"
-
-#: src/telephony/ui/views/chat_view.py:764
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Conversation"
-msgstr "Izbriši razgovor"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid ""
-"Forwarded from {sender}:\n"
-"{body}"
-msgstr ""
-"Forwarded from {sender}:\n"
-"{body}"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid "Forwarded from {sender}"
-msgstr "Forwarded from {sender}"
-
-#: src/telephony/ui/views/chat_view.py:800
-msgid "Forward To"
-msgstr "Proslijedi na"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Delete Message"
-msgstr "Izbriši poruku"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Are you sure you want to delete this message?"
-msgstr "Jeste li sigurni da želite izbrisati ovu poruku?"
-
-#: src/telephony/ui/views/chat_view.py:884
-msgid "Group renamed"
-msgstr "Grupa je preimenovana"
-
-#: src/telephony/ui/views/chat_view.py:899
-msgid "Compressing video..."
-msgstr "Sažimanje videa..."
-
-#: src/telephony/ui/views/chat_view.py:904
-msgid "Video compression failed"
-msgstr "Video kompresija nije uspjela"
-
-#: src/telephony/ui/views/chat_view.py:1064
-msgid "Nothing to schedule"
-msgstr "Ništa za raspored"
-
-#: src/telephony/ui/views/chat_view.py:1078
-msgid "Schedule Message"
-msgstr "Raspored poruka"
-
-#: src/telephony/ui/views/chat_view.py:1120
-msgid "Message scheduled for {time}"
-msgstr "Poruka zakazana za {time}"
-
-#: src/telephony/ui/views/chat_view.py:1123
-#: src/telephony/ui/views/chat_view.py:1149
-msgid "[Attachment]"
-msgstr "[Privitak]"
-
-#: src/telephony/ui/views/chat_view.py:1140
-msgid "Failed to send message"
-msgstr "Slanje poruke nije uspjelo"
-
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Group"
-msgstr "Izbriši grupu"
-
-#: src/telephony/ui/views/chat_view.py:1224
-msgid ""
-"This will permanently delete the conversation history and all saved media "
-"files."
-msgstr ""
-"Ovo će trajno izbrisati povijest razgovora i sve spremljene medijske "
-"datoteke."
-
-#: src/telephony/ui/views/contacts_view.py:61
-msgid "Search contacts"
-msgstr "Traži kontakte"
-
-#: src/telephony/ui/views/contacts_view.py:424
-msgid "Call Anonymous"
-msgstr "Nazovi anonimnu"
-
-#: src/telephony/ui/views/dialpad_view.py:40
-msgid "Enter number"
-msgstr "Unesite broj"
-
-#: src/telephony/ui/views/dialpad_view.py:47
-#: src/telephony/ui/views/dialpad_view.py:148
-msgid "Telephony Smart Dialpad at your service"
-msgstr "Telephony Smart Dialpad vama na usluzi"
-
-#: src/telephony/ui/views/dialpad_view.py:245
-msgid "Invalid number in clipboard"
-msgstr "Nevažeći broj u međuspremniku"
-
-#: src/telephony/ui/views/dialpad_view.py:247
-msgid "Invalid number"
-msgstr "Nevažeći broj"
-
-#: src/telephony/ui/main_window.py:78
-msgid "Telephony"
-msgstr "Telefonija"
-
-#: src/telephony/ui/main_window.py:102
-msgid "Dialpad"
-msgstr "Brojčanik"
-
-#: src/telephony/ui/main_window.py:105
-msgid "History"
-msgstr "Povijest"
-
-#: src/telephony/ui/main_window.py:147
-msgid "Switching address book..."
-msgstr "Promjena adresara..."
-
-#: src/telephony/ui/main_window.py:156
-msgid "Syncing Contacts..."
-msgstr "Sinkronizacija kontakata..."
-
-#: src/telephony/ui/main_window.py:245
-msgid "Set your number in Settings"
-msgstr "Postavite svoj broj u Postavkama"
-
-#: src/telephony/ui/main_window.py:260
-msgid "Please set Default Country Code in Settings"
-msgstr "Postavite zadani kod zemlje u Postavkama"
-
-#: src/telephony/ui/main_window.py:273
-msgid "Setup Emergency Numbers in Settings"
-msgstr "Postavite brojeve hitnih službi u postavkama"
-
-#: src/telephony/ui/main_window.py:289
-msgid "Resolve Duplicates"
-msgstr "Riješite duplikate"
-
-#: src/telephony/ui/main_window.py:300
-msgid "Reload Contacts"
-msgstr "Ponovno učitaj kontakte"
-
-#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:505
-msgid "Blocklist"
-msgstr "Popis blokiranih"
-
-#: src/telephony/ui/main_window.py:389
-msgid "Modem Connected"
-msgstr "Modem povezan"
-
-#: src/telephony/ui/main_window.py:391
-msgid "Modem Error: {message}"
-msgstr "Greška modema: {message}"
-
-#: src/telephony/ui/main_window.py:415
-msgid "Sending USSD..."
-msgstr "Slanje USSD-a..."
-
-#: src/telephony/ui/main_window.py:430
-msgid "USSD Result"
-msgstr "USSD rezultat"
-
-#: src/telephony/ui/main_window.py:477
-msgid "Found {count} duplicate contact. Check menu."
-msgid_plural "Found {count} duplicate contacts. Check menu."
-msgstr[0] "Pronađen {count} dvostruki kontakt. Provjerite izbornik."
-msgstr[1] "Pronađeno {count} dvostrukih kontakata. Provjerite izbornik."
-
-#: src/telephony/ui/main_window.py:502 src/telephony/ui/main_window.py:554
-msgid "Contacts syncing..."
-msgstr "Sinkronizacija kontakata..."
-
-#: src/telephony/ui/main_window.py:548
-msgid "Reloading Contacts..."
-msgstr "Ponovno učitavanje kontakata..."
-
-#: src/telephony/ui/main_window.py:564
-msgid "Multiple Contacts Found"
-msgstr "Pronađeno je više kontakata"
-
-#: src/telephony/ui/main_window.py:565
-msgid "Which contact would you like to edit?"
-msgstr "Koji kontakt želite urediti?"
-
-#: src/telephony/ui/main_window.py:578
-msgid "Unknown Addressbook"
-msgstr "Nepoznati adresar"
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling (Anonymous)..."
-msgstr "Zovem (anonimno)..."
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling {number}..."
-msgstr "Pozivanje {number}..."
-
-#: src/telephony/ui/main_window.py:644
-msgid "Call Failed"
-msgstr "Poziv nije uspio"
-
-#: src/telephony/ui/main_window.py:648
-msgid "Call Details"
-msgstr "Detalji poziva"
-
-#: src/telephony/ui/main_window.py:649
-msgid ""
-"Number: {number}\n"
-"Name: {name}\n"
-"Date: {date}\n"
-"Duration: {duration}"
-msgstr ""
-"Broj: {number}\n"
-"Ime: {name}\n"
-"Datum: {date}\n"
-"Trajanje: {duration}"
-
-#: src/telephony/ui/main_window.py:691
-msgid "Add to Existing Contact"
-msgstr "Dodaj postojećem kontaktu"
-
-#: src/telephony/ui/main_window.py:724
-msgid "Send Message"
-msgstr "Pošalji poruku"
-
-#: src/telephony/ui/main_window.py:747
-msgid "Delete this call"
-msgstr "Izbriši ovaj poziv"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Delete Call"
-msgstr "Izbriši poziv"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Remove this call?"
-msgstr "Ukloniti ovaj poziv?"
-
-#: src/telephony/ui/main_window.py:766
-msgid "Number copied"
-msgstr "Broj kopiran"
-
-#: src/telephony/ui/main_window.py:773
-msgid "Added to {name}"
-msgstr "Dodano u {name}"
-
-#: src/telephony/ui/main_window.py:776
-msgid "Failed to add number"
-msgstr "Dodavanje broja nije uspjelo"
+#~ msgid "Switching address book..."
+#~ msgstr "Promjena adresara..."

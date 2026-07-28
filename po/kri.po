@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 12:03+0000\n"
+"POT-Creation-Date: 2026-07-29 02:02+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -13,128 +13,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:91
-msgid "Exported {count} messages to Chatty database."
-msgstr "Ekspɔt {kɔnt} mɛsej dɛn to Chatty database."
+#: src/telephony/app.py:530 src/telephony/app.py:564
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:398
+#: src/telephony/backend/utils/db_blocklist_utils.py:52
+#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
+#: src/telephony/ui/views/chat_view.py:93
+#: src/telephony/ui/views/chat_view.py:142
+#: src/telephony/ui/views/chat_view.py:152
+#: src/telephony/ui/views/chat_view.py:156
+#: src/telephony/ui/views/chat_view.py:700
+#: src/telephony/ui/views/chat_view.py:704
+#: src/telephony/ui/views/chat_view.py:800
+#: src/telephony/ui/views/chat_view.py:806
+#: src/telephony/ui/views/chat_view.py:965
+#: src/telephony/ui/views/chat_view.py:967
+#: src/telephony/ui/views/chat_view.py:1160
+#: src/telephony/ui/views/dialpad_view.py:158
+#: src/telephony/ui/views/history_view.py:411
+#: src/telephony/ui/views/messages_view.py:363
+#: src/telephony/ui/views/messages_view.py:366
+#: src/telephony/ui/views/messages_view.py:437
+#: src/telephony/ui/views/messages_view.py:441
+#: src/telephony/ui/views/messages_view.py:531
+#: src/telephony/ui/views/messages_view.py:868
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
+#: src/telephony/ui/widgets/history_rows_widget.py:121
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:166
+#: src/telephony/ui/windows/custom_tone_list_window.py:260
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:126
+#: src/telephony/ui/windows/incall_window.py:296
+#: src/telephony/ui/windows/incall_window.py:309
+#: src/telephony/ui/windows/incall_window.py:332
+#: src/telephony/ui/windows/incall_window.py:461
+#: src/telephony/ui/windows/trusted_actions_list_window.py:309
+#: src/telephony/ui/windows/trusted_actions_list_window.py:447
+msgid "Unknown"
+msgstr "Nɔ no"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:147
-msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Ekspɔt {kɔnt} kɔl dɛn to Gnome Kɔl database."
+#: src/telephony/app.py:541
+msgid "Call Back"
+msgstr "Kɔl Bak"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:164
-msgid "Source database not found."
-msgstr "Sos database nɔ de."
+#: src/telephony/app.py:571
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} nyu mɛsej"
+msgstr[1] "{count} nyu mɛsej dɛn"
 
-#: src/telephony/backend/utils/exporter_local_utils.py:167
-msgid "Exported Telephony database successfully."
-msgstr "Ekspɔt Tɛlifoni database saksesful wan."
+#: src/telephony/app.py:575
+#: src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Opin"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:34
-#: src/telephony/backend/utils/importer_ios_utils.py:202
-#: src/telephony/backend/utils/importer_android_utils.py:33
-#: src/telephony/backend/utils/importer_android_utils.py:135
-msgid "File not found."
-msgstr "Fayl nɔ fɛn."
+#: src/telephony/app.py:579
+msgid "Call"
+msgstr "Kɔl"
 
-#: src/telephony/backend/utils/importer_ios_utils.py:63
-msgid "Could not find messages table in iOS database."
-msgstr "Nɔ bin ebul fɔ fɛn mɛsej tebul na iOS database."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:70
-msgid "Failed to read iOS SMS database structure."
-msgstr "Fail fɔ rid iOS SMS database strɔkchɔ."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:193
-msgid "Imported {count} messages from iOS backup."
-msgstr "Impɔt {kɔnt} mɛsej frɔm iOS bak-ap."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:227
-msgid "Could not find call history table in iOS database."
-msgstr "Nɔ bin ebul fɔ fɛn kɔl istri tebul na iOS database."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:234
-msgid "Failed to read iOS Calls database structure."
-msgstr "Fail fɔ rid iOS Kɔl database strɔkchɔ."
-
-#: src/telephony/backend/utils/importer_ios_utils.py:297
-msgid "Imported {count} calls from iOS backup."
-msgstr "Impɔt {count} kɔl frɔm iOS bak-ap."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:139
-msgid "Successfully exported {count} messages to XML."
-msgstr "Saksesfully ɛkspɔt {count} mɛsej dɛn to XML."
-
-#: src/telephony/backend/utils/exporter_android_utils.py:205
-msgid "Successfully exported {count} calls to XML."
-msgstr "Saksesfully ɛkspɔt {count} kɔl dɛn to XML."
-
-#: src/telephony/backend/utils/importer_local_utils.py:31
-msgid "Chatty database not found."
-msgstr "Chatty database nɔ fɛn."
-
-#: src/telephony/backend/utils/importer_local_utils.py:53
-msgid "Could not find messages table in Chatty database."
-msgstr "Nɔ bin ebul fɔ fɛn mɛsej tebul na Chatty database."
-
-#: src/telephony/backend/utils/importer_local_utils.py:60
-msgid "Failed to read Chatty database structure."
-msgstr "Fail fɔ rid Chatty database strɔkchɔ."
-
-#: src/telephony/backend/utils/importer_local_utils.py:121
-msgid "Imported {count} messages from Chatty."
-msgstr "Impɔt {kɔnt} mɛsej dɛn frɔm Chatty."
-
-#: src/telephony/backend/utils/importer_local_utils.py:131
-msgid "Calls database not found."
-msgstr "Kɔl database nɔ fɛn."
-
-#: src/telephony/backend/utils/importer_local_utils.py:151
-msgid "Could not find call history table in Calls database."
-msgstr "Nɔ bin ebul fɔ fɛn kɔl istri tebul na Kɔl database."
-
-#: src/telephony/backend/utils/importer_local_utils.py:158
-msgid "Failed to read Calls database structure."
-msgstr "Failed fɔ rid Kɔl database strɔkchɔ."
-
-#: src/telephony/backend/utils/importer_local_utils.py:210
-msgid "Imported {count} calls."
-msgstr "Impɔt {kɔnt} kɔl dɛn."
-
-#: src/telephony/backend/utils/importer_android_utils.py:126
-msgid "Imported {count} messages from Android backup."
-msgstr "Impɔt {kɔnt} mɛsej frɔm Andrɔyd bak-ap."
-
-#: src/telephony/backend/utils/importer_android_utils.py:200
-msgid "Imported {count} calls from Android backup."
-msgstr "Impɔt {count} kɔl frɔm Andrɔyd bak-ap."
-
-#: src/telephony/backend/utils/model_utils.py:56
-msgid "0s"
-msgstr "0s"
-
-#: src/telephony/backend/utils/model_utils.py:61
-msgid "{h}h {m}m"
-msgstr "{h}h {m}m"
-
-#: src/telephony/backend/utils/model_utils.py:63
-msgid "{m}m {s}s"
-msgstr "{m}m {s} dɛn"
-
-#: src/telephony/backend/utils/model_utils.py:64
-msgid "{s}s"
-msgstr "{s} dɛn de"
-
-#: src/telephony/backend/managers/location_manager.py:63
-msgid "Initializing location services..."
-msgstr "Initializing lokeshɔn savis dɛn..."
-
-#: src/telephony/backend/managers/location_manager.py:126
-msgid "Waiting for location service..."
-msgstr "Wet fɔ lokeshɔn savis..."
-
-#: src/telephony/backend/managers/location_manager.py:143
-msgid "Waiting for satellite fix..."
-msgstr "Wet fɔ sataylayt fiks..."
+#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/utils/db_blocklist_utils.py:35
+#: src/telephony/ui/views/messages_view.py:357
+#: src/telephony/ui/views/messages_view.py:428
+msgid "Blocked Number"
+msgstr "Nɔmba we dɛn dɔn blok"
 
 #: src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency Mode"
@@ -149,40 +97,40 @@ msgid "Start Emergency Process"
 msgstr "Start Imejɛnsi Prɔses"
 
 #: src/telephony/backend/managers/emergency_manager.py:132
-#: src/telephony/ui/windows/data_management_window.py:76
-#: src/telephony/ui/windows/data_management_window.py:138
-#: src/telephony/ui/windows/data_management_window.py:185
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:50
-#: src/telephony/ui/windows/contact_editor_window.py:118
-#: src/telephony/ui/windows/contact_editor_window.py:802
-#: src/telephony/ui/windows/contact_picker_window.py:45
-#: src/telephony/ui/windows/custom_tone_list_window.py:55
-#: src/telephony/ui/windows/custom_tone_list_window.py:332
-#: src/telephony/ui/windows/settings_window.py:64
-#: src/telephony/ui/windows/settings_window.py:356
-#: src/telephony/ui/windows/import_wizard_window.py:48
-#: src/telephony/ui/windows/duplicate_resolution_window.py:60
-#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
+#: src/telephony/ui/views/history_view.py:81
+#: src/telephony/ui/views/messages_view.py:114
+#: src/telephony/ui/windows/advanced_settings_window.py:48
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:69
 #: src/telephony/ui/windows/camera_video_window.py:80
-#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:832
+#: src/telephony/ui/windows/contact_picker_window.py:46
+#: src/telephony/ui/windows/custom_tone_list_window.py:56
+#: src/telephony/ui/windows/custom_tone_list_window.py:319
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
 #: src/telephony/ui/windows/import_export_window.py:74
 #: src/telephony/ui/windows/import_export_window.py:171
 #: src/telephony/ui/windows/import_export_window.py:197
 #: src/telephony/ui/windows/import_export_window.py:307
-#: src/telephony/ui/windows/import_export_window.py:328
-#: src/telephony/ui/windows/import_export_window.py:429
-#: src/telephony/ui/windows/import_export_window.py:489
-#: src/telephony/ui/windows/blocklist_editor_window.py:46
-#: src/telephony/ui/windows/blocklist_editor_window.py:156
+#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:437
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:65
+#: src/telephony/ui/windows/settings_window.py:406
 #: src/telephony/ui/windows/sound_recorder_window.py:70
-#: src/telephony/ui/windows/camera_photo_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:68
-#: src/telephony/ui/windows/trusted_actions_list_window.py:455
-#: src/telephony/ui/windows/trusted_actions_list_window.py:526
-#: src/telephony/ui/windows/trusted_actions_list_window.py:546
-#: src/telephony/ui/views/history_view.py:82
-#: src/telephony/ui/views/messages_view.py:119
-#: src/telephony/ui/main_window.py:440 src/telephony/ui/main_window.py:609
+#: src/telephony/ui/windows/trusted_actions_list_window.py:105
+#: src/telephony/ui/windows/trusted_actions_list_window.py:553
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+#: src/telephony/ui/windows/trusted_actions_list_window.py:667
 msgid "Cancel"
 msgstr "nɔ"
 
@@ -203,6 +151,7 @@ msgid "Set numbers in Settings."
 msgstr "Sɛt nɔmba dɛn na Sɛtin dɛn."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
+#, fuzzy, python-brace-format
 msgid "Call {number}"
 msgstr "Kɔl {nɔmba}."
 
@@ -211,6 +160,7 @@ msgid "Confirm Emergency Call"
 msgstr "Kɔnfɛm Imejɛnsi Kɔl"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
+#, fuzzy, python-brace-format
 msgid "Call {name}?"
 msgstr "Kɔl {nem}?"
 
@@ -222,8 +172,20 @@ msgstr "🟢 Yes, Kɔl"
 msgid "🔴 No, Return"
 msgstr "🔴 Nɔ, Ritɔn bak"
 
+#: src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Initializing lokeshɔn savis dɛn..."
+
+#: src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Wet fɔ lokeshɔn savis..."
+
+#: src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Wet fɔ sataylayt fiks..."
+
 #: src/telephony/backend/managers/lockscreen_manager.py:80
-#: src/telephony/ui/windows/incall_window.py:184
+#: src/telephony/ui/windows/incall_window.py:186
 msgid "Modem Stuck"
 msgstr "Modem bin stɔp"
 
@@ -236,66 +198,22 @@ msgid "Telephony Emergency"
 msgstr "Imejɛnsi fɔ Tɛlifon"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:85
-#: src/telephony/ui/windows/incall_window.py:186
-#: src/telephony/ui/windows/incall_window.py:607
+#: src/telephony/ui/windows/incall_window.py:188
+#: src/telephony/ui/windows/incall_window.py:650
 msgid "🔴 Reboot Modem"
 msgstr "🔴 Ribɔt Mɔdem"
-
-#: src/telephony/backend/managers/lockscreen_manager.py:132
-#: src/telephony/backend/managers/lockscreen_manager.py:142
-#: src/telephony/backend/managers/lockscreen_manager.py:398
-#: src/telephony/app.py:513 src/telephony/app.py:547
-#: src/telephony/ui/windows/incall_window.py:124
-#: src/telephony/ui/windows/incall_window.py:294
-#: src/telephony/ui/windows/incall_window.py:307
-#: src/telephony/ui/windows/incall_window.py:330
-#: src/telephony/ui/windows/incall_window.py:454
-#: src/telephony/ui/windows/custom_tone_list_window.py:173
-#: src/telephony/ui/windows/custom_tone_list_window.py:267
-#: src/telephony/ui/windows/duplicate_resolution_window.py:144
-#: src/telephony/ui/windows/blocklist_window.py:155
-#: src/telephony/ui/windows/trusted_actions_list_window.py:221
-#: src/telephony/ui/windows/trusted_actions_list_window.py:343
-#: src/telephony/ui/widgets/history_rows_widget.py:121
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:248
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:253
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:259
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:265
-#: src/telephony/ui/widgets/messages_rows_widget.py:97
-#: src/telephony/ui/views/history_view.py:412
-#: src/telephony/ui/views/messages_view.py:330
-#: src/telephony/ui/views/messages_view.py:333
-#: src/telephony/ui/views/messages_view.py:402
-#: src/telephony/ui/views/messages_view.py:406
-#: src/telephony/ui/views/messages_view.py:496
-#: src/telephony/ui/views/messages_view.py:749
-#: src/telephony/ui/views/chat_view.py:82
-#: src/telephony/ui/views/chat_view.py:87
-#: src/telephony/ui/views/chat_view.py:141
-#: src/telephony/ui/views/chat_view.py:151
-#: src/telephony/ui/views/chat_view.py:155
-#: src/telephony/ui/views/chat_view.py:682
-#: src/telephony/ui/views/chat_view.py:686
-#: src/telephony/ui/views/chat_view.py:783
-#: src/telephony/ui/views/chat_view.py:789
-#: src/telephony/ui/views/chat_view.py:869
-#: src/telephony/ui/views/chat_view.py:871
-#: src/telephony/ui/views/chat_view.py:1000
-#: src/telephony/ui/views/dialpad_view.py:157
-#: src/telephony/ui/main_window.py:576
-msgid "Unknown"
-msgstr "Nɔ no"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:187
 msgid "Telephony - Incoming"
 msgstr "Telefoni - Inkam"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
+#, fuzzy, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 Inkam: {nem}."
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
-#: src/telephony/ui/windows/incall_window.py:385
+#: src/telephony/ui/windows/incall_window.py:387
 msgid "Incoming Call..."
 msgstr "Inkam Kɔl..."
 
@@ -326,6 +244,7 @@ msgid "Telephony - On Hold"
 msgstr "Telefoni - Na Hold"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
+#, fuzzy, python-brace-format
 msgid "🟠 {name} put as on hold"
 msgstr "🟠 {nem} put as na hold"
 
@@ -349,6 +268,7 @@ msgid "MuteMic"
 msgstr "MuteMic we dɛn kɔl"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
+#, fuzzy, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {nem} (On Hold)"
 
@@ -361,6 +281,7 @@ msgid "Telephony - Active Call"
 msgstr "Telefoni - Aktiv Kɔl"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
+#, fuzzy, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 Aktiv: {nem}."
 
@@ -380,24 +301,10 @@ msgstr "SpikaOff"
 msgid "SpeakerOn"
 msgstr "SpikaOn"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:35
-msgid "Please wait 60 seconds before triggering {prefix} again."
-msgstr "Duya wet 60 sɛkɔn bifo yu trig {prefix} bak."
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:266
-msgid " (Accuracy: {acc}m)"
-msgstr "(Akkuracy: {acc}m) we yu de du am."
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:268
-msgid "I am here: {link}{acc_str}"
-msgstr "Mi de ya: {link}{acc_str}"
-
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:276
-msgid "Failed to obtain location after trying all methods."
-msgstr "Failed to obtain location afta i tray ɔl di we dɛn."
-
+#: src/telephony/backend/managers/mms_manager.py:245
 #: src/telephony/backend/managers/ofono_calls_manager.py:39
-#: src/telephony/ui/main_window.py:425
+#: src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: src/telephony/ui/main_window.py:447
 msgid "Modem not ready"
 msgstr "Modem nɔ rɛdi"
 
@@ -406,1116 +313,1017 @@ msgid "Cannot dial while in another call"
 msgstr "Nɔ ebul fɔ dayl we yu de kɔl ɔda kɔl"
 
 #: src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
 msgid "Dial Error: {e}"
 msgstr "Dial Mistek: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:50
+#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "Failed fɔ sɛn: {e}."
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:56
+#: src/telephony/backend/managers/ofono_messaging_manager.py:144
 msgid "Not supported"
 msgstr "Nɔto sɔpɔt"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:61
-#: src/telephony/ui/windows/data_management_window.py:285
+#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
 msgid "Error: {e}"
 msgstr "Mistek: {e}."
 
-#: src/telephony/app.py:524
-msgid "Call Back"
-msgstr "Kɔl Bak"
-
-#: src/telephony/app.py:554
-msgid "{count} new message"
-msgid_plural "{count} new messages"
-msgstr[0] "{count} nyu mɛsej"
-msgstr[1] "{count} nyu mɛsej dɛn"
-
-#: src/telephony/app.py:558
-#: src/telephony/ui/windows/contact_picker_window.py:30
-msgid "Open"
-msgstr "Opin"
-
-#: src/telephony/app.py:562
-msgid "Call"
-msgstr "Kɔl"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:81
-msgid "Scheduled ({current}/{total})"
-msgstr "Scheduled ({kɔrɛnt}/{tɔtal}) ."
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:90
-msgid "To: {name}"
-msgstr "To: {nem}."
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:144
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:298
-msgid "Scheduled: {time}"
-msgstr "Scheduled: {tɛm} we dɛn dɔn sɛtul."
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:154
-msgid "Send Now"
-msgstr "Send Naw"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:165
-#: src/telephony/ui/windows/custom_tone_list_window.py:193
-msgid "Remove"
-msgstr "Pul kɔmɔt"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:172
-msgid "Message removed"
-msgstr "Dɛn dɔn pul di mɛsej"
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-msgid "Sent scheduled message to {number}"
-msgstr "Sɛn mɛsej we dɛn dɔn sɛtul to {nɔmba}."
-
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:222
-msgid "Failed to send to {number}"
-msgstr "Fail fɔ sɛn to {nɔmba}."
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Database Management"
-msgstr "Database Manejmɛnt"
-
-#: src/telephony/ui/windows/data_management_window.py:32
-msgid "Select data to permanently delete."
-msgstr "Pik di data fɔ dilit fɔ ɔltɛm."
-
-#: src/telephony/ui/windows/data_management_window.py:47
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Delete Call History"
-msgstr "Dilit di Kɔl Istri"
-
-#: src/telephony/ui/windows/data_management_window.py:48
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "Delete All Messages"
-msgstr "Dilit Ɔl di Mɛsej dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:49
-msgid "Delete All Group Names"
-msgstr "Dilit Ɔl di Grup Nem dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:50
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Delete Blocklist"
-msgstr "Dilit di Blɔklist"
-
-#: src/telephony/ui/windows/data_management_window.py:51
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete All Contacts"
-msgstr "Dilit Ɔl di Kɔntakt dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:52
-#: src/telephony/ui/windows/data_management_window.py:134
-#: src/telephony/ui/windows/data_management_window.py:157
-msgid "Delete Address Book"
-msgstr "Dilit Adrɛs Buk"
-
-#: src/telephony/ui/windows/data_management_window.py:53
-msgid "Delete Custom Settings"
-msgstr "Dilit di Kɔstɔm Sɛtin dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:60
-msgid "DELETE EVERYTHING"
-msgstr "DILƐT ƆLTIN"
-
-#: src/telephony/ui/windows/data_management_window.py:65
-#: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/contact_editor_window.py:98
-#: src/telephony/ui/windows/settings_window.py:318
-#: src/telephony/ui/windows/settings_window.py:342
-#: src/telephony/ui/windows/settings_window.py:393
-#: src/telephony/ui/windows/settings_window.py:531
-#: src/telephony/ui/windows/settings_window.py:764
-#: src/telephony/ui/windows/chat_media_controller_window.py:148
-#: src/telephony/ui/main_window.py:522 src/telephony/ui/main_window.py:756
-msgid "Close"
-msgstr "Tayt"
-
-#: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:728
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:131
-msgid "Delete"
-msgstr "Dilit"
-
-#: src/telephony/ui/windows/data_management_window.py:90
-msgid "Are you sure? This cannot be undone."
-msgstr "Yu shɔ? Dis nɔ go ebul fɔ chenj."
-
-#: src/telephony/ui/windows/data_management_window.py:94
-msgid "This will delete all SMS/MMS and attachments."
-msgstr "Dis go dilit ɔl di SMS/MMS ɛn atɛshmɛnt dɛn."
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Delete Group Names"
-msgstr "Dilit di Grup Nem dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:98
-msgid "Reset all custom group chat names?"
-msgstr "Riset ɔl di kɔstɔm grup chat nem dɛn?"
-
-#: src/telephony/ui/windows/data_management_window.py:102
-msgid "Unblock all numbers?"
-msgstr "Unblock ɔl di nɔmba dɛn?"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Delete Settings"
-msgstr "Dilit Sɛtin dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:110
-msgid "Clear all custom settings? Emergency numbers will be lost."
-msgstr "Klia ɔl di kɔstɔm sɛtin dɛn? Imejɛnsi nɔmba dɛn go lɔs."
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "No deletable address books"
-msgstr "Nɔ adrɛs buk dɛn we dɛn kin dilit"
-
-#: src/telephony/ui/windows/data_management_window.py:130
-msgid "There are no custom address books that can be deleted."
-msgstr "No kɔstɔm adrɛs buk nɔ de we dɛn kin dilit."
-
-#: src/telephony/ui/windows/data_management_window.py:135
-msgid ""
-"Which address book do you want to delete permanently?\n"
-"\n"
-"This will wipe it from the system."
-msgstr ""
-"Us adrɛs buk yu want fɔ dilit fɔ ɔltɛm?\n"
-"\n"
-"Dis go wayp am frɔm di sistɛm."
-
-#: src/telephony/ui/windows/data_management_window.py:158
-msgid "Are you sure you want to permanently delete the '{name}' address book?"
-msgstr "Yu shɔ se yu want fɔ dilit di '{nem}' adrɛs buk fɔ ɔltɛm?"
-
-#: src/telephony/ui/windows/data_management_window.py:173
-msgid "Delete EVERYTHING"
-msgstr "Dilit ƆLTIN"
-
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Wipe database, config files and contacts? App will reset."
-msgstr "Waip database, konfig fayl ɛn kɔntakt dɛn? App go riset."
-
-#: src/telephony/ui/windows/data_management_window.py:174
-msgid "Really delete everyone from your address book?"
-msgstr "Rili dilit ɔlman na yu adrɛs buk?"
-
-#: src/telephony/ui/windows/data_management_window.py:182
-msgid "Select which address book to clear:"
-msgstr "Pik us adrɛs buk fɔ klia:"
-
-#: src/telephony/ui/windows/data_management_window.py:193
-msgid "All Address Books"
-msgstr "Ɔl di Adrɛs Buk dɛn"
-
-#: src/telephony/ui/windows/data_management_window.py:223
-msgid "Call History Deleted"
-msgstr "Di Kɔl Istri dɔn Dilit"
-
-#: src/telephony/ui/windows/data_management_window.py:227
-msgid "Deleting messages..."
-msgstr "We yu de dilit mɛsej dɛn..."
-
-#: src/telephony/ui/windows/data_management_window.py:233
-msgid "Messages & Attachments Deleted"
-msgstr "Mɛsej dɛn & Atɛshmɛnt dɛn dɔn Dilit"
-
-#: src/telephony/ui/windows/data_management_window.py:240
-msgid "Group Names Reset"
-msgstr "Grup Nem dɛn Riset"
-
-#: src/telephony/ui/windows/data_management_window.py:246
-msgid "Blocklist Cleared"
-msgstr "Blɔklist dɔn Klia"
-
-#: src/telephony/ui/windows/data_management_window.py:250
-msgid "Deleting contacts..."
-msgstr "Dilit kɔntakt dɛn..."
-
-#: src/telephony/ui/windows/data_management_window.py:257
-msgid "Contacts Deleted"
-msgstr "Di kɔntakt dɛn we dɛn dɔn dilit"
-
-#: src/telephony/ui/windows/data_management_window.py:265
-msgid "Deleting address book..."
-msgstr "We yu de dilit adrɛs buk..."
-
-#: src/telephony/ui/windows/data_management_window.py:272
-msgid "Address Book Deleted"
-msgstr "Adrɛs Buk we Dɛn dɔn Dilit"
-
-#: src/telephony/ui/windows/data_management_window.py:275
-msgid "Failed to delete Address Book"
-msgstr "I nɔ bin ebul fɔ dilit Adrɛs Buk"
-
-#: src/telephony/ui/windows/data_management_window.py:282
-msgid "Settings cleared"
-msgstr "Di sɛtin dɛn dɔn klia"
-
-#: src/telephony/ui/windows/data_management_window.py:289
-msgid "Wiping Database..."
-msgstr "Wiping Database we yu de yuz..."
-
-#: src/telephony/ui/windows/data_management_window.py:303
-msgid "App Reset Complete"
-msgstr "App Riset Kɔmplit"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:28
-#: src/telephony/ui/windows/settings_window.py:255
-#: src/telephony/ui/windows/settings_window.py:416
-msgid "Notification Overrides"
-msgstr "Notis we dɛn de ɔvalayz"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:54
-#: src/telephony/ui/windows/contact_editor_window.py:122
-#: src/telephony/ui/windows/custom_tone_list_window.py:59
-#: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/advanced_settings_window.py:56
-#: src/telephony/ui/windows/blocklist_editor_window.py:50
-#: src/telephony/ui/windows/trusted_actions_list_window.py:73
-#: src/telephony/ui/windows/trusted_actions_list_window.py:459
-#: src/telephony/ui/main_window.py:783
-msgid "Save"
-msgstr "Sev"
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:67
-#: src/telephony/ui/windows/trusted_actions_list_window.py:89
-msgid "Find and add contacts..."
-msgstr "Fɛn ɛn ad kɔntakt dɛn..."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:74
-msgid ""
-"Contacts in this list will always play notifications at full volume, even if"
-" the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Di kɔntakt dɛn we de na dis list go ple notis dɛn ɔltɛm wit ful vɔlyum, "
-"ilɛksɛf di fon de na Saylent ɔ Nɔ Distɔb mɔd."
-
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:244
-#: src/telephony/ui/windows/custom_tone_list_window.py:310
-#: src/telephony/ui/windows/trusted_actions_list_window.py:389
-#: src/telephony/ui/views/messages_view.py:681
-msgid "No contacts found"
-msgstr "No kɔntakt nɔ fɛn"
-
-#: src/telephony/ui/windows/info_window.py:28
-msgid "About Telephony"
-msgstr "Bɔt Tɛlifon"
-
-#: src/telephony/ui/windows/info_window.py:53
-msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
-msgstr "Fast fon dayalɔ ɛn mɛsej klaynt we dɛn mek fɔ FLX1 ɛn FLX1 dɛn."
-
-#: src/telephony/ui/windows/info_window.py:71
-msgid "Version"
-msgstr "Dis wan"
-
-#: src/telephony/ui/windows/info_window.py:72
-msgid "Developer"
-msgstr "Divɛlɔpmɛnt"
-
-#: src/telephony/ui/windows/info_window.py:73
-msgid "License"
-msgstr "Laysens"
-
-#: src/telephony/ui/windows/info_window.py:77
-msgid "Links"
-msgstr "Links dɛn we de"
-
-#: src/telephony/ui/windows/info_window.py:101
-#: src/telephony/ui/windows/contact_editor_window.py:216
-msgid "Website"
-msgstr "Wɛbsayt"
-
-#: src/telephony/ui/windows/info_window.py:109
-msgid "Issue Tracker"
-msgstr "Issue Tracker fɔ di tin dɛn we de apin"
-
-#: src/telephony/ui/windows/info_window.py:110
-msgid "Report bugs or request features"
-msgstr "Ripɔt bɔg ɔ rikwest ficha dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:31
-#: src/telephony/ui/windows/contact_editor_window.py:397
-msgid "Contact Details"
-msgstr "Di Ditiɛl dɛn fɔ Kɔntakt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:66
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:236
-#: src/telephony/ui/windows/trusted_actions_list_window.py:312
-#: src/telephony/ui/views/contacts_view.py:122
-msgid "Mobile"
-msgstr "Mobayl"
-
-#: src/telephony/ui/windows/contact_editor_window.py:67
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:237
-#: src/telephony/ui/windows/trusted_actions_list_window.py:313
-#: src/telephony/ui/views/contacts_view.py:123
-msgid "Work"
-msgstr "Wok"
-
-#: src/telephony/ui/windows/contact_editor_window.py:68
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:238
-#: src/telephony/ui/windows/trusted_actions_list_window.py:314
-#: src/telephony/ui/views/contacts_view.py:124
-msgid "Home"
-msgstr "Os"
-
-#: src/telephony/ui/windows/contact_editor_window.py:69
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/custom_tone_list_window.py:239
-#: src/telephony/ui/windows/trusted_actions_list_window.py:315
-#: src/telephony/ui/views/contacts_view.py:125
-msgid "Fax"
-msgstr "Faks"
-
-#: src/telephony/ui/windows/contact_editor_window.py:70
-#: src/telephony/ui/windows/contact_editor_window.py:406
-#: src/telephony/ui/windows/contact_editor_window.py:430
-#: src/telephony/ui/windows/custom_tone_list_window.py:240
-#: src/telephony/ui/windows/trusted_actions_list_window.py:316
-#: src/telephony/ui/views/contacts_view.py:126
-msgid "Other"
-msgstr "Ɔda"
-
-#: src/telephony/ui/windows/contact_editor_window.py:71
-#: src/telephony/ui/windows/custom_tone_list_window.py:241
-#: src/telephony/ui/windows/trusted_actions_list_window.py:317
-#: src/telephony/ui/views/contacts_view.py:127
-msgid "Main"
-msgstr "Men"
-
-#: src/telephony/ui/windows/contact_editor_window.py:102
-#: src/telephony/ui/windows/custom_tone_list_window.py:186
-msgid "Edit"
-msgstr "Kɔrɛkt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:136
-msgid "Identity"
-msgstr "Udat"
-
-#: src/telephony/ui/windows/contact_editor_window.py:139
-#: src/telephony/ui/windows/contact_editor_window.py:157
-msgid "Favorite"
-msgstr "Bɛst"
-
-#: src/telephony/ui/windows/contact_editor_window.py:147
-msgid "Full Name"
-msgstr "Ful Nem"
-
-#: src/telephony/ui/windows/contact_editor_window.py:153
-msgid "Name"
-msgstr "Nem"
-
-#: src/telephony/ui/windows/contact_editor_window.py:157
-#: src/telephony/ui/windows/trusted_actions_list_window.py:527
-msgid "Yes"
-msgstr "Yɛs"
-
-#: src/telephony/ui/windows/contact_editor_window.py:163
-msgid "Phone Numbers"
-msgstr "Fɔn Nɔmba dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:179
-#: src/telephony/ui/windows/settings_window.py:212
-#: src/telephony/ui/main_window.py:782
-msgid "Add Number"
-msgstr "Ad Nɔmba"
-
-#: src/telephony/ui/windows/contact_editor_window.py:190
-#: src/telephony/ui/windows/duplicate_resolution_window.py:159
-msgid "Email Addresses"
-msgstr "Imel Adrɛs dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:200
-msgid "Add Email"
-msgstr "Add Imel fɔ yu"
-
-#: src/telephony/ui/windows/contact_editor_window.py:211
-msgid "Additional Details"
-msgstr "Ɔda Ditiɛl dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Organization"
-msgstr "Ɔganayzeshɔn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:214
-msgid "Job Title"
-msgstr "Taytul fɔ Job"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Address"
-msgstr "Adrɛs"
-
-#: src/telephony/ui/windows/contact_editor_window.py:215
-msgid "Notes"
-msgstr "Notis dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:241
-#: src/telephony/ui/windows/contact_editor_window.py:246
-msgid "Birthday"
-msgstr "Batde"
-
-#: src/telephony/ui/windows/contact_editor_window.py:242
-#: src/telephony/ui/windows/contact_editor_window.py:249
-msgid "Anniversary"
-msgstr "Anivasri"
-
-#: src/telephony/ui/windows/contact_editor_window.py:258
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Delete Contact"
-msgstr "Dilit Kɔntakt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:269
-#: src/telephony/ui/windows/settings_window.py:161
-#: src/telephony/ui/windows/settings_window.py:390
-msgid "Address Books"
-msgstr "Adrɛs Buk dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:289
-msgid "Unknown Source"
-msgstr "Wi nɔ No di say we dɛn pul am"
-
-#: src/telephony/ui/windows/contact_editor_window.py:313
-#: src/telephony/ui/windows/contact_editor_window.py:351
-#: src/telephony/ui/windows/date_time_picker_window.py:29
-msgid "Select Date"
-msgstr "Pik di De"
-
-#: src/telephony/ui/windows/contact_editor_window.py:324
-msgid "Clear Date"
-msgstr "Klia Deti fɔ yu"
-
-#: src/telephony/ui/windows/contact_editor_window.py:366
-msgid "Select {title}"
-msgstr "Selekt {taytul}."
-
-#: src/telephony/ui/windows/contact_editor_window.py:376
-msgid "Copy {title}"
-msgstr "Kɔpi {taytul}."
-
-#: src/telephony/ui/windows/contact_editor_window.py:385
-msgid "Copied to clipboard"
-msgstr "Dɛn kɔpi am na klipbɔd"
-
-#: src/telephony/ui/windows/contact_editor_window.py:390
-#: src/telephony/ui/main_window.py:680
-msgid "Edit Contact"
-msgstr "Ɛdit Kɔntakt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:530
-msgid "Export Contact"
-msgstr "Ɛkspɔt Kɔntakt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:549
-msgid "Are you sure you want to delete this contact?"
-msgstr "Yu shɔ se yu want fɔ dilit dis kɔntakt?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:559
-msgid "Deleting contact..."
-msgstr "Dilit kɔntakt..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:745
-msgid "Saving contact..."
-msgstr "Sevin kɔntakt..."
-
-#: src/telephony/ui/windows/contact_editor_window.py:798
-#: src/telephony/ui/windows/blocklist_editor_window.py:152
-msgid "Conflict"
-msgstr "Fɛt-fɛt"
-
-#: src/telephony/ui/windows/contact_editor_window.py:799
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Unblocking and add the number to Contacts?"
-msgstr ""
-"Nɔmba nɔ kin de pan ɔl tu di Blɔklist ɛn Kɔntakt.\n"
-"\n"
-"Yu want fɔ go bifo wit Unblocking ɛn ad di nɔmba to Kɔntakt dɛn?"
-
-#: src/telephony/ui/windows/contact_editor_window.py:803
-msgid "Yes, Add to Contacts"
-msgstr "Yɛs, Ad to Kɔntakt dɛn"
-
-#: src/telephony/ui/windows/contact_editor_window.py:818
-#: src/telephony/ui/windows/settings_window.py:407
-#: src/telephony/ui/windows/settings_window.py:419
-#: src/telephony/ui/windows/blocklist_editor_window.py:172
-#: src/telephony/ui/main_window.py:432
-msgid "OK"
-msgstr "OK"
-
-#: src/telephony/ui/windows/contact_picker_window.py:29
-msgid "Pick Contact"
-msgstr "Pik Kɔntakt"
-
-#: src/telephony/ui/windows/contact_picker_window.py:61
-msgid "Name or Number"
-msgstr "Nem ɔ Nɔmba"
-
-#: src/telephony/ui/windows/contact_picker_window.py:191
-msgid "No number"
-msgstr "No nɔmba nɔ de"
-
-#: src/telephony/ui/windows/incall_window.py:145
-#: src/telephony/ui/main_window.py:700
-msgid "Search Number"
-msgstr "Sɔch Nɔmba"
-
-#: src/telephony/ui/windows/incall_window.py:150
-msgid "Hangup and Send SMS"
-msgstr "Hangup ɛn Sɛnd SMS"
-
-#: src/telephony/ui/windows/incall_window.py:185
-msgid "The call failed to disconnect."
-msgstr "Di kɔl nɔ bin ebul fɔ diskɔnekt."
-
-#: src/telephony/ui/windows/incall_window.py:218
-#: src/telephony/ui/windows/incall_window.py:626
-msgid "Output"
-msgstr "Di tin we dɛn kin du"
-
-#: src/telephony/ui/windows/incall_window.py:233
-#: src/telephony/ui/windows/incall_window.py:654
-msgid "Input"
-msgstr "Input we dɛn put insay"
-
-#: src/telephony/ui/windows/incall_window.py:385
-msgid "Silenced Incoming Call"
-msgstr "Saylens Inkam Kɔl"
-
-#: src/telephony/ui/windows/incall_window.py:494
-#: src/telephony/ui/windows/incall_window.py:741
-#: src/telephony/ui/windows/settings_window.py:231
-msgid "I can't talk right now."
-msgstr "A nɔ ebul fɔ tɔk rayt naw."
-
-#: src/telephony/ui/windows/incall_window.py:580
-msgid "Restarting RIL..."
-msgstr "Ristart RIL..."
-
-#: src/telephony/ui/windows/incall_window.py:592
-msgid "Restored!"
-msgstr "Dɛn dɔn mek am bak!"
-
-#: src/telephony/ui/windows/incall_window.py:598
-msgid "Failed. Reboot Device."
-msgstr "Dɔn fel. Ribɔt Divays."
-
-#: src/telephony/ui/windows/incall_window.py:600
-msgid "Verifying... {attempt}"
-msgstr "We yu de chɛk... {attempt}"
-
-#: src/telephony/ui/windows/incall_window.py:659
-msgid "Mute Microphone"
-msgstr "Mute Maykrofon"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:273
-msgid "Individual SMS Notifications"
-msgstr "Wan wan SMS Notis dɛn"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:30
-#: src/telephony/ui/windows/settings_window.py:284
-msgid "Individual Ringtones"
-msgstr "Wan wan Rington dɛn"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:72
-msgid "Find contact to add..."
-msgstr "Fɛn kɔntakt fɔ ad..."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:79
-msgid ""
-"Select a contact and choose a custom sound file (.ogg or .oga). The file "
-"will be copied to your local storage."
-msgstr ""
-"Pik wan kɔntakt ɛn pik wan kɔstɔm sawnd fayl (.ogg ɔ .oga). Dɛn go kɔpi di "
-"fayl na yu lokal stɔrɔj."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:209
-msgid "Custom tone removed (Click Save to commit)"
-msgstr "Di kɔstɔm tɔyn dɔn pul (Klik Sɛv fɔ kɔmit)"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:328
-msgid "Select Tone for {name}"
-msgstr "Selekt Tɔn fɔ {nem}."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:331
-#: src/telephony/ui/windows/settings_window.py:355
-msgid "Select"
-msgstr "Pik"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:336
-msgid "Supported Audio (OGG)"
-msgstr "Odio we dɛn sɔpɔt (OGG) ."
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:364
-msgid "Only .ogg or .oga files are supported"
-msgstr "Na .ogg ɔ .oga fayl dɛn nɔmɔ dɛn de sɔpɔt"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:375
-msgid "Failed to copy audio file"
-msgstr "Fail fɔ kɔpi odio fayl"
-
-#: src/telephony/ui/windows/custom_tone_list_window.py:395
-msgid "Custom tone added"
-msgstr "Kastɔm ​​tɔyn ad"
-
-#: src/telephony/ui/windows/settings_window.py:39
-#: src/telephony/ui/main_window.py:295
-msgid "Settings"
-msgstr "Sɛtin dɛn we dɛn dɔn mek"
-
-#: src/telephony/ui/windows/settings_window.py:87
-#: src/telephony/ui/windows/settings_window.py:339
-msgid "Ringback Tone"
-msgstr "Ringbak Tɔn"
-
-#: src/telephony/ui/windows/settings_window.py:90
-msgid "Enable Local Ringback"
-msgstr "Enable Lokal Ringbak"
-
-#: src/telephony/ui/windows/settings_window.py:105
-msgid "Selected Tone"
-msgstr "Tɔn we yu dɔn pik"
-
-#: src/telephony/ui/windows/settings_window.py:108
-#: src/telephony/ui/windows/settings_window.py:328
-msgid "System Default"
-msgstr "Sistem Difɔlt"
-
-#: src/telephony/ui/windows/settings_window.py:135
-msgid "SIM Settings"
-msgstr "SIM Sɛtin dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:138
-msgid "My Number"
-msgstr "Mi Nɔmba"
-
-#: src/telephony/ui/windows/settings_window.py:139
-msgid "My Number (International Format)"
-msgstr "Mi Nɔmba (Intanɛshɔnal Fɔmat) ."
-
-#: src/telephony/ui/windows/settings_window.py:145
-#: src/telephony/ui/windows/settings_window.py:146
-#: src/telephony/ui/windows/settings_window.py:315
-msgid "Default Country Code"
-msgstr "Difɔlt Kɔntri Kɔd"
-
-#: src/telephony/ui/windows/settings_window.py:172
-msgid "Address Book Info"
-msgstr "Adrɛs Buk Info"
-
-#: src/telephony/ui/windows/settings_window.py:180
-msgid "Default Address Book"
-msgstr "Difɔlt Adrɛs Buk"
-
-#: src/telephony/ui/windows/settings_window.py:186
-msgid "Duplicate Resolver"
-msgstr "Dupliket Rizɔlt"
-
-#: src/telephony/ui/windows/settings_window.py:188
-msgid ""
-"Scan for duplicate numbers and show a resolution banner in the Contacts "
-"view."
-msgstr ""
-"Skan fɔ dupliket nɔmba dɛn ɛn sho wan rizɔlt ban na di Kɔntakt dɛn we yu de "
-"si."
-
-#: src/telephony/ui/windows/settings_window.py:201
-msgid "Lockscreen Emergency"
-msgstr "Lɔkskrin Imejɛnsi"
-
-#: src/telephony/ui/windows/settings_window.py:204
-msgid "Show Emergency Button"
-msgstr "Sho di Imejɛnsi Bɔtin"
-
-#: src/telephony/ui/windows/settings_window.py:209
-msgid "Emergency Numbers"
-msgstr "Imejɛnsi Nɔmba dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:226
-msgid "Quick Response"
-msgstr "Kwik Rispɔns"
-
-#: src/telephony/ui/windows/settings_window.py:229
-msgid "Decline Message"
-msgstr "Diklayn Mɛsej"
-
-#: src/telephony/ui/windows/settings_window.py:236
-msgid "Notification Exceptions"
-msgstr "Notis Ɛksepshɔn dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:239
-#: src/telephony/ui/windows/settings_window.py:404
-msgid "Repeated Calls Bypass"
-msgstr "Ripit Kɔl dɛn Baypas"
-
-#: src/telephony/ui/windows/settings_window.py:241
-msgid "If the same number calls 3 times in 5 minutes, force max volume."
-msgstr "If di sem nɔmba kɔl 3 tɛm insay 5 minit, fos maks volyum."
-
-#: src/telephony/ui/windows/settings_window.py:256
-msgid "Manage contacts that always play sound"
-msgstr "Manej kɔntakt dɛn we de ple sawnd ɔltɛm"
-
-#: src/telephony/ui/windows/settings_window.py:265
-#: src/telephony/ui/windows/settings_window.py:277
-#: src/telephony/ui/windows/settings_window.py:288
-msgid "Manage"
-msgstr "Manej"
-
-#: src/telephony/ui/windows/settings_window.py:275
-msgid "Set custom notification sounds for specific contacts"
-msgstr "Sɛt kɔstɔm notis sawnd fɔ sɔm patikyula kɔntakt dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:286
-msgid "Set custom ringtones for specific contacts"
-msgstr "Set kɔstɔm rington fɔ patikyula kɔntakt dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:302
-#: src/telephony/ui/windows/advanced_settings_window.py:33
-msgid "Advanced Settings"
-msgstr "Advans Sɛtin dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:311
-msgid ""
-"The Default Country Code is used to format numbers that don't include an international prefix (e.g., +358).\n"
-"\n"
-"If left empty, the system tries to detect it automatically from your SIM card or network.\n"
-"\n"
-"You can manually override it here by entering a 2-letter ISO region code (e.g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
-msgstr ""
-"Di Difɔlt Kɔntri Kɔd de fɔ fɔmat nɔmba dɛn we nɔ gɛt intanashɔnal prɛfiks (e.g., +358).\n"
-"\n"
-"If yu lɛf am ɛmti, di sistem go tray fɔ no am ɔtomɛtik wan frɔm yu SIM kad ɔ nɛtwɔk.\n"
-"\n"
-"Yu kin ɔvalayz am wit yu an ya bay we yu ɛnta 2-lɛta ISO rijyɔn kɔd (e.g. US, FI, DE) ɔ kɔl kɔd (e.g. +358, 358, +1, 1)."
-
-#: src/telephony/ui/windows/settings_window.py:332
-msgid ""
-"The ringback tone is the sound played (toot-toot-toot) while waiting for an outgoing call to be answered. Some carriers don't generate it so we have option to generate it manually here. \n"
-"\n"
-"You can select your own music file, or clear it to use the standard system tone."
-msgstr ""
-"Di ring bak tɔyn na di sawnd we dɛn de ple (toot-toot-toot) we dɛn de wet fɔ mek dɛn ansa kɔl we de kɔmɔt. Sɔm kyaria nɔ de jenarayz am so wi gɛt opshɔn fɔ jenarayz am manually ya. \n"
-"\n"
-"Yu kin pik yu yon myuzik fayl, ɔ klia am fɔ yuz di standad sistɛm tɔyn."
-
-#: src/telephony/ui/windows/settings_window.py:352
-msgid "Select Ringback Tone"
-msgstr "Pik di Ringbak Tɔn"
-
-#: src/telephony/ui/windows/settings_window.py:360
-msgid "Audio Files"
-msgstr "Odio Fayl dɛn"
-
-#: src/telephony/ui/windows/settings_window.py:386
-msgid ""
-"Select the address books to use with Telephony and arrange them in order of "
-"priority. The topmost address book has the highest priority and will be "
-"preferred if a number is found in multiple address books. You can use the "
-"Duplicate Resolver toggle below to help manage duplicates, but even if "
-"disabled, we encourage enabling it for a better experience."
-msgstr ""
-"Pik di adrɛs buk dɛn we yu go yuz wit Tɛlifon ɛn arenj dɛn akɔdin to di we "
-"aw yu fɔ yuz dɛn fɔs. Di adrɛs buk we de ɔp pas ɔl na in na di ay prayoritɛd"
-" ɛn dɛn go lɛk am if dɛn fɛn wan nɔmba na bɔku adrɛs buk dɛn. Yu kin yuz di "
-"Duplicate Resolver toggle dɔŋ ya fɔ ɛp fɔ manej dupliket, bɔt ivin if yu nɔ "
-"ebul fɔ du am, wi de ɛnkɔrej fɔ ɛnabul am fɔ mek yu gɛt bɛtɛ ɛkspiriɛns."
-
-#: src/telephony/ui/windows/settings_window.py:405
-msgid ""
-"When enabled, if the same phone number calls you 3 times within 5 minutes, "
-"the third call (and subsequent ones within the window) will force the phone "
-"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
-msgstr ""
-"We dɛn ɛnabul am, if di sem fon nɔmba kɔl yu 3 tɛm insay 5 minit, di tɔd kɔl"
-" (ɛn di wan dɛn we go kam afta dat insay di winda) go fos di fon fɔ ring wit"
-" maksimal vɔlyum, baypas di Saylent ɔ Nɔ Distɔb mɔd dɛn."
-
-#: src/telephony/ui/windows/settings_window.py:417
-msgid ""
-"Choose contacts that will always play notifications at full volume, even "
-"when the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Pik kɔntakt dɛn we go ple notis ɔltɛm wit ful vɔlyum, ivin we di fon de na "
-"Saylent ɔ Nɔ Distɔb mɔd."
-
-#: src/telephony/ui/windows/settings_window.py:438
-msgid "Unknown Callers"
-msgstr "Pipul dɛn we Dɛn Nɔ No we De Kɔl"
-
-#: src/telephony/ui/windows/settings_window.py:443
-msgid "Unknown Callers Action"
-msgstr "Akshɔn fɔ di wan dɛn we kɔl pipul dɛn we dɛn nɔ no"
-
-#: src/telephony/ui/windows/settings_window.py:445
-msgid "Applies also to hidden numbers."
-msgstr "I de aplay bak to nɔmba dɛn we dɛn ayd."
-
-#: src/telephony/ui/windows/settings_window.py:448
-msgid "Do Nothing"
-msgstr "Nɔ Du Natin"
-
-#: src/telephony/ui/windows/settings_window.py:449
-msgid "Block Completely"
-msgstr "Blɔk Kɔmplit wan"
-
-#: src/telephony/ui/windows/settings_window.py:450
-msgid "Silence and Hide UI"
-msgstr "Saylens ɛn Ayd UI"
-
-#: src/telephony/ui/windows/settings_window.py:451
-msgid "Silence Only"
-msgstr "Saylens Ɔnli"
-
-#: src/telephony/ui/windows/settings_window.py:459
-msgid ""
-"Add Search button to InCall window and Call History for unknown callers"
-msgstr "Ad Sɔch bɔtin to InCall winda ɛn Kɔl Istri fɔ pipul dɛn we yu nɔ no"
-
-#: src/telephony/ui/windows/settings_window.py:465
-msgid "Search Engine"
-msgstr "Sɔch Injin"
-
-#: src/telephony/ui/windows/settings_window.py:469
-#: src/telephony/ui/windows/settings_window.py:474
-msgid "Custom URL"
-msgstr "Kastom URL we yu want"
-
-#: src/telephony/ui/windows/settings_window.py:524
-msgid ""
-"Enter the URL you want to use for searching unknown numbers. Include '{number}' in the URL where the caller's phone number should go.\n"
-"\n"
-"For example: https://mysearch.com/?q={number}\n"
-"\n"
-"When you tap the search button during a call, we will replace '{number}' with the actual phone number and open it in your default browser."
-msgstr ""
-"Ɛntay di URL we yu want fɔ yuz fɔ fɛn nɔmba dɛn we yu nɔ no. Put '{nɔmba}' na di URL usay di pɔsin we kɔl in fon nɔmba fɔ go.\n"
-"\n"
-"Fɔ ɛgzampul: https://mysearch.com/?q={nɔmba}\n"
-"\n"
-"We yu tap di sɔch bɔtin we yu de kɔl, wi go riples ‘{nɔmba}’ wit di rial fon nɔmba ɛn opin am na yu difɔlt brawza."
-
-#: src/telephony/ui/windows/settings_window.py:528
-msgid "Custom Search URL"
-msgstr "Kɔstɔm Sɔch URL"
-
-#: src/telephony/ui/windows/settings_window.py:549
-msgid "Desktop Shortcuts"
-msgstr "Sɔtkat dɛn fɔ Dɛsktɔp"
-
-#: src/telephony/ui/windows/settings_window.py:554
-msgid "Calls"
-msgstr "Kɔl dɛn we dɛn kin kɔl"
-
-#: src/telephony/ui/windows/settings_window.py:555
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Duya wet 60 sɛkɔn bifo yu trig {prefix} bak."
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Akkuracy: {acc}m) we yu de du am."
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Mi de ya: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
+msgstr "Failed to obtain location afta i tray ɔl di we dɛn."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "Saksesfully ɛkspɔt {count} mɛsej dɛn to XML."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Saksesfully ɛkspɔt {count} kɔl dɛn to XML."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:91
+#, fuzzy, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Ekspɔt {kɔnt} mɛsej dɛn to Chatty database."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:147
+#, fuzzy, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Ekspɔt {kɔnt} kɔl dɛn to Gnome Kɔl database."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Sos database nɔ de."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Ekspɔt Tɛlifoni database saksesful wan."
+
+#: src/telephony/backend/utils/importer_android_utils.py:33
+#: src/telephony/backend/utils/importer_android_utils.py:138
+#: src/telephony/backend/utils/importer_ios_utils.py:34
+#: src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Fayl nɔ fɛn."
+
+#: src/telephony/backend/utils/importer_android_utils.py:129
+#, fuzzy, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Impɔt {kɔnt} mɛsej frɔm Andrɔyd bak-ap."
+
+#: src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Impɔt {count} kɔl frɔm Andrɔyd bak-ap."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "Nɔ bin ebul fɔ fɛn mɛsej tebul na iOS database."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "Fail fɔ rid iOS SMS database strɔkchɔ."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:196
+#, fuzzy, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Impɔt {kɔnt} mɛsej frɔm iOS bak-ap."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "Nɔ bin ebul fɔ fɛn kɔl istri tebul na iOS database."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "Fail fɔ rid iOS Kɔl database strɔkchɔ."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Impɔt {count} kɔl frɔm iOS bak-ap."
+
+#: src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Chatty database nɔ fɛn."
+
+#: src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Nɔ bin ebul fɔ fɛn mɛsej tebul na Chatty database."
+
+#: src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Fail fɔ rid Chatty database strɔkchɔ."
+
+#: src/telephony/backend/utils/importer_local_utils.py:124
+#, fuzzy, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Impɔt {kɔnt} mɛsej dɛn frɔm Chatty."
+
+#: src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Kɔl database nɔ fɛn."
+
+#: src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr "Nɔ bin ebul fɔ fɛn kɔl istri tebul na Kɔl database."
+
+#: src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Failed fɔ rid Kɔl database strɔkchɔ."
+
+#: src/telephony/backend/utils/importer_local_utils.py:213
+#, fuzzy, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Impɔt {kɔnt} kɔl dɛn."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s} dɛn"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s} dɛn de"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telefon we yu kin yuz"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Dialpad we yu kin yuz"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Istri"
+
+#: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:63
-#: src/telephony/ui/main_window.py:109
+#: src/telephony/ui/windows/settings_window.py:605
 msgid "Messages"
 msgstr "Mɛsej dɛn"
 
-#: src/telephony/ui/windows/settings_window.py:556
-#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:606
 msgid "Contacts"
 msgstr "Kɔntakt dɛn"
 
-#: src/telephony/ui/windows/settings_window.py:720
-msgid "Name (e.g. Mom)"
-msgstr "Nem (e.g. Mama) ."
+#: src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Sink Kɔntakt dɛn..."
 
-#: src/telephony/ui/windows/settings_window.py:724
-#: src/telephony/ui/windows/blocklist_editor_window.py:64
-msgid "Number"
-msgstr "Nɔmba"
+#: src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Sɛt yu nɔmba na Sɛtin"
 
-#: src/telephony/ui/windows/settings_window.py:799
-msgid "System Default (Always Enabled)"
-msgstr "Sistem Difɔlt (Dɛn Enabled Ɔltɛm) ."
+#: src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Duya sɛt Difɔlt Kɔntri Kɔd na Sɛtin dɛn"
 
-#: src/telephony/ui/windows/settings_window.py:810
-msgid "Personal Address Book"
-msgstr "Pɔsin in Adrɛs Buk"
+#: src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Sɛtup Imejɛnsi Nɔmba dɛn na Sɛtin dɛn"
 
-#: src/telephony/ui/windows/settings_window.py:811
-msgid ""
-"This is the address book that will be synced to Andromeda if you choose to "
-"do so in System Settings."
-msgstr ""
-"Dis na di adrɛs buk we dɛn go sink to Andromeda if yu pik fɔ du am na Sistem"
-" Sɛtin."
+#: src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Rizolt Dupliket dɛn"
 
-#: src/telephony/ui/windows/settings_window.py:819
-msgid "Andromeda Contacts"
-msgstr "Andromeda Kɔntakt dɛn"
+#: src/telephony/ui/main_window.py:295
+#: src/telephony/ui/windows/settings_window.py:40
+msgid "Settings"
+msgstr "Sɛtin dɛn we dɛn dɔn mek"
 
-#: src/telephony/ui/windows/settings_window.py:820
-msgid ""
-"This is the address book that will be synced from Andromeda if you choose to"
-" do so in System Settings."
-msgstr ""
-"Dis na di adrɛs buk we dɛn go sink frɔm Andromeda if yu pik fɔ du am na "
-"Sistem Sɛtin."
+#: src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "Rilod Kɔntakt dɛn"
 
-#: src/telephony/ui/windows/settings_window.py:940
-msgid "Settings Saved"
-msgstr "Sɛtin dɛn we dɛn dɔn kip"
+#: src/telephony/ui/main_window.py:305
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Impɔt / Ɛkspɔt"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Messages"
-msgstr "Impɔt Mɛsej dɛn"
+#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Blɔklist"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
-msgid "Import Call History"
-msgstr "Impɔt Kɔl Istri"
+#: src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Modem we dɛn dɔn kɔnɛkt"
 
-#: src/telephony/ui/windows/import_wizard_window.py:70
-msgid "Waiting for selection..."
-msgstr "Wet fɔ sɛlɛkshɔn..."
+#: src/telephony/ui/main_window.py:391
+#, fuzzy, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Modem Erɔd: {mɛsej}."
 
-#: src/telephony/ui/windows/import_wizard_window.py:93
-msgid "Where do you want to import from?"
-msgstr "Usay yu want fɔ import frɔm?"
+#: src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "We yu de sɛn USSD..."
 
-#: src/telephony/ui/windows/import_wizard_window.py:101
-msgid "System Database"
-msgstr "Sistem Database we yu de yuz"
+#: src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "USSD Rizult"
 
-#: src/telephony/ui/windows/import_wizard_window.py:103
-msgid "Import from local Chatty installation"
-msgstr "Import frɔm lokal Chatty instɔleshɔn"
+#: src/telephony/ui/main_window.py:454
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:848
+#: src/telephony/ui/windows/settings_window.py:457
+#: src/telephony/ui/windows/settings_window.py:469
+#: src/telephony/ui/windows/settings_window.py:815
+msgid "OK"
+msgstr "OK"
 
-#: src/telephony/ui/windows/import_wizard_window.py:105
-msgid "Import from local Calls installation"
-msgstr "Impɔt frɔm lokal Kɔl instɔleshɔn"
-
-#: src/telephony/ui/windows/import_wizard_window.py:107
-msgid "Import"
-msgstr "Briŋ kam"
-
-#: src/telephony/ui/windows/import_wizard_window.py:114
-msgid "Custom Database Backup"
-msgstr "Kastɔm ​​Database Bak-ap"
-
-#: src/telephony/ui/windows/import_wizard_window.py:115
-msgid "Select an exported SQLite DB file"
-msgstr "Selekt wan SQLite DB fayl we dɛn dɔn ɛkspɔt"
-
-#: src/telephony/ui/windows/import_wizard_window.py:117
-#: src/telephony/ui/windows/import_export_window.py:251
-msgid "Select File"
-msgstr "Pik di Fayl"
-
-#: src/telephony/ui/windows/import_wizard_window.py:142
-msgid "Select Database File"
-msgstr "Pik di Database Fayl"
-
-#: src/telephony/ui/windows/import_wizard_window.py:160
-msgid "MMS Attachments (Optional)"
-msgstr "MMS Atɛshmɛnt dɛn (Opshɔnal) ."
-
-#: src/telephony/ui/windows/import_wizard_window.py:168
-msgid "MMS Folder Backup"
-msgstr "MMS Fɔlda Bak-ap"
-
-#: src/telephony/ui/windows/import_wizard_window.py:169
-msgid "Select the directory containing images/videos"
-msgstr "Pik di dairektrɔ we gɛt pikchɔ/vidio dɛn"
-
-#: src/telephony/ui/windows/import_wizard_window.py:171
-msgid "Select Folder"
-msgstr "Pik di Fɔlda"
-
-#: src/telephony/ui/windows/import_wizard_window.py:178
-msgid "Skip Attachments"
-msgstr "Skip di Atɛshmɛnt dɛn"
-
-#: src/telephony/ui/windows/import_wizard_window.py:179
-msgid "Import SMS and texts only"
-msgstr "Impɔt SMS ɛn tɛks dɛn nɔmɔ"
-
-#: src/telephony/ui/windows/import_wizard_window.py:185
-msgid "Skip"
-msgstr "Jɔmp"
-
-#: src/telephony/ui/windows/import_wizard_window.py:195
-msgid "Select MMS Folder"
-msgstr "Pik di MMS Fɔlda"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:36
-msgid "Duplicate Contact"
-msgstr "Dupliket Kɔntakt"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:64
-msgid "Merge all"
-msgstr "Merge ɔl"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:88
-msgid "Merging Contacts..."
-msgstr "We yu de jɔyn Kɔntakt dɛn..."
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:107
-msgid "Remaining conflicts: {count}"
-msgstr "Di kɔnflikt dɛn we lɛf: {kɔnt}"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:126
-msgid "{number} is saved to contacts:"
-msgstr "{nɔmba} de sev to kɔntakt dɛn:"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:141
-msgid "Address Book: {name}"
-msgstr "Adrɛs Buk: {nem}."
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:162
-msgid "Keep this, Remove duplicates"
-msgstr "Kip dis, Rimov dupliket"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:168
-msgid "Keep this, Merge duplicates"
-msgstr "Kip dis, Merge dupliket"
-
-#: src/telephony/ui/windows/duplicate_resolution_window.py:326
-msgid "Merging {current}/{total}..."
-msgstr "Merging {kɔrɛnt}/{tɔtal}..."
-
+#: src/telephony/ui/main_window.py:463
 #: src/telephony/ui/windows/date_time_picker_window.py:41
-#: src/telephony/ui/main_window.py:441
 msgid "Confirm"
 msgstr "Mek wi biliv"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:62
-msgid "Year"
-msgstr "Ia"
+#: src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "Found {count} dupliket kɔntakt. Chek di menyu."
+msgstr[1] "Found {count} dupliket kɔntakt dɛn. Chek di menyu."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:81
-msgid "Month"
-msgstr "Mɔnt"
+#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Kontakt dɛn we de sink..."
 
-#: src/telephony/ui/windows/date_time_picker_window.py:116
-msgid "Hour"
-msgstr "Awa"
+#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
+#: src/telephony/ui/windows/chat_media_controller_window.py:148
+#: src/telephony/ui/windows/contact_editor_window.py:103
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:368
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:443
+#: src/telephony/ui/windows/settings_window.py:581
+#: src/telephony/ui/windows/settings_window.py:858
+msgid "Close"
+msgstr "Tayt"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:135
-msgid "Minute"
-msgstr "Minit"
+#: src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Rilod Kɔntakt dɛn..."
+
+#: src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "Dɛn dɔn fɛn bɔku bɔku Kɔntakt dɛn"
+
+#: src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Us kɔntakt yu go lɛk fɔ ɛdit?"
+
+#: src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Adrɛsbuk we Wi Nɔ No"
+
+#: src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "We yu de kɔl (Anonymous)..."
+
+#: src/telephony/ui/main_window.py:659
+#, fuzzy, python-brace-format
+msgid "Calling {number}..."
+msgstr "We yu de kɔl {nɔmba}..."
+
+#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Di kɔl we dɛn kɔl Failed"
+
+#: src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Di Ditiɛl dɛn fɔ Kɔl"
+
+#: src/telephony/ui/main_window.py:676
+#, fuzzy, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Nɔmba: {nɔmba}\n"
+"Nem: {nem}.\n"
+"Deti: {deti}.\n"
+"Di tɛm we i fɔ tek: {di tɛm we i fɔ tek}."
+
+#: src/telephony/ui/main_window.py:692
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "Unblock di Nɔmba"
+
+#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+msgid "Unblocked"
+msgstr "Dɛn nɔ blok am"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "Ɛdit Kɔntakt"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+msgid "Add to Contacts"
+msgstr "Ad to Kɔntakt dɛn"
+
+#: src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Ad to Kɔntakt we dɔn de"
+
+#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/windows/incall_window.py:147
+msgid "Search Number"
+msgstr "Sɔch Nɔmba"
+
+#: src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Sɛnd Mɛsej"
+
+#: src/telephony/ui/main_window.py:755
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+msgid "Copy Number"
+msgstr "Kɔpi Nɔmba"
+
+#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Blɔk Nɔmba"
+
+#: src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Dilit dis kɔl"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Dilit Kɔl"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Rimov dis kol?"
+
+#: src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Nɔmba we dɛn kɔpi"
+
+#: src/telephony/ui/main_window.py:798
+#: src/telephony/ui/windows/contact_editor_window.py:757
+msgid "Saving contact..."
+msgstr "Sevin kɔntakt..."
+
+#: src/telephony/ui/main_window.py:802
+#, fuzzy, python-brace-format
+msgid "Added to {name}"
+msgstr "Add to {nem}."
+
+#: src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Failed fɔ ad nɔmba"
+
+#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/windows/contact_editor_window.py:184
+#: src/telephony/ui/windows/settings_window.py:213
+msgid "Add Number"
+msgstr "Ad Nɔmba"
+
+#: src/telephony/ui/main_window.py:814
+#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:60
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:110
+#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+msgid "Save"
+msgstr "Sev"
+
+#: src/telephony/ui/views/chat_view.py:133
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Draft to {count} di wan dɛn we de gɛt"
+
+#: src/telephony/ui/views/chat_view.py:160
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} Di wan dɛn we tek pat"
+
+#: src/telephony/ui/views/chat_view.py:306
+msgid "Replies not supported for this sender"
+msgstr "Ripli dɛn nɔ sɔpɔt fɔ dis pɔsin we sɛn am"
+
+#: src/telephony/ui/views/chat_view.py:350
+#: src/telephony/ui/views/chat_view.py:1230
+msgid "Scheduled time must be in the future"
+msgstr "Di tɛm we dɛn dɔn sɛtul fɔ bi tumara bambay"
+
+#: src/telephony/ui/views/chat_view.py:358
+#, fuzzy, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Rischeduled fɔ {tɛm}."
+
+#: src/telephony/ui/views/chat_view.py:362
+msgid "Re-Schedule Message"
+msgstr "Ri-Schedul Mɛsej"
+
+#: src/telephony/ui/views/chat_view.py:497
+#: src/telephony/ui/views/chat_view.py:562
+msgid "— New Messages —"
+msgstr "— Nyu Mɛsej dɛn —"
+
+#: src/telephony/ui/views/chat_view.py:600
+msgid "No results found in this conversation"
+msgstr "No rizulyt nɔ bin de pan dis tɔk"
+
+#: src/telephony/ui/views/chat_view.py:672
+msgid "Group Name"
+msgstr "Grup Nem"
+
+#: src/telephony/ui/views/chat_view.py:673
+msgid "Set group name..."
+msgstr "Set grup nem..."
+
+#: src/telephony/ui/views/chat_view.py:681
+msgid "Participants"
+msgstr "Di wan dɛn we tek pat"
+
+#: src/telephony/ui/views/chat_view.py:781
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Conversation"
+msgstr "Dilit di Kɔnvɔshɔn"
+
+#: src/telephony/ui/views/chat_view.py:798
+#: src/telephony/ui/views/chat_view.py:1162
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+msgid "Me"
+msgstr "Mi"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, fuzzy, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Fɔwad frɔm {sender}:\n"
+"{bɔdi}"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Fɔwad frɔm {sender}."
+
+#: src/telephony/ui/views/chat_view.py:817
+msgid "Forward To"
+msgstr "Fɔ go bifo To"
+
+#: src/telephony/ui/views/chat_view.py:818
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+msgid "Forward"
+msgstr "Wet fɔ"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Delete Message"
+msgstr "Dilit Mɛsej"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Are you sure you want to delete this message?"
+msgstr "Yu shɔ se yu want fɔ dilit dis mɛsej?"
+
+#: src/telephony/ui/views/chat_view.py:980
+msgid "Group renamed"
+msgstr "Grup we dɛn chenj in nem"
+
+#: src/telephony/ui/views/chat_view.py:1008
+#, fuzzy
+msgid "Compressing image..."
+msgstr "We yu de kɔmprɛs di fim..."
+
+#: src/telephony/ui/views/chat_view.py:1010
+msgid "Image is too large to send"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1012
+msgid "Compressing video..."
+msgstr "We yu de kɔmprɛs di fim..."
+
+#: src/telephony/ui/views/chat_view.py:1014
+msgid "Video compression failed"
+msgstr "Vidio kɔmpreshɔn nɔ bin wok"
+
+#: src/telephony/ui/views/chat_view.py:1016
+msgid "File is too large to send via MMS"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1224
+msgid "Nothing to schedule"
+msgstr "Natin nɔ de fɔ schedul"
+
+#: src/telephony/ui/views/chat_view.py:1238
+msgid "Schedule Message"
+msgstr "Skedul Mɛsej"
+
+#: src/telephony/ui/views/chat_view.py:1277
+#, fuzzy, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Mesej we dɛn dɔn schedul fɔ {tɛm}."
+
+#: src/telephony/ui/views/chat_view.py:1280
+#: src/telephony/ui/views/chat_view.py:1298
+msgid "[Attachment]"
+msgstr "[Lɛk]"
+
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Group"
+msgstr "Dilit Grup fɔ dilit"
+
+#: src/telephony/ui/views/chat_view.py:1388
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Dis go dilit di tɔk istri ɛn ɔl di midia fayl dɛn we dɛn dɔn sev fɔ ɔltɛm."
+
+#: src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Sɔch kɔntakt dɛn"
+
+#: src/telephony/ui/views/contacts_view.py:119
+#: src/telephony/ui/windows/contact_editor_window.py:71
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:229
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Mobile"
+msgstr "Mobayl"
+
+#: src/telephony/ui/views/contacts_view.py:120
+#: src/telephony/ui/windows/contact_editor_window.py:72
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:230
+#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+msgid "Work"
+msgstr "Wok"
+
+#: src/telephony/ui/views/contacts_view.py:121
+#: src/telephony/ui/windows/contact_editor_window.py:73
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:231
+#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+msgid "Home"
+msgstr "Os"
+
+#: src/telephony/ui/views/contacts_view.py:122
+#: src/telephony/ui/windows/contact_editor_window.py:74
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:232
+#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+msgid "Fax"
+msgstr "Faks"
+
+#: src/telephony/ui/views/contacts_view.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:75
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:233
+#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+msgid "Other"
+msgstr "Ɔda"
+
+#: src/telephony/ui/views/contacts_view.py:124
+#: src/telephony/ui/windows/contact_editor_window.py:76
+#: src/telephony/ui/windows/custom_tone_list_window.py:234
+#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+msgid "Main"
+msgstr "Men"
+
+#: src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Kɔl di pɔsin we nɔ no yu nem"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Ɛntay di nɔmba"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Telefon Smart Dialpad na yu savis"
+
+#: src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Nɔmba we nɔ valid na klipbɔd"
+
+#: src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Nɔmba we nɔ rayt"
+
+#: src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "Ɔl"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "Ɛni tɛm we i tek"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Nɔ gɛt ansa"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s insay di ia"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 minit"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 minit"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 mins"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "Ɛni deti"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Tide"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "Las 3 dez"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "Las 14 dez"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "Las 30 dez"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "Las 60 dez"
+
+#: src/telephony/ui/views/messages_view.py:106
+#: src/telephony/ui/views/messages_view.py:575
+msgid "Search Contacts..."
+msgstr "Sɔch Kɔntakt dɛn..."
+
+#: src/telephony/ui/views/messages_view.py:224
+msgid "All Messages"
+msgstr "Ɔl di Mɛsej dɛn"
+
+#: src/telephony/ui/views/messages_view.py:225
+msgid "Unread Messages"
+msgstr "Mɛsej dɛn we Nɔ Rid"
+
+#: src/telephony/ui/views/messages_view.py:226
+msgid "Unknown Numbers"
+msgstr "Nɔmba dɛn we Wi Nɔ No"
+
+#: src/telephony/ui/views/messages_view.py:227
+msgid "Saved Contacts"
+msgstr "Kɔntakt dɛn we dɛn dɔn kip"
+
+#: src/telephony/ui/views/messages_view.py:228
+msgid "Group Messages"
+msgstr "Grup Mɛsej dɛn"
+
+#: src/telephony/ui/views/messages_view.py:229
+msgid "Individual Messages"
+msgstr "Wan wan Mɛsej dɛn"
+
+#: src/telephony/ui/views/messages_view.py:230
+msgid "Alphabetical Senders"
+msgstr "Di wan dɛn we de sɛn di alifbɛt"
+
+#: src/telephony/ui/views/messages_view.py:322
+#: src/telephony/ui/views/messages_view.py:444
+msgid "[Multimedia Message]"
+msgstr "[Mɔltimidia Mɛsej]."
+
+#: src/telephony/ui/views/messages_view.py:579
+msgid "Search Messages..."
+msgstr "Sɔch Mɛsej dɛn..."
+
+#: src/telephony/ui/views/messages_view.py:621
+#, fuzzy, python-brace-format
+msgid "Start ({count})"
+msgstr "Start ({kɔnt}) ."
+
+#: src/telephony/ui/views/messages_view.py:628
+#, fuzzy, python-brace-format
+msgid "Open ({count})"
+msgstr "Start ({kɔnt}) ."
+
+#: src/telephony/ui/views/messages_view.py:700
+#, fuzzy, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Add Nɔmba: {nɔmba}"
+
+#: src/telephony/ui/views/messages_view.py:733
+#, fuzzy
+msgid "Group chat"
+msgstr "Grup Nem"
+
+#: src/telephony/ui/views/messages_view.py:741
+#: src/telephony/ui/windows/custom_tone_list_window.py:297
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+msgid "No contacts found"
+msgstr "No kɔntakt nɔ fɛn"
+
+#: src/telephony/ui/views/messages_view.py:856
+msgid "No results found"
+msgstr "No rizulyt nɔ de we dɛn fɛn"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+msgid "Copy Text"
+msgstr "Kɔpi Tɛks"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+msgid "Re-Schedule"
+msgstr "Ri-Schedul fɔ di wok"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+msgid "Mark as Unread"
+msgstr "Mak as pɔsin we Nɔ Rid"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:778
+msgid "Delete"
+msgstr "Dilit"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, fuzzy, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Scheduled: {tɛm} we dɛn dɔn sɛtul."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#, fuzzy
+msgid "Failed to send"
+msgstr "Failed fɔ sɛn: {e}."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#, fuzzy
+msgid "Sending..."
+msgstr "We yu de sɛn USSD..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+msgid "Open with"
+msgstr "Opin wit"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+msgid "Copy"
+msgstr "Kɔpi"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+msgid "Save as"
+msgstr "Sev as"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
+msgid "Retry Send"
+msgstr ""
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+msgid "Open With..."
+msgstr "Opin Wit..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+msgid "Save File As"
+msgstr "Sev Fayl As"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:48
+msgid "Hangup All Calls"
+msgstr "Hangup Ɔl di Kɔl dɛn"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, fuzzy, python-brace-format
+msgid "{time} • Group"
+msgstr "{tɛm} • Grup"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, fuzzy, python-brace-format
+msgid "Draft: {message}"
+msgstr "Draft: {mɛsej}."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:32
+#: src/telephony/ui/windows/settings_window.py:352
+msgid "Advanced Settings"
+msgstr "Advans Sɛtin dɛn"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:65
+msgid "Loading..."
+msgstr "We yu de lod..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:102
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Erɔd we dɛn de lod di sɛtin dɛn: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:110
+msgid "Secret SMS Triggers"
+msgstr "Sikrit SMS Trig dɛn"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:113
+#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+msgid "Set \"Find my Telephony\""
+msgstr "Set \"Fin mi Telefoni\"."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:119
+#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+msgid "Set \"Trusted Callback\""
+msgstr "Set \"Kɔlbak we yu kin trɔst\"."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+msgid "Set \"SMS -Relay\""
+msgstr "Set \"SMS -Rilay\"."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:131
+#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+msgid "Set \"SMS -tmate\""
+msgstr "Set \"SMS -tmate\"."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:137
+#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "Set \"SMS Switch Waip Divays\"."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:145
+msgid "Restart Modem"
+msgstr "Ristart Modem bak"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+msgid "Data Management"
+msgstr "Data Manejmɛnt"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Dɛn dɔn kansel di ɔthɛntishɔn"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:172
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Auth mistek: {e}."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:180
+msgid "Advanced Settings Applied"
+msgstr "Advans Sɛtin dɛn we Dɛn Aplay"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Restarting Modem..."
+msgstr "Ristart fɔ Modem..."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Di Ditel dɛn bɔt di Nɔmba"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Di kɔl dɛn we dɛn kɔl frɔm dis nɔmba, dɛn go rijɛkt am ɔtomɛtik wan."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:774
+msgid "Number"
+msgstr "Nɔmba"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Notis (I kin pik am) ."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Dupliket"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Dis nɔmba dɔn ɔlrɛdi blok."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Database Erɔr we dɛn mek"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Failed fɔ sev to blɔklist."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:828
+msgid "Conflict"
+msgstr "Fɛt-fɛt"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Nɔmba nɔ kin de pan ɔl tu di Blɔklist ɛn Kɔntakt.\n"
+"\n"
+"Yu want fɔ go bifo wit Blɔk ɛn pul di nɔmba na Kɔntakt?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Yɛs, na Blɔk"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Nɔmba dɛn we dɛn dɔn blok"
+
+#: src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "No not dɛn nɔ de"
+
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Yu shɔ se yu want fɔ pul dis nɔmba?"
+
+#: src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Nɔmba we nɔ blok"
+
+#: src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Tek Pikchɔ"
+
+#: src/telephony/ui/windows/camera_photo_window.py:140
+#: src/telephony/ui/windows/camera_video_window.py:172
+#: src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Ritek am bak"
+
+#: src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Ataya di Fɔto"
+
+#: src/telephony/ui/windows/camera_video_window.py:47
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Rikɔd di fim"
+
+#: src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Ataya di fim"
+
+#: src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "I nɔ ebul fɔ rikodɔm di fim: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Di rikodin nɔ wok (Fayla ɛmti)."
+
+#: src/telephony/ui/windows/camera_video_window.py:388
+#, fuzzy, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Big fim ({sayz}KB). Wi go kɔmprɛs we dɛn sɛn am."
+
+#: src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Nɔ ebul fɔ ple ɛmti fayl."
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:60
 msgid "Take Photo"
 msgstr "Tek Fɔto"
-
-#: src/telephony/ui/windows/chat_media_controller_window.py:61
-#: src/telephony/ui/windows/camera_video_window.py:47
-msgid "Record Video"
-msgstr "Rikɔd di fim"
 
 #: src/telephony/ui/windows/chat_media_controller_window.py:62
 msgid "Record Audio"
@@ -1562,101 +1370,453 @@ msgstr "Atɛshmɛnt Mistek"
 msgid "Failed to prepare attachment."
 msgstr "I nɔ bin ebul fɔ pripia fɔ atak."
 
-#: src/telephony/ui/windows/camera_video_window.py:172
-#: src/telephony/ui/windows/sound_recorder_window.py:144
-#: src/telephony/ui/windows/camera_photo_window.py:141
-msgid "Retake"
-msgstr "Ritek am bak"
+#: src/telephony/ui/windows/contact_editor_window.py:36
+#: src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Di Ditiɛl dɛn fɔ Kɔntakt"
 
-#: src/telephony/ui/windows/camera_video_window.py:177
-msgid "Attach Video"
-msgstr "Ataya di fim"
+#: src/telephony/ui/windows/contact_editor_window.py:107
+#: src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "Kɔrɛkt"
 
-#: src/telephony/ui/windows/camera_video_window.py:314
-msgid "Failed to record video: {error_msg}"
-msgstr "I nɔ ebul fɔ rikodɔm di fim: {error_msg}"
+#: src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Udat"
 
-#: src/telephony/ui/windows/camera_video_window.py:384
-msgid "Recording failed (File empty)."
-msgstr "Di rikodin nɔ wok (Fayla ɛmti)."
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "Bɛst"
 
-#: src/telephony/ui/windows/camera_video_window.py:388
-msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Big fim ({sayz}KB). Wi go kɔmprɛs we dɛn sɛn am."
+#: src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Ful Nem"
 
-#: src/telephony/ui/windows/camera_video_window.py:405
-msgid "Cannot play empty file."
-msgstr "Nɔ ebul fɔ ple ɛmti fayl."
+#: src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Nem"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:69
-msgid "Loading..."
-msgstr "We yu de lod..."
+#: src/telephony/ui/windows/contact_editor_window.py:162
+#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+msgid "Yes"
+msgstr "Yɛs"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:106
-msgid "Error loading settings: {e}"
-msgstr "Erɔd we dɛn de lod di sɛtin dɛn: {e}"
+#: src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Fɔn Nɔmba dɛn"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:114
-msgid "Secret SMS Triggers"
-msgstr "Sikrit SMS Trig dɛn"
+#: src/telephony/ui/windows/contact_editor_window.py:195
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "Imel Adrɛs dɛn"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:117
-#: src/telephony/ui/windows/trusted_actions_list_window.py:36
-msgid "Set \"Find my Telephony\""
-msgstr "Set \"Fin mi Telefoni\"."
+#: src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "Add Imel fɔ yu"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:123
-#: src/telephony/ui/windows/trusted_actions_list_window.py:38
-msgid "Set \"Trusted Callback\""
-msgstr "Set \"Kɔlbak we yu kin trɔst\"."
+#: src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Ɔda Ditiɛl dɛn"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:129
-#: src/telephony/ui/windows/trusted_actions_list_window.py:40
-msgid "Set \"SMS -Relay\""
-msgstr "Set \"SMS -Rilay\"."
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Ɔganayzeshɔn"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:135
-#: src/telephony/ui/windows/trusted_actions_list_window.py:42
-msgid "Set \"SMS -tmate\""
-msgstr "Set \"SMS -tmate\"."
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Taytul fɔ Job"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:141
-#: src/telephony/ui/windows/trusted_actions_list_window.py:44
-msgid "Set \"SMS Switch Wipe Device\""
-msgstr "Set \"SMS Switch Waip Divays\"."
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Adrɛs"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:149
-msgid "Restart Modem"
-msgstr "Ristart Modem bak"
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Notis dɛn"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:157
-msgid "Data Management"
-msgstr "Data Manejmɛnt"
+#: src/telephony/ui/windows/contact_editor_window.py:221
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Wɛbsayt"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:173
-msgid "Authentication cancelled"
-msgstr "Dɛn dɔn kansel di ɔthɛntishɔn"
+#: src/telephony/ui/windows/contact_editor_window.py:246
+#: src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Batde"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:176
-msgid "Auth error: {e}"
-msgstr "Auth mistek: {e}."
+#: src/telephony/ui/windows/contact_editor_window.py:247
+#: src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "Anivasri"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:198
-msgid "Advanced Settings Applied"
-msgstr "Advans Sɛtin dɛn we Dɛn Aplay"
+#: src/telephony/ui/windows/contact_editor_window.py:263
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Delete Contact"
+msgstr "Dilit Kɔntakt"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:202
-msgid "Error saving settings"
-msgstr "Erɔd fɔ sev sɛtin dɛn"
+#: src/telephony/ui/windows/contact_editor_window.py:274
+#: src/telephony/ui/windows/settings_window.py:162
+#: src/telephony/ui/windows/settings_window.py:440
+msgid "Address Books"
+msgstr "Adrɛs Buk dɛn"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:206
-msgid "Restarting Modem..."
-msgstr "Ristart fɔ Modem..."
+#: src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Wi nɔ No di say we dɛn pul am"
 
-#: src/telephony/ui/windows/import_export_window.py:43
-#: src/telephony/ui/main_window.py:305
-msgid "Import / Export"
-msgstr "Impɔt / Ɛkspɔt"
+#: src/telephony/ui/windows/contact_editor_window.py:318
+#: src/telephony/ui/windows/contact_editor_window.py:356
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Pik di De"
+
+#: src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "Klia Deti fɔ yu"
+
+#: src/telephony/ui/windows/contact_editor_window.py:371
+#, fuzzy, python-brace-format
+msgid "Select {title}"
+msgstr "Selekt {taytul}."
+
+#: src/telephony/ui/windows/contact_editor_window.py:381
+#, fuzzy, python-brace-format
+msgid "Copy {title}"
+msgstr "Kɔpi {taytul}."
+
+#: src/telephony/ui/windows/contact_editor_window.py:390
+#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+msgid "Copied to clipboard"
+msgstr "Dɛn kɔpi am na klipbɔd"
+
+#: src/telephony/ui/windows/contact_editor_window.py:535
+msgid "Export Contact"
+msgstr "Ɛkspɔt Kɔntakt"
+
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Are you sure you want to delete this contact?"
+msgstr "Yu shɔ se yu want fɔ dilit dis kɔntakt?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:567
+msgid "Deleting contact..."
+msgstr "Dilit kɔntakt..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:822
+#, fuzzy
+msgid "Failed to save contact"
+msgstr "Failed fɔ sev to blɔklist."
+
+#: src/telephony/ui/windows/contact_editor_window.py:829
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Nɔmba nɔ kin de pan ɔl tu di Blɔklist ɛn Kɔntakt.\n"
+"\n"
+"Yu want fɔ go bifo wit Unblocking ɛn ad di nɔmba to Kɔntakt dɛn?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:833
+msgid "Yes, Add to Contacts"
+msgstr "Yɛs, Ad to Kɔntakt dɛn"
+
+#: src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Pik Kɔntakt"
+
+#: src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "Nem ɔ Nɔmba"
+
+#: src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "No nɔmba nɔ de"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:323
+msgid "Individual SMS Notifications"
+msgstr "Wan wan SMS Notis dɛn"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:334
+msgid "Individual Ringtones"
+msgstr "Wan wan Rington dɛn"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "Fɛn kɔntakt fɔ ad..."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Pik wan kɔntakt ɛn pik wan kɔstɔm sawnd fayl (.ogg ɔ .oga). Dɛn go kɔpi di "
+"fayl na yu lokal stɔrɔj."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:186
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Pul kɔmɔt"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Di kɔstɔm tɔyn dɔn pul (Klik Sɛv fɔ kɔmit)"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#, fuzzy, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Selekt Tɔn fɔ {nem}."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:318
+#: src/telephony/ui/windows/settings_window.py:405
+msgid "Select"
+msgstr "Pik"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:323
+msgid "Supported Audio (OGG)"
+msgstr "Odio we dɛn sɔpɔt (OGG) ."
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:351
+msgid "Only .ogg or .oga files are supported"
+msgstr "Na .ogg ɔ .oga fayl dɛn nɔmɔ dɛn de sɔpɔt"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:362
+msgid "Failed to copy audio file"
+msgstr "Fail fɔ kɔpi odio fayl"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:382
+msgid "Custom tone added"
+msgstr "Kastɔm ​​tɔyn ad"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Database Manejmɛnt"
+
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Pik di data fɔ dilit fɔ ɔltɛm."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Dilit di Kɔl Istri"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Dilit Ɔl di Mɛsej dɛn"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Dilit Ɔl di Grup Nem dɛn"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Dilit di Blɔklist"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Dilit Ɔl di Kɔntakt dɛn"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Dilit Adrɛs Buk"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "DILƐT ƆLTIN"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Yu shɔ? Dis nɔ go ebul fɔ chenj."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Dis go dilit ɔl di SMS/MMS ɛn atɛshmɛnt dɛn."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Dilit di Grup Nem dɛn"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Riset ɔl di kɔstɔm grup chat nem dɛn?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Unblock ɔl di nɔmba dɛn?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Nɔ adrɛs buk dɛn we dɛn kin dilit"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "No kɔstɔm adrɛs buk nɔ de we dɛn kin dilit."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Us adrɛs buk yu want fɔ dilit fɔ ɔltɛm?\n"
+"\n"
+"Dis go wayp am frɔm di sistɛm."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#, fuzzy, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "Yu shɔ se yu want fɔ dilit di '{nem}' adrɛs buk fɔ ɔltɛm?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Dilit ƆLTIN"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr "Waip database, konfig fayl ɛn kɔntakt dɛn? App go riset."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Rili dilit ɔlman na yu adrɛs buk?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Pik us adrɛs buk fɔ klia:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Ɔl di Adrɛs Buk dɛn"
+
+#: src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Di Kɔl Istri dɔn Dilit"
+
+#: src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "We yu de dilit mɛsej dɛn..."
+
+#: src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Mɛsej dɛn & Atɛshmɛnt dɛn dɔn Dilit"
+
+#: src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "Grup Nem dɛn Riset"
+
+#: src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Blɔklist dɔn Klia"
+
+#: src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Dilit kɔntakt dɛn..."
+
+#: src/telephony/ui/windows/data_management_window.py:253
+msgid "Contacts Deleted"
+msgstr "Di kɔntakt dɛn we dɛn dɔn dilit"
+
+#: src/telephony/ui/windows/data_management_window.py:261
+msgid "Deleting address book..."
+msgstr "We yu de dilit adrɛs buk..."
+
+#: src/telephony/ui/windows/data_management_window.py:268
+msgid "Address Book Deleted"
+msgstr "Adrɛs Buk we Dɛn dɔn Dilit"
+
+#: src/telephony/ui/windows/data_management_window.py:271
+msgid "Failed to delete Address Book"
+msgstr "I nɔ bin ebul fɔ dilit Adrɛs Buk"
+
+#: src/telephony/ui/windows/data_management_window.py:276
+msgid "Wiping Database..."
+msgstr "Wiping Database we yu de yuz..."
+
+#: src/telephony/ui/windows/data_management_window.py:290
+msgid "App Reset Complete"
+msgstr "App Riset Kɔmplit"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "Ia"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Mɔnt"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Awa"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Minit"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Notification Overrides"
+msgstr "Notis we dɛn de ɔvalayz"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+msgid "Find and add contacts..."
+msgstr "Fɛn ɛn ad kɔntakt dɛn..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Di kɔntakt dɛn we de na dis list go ple notis dɛn ɔltɛm wit ful vɔlyum, "
+"ilɛksɛf di fon de na Saylent ɔ Nɔ Distɔb mɔd."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Dupliket Kɔntakt"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Merge ɔl"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "We yu de jɔyn Kɔntakt dɛn..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, fuzzy, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Di kɔnflikt dɛn we lɛf: {kɔnt}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, fuzzy, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{nɔmba} de sev to kɔntakt dɛn:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, fuzzy, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Adrɛs Buk: {nem}."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Kip dis, Rimov dupliket"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Kip dis, Merge dupliket"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, fuzzy, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Merging {kɔrɛnt}/{tɔtal}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1713,10 +1873,12 @@ msgid "No contacts found on SIM card."
 msgstr "No kɔntakt nɔ de we dɛn fɛn na SIM kad."
 
 #: src/telephony/ui/windows/import_export_window.py:111
+#, fuzzy, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "Impɔt {kɔnt} kɔntakt dɛn frɔm SIM."
 
 #: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "SIM Impɔt nɔ wok: {e}"
 
@@ -1760,6 +1922,7 @@ msgid "Extracting backup from iPhone... This may take a long time!"
 msgstr "Ekstrakt bak-ap frɔm iPhone... Dis kin tek lɔng tɛm!"
 
 #: src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "USB Bak-ap nɔ wok: {e}"
 
@@ -1780,15 +1943,21 @@ msgid "Importing iPhone Calls..."
 msgstr "Impɔtant Ayfon Kɔl dɛn..."
 
 #: src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "Erɔd we dɛn de import iOS: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:251
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Pik di Fayl"
 
 #: src/telephony/ui/windows/import_export_window.py:254
 msgid "XML Files"
 msgstr "XML Fayl dɛn"
 
 #: src/telephony/ui/windows/import_export_window.py:268
-#: src/telephony/ui/windows/import_export_window.py:451
+#: src/telephony/ui/windows/import_export_window.py:459
 msgid "Importing..."
 msgstr "Impɔtant..."
 
@@ -1817,6 +1986,7 @@ msgid "iOS"
 msgstr "iOS we dɛn kɔl"
 
 #: src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
 msgid "Export to {fmt}"
 msgstr "Ekspɔt to {fmt}."
 
@@ -1824,131 +1994,598 @@ msgstr "Ekspɔt to {fmt}."
 msgid "What do you want to export?"
 msgstr "Wetin yu wan fɔ ɛkspɔt?"
 
-#: src/telephony/ui/windows/import_export_window.py:325
+#: src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+
+#: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
 msgstr "Mɛsej dɛn (SMS/MMS) ."
 
-#: src/telephony/ui/windows/import_export_window.py:326
+#: src/telephony/ui/windows/import_export_window.py:334
 msgid "Call History"
 msgstr "Kɔl Istri"
 
-#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:344
 msgid "Export File"
 msgstr "Ɛkspɔt Fayl"
 
-#: src/telephony/ui/windows/import_export_window.py:362
+#: src/telephony/ui/windows/import_export_window.py:370
 msgid "Exporting..."
 msgstr "We dɛn de ɛkspɔt..."
 
-#: src/telephony/ui/windows/import_export_window.py:396
+#: src/telephony/ui/windows/import_export_window.py:404
 msgid "Import VCard"
 msgstr "Impɔt VCard we yu de yuz"
 
-#: src/telephony/ui/windows/import_export_window.py:398
+#: src/telephony/ui/windows/import_export_window.py:406
 msgid "VCard Files"
 msgstr "VCard Fayl dɛn"
 
-#: src/telephony/ui/windows/import_export_window.py:417
-#: src/telephony/ui/windows/import_export_window.py:481
+#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:489
 msgid "No enabled address books found"
 msgstr "Dɛn nɔ fɛn ɛni adrɛs buk we dɛn dɔn ɛnabul"
 
-#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:433
 msgid "Select Address Book"
 msgstr "Pik di Adrɛs Buk"
 
-#: src/telephony/ui/windows/import_export_window.py:426
+#: src/telephony/ui/windows/import_export_window.py:434
 msgid "Where do you want to import contacts?"
 msgstr "Usay yu want fɔ import kɔntakt dɛn?"
 
-#: src/telephony/ui/windows/import_export_window.py:465
+#: src/telephony/ui/windows/import_export_window.py:473
+#, fuzzy, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "Impɔt {kɔnt} kɔntakt dɛn"
 
-#: src/telephony/ui/windows/import_export_window.py:469
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
 msgid "Import failed: {e}"
 msgstr "Impɔt nɔ bin wok: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:485
-#: src/telephony/ui/windows/import_export_window.py:523
+#: src/telephony/ui/windows/import_export_window.py:493
+#: src/telephony/ui/windows/import_export_window.py:531
 msgid "Export Contacts"
 msgstr "Ɛkspɔt Kɔntakt dɛn"
 
-#: src/telephony/ui/windows/import_export_window.py:486
+#: src/telephony/ui/windows/import_export_window.py:494
 msgid "Which address book do you want to export?"
 msgstr "Us adrɛs buk yu want fɔ ɛkspɔt?"
 
-#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_export_window.py:505
 msgid "Export All Address Books"
 msgstr "Ɛkspɔt Ɔl di Adrɛs Buk dɛn"
 
-#: src/telephony/ui/windows/import_export_window.py:551
+#: src/telephony/ui/windows/import_export_window.py:559
 msgid "No contacts found to export"
 msgstr "No kɔntakt nɔ fɛn fɔ ɛkspɔt"
 
-#: src/telephony/ui/windows/import_export_window.py:567
+#: src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "{count} kɔntakt dɛn we dɛn dɔn ɛkspɔt"
 
-#: src/telephony/ui/windows/import_export_window.py:570
+#: src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
 msgid "Export error: {e}"
 msgstr "Ekspɔt mistek: {e}."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:33
-#: src/telephony/ui/main_window.py:734
-msgid "Block Number"
-msgstr "Blɔk Nɔmba"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Impɔt Mɛsej dɛn"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:59
-msgid "Number Details"
-msgstr "Di Ditel dɛn bɔt di Nɔmba"
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Impɔt Kɔl Istri"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:60
-msgid "Calls from this number will be automatically rejected."
-msgstr "Di kɔl dɛn we dɛn kɔl frɔm dis nɔmba, dɛn go rijɛkt am ɔtomɛtik wan."
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Wet fɔ sɛlɛkshɔn..."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:71
-msgid "Note (Optional)"
-msgstr "Notis (I kin pik am) ."
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Usay yu want fɔ import frɔm?"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:124
-#: src/telephony/ui/windows/blocklist_editor_window.py:142
-#: src/telephony/ui/views/messages_view.py:324
-#: src/telephony/ui/views/messages_view.py:393
-msgid "Blocked Number"
-msgstr "Nɔmba we dɛn dɔn blok"
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Sistem Database we yu de yuz"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Database Error"
-msgstr "Database Erɔr we dɛn mek"
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Import frɔm lokal Chatty instɔleshɔn"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:129
-#: src/telephony/ui/windows/blocklist_editor_window.py:147
-msgid "Failed to save to blocklist."
-msgstr "Failed fɔ sev to blɔklist."
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Impɔt frɔm lokal Kɔl instɔleshɔn"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "Duplicate"
-msgstr "Dupliket"
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Briŋ kam"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:136
-msgid "This number is already blocked."
-msgstr "Dis nɔmba dɔn ɔlrɛdi blok."
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Kastɔm ​​Database Bak-ap"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:153
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Selekt wan SQLite DB fayl we dɛn dɔn ɛkspɔt"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Pik di Database Fayl"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS Atɛshmɛnt dɛn (Opshɔnal) ."
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "MMS Fɔlda Bak-ap"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Pik di dairektrɔ we gɛt pikchɔ/vidio dɛn"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Pik di Fɔlda"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Skip di Atɛshmɛnt dɛn"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Impɔt SMS ɛn tɛks dɛn nɔmɔ"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Jɔmp"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Pik di MMS Fɔlda"
+
+#: src/telephony/ui/windows/incall_window.py:152
+msgid "Hangup and Send SMS"
+msgstr "Hangup ɛn Sɛnd SMS"
+
+#: src/telephony/ui/windows/incall_window.py:187
+msgid "The call failed to disconnect."
+msgstr "Di kɔl nɔ bin ebul fɔ diskɔnekt."
+
+#: src/telephony/ui/windows/incall_window.py:220
+#: src/telephony/ui/windows/incall_window.py:669
+msgid "Output"
+msgstr "Di tin we dɛn kin du"
+
+#: src/telephony/ui/windows/incall_window.py:235
+#: src/telephony/ui/windows/incall_window.py:697
+msgid "Input"
+msgstr "Input we dɛn put insay"
+
+#: src/telephony/ui/windows/incall_window.py:387
+msgid "Silenced Incoming Call"
+msgstr "Saylens Inkam Kɔl"
+
+#: src/telephony/ui/windows/incall_window.py:503
+#: src/telephony/ui/windows/settings_window.py:241
+msgid "I can't talk right now."
+msgstr "A nɔ ebul fɔ tɔk rayt naw."
+
+#: src/telephony/ui/windows/incall_window.py:626
+msgid "Restarting RIL..."
+msgstr "Ristart RIL..."
+
+#: src/telephony/ui/windows/incall_window.py:635
+msgid "Restored!"
+msgstr "Dɛn dɔn mek am bak!"
+
+#: src/telephony/ui/windows/incall_window.py:641
+msgid "Failed. Reboot Device."
+msgstr "Dɔn fel. Ribɔt Divays."
+
+#: src/telephony/ui/windows/incall_window.py:643
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "We yu de chɛk... {attempt}"
+
+#: src/telephony/ui/windows/incall_window.py:702
+msgid "Mute Microphone"
+msgstr "Mute Maykrofon"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Bɔt Tɛlifon"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr "Fast fon dayalɔ ɛn mɛsej klaynt we dɛn mek fɔ FLX1 ɛn FLX1 dɛn."
+
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Dis wan"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Divɛlɔpmɛnt"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Laysens"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Links dɛn we de"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Issue Tracker fɔ di tin dɛn we de apin"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Ripɔt bɔg ɔ rikwest ficha dɛn"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, fuzzy, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Scheduled ({kɔrɛnt}/{tɔtal}) ."
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, fuzzy, python-brace-format
+msgid "To: {name}"
+msgstr "To: {nem}."
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Send Naw"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Dɛn dɔn pul di mɛsej"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, fuzzy, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Sɛn mɛsej we dɛn dɔn sɛtul to {nɔmba}."
+
+#: src/telephony/ui/windows/settings_window.py:88
+#: src/telephony/ui/windows/settings_window.py:389
+msgid "Ringback Tone"
+msgstr "Ringbak Tɔn"
+
+#: src/telephony/ui/windows/settings_window.py:91
+msgid "Enable Local Ringback"
+msgstr "Enable Lokal Ringbak"
+
+#: src/telephony/ui/windows/settings_window.py:106
+msgid "Selected Tone"
+msgstr "Tɔn we yu dɔn pik"
+
+#: src/telephony/ui/windows/settings_window.py:109
+#: src/telephony/ui/windows/settings_window.py:378
+msgid "System Default"
+msgstr "Sistem Difɔlt"
+
+#: src/telephony/ui/windows/settings_window.py:136
+msgid "SIM Settings"
+msgstr "SIM Sɛtin dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:139
+msgid "My Number"
+msgstr "Mi Nɔmba"
+
+#: src/telephony/ui/windows/settings_window.py:140
+msgid "My Number (International Format)"
+msgstr "Mi Nɔmba (Intanɛshɔnal Fɔmat) ."
+
+#: src/telephony/ui/windows/settings_window.py:146
+#: src/telephony/ui/windows/settings_window.py:147
+#: src/telephony/ui/windows/settings_window.py:365
+msgid "Default Country Code"
+msgstr "Difɔlt Kɔntri Kɔd"
+
+#: src/telephony/ui/windows/settings_window.py:173
+msgid "Address Book Info"
+msgstr "Adrɛs Buk Info"
+
+#: src/telephony/ui/windows/settings_window.py:181
+msgid "Default Address Book"
+msgstr "Difɔlt Adrɛs Buk"
+
+#: src/telephony/ui/windows/settings_window.py:187
+msgid "Duplicate Resolver"
+msgstr "Dupliket Rizɔlt"
+
+#: src/telephony/ui/windows/settings_window.py:189
 msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Blocking and remove the number from Contacts?"
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
 msgstr ""
-"Nɔmba nɔ kin de pan ɔl tu di Blɔklist ɛn Kɔntakt.\n"
-"\n"
-"Yu want fɔ go bifo wit Blɔk ɛn pul di nɔmba na Kɔntakt?"
+"Skan fɔ dupliket nɔmba dɛn ɛn sho wan rizɔlt ban na di Kɔntakt dɛn we yu de "
+"si."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:157
-msgid "Yes, Block"
-msgstr "Yɛs, na Blɔk"
+#: src/telephony/ui/windows/settings_window.py:202
+msgid "Lockscreen Emergency"
+msgstr "Lɔkskrin Imejɛnsi"
+
+#: src/telephony/ui/windows/settings_window.py:205
+msgid "Show Emergency Button"
+msgstr "Sho di Imejɛnsi Bɔtin"
+
+#: src/telephony/ui/windows/settings_window.py:210
+msgid "Emergency Numbers"
+msgstr "Imejɛnsi Nɔmba dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:227
+msgid "Quick Response"
+msgstr "Kwik Rispɔns"
+
+#: src/telephony/ui/windows/settings_window.py:230
+#, fuzzy
+msgid "Add Decline Message"
+msgstr "Diklayn Mɛsej"
+
+#: src/telephony/ui/windows/settings_window.py:245
+#: src/telephony/ui/windows/settings_window.py:812
+#, fuzzy
+msgid "Call Volume"
+msgstr "Kɔl {nɔmba}."
+
+#: src/telephony/ui/windows/settings_window.py:257
+msgid "Allow Amplification"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:259
+msgid "Let sliders go above 100%. Amplified audio may distort."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Earpiece"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:269
+#, fuzzy
+msgid "Speaker"
+msgstr "SpikaOn"
+
+#: src/telephony/ui/windows/settings_window.py:270
+msgid "Wired Headset"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:271
+msgid "Bluetooth"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:286
+msgid "Notification Exceptions"
+msgstr "Notis Ɛksepshɔn dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:289
+#: src/telephony/ui/windows/settings_window.py:454
+msgid "Repeated Calls Bypass"
+msgstr "Ripit Kɔl dɛn Baypas"
+
+#: src/telephony/ui/windows/settings_window.py:291
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr "If di sem nɔmba kɔl 3 tɛm insay 5 minit, fos maks volyum."
+
+#: src/telephony/ui/windows/settings_window.py:306
+msgid "Manage contacts that always play sound"
+msgstr "Manej kɔntakt dɛn we de ple sawnd ɔltɛm"
+
+#: src/telephony/ui/windows/settings_window.py:315
+#: src/telephony/ui/windows/settings_window.py:327
+#: src/telephony/ui/windows/settings_window.py:338
+msgid "Manage"
+msgstr "Manej"
+
+#: src/telephony/ui/windows/settings_window.py:325
+msgid "Set custom notification sounds for specific contacts"
+msgstr "Sɛt kɔstɔm notis sawnd fɔ sɔm patikyula kɔntakt dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:336
+msgid "Set custom ringtones for specific contacts"
+msgstr "Set kɔstɔm rington fɔ patikyula kɔntakt dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:361
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Di Difɔlt Kɔntri Kɔd de fɔ fɔmat nɔmba dɛn we nɔ gɛt intanashɔnal prɛfiks (e."
+"g., +358).\n"
+"\n"
+"If yu lɛf am ɛmti, di sistem go tray fɔ no am ɔtomɛtik wan frɔm yu SIM kad ɔ "
+"nɛtwɔk.\n"
+"\n"
+"Yu kin ɔvalayz am wit yu an ya bay we yu ɛnta 2-lɛta ISO rijyɔn kɔd (e.g. "
+"US, FI, DE) ɔ kɔl kɔd (e.g. +358, 358, +1, 1)."
+
+#: src/telephony/ui/windows/settings_window.py:382
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Di ring bak tɔyn na di sawnd we dɛn de ple (toot-toot-toot) we dɛn de wet fɔ "
+"mek dɛn ansa kɔl we de kɔmɔt. Sɔm kyaria nɔ de jenarayz am so wi gɛt opshɔn "
+"fɔ jenarayz am manually ya. \n"
+"\n"
+"Yu kin pik yu yon myuzik fayl, ɔ klia am fɔ yuz di standad sistɛm tɔyn."
+
+#: src/telephony/ui/windows/settings_window.py:402
+msgid "Select Ringback Tone"
+msgstr "Pik di Ringbak Tɔn"
+
+#: src/telephony/ui/windows/settings_window.py:410
+msgid "Audio Files"
+msgstr "Odio Fayl dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:436
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Pik di adrɛs buk dɛn we yu go yuz wit Tɛlifon ɛn arenj dɛn akɔdin to di we "
+"aw yu fɔ yuz dɛn fɔs. Di adrɛs buk we de ɔp pas ɔl na in na di ay prayoritɛd "
+"ɛn dɛn go lɛk am if dɛn fɛn wan nɔmba na bɔku adrɛs buk dɛn. Yu kin yuz di "
+"Duplicate Resolver toggle dɔŋ ya fɔ ɛp fɔ manej dupliket, bɔt ivin if yu nɔ "
+"ebul fɔ du am, wi de ɛnkɔrej fɔ ɛnabul am fɔ mek yu gɛt bɛtɛ ɛkspiriɛns."
+
+#: src/telephony/ui/windows/settings_window.py:455
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"We dɛn ɛnabul am, if di sem fon nɔmba kɔl yu 3 tɛm insay 5 minit, di tɔd kɔl "
+"(ɛn di wan dɛn we go kam afta dat insay di winda) go fos di fon fɔ ring wit "
+"maksimal vɔlyum, baypas di Saylent ɔ Nɔ Distɔb mɔd dɛn."
+
+#: src/telephony/ui/windows/settings_window.py:467
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Pik kɔntakt dɛn we go ple notis ɔltɛm wit ful vɔlyum, ivin we di fon de na "
+"Saylent ɔ Nɔ Distɔb mɔd."
+
+#: src/telephony/ui/windows/settings_window.py:488
+msgid "Unknown Callers"
+msgstr "Pipul dɛn we Dɛn Nɔ No we De Kɔl"
+
+#: src/telephony/ui/windows/settings_window.py:493
+msgid "Unknown Callers Action"
+msgstr "Akshɔn fɔ di wan dɛn we kɔl pipul dɛn we dɛn nɔ no"
+
+#: src/telephony/ui/windows/settings_window.py:495
+msgid "Applies also to hidden numbers."
+msgstr "I de aplay bak to nɔmba dɛn we dɛn ayd."
+
+#: src/telephony/ui/windows/settings_window.py:498
+msgid "Do Nothing"
+msgstr "Nɔ Du Natin"
+
+#: src/telephony/ui/windows/settings_window.py:499
+msgid "Block Completely"
+msgstr "Blɔk Kɔmplit wan"
+
+#: src/telephony/ui/windows/settings_window.py:500
+msgid "Silence and Hide UI"
+msgstr "Saylens ɛn Ayd UI"
+
+#: src/telephony/ui/windows/settings_window.py:501
+msgid "Silence Only"
+msgstr "Saylens Ɔnli"
+
+#: src/telephony/ui/windows/settings_window.py:509
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr "Ad Sɔch bɔtin to InCall winda ɛn Kɔl Istri fɔ pipul dɛn we yu nɔ no"
+
+#: src/telephony/ui/windows/settings_window.py:515
+msgid "Search Engine"
+msgstr "Sɔch Injin"
+
+#: src/telephony/ui/windows/settings_window.py:519
+#: src/telephony/ui/windows/settings_window.py:524
+msgid "Custom URL"
+msgstr "Kastom URL we yu want"
+
+#: src/telephony/ui/windows/settings_window.py:574
+#, fuzzy, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Ɛntay di URL we yu want fɔ yuz fɔ fɛn nɔmba dɛn we yu nɔ no. Put '{nɔmba}' "
+"na di URL usay di pɔsin we kɔl in fon nɔmba fɔ go.\n"
+"\n"
+"Fɔ ɛgzampul: https://mysearch.com/?q={nɔmba}\n"
+"\n"
+"We yu tap di sɔch bɔtin we yu de kɔl, wi go riples ‘{nɔmba}’ wit di rial fon "
+"nɔmba ɛn opin am na yu difɔlt brawza."
+
+#: src/telephony/ui/windows/settings_window.py:578
+msgid "Custom Search URL"
+msgstr "Kɔstɔm Sɔch URL"
+
+#: src/telephony/ui/windows/settings_window.py:599
+msgid "Desktop Shortcuts"
+msgstr "Sɔtkat dɛn fɔ Dɛsktɔp"
+
+#: src/telephony/ui/windows/settings_window.py:604
+msgid "Calls"
+msgstr "Kɔl dɛn we dɛn kin kɔl"
+
+#: src/telephony/ui/windows/settings_window.py:770
+msgid "Name (e.g. Mom)"
+msgstr "Nem (e.g. Mama) ."
+
+#: src/telephony/ui/windows/settings_window.py:813
+msgid ""
+"This is the base hardware volume applied to the selected output when a call "
+"connects. The volume buttons during a call only adjust fine-tuning on top of "
+"this base level, so if the base is 0% the call stays silent no matter what. "
+"Values above 100% use software amplification and may distort audio. Wired "
+"Headset and Bluetooth levels are stored for upcoming routing support."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:822
+msgid "Decline Message"
+msgstr "Diklayn Mɛsej"
+
+#: src/telephony/ui/windows/settings_window.py:893
+msgid "System Default (Always Enabled)"
+msgstr "Sistem Difɔlt (Dɛn Enabled Ɔltɛm) ."
+
+#: src/telephony/ui/windows/settings_window.py:904
+msgid "Personal Address Book"
+msgstr "Pɔsin in Adrɛs Buk"
+
+#: src/telephony/ui/windows/settings_window.py:905
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Dis na di adrɛs buk we dɛn go sink to Andromeda if yu pik fɔ du am na Sistem "
+"Sɛtin."
+
+#: src/telephony/ui/windows/settings_window.py:913
+msgid "Andromeda Contacts"
+msgstr "Andromeda Kɔntakt dɛn"
+
+#: src/telephony/ui/windows/settings_window.py:914
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Dis na di adrɛs buk we dɛn go sink frɔm Andromeda if yu pik fɔ du am na "
+"Sistem Sɛtin."
+
+#: src/telephony/ui/windows/settings_window.py:1039
+msgid "Settings Saved"
+msgstr "Sɛtin dɛn we dɛn dɔn kip"
 
 #: src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
@@ -1966,48 +2603,23 @@ msgstr "Ataya Voys Notis"
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
 msgstr "Rikɔdin tu big fɔ MMS (Max 600KB). Duya Ritek shɔt wan."
 
-#: src/telephony/ui/windows/blocklist_window.py:37
-msgid "Blocked Numbers"
-msgstr "Nɔmba dɛn we dɛn dɔn blok"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+msgid "Enable Feature"
+msgstr ""
 
-#: src/telephony/ui/windows/blocklist_window.py:127
-msgid "No notes"
-msgstr "No not dɛn nɔ de"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-#: src/telephony/ui/main_window.py:665
-msgid "Unblock Number"
-msgstr "Unblock di Nɔmba"
-
-#: src/telephony/ui/windows/blocklist_window.py:141
-msgid "Are you sure you want to unblock this number?"
-msgstr "Yu shɔ se yu want fɔ pul dis nɔmba?"
-
-#: src/telephony/ui/windows/blocklist_window.py:157
-msgid "Unblocked number"
-msgstr "Nɔmba we nɔ blok"
-
-#: src/telephony/ui/windows/camera_photo_window.py:41
-msgid "Take Picture"
-msgstr "Tek Pikchɔ"
-
-#: src/telephony/ui/windows/camera_photo_window.py:146
-msgid "Attach Photo"
-msgstr "Ataya di Fɔto"
-
-#: src/telephony/ui/windows/trusted_actions_list_window.py:97
+#: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
-"Contacts can trigger an action by sending a secret SMS message. Add contacts"
-" below and set their secret trigger phrase."
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
 msgstr ""
 "Kɔntakt dɛn kin mek pɔsin du sɔntin bay we dɛn kin sɛn sikrit SMS mɛsej. Ad "
 "kɔntakt dɛn dɔŋ ya ɛn sɛt dɛn sikrit triga frɛz."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:100
+#: src/telephony/ui/windows/trusted_actions_list_window.py:154
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
-"TOTP is mandatory for this feature to work. Add contacts below and set their"
-" secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
 "'Gorilla 123456'"
 msgstr ""
 "Di kɔntakt dɛn we dɛn kin trɔst kin aks fɔ usay yu de bay we dɛn sɛn sikrit "
@@ -2015,7 +2627,7 @@ msgstr ""
 "dɛn sikrit triga frɛz. Ɛgzampul fɔ templet: 'SECRET TOTP' Rial layf "
 "ɛgzampul: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:103
+#: src/telephony/ui/windows/trusted_actions_list_window.py:157
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -2023,11 +2635,11 @@ msgid ""
 "example: 'Gorilla 123456'"
 msgstr ""
 "Di kɔntakt dɛn we dɛn kin trɔst kin mek pɔsin kɔl bak kwayɛt wan bay we dɛn "
-"kin sɛn sikrit SMS mɛsej. TOTP na masta fɔ mek dis ficha wok. Ad kɔntakt dɛn"
-" dɔŋ ya ɛn sɛt dɛn sikrit triga frɛz. Ɛgzampul fɔ templet: 'SECRET TOTP' "
-"Rial layf ɛgzampul: 'Gorilla 123456'"
+"kin sɛn sikrit SMS mɛsej. TOTP na masta fɔ mek dis ficha wok. Ad kɔntakt dɛn "
+"dɔŋ ya ɛn sɛt dɛn sikrit triga frɛz. Ɛgzampul fɔ templet: 'SECRET TOTP' Rial "
+"layf ɛgzampul: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:106
+#: src/telephony/ui/windows/trusted_actions_list_window.py:160
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
@@ -2039,7 +2651,7 @@ msgstr ""
 "fɔ templet: 'SECRET TOTP +1234567890 MESSAGE' Rial layf ɛgzampul: 'Gorilla "
 "123456 +1234567890 Hello'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:109
+#: src/telephony/ui/windows/trusted_actions_list_window.py:163
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -2047,14 +2659,14 @@ msgid ""
 "template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
 msgstr ""
 "Kɔntakt dɛn we dɛn kin trɔst kin stat wan tmate SSH sɛshɔn ɛn gɛt di SSH "
-"akses string bay we dɛn sɛn sikrit SMS mɛsej. TOTP na masta fɔ mek dis ficha"
-" wok. Ad kɔntakt dɛn dɔŋ ya ɛn sɛt dɛn sikrit triga frɛz. Ɛgzampul fɔ "
+"akses string bay we dɛn sɛn sikrit SMS mɛsej. TOTP na masta fɔ mek dis ficha "
+"wok. Ad kɔntakt dɛn dɔŋ ya ɛn sɛt dɛn sikrit triga frɛz. Ɛgzampul fɔ "
 "templet: 'SECRET TOTP' Rial layf ɛgzampul: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:112
+#: src/telephony/ui/windows/trusted_actions_list_window.py:166
 msgid ""
-"Trusted contacts can wipe your device. TOTP is mandatory for this feature to"
-" work. Add contacts below and set their secret trigger phrase. Example "
+"Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
 "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
 "example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
 msgstr ""
@@ -2063,548 +2675,122 @@ msgstr ""
 "templet: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Rial layf "
 "ɛgzampul: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:132
-msgid "Show TOTP Setup"
-msgstr "Sho TOTP Sɛtap"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+msgid "View or edit TOTP"
+msgstr ""
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:249
+#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+msgid "Setup TOTP"
+msgstr ""
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
 msgstr "Sikrit mɛsej"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:261
+#: src/telephony/ui/windows/trusted_actions_list_window.py:349
 msgid "Remove Contact"
 msgstr "Rimov Kɔntakt"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:285
+#: src/telephony/ui/windows/trusted_actions_list_window.py:373
 msgid "Contact removed (Click Save to commit)"
 msgstr "Kɔntakt dɔn pul (Klik Sev fɔ kɔmit)"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:410
+#: src/telephony/ui/windows/trusted_actions_list_window.py:508
 msgid "Contact already in trusted list"
 msgstr "Kɔntakt dɔn ɔlrɛdi de na di list we dɛn kin trɔst"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:424
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
 msgid "Contact added"
 msgstr "Kontakt ad"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:442
+#: src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "TOTP Setup"
 msgstr "TOTP Sɛtap"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:483
+#: src/telephony/ui/windows/trusted_actions_list_window.py:586
 msgid ""
-"Share this code with your trusted contact. They should add it to an authenticator app such as Gnome Authenticator.\n"
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
 "\n"
 "If entering manually, ensure the following settings:\n"
 "• Algorithm: SHA1\n"
 "• Digits: 6\n"
 "• Interval: 60 seconds\n"
 "\n"
-"Each action has its own code. When triggering an action by SMS, they must append the current 6-digit code from their authenticator after the keyword."
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
 msgstr ""
-"Sheya dis kɔd wit yu kɔntakt we yu kin trɔst. Dɛn fɔ ad am to wan ɔtɛntiketɔ app lɛk Gnome Authenticator.\n"
+"Sheya dis kɔd wit yu kɔntakt we yu kin trɔst. Dɛn fɔ ad am to wan ɔtɛntiketɔ "
+"app lɛk Gnome Authenticator.\n"
 "\n"
 "If yu de put am manuali, mek shɔ se di sɛtin dɛn dɔŋ ya de:\n"
 "• Aligoritɛm: SHA1\n"
 "• Diji dɛn: 6\n"
 "• Intaval: 60 sɛkɔnd\n"
 "\n"
-"Wan wan akshɔn gɛt in yon kɔd. We dɛn de trig wan akshɔn bay SMS, dɛn mɔs put di kɔrɛnt 6-diji kɔd kɔmɔt na dɛn ɔtɛntiketɔ afta di kiwɔd."
+"Wan wan akshɔn gɛt in yon kɔd. We dɛn de trig wan akshɔn bay SMS, dɛn mɔs "
+"put di kɔrɛnt 6-diji kɔd kɔmɔt na dɛn ɔtɛntiketɔ afta di kiwɔd."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:506
-#: src/telephony/ui/windows/trusted_actions_list_window.py:547
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#, fuzzy
+msgid "Copy TOTP key"
+msgstr "Kɔpi Tɛks"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:626
+#: src/telephony/ui/windows/trusted_actions_list_window.py:668
 msgid "Regenerate"
 msgstr "Jɛnɛret am bak"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:513
+#: src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Remove current TOTP"
 msgstr "Rimov kɔrɛnt TOTP"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+#: src/telephony/ui/windows/trusted_actions_list_window.py:642
 msgid "Remove TOTP Key?"
 msgstr "Rimov TOTP Ki?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:523
+#: src/telephony/ui/windows/trusted_actions_list_window.py:643
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
 msgstr ""
-"Yu shɔ se yu want fɔ pul di TOTP ki? Dis akshɔn go disebul TOTP vɛrifikeshɔn"
-" fɔ dis ficha."
+"Yu shɔ se yu want fɔ pul di TOTP ki? Dis akshɔn go disebul TOTP vɛrifikeshɔn "
+"fɔ dis ficha."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:542
+#: src/telephony/ui/windows/trusted_actions_list_window.py:663
 msgid "Regenerate Code?"
 msgstr "Jɛnɛret Kɔd bak?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:543
+#: src/telephony/ui/windows/trusted_actions_list_window.py:664
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr ""
-"Dis go invalidet di kɔrɛnt kɔd we de na yu kɔntakt in ɔtɛntiketɔ app. Yu "
-"shɔ?"
+"Dis go invalidet di kɔrɛnt kɔd we de na yu kɔntakt in ɔtɛntiketɔ app. Yu shɔ?"
 
-#: src/telephony/ui/widgets/incall_elements_widget.py:48
-msgid "Hangup All Calls"
-msgstr "Hangup Ɔl di Kɔl dɛn"
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Fail fɔ sɛn to {nɔmba}."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:123
-msgid "Copy Text"
-msgstr "Kɔpi Tɛks"
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Dilit di Kɔstɔm Sɛtin dɛn"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
-#: src/telephony/ui/main_window.py:729
-msgid "Copy Number"
-msgstr "Kɔpi Nɔmba"
+#~ msgid "Delete Settings"
+#~ msgstr "Dilit Sɛtin dɛn"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:125
-#: src/telephony/ui/main_window.py:680
-msgid "Add to Contacts"
-msgstr "Ad to Kɔntakt dɛn"
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "Klia ɔl di kɔstɔm sɛtin dɛn? Imejɛnsi nɔmba dɛn go lɔs."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
-msgid "Re-Schedule"
-msgstr "Ri-Schedul fɔ di wok"
+#~ msgid "Settings cleared"
+#~ msgstr "Di sɛtin dɛn dɔn klia"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:129
-#: src/telephony/ui/views/chat_view.py:801
-msgid "Forward"
-msgstr "Wet fɔ"
+#~ msgid "Error saving settings"
+#~ msgstr "Erɔd fɔ sev sɛtin dɛn"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:130
-msgid "Mark as Unread"
-msgstr "Mak as pɔsin we Nɔ Rid"
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Sho TOTP Sɛtap"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:263
-#: src/telephony/ui/views/chat_view.py:781
-#: src/telephony/ui/views/chat_view.py:1002
-msgid "Me"
-msgstr "Mi"
+#~ msgid "Failed to send message"
+#~ msgstr "I nɔ bin ebul fɔ sɛn mɛsej"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:526
-msgid "Open with"
-msgstr "Opin wit"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:527
-msgid "Copy"
-msgstr "Kɔpi"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:528
-msgid "Save as"
-msgstr "Sev as"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:670
-msgid "Open With..."
-msgstr "Opin Wit..."
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:691
-msgid "Save File As"
-msgstr "Sev Fayl As"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:103
-msgid "{time} • Group"
-msgstr "{tɛm} • Grup"
-
-#: src/telephony/ui/widgets/messages_rows_widget.py:109
-msgid "Draft: {message}"
-msgstr "Draft: {mɛsej}."
-
-#: src/telephony/ui/views/history_view.py:126
-msgid "All"
-msgstr "Ɔl"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Any duration"
-msgstr "Ɛni tɛm we i tek"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "Unanswered"
-msgstr "Nɔ gɛt ansa"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1s - 60s"
-msgstr "1s - 60s insay di ia"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "1-3 mins"
-msgstr "1-3 minit"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "3-10 mins"
-msgstr "3-10 minit"
-
-#: src/telephony/ui/views/history_view.py:183
-msgid "> 15 mins"
-msgstr "> 15 mins"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Any date"
-msgstr "Ɛni deti"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Today"
-msgstr "Tide"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 3 days"
-msgstr "Las 3 dez"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 14 days"
-msgstr "Las 14 dez"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 30 days"
-msgstr "Las 30 dez"
-
-#: src/telephony/ui/views/history_view.py:203
-msgid "Last 60 days"
-msgstr "Las 60 dez"
-
-#: src/telephony/ui/views/messages_view.py:111
-#: src/telephony/ui/views/messages_view.py:545
-msgid "Search Contacts..."
-msgstr "Sɔch Kɔntakt dɛn..."
-
-#: src/telephony/ui/views/messages_view.py:229
-msgid "All Messages"
-msgstr "Ɔl di Mɛsej dɛn"
-
-#: src/telephony/ui/views/messages_view.py:230
-msgid "Unread Messages"
-msgstr "Mɛsej dɛn we Nɔ Rid"
-
-#: src/telephony/ui/views/messages_view.py:231
-msgid "Unknown Numbers"
-msgstr "Nɔmba dɛn we Wi Nɔ No"
-
-#: src/telephony/ui/views/messages_view.py:232
-msgid "Saved Contacts"
-msgstr "Kɔntakt dɛn we dɛn dɔn kip"
-
-#: src/telephony/ui/views/messages_view.py:233
-msgid "Group Messages"
-msgstr "Grup Mɛsej dɛn"
-
-#: src/telephony/ui/views/messages_view.py:234
-msgid "Individual Messages"
-msgstr "Wan wan Mɛsej dɛn"
-
-#: src/telephony/ui/views/messages_view.py:235
-msgid "Alphabetical Senders"
-msgstr "Di wan dɛn we de sɛn di alifbɛt"
-
-#: src/telephony/ui/views/messages_view.py:409
-msgid "[Multimedia Message]"
-msgstr "[Mɔltimidia Mɛsej]."
-
-#: src/telephony/ui/views/messages_view.py:549
-msgid "Search Messages..."
-msgstr "Sɔch Mɛsej dɛn..."
-
-#: src/telephony/ui/views/messages_view.py:562
-#: src/telephony/ui/views/messages_view.py:636
-msgid "Start ({count})"
-msgstr "Start ({kɔnt}) ."
-
-#: src/telephony/ui/views/messages_view.py:661
-msgid "Add Number: {number}"
-msgstr "Add Nɔmba: {nɔmba}"
-
-#: src/telephony/ui/views/messages_view.py:735
-msgid "No results found"
-msgstr "No rizulyt nɔ de we dɛn fɛn"
-
-#: src/telephony/ui/views/chat_view.py:132
-msgid "Draft to {count} recipients"
-msgstr "Draft to {count} di wan dɛn we de gɛt"
-
-#: src/telephony/ui/views/chat_view.py:159
-msgid "{count} Participants"
-msgstr "{count} Di wan dɛn we tek pat"
-
-#: src/telephony/ui/views/chat_view.py:305
-msgid "Replies not supported for this sender"
-msgstr "Ripli dɛn nɔ sɔpɔt fɔ dis pɔsin we sɛn am"
-
-#: src/telephony/ui/views/chat_view.py:345
-#: src/telephony/ui/views/chat_view.py:1070
-msgid "Scheduled time must be in the future"
-msgstr "Di tɛm we dɛn dɔn sɛtul fɔ bi tumara bambay"
-
-#: src/telephony/ui/views/chat_view.py:353
-msgid "Rescheduled for {time}"
-msgstr "Rischeduled fɔ {tɛm}."
-
-#: src/telephony/ui/views/chat_view.py:357
-msgid "Re-Schedule Message"
-msgstr "Ri-Schedul Mɛsej"
-
-#: src/telephony/ui/views/chat_view.py:493
-#: src/telephony/ui/views/chat_view.py:556
-msgid "— New Messages —"
-msgstr "— Nyu Mɛsej dɛn —"
-
-#: src/telephony/ui/views/chat_view.py:588
-msgid "No results found in this conversation"
-msgstr "No rizulyt nɔ bin de pan dis tɔk"
-
-#: src/telephony/ui/views/chat_view.py:654
-msgid "Group Name"
-msgstr "Grup Nem"
-
-#: src/telephony/ui/views/chat_view.py:655
-msgid "Set group name..."
-msgstr "Set grup nem..."
-
-#: src/telephony/ui/views/chat_view.py:663
-msgid "Participants"
-msgstr "Di wan dɛn we tek pat"
-
-#: src/telephony/ui/views/chat_view.py:749 src/telephony/ui/main_window.py:672
-msgid "Unblocked"
-msgstr "Dɛn nɔ blok am"
-
-#: src/telephony/ui/views/chat_view.py:764
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Conversation"
-msgstr "Dilit di Kɔnvɔshɔn"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid ""
-"Forwarded from {sender}:\n"
-"{body}"
-msgstr ""
-"Fɔwad frɔm {sender}:\n"
-"{bɔdi}"
-
-#: src/telephony/ui/views/chat_view.py:791
-msgid "Forwarded from {sender}"
-msgstr "Fɔwad frɔm {sender}."
-
-#: src/telephony/ui/views/chat_view.py:800
-msgid "Forward To"
-msgstr "Fɔ go bifo To"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Delete Message"
-msgstr "Dilit Mɛsej"
-
-#: src/telephony/ui/views/chat_view.py:847
-msgid "Are you sure you want to delete this message?"
-msgstr "Yu shɔ se yu want fɔ dilit dis mɛsej?"
-
-#: src/telephony/ui/views/chat_view.py:884
-msgid "Group renamed"
-msgstr "Grup we dɛn chenj in nem"
-
-#: src/telephony/ui/views/chat_view.py:899
-msgid "Compressing video..."
-msgstr "We yu de kɔmprɛs di fim..."
-
-#: src/telephony/ui/views/chat_view.py:904
-msgid "Video compression failed"
-msgstr "Vidio kɔmpreshɔn nɔ bin wok"
-
-#: src/telephony/ui/views/chat_view.py:1064
-msgid "Nothing to schedule"
-msgstr "Natin nɔ de fɔ schedul"
-
-#: src/telephony/ui/views/chat_view.py:1078
-msgid "Schedule Message"
-msgstr "Skedul Mɛsej"
-
-#: src/telephony/ui/views/chat_view.py:1120
-msgid "Message scheduled for {time}"
-msgstr "Mesej we dɛn dɔn schedul fɔ {tɛm}."
-
-#: src/telephony/ui/views/chat_view.py:1123
-#: src/telephony/ui/views/chat_view.py:1149
-msgid "[Attachment]"
-msgstr "[Lɛk]"
-
-#: src/telephony/ui/views/chat_view.py:1140
-msgid "Failed to send message"
-msgstr "I nɔ bin ebul fɔ sɛn mɛsej"
-
-#: src/telephony/ui/views/chat_view.py:1223
-msgid "Delete Group"
-msgstr "Dilit Grup fɔ dilit"
-
-#: src/telephony/ui/views/chat_view.py:1224
-msgid ""
-"This will permanently delete the conversation history and all saved media "
-"files."
-msgstr ""
-"Dis go dilit di tɔk istri ɛn ɔl di midia fayl dɛn we dɛn dɔn sev fɔ ɔltɛm."
-
-#: src/telephony/ui/views/contacts_view.py:61
-msgid "Search contacts"
-msgstr "Sɔch kɔntakt dɛn"
-
-#: src/telephony/ui/views/contacts_view.py:424
-msgid "Call Anonymous"
-msgstr "Kɔl di pɔsin we nɔ no yu nem"
-
-#: src/telephony/ui/views/dialpad_view.py:40
-msgid "Enter number"
-msgstr "Ɛntay di nɔmba"
-
-#: src/telephony/ui/views/dialpad_view.py:47
-#: src/telephony/ui/views/dialpad_view.py:148
-msgid "Telephony Smart Dialpad at your service"
-msgstr "Telefon Smart Dialpad na yu savis"
-
-#: src/telephony/ui/views/dialpad_view.py:245
-msgid "Invalid number in clipboard"
-msgstr "Nɔmba we nɔ valid na klipbɔd"
-
-#: src/telephony/ui/views/dialpad_view.py:247
-msgid "Invalid number"
-msgstr "Nɔmba we nɔ rayt"
-
-#: src/telephony/ui/main_window.py:78
-msgid "Telephony"
-msgstr "Telefon we yu kin yuz"
-
-#: src/telephony/ui/main_window.py:102
-msgid "Dialpad"
-msgstr "Dialpad we yu kin yuz"
-
-#: src/telephony/ui/main_window.py:105
-msgid "History"
-msgstr "Istri"
-
-#: src/telephony/ui/main_window.py:147
-msgid "Switching address book..."
-msgstr "Switching adrɛs buk..."
-
-#: src/telephony/ui/main_window.py:156
-msgid "Syncing Contacts..."
-msgstr "Sink Kɔntakt dɛn..."
-
-#: src/telephony/ui/main_window.py:245
-msgid "Set your number in Settings"
-msgstr "Sɛt yu nɔmba na Sɛtin"
-
-#: src/telephony/ui/main_window.py:260
-msgid "Please set Default Country Code in Settings"
-msgstr "Duya sɛt Difɔlt Kɔntri Kɔd na Sɛtin dɛn"
-
-#: src/telephony/ui/main_window.py:273
-msgid "Setup Emergency Numbers in Settings"
-msgstr "Sɛtup Imejɛnsi Nɔmba dɛn na Sɛtin dɛn"
-
-#: src/telephony/ui/main_window.py:289
-msgid "Resolve Duplicates"
-msgstr "Rizolt Dupliket dɛn"
-
-#: src/telephony/ui/main_window.py:300
-msgid "Reload Contacts"
-msgstr "Rilod Kɔntakt dɛn"
-
-#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:505
-msgid "Blocklist"
-msgstr "Blɔklist"
-
-#: src/telephony/ui/main_window.py:389
-msgid "Modem Connected"
-msgstr "Modem we dɛn dɔn kɔnɛkt"
-
-#: src/telephony/ui/main_window.py:391
-msgid "Modem Error: {message}"
-msgstr "Modem Erɔd: {mɛsej}."
-
-#: src/telephony/ui/main_window.py:415
-msgid "Sending USSD..."
-msgstr "We yu de sɛn USSD..."
-
-#: src/telephony/ui/main_window.py:430
-msgid "USSD Result"
-msgstr "USSD Rizult"
-
-#: src/telephony/ui/main_window.py:477
-msgid "Found {count} duplicate contact. Check menu."
-msgid_plural "Found {count} duplicate contacts. Check menu."
-msgstr[0] "Found {count} dupliket kɔntakt. Chek di menyu."
-msgstr[1] "Found {count} dupliket kɔntakt dɛn. Chek di menyu."
-
-#: src/telephony/ui/main_window.py:502 src/telephony/ui/main_window.py:554
-msgid "Contacts syncing..."
-msgstr "Kontakt dɛn we de sink..."
-
-#: src/telephony/ui/main_window.py:548
-msgid "Reloading Contacts..."
-msgstr "Rilod Kɔntakt dɛn..."
-
-#: src/telephony/ui/main_window.py:564
-msgid "Multiple Contacts Found"
-msgstr "Dɛn dɔn fɛn bɔku bɔku Kɔntakt dɛn"
-
-#: src/telephony/ui/main_window.py:565
-msgid "Which contact would you like to edit?"
-msgstr "Us kɔntakt yu go lɛk fɔ ɛdit?"
-
-#: src/telephony/ui/main_window.py:578
-msgid "Unknown Addressbook"
-msgstr "Adrɛsbuk we Wi Nɔ No"
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling (Anonymous)..."
-msgstr "We yu de kɔl (Anonymous)..."
-
-#: src/telephony/ui/main_window.py:637
-msgid "Calling {number}..."
-msgstr "We yu de kɔl {nɔmba}..."
-
-#: src/telephony/ui/main_window.py:644
-msgid "Call Failed"
-msgstr "Di kɔl we dɛn kɔl Failed"
-
-#: src/telephony/ui/main_window.py:648
-msgid "Call Details"
-msgstr "Di Ditiɛl dɛn fɔ Kɔl"
-
-#: src/telephony/ui/main_window.py:649
-msgid ""
-"Number: {number}\n"
-"Name: {name}\n"
-"Date: {date}\n"
-"Duration: {duration}"
-msgstr ""
-"Nɔmba: {nɔmba}\n"
-"Nem: {nem}.\n"
-"Deti: {deti}.\n"
-"Di tɛm we i fɔ tek: {di tɛm we i fɔ tek}."
-
-#: src/telephony/ui/main_window.py:691
-msgid "Add to Existing Contact"
-msgstr "Ad to Kɔntakt we dɔn de"
-
-#: src/telephony/ui/main_window.py:724
-msgid "Send Message"
-msgstr "Sɛnd Mɛsej"
-
-#: src/telephony/ui/main_window.py:747
-msgid "Delete this call"
-msgstr "Dilit dis kɔl"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Delete Call"
-msgstr "Dilit Kɔl"
-
-#: src/telephony/ui/main_window.py:752
-msgid "Remove this call?"
-msgstr "Rimov dis kol?"
-
-#: src/telephony/ui/main_window.py:766
-msgid "Number copied"
-msgstr "Nɔmba we dɛn kɔpi"
-
-#: src/telephony/ui/main_window.py:773
-msgid "Added to {name}"
-msgstr "Add to {nem}."
-
-#: src/telephony/ui/main_window.py:776
-msgid "Failed to add number"
-msgstr "Failed fɔ ad nɔmba"
+#~ msgid "Switching address book..."
+#~ msgstr "Switching adrɛs buk..."

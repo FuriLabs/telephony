@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-30 12:03+0000\n"
+"POT-Creation-Date: 2026-07-29 02:02+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -12,573 +12,1502 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Exported {count} messages to Chatty database."
-msgstr "Exportéiert {count} Messagen op Chatty Datebank."
-
-msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Exportéiert {count} Uriff an d'Gnome Calls Datebank."
-
-msgid "Source database not found."
-msgstr "Quell Datebank net fonnt."
-
-msgid "Exported Telephony database successfully."
-msgstr "Exportéiert Telefonie Datebank erfollegräich."
-
-msgid "File not found."
-msgstr "Fichier net fonnt."
-
-msgid "Could not find messages table in iOS database."
-msgstr "Konnt net Messagen Dësch an iOS Datebank fannen."
-
-msgid "Failed to read iOS SMS database structure."
-msgstr "Ausgefall iOS SMS Datebank Struktur ze liesen."
-
-msgid "Imported {count} messages from iOS backup."
-msgstr "Importéiert {count} Messagen aus iOS Backupsatellit."
-
-msgid "Could not find call history table in iOS database."
-msgstr "Konnt den Uruffgeschichttabel an der iOS Datebank net fannen."
-
-msgid "Failed to read iOS Calls database structure."
-msgstr "Ausgefall fir iOS Calls Datebank Struktur ze liesen."
-
-msgid "Imported {count} calls from iOS backup."
-msgstr "Importéiert {count} Appellen aus iOS Backupsatellit."
-
-msgid "Successfully exported {count} messages to XML."
-msgstr "{count} Messagen op XML erfollegräich exportéiert."
-
-msgid "Successfully exported {count} calls to XML."
-msgstr "Erfolleg exportéiert {count} Uriff op XML."
-
-msgid "Chatty database not found."
-msgstr "Chatty Datebank net fonnt."
-
-msgid "Could not find messages table in Chatty database."
-msgstr "Konnt net Messagen Dësch an Chatty Datebank fannen."
-
-msgid "Failed to read Chatty database structure."
-msgstr "Ausgefall Chatty Datebank Struktur ze liesen."
-
-msgid "Imported {count} messages from Chatty."
-msgstr "Importéiert {count} Messagen aus Chatty."
-
-msgid "Calls database not found."
-msgstr "Uriff Datebank net fonnt."
-
-msgid "Could not find call history table in Calls database."
-msgstr "Konnt den Uruffgeschichttabel net an der Uruff Datebank fannen."
-
-msgid "Failed to read Calls database structure."
-msgstr "Ausgefall op Call Datebank Struktur ze liesen."
-
-msgid "Imported {count} calls."
-msgstr "Importéiert {count} rifft."
-
-msgid "Imported {count} messages from Android backup."
-msgstr "Importéiert {count} Messagen aus Android Backupsatellit."
-
-msgid "Imported {count} calls from Android backup."
-msgstr "Importéiert {count} Appellen aus Android Backup."
-
-msgid "0s"
-msgstr "0s vun"
-
-msgid "{h}h {m}m"
-msgstr "{h}h {m}m"
-
-msgid "{m}m {s}s"
-msgstr "{m}m {s}s"
-
-msgid "{s}s"
-msgstr "{s}s"
-
-msgid "Initializing location services..."
-msgstr "Initialiséieren Location Servicer ..."
-
-msgid "Waiting for location service..."
-msgstr "Waart op Locatiounsservice ..."
-
-msgid "Waiting for satellite fix..."
-msgstr "Waart op Satellitefix ..."
-
-msgid "Emergency Mode"
-msgstr "Noutfall Modus"
-
-msgid "Emergency calls only."
-msgstr "Nëmmen Noutruffen."
-
-msgid "Start Emergency Process"
-msgstr "Start Noutfall Prozess"
-
-msgid "Cancel"
-msgstr "Ofbriechen"
-
-msgid "Return to Lockscreen"
-msgstr "Zréck op Sperrbildschirm"
-
-msgid "Back"
-msgstr "Zréck"
-
-msgid "No Numbers Configured"
-msgstr "Keng Zuelen konfiguréiert"
-
-msgid "Set numbers in Settings."
-msgstr "Set Zuelen an Astellungen."
-
-msgid "Call {number}"
-msgstr "Call {number}"
-
-msgid "Confirm Emergency Call"
-msgstr "Confirméieren Noutruff"
-
-msgid "Call {name}?"
-msgstr "Call {name}?"
-
-msgid "🟢 Yes, Call"
-msgstr "Jo, rufft un"
-
-msgid "🔴 No, Return"
-msgstr "🔴 Nee, zréck"
-
-msgid "Modem Stuck"
-msgstr "Modem gestoppt"
-
-msgid "Call failed to disconnect."
-msgstr "Uruff konnt net trennen."
-
-msgid "Telephony Emergency"
-msgstr "Telefonie Noutfall"
-
-msgid "🔴 Reboot Modem"
-msgstr "🔴 Modem nei starten"
-
+#: src/telephony/app.py:530 src/telephony/app.py:564
+#: src/telephony/backend/managers/lockscreen_manager.py:132
+#: src/telephony/backend/managers/lockscreen_manager.py:142
+#: src/telephony/backend/managers/lockscreen_manager.py:398
+#: src/telephony/backend/utils/db_blocklist_utils.py:52
+#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
+#: src/telephony/ui/views/chat_view.py:93
+#: src/telephony/ui/views/chat_view.py:142
+#: src/telephony/ui/views/chat_view.py:152
+#: src/telephony/ui/views/chat_view.py:156
+#: src/telephony/ui/views/chat_view.py:700
+#: src/telephony/ui/views/chat_view.py:704
+#: src/telephony/ui/views/chat_view.py:800
+#: src/telephony/ui/views/chat_view.py:806
+#: src/telephony/ui/views/chat_view.py:965
+#: src/telephony/ui/views/chat_view.py:967
+#: src/telephony/ui/views/chat_view.py:1160
+#: src/telephony/ui/views/dialpad_view.py:158
+#: src/telephony/ui/views/history_view.py:411
+#: src/telephony/ui/views/messages_view.py:363
+#: src/telephony/ui/views/messages_view.py:366
+#: src/telephony/ui/views/messages_view.py:437
+#: src/telephony/ui/views/messages_view.py:441
+#: src/telephony/ui/views/messages_view.py:531
+#: src/telephony/ui/views/messages_view.py:868
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
+#: src/telephony/ui/widgets/history_rows_widget.py:121
+#: src/telephony/ui/widgets/messages_rows_widget.py:97
+#: src/telephony/ui/windows/custom_tone_list_window.py:166
+#: src/telephony/ui/windows/custom_tone_list_window.py:260
+#: src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: src/telephony/ui/windows/incall_window.py:126
+#: src/telephony/ui/windows/incall_window.py:296
+#: src/telephony/ui/windows/incall_window.py:309
+#: src/telephony/ui/windows/incall_window.py:332
+#: src/telephony/ui/windows/incall_window.py:461
+#: src/telephony/ui/windows/trusted_actions_list_window.py:309
+#: src/telephony/ui/windows/trusted_actions_list_window.py:447
 msgid "Unknown"
 msgstr "Onbekannt"
 
-msgid "Telephony - Incoming"
-msgstr "Telefonie - Entréeën"
-
-msgid "🟢 Incoming: {name}"
-msgstr "Entréeën: {name}"
-
-msgid "Incoming Call..."
-msgstr "Uruff erakomm ..."
-
-msgid "🔁 Swap"
-msgstr "🔁 Tauschen"
-
-msgid "🟢 Answer"
-msgstr "Äntwert"
-
-msgid "🔴 Hangup"
-msgstr "🔴 Halt op"
-
-msgid "🔴 SMS&End"
-msgstr "🔴 SMS & Enn"
-
-msgid "Telephony - On Hold"
-msgstr "Telefonie - Ophalen"
-
-msgid "🟠 {name} put as on hold"
-msgstr "🠠 {name} gesat wéi ophalen"
-
-msgid "Call On Hold..."
-msgstr "Uruff op Hold ..."
-
-msgid "🔴 Decline"
-msgstr "🔴 Decline"
-
-msgid "UnmuteMic"
-msgstr "UnmuteMic"
-
-msgid "MuteMic"
-msgstr "MuteMic"
-
-msgid "⏸️ {name} (On Hold)"
-msgstr "⏸️ {name} (On Hold)"
-
-msgid "🔁 Resume"
-msgstr "🔁 Resumé"
-
-msgid "Telephony - Active Call"
-msgstr "Telefonie - Aktiv Call"
-
-msgid "🟢 Active: {name}"
-msgstr "Aktiv: {name}"
-
-msgid "Active Call"
-msgstr "Aktiv Call"
-
-msgid "🔴 HangupAll"
-msgstr "🔴 HangupAll"
-
-msgid "SpeakerOff"
-msgstr "SpeakerOff"
-
-msgid "SpeakerOn"
-msgstr "Speaker op"
-
-msgid "Please wait 60 seconds before triggering {prefix} again."
-msgstr "Waart w.e.g. 60 Sekonnen ier Dir {prefix} erëm ausléist."
-
-msgid " (Accuracy: {acc}m)"
-msgstr "(Genauegkeet: {acc}m)"
-
-msgid "I am here: {link}{acc_str}"
-msgstr "Ech sinn hei: {link}{acc_str}"
-
-msgid "Failed to obtain location after trying all methods."
-msgstr "Ausgefall fir Plaz ze kréien nodeems Dir all Methode probéiert hutt."
-
-msgid "Modem not ready"
-msgstr "Modem net prett"
-
-msgid "Cannot dial while in another call"
-msgstr "Kann net uruffen wärend engem aneren Uruff"
-
-msgid "Dial Error: {e}"
-msgstr "Wielt Feeler: {e}"
-
-msgid "Failed to send: {e}"
-msgstr "Ausgefall ze schécken: {e}"
-
-msgid "Not supported"
-msgstr "Net ënnerstëtzt"
-
-msgid "Error: {e}"
-msgstr "Feeler: {e}"
-
+#: src/telephony/app.py:541
 msgid "Call Back"
 msgstr "Call Back"
 
+#: src/telephony/app.py:571
+#, python-brace-format
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} neie Message"
 msgstr[1] "{count} nei Messagen"
 
+#: src/telephony/app.py:575
+#: src/telephony/ui/windows/contact_picker_window.py:31
 msgid "Open"
 msgstr "Oppen"
 
+#: src/telephony/app.py:579
 msgid "Call"
 msgstr "Call"
 
-msgid "Scheduled ({current}/{total})"
-msgstr "Geplangt ({current}/{total})"
+#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/utils/db_blocklist_utils.py:35
+#: src/telephony/ui/views/messages_view.py:357
+#: src/telephony/ui/views/messages_view.py:428
+msgid "Blocked Number"
+msgstr "Blockéiert Zuel"
 
-msgid "To: {name}"
-msgstr "An: {name}"
+#: src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency Mode"
+msgstr "Noutfall Modus"
 
-msgid "Scheduled: {time}"
-msgstr "Zäitplang: {time}"
+#: src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency calls only."
+msgstr "Nëmmen Noutruffen."
 
-msgid "Send Now"
-msgstr "Schéckt elo"
+#: src/telephony/backend/managers/emergency_manager.py:119
+msgid "Start Emergency Process"
+msgstr "Start Noutfall Prozess"
 
-msgid "Remove"
-msgstr "Ewechzehuelen"
+#: src/telephony/backend/managers/emergency_manager.py:132
+#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
+#: src/telephony/ui/views/history_view.py:81
+#: src/telephony/ui/views/messages_view.py:114
+#: src/telephony/ui/windows/advanced_settings_window.py:48
+#: src/telephony/ui/windows/blocklist_editor_window.py:42
+#: src/telephony/ui/windows/blocklist_editor_window.py:111
+#: src/telephony/ui/windows/camera_photo_window.py:69
+#: src/telephony/ui/windows/camera_video_window.py:80
+#: src/telephony/ui/windows/contact_editor_window.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:832
+#: src/telephony/ui/windows/contact_picker_window.py:46
+#: src/telephony/ui/windows/custom_tone_list_window.py:56
+#: src/telephony/ui/windows/custom_tone_list_window.py:319
+#: src/telephony/ui/windows/data_management_window.py:76
+#: src/telephony/ui/windows/data_management_window.py:134
+#: src/telephony/ui/windows/data_management_window.py:181
+#: src/telephony/ui/windows/date_time_picker_window.py:40
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: src/telephony/ui/windows/import_export_window.py:74
+#: src/telephony/ui/windows/import_export_window.py:171
+#: src/telephony/ui/windows/import_export_window.py:197
+#: src/telephony/ui/windows/import_export_window.py:307
+#: src/telephony/ui/windows/import_export_window.py:336
+#: src/telephony/ui/windows/import_export_window.py:437
+#: src/telephony/ui/windows/import_export_window.py:497
+#: src/telephony/ui/windows/import_wizard_window.py:48
+#: src/telephony/ui/windows/settings_window.py:65
+#: src/telephony/ui/windows/settings_window.py:406
+#: src/telephony/ui/windows/sound_recorder_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:105
+#: src/telephony/ui/windows/trusted_actions_list_window.py:553
+#: src/telephony/ui/windows/trusted_actions_list_window.py:646
+#: src/telephony/ui/windows/trusted_actions_list_window.py:667
+msgid "Cancel"
+msgstr "Ofbriechen"
 
-msgid "Message removed"
-msgstr "Message geläscht"
+#: src/telephony/backend/managers/emergency_manager.py:132
+msgid "Return to Lockscreen"
+msgstr "Zréck op Sperrbildschirm"
 
-msgid "Sent scheduled message to {number}"
-msgstr "Geschéckt geplangte Message ze {number}"
+#: src/telephony/backend/managers/emergency_manager.py:133
+msgid "Back"
+msgstr "Zréck"
 
-msgid "Failed to send to {number}"
-msgstr "Ausgefall op {number} ze schécken"
+#: src/telephony/backend/managers/emergency_manager.py:137
+msgid "No Numbers Configured"
+msgstr "Keng Zuelen konfiguréiert"
 
-msgid "Database Management"
-msgstr "Datebank Management"
+#: src/telephony/backend/managers/emergency_manager.py:137
+msgid "Set numbers in Settings."
+msgstr "Set Zuelen an Astellungen."
 
-msgid "Select data to permanently delete."
-msgstr "Wielt Daten fir permanent ze läschen."
+#: src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
+msgid "Call {number}"
+msgstr "Call {number}"
 
-msgid "Delete Call History"
-msgstr "Läschen Call Geschicht"
+#: src/telephony/backend/managers/emergency_manager.py:162
+msgid "Confirm Emergency Call"
+msgstr "Confirméieren Noutruff"
 
-msgid "Delete All Messages"
-msgstr "Läschen All Messagen"
+#: src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "Call {name}?"
 
-msgid "Delete All Group Names"
-msgstr "Läschen All Grupp Nimm"
+#: src/telephony/backend/managers/emergency_manager.py:164
+msgid "🟢 Yes, Call"
+msgstr "Jo, rufft un"
 
-msgid "Delete Blocklist"
-msgstr "Blocklist läschen"
+#: src/telephony/backend/managers/emergency_manager.py:164
+msgid "🔴 No, Return"
+msgstr "🔴 Nee, zréck"
 
-msgid "Delete All Contacts"
-msgstr "All Kontakter läschen"
+#: src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Initialiséieren Location Servicer ..."
 
-msgid "Delete Address Book"
-msgstr "Adressbuch läschen"
+#: src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Waart op Locatiounsservice ..."
 
-msgid "Delete Custom Settings"
-msgstr "Benotzerdefinéiert Astellungen läschen"
+#: src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Waart op Satellitefix ..."
 
-msgid "DELETE EVERYTHING"
-msgstr "ALLES LËSCHT"
+#: src/telephony/backend/managers/lockscreen_manager.py:80
+#: src/telephony/ui/windows/incall_window.py:186
+msgid "Modem Stuck"
+msgstr "Modem gestoppt"
 
+#: src/telephony/backend/managers/lockscreen_manager.py:81
+msgid "Call failed to disconnect."
+msgstr "Uruff konnt net trennen."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Telephony Emergency"
+msgstr "Telefonie Noutfall"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:85
+#: src/telephony/ui/windows/incall_window.py:188
+#: src/telephony/ui/windows/incall_window.py:650
+msgid "🔴 Reboot Modem"
+msgstr "🔴 Modem nei starten"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:187
+msgid "Telephony - Incoming"
+msgstr "Telefonie - Entréeën"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:188
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "Entréeën: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:189
+#: src/telephony/ui/windows/incall_window.py:387
+msgid "Incoming Call..."
+msgstr "Uruff erakomm ..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:192
+#: src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "🔁 Swap"
+msgstr "🔁 Tauschen"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "Äntwert"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:195
+#: src/telephony/backend/managers/lockscreen_manager.py:207
+#: src/telephony/backend/managers/lockscreen_manager.py:219
+#: src/telephony/backend/managers/lockscreen_manager.py:229
+msgid "🔴 Hangup"
+msgstr "🔴 Halt op"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:196
+#: src/telephony/backend/managers/lockscreen_manager.py:208
+msgid "🔴 SMS&End"
+msgstr "🔴 SMS & Enn"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:199
+#: src/telephony/backend/managers/lockscreen_manager.py:215
+msgid "Telephony - On Hold"
+msgstr "Telefonie - Ophalen"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:200
+#, python-brace-format
+msgid "🟠 {name} put as on hold"
+msgstr "🠠 {name} gesat wéi ophalen"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:201
+#: src/telephony/backend/managers/lockscreen_manager.py:217
+msgid "Call On Hold..."
+msgstr "Uruff op Hold ..."
+
+#: src/telephony/backend/managers/lockscreen_manager.py:205
+msgid "🔴 Decline"
+msgstr "🔴 Decline"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:211
+#: src/telephony/backend/managers/lockscreen_manager.py:233
+msgid "UnmuteMic"
+msgstr "UnmuteMic"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:211
+#: src/telephony/backend/managers/lockscreen_manager.py:233
+msgid "MuteMic"
+msgstr "MuteMic"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:216
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (On Hold)"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔁 Resume"
+msgstr "🔁 Resumé"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:222
+msgid "Telephony - Active Call"
+msgstr "Telefonie - Aktiv Call"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:223
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "Aktiv: {name}"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:224
+msgid "Active Call"
+msgstr "Aktiv Call"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:227
+msgid "🔴 HangupAll"
+msgstr "🔴 HangupAll"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:237
+msgid "SpeakerOff"
+msgstr "SpeakerOff"
+
+#: src/telephony/backend/managers/lockscreen_manager.py:237
+msgid "SpeakerOn"
+msgstr "Speaker op"
+
+#: src/telephony/backend/managers/mms_manager.py:245
+#: src/telephony/backend/managers/ofono_calls_manager.py:39
+#: src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: src/telephony/ui/main_window.py:447
+msgid "Modem not ready"
+msgstr "Modem net prett"
+
+#: src/telephony/backend/managers/ofono_calls_manager.py:53
+msgid "Cannot dial while in another call"
+msgstr "Kann net uruffen wärend engem aneren Uruff"
+
+#: src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "Wielt Feeler: {e}"
+
+#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "Ausgefall ze schécken: {e}"
+
+#: src/telephony/backend/managers/ofono_messaging_manager.py:144
+msgid "Not supported"
+msgstr "Net ënnerstëtzt"
+
+#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "Feeler: {e}"
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Waart w.e.g. 60 Sekonnen ier Dir {prefix} erëm ausléist."
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Genauegkeet: {acc}m)"
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Ech sinn hei: {link}{acc_str}"
+
+#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
+msgstr "Ausgefall fir Plaz ze kréien nodeems Dir all Methode probéiert hutt."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "{count} Messagen op XML erfollegräich exportéiert."
+
+#: src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Erfolleg exportéiert {count} Uriff op XML."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Exportéiert {count} Messagen op Chatty Datebank."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Exportéiert {count} Uriff an d'Gnome Calls Datebank."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Quell Datebank net fonnt."
+
+#: src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Exportéiert Telefonie Datebank erfollegräich."
+
+#: src/telephony/backend/utils/importer_android_utils.py:33
+#: src/telephony/backend/utils/importer_android_utils.py:138
+#: src/telephony/backend/utils/importer_ios_utils.py:34
+#: src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Fichier net fonnt."
+
+#: src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Importéiert {count} Messagen aus Android Backupsatellit."
+
+#: src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Importéiert {count} Appellen aus Android Backup."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "Konnt net Messagen Dësch an iOS Datebank fannen."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "Ausgefall iOS SMS Datebank Struktur ze liesen."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Importéiert {count} Messagen aus iOS Backupsatellit."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "Konnt den Uruffgeschichttabel an der iOS Datebank net fannen."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "Ausgefall fir iOS Calls Datebank Struktur ze liesen."
+
+#: src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Importéiert {count} Appellen aus iOS Backupsatellit."
+
+#: src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Chatty Datebank net fonnt."
+
+#: src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Konnt net Messagen Dësch an Chatty Datebank fannen."
+
+#: src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Ausgefall Chatty Datebank Struktur ze liesen."
+
+#: src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Importéiert {count} Messagen aus Chatty."
+
+#: src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Uriff Datebank net fonnt."
+
+#: src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr "Konnt den Uruffgeschichttabel net an der Uruff Datebank fannen."
+
+#: src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Ausgefall op Call Datebank Struktur ze liesen."
+
+#: src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Importéiert {count} rifft."
+
+#: src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s vun"
+
+#: src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}s"
+
+#: src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telefonie"
+
+#: src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Dialpad"
+
+#: src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Geschicht"
+
+#: src/telephony/ui/main_window.py:114
+#: src/telephony/ui/views/messages_view.py:63
+#: src/telephony/ui/windows/settings_window.py:605
+msgid "Messages"
+msgstr "Messagen"
+
+#: src/telephony/ui/main_window.py:117
+#: src/telephony/ui/windows/settings_window.py:606
+msgid "Contacts"
+msgstr "Kontakter"
+
+#: src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Synchroniséiert Kontakter ..."
+
+#: src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Setzt Är Nummer an Astellungen"
+
+#: src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Setzt w.e.g. Default Country Code an Astellungen"
+
+#: src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Setzt Noutnummeren an Astellungen"
+
+#: src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Duplikate léisen"
+
+#: src/telephony/ui/main_window.py:295
+#: src/telephony/ui/windows/settings_window.py:40
+msgid "Settings"
+msgstr "Astellungen"
+
+#: src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "Reload Kontakter"
+
+#: src/telephony/ui/main_window.py:305
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Import / Export"
+
+#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Blocklëscht"
+
+#: src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Modem ugeschloss"
+
+#: src/telephony/ui/main_window.py:391
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Modem Feeler: {message}"
+
+#: src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "USSD schécken ..."
+
+#: src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "USSD Resultat"
+
+#: src/telephony/ui/main_window.py:454
+#: src/telephony/ui/windows/blocklist_editor_window.py:127
+#: src/telephony/ui/windows/contact_editor_window.py:848
+#: src/telephony/ui/windows/settings_window.py:457
+#: src/telephony/ui/windows/settings_window.py:469
+#: src/telephony/ui/windows/settings_window.py:815
+msgid "OK"
+msgstr "OK"
+
+#: src/telephony/ui/main_window.py:463
+#: src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "Confirméieren"
+
+#: src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "{count} Duplikatkontakt fonnt. Kuckt de Menü."
+msgstr[1] "{count} Duplikatkontakter fonnt. Kuckt de Menü."
+
+#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Kontakter synchroniséieren ..."
+
+#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
+#: src/telephony/ui/windows/chat_media_controller_window.py:148
+#: src/telephony/ui/windows/contact_editor_window.py:103
+#: src/telephony/ui/windows/data_management_window.py:65
+#: src/telephony/ui/windows/info_window.py:40
+#: src/telephony/ui/windows/settings_window.py:368
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:443
+#: src/telephony/ui/windows/settings_window.py:581
+#: src/telephony/ui/windows/settings_window.py:858
 msgid "Close"
 msgstr "Zoumaachen"
 
-msgid "Delete"
-msgstr "Läschen"
+#: src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Kontakter nei lueden ..."
 
-msgid "Are you sure? This cannot be undone."
-msgstr "Bass du secher? Dëst kann net réckgängeg gemaach ginn."
+#: src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "Multiple Kontakter fonnt"
 
-msgid "This will delete all SMS/MMS and attachments."
-msgstr "Dëst wäert all SMS / MMS an Uschlëss läschen."
+#: src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Wéi eng Kontakt wëllt Dir änneren?"
 
-msgid "Delete Group Names"
-msgstr "Läschen Grupp Nimm"
+#: src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Onbekannt Adressbuch"
 
-msgid "Reset all custom group chat names?"
-msgstr "All personaliséiert Grupp Chat Nimm zrécksetzen?"
+#: src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "Rufft (Anonym) ..."
 
-msgid "Unblock all numbers?"
-msgstr "Spär all Zuelen op?"
+#: src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Rufft {number}..."
 
-msgid "Delete Settings"
-msgstr "Läschen Astellungen"
+#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Uruff Ausgefall"
 
-msgid "Clear all custom settings? Emergency numbers will be lost."
-msgstr "All personaliséiert Astellunge läschen? D'Noutnummere gi verluer."
+#: src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Call Detailer"
 
-msgid "No deletable address books"
-msgstr "Keng läschen Adressbicher"
-
-msgid "There are no custom address books that can be deleted."
-msgstr "Et gi keng personaliséiert Adressbicher déi geläscht kënne ginn."
-
+#: src/telephony/ui/main_window.py:676
+#, python-brace-format
 msgid ""
-"Which address book do you want to delete permanently?\n"
-"\n"
-"This will wipe it from the system."
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
 msgstr ""
-"Wéi eng Adressbuch wëllt Dir permanent läschen?\n"
-"\n"
-"Dëst wäert et aus dem System wëschen."
-
-msgid "Are you sure you want to permanently delete the '{name}' address book?"
-msgstr ""
-"Sidd Dir sécher datt Dir d'Adressbuch '{name}' permanent läschen wëllt?"
-
-msgid "Delete EVERYTHING"
-msgstr "Läschen ALLES"
-
-msgid "Wipe database, config files and contacts? App will reset."
-msgstr ""
-"Wëschen Datebank, Configuratiounsdateien a Kontakter? App wäert zréckgesat "
-"ginn."
-
-msgid "Really delete everyone from your address book?"
-msgstr "Wierklech jiddereen aus Ärem Adressbuch läschen?"
-
-msgid "Select which address book to clear:"
-msgstr "Wielt wéi eng Adressbuch fir ze läschen:"
-
-msgid "All Address Books"
-msgstr "All Adressbicher"
-
-msgid "Call History Deleted"
-msgstr "Call Geschicht geläscht"
-
-msgid "Deleting messages..."
-msgstr "Messagen läschen..."
-
-msgid "Messages & Attachments Deleted"
-msgstr "Messagen & Uschlëss geläscht"
-
-msgid "Group Names Reset"
-msgstr "Grupp Nimm zréckgesat"
-
-msgid "Blocklist Cleared"
-msgstr "Blocklist geläscht"
-
-msgid "Deleting contacts..."
-msgstr "Kontakter läschen..."
-
-msgid "Contacts Deleted"
-msgstr "Kontakter geläscht"
-
-msgid "Deleting address book..."
-msgstr "Adressbuch läschen ..."
-
-msgid "Address Book Deleted"
-msgstr "Adressbuch geläscht"
-
-msgid "Failed to delete Address Book"
-msgstr "Ausgefall Adress Buch ze läschen"
-
-msgid "Settings cleared"
-msgstr "Astellunge geläscht"
-
-msgid "Wiping Database..."
-msgstr "Datebank wëschen ..."
-
-msgid "App Reset Complete"
-msgstr "App Reset fäerdeg"
-
-msgid "Notification Overrides"
-msgstr "Notifikatioun Iwwerschreiden"
-
-msgid "Save"
-msgstr "Späicheren"
-
-msgid "Find and add contacts..."
-msgstr "Fannt a füügt Kontakter derbäi ..."
-
-msgid ""
-"Contacts in this list will always play notifications at full volume, even if"
-" the phone is in Silent or Do Not Disturb mode."
-msgstr ""
-"Kontakter an dëser Lëscht spillen ëmmer Notifikatiounen op voller Volumen, "
-"och wann den Telefon am Stille Modus ass oder net stéiert."
-
-msgid "No contacts found"
-msgstr "Keng Kontakter fonnt"
-
-msgid "About Telephony"
-msgstr "Iwwer Telefonie"
-
-msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
-msgstr "Fast Telefon Dialer a Messagerie Client entworf fir FLX1 an FLX1s."
-
-msgid "Version"
-msgstr "Versioun"
-
-msgid "Developer"
-msgstr "Entwéckler"
-
-msgid "License"
-msgstr "Lizenz"
-
-msgid "Links"
-msgstr "Linken"
-
-msgid "Website"
-msgstr "Websäit"
-
-msgid "Issue Tracker"
-msgstr "Ausgab Tracker"
-
-msgid "Report bugs or request features"
-msgstr "Rapport Bugs oder Ufro Funktiounen"
-
-msgid "Contact Details"
-msgstr "Kontakt Detailer"
-
-msgid "Mobile"
-msgstr "Mobile"
-
-msgid "Work"
-msgstr "Aarbecht"
-
-msgid "Home"
-msgstr "Doheem"
-
-msgid "Fax"
-msgstr "Fax an"
-
-msgid "Other"
-msgstr "Aner"
-
-msgid "Main"
-msgstr "Main"
-
-msgid "Edit"
-msgstr "Edit"
-
-msgid "Identity"
-msgstr "Identitéit"
-
-msgid "Favorite"
-msgstr "Favourite"
-
-msgid "Full Name"
-msgstr "Ganzen numm"
-
-msgid "Name"
-msgstr "Numm"
-
-msgid "Yes"
-msgstr "Jo"
-
-msgid "Phone Numbers"
-msgstr "Telefonsnummer"
-
-msgid "Add Number"
-msgstr "Add Zuel"
-
-msgid "Email Addresses"
-msgstr "E-Mail Adressen"
-
-msgid "Add Email"
-msgstr "E-Mail addéieren"
-
-msgid "Additional Details"
-msgstr "Zousätzlech Detailer"
-
-msgid "Organization"
-msgstr "Organisatioun"
-
-msgid "Job Title"
-msgstr "Aarbechtstitel"
-
-msgid "Address"
-msgstr "Adress"
-
-msgid "Notes"
-msgstr "Notizen"
-
-msgid "Birthday"
-msgstr "Gebuertsdag"
-
-msgid "Anniversary"
-msgstr "Joresdag"
-
-msgid "Delete Contact"
-msgstr "Kontakt läschen"
-
-msgid "Address Books"
-msgstr "Adressbicher"
-
-msgid "Unknown Source"
-msgstr "Onbekannt Quell"
-
-msgid "Select Date"
-msgstr "Wielt Datum"
-
-msgid "Clear Date"
-msgstr "Kloer Datum"
-
-msgid "Select {title}"
-msgstr "Wielt {title}"
-
-msgid "Copy {title}"
-msgstr "Kopie {title}"
-
-msgid "Copied to clipboard"
-msgstr "Kopéiert op Clipboard"
-
+"Zuel: {number}\n"
+"Numm: {name}\n"
+"Datum: {date}\n"
+"Dauer: {duration}"
+
+#: src/telephony/ui/main_window.py:692
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "Spär Zuel"
+
+#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+msgid "Unblocked"
+msgstr "Deblockéiert"
+
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/windows/contact_editor_window.py:395
 msgid "Edit Contact"
 msgstr "Kontakt änneren"
 
-msgid "Export Contact"
-msgstr "Export Kontakt"
+#: src/telephony/ui/main_window.py:706
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+msgid "Add to Contacts"
+msgstr "Add to Kontakter"
 
-msgid "Are you sure you want to delete this contact?"
-msgstr "Sidd Dir sécher, datt Dir dëse Kontakt läschen wëllt?"
+#: src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Füügt zu existente Kontakt"
 
-msgid "Deleting contact..."
-msgstr "Kontakt läschen ..."
+#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/windows/incall_window.py:147
+msgid "Search Number"
+msgstr "Sich Zuel"
 
+#: src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Schécken Message"
+
+#: src/telephony/ui/main_window.py:755
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+msgid "Copy Number"
+msgstr "Kopie Zuel"
+
+#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Block Zuel"
+
+#: src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Dësen Uruff läschen"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Läschen Call"
+
+#: src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Dësen Uruff ewechhuelen?"
+
+#: src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Zuel kopéiert"
+
+#: src/telephony/ui/main_window.py:798
+#: src/telephony/ui/windows/contact_editor_window.py:757
 msgid "Saving contact..."
 msgstr "Kontakt späichert ..."
 
+#: src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Zu {name} dobäigesat"
+
+#: src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Ausgefall Nummer derbäi"
+
+#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/windows/contact_editor_window.py:184
+#: src/telephony/ui/windows/settings_window.py:213
+msgid "Add Number"
+msgstr "Add Zuel"
+
+#: src/telephony/ui/main_window.py:814
+#: src/telephony/ui/windows/advanced_settings_window.py:52
+#: src/telephony/ui/windows/blocklist_editor_window.py:46
+#: src/telephony/ui/windows/contact_editor_window.py:127
+#: src/telephony/ui/windows/custom_tone_list_window.py:60
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: src/telephony/ui/windows/settings_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:110
+#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+msgid "Save"
+msgstr "Späicheren"
+
+#: src/telephony/ui/views/chat_view.py:133
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Entworf fir {count} Empfänger"
+
+#: src/telephony/ui/views/chat_view.py:160
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} Participanten"
+
+#: src/telephony/ui/views/chat_view.py:306
+msgid "Replies not supported for this sender"
+msgstr "Äntwerten net ënnerstëtzt fir dëse Sender"
+
+#: src/telephony/ui/views/chat_view.py:350
+#: src/telephony/ui/views/chat_view.py:1230
+msgid "Scheduled time must be in the future"
+msgstr "Geplangte Zäit muss an Zukunft sinn"
+
+#: src/telephony/ui/views/chat_view.py:358
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Ëmgeplangt fir {time}"
+
+#: src/telephony/ui/views/chat_view.py:362
+msgid "Re-Schedule Message"
+msgstr "Nei Zäitplang Message"
+
+#: src/telephony/ui/views/chat_view.py:497
+#: src/telephony/ui/views/chat_view.py:562
+msgid "— New Messages —"
+msgstr "- Nei Messagen -"
+
+#: src/telephony/ui/views/chat_view.py:600
+msgid "No results found in this conversation"
+msgstr "Keng Resultater fonnt an dësem Gespréich"
+
+#: src/telephony/ui/views/chat_view.py:672
+msgid "Group Name"
+msgstr "Grupp Numm"
+
+#: src/telephony/ui/views/chat_view.py:673
+msgid "Set group name..."
+msgstr "Grupp Numm setzen ..."
+
+#: src/telephony/ui/views/chat_view.py:681
+msgid "Participants"
+msgstr "Participanten"
+
+#: src/telephony/ui/views/chat_view.py:781
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Conversation"
+msgstr "Läschen Gespréich"
+
+#: src/telephony/ui/views/chat_view.py:798
+#: src/telephony/ui/views/chat_view.py:1162
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+msgid "Me"
+msgstr "Ech"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Vum {sender} weidergeleet:\n"
+"{body}"
+
+#: src/telephony/ui/views/chat_view.py:808
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Forward vun {sender}"
+
+#: src/telephony/ui/views/chat_view.py:817
+msgid "Forward To"
+msgstr "Forward An"
+
+#: src/telephony/ui/views/chat_view.py:818
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+msgid "Forward"
+msgstr "Forward"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Delete Message"
+msgstr "Läschen Message"
+
+#: src/telephony/ui/views/chat_view.py:843
+msgid "Are you sure you want to delete this message?"
+msgstr "Sidd Dir sécher datt Dir dëse Message läsche wëllt?"
+
+#: src/telephony/ui/views/chat_view.py:980
+msgid "Group renamed"
+msgstr "Grupp ëmbenannt"
+
+#: src/telephony/ui/views/chat_view.py:1008
+#, fuzzy
+msgid "Compressing image..."
+msgstr "Video kompriméieren ..."
+
+#: src/telephony/ui/views/chat_view.py:1010
+msgid "Image is too large to send"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1012
+msgid "Compressing video..."
+msgstr "Video kompriméieren ..."
+
+#: src/telephony/ui/views/chat_view.py:1014
+msgid "Video compression failed"
+msgstr "Videokompressioun ass gescheitert"
+
+#: src/telephony/ui/views/chat_view.py:1016
+msgid "File is too large to send via MMS"
+msgstr ""
+
+#: src/telephony/ui/views/chat_view.py:1224
+msgid "Nothing to schedule"
+msgstr "Näischt ze Zäitplang"
+
+#: src/telephony/ui/views/chat_view.py:1238
+msgid "Schedule Message"
+msgstr "Zäitplang Message"
+
+#: src/telephony/ui/views/chat_view.py:1277
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Message geplangt fir {time}"
+
+#: src/telephony/ui/views/chat_view.py:1280
+#: src/telephony/ui/views/chat_view.py:1298
+msgid "[Attachment]"
+msgstr "[Anhang]"
+
+#: src/telephony/ui/views/chat_view.py:1387
+msgid "Delete Group"
+msgstr "Grupp läschen"
+
+#: src/telephony/ui/views/chat_view.py:1388
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Dëst wäert d'Gespréichgeschicht an all gespäichert Mediendateien permanent "
+"läschen."
+
+#: src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Sich Kontakter"
+
+#: src/telephony/ui/views/contacts_view.py:119
+#: src/telephony/ui/windows/contact_editor_window.py:71
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:229
+#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+msgid "Mobile"
+msgstr "Mobile"
+
+#: src/telephony/ui/views/contacts_view.py:120
+#: src/telephony/ui/windows/contact_editor_window.py:72
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:230
+#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+msgid "Work"
+msgstr "Aarbecht"
+
+#: src/telephony/ui/views/contacts_view.py:121
+#: src/telephony/ui/windows/contact_editor_window.py:73
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:231
+#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+msgid "Home"
+msgstr "Doheem"
+
+#: src/telephony/ui/views/contacts_view.py:122
+#: src/telephony/ui/windows/contact_editor_window.py:74
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/custom_tone_list_window.py:232
+#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+msgid "Fax"
+msgstr "Fax an"
+
+#: src/telephony/ui/views/contacts_view.py:123
+#: src/telephony/ui/windows/contact_editor_window.py:75
+#: src/telephony/ui/windows/contact_editor_window.py:411
+#: src/telephony/ui/windows/contact_editor_window.py:435
+#: src/telephony/ui/windows/custom_tone_list_window.py:233
+#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+msgid "Other"
+msgstr "Aner"
+
+#: src/telephony/ui/views/contacts_view.py:124
+#: src/telephony/ui/windows/contact_editor_window.py:76
+#: src/telephony/ui/windows/custom_tone_list_window.py:234
+#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+msgid "Main"
+msgstr "Main"
+
+#: src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Call Anonym"
+
+#: src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Gitt Zuel un"
+
+#: src/telephony/ui/views/dialpad_view.py:48
+#: src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Telefonie Smart Dialpad zu Ärem Service"
+
+#: src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Ongülteg Zuel am Clipboard"
+
+#: src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Invalid Zuel"
+
+#: src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "All"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "All Dauer"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Onbeäntwert"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 Minutten"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 min"
+
+#: src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 min"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "All Datum"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Haut"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "Déi lescht 3 Deeg"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "Déi lescht 14 Deeg"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "Déi lescht 30 Deeg"
+
+#: src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "Déi lescht 60 Deeg"
+
+#: src/telephony/ui/views/messages_view.py:106
+#: src/telephony/ui/views/messages_view.py:575
+msgid "Search Contacts..."
+msgstr "Sich Kontakter ..."
+
+#: src/telephony/ui/views/messages_view.py:224
+msgid "All Messages"
+msgstr "All Messagen"
+
+#: src/telephony/ui/views/messages_view.py:225
+msgid "Unread Messages"
+msgstr "Ongelies Messagen"
+
+#: src/telephony/ui/views/messages_view.py:226
+msgid "Unknown Numbers"
+msgstr "Onbekannt Zuelen"
+
+#: src/telephony/ui/views/messages_view.py:227
+msgid "Saved Contacts"
+msgstr "Gespäichert Kontakter"
+
+#: src/telephony/ui/views/messages_view.py:228
+msgid "Group Messages"
+msgstr "Grupp Messagen"
+
+#: src/telephony/ui/views/messages_view.py:229
+msgid "Individual Messages"
+msgstr "Individuell Messagen"
+
+#: src/telephony/ui/views/messages_view.py:230
+msgid "Alphabetical Senders"
+msgstr "Alphabetesch Sender"
+
+#: src/telephony/ui/views/messages_view.py:322
+#: src/telephony/ui/views/messages_view.py:444
+msgid "[Multimedia Message]"
+msgstr "[Multimedia Message]"
+
+#: src/telephony/ui/views/messages_view.py:579
+msgid "Search Messages..."
+msgstr "Sich Messagen ..."
+
+#: src/telephony/ui/views/messages_view.py:621
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Start ({count})"
+
+#: src/telephony/ui/views/messages_view.py:628
+#, fuzzy, python-brace-format
+msgid "Open ({count})"
+msgstr "Start ({count})"
+
+#: src/telephony/ui/views/messages_view.py:700
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Add Number: {number}"
+
+#: src/telephony/ui/views/messages_view.py:733
+#, fuzzy
+msgid "Group chat"
+msgstr "Grupp Numm"
+
+#: src/telephony/ui/views/messages_view.py:741
+#: src/telephony/ui/windows/custom_tone_list_window.py:297
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+msgid "No contacts found"
+msgstr "Keng Kontakter fonnt"
+
+#: src/telephony/ui/views/messages_view.py:856
+msgid "No results found"
+msgstr "Keng Resultater fonnt"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+msgid "Copy Text"
+msgstr "Text kopéieren"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+msgid "Re-Schedule"
+msgstr "Re-Schedule"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+msgid "Mark as Unread"
+msgstr "Markéiert als Ongelies"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
+#: src/telephony/ui/windows/data_management_window.py:77
+#: src/telephony/ui/windows/settings_window.py:778
+msgid "Delete"
+msgstr "Läschen"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Zäitplang: {time}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#, fuzzy
+msgid "Failed to send"
+msgstr "Ausgefall ze schécken: {e}"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#, fuzzy
+msgid "Sending..."
+msgstr "USSD schécken ..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+msgid "Open with"
+msgstr "Oppen mat"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+msgid "Copy"
+msgstr "Kopie"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+msgid "Save as"
+msgstr "Späicheren als"
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
+msgid "Retry Send"
+msgstr ""
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+msgid "Open With..."
+msgstr "Open mat ..."
+
+#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+msgid "Save File As"
+msgstr "Datei späicheren als"
+
+#: src/telephony/ui/widgets/incall_elements_widget.py:48
+msgid "Hangup All Calls"
+msgstr "Opzehänken All Uruff"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Grupp"
+
+#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Entworf: {message}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:32
+#: src/telephony/ui/windows/settings_window.py:352
+msgid "Advanced Settings"
+msgstr "Fortgeschratt Astellungen"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:65
+msgid "Loading..."
+msgstr "Lueden..."
+
+#: src/telephony/ui/windows/advanced_settings_window.py:102
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Feeler beim Luede vun Astellungen: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:110
+msgid "Secret SMS Triggers"
+msgstr "Geheim SMS Ausléiser"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:113
+#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+msgid "Set \"Find my Telephony\""
+msgstr "Set \"Find meng Telefonie\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:119
+#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+msgid "Set \"Trusted Callback\""
+msgstr "Set \"Trusted Callback\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:125
+#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+msgid "Set \"SMS -Relay\""
+msgstr "Set \"SMS - Relais\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:131
+#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+msgid "Set \"SMS -tmate\""
+msgstr "Set \"SMS -tmate\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:137
+#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "Set \"SMS Switch Wipe Device\""
+
+#: src/telephony/ui/windows/advanced_settings_window.py:145
+msgid "Restart Modem"
+msgstr "Restart Modem"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:153
+msgid "Data Management"
+msgstr "Data Management"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Authentifikatioun annuléiert"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:172
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Auth Feeler: {e}"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:180
+msgid "Advanced Settings Applied"
+msgstr "Fortgeschratt Astellunge applizéiert"
+
+#: src/telephony/ui/windows/advanced_settings_window.py:185
+msgid "Restarting Modem..."
+msgstr "Modem nei starten..."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Zuel Detailer"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Uriff vun dëser Nummer ginn automatesch refuséiert."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:60
+#: src/telephony/ui/windows/settings_window.py:774
+msgid "Number"
+msgstr "Zuel"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Notiz (optional)"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Duplizéiert"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Dës Nummer ass scho gespaart."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Datebank Feeler"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Konnt net späicheren op d'Blocklist."
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:107
+#: src/telephony/ui/windows/contact_editor_window.py:828
 msgid "Conflict"
 msgstr "Konflikt"
 
+#: src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Zuel kann net souwuel op der Blocklist wéi och op Kontakter sinn.\n"
+"\n"
+"Wëllt Dir weider mat Blockéieren an d'Nummer aus Kontakter läschen?"
+
+#: src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Jo, Block"
+
+#: src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Blockéiert Zuelen"
+
+#: src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "Keng Notizen"
+
+#: src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Sidd Dir sécher datt Dir dës Nummer deblockéiere wëllt?"
+
+#: src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Spär Nummer"
+
+#: src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Maacht Foto"
+
+#: src/telephony/ui/windows/camera_photo_window.py:140
+#: src/telephony/ui/windows/camera_video_window.py:172
+#: src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Widderhuelen"
+
+#: src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Foto befestegt"
+
+#: src/telephony/ui/windows/camera_video_window.py:47
+#: src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Record Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Befestegt Video"
+
+#: src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Ausgefall Video opzehuelen: {error_msg}"
+
+#: src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Opnam gescheitert (Fichier eidel)."
+
+#: src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Grousse Video ({size}KB). Gëtt op Sende kompriméiert."
+
+#: src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Kann net eidel Datei spillen."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "Foto maachen"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "Record Audio"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "Wielt Datei"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "Zäitplang"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "Kamera Feeler"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "Konnt d'Kamera net starten."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "Konnt d'Videoopnam net starten."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Audio Error"
+msgstr "Audio Feeler"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Could not start audio recorder."
+msgstr "Konnt den Audiorecorder net starten."
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:101
+msgid "Select Attachment"
+msgstr "Wielt Unhang"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Attachment Error"
+msgstr "Unhang Feeler"
+
+#: src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Failed to prepare attachment."
+msgstr "Ausgefall fir Uschloss ze preparéieren."
+
+#: src/telephony/ui/windows/contact_editor_window.py:36
+#: src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Kontakt Detailer"
+
+#: src/telephony/ui/windows/contact_editor_window.py:107
+#: src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "Edit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Identitéit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:144
+#: src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "Favourite"
+
+#: src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Ganzen numm"
+
+#: src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Numm"
+
+#: src/telephony/ui/windows/contact_editor_window.py:162
+#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+msgid "Yes"
+msgstr "Jo"
+
+#: src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Telefonsnummer"
+
+#: src/telephony/ui/windows/contact_editor_window.py:195
+#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "E-Mail Adressen"
+
+#: src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "E-Mail addéieren"
+
+#: src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Zousätzlech Detailer"
+
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Organisatioun"
+
+#: src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Aarbechtstitel"
+
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Adress"
+
+#: src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Notizen"
+
+#: src/telephony/ui/windows/contact_editor_window.py:221
+#: src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Websäit"
+
+#: src/telephony/ui/windows/contact_editor_window.py:246
+#: src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Gebuertsdag"
+
+#: src/telephony/ui/windows/contact_editor_window.py:247
+#: src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "Joresdag"
+
+#: src/telephony/ui/windows/contact_editor_window.py:263
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Delete Contact"
+msgstr "Kontakt läschen"
+
+#: src/telephony/ui/windows/contact_editor_window.py:274
+#: src/telephony/ui/windows/settings_window.py:162
+#: src/telephony/ui/windows/settings_window.py:440
+msgid "Address Books"
+msgstr "Adressbicher"
+
+#: src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Onbekannt Quell"
+
+#: src/telephony/ui/windows/contact_editor_window.py:318
+#: src/telephony/ui/windows/contact_editor_window.py:356
+#: src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Wielt Datum"
+
+#: src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "Kloer Datum"
+
+#: src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Wielt {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Kopie {title}"
+
+#: src/telephony/ui/windows/contact_editor_window.py:390
+#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+msgid "Copied to clipboard"
+msgstr "Kopéiert op Clipboard"
+
+#: src/telephony/ui/windows/contact_editor_window.py:535
+msgid "Export Contact"
+msgstr "Export Kontakt"
+
+#: src/telephony/ui/windows/contact_editor_window.py:554
+msgid "Are you sure you want to delete this contact?"
+msgstr "Sidd Dir sécher, datt Dir dëse Kontakt läschen wëllt?"
+
+#: src/telephony/ui/windows/contact_editor_window.py:567
+msgid "Deleting contact..."
+msgstr "Kontakt läschen ..."
+
+#: src/telephony/ui/windows/contact_editor_window.py:822
+#, fuzzy
+msgid "Failed to save contact"
+msgstr "Konnt net späicheren op d'Blocklist."
+
+#: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -588,66 +1517,37 @@ msgstr ""
 "\n"
 "Wëllt Dir weiderfuere mat Spären an d'Nummer u Kontakter derbäisetzen?"
 
+#: src/telephony/ui/windows/contact_editor_window.py:833
 msgid "Yes, Add to Contacts"
 msgstr "Jo, Add to Contacts"
 
-msgid "OK"
-msgstr "OK"
-
+#: src/telephony/ui/windows/contact_picker_window.py:30
 msgid "Pick Contact"
 msgstr "Wielt Kontakt"
 
+#: src/telephony/ui/windows/contact_picker_window.py:62
 msgid "Name or Number"
 msgstr "Numm oder Nummer"
 
+#: src/telephony/ui/windows/contact_picker_window.py:192
 msgid "No number"
 msgstr "Keng Zuel"
 
-msgid "Search Number"
-msgstr "Sich Zuel"
-
-msgid "Hangup and Send SMS"
-msgstr "Opzehänken a SMS schécken"
-
-msgid "The call failed to disconnect."
-msgstr "Den Uruff konnt net trennen."
-
-msgid "Output"
-msgstr "Ausgang"
-
-msgid "Input"
-msgstr "Input"
-
-msgid "Silenced Incoming Call"
-msgstr "Silent Entréeën Uruff"
-
-msgid "I can't talk right now."
-msgstr "Ech kann elo net schwätzen."
-
-msgid "Restarting RIL..."
-msgstr "RIL nei starten..."
-
-msgid "Restored!"
-msgstr "Restauréiert!"
-
-msgid "Failed. Reboot Device."
-msgstr "Ausgefall. Restart Gerät."
-
-msgid "Verifying... {attempt}"
-msgstr "Verifizéiert ... {attempt}"
-
-msgid "Mute Microphone"
-msgstr "Mute Mikro"
-
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:323
 msgid "Individual SMS Notifications"
 msgstr "Individuell SMS Notifikatiounen"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:334
 msgid "Individual Ringtones"
 msgstr "Individuell Ringtones"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:73
 msgid "Find contact to add..."
 msgstr "Fannt Kontakt fir ze addéieren ..."
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:80
 msgid ""
 "Select a contact and choose a custom sound file (.ogg or .oga). The file "
 "will be copied to your local storage."
@@ -655,139 +1555,893 @@ msgstr ""
 "Wielt e Kontakt a wielt eng personaliséiert Toundatei (.ogg oder .oga). De "
 "Fichier gëtt op Är lokal Späichere kopéiert."
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:186
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Ewechzehuelen"
+
+#: src/telephony/ui/windows/custom_tone_list_window.py:202
 msgid "Custom tone removed (Click Save to commit)"
 msgstr ""
 "Benotzerdefinéiert Toun geläscht (Klickt späicheren fir ze engagéieren)"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#, python-brace-format
 msgid "Select Tone for {name}"
 msgstr "Wielt Tone fir {name}"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:318
+#: src/telephony/ui/windows/settings_window.py:405
 msgid "Select"
 msgstr "Wielt"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:323
 msgid "Supported Audio (OGG)"
 msgstr "Ënnerstëtzt Audio (OGG)"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:351
 msgid "Only .ogg or .oga files are supported"
 msgstr "Nëmmen .ogg oder .oga Dateien ginn ënnerstëtzt"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:362
 msgid "Failed to copy audio file"
 msgstr "Ausgefall Audiodatei ze kopéieren"
 
+#: src/telephony/ui/windows/custom_tone_list_window.py:382
 msgid "Custom tone added"
 msgstr "Benotzerdefinéiert Tonalitéit dobäi"
 
-msgid "Settings"
-msgstr "Astellungen"
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Datebank Management"
 
+#: src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Wielt Daten fir permanent ze läschen."
+
+#: src/telephony/ui/windows/data_management_window.py:47
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Läschen Call Geschicht"
+
+#: src/telephony/ui/windows/data_management_window.py:48
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Läschen All Messagen"
+
+#: src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Läschen All Grupp Nimm"
+
+#: src/telephony/ui/windows/data_management_window.py:50
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Blocklist läschen"
+
+#: src/telephony/ui/windows/data_management_window.py:51
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "All Kontakter läschen"
+
+#: src/telephony/ui/windows/data_management_window.py:52
+#: src/telephony/ui/windows/data_management_window.py:130
+#: src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Adressbuch läschen"
+
+#: src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "ALLES LËSCHT"
+
+#: src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Bass du secher? Dëst kann net réckgängeg gemaach ginn."
+
+#: src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Dëst wäert all SMS / MMS an Uschlëss läschen."
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Läschen Grupp Nimm"
+
+#: src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "All personaliséiert Grupp Chat Nimm zrécksetzen?"
+
+#: src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Spär all Zuelen op?"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Keng läschen Adressbicher"
+
+#: src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Et gi keng personaliséiert Adressbicher déi geläscht kënne ginn."
+
+#: src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Wéi eng Adressbuch wëllt Dir permanent läschen?\n"
+"\n"
+"Dëst wäert et aus dem System wëschen."
+
+#: src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr ""
+"Sidd Dir sécher datt Dir d'Adressbuch '{name}' permanent läschen wëllt?"
+
+#: src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Läschen ALLES"
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"Wëschen Datebank, Configuratiounsdateien a Kontakter? App wäert zréckgesat "
+"ginn."
+
+#: src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Wierklech jiddereen aus Ärem Adressbuch läschen?"
+
+#: src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Wielt wéi eng Adressbuch fir ze läschen:"
+
+#: src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "All Adressbicher"
+
+#: src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Call Geschicht geläscht"
+
+#: src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "Messagen läschen..."
+
+#: src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Messagen & Uschlëss geläscht"
+
+#: src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "Grupp Nimm zréckgesat"
+
+#: src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Blocklist geläscht"
+
+#: src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Kontakter läschen..."
+
+#: src/telephony/ui/windows/data_management_window.py:253
+msgid "Contacts Deleted"
+msgstr "Kontakter geläscht"
+
+#: src/telephony/ui/windows/data_management_window.py:261
+msgid "Deleting address book..."
+msgstr "Adressbuch läschen ..."
+
+#: src/telephony/ui/windows/data_management_window.py:268
+msgid "Address Book Deleted"
+msgstr "Adressbuch geläscht"
+
+#: src/telephony/ui/windows/data_management_window.py:271
+msgid "Failed to delete Address Book"
+msgstr "Ausgefall Adress Buch ze läschen"
+
+#: src/telephony/ui/windows/data_management_window.py:276
+msgid "Wiping Database..."
+msgstr "Datebank wëschen ..."
+
+#: src/telephony/ui/windows/data_management_window.py:290
+msgid "App Reset Complete"
+msgstr "App Reset fäerdeg"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "Joer"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Mount"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Stonn"
+
+#: src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Minutt"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:466
+msgid "Notification Overrides"
+msgstr "Notifikatioun Iwwerschreiden"
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+msgid "Find and add contacts..."
+msgstr "Fannt a füügt Kontakter derbäi ..."
+
+#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Kontakter an dëser Lëscht spillen ëmmer Notifikatiounen op voller Volumen, "
+"och wann den Telefon am Stille Modus ass oder net stéiert."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Duplizéiert Kontakt"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Alles fusionéieren"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Kontakter fusionéieren ..."
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Rescht Konflikter: {count}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} gëtt op Kontakter gespäichert:"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Adressbuch: {name}"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Halt dëst, Ewechzehuelen Duplikaten"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Halt dëst, Duplikate fusionéieren"
+
+#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "{current}/{total}..."
+
+#: src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"Extrait, transforméieren, lueden (ETL).\n"
+"Wielt Datenquell oder Destinatioun."
+
+#: src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "Import Kontakter aus vCard"
+
+#: src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "Export Kontakter op vCard"
+
+#: src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "Import Kontakter aus SIM Kaart"
+
+#: src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "Import Vun lokal Chatty"
+
+#: src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "Import Vun lokalen Uriff"
+
+#: src/telephony/ui/windows/import_export_window.py:67
+#: src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "Import Vun Android"
+
+#: src/telephony/ui/windows/import_export_window.py:68
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "Import Vun iOS"
+
+#: src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "Export Uriff oder Messagen"
+
+#: src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "Kontakter vun der SIM importéieren ..."
+
+#: src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "Kee Modem fonnt fir SIM Import"
+
+#: src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "Keng Kontakter op der SIM Kaart fonnt."
+
+#: src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "Importéiert {count} Kontakter aus SIM."
+
+#: src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "SIM Import ausgefall: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Chatty importéieren ..."
+
+#: src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "Uriff importéieren ..."
+
+#: src/telephony/ui/windows/import_export_window.py:159
+#: src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "Wielt eng Optioun:"
+
+#: src/telephony/ui/windows/import_export_window.py:169
+#: src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "Wielt SMS / MMS Datei"
+
+#: src/telephony/ui/windows/import_export_window.py:170
+#: src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "Wielt Call Geschicht Datei"
+
+#: src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "Direkt USB Import (recommandéiert)"
+
+#: src/telephony/ui/windows/import_export_window.py:207
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr "Keen iOS Apparat fonnt. W.e.g. verbënnt Ären iPhone iwwer USB."
+
+#: src/telephony/ui/windows/import_export_window.py:210
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr "Apparat net vertraut. Spär w.e.g. Ären iPhone a tippt op 'Vertrauen'."
+
+#: src/telephony/ui/windows/import_export_window.py:213
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "Extrait de Backup vum iPhone ... Dëst kann laang daueren!"
+
+#: src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "USB Backup gescheitert: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:226
+msgid "No SMS database found in backup."
+msgstr "Keng SMS Datebank am Backup fonnt."
+
+#: src/telephony/ui/windows/import_export_window.py:227
+msgid "No Call History database found in backup."
+msgstr "Keng Call History Datebank am Backup fonnt."
+
+#: src/telephony/ui/windows/import_export_window.py:230
+msgid "Importing iPhone SMS..."
+msgstr "Import iPhone SMS ..."
+
+#: src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone Calls..."
+msgstr "iPhone Uriff importéieren ..."
+
+#: src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "Feeler beim iOS Import: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:251
+#: src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Wielt Datei"
+
+#: src/telephony/ui/windows/import_export_window.py:254
+msgid "XML Files"
+msgstr "XML Dateien"
+
+#: src/telephony/ui/windows/import_export_window.py:268
+#: src/telephony/ui/windows/import_export_window.py:459
+msgid "Importing..."
+msgstr "Importéiert ..."
+
+#: src/telephony/ui/windows/import_export_window.py:292
+msgid "Export Data"
+msgstr "Daten exportéieren"
+
+#: src/telephony/ui/windows/import_export_window.py:292
+msgid "Select destination format:"
+msgstr "Wielt Destinatiounsformat:"
+
+#: src/telephony/ui/windows/import_export_window.py:302
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - Chatty / rifft"
+
+#: src/telephony/ui/windows/import_export_window.py:303
+msgid "Linux - Telephony"
+msgstr "Linux - Telefonie"
+
+#: src/telephony/ui/windows/import_export_window.py:304
+msgid "Android"
+msgstr "Android"
+
+#: src/telephony/ui/windows/import_export_window.py:305
+msgid "iOS"
+msgstr "iOS"
+
+#: src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "Export ze {fmt}"
+
+#: src/telephony/ui/windows/import_export_window.py:315
+msgid "What do you want to export?"
+msgstr "Wat wëllt Dir exportéieren?"
+
+#: src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+
+#: src/telephony/ui/windows/import_export_window.py:333
+msgid "Messages (SMS/MMS)"
+msgstr "Messagen (SMS/MMS)"
+
+#: src/telephony/ui/windows/import_export_window.py:334
+msgid "Call History"
+msgstr "Call Geschicht"
+
+#: src/telephony/ui/windows/import_export_window.py:344
+msgid "Export File"
+msgstr "Export Datei"
+
+#: src/telephony/ui/windows/import_export_window.py:370
+msgid "Exporting..."
+msgstr "Exportéiert..."
+
+#: src/telephony/ui/windows/import_export_window.py:404
+msgid "Import VCard"
+msgstr "Import VCard"
+
+#: src/telephony/ui/windows/import_export_window.py:406
+msgid "VCard Files"
+msgstr "VCard Dateien"
+
+#: src/telephony/ui/windows/import_export_window.py:425
+#: src/telephony/ui/windows/import_export_window.py:489
+msgid "No enabled address books found"
+msgstr "Keng aktivéiert Adressbicher fonnt"
+
+#: src/telephony/ui/windows/import_export_window.py:433
+msgid "Select Address Book"
+msgstr "Wielt Adressbuch"
+
+#: src/telephony/ui/windows/import_export_window.py:434
+msgid "Where do you want to import contacts?"
+msgstr "Wou wëllt Dir Kontakter importéieren?"
+
+#: src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "Importéiert {count} Kontakter"
+
+#: src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "Import gescheitert: {e}"
+
+#: src/telephony/ui/windows/import_export_window.py:493
+#: src/telephony/ui/windows/import_export_window.py:531
+msgid "Export Contacts"
+msgstr "Export Kontakter"
+
+#: src/telephony/ui/windows/import_export_window.py:494
+msgid "Which address book do you want to export?"
+msgstr "Wéi eng Adressbuch wëllt Dir exportéieren?"
+
+#: src/telephony/ui/windows/import_export_window.py:505
+msgid "Export All Address Books"
+msgstr "Export All Adressbicher"
+
+#: src/telephony/ui/windows/import_export_window.py:559
+msgid "No contacts found to export"
+msgstr "Keng Kontakter fonnt fir ze exportéieren"
+
+#: src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "Exportéiert {count} Kontakter"
+
+#: src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "Exportfehler: {e}"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Import Messagen"
+
+#: src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Import Call Geschicht"
+
+#: src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Waart op d'Auswiel ..."
+
+#: src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Vun wou wëllt Dir importéieren?"
+
+#: src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "System Datebank"
+
+#: src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Import vun der lokaler Chatty Installatioun"
+
+#: src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Import vun lokal Calls Installatioun"
+
+#: src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Import"
+
+#: src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Benotzerdefinéiert Datebank Backupsatellit"
+
+#: src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Wielt eng exportéiert SQLite DB Datei"
+
+#: src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Wielt Datebank Datei"
+
+#: src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS Uschlëss (optional)"
+
+#: src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "MMS Dossier Backupsatellit"
+
+#: src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Wielt de Verzeechnes mat Biller / Videoen"
+
+#: src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Wielt Dossier"
+
+#: src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Iwwersprangen Uschlëss"
+
+#: src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Import nëmmen SMSen an Texter"
+
+#: src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Sprangen"
+
+#: src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Wielt MMS Dossier"
+
+#: src/telephony/ui/windows/incall_window.py:152
+msgid "Hangup and Send SMS"
+msgstr "Opzehänken a SMS schécken"
+
+#: src/telephony/ui/windows/incall_window.py:187
+msgid "The call failed to disconnect."
+msgstr "Den Uruff konnt net trennen."
+
+#: src/telephony/ui/windows/incall_window.py:220
+#: src/telephony/ui/windows/incall_window.py:669
+msgid "Output"
+msgstr "Ausgang"
+
+#: src/telephony/ui/windows/incall_window.py:235
+#: src/telephony/ui/windows/incall_window.py:697
+msgid "Input"
+msgstr "Input"
+
+#: src/telephony/ui/windows/incall_window.py:387
+msgid "Silenced Incoming Call"
+msgstr "Silent Entréeën Uruff"
+
+#: src/telephony/ui/windows/incall_window.py:503
+#: src/telephony/ui/windows/settings_window.py:241
+msgid "I can't talk right now."
+msgstr "Ech kann elo net schwätzen."
+
+#: src/telephony/ui/windows/incall_window.py:626
+msgid "Restarting RIL..."
+msgstr "RIL nei starten..."
+
+#: src/telephony/ui/windows/incall_window.py:635
+msgid "Restored!"
+msgstr "Restauréiert!"
+
+#: src/telephony/ui/windows/incall_window.py:641
+msgid "Failed. Reboot Device."
+msgstr "Ausgefall. Restart Gerät."
+
+#: src/telephony/ui/windows/incall_window.py:643
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "Verifizéiert ... {attempt}"
+
+#: src/telephony/ui/windows/incall_window.py:702
+msgid "Mute Microphone"
+msgstr "Mute Mikro"
+
+#: src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Iwwer Telefonie"
+
+#: src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr "Fast Telefon Dialer a Messagerie Client entworf fir FLX1 an FLX1s."
+
+#: src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Versioun"
+
+#: src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Entwéckler"
+
+#: src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Lizenz"
+
+#: src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Linken"
+
+#: src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Ausgab Tracker"
+
+#: src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Rapport Bugs oder Ufro Funktiounen"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Geplangt ({current}/{total})"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "An: {name}"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Schéckt elo"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Message geläscht"
+
+#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, fuzzy, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Geschéckt geplangte Message ze {number}"
+
+#: src/telephony/ui/windows/settings_window.py:88
+#: src/telephony/ui/windows/settings_window.py:389
 msgid "Ringback Tone"
 msgstr "Ringback Toun"
 
+#: src/telephony/ui/windows/settings_window.py:91
 msgid "Enable Local Ringback"
 msgstr "Aktivéiert Lokal Ringback"
 
+#: src/telephony/ui/windows/settings_window.py:106
 msgid "Selected Tone"
 msgstr "Ausgewielten Toun"
 
+#: src/telephony/ui/windows/settings_window.py:109
+#: src/telephony/ui/windows/settings_window.py:378
 msgid "System Default"
 msgstr "System Standard"
 
+#: src/telephony/ui/windows/settings_window.py:136
 msgid "SIM Settings"
 msgstr "SIM Astellungen"
 
+#: src/telephony/ui/windows/settings_window.py:139
 msgid "My Number"
 msgstr "Meng Nummer"
 
+#: src/telephony/ui/windows/settings_window.py:140
 msgid "My Number (International Format)"
 msgstr "Meng Nummer (International Format)"
 
+#: src/telephony/ui/windows/settings_window.py:146
+#: src/telephony/ui/windows/settings_window.py:147
+#: src/telephony/ui/windows/settings_window.py:365
 msgid "Default Country Code"
 msgstr "Standard Land Code"
 
+#: src/telephony/ui/windows/settings_window.py:173
 msgid "Address Book Info"
 msgstr "Adressbuch Info"
 
+#: src/telephony/ui/windows/settings_window.py:181
 msgid "Default Address Book"
 msgstr "Standard Adressbuch"
 
+#: src/telephony/ui/windows/settings_window.py:187
 msgid "Duplicate Resolver"
 msgstr "Duplikat Resolver"
 
+#: src/telephony/ui/windows/settings_window.py:189
 msgid ""
-"Scan for duplicate numbers and show a resolution banner in the Contacts "
-"view."
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
 msgstr ""
 "Scan fir duplizéiert Zuelen a weist e Resolutiounsbanner an der Kontakter "
 "Vue."
 
+#: src/telephony/ui/windows/settings_window.py:202
 msgid "Lockscreen Emergency"
 msgstr "Sperrbildschirm Noutfall"
 
+#: src/telephony/ui/windows/settings_window.py:205
 msgid "Show Emergency Button"
 msgstr "Show Noutfall Knäppchen"
 
+#: src/telephony/ui/windows/settings_window.py:210
 msgid "Emergency Numbers"
 msgstr "Noutfall Zuelen"
 
+#: src/telephony/ui/windows/settings_window.py:227
 msgid "Quick Response"
 msgstr "Schnell Äntwert"
 
-msgid "Decline Message"
+#: src/telephony/ui/windows/settings_window.py:230
+#, fuzzy
+msgid "Add Decline Message"
 msgstr "Oflehnen Message"
 
+#: src/telephony/ui/windows/settings_window.py:245
+#: src/telephony/ui/windows/settings_window.py:812
+#, fuzzy
+msgid "Call Volume"
+msgstr "Call {number}"
+
+#: src/telephony/ui/windows/settings_window.py:257
+msgid "Allow Amplification"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:259
+msgid "Let sliders go above 100%. Amplified audio may distort."
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:268
+msgid "Earpiece"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:269
+#, fuzzy
+msgid "Speaker"
+msgstr "Speaker op"
+
+#: src/telephony/ui/windows/settings_window.py:270
+msgid "Wired Headset"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:271
+msgid "Bluetooth"
+msgstr ""
+
+#: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
 msgstr "Notifikatioun Ausnahmen"
 
+#: src/telephony/ui/windows/settings_window.py:289
+#: src/telephony/ui/windows/settings_window.py:454
 msgid "Repeated Calls Bypass"
 msgstr "Widderholl Uriff Bypass"
 
+#: src/telephony/ui/windows/settings_window.py:291
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr ""
 "Wann déi selwecht Zuel rifft 3 Mol an 5 Minutten, Kraaft maximal Volumen."
 
+#: src/telephony/ui/windows/settings_window.py:306
 msgid "Manage contacts that always play sound"
 msgstr "Verwalte Kontakter déi ëmmer Toun spillen"
 
+#: src/telephony/ui/windows/settings_window.py:315
+#: src/telephony/ui/windows/settings_window.py:327
+#: src/telephony/ui/windows/settings_window.py:338
 msgid "Manage"
 msgstr "Verwalten"
 
+#: src/telephony/ui/windows/settings_window.py:325
 msgid "Set custom notification sounds for specific contacts"
 msgstr "Setzt personaliséiert Notifikatiounskläng fir spezifesch Kontakter"
 
+#: src/telephony/ui/windows/settings_window.py:336
 msgid "Set custom ringtones for specific contacts"
 msgstr "Setzt personaliséiert Ringtone fir spezifesch Kontakter"
 
-msgid "Advanced Settings"
-msgstr "Fortgeschratt Astellungen"
-
+#: src/telephony/ui/windows/settings_window.py:361
 msgid ""
-"The Default Country Code is used to format numbers that don't include an international prefix (e.g., +358).\n"
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
 "\n"
-"If left empty, the system tries to detect it automatically from your SIM card or network.\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
 "\n"
-"You can manually override it here by entering a 2-letter ISO region code (e.g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
 msgstr ""
-"Den Default Country Code gëtt benotzt fir Zuelen ze formatéieren déi keen internationale Präfix enthalen (z.B. +358).\n"
+"Den Default Country Code gëtt benotzt fir Zuelen ze formatéieren déi keen "
+"internationale Präfix enthalen (z.B. +358).\n"
 "\n"
-"Wann et eidel gelooss gëtt, probéiert de System et automatesch vun Ärer SIM Kaart oder Netzwierk z'entdecken.\n"
+"Wann et eidel gelooss gëtt, probéiert de System et automatesch vun Ärer SIM "
+"Kaart oder Netzwierk z'entdecken.\n"
 "\n"
-"Dir kënnt et hei manuell iwwerschreiden andeems Dir en 2-Bréif ISO-Regiounscode (z.B. US, FI, DE) oder en Uruffcode (z.B. +358, 358, +1, 1) aginn."
+"Dir kënnt et hei manuell iwwerschreiden andeems Dir en 2-Bréif ISO-"
+"Regiounscode (z.B. US, FI, DE) oder en Uruffcode (z.B. +358, 358, +1, 1) "
+"aginn."
 
+#: src/telephony/ui/windows/settings_window.py:382
 msgid ""
-"The ringback tone is the sound played (toot-toot-toot) while waiting for an outgoing call to be answered. Some carriers don't generate it so we have option to generate it manually here. \n"
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
 "\n"
-"You can select your own music file, or clear it to use the standard system tone."
+"You can select your own music file, or clear it to use the standard system "
+"tone."
 msgstr ""
-"De Ringback Toun ass den Toun gespillt (toot-toot-toot) wärend Dir waart op en erausgaangen Uruff fir geäntwert ze ginn. E puer Carrièren generéieren et net sou datt mir d'Méiglechkeet hunn et hei manuell ze generéieren. \n"
+"De Ringback Toun ass den Toun gespillt (toot-toot-toot) wärend Dir waart op "
+"en erausgaangen Uruff fir geäntwert ze ginn. E puer Carrièren generéieren et "
+"net sou datt mir d'Méiglechkeet hunn et hei manuell ze generéieren. \n"
 "\n"
-"Dir kënnt Är eege Museksdatei auswielen, oder se läschen fir de Standard System Toun ze benotzen."
+"Dir kënnt Är eege Museksdatei auswielen, oder se läschen fir de Standard "
+"System Toun ze benotzen."
 
+#: src/telephony/ui/windows/settings_window.py:402
 msgid "Select Ringback Tone"
 msgstr "Wielt Ringback Tone"
 
+#: src/telephony/ui/windows/settings_window.py:410
 msgid "Audio Files"
 msgstr "Audiodateien"
 
+#: src/telephony/ui/windows/settings_window.py:436
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -802,6 +2456,7 @@ msgstr ""
 "och wann et behënnert ass, encouragéiere mir et fir eng besser Erfahrung "
 "z'aktivéieren."
 
+#: src/telephony/ui/windows/settings_window.py:455
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -812,6 +2467,7 @@ msgstr ""
 "Telefon forcéieren fir op maximal Volumen ze ruffen, andeems d'Stille oder "
 "d'Modi net stéieren."
 
+#: src/telephony/ui/windows/settings_window.py:467
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -819,79 +2475,107 @@ msgstr ""
 "Wielt Kontakter déi ëmmer Notifikatioune mat voller Volumen spillen, och "
 "wann den Telefon am Stille Modus oder Stéiert net ass."
 
+#: src/telephony/ui/windows/settings_window.py:488
 msgid "Unknown Callers"
 msgstr "Onbekannt Uruffer"
 
+#: src/telephony/ui/windows/settings_window.py:493
 msgid "Unknown Callers Action"
 msgstr "Onbekannt Callers Action"
 
+#: src/telephony/ui/windows/settings_window.py:495
 msgid "Applies also to hidden numbers."
 msgstr "Gëllt och fir verstoppt Zuelen."
 
+#: src/telephony/ui/windows/settings_window.py:498
 msgid "Do Nothing"
 msgstr "Näischt maachen"
 
+#: src/telephony/ui/windows/settings_window.py:499
 msgid "Block Completely"
 msgstr "Blockéiert komplett"
 
+#: src/telephony/ui/windows/settings_window.py:500
 msgid "Silence and Hide UI"
 msgstr "Silence and Hide UI"
 
+#: src/telephony/ui/windows/settings_window.py:501
 msgid "Silence Only"
 msgstr "Nëmmen Rou"
 
-msgid ""
-"Add Search button to InCall window and Call History for unknown callers"
+#: src/telephony/ui/windows/settings_window.py:509
+msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr ""
 "Füügt Sichknäppchen an d'InCall Fënster an d'Uruffgeschicht fir onbekannt "
 "Uruffer"
 
+#: src/telephony/ui/windows/settings_window.py:515
 msgid "Search Engine"
 msgstr "Sich Engine"
 
+#: src/telephony/ui/windows/settings_window.py:519
+#: src/telephony/ui/windows/settings_window.py:524
 msgid "Custom URL"
 msgstr "Benotzerdefinéiert URL"
 
+#: src/telephony/ui/windows/settings_window.py:574
+#, python-brace-format
 msgid ""
-"Enter the URL you want to use for searching unknown numbers. Include '{number}' in the URL where the caller's phone number should go.\n"
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
 "\n"
 "For example: https://mysearch.com/?q={number}\n"
 "\n"
-"When you tap the search button during a call, we will replace '{number}' with the actual phone number and open it in your default browser."
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
 msgstr ""
-"Gitt d'URL un déi Dir benotze wëllt fir onbekannt Zuelen ze sichen. Gitt '{number}' an der URL un, wou d'Telefonsnummer vum Uruffer sollt goen.\n"
+"Gitt d'URL un déi Dir benotze wëllt fir onbekannt Zuelen ze sichen. Gitt "
+"'{number}' an der URL un, wou d'Telefonsnummer vum Uruffer sollt goen.\n"
 "\n"
 "Zum Beispill: https://mysearch.com/?q={number}\n"
 "\n"
-"Wann Dir op de Sichknäppchen wärend engem Uruff tippt, ersetzen mir '{number}' mat der aktueller Telefonsnummer an öffnen se an Ärem Standardbrowser."
+"Wann Dir op de Sichknäppchen wärend engem Uruff tippt, ersetzen mir "
+"'{number}' mat der aktueller Telefonsnummer an öffnen se an Ärem "
+"Standardbrowser."
 
+#: src/telephony/ui/windows/settings_window.py:578
 msgid "Custom Search URL"
 msgstr "Benotzerdefinéiert Sich URL"
 
+#: src/telephony/ui/windows/settings_window.py:599
 msgid "Desktop Shortcuts"
 msgstr "Desktop Ofkiirzungen"
 
+#: src/telephony/ui/windows/settings_window.py:604
 msgid "Calls"
 msgstr "Appellen"
 
-msgid "Messages"
-msgstr "Messagen"
-
-msgid "Contacts"
-msgstr "Kontakter"
-
+#: src/telephony/ui/windows/settings_window.py:770
 msgid "Name (e.g. Mom)"
 msgstr "Numm (z.B. Mamm)"
 
-msgid "Number"
-msgstr "Zuel"
+#: src/telephony/ui/windows/settings_window.py:813
+msgid ""
+"This is the base hardware volume applied to the selected output when a call "
+"connects. The volume buttons during a call only adjust fine-tuning on top of "
+"this base level, so if the base is 0% the call stays silent no matter what. "
+"Values above 100% use software amplification and may distort audio. Wired "
+"Headset and Bluetooth levels are stored for upcoming routing support."
+msgstr ""
 
+#: src/telephony/ui/windows/settings_window.py:822
+msgid "Decline Message"
+msgstr "Oflehnen Message"
+
+#: src/telephony/ui/windows/settings_window.py:893
 msgid "System Default (Always Enabled)"
 msgstr "System Standard (ëmmer aktivéiert)"
 
+#: src/telephony/ui/windows/settings_window.py:904
 msgid "Personal Address Book"
 msgstr "Perséinlech Adress Buch"
 
+#: src/telephony/ui/windows/settings_window.py:905
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -899,481 +2583,55 @@ msgstr ""
 "Dëst ass d'Adressbuch dat mat Andromeda synchroniséiert gëtt wann Dir "
 "gewielt hutt dat an de Systemastellungen ze maachen."
 
+#: src/telephony/ui/windows/settings_window.py:913
 msgid "Andromeda Contacts"
 msgstr "Andromeda Kontakter"
 
+#: src/telephony/ui/windows/settings_window.py:914
 msgid ""
-"This is the address book that will be synced from Andromeda if you choose to"
-" do so in System Settings."
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
 msgstr ""
 "Dëst ass d'Adressbuch dat vun Andromeda synchroniséiert gëtt wann Dir "
 "gewielt hutt dat an de Systemastellungen ze maachen."
 
+#: src/telephony/ui/windows/settings_window.py:1039
 msgid "Settings Saved"
 msgstr "Astellunge gespäichert"
 
-msgid "Import Messages"
-msgstr "Import Messagen"
-
-msgid "Import Call History"
-msgstr "Import Call Geschicht"
-
-msgid "Waiting for selection..."
-msgstr "Waart op d'Auswiel ..."
-
-msgid "Where do you want to import from?"
-msgstr "Vun wou wëllt Dir importéieren?"
-
-msgid "System Database"
-msgstr "System Datebank"
-
-msgid "Import from local Chatty installation"
-msgstr "Import vun der lokaler Chatty Installatioun"
-
-msgid "Import from local Calls installation"
-msgstr "Import vun lokal Calls Installatioun"
-
-msgid "Import"
-msgstr "Import"
-
-msgid "Custom Database Backup"
-msgstr "Benotzerdefinéiert Datebank Backupsatellit"
-
-msgid "Select an exported SQLite DB file"
-msgstr "Wielt eng exportéiert SQLite DB Datei"
-
-msgid "Select File"
-msgstr "Wielt Datei"
-
-msgid "Select Database File"
-msgstr "Wielt Datebank Datei"
-
-msgid "MMS Attachments (Optional)"
-msgstr "MMS Uschlëss (optional)"
-
-msgid "MMS Folder Backup"
-msgstr "MMS Dossier Backupsatellit"
-
-msgid "Select the directory containing images/videos"
-msgstr "Wielt de Verzeechnes mat Biller / Videoen"
-
-msgid "Select Folder"
-msgstr "Wielt Dossier"
-
-msgid "Skip Attachments"
-msgstr "Iwwersprangen Uschlëss"
-
-msgid "Import SMS and texts only"
-msgstr "Import nëmmen SMSen an Texter"
-
-msgid "Skip"
-msgstr "Sprangen"
-
-msgid "Select MMS Folder"
-msgstr "Wielt MMS Dossier"
-
-msgid "Duplicate Contact"
-msgstr "Duplizéiert Kontakt"
-
-msgid "Merge all"
-msgstr "Alles fusionéieren"
-
-msgid "Merging Contacts..."
-msgstr "Kontakter fusionéieren ..."
-
-msgid "Remaining conflicts: {count}"
-msgstr "Rescht Konflikter: {count}"
-
-msgid "{number} is saved to contacts:"
-msgstr "{number} gëtt op Kontakter gespäichert:"
-
-msgid "Address Book: {name}"
-msgstr "Adressbuch: {name}"
-
-msgid "Keep this, Remove duplicates"
-msgstr "Halt dëst, Ewechzehuelen Duplikaten"
-
-msgid "Keep this, Merge duplicates"
-msgstr "Halt dëst, Duplikate fusionéieren"
-
-msgid "Merging {current}/{total}..."
-msgstr "{current}/{total}..."
-
-msgid "Confirm"
-msgstr "Confirméieren"
-
-msgid "Year"
-msgstr "Joer"
-
-msgid "Month"
-msgstr "Mount"
-
-msgid "Hour"
-msgstr "Stonn"
-
-msgid "Minute"
-msgstr "Minutt"
-
-msgid "Take Photo"
-msgstr "Foto maachen"
-
-msgid "Record Video"
-msgstr "Record Video"
-
-msgid "Record Audio"
-msgstr "Record Audio"
-
-msgid "Choose File"
-msgstr "Wielt Datei"
-
-msgid "Schedule"
-msgstr "Zäitplang"
-
-msgid "Camera Error"
-msgstr "Kamera Feeler"
-
-msgid "Could not start the camera."
-msgstr "Konnt d'Kamera net starten."
-
-msgid "Could not start video recording."
-msgstr "Konnt d'Videoopnam net starten."
-
-msgid "Audio Error"
-msgstr "Audio Feeler"
-
-msgid "Could not start audio recorder."
-msgstr "Konnt den Audiorecorder net starten."
-
-msgid "Select Attachment"
-msgstr "Wielt Unhang"
-
-msgid "Attachment Error"
-msgstr "Unhang Feeler"
-
-msgid "Failed to prepare attachment."
-msgstr "Ausgefall fir Uschloss ze preparéieren."
-
-msgid "Retake"
-msgstr "Widderhuelen"
-
-msgid "Attach Video"
-msgstr "Befestegt Video"
-
-msgid "Failed to record video: {error_msg}"
-msgstr "Ausgefall Video opzehuelen: {error_msg}"
-
-msgid "Recording failed (File empty)."
-msgstr "Opnam gescheitert (Fichier eidel)."
-
-msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Grousse Video ({size}KB). Gëtt op Sende kompriméiert."
-
-msgid "Cannot play empty file."
-msgstr "Kann net eidel Datei spillen."
-
-msgid "Loading..."
-msgstr "Lueden..."
-
-msgid "Error loading settings: {e}"
-msgstr "Feeler beim Luede vun Astellungen: {e}"
-
-msgid "Secret SMS Triggers"
-msgstr "Geheim SMS Ausléiser"
-
-msgid "Set \"Find my Telephony\""
-msgstr "Set \"Find meng Telefonie\""
-
-msgid "Set \"Trusted Callback\""
-msgstr "Set \"Trusted Callback\""
-
-msgid "Set \"SMS -Relay\""
-msgstr "Set \"SMS - Relais\""
-
-msgid "Set \"SMS -tmate\""
-msgstr "Set \"SMS -tmate\""
-
-msgid "Set \"SMS Switch Wipe Device\""
-msgstr "Set \"SMS Switch Wipe Device\""
-
-msgid "Restart Modem"
-msgstr "Restart Modem"
-
-msgid "Data Management"
-msgstr "Data Management"
-
-msgid "Authentication cancelled"
-msgstr "Authentifikatioun annuléiert"
-
-msgid "Auth error: {e}"
-msgstr "Auth Feeler: {e}"
-
-msgid "Advanced Settings Applied"
-msgstr "Fortgeschratt Astellunge applizéiert"
-
-msgid "Error saving settings"
-msgstr "Feeler beim späicheren Astellungen"
-
-msgid "Restarting Modem..."
-msgstr "Modem nei starten..."
-
-msgid "Import / Export"
-msgstr "Import / Export"
-
-msgid ""
-"Extract, transform, load (ETL).\n"
-"Select data source or destination."
-msgstr ""
-"Extrait, transforméieren, lueden (ETL).\n"
-"Wielt Datenquell oder Destinatioun."
-
-msgid "Import Contacts from vCard"
-msgstr "Import Kontakter aus vCard"
-
-msgid "Export Contacts to vCard"
-msgstr "Export Kontakter op vCard"
-
-msgid "Import Contacts from SIM card"
-msgstr "Import Kontakter aus SIM Kaart"
-
-msgid "Import From local Chatty"
-msgstr "Import Vun lokal Chatty"
-
-msgid "Import From local Calls"
-msgstr "Import Vun lokalen Uriff"
-
-msgid "Import From Android"
-msgstr "Import Vun Android"
-
-msgid "Import From iOS"
-msgstr "Import Vun iOS"
-
-msgid "Export Calls or Messages"
-msgstr "Export Uriff oder Messagen"
-
-msgid "Importing contacts from SIM..."
-msgstr "Kontakter vun der SIM importéieren ..."
-
-msgid "No modem found for SIM import"
-msgstr "Kee Modem fonnt fir SIM Import"
-
-msgid "No contacts found on SIM card."
-msgstr "Keng Kontakter op der SIM Kaart fonnt."
-
-msgid "Imported {count} contacts from SIM."
-msgstr "Importéiert {count} Kontakter aus SIM."
-
-msgid "SIM Import failed: {e}"
-msgstr "SIM Import ausgefall: {e}"
-
-msgid "Importing Chatty..."
-msgstr "Chatty importéieren ..."
-
-msgid "Importing Calls..."
-msgstr "Uriff importéieren ..."
-
-msgid "Select an option:"
-msgstr "Wielt eng Optioun:"
-
-msgid "Select SMS/MMS file"
-msgstr "Wielt SMS / MMS Datei"
-
-msgid "Select Call history file"
-msgstr "Wielt Call Geschicht Datei"
-
-msgid "Direct USB Import (Recommended)"
-msgstr "Direkt USB Import (recommandéiert)"
-
-msgid "No iOS device detected. Please connect your iPhone via USB."
-msgstr "Keen iOS Apparat fonnt. W.e.g. verbënnt Ären iPhone iwwer USB."
-
-msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
-msgstr "Apparat net vertraut. Spär w.e.g. Ären iPhone a tippt op 'Vertrauen'."
-
-msgid "Extracting backup from iPhone... This may take a long time!"
-msgstr "Extrait de Backup vum iPhone ... Dëst kann laang daueren!"
-
-msgid "USB Backup failed: {e}"
-msgstr "USB Backup gescheitert: {e}"
-
-msgid "No SMS database found in backup."
-msgstr "Keng SMS Datebank am Backup fonnt."
-
-msgid "No Call History database found in backup."
-msgstr "Keng Call History Datebank am Backup fonnt."
-
-msgid "Importing iPhone SMS..."
-msgstr "Import iPhone SMS ..."
-
-msgid "Importing iPhone Calls..."
-msgstr "iPhone Uriff importéieren ..."
-
-msgid "Error during iOS import: {e}"
-msgstr "Feeler beim iOS Import: {e}"
-
-msgid "XML Files"
-msgstr "XML Dateien"
-
-msgid "Importing..."
-msgstr "Importéiert ..."
-
-msgid "Export Data"
-msgstr "Daten exportéieren"
-
-msgid "Select destination format:"
-msgstr "Wielt Destinatiounsformat:"
-
-msgid "Linux - Chatty/Calls"
-msgstr "Linux - Chatty / rifft"
-
-msgid "Linux - Telephony"
-msgstr "Linux - Telefonie"
-
-msgid "Android"
-msgstr "Android"
-
-msgid "iOS"
-msgstr "iOS"
-
-msgid "Export to {fmt}"
-msgstr "Export ze {fmt}"
-
-msgid "What do you want to export?"
-msgstr "Wat wëllt Dir exportéieren?"
-
-msgid "Messages (SMS/MMS)"
-msgstr "Messagen (SMS/MMS)"
-
-msgid "Call History"
-msgstr "Call Geschicht"
-
-msgid "Export File"
-msgstr "Export Datei"
-
-msgid "Exporting..."
-msgstr "Exportéiert..."
-
-msgid "Import VCard"
-msgstr "Import VCard"
-
-msgid "VCard Files"
-msgstr "VCard Dateien"
-
-msgid "No enabled address books found"
-msgstr "Keng aktivéiert Adressbicher fonnt"
-
-msgid "Select Address Book"
-msgstr "Wielt Adressbuch"
-
-msgid "Where do you want to import contacts?"
-msgstr "Wou wëllt Dir Kontakter importéieren?"
-
-msgid "Imported {count} contacts"
-msgstr "Importéiert {count} Kontakter"
-
-msgid "Import failed: {e}"
-msgstr "Import gescheitert: {e}"
-
-msgid "Export Contacts"
-msgstr "Export Kontakter"
-
-msgid "Which address book do you want to export?"
-msgstr "Wéi eng Adressbuch wëllt Dir exportéieren?"
-
-msgid "Export All Address Books"
-msgstr "Export All Adressbicher"
-
-msgid "No contacts found to export"
-msgstr "Keng Kontakter fonnt fir ze exportéieren"
-
-msgid "Exported {count} contacts"
-msgstr "Exportéiert {count} Kontakter"
-
-msgid "Export error: {e}"
-msgstr "Exportfehler: {e}"
-
-msgid "Block Number"
-msgstr "Block Zuel"
-
-msgid "Number Details"
-msgstr "Zuel Detailer"
-
-msgid "Calls from this number will be automatically rejected."
-msgstr "Uriff vun dëser Nummer ginn automatesch refuséiert."
-
-msgid "Note (Optional)"
-msgstr "Notiz (optional)"
-
-msgid "Blocked Number"
-msgstr "Blockéiert Zuel"
-
-msgid "Database Error"
-msgstr "Datebank Feeler"
-
-msgid "Failed to save to blocklist."
-msgstr "Konnt net späicheren op d'Blocklist."
-
-msgid "Duplicate"
-msgstr "Duplizéiert"
-
-msgid "This number is already blocked."
-msgstr "Dës Nummer ass scho gespaart."
-
-msgid ""
-"Number can't be on both Blocklist and Contacts.\n"
-"\n"
-"Do you want to proceed with Blocking and remove the number from Contacts?"
-msgstr ""
-"Zuel kann net souwuel op der Blocklist wéi och op Kontakter sinn.\n"
-"\n"
-"Wëllt Dir weider mat Blockéieren an d'Nummer aus Kontakter läschen?"
-
-msgid "Yes, Block"
-msgstr "Jo, Block"
-
+#: src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
 msgstr "Stëmm Message"
 
+#: src/telephony/ui/windows/sound_recorder_window.py:91
 msgid "Tap to Record"
 msgstr "Tippen fir opzehuelen"
 
+#: src/telephony/ui/windows/sound_recorder_window.py:137
 msgid "Attach Voice Note"
 msgstr "Befestegt Stëmm Notiz"
 
+#: src/telephony/ui/windows/sound_recorder_window.py:224
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
 msgstr "Opnam ass ze grouss fir MMS (Max 600KB). Maacht w.e.g. méi kuerz."
 
-msgid "Blocked Numbers"
-msgstr "Blockéiert Zuelen"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+msgid "Enable Feature"
+msgstr ""
 
-msgid "No notes"
-msgstr "Keng Notizen"
-
-msgid "Unblock Number"
-msgstr "Spär Zuel"
-
-msgid "Are you sure you want to unblock this number?"
-msgstr "Sidd Dir sécher datt Dir dës Nummer deblockéiere wëllt?"
-
-msgid "Unblocked number"
-msgstr "Spär Nummer"
-
-msgid "Take Picture"
-msgstr "Maacht Foto"
-
-msgid "Attach Photo"
-msgstr "Foto befestegt"
-
+#: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
-"Contacts can trigger an action by sending a secret SMS message. Add contacts"
-" below and set their secret trigger phrase."
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
 msgstr ""
 "Kontakter kënnen eng Aktioun ausléisen andeems Dir eng geheim SMS Message "
 "schéckt. Füügt Kontakter hei drënner a setzt hir geheime Ausléiser Ausdrock."
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:154
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
-"TOTP is mandatory for this feature to work. Add contacts below and set their"
-" secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
 "'Gorilla 123456'"
 msgstr ""
 "Vertraute Kontakter kënnen Är Positioun ufroen andeems se eng geheim SMS-"
@@ -1382,6 +2640,7 @@ msgstr ""
 "Ausléiser-Ausdrock. Beispill Schabloun: 'SECRET TOTP' Real Liewen Beispill: "
 "'Gorilla 123456'"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:157
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -1394,18 +2653,19 @@ msgstr ""
 "Ausléiser-Ausdrock. Beispill Schabloun: 'SECRET TOTP' Real Liewen Beispill: "
 "'Gorilla 123456'"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:160
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
 "template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
 "123456 +1234567890 Hello'"
 msgstr ""
-"Vertraute Kontakter kënnen e SMS-Relais schécken. TOTP ass obligatoresch fir"
-" datt dës Funktioun funktionéiert. Füügt Kontakter hei drënner derbäi a "
-"setzt hire geheime Ausléiser-Ausdrock. Beispill Schabloun: 'SECRET TOTP "
-"+1234567890 MESSAGE' Real Liewen Beispill: 'Gorilla 123456 +1234567890 "
-"Hello'"
+"Vertraute Kontakter kënnen e SMS-Relais schécken. TOTP ass obligatoresch fir "
+"datt dës Funktioun funktionéiert. Füügt Kontakter hei drënner derbäi a setzt "
+"hire geheime Ausléiser-Ausdrock. Beispill Schabloun: 'SECRET TOTP "
+"+1234567890 MESSAGE' Real Liewen Beispill: 'Gorilla 123456 +1234567890 Hello'"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:163
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -1418,67 +2678,95 @@ msgstr ""
 "drënner derbäi a setzt hire geheime Ausléiser-Ausdrock. Beispill Schabloun: "
 "'SECRET TOTP' Real Liewen Beispill: 'Gorilla 123456'"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:166
 msgid ""
-"Trusted contacts can wipe your device. TOTP is mandatory for this feature to"
-" work. Add contacts below and set their secret trigger phrase. Example "
+"Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
 "template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
 "example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
 msgstr ""
 "Vertraute Kontakter kënnen Ären Apparat wëschen. TOTP ass obligatoresch fir "
-"datt dës Funktioun funktionéiert. Füügt Kontakter hei drënner derbäi a setzt"
-" hire geheime Ausléiser-Ausdrock. Beispill Schabloun: 'SECRET TOTP "
+"datt dës Funktioun funktionéiert. Füügt Kontakter hei drënner derbäi a setzt "
+"hire geheime Ausléiser-Ausdrock. Beispill Schabloun: 'SECRET TOTP "
 "SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real Liewen Beispill: 'Gorilla "
 "123456 0000 1234 SupportYourLocalFootball'"
 
-msgid "Show TOTP Setup"
-msgstr "TOTP Setup weisen"
+#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+msgid "View or edit TOTP"
+msgstr ""
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+msgid "Setup TOTP"
+msgstr ""
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
 msgstr "Geheime Message"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:349
 msgid "Remove Contact"
 msgstr "Ewechzehuelen Kontakt"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:373
 msgid "Contact removed (Click Save to commit)"
 msgstr "Kontakt geläscht (Klickt späicheren fir ze engagéieren)"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:508
 msgid "Contact already in trusted list"
 msgstr "Kontakt schonn an der Vertrauenslëscht"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:522
 msgid "Contact added"
 msgstr "Kontakt dobäi"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "TOTP Setup"
 msgstr "TOTP Setup"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:586
 msgid ""
-"Share this code with your trusted contact. They should add it to an authenticator app such as Gnome Authenticator.\n"
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
 "\n"
 "If entering manually, ensure the following settings:\n"
 "• Algorithm: SHA1\n"
 "• Digits: 6\n"
 "• Interval: 60 seconds\n"
 "\n"
-"Each action has its own code. When triggering an action by SMS, they must append the current 6-digit code from their authenticator after the keyword."
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
 msgstr ""
-"Deelt dëse Code mat Ärem vertraute Kontakt. Si sollten en an eng Authentifikatiouns-App wéi Gnome Authenticator bäifügen.\n"
+"Deelt dëse Code mat Ärem vertraute Kontakt. Si sollten en an eng "
+"Authentifikatiouns-App wéi Gnome Authenticator bäifügen.\n"
 "\n"
 "Wann et manuell aginn gëtt, gitt sécher datt dës Astellunge benotzt ginn:\n"
 "• Algorithmus: SHA1\n"
 "• Zifferen: 6\n"
 "• Intervall: 60 Sekonnen\n"
 "\n"
-"All Aktioun huet hiren eegene Code. Wann een eng Aktioun per SMS ausléist, muss deen den aktuellen 6-Ziffere-Code vu senger Authentifikatiouns-App nom Schlësselwuert unhänken."
+"All Aktioun huet hiren eegene Code. Wann een eng Aktioun per SMS ausléist, "
+"muss deen den aktuellen 6-Ziffere-Code vu senger Authentifikatiouns-App nom "
+"Schlësselwuert unhänken."
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#, fuzzy
+msgid "Copy TOTP key"
+msgstr "Text kopéieren"
+
+#: src/telephony/ui/windows/trusted_actions_list_window.py:626
+#: src/telephony/ui/windows/trusted_actions_list_window.py:668
 msgid "Regenerate"
 msgstr "Nei generéieren"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Remove current TOTP"
 msgstr "Aktuellen TOTP ewechhuelen"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:642
 msgid "Remove TOTP Key?"
 msgstr "TOTP-Schlëssel ewechhuelen?"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:643
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
@@ -1486,357 +2774,41 @@ msgstr ""
 "Sidd Dir sécher datt Dir den TOTP-Schlëssel ewechhuele wëllt? Dës Aktioun "
 "wäert d'TOTP-Verifizéierung fir dës Funktioun deaktivéieren."
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:663
 msgid "Regenerate Code?"
 msgstr "Code nei generéieren?"
 
+#: src/telephony/ui/windows/trusted_actions_list_window.py:664
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr ""
-"Dëst wäert den aktuellen Code an der Authentifikatiouns-App vun Ärem Kontakt"
-" ongëlteg maachen. Sidd Dir sécher?"
+"Dëst wäert den aktuellen Code an der Authentifikatiouns-App vun Ärem Kontakt "
+"ongëlteg maachen. Sidd Dir sécher?"
 
-msgid "Hangup All Calls"
-msgstr "Opzehänken All Uruff"
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Ausgefall op {number} ze schécken"
 
-msgid "Copy Text"
-msgstr "Text kopéieren"
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Benotzerdefinéiert Astellungen läschen"
 
-msgid "Copy Number"
-msgstr "Kopie Zuel"
+#~ msgid "Delete Settings"
+#~ msgstr "Läschen Astellungen"
 
-msgid "Add to Contacts"
-msgstr "Add to Kontakter"
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "All personaliséiert Astellunge läschen? D'Noutnummere gi verluer."
 
-msgid "Re-Schedule"
-msgstr "Re-Schedule"
+#~ msgid "Settings cleared"
+#~ msgstr "Astellunge geläscht"
 
-msgid "Forward"
-msgstr "Forward"
+#~ msgid "Error saving settings"
+#~ msgstr "Feeler beim späicheren Astellungen"
 
-msgid "Mark as Unread"
-msgstr "Markéiert als Ongelies"
+#~ msgid "Show TOTP Setup"
+#~ msgstr "TOTP Setup weisen"
 
-msgid "Me"
-msgstr "Ech"
+#~ msgid "Failed to send message"
+#~ msgstr "Ausgefall Message ze schécken"
 
-msgid "Open with"
-msgstr "Oppen mat"
-
-msgid "Copy"
-msgstr "Kopie"
-
-msgid "Save as"
-msgstr "Späicheren als"
-
-msgid "Open With..."
-msgstr "Open mat ..."
-
-msgid "Save File As"
-msgstr "Datei späicheren als"
-
-msgid "{time} • Group"
-msgstr "{time} • Grupp"
-
-msgid "Draft: {message}"
-msgstr "Entworf: {message}"
-
-msgid "All"
-msgstr "All"
-
-msgid "Any duration"
-msgstr "All Dauer"
-
-msgid "Unanswered"
-msgstr "Onbeäntwert"
-
-msgid "1s - 60s"
-msgstr "1s - 60s"
-
-msgid "1-3 mins"
-msgstr "1-3 Minutten"
-
-msgid "3-10 mins"
-msgstr "3-10 min"
-
-msgid "> 15 mins"
-msgstr "> 15 min"
-
-msgid "Any date"
-msgstr "All Datum"
-
-msgid "Today"
-msgstr "Haut"
-
-msgid "Last 3 days"
-msgstr "Déi lescht 3 Deeg"
-
-msgid "Last 14 days"
-msgstr "Déi lescht 14 Deeg"
-
-msgid "Last 30 days"
-msgstr "Déi lescht 30 Deeg"
-
-msgid "Last 60 days"
-msgstr "Déi lescht 60 Deeg"
-
-msgid "Search Contacts..."
-msgstr "Sich Kontakter ..."
-
-msgid "All Messages"
-msgstr "All Messagen"
-
-msgid "Unread Messages"
-msgstr "Ongelies Messagen"
-
-msgid "Unknown Numbers"
-msgstr "Onbekannt Zuelen"
-
-msgid "Saved Contacts"
-msgstr "Gespäichert Kontakter"
-
-msgid "Group Messages"
-msgstr "Grupp Messagen"
-
-msgid "Individual Messages"
-msgstr "Individuell Messagen"
-
-msgid "Alphabetical Senders"
-msgstr "Alphabetesch Sender"
-
-msgid "[Multimedia Message]"
-msgstr "[Multimedia Message]"
-
-msgid "Search Messages..."
-msgstr "Sich Messagen ..."
-
-msgid "Start ({count})"
-msgstr "Start ({count})"
-
-msgid "Add Number: {number}"
-msgstr "Add Number: {number}"
-
-msgid "No results found"
-msgstr "Keng Resultater fonnt"
-
-msgid "Draft to {count} recipients"
-msgstr "Entworf fir {count} Empfänger"
-
-msgid "{count} Participants"
-msgstr "{count} Participanten"
-
-msgid "Replies not supported for this sender"
-msgstr "Äntwerten net ënnerstëtzt fir dëse Sender"
-
-msgid "Scheduled time must be in the future"
-msgstr "Geplangte Zäit muss an Zukunft sinn"
-
-msgid "Rescheduled for {time}"
-msgstr "Ëmgeplangt fir {time}"
-
-msgid "Re-Schedule Message"
-msgstr "Nei Zäitplang Message"
-
-msgid "— New Messages —"
-msgstr "- Nei Messagen -"
-
-msgid "No results found in this conversation"
-msgstr "Keng Resultater fonnt an dësem Gespréich"
-
-msgid "Group Name"
-msgstr "Grupp Numm"
-
-msgid "Set group name..."
-msgstr "Grupp Numm setzen ..."
-
-msgid "Participants"
-msgstr "Participanten"
-
-msgid "Unblocked"
-msgstr "Deblockéiert"
-
-msgid "Delete Conversation"
-msgstr "Läschen Gespréich"
-
-msgid ""
-"Forwarded from {sender}:\n"
-"{body}"
-msgstr ""
-"Vum {sender} weidergeleet:\n"
-"{body}"
-
-msgid "Forwarded from {sender}"
-msgstr "Forward vun {sender}"
-
-msgid "Forward To"
-msgstr "Forward An"
-
-msgid "Delete Message"
-msgstr "Läschen Message"
-
-msgid "Are you sure you want to delete this message?"
-msgstr "Sidd Dir sécher datt Dir dëse Message läsche wëllt?"
-
-msgid "Group renamed"
-msgstr "Grupp ëmbenannt"
-
-msgid "Compressing video..."
-msgstr "Video kompriméieren ..."
-
-msgid "Video compression failed"
-msgstr "Videokompressioun ass gescheitert"
-
-msgid "Nothing to schedule"
-msgstr "Näischt ze Zäitplang"
-
-msgid "Schedule Message"
-msgstr "Zäitplang Message"
-
-msgid "Message scheduled for {time}"
-msgstr "Message geplangt fir {time}"
-
-msgid "[Attachment]"
-msgstr "[Anhang]"
-
-msgid "Failed to send message"
-msgstr "Ausgefall Message ze schécken"
-
-msgid "Delete Group"
-msgstr "Grupp läschen"
-
-msgid ""
-"This will permanently delete the conversation history and all saved media "
-"files."
-msgstr ""
-"Dëst wäert d'Gespréichgeschicht an all gespäichert Mediendateien permanent "
-"läschen."
-
-msgid "Search contacts"
-msgstr "Sich Kontakter"
-
-msgid "Call Anonymous"
-msgstr "Call Anonym"
-
-msgid "Enter number"
-msgstr "Gitt Zuel un"
-
-msgid "Telephony Smart Dialpad at your service"
-msgstr "Telefonie Smart Dialpad zu Ärem Service"
-
-msgid "Invalid number in clipboard"
-msgstr "Ongülteg Zuel am Clipboard"
-
-msgid "Invalid number"
-msgstr "Invalid Zuel"
-
-msgid "Telephony"
-msgstr "Telefonie"
-
-msgid "Dialpad"
-msgstr "Dialpad"
-
-msgid "History"
-msgstr "Geschicht"
-
-msgid "Switching address book..."
-msgstr "Adressbuch wiesselen ..."
-
-msgid "Syncing Contacts..."
-msgstr "Synchroniséiert Kontakter ..."
-
-msgid "Set your number in Settings"
-msgstr "Setzt Är Nummer an Astellungen"
-
-msgid "Please set Default Country Code in Settings"
-msgstr "Setzt w.e.g. Default Country Code an Astellungen"
-
-msgid "Setup Emergency Numbers in Settings"
-msgstr "Setzt Noutnummeren an Astellungen"
-
-msgid "Resolve Duplicates"
-msgstr "Duplikate léisen"
-
-msgid "Reload Contacts"
-msgstr "Reload Kontakter"
-
-msgid "Blocklist"
-msgstr "Blocklëscht"
-
-msgid "Modem Connected"
-msgstr "Modem ugeschloss"
-
-msgid "Modem Error: {message}"
-msgstr "Modem Feeler: {message}"
-
-msgid "Sending USSD..."
-msgstr "USSD schécken ..."
-
-msgid "USSD Result"
-msgstr "USSD Resultat"
-
-msgid "Found {count} duplicate contact. Check menu."
-msgid_plural "Found {count} duplicate contacts. Check menu."
-msgstr[0] "{count} Duplikatkontakt fonnt. Kuckt de Menü."
-msgstr[1] "{count} Duplikatkontakter fonnt. Kuckt de Menü."
-
-msgid "Contacts syncing..."
-msgstr "Kontakter synchroniséieren ..."
-
-msgid "Reloading Contacts..."
-msgstr "Kontakter nei lueden ..."
-
-msgid "Multiple Contacts Found"
-msgstr "Multiple Kontakter fonnt"
-
-msgid "Which contact would you like to edit?"
-msgstr "Wéi eng Kontakt wëllt Dir änneren?"
-
-msgid "Unknown Addressbook"
-msgstr "Onbekannt Adressbuch"
-
-msgid "Calling (Anonymous)..."
-msgstr "Rufft (Anonym) ..."
-
-msgid "Calling {number}..."
-msgstr "Rufft {number}..."
-
-msgid "Call Failed"
-msgstr "Uruff Ausgefall"
-
-msgid "Call Details"
-msgstr "Call Detailer"
-
-msgid ""
-"Number: {number}\n"
-"Name: {name}\n"
-"Date: {date}\n"
-"Duration: {duration}"
-msgstr ""
-"Zuel: {number}\n"
-"Numm: {name}\n"
-"Datum: {date}\n"
-"Dauer: {duration}"
-
-msgid "Add to Existing Contact"
-msgstr "Füügt zu existente Kontakt"
-
-msgid "Send Message"
-msgstr "Schécken Message"
-
-msgid "Delete this call"
-msgstr "Dësen Uruff läschen"
-
-msgid "Delete Call"
-msgstr "Läschen Call"
-
-msgid "Remove this call?"
-msgstr "Dësen Uruff ewechhuelen?"
-
-msgid "Number copied"
-msgstr "Zuel kopéiert"
-
-msgid "Added to {name}"
-msgstr "Zu {name} dobäigesat"
-
-msgid "Failed to add number"
-msgstr "Ausgefall Nummer derbäi"
+#~ msgid "Switching address book..."
+#~ msgstr "Adressbuch wiesselen ..."
