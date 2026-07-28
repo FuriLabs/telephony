@@ -26,7 +26,7 @@ from ...backend.managers.audio_manager import TelephonyAudioManager
 from ..windows.fader_window import ProximityFader
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
 from ...backend.managers.lockscreen_manager import LockScreenManager
-from ...backend.utils.system_utils import restart_mtk_modem
+from ...backend.utils.system_utils import restart_ril_modem
 from ...backend.utils.phone_utils import normalize_number
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
@@ -579,7 +579,7 @@ class InCallWindow(Gtk.Window):
         self.btn_restart.set_sensitive(False)
         self.btn_restart.set_label(_("Restarting RIL..."))
         try:
-            restart_mtk_modem()
+            restart_ril_modem()
         except Exception as e:
             logger.error(f"RIL Restart Failed: {e}")
         self.restart_attempts = 0

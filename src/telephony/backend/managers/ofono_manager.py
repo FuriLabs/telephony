@@ -23,7 +23,7 @@ from loguru import logger
 from gi.repository import Gio, GLib, GObject
 
 from ...backend.utils.phone_utils import normalize_number
-from ...backend.utils.system_utils import restart_mtk_modem
+from ...backend.utils.system_utils import restart_ril_modem
 from ..services.ofono_service import OfonoService
 from .location_manager import LocationManager
 from .audio_manager import TelephonyAudioManager
@@ -100,7 +100,7 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
             if len(self.active_calls) > 0:
                 logger.error("[OfonoManager] Modem lost during active call! Triggering RIL restart.")
                 try:
-                    restart_mtk_modem()
+                    restart_ril_modem()
                 except Exception as e:
                     logger.error(f"[OfonoManager] Failed to restart RIL: {e}")
 

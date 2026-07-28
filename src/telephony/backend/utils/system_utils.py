@@ -182,12 +182,12 @@ def enable_location():
         logger.warning(f"Could not enable location: {e}")
 
 
-def restart_mtk_modem():
-    """Restarts the MTK modem stack by setting the prop via shell."""
+def restart_ril_modem():
+    """Restarts the RIL modem stack. Currently supports MTK chipsets."""
     try:
         subprocess.run(["setprop", "vendor.ril.mtk.restart", "1"], check=False)
     except Exception as e:
-        logger.error(f"Failed to restart MTK modem: {e}")
+        logger.error(f"Failed to restart RIL modem: {e}")
 
 
 def press_power_button():

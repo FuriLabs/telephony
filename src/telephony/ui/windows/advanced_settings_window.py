@@ -22,7 +22,7 @@ from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
 
-from ...backend.utils.system_utils import restart_mtk_modem
+from ...backend.utils.system_utils import restart_ril_modem
 
 
 class AdvancedSettingsWindow(Adw.Window):
@@ -205,7 +205,7 @@ class AdvancedSettingsWindow(Adw.Window):
         """Handle restart modem action."""
         self._show_toast(_("Restarting Modem..."), False)
         try:
-            restart_mtk_modem()
+            restart_ril_modem()
             GLib.idle_add(lambda: self.close() or False)
         except Exception as e:
             logger.warning(f"[Settings] Restart modem failed: {e}")
