@@ -19,7 +19,6 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib
-from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.system_utils import restart_ril_modem
@@ -28,16 +27,13 @@ from ...backend.utils.system_utils import restart_ril_modem
 class AdvancedSettingsWindow(Adw.Window):
     """Advanced settings window."""
 
-    def __init__(self, parent, backend):
+    def __init__(self, parent):
         """Initialize the advanced settings window."""
         super().__init__(title=_("Advanced Settings"))
         self.set_transient_for(parent)
         self.parent_win = parent
         self.set_modal(True)
         self.set_default_size(450, 800)
-        self.backend = backend
-
-        self.pending_props = {}
 
         self.overlay = Adw.ToastOverlay()
         self.set_content(self.overlay)
@@ -179,27 +175,10 @@ class AdvancedSettingsWindow(Adw.Window):
         win = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
         win.present()
 
-    def _queue_prop(self, iface, prop, val):
-        """Queue a property change."""
-        if iface not in self.pending_props:
-            self.pending_props[iface] = {}
-        self.pending_props[iface][prop] = val
-
     def on_save_clicked(self, btn):
         """Apply all pending changes."""
-        try:
-            for iface, props in self.pending_props.items():
-                for prop, val in props.items():
-                    try:
-                        self.backend.set_property(iface, prop, val)
-                    except Exception as e:
-                        logger.error(f"Failed to set property {prop}: {e}")
-
-            self.overlay.add_toast(Adw.Toast.new(_("Advanced Settings Applied")))
-            GLib.timeout_add(1500, lambda: self.close() or False)
-        except Exception as e:
-            logger.error(f"[AdvancedSettingsWindow] Save error: {e}")
-            self._show_toast(_("Error saving settings"))
+        self.overlay.add_toast(Adw.Toast.new(_("Advanced Settings Applied")))
+        GLib.timeout_add(1500, lambda: self.close() or False)
 
     def _on_restart_modem(self, btn):
         """Handle restart modem action."""

@@ -28,7 +28,6 @@ from .custom_tone_list_window import CustomToneListWindow
 
 
 from .advanced_settings_window import AdvancedSettingsWindow
-from ...backend.managers.settings_ofono_manager import OfonoBackend
 
 
 class SettingsWindow(Adw.Window):
@@ -42,7 +41,6 @@ class SettingsWindow(Adw.Window):
 
         self.main_window = main_window
         self.eds = eds_manager
-        self.ofono_backend = OfonoBackend()
 
         self.set_transient_for(main_window)
         self.set_modal(True)
@@ -380,7 +378,7 @@ class SettingsWindow(Adw.Window):
 
     def _open_modem_settings(self, btn):
         """Open advanced modem settings."""
-        win = AdvancedSettingsWindow(self, self.ofono_backend)
+        win = AdvancedSettingsWindow(self)
         win.present()
 
     def _show_addressbook_info(self, btn):
