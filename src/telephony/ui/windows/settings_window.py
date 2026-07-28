@@ -242,6 +242,47 @@ class SettingsWindow(Adw.Window):
         for msg in saved_msgs:
             self._add_reject_row(msg)
 
+        self.grp_call_volume = Adw.PreferencesGroup(title=_("Call Volume"))
+        btn_info_vol = Gtk.Button(icon_name="dialog-information-symbolic")
+        btn_info_vol.set_valign(Gtk.Align.CENTER)
+        btn_info_vol.add_css_class("flat")
+        btn_info_vol.add_css_class("circular")
+        btn_info_vol.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self._show_call_volume_info(b) or False))
+        self.grp_call_volume.set_header_suffix(btn_info_vol)
+        page.add(self.grp_call_volume)
+
+        saved_levels = self.main_window.gsettings_mgr.get_call_volume_levels()
+
+        self.sw_volume_boost = Adw.SwitchRow(title=_("Allow Amplification"))
+        self.sw_volume_boost.set_subtitle(
+            _("Let sliders go above 100%. Amplified audio may distort."))
+        self.sw_volume_boost.set_active(
+            any(v > 100 for v in saved_levels.values()))
+        self.sw_volume_boost.connect(
+            "notify::active", self._on_volume_boost_toggled)
+        self.grp_call_volume.add(self.sw_volume_boost)
+
+        upper = 150 if self.sw_volume_boost.get_active() else 100
+        self.volume_scales = {}
+        route_titles = (("earpiece", _("Earpiece")),
+                        ("speaker", _("Speaker")),
+                        ("wired", _("Wired Headset")),
+                        ("bluetooth", _("Bluetooth")))
+        for route_id, title in route_titles:
+            row = Adw.ActionRow(title=title)
+            scale = Gtk.Scale.new_with_range(
+                Gtk.Orientation.HORIZONTAL, 0, upper, 5)
+            scale.set_value(saved_levels.get(route_id, 80))
+            scale.set_hexpand(True)
+            scale.set_size_request(180, -1)
+            scale.set_draw_value(True)
+            scale.set_value_pos(Gtk.PositionType.RIGHT)
+            scale.add_mark(100, Gtk.PositionType.BOTTOM, None)
+            row.add_suffix(scale)
+            self.grp_call_volume.add(row)
+            self.volume_scales[route_id] = scale
+
         grp_notif = Adw.PreferencesGroup(title=_("Notification Exceptions"))
         page.add(grp_notif)
 
@@ -752,6 +793,30 @@ class SettingsWindow(Adw.Window):
         self.grp_emerg_list.remove(row)
         self.emergency_rows = [x for x in self.emergency_rows if x[0] != row]
 
+    def _on_volume_boost_toggled(self, row, _param):
+        """Extend or clamp the volume slider range based on the boost switch."""
+        boosted = row.get_active()
+        for scale in self.volume_scales.values():
+            if boosted:
+                scale.set_range(0, 150)
+            else:
+                if scale.get_value() > 100:
+                    scale.set_value(100)
+                scale.set_range(0, 100)
+            scale.add_mark(100, Gtk.PositionType.BOTTOM, None)
+
+    def _show_call_volume_info(self, btn):
+        """Show info about base call volume levels."""
+        d = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Call Volume"),
+            body=_("This is the base hardware volume applied to the selected output when a call connects. The volume buttons during a call only adjust fine-tuning on top of this base level, so if the base is 0% the call stays silent no matter what. Values above 100% use software amplification and may distort audio. Wired Headset and Bluetooth levels are stored for upcoming routing support.")
+        )
+        d.add_response("ok", _("OK"))
+        d.connect("response", lambda d, r: GLib.idle_add(
+            lambda: d.close() or False))
+        d.present()
+
     def _add_reject_row(self, text):
         """Add an editable decline message row."""
         row = Adw.EntryRow(title=_("Decline Message"))
@@ -915,6 +980,10 @@ class SettingsWindow(Adw.Window):
         self.main_window.gsettings_mgr.set_reject_call_messages(reject_msgs)
         self.main_window.gsettings_mgr.set_setting(
             "reject_call_message", reject_msgs[0] if reject_msgs else "")
+
+        volume_levels = {route: int(scale.get_value())
+                         for route, scale in self.volume_scales.items()}
+        self.main_window.gsettings_mgr.set_call_volume_levels(volume_levels)
 
         self._set_gsettings_emergency(self.sw_emerg.get_active())
         emerg_list = []

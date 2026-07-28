@@ -75,6 +75,27 @@ class GSettingsManager:
         except Exception as e:
             logger.error(f"[GSettings] Settings Error for {key}: {e}")
 
+    def get_call_volume_levels(self):
+        """Return per-route base call volume percentages with defaults applied."""
+        levels = {"earpiece": 80, "speaker": 80, "wired": 80, "bluetooth": 80}
+        try:
+            val = self.get_setting("call_volume_levels")
+            if val:
+                saved = json.loads(val)
+                for route in levels:
+                    if route in saved:
+                        levels[route] = int(saved[route])
+        except Exception as e:
+            logger.error(f"[GSettings] Get Call Volume Levels Error: {e}")
+        return levels
+
+    def set_call_volume_levels(self, levels_dict):
+        """Persist per-route base call volume percentages."""
+        try:
+            self.set_setting("call_volume_levels", json.dumps(levels_dict))
+        except Exception as e:
+            logger.error(f"[GSettings] Set Call Volume Levels Error: {e}")
+
     def get_reject_call_messages(self):
         """Return the configured quick response messages, falling back to the legacy single message."""
         try:

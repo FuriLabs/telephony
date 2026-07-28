@@ -64,6 +64,8 @@ class InCallWindow(Gtk.Window):
         self.is_speaker = False
         self.is_muted = False
         self.dtmf_visible = False
+        self.current_route = "earpiece"
+        self.call_volume_applied = False
         self.call_history = {}
         self.ignored_calls = set()
 
@@ -389,6 +391,7 @@ class InCallWindow(Gtk.Window):
                 self.is_ringing = False
             self.audio.set_voice_profile(True)
             self.audio.mute(self.is_muted)
+            self._apply_call_volume()
             self.controls_stack.set_visible_child_name("active")
             self._toggle_blue(self.btn_output, self.is_speaker)
             self._toggle_blue(self.btn_input, self.is_muted)
@@ -420,6 +423,10 @@ class InCallWindow(Gtk.Window):
         self.lock_manager.clear_all()
         self.audio.stop_ringing()
         self.is_ringing = False
+
+        self.audio.restore_call_volume()
+        self.call_volume_applied = False
+        self.current_route = "earpiece"
 
         self.audio.set_voice_profile(False)
         self.audio.mute(False)
@@ -606,6 +613,8 @@ class InCallWindow(Gtk.Window):
         self.audio.play_hangup()
         self.fader.set_active(False)
         self.audio.update_hardware_state(False)
+        self.audio.restore_call_volume()
+        self.call_volume_applied = False
         self.audio.set_voice_profile(False)
         self.is_speaker = False
         self.controls_stack.set_visible_child_name("error")
@@ -724,9 +733,22 @@ class InCallWindow(Gtk.Window):
             row.connect("activated", _cb_in)
             self.input_group.add(row)
 
+    def _apply_call_volume(self):
+        """Push the configured base volume for the current output route."""
+        if self.call_volume_applied:
+            return
+        levels = self.gsettings_mgr.get_call_volume_levels()
+        level = levels.get(self.current_route, 80) / 100.0
+        self.audio.push_call_volume(level)
+        self.call_volume_applied = True
+
     def _handle_output_selection(self, route_id):
         """Handle output route selection."""
         self.audio.set_audio_route(route_id)
+        self.current_route = route_id
+        if self.call_volume_applied:
+            self.call_volume_applied = False
+            self._apply_call_volume()
         if route_id == "speaker":
             self.is_speaker = True
             self.btn_output.set_icon_name("audio-speakers-symbolic")
