@@ -179,12 +179,23 @@ class App(Adw.Application):
 
             self.incall.connect("close-request", _on_incall_closed)
 
-    def _on_global_call_added(self, _manager, path, _props):
-        """Global handler for new calls to ensure InCallWindow is presented."""
-        self._ensure_incall_window()
+    def release_keyboard_focus(self):
+        """Drop entry focus in all windows so the on-screen keyboard dismisses."""
+        for win in self.get_windows():
+            win.set_focus(None)
+
+    def _present_incall_window(self):
+        """Present the in-call window after the on-screen keyboard has dismissed."""
         if self.incall:
             self.incall.present()
             self.incall.update_state()
+        return False
+
+    def _on_global_call_added(self, _manager, path, _props):
+        """Global handler for new calls to ensure InCallWindow is presented."""
+        self._ensure_incall_window()
+        self.release_keyboard_focus()
+        GLib.idle_add(self._present_incall_window)
 
     def _setup_css(self):
         """Load and apply custom CSS."""
