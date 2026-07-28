@@ -552,13 +552,7 @@ class MessagesView(Adw.Bin):
         text = entry.get_text().strip()
         count = len(self.selected_recipients)
 
-        if count > 0:
-            self.action_box.set_visible(True)
-            self.btn_compose.set_label(_("Start ({count})").format(count=count))
-            self.toggle_box.set_visible(False)
-        else:
-            self.action_box.set_visible(False)
-            self.toggle_box.set_visible(True)
+        self._update_compose_button()
 
         if not text and count == 0:
             self.content_stack.set_visible_child_name("conversations")
@@ -578,6 +572,27 @@ class MessagesView(Adw.Bin):
             self.perform_message_search(query)
         self.search_timer = None
         return False
+
+    def _update_compose_button(self):
+        """Refresh the compose button label based on selection and existing threads."""
+        count = len(self.selected_recipients)
+        if count == 0:
+            self.action_box.set_visible(False)
+            self.toggle_box.set_visible(True)
+            return
+
+        self.action_box.set_visible(True)
+        self.toggle_box.set_visible(False)
+        self.btn_compose.set_label(_("Start ({count})").format(count=count))
+
+        recipients = list(self.selected_recipients)
+        target = recipients[0] if count == 1 else recipients
+
+        def done(exists):
+            if exists and self.selected_recipients == set(recipients):
+                self.btn_compose.set_label(_("Open ({count})").format(count=count))
+
+        run_in_background(self.db.conversation_exists, target, on_complete=done)
 
     def on_compose_clicked(self, btn):
         """Handle click on compose button."""
@@ -625,14 +640,7 @@ class MessagesView(Adw.Bin):
             self.search_entry.set_text("")
             self._is_programmatic_update = False
 
-        count = len(self.selected_recipients)
-        if count > 0:
-            self.action_box.set_visible(True)
-            self.btn_compose.set_label(_("Start ({count})").format(count=count))
-            self.toggle_box.set_visible(False)
-        else:
-            self.action_box.set_visible(False)
-            self.toggle_box.set_visible(True)
+        self._update_compose_button()
 
     def perform_contact_search(self, query):
         """Search for contacts matching the query."""
@@ -672,9 +680,10 @@ class MessagesView(Adw.Bin):
                 sources = self.app_window.eds.get_sources_info()
                 for s in sources:
                     s_map[s['uid']] = s['name']
-            return res, s_map
+            convs = self._search_conversations(query, res)
+            return res, s_map, convs
 
-        def _on_done(results, source_map):
+        def _on_done(results, source_map, conversations):
             if self.contact_search_token != current_token:
                 return False
 
@@ -684,7 +693,16 @@ class MessagesView(Adw.Bin):
             if manual_entry_row:
                 self.results_list.append(manual_entry_row)
 
-            if not results:
+            for conv_id, display_name, is_group in conversations:
+                row = Adw.ActionRow(title=display_name)
+                row.set_subtitle(_("Group chat") if is_group else conv_id)
+                row.set_activatable(True)
+                row.add_prefix(Gtk.Image.new_from_icon_name("chat-message-new-symbolic"))
+                row.connect("activated", lambda r, cid=conv_id: GLib.idle_add(
+                    lambda: [self._reset_search_ui(), self.open_chat(cid, None)] and False))
+                self.results_list.append(row)
+
+            if not results and not conversations:
                 lbl = Gtk.Label(label=_("No contacts found"), css_classes=["dim-label", "caption"])
                 lbl.set_margin_top(20)
                 self.results_list.append(lbl)
@@ -734,10 +752,53 @@ class MessagesView(Adw.Bin):
             return False
 
         def _bg_task():
-            res, s_map = _bg_fetch()
-            GLib.idle_add(lambda: _on_done(res, s_map))
+            res, s_map, convs = _bg_fetch()
+            GLib.idle_add(lambda: _on_done(res, s_map, convs))
 
         run_in_background(_bg_task)
+
+    def _search_conversations(self, query, contact_results):
+        """Find existing conversations matching the query by group name, number or member."""
+        q = query.strip().lower()
+        if not q:
+            return []
+
+        group_names = self.db.get_all_group_names()
+        conv_ids = self.db.get_conversation_ids()
+        norm_query = normalize_number(query)
+
+        contact_numbers = set()
+        for res in contact_results or []:
+            for (num, _lbl) in res[3]:
+                n = normalize_number(num)
+                if n:
+                    contact_numbers.add(n)
+
+        matches = []
+        for conv_id in conv_ids:
+            custom = group_names.get(conv_id, "")
+            is_group = "," in conv_id
+            participants = [p.strip() for p in conv_id.split(",")] if is_group else [conv_id]
+
+            hit = False
+            if custom and q in custom.lower():
+                hit = True
+            elif norm_query and len(norm_query) >= 3 and any(norm_query in p for p in participants):
+                hit = is_group
+            elif is_group and contact_numbers and any(p in contact_numbers for p in participants):
+                hit = True
+
+            if hit:
+                display = custom
+                if not display:
+                    names = [self.app_window.eds.get_display_name(p) or p for p in participants]
+                    display = ", ".join(names)
+                matches.append((conv_id, display, is_group))
+
+            if len(matches) >= 10:
+                break
+
+        return matches
 
     def perform_message_search(self, query):
         """Search for messages matching the query."""

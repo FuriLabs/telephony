@@ -23,6 +23,38 @@ from gi.repository import GLib
 
 
 class DbMessagesUtils:
+    def _normalize_chat_id(self, number_or_list):
+        """Normalize a recipient or recipient list to the stored conversation id."""
+        if isinstance(number_or_list, list):
+            cleaned = [normalize_number(n, permissive=True) for n in number_or_list]
+            return ",".join(sorted(cleaned))
+        if "," in str(number_or_list):
+            return number_or_list
+        return normalize_number(number_or_list, permissive=True)
+
+    def conversation_exists(self, number_or_list):
+        """Check whether a conversation already exists for the given recipients."""
+        try:
+            chat_id = self._normalize_chat_id(number_or_list)
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("SELECT 1 FROM messages WHERE remote_number=? AND status != 'draft' LIMIT 1", (chat_id,))
+                return c.fetchone() is not None
+        except Exception as e:
+            logger.error(f"[DB] Conversation exists check error: {e}")
+            return False
+
+    def get_conversation_ids(self):
+        """Return all distinct conversation ids."""
+        try:
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("SELECT DISTINCT remote_number FROM messages WHERE status != 'draft'")
+                return [r[0] for r in c.fetchall() if r[0]]
+        except Exception as e:
+            logger.error(f"[DB] Get Conversation Ids Error: {e}")
+            return []
+
     def add_message(self, remote_number, direction, body, status="unread", subject=None, attachments=[], sender=None, scheduled_timestamp=None):
         """Add a message to the database."""
         if not remote_number or not direction:
