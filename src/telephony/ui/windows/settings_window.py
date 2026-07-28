@@ -47,6 +47,7 @@ class SettingsWindow(Adw.Window):
         self.set_default_size(400, 750)
 
         self.emergency_rows = []
+        self.reject_rows = []
 
         self.temp_ringback_file = self.main_window.gsettings_mgr.get_setting(
             "ringback_custom_file")
@@ -223,15 +224,23 @@ class SettingsWindow(Adw.Window):
             self._add_emergency_row(
                 item.get("name", ""), item.get("number", ""))
 
-        grp_msg = Adw.PreferencesGroup(title=_("Quick Response"))
-        page.add(grp_msg)
+        self.grp_reject_list = Adw.PreferencesGroup(title=_("Quick Response"))
+        page.add(self.grp_reject_list)
 
-        self.entry_reject = Adw.EntryRow(title=_("Decline Message"))
-        saved_msg = self.main_window.gsettings_mgr.get_setting(
-            "reject_call_message") or _("I can't talk right now.")
-        self.entry_reject.set_text(saved_msg)
+        row_add_msg = Adw.ActionRow(title=_("Add Decline Message"))
+        btn_add_msg = Gtk.Button(icon_name="list-add-symbolic")
+        btn_add_msg.add_css_class("flat")
+        btn_add_msg.add_css_class("circular")
+        btn_add_msg.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self._add_reject_row("") or False))
+        row_add_msg.add_suffix(btn_add_msg)
+        self.grp_reject_list.add(row_add_msg)
 
-        grp_msg.add(self.entry_reject)
+        saved_msgs = self.main_window.gsettings_mgr.get_reject_call_messages()
+        if not saved_msgs:
+            saved_msgs = [_("I can't talk right now.")]
+        for msg in saved_msgs:
+            self._add_reject_row(msg)
 
         grp_notif = Adw.PreferencesGroup(title=_("Notification Exceptions"))
         page.add(grp_notif)
@@ -743,6 +752,26 @@ class SettingsWindow(Adw.Window):
         self.grp_emerg_list.remove(row)
         self.emergency_rows = [x for x in self.emergency_rows if x[0] != row]
 
+    def _add_reject_row(self, text):
+        """Add an editable decline message row."""
+        row = Adw.EntryRow(title=_("Decline Message"))
+        row.set_text(text)
+
+        btn_del = Gtk.Button(icon_name="user-trash-symbolic")
+        btn_del.set_valign(Gtk.Align.CENTER)
+        btn_del.add_css_class("flat")
+        btn_del.add_css_class("circular")
+        btn_del.connect("clicked", lambda b: self._remove_reject_row(row))
+        row.add_suffix(btn_del)
+
+        self.grp_reject_list.add(row)
+        self.reject_rows.append(row)
+
+    def _remove_reject_row(self, row):
+        """Remove a decline message row."""
+        self.grp_reject_list.remove(row)
+        self.reject_rows = [r for r in self.reject_rows if r != row]
+
     def _on_default_ab_changed(self, row, param):
         """Handle default address book selection change."""
         idx = row.get_selected()
@@ -882,9 +911,10 @@ class SettingsWindow(Adw.Window):
         self.main_window.gsettings_mgr.set_setting("default_country_code", cc)
         set_custom_region(cc)
 
-        msg_text = self.entry_reject.get_text().strip()
+        reject_msgs = [r.get_text().strip() for r in self.reject_rows if r.get_text().strip()]
+        self.main_window.gsettings_mgr.set_reject_call_messages(reject_msgs)
         self.main_window.gsettings_mgr.set_setting(
-            "reject_call_message", msg_text)
+            "reject_call_message", reject_msgs[0] if reject_msgs else "")
 
         self._set_gsettings_emergency(self.sw_emerg.get_active())
         emerg_list = []

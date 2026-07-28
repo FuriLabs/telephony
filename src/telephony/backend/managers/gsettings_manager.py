@@ -75,6 +75,29 @@ class GSettingsManager:
         except Exception as e:
             logger.error(f"[GSettings] Settings Error for {key}: {e}")
 
+    def get_reject_call_messages(self):
+        """Return the configured quick response messages, falling back to the legacy single message."""
+        try:
+            val = self.get_setting("reject_call_messages")
+            if val:
+                messages = json.loads(val)
+                if messages:
+                    return messages
+        except Exception as e:
+            logger.error(f"[GSettings] Get Reject Messages Error: {e}")
+
+        legacy = self.get_setting("reject_call_message")
+        if legacy:
+            return [legacy]
+        return []
+
+    def set_reject_call_messages(self, messages_list):
+        """Persist the quick response messages list."""
+        try:
+            self.set_setting("reject_call_messages", json.dumps(messages_list))
+        except Exception as e:
+            logger.error(f"[GSettings] Set Reject Messages Error: {e}")
+
     def get_emergency_numbers(self):
         try:
             val = self.get_setting("emergency_numbers")

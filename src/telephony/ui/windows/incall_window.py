@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, Adw
+from gi.repository import Gtk, GLib, Adw, Pango
 import time
 import os
 import urllib.parse
@@ -466,7 +466,7 @@ class InCallWindow(Gtk.Window):
 
             b_sms = Gtk.Button(icon_name="mail-message-new-symbolic", css_classes=["circular", "bg-btn"])
             b_sms.set_size_request(50, 50)
-            b_sms.connect("clicked", lambda b, p=path, n=data['number']: GLib.idle_add(lambda: self.on_ignore_with_sms(p, n) or False))
+            b_sms.connect("clicked", lambda b, p=path, n=data['number']: GLib.idle_add(lambda: self.on_ignore_with_sms(b, p, n) or False))
             btn_box.append(b_sms)
 
             b_act = Gtk.Button(css_classes=["circular", "btn-green", "bg-btn"])
@@ -489,15 +489,52 @@ class InCallWindow(Gtk.Window):
             self.is_ringing = False
         self.update_state()
 
-    def on_ignore_with_sms(self, path, number):
+    def _pick_quick_response(self, anchor, callback):
+        """Invoke callback with a quick response message, showing a picker when several exist."""
+        messages = self.gsettings_mgr.get_reject_call_messages()
+        if not messages:
+            messages = [_("I can't talk right now.")]
+
+        if len(messages) == 1:
+            callback(messages[0])
+            return
+
+        popover = Gtk.Popover()
+        popover.set_position(Gtk.PositionType.TOP)
+        popover.set_parent(anchor)
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
+                      margin_top=8, margin_bottom=8, margin_start=8, margin_end=8)
+
+        def on_pick(_btn, msg):
+            popover.popdown()
+            callback(msg)
+
+        for msg in messages:
+            btn = Gtk.Button(label=msg)
+            btn.add_css_class("flat")
+            child = btn.get_child()
+            if isinstance(child, Gtk.Label):
+                child.set_ellipsize(Pango.EllipsizeMode.END)
+                child.set_max_width_chars(32)
+            btn.connect("clicked", on_pick, msg)
+            box.append(btn)
+
+        popover.set_child(box)
+        popover.connect("closed", lambda p: GLib.idle_add(lambda: p.unparent() or False))
+        popover.popup()
+
+    def on_ignore_with_sms(self, btn, path, number):
         """Ignore a call and send a quick response."""
-        msg = self.gsettings_mgr.get_setting("reject_call_message") or _("I can't talk right now.")
-        self.ofono.send_sms(number, msg)
-        self.ignored_calls.add(path)
-        if self.is_ringing:
-            self.audio.stop_ringing()
-            self.is_ringing = False
-        self.update_state()
+        def do_ignore(msg):
+            self.ofono.send_quick_response(number, msg)
+            self.ignored_calls.add(path)
+            if self.is_ringing:
+                self.audio.stop_ringing()
+                self.is_ringing = False
+            self.update_state()
+
+        self._pick_quick_response(btn, do_ignore)
 
     def on_search_unknown_click(self, btn):
         """Open web browser to search for unknown number."""
@@ -732,12 +769,17 @@ class InCallWindow(Gtk.Window):
         self._toggle_blue(btn, self.dtmf_visible)
 
     def on_reject_with_msg(self, btn):
-        """Reject call and send SMS."""
-        self._start_closing_sequence()
-        self.set_visible(False)
-        msg = self.gsettings_mgr.get_setting("reject_call_message") or _("I can't talk right now.")
-        self.ofono.send_sms(self.ofono.active_calls[self.active_path]['number'], msg)
-        self.ofono.hangup_call(self.active_path)
+        """Reject call and send a quick response SMS."""
+        def do_reject(msg):
+            call = self.ofono.active_calls.get(self.active_path)
+            if not call:
+                return
+            self._start_closing_sequence()
+            self.set_visible(False)
+            self.ofono.send_quick_response(call['number'], msg)
+            self.ofono.hangup_call(self.active_path)
+
+        self._pick_quick_response(btn, do_reject)
 
     def _toggle_blue(self, btn, active):
         """Helper to toggle active button state style."""

@@ -467,10 +467,7 @@ class TelephonyDaemonDBus:
                 number = call_info.get('number') if call_info else None
                 self.ofono.hangup_call(call_path)
                 if number and sms_text:
-                    row_id = self.db.add_message(number, 'outgoing', sms_text, status='draft', subject=None, attachments=[], sender="Me")
-                    success = self.ofono.send_sms(number, sms_text)
-                    if success:
-                        self.db.update_message_schedule(row_id, status="sent", timestamp=None)
+                    self.ofono.send_quick_response(number, sms_text)
         invocation.return_value(None)
 
     def _handle_schedulesms(self, parameters, invocation):

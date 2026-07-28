@@ -51,6 +51,17 @@ class OfonoMessagingManager:
                 self.emit('action-error', _("Failed to send: {e}").format(e=e))
                 return False
 
+    def send_quick_response(self, number, text):
+        """Send an SMS and record it in the local message database."""
+        if not self.send_sms(number, text):
+            return False
+
+        try:
+            self.db.add_message(number, "outgoing", text, "sent", sender="Me")
+        except Exception as e:
+            logger.error(f"[OfonoManager] Failed to record quick response: {e}")
+        return True
+
     def send_ussd(self, command):
         """Send a USSD command."""
         if not self.ussd_proxy:
