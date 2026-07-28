@@ -119,11 +119,13 @@ class LocationManager(GObject.Object):
         logger.info("[Location] Geoclue client ready.")
 
         client = self.simple_client.get_client()
-        if client:
-            logger.debug(f"[Location] Client Active: {client.props.active}")
-            if not client.props.active:
-                if self.progress_callback:
-                    self.progress_callback(_("Waiting for location service..."))
+        if not client:
+            return
+
+        logger.debug(f"[Location] Client Active: {client.props.active}")
+
+        if not client.props.active and self.progress_callback:
+            self.progress_callback(_("Waiting for location service..."))
 
         location = self.simple_client.get_location()
         is_good_enough = False
