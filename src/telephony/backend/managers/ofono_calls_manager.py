@@ -103,6 +103,7 @@ class OfonoCallsManager:
             if call:
                 call.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
+            logger.debug(f"[OfonoManager] Answer failed for {path}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
                 self._force_remove(path)
@@ -120,6 +121,7 @@ class OfonoCallsManager:
             if call:
                 call.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
+            logger.debug(f"[OfonoManager] Hangup failed for {path}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
                 self._force_remove(path)
@@ -129,7 +131,8 @@ class OfonoCallsManager:
         if self.voice_proxy:
             try:
                 self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
-            except Exception:
+            except Exception as e:
+                logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
                 for path in list(self.active_calls.keys()):
                     self.hangup_call(path)
 
