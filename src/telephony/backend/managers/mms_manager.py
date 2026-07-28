@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import magic
 import mimetypes
 import os
 import random
@@ -392,6 +391,7 @@ class MmsManager(GObject.Object):
     def _detect_mime(self, path):
         """Detect MIME type of a file using python-magic."""
         try:
+            import magic
             mime = magic.from_file(path, mime=True)
             if mime and mime in ["text/html", "text/plain", "text/xml", "application/xml"]:
                 try:

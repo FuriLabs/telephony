@@ -20,12 +20,9 @@ import os
 import mimetypes
 import re
 import hashlib
-import magic
-import av
 import shutil
 import html
 from concurrent.futures import ThreadPoolExecutor
-from PIL import Image, ImageOps
 from gettext import gettext as _
 
 import gi
@@ -375,6 +372,7 @@ class ChatBubbleFactory:
 
             mime = None
             try:
+                import magic
                 mime = magic.from_file(path, mime=True)
             except Exception as e:
                 logger.debug(f"[Bubbles] magic.from_file failed: {e}")
@@ -407,6 +405,7 @@ class ChatBubbleFactory:
                     thumb_path = target_thumb
                 else:
                     if is_image:
+                        from PIL import Image, ImageOps
                         with Image.open(path) as img:
                             if img.mode in ("RGBA", "P"):
                                 img = img.convert("RGB")
@@ -414,6 +413,8 @@ class ChatBubbleFactory:
                             img.save(target_thumb, "JPEG", quality=70)
                         thumb_path = target_thumb
                     elif is_video:
+                        import av
+                        from PIL import Image, ImageOps
                         with av.open(path) as container:
                             stream = container.streams.video[0]
                             frame = next(container.decode(stream))

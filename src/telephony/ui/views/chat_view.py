@@ -45,7 +45,7 @@ if not Gst.is_initialized():
 
 
 LOAD_MORE_BATCH = 50
-MAX_MESSAGES_IN_MEMORY = 500
+MAX_MESSAGES_IN_MEMORY = 200
 
 
 class ChatPage(Gtk.Box):

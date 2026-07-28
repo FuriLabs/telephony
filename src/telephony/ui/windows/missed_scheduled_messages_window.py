@@ -37,18 +37,20 @@ class MissedScheduledMessagesDialog:
 
     def check_missed_scheduled_messages(self, done_callback=None):
         """Check for messages that were missed while app was closed."""
-        try:
-            missed = self.scheduler.get_missed_messages(buffer_minutes=1)
+        def done(missed):
             if not missed:
                 if done_callback:
                     done_callback()
                 return
-
             self._process_missed_message_queue(missed, 0, done_callback)
-        except Exception as e:
-            logger.error(f"[MissedScheduled] Check missed messages error: {e}")
+
+        def failed(error):
+            logger.error(f"[MissedScheduled] Check missed messages error: {error}")
             if done_callback:
                 done_callback()
+
+        run_in_background(self.scheduler.get_missed_messages, buffer_minutes=1,
+                          on_complete=done, on_error=failed)
 
     def _process_missed_message_queue(self, messages, index, done_callback):
         """Recursively show dialogs for missed messages."""

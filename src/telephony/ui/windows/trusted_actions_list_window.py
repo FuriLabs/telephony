@@ -16,7 +16,6 @@
 from gi.repository import Gtk, Adw, GLib, Pango, Gio, Gdk, GdkPixbuf
 from loguru import logger
 from gettext import gettext as _
-import qrcode
 from io import BytesIO
 
 from ...backend.utils.thread_utils import run_in_background
@@ -599,6 +598,7 @@ class TrustedActionsListWindow(Adw.Window):
 
         content_box.append(seed_box)
 
+        import qrcode
         img = qrcode.make(uri)
         buf = BytesIO()
         img.save(buf, format="PNG")

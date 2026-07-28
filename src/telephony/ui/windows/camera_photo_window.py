@@ -23,7 +23,6 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
-from PIL import Image
 from loguru import logger
 
 if not Gst.is_initialized():
@@ -315,6 +314,8 @@ class CameraPhoto(Adw.Window):
 
     def _process_image(self, path):
         """Compress image to self.output_path."""
+        from PIL import Image
+
         self.output_path = path
         try:
             img = Image.open(path)
