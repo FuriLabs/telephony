@@ -364,6 +364,8 @@ class MessagesView(Adw.Bin):
         current_limit = limit if limit is not None else self.page_limit
         raw_rows = self.db.get_conversations(limit=current_limit + 1, offset=offset, filter_type=self.active_filter)
         contact_map = self.db.get_contacts_lookup_map()
+        group_names = self.db.get_all_group_names()
+        blocked_numbers = {normalize_number(b[1]) for b in self.db.get_blocked_numbers()}
 
         processed = []
         has_more = False
@@ -377,7 +379,7 @@ class MessagesView(Adw.Bin):
 
             if "," in num:
                 recipients = [n.strip() for n in num.split(',')]
-                custom_name = self.db.get_group_name(recipients)
+                custom_name = group_names.get(num)
 
                 if custom_name:
                     name = custom_name
@@ -389,10 +391,10 @@ class MessagesView(Adw.Bin):
                     name = ", ".join(display_names)
             else:
                 norm = normalize_number(num)
-                if self.db.is_blocked(norm):
+                if norm in blocked_numbers:
                     name = _("Blocked Number")
                 else:
-                    custom_name = self.db.get_group_name([num])
+                    custom_name = group_names.get(num)
                     if custom_name:
                         name = custom_name
                     else:

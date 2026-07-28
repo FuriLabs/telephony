@@ -271,6 +271,17 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
         except Exception as e:
             logger.error(f"[DB] Set Group Name Error: {e}")
 
+    def get_all_group_names(self):
+        """Return the full mapping of conversation ids to custom group names."""
+        try:
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("SELECT id, name FROM group_names")
+                return dict(c.fetchall())
+        except Exception as e:
+            logger.error(f"[DB] Get Group Names Error: {e}")
+            return {}
+
     def get_group_name(self, recipients_list):
         """Get the custom name for a group conversation."""
         try:

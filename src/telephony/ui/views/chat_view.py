@@ -18,6 +18,7 @@ from ...backend.utils.thread_utils import run_in_background
 from ..windows.chat_media_controller_window import ChatMediaController
 from ...backend.utils.datetime_utils import format_timestamp, parse_timestamp
 
+import json
 import os
 import shutil
 import tempfile
@@ -168,7 +169,8 @@ class ChatPage(Gtk.Box):
         self.append(header)
 
         self.details_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_DOWN)
-        self.setup_details_panel()
+        self._details_built = False
+        self.btn_menu.connect("toggled", self._ensure_details_panel)
         self.btn_menu.bind_property("active", self.details_revealer, "reveal-child", GObject.BindingFlags.BIDIRECTIONAL)
         self.append(self.details_revealer)
 
@@ -647,6 +649,12 @@ class ChatPage(Gtk.Box):
             return False
         return False
 
+    def _ensure_details_panel(self, btn):
+        """Build the details panel the first time the menu is opened."""
+        if btn.get_active() and not self._details_built:
+            self._details_built = True
+            self.setup_details_panel()
+
     def setup_details_panel(self):
         """Setup the conversation details slide-down panel."""
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -823,31 +831,33 @@ class ChatPage(Gtk.Box):
 
         if found_item:
             logger.info(f"[ChatPage] Refreshing status for message {msg_id}")
-            details = self.db.get_message_details(msg_id)
-            if details:
-                self._reload_chat()
-            else:
-                self.store.remove(target_idx)
+
+            def done(details):
+                if details:
+                    self._reload_chat()
+                else:
+                    self.store.remove(target_idx)
+
+            run_in_background(self.db.get_message_details, msg_id, on_complete=done)
 
     def on_delete_message(self, item_id):
         """Handle individual message deletion."""
         def on_confirm_delete():
-            msg_data = self.db.get_chat_messages(self.number, limit=5000)
-            for m in msg_data:
-                if m[0] == item_id:
-                    atts = m[6] if len(m) > 6 else []
-                    for path in atts:
+            def task():
+                details = self.db.get_message_details(item_id)
+                if details and details[4]:
+                    for path in json.loads(details[4]):
                         if os.path.exists(path):
                             try:
                                 os.remove(path)
                             except Exception as e:
                                 logger.warning(f"[Chat] Attachment delete failed: {e}")
-                    break
 
-            self.db.delete_message(item_id)
+                self.db.delete_message(item_id)
+
+            run_in_background(task)
             if (self.app_window and self.app_window.scheduler is not None):
                 self.app_window.scheduler.remove_cron(item_id)
-            self._reload_chat()
 
         self.app_window.confirm_action(_("Delete Message"), _("Are you sure you want to delete this message?"), on_confirm_delete)
 
@@ -1325,30 +1335,34 @@ class ChatPage(Gtk.Box):
         """Handle conversation deletion."""
         def do_full_delete():
             target_id = self.number
-
-            all_msgs = self.db.get_chat_messages(target_id, limit=100000)
-
-            files_deleted = 0
-            for m in all_msgs:
-                atts = m[6] if len(m) > 6 else []
-                for path in atts:
-                    if os.path.exists(path):
-                        try:
-                            os.remove(path)
-                            files_deleted += 1
-                        except Exception as e:
-                            logger.error(f"Failed to delete {path}: {e}")
-
-            logger.info(f"[Delete] Wiped {len(all_msgs)} messages and {files_deleted} files for ID: {target_id}")
-
-            for m in all_msgs:
-                if m[4] == 'scheduled':
-                    if (self.app_window and self.app_window.scheduler is not None):
-                        self.app_window.scheduler.remove_cron(m[0])
-
-            self.db.delete_conversation(target_id)
-
             self.messages_view.close_active_chat()
+
+            def task():
+                all_msgs = self.db.get_chat_messages(target_id, limit=100000)
+
+                files_deleted = 0
+                for m in all_msgs:
+                    atts = m[6] if len(m) > 6 else []
+                    for path in atts:
+                        if os.path.exists(path):
+                            try:
+                                os.remove(path)
+                                files_deleted += 1
+                            except Exception as e:
+                                logger.error(f"Failed to delete {path}: {e}")
+
+                logger.info(f"[Delete] Wiped {len(all_msgs)} messages and {files_deleted} files for ID: {target_id}")
+
+                scheduled_ids = [m[0] for m in all_msgs if m[4] == 'scheduled']
+                self.db.delete_conversation(target_id)
+                return scheduled_ids
+
+            def done(scheduled_ids):
+                if self.app_window and self.app_window.scheduler is not None:
+                    for msg_id in scheduled_ids or []:
+                        self.app_window.scheduler.remove_cron(msg_id)
+
+            run_in_background(task, on_complete=done)
 
         title = _("Delete Group") if self.is_group else _("Delete Conversation")
         body = _("This will permanently delete the conversation history and all saved media files.")

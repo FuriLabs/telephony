@@ -15,22 +15,11 @@
 
 from .datetime_utils import format_timestamp
 import json
-from functools import lru_cache
-import copy
 
 from loguru import logger
 
 from .phone_utils import normalize_number
 from gi.repository import GLib
-
-
-@lru_cache(maxsize=1024)
-def _cached_json_loads(data):
-    try:
-        return json.loads(data)
-    except json.JSONDecodeError as e:
-        logger.error(f"[DB] JSON decode error: {e}")
-        return []
 
 
 class DbMessagesUtils:
@@ -348,7 +337,7 @@ class DbMessagesUtils:
                 return [
                     (
                         r[0], r[1], r[2], r[3], r[4], r[5],
-                        copy.deepcopy(_cached_json_loads(r[6])) if r[6] else [],
+                        json.loads(r[6]) if r[6] else [],
                         r[7] if len(r) > 7 else "Unknown",
                         r[8] if len(r) > 8 else None
                     )
@@ -376,7 +365,7 @@ class DbMessagesUtils:
                 return [
                     (
                         r[0], r[1], r[2], r[3], r[4], r[5],
-                        copy.deepcopy(_cached_json_loads(r[6])) if r[6] else [],
+                        json.loads(r[6]) if r[6] else [],
                         r[7] if len(r) > 7 else "Unknown",
                         r[8] if len(r) > 8 else None
                     )
