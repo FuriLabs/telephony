@@ -21,6 +21,8 @@ import urllib.request
 from loguru import logger
 from gi.repository import Gio, GLib
 
+CONNCHECK_URL = "https://conncheck.furios.io/"
+
 
 class TmateManager:
     """Manages tmate SSH sessions triggered by SMS."""
@@ -34,8 +36,8 @@ class TmateManager:
 
     def _task(self, target_number):
         try:
-            urllib.request.urlopen('https://8.8.8.8', timeout=2)
-            has_internet = True
+            with urllib.request.urlopen(CONNCHECK_URL, timeout=5) as res:
+                has_internet = res.read().decode().strip() == "OK"
         except Exception:
             has_internet = False
 
