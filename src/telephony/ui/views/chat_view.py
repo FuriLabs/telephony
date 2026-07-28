@@ -821,29 +821,6 @@ class ChatPage(Gtk.Box):
         )
         picker.present()
 
-    def refresh_message_status(self, msg_id):
-        """Update a specific message status if it exists in the view."""
-        target_idx = -1
-        found_item = None
-
-        for i in range(self.store.get_n_items()):
-            item = self.store.get_item(i)
-            if item.id == msg_id:
-                target_idx = i
-                found_item = item
-                break
-
-        if found_item:
-            logger.info(f"[ChatPage] Refreshing status for message {msg_id}")
-
-            def done(details):
-                if details:
-                    self._reload_chat()
-                else:
-                    self.store.remove(target_idx)
-
-            run_in_background(self.db.get_message_details, msg_id, on_complete=done)
-
     def on_delete_message(self, item_id):
         """Handle individual message deletion."""
         def on_confirm_delete():

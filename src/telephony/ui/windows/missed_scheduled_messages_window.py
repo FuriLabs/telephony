@@ -201,27 +201,22 @@ class MissedScheduledMessagesDialog:
                 if attachments_json:
                     try:
                         attachments = json.loads(attachments_json)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(f"[MissedScheduled] Failed to parse attachments JSON: {e}")
 
-                success = False
+                self.db.update_message_schedule(mid, status="sending")
+                self.scheduler.remove_cron(mid)
+
                 is_group = "," in number
-
                 if is_group or attachments or subject:
                     if self.mms:
-                        targets = number.split(",") if is_group else [number]
-                        success = self.mms.send_mms(targets, body=body, attachment_paths=attachments, subject=subject)
+                        targets = [n.strip() for n in number.split(",")] if is_group else [number]
+                        self.mms.send_mms_tracked(targets, body, attachments, mid)
                 else:
                     if self.ofono:
-                        success = self.ofono.send_sms(number, body)
+                        self.ofono.send_sms_tracked(number, body, mid)
 
-                if success:
-                    self.db.update_message_schedule(mid, status="sent")
-                    self.scheduler.remove_cron(mid)
-                    GLib.idle_add(lambda: self.app_window.notify_success(_("Sent scheduled message to {number}").format(number=number)))
-                else:
-                    self.db.update_message_schedule(mid, status="failed")
-                    GLib.idle_add(lambda: self.app_window.notify_error(_("Failed to send to {number}").format(number=number)))
+                GLib.idle_add(lambda: self.app_window.notify_success(_("Sending message to {number}...").format(number=number)))
 
             except Exception as e:
                 logger.error(f"[MissedScheduled] Send missed bg error: {e}")

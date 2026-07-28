@@ -66,8 +66,6 @@ class MainWindow(Adw.Window):
         self.mms = mms_manager
         self.gsettings_mgr = gsettings_mgr
         self.scheduler = self.app.scheduler
-        if self.scheduler:
-            self.scheduler.on_message_sent_callback = self.on_scheduled_message_processed
 
         self.refresh_timer = None
 
@@ -204,12 +202,6 @@ class MainWindow(Adw.Window):
         """Callback when a popup task is finished."""
         self.is_popup_active = False
         self.process_popup_queue()
-
-    def on_scheduled_message_processed(self, msg_id, success):
-        """Handle callback from scheduler when a message is processed."""
-        logger.info(f"[MainWindow] Scheduled message {msg_id} processed (Success: {success})")
-        if self.messages_view:
-            GLib.idle_add(lambda: self.messages_view.update_scheduled_message(msg_id))
 
     def _on_window_map(self, *args):
         """Handle window map event."""

@@ -33,7 +33,6 @@ class ScheduleManager:
         self.ofono = ofono_manager
         self.mms = mms_manager
         self._timer_id = None
-        self.on_message_sent_callback = None
 
     def start(self):
         """Start the scheduler logic."""
@@ -120,30 +119,22 @@ class ScheduleManager:
             except Exception as e:
                 logger.warning(f"[ScheduleManager] Failed to parse attachments JSON: {e}")
 
-        success = False
-        is_group = "," in number
+        self.db.update_message_schedule(mid, status="sending")
 
+        is_group = "," in number
         if is_group or attachments or subject:
             if self.mms:
                 targets = [n.strip() for n in number.split(",")] if is_group else [number]
-                success = self.mms.send_mms(targets, body=body, attachment_paths=attachments, subject=subject)
+                self.mms.send_mms_tracked(targets, body, attachments, mid)
             else:
                 logger.warning("[ScheduleManager] MMS manager not available")
+                self.db.update_message_status(mid, "failed")
         else:
             if self.ofono:
-                success = self.ofono.send_sms(number, body)
+                self.ofono.send_sms_tracked(number, body, mid)
             else:
                 logger.warning("[ScheduleManager] Ofono manager not available")
-
-        if success:
-            self.db.update_message_schedule(mid, status="sent")
-            logger.info(f"[ScheduleManager] Message {mid} sent successfully")
-        else:
-            self.db.update_message_schedule(mid, status="failed")
-            logger.error(f"[ScheduleManager] Failed to send message {mid}")
-
-        if self.on_message_sent_callback:
-            self.on_message_sent_callback(mid, success)
+                self.db.update_message_status(mid, "failed")
 
     def add_cron(self, message_id, timestamp_str):
         """

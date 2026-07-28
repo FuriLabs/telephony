@@ -65,11 +65,6 @@ class MessagesView(Adw.Bin):
         self.active_filter = "all"
         self.nav_view.add(self.main_page)
 
-    def update_scheduled_message(self, msg_id):
-        """Pass update notification to active chat page if relevant."""
-        if self.active_chat_page:
-            self.active_chat_page.refresh_message_status(msg_id)
-
     def _resolve_contact_name(self, contact_map, number):
         """Resolve contact name from map, handling list/string types."""
         norm_num = normalize_number(number)

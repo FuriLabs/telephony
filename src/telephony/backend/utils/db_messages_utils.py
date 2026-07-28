@@ -218,7 +218,7 @@ class DbMessagesUtils:
                 c = self.conn_messages.cursor()
                 if status == "scheduled" and timestamp:
                     c.execute("UPDATE messages SET status=?, scheduled_timestamp=? WHERE id=?", (status, timestamp, msg_id))
-                elif status == "sent":
+                elif status in ("sent", "sending"):
                     now_str = format_timestamp()
                     c.execute("UPDATE messages SET status=?, timestamp=?, scheduled_timestamp=NULL WHERE id=?", (status, now_str, msg_id))
                 else:

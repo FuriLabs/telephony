@@ -18,6 +18,7 @@ from loguru import logger
 
 from gettext import gettext as _
 from ..utils.phone_utils import normalize_number
+from ..utils.thread_utils import run_in_background
 import time
 
 
@@ -42,14 +43,9 @@ class OfonoMessagingManager:
             return True
 
         except Exception as e:
-            err = str(e)
-            if any(x in err for x in ["Operation failed", "Timeout", "NoReply", "org.ofono.Error.Failed"]):
-                logger.warning(f"[OfonoManager] SMS Error Ignored (Likely Sent): {e}")
-                return True
-            else:
-                logger.error(f"[OfonoManager] SMS Failed: {e}")
-                self.emit('action-error', _("Failed to send: {e}").format(e=e))
-                return False
+            logger.error(f"[OfonoManager] SMS Failed: {e}")
+            self.emit('action-error', _("Failed to send: {e}").format(e=e))
+            return False
 
     def send_sms_tracked(self, number, text, row_id):
         """Send an SMS and resolve the stored row's status from ofono state signals."""
@@ -134,14 +130,12 @@ class OfonoMessagingManager:
             self._resolve_sms(row_id, value)
 
     def send_quick_response(self, number, text):
-        """Send an SMS and record it in the local message database."""
-        if not self.send_sms(number, text):
+        """Record an SMS in the conversation and send it with delivery tracking."""
+        row_id = self.db.add_message(number, "outgoing", text, "sending", sender="Me")
+        if row_id is None:
             return False
 
-        try:
-            self.db.add_message(number, "outgoing", text, "sent", sender="Me")
-        except Exception as e:
-            logger.error(f"[OfonoManager] Failed to record quick response: {e}")
+        run_in_background(self.send_sms_tracked, number, text, row_id)
         return True
 
     def send_ussd(self, command):
