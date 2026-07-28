@@ -326,7 +326,7 @@ class MessagesView(Adw.Bin):
                 if custom_name:
                     name = custom_name
                 else:
-                    name = self.app_window.eds.get_contact_name(target) or _("Unknown")
+                    name = self.app_window.eds.get_display_name(target) or _("Unknown")
 
         if name == "Unknown":
             name = _("Unknown")
@@ -480,7 +480,7 @@ class MessagesView(Adw.Bin):
             elif not name:
                 names = []
                 for n in target_number:
-                    names.append(self.app_window.eds.get_contact_name(n) or n)
+                    names.append(self.app_window.eds.get_display_name(n) or n)
                 name = ", ".join(names)
         else:
             target_number = self.check_and_clear_notification(canonical_target)
@@ -489,7 +489,7 @@ class MessagesView(Adw.Bin):
             if custom_name:
                 name = custom_name
             elif not name or name == target_number:
-                name = self.app_window.eds.get_contact_name(target_number) or target_number
+                name = self.app_window.eds.get_display_name(target_number) or target_number
 
         if name == "Unknown":
             name = _("Unknown")

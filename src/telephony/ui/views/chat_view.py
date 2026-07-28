@@ -143,7 +143,7 @@ class ChatPage(Gtk.Box):
         if self.is_group:
             participant_names = []
             for num in self.recipients:
-                name = self.app_window.eds.get_contact_name(num)
+                name = self.app_window.eds.get_display_name(num)
                 if not name:
                     if not any(c.isalpha() for c in num):
                         name = _("Unknown")
@@ -311,7 +311,7 @@ class ChatPage(Gtk.Box):
         """Bind handler for list item factory."""
         ChatBubbleFactory.bind(factory, list_item,
                                delete_callback=self.on_delete_message,
-                               contact_lookup=self.app_window.eds.get_contact_name,
+                               contact_lookup=self.app_window.eds.get_display_name,
                                add_contact_cb=self.app_window.present_edit_contact,
                                is_group=self.is_group,
                                forward_callback=self.on_forward_message,
@@ -679,7 +679,7 @@ class ChatPage(Gtk.Box):
             hbox.set_margin_top(8)
             hbox.set_margin_bottom(8)
 
-            name = self.app_window.eds.get_contact_name(rec)
+            name = self.app_window.eds.get_display_name(rec)
             if not name:
                 if not any(c.isalpha() for c in rec):
                     name = _("Unknown")
@@ -746,8 +746,7 @@ class ChatPage(Gtk.Box):
                         norm_rec = normalize_number(number)
                         for bid, bnum, _ignored in blocked:
                             if normalize_number(bnum) == norm_rec:
-                                self.db.remove_blocked_number(bid)
-                                self.db.update_history_names([number], None)
+                                self.db.unblock_number(bid, number)
                                 break
                         self.app_window.notify_success(_("Unblocked"))
                     else:
@@ -785,7 +784,7 @@ class ChatPage(Gtk.Box):
         elif sender_display == "Unknown":
             sender_display = _("Unknown")
         else:
-            name = self.app_window.eds.get_contact_name(sender_display)
+            name = self.app_window.eds.get_display_name(sender_display)
             if name:
                 sender_display = name
                 if sender_display == "Unknown":

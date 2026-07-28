@@ -669,8 +669,7 @@ class MainWindow(Adw.Window):
 
             def _unblock_cb(b):
                 GLib.idle_add(lambda: d.close() or False)
-                self.db.remove_blocked_number(is_blocked_id)
-                self.db.update_history_names([item.number], None)
+                self.db.unblock_number(is_blocked_id, item.number)
                 self.notify_success(_("Unblocked"))
             btn_unblock.connect("clicked", lambda b: GLib.idle_add(lambda: _unblock_cb(b) or False))
 

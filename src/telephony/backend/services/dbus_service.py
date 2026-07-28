@@ -822,7 +822,7 @@ class TelephonyDaemonDBus:
         """Handle AddBlockedNumber command."""
         number, note = parameters.unpack()
         if self.db:
-            self.db.add_blocked_number(number, note)
+            self.db.block_number(number, note)
         invocation.return_value(None)
 
     def _handle_removeblockednumber(self, parameters, invocation):
@@ -830,9 +830,9 @@ class TelephonyDaemonDBus:
         bid = parameters.unpack()[0]
         if self.db:
             try:
-                self.db.remove_blocked_number(int(bid))
+                self.db.unblock_number(int(bid))
             except ValueError as e:
-                logger.debug(f"ValueError in remove_blocked_number: {e}")
+                logger.debug(f"ValueError in unblock_number: {e}")
         invocation.return_value(None)
 
     def _handle_getmissedmessages(self, parameters, invocation):

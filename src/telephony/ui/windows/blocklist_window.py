@@ -150,10 +150,7 @@ class BlocklistView(Adw.Bin):
                 number = item.number
                 break
 
-        self.db.remove_blocked_number(entry_id)
-
-        if number:
-            self.db.update_history_names([number], _("Unknown"))
+        self.db.unblock_number(entry_id, number)
 
         self.app_window.notify_success(_("Unblocked number"))
 

@@ -15,6 +15,7 @@
 
 import sqlite3
 
+from gettext import gettext as _
 from loguru import logger
 from gi.repository import GLib
 
@@ -22,6 +23,34 @@ from .phone_utils import normalize_number
 
 
 class DbBlocklistUtils:
+    def block_number(self, number, note=""):
+        """
+        Block a number and scrub it everywhere: rename it in call history,
+        remove it from contacts and drop it from trusted and special lists.
+        """
+        clean_num = normalize_number(number, permissive=False)
+        if not self.add_blocked_number(clean_num, note):
+            return False
+
+        self.update_history_names([clean_num], _("Blocked Number"))
+        if self.eds:
+            self.eds.remove_number_everywhere(clean_num)
+        return True
+
+    def unblock_number(self, bid, number=None):
+        """Remove a blocklist entry and rename the number back to Unknown."""
+        if number is None:
+            for row_id, row_num, _note in self.get_blocked_numbers():
+                if row_id == bid:
+                    number = row_num
+                    break
+
+        self.remove_blocked_number(bid)
+
+        if number:
+            clean_num = normalize_number(number, permissive=False)
+            self.update_history_names([clean_num], _("Unknown"))
+
     def add_blocked_number(self, number, note=""):
         """Add a number to the blocklist."""
         try:

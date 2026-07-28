@@ -18,7 +18,6 @@ from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
-from ...backend.utils.vcard_utils import unfold_vcard
 
 
 class BlocklistEditor(Adw.Window):
@@ -80,65 +79,23 @@ class BlocklistEditor(Adw.Window):
 
         norm_num = normalize_number(raw_num)
 
-        contact_results = self.eds.search_contacts(norm_num)
-        if contact_results:
-            def _do_block_and_remove():
-                if self.db.add_blocked_number(norm_num, note):
-                    logger.info(f"[Blocklist] Added number: {norm_num}")
-                    for c in contact_results:
-                        uid = c[0]
-
-                        should_delete = False
-                        full_contact = self.eds.cache.get(uid)
-                        if full_contact:
-                            phones = full_contact.get('phones', [])
-                            other_phones = [p for p in phones if normalize_number(p[0]) != norm_num]
-
-                            emails = full_contact.get('emails', [])
-
-                            has_other_fields = False
-                            vcard = full_contact.get('vcard', '')
-                            if vcard:
-                                unfolded = unfold_vcard(vcard)
-                                for line in unfolded.splitlines():
-                                    if ":" not in line:
-                                        continue
-                                    key = line.split(":", 1)[0].split(";")[0].upper()
-                                    if key in ["ORG", "TITLE", "ADR", "NOTE", "URL", "BDAY", "ANNIVERSARY"]:
-                                        has_other_fields = True
-                                        break
-
-                            if not other_phones and not emails and not has_other_fields:
-                                should_delete = True
-
-                        if should_delete:
-                            logger.info(f"[Blocklist] Deleting contact {uid} (empty after block)")
-                            self.eds.delete_contact(uid)
-                        else:
-                            self.eds.remove_number_from_contact(uid, norm_num)
-
-                    self.db.update_history_names([norm_num], _("Blocked Number"))
-
-                    GLib.idle_add(lambda: self.close() or False)
-                else:
-                    self._show_error(_("Database Error"), _("Failed to save to blocklist."))
-
-            self._confirm_block_remove(raw_num, _do_block_and_remove)
-            return
-
         if self.db.is_blocked(norm_num):
             logger.warning(f"[Blocklist] Block rejected: Number {norm_num} is already blocked.")
             self._show_error(_("Duplicate"), _("This number is already blocked."))
             return
 
-        success = self.db.add_blocked_number(norm_num, note)
-        if success:
-            logger.info(f"[Blocklist] Added number: {norm_num}")
-            self.db.update_history_names([norm_num], _("Blocked Number"))
-            GLib.idle_add(lambda: self.close() or False)
-        else:
-            logger.error(f"[Blocklist] DB Add Failed for {norm_num}")
-            self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+        def _do_block():
+            if self.db.block_number(norm_num, note):
+                logger.info(f"[Blocklist] Added number: {norm_num}")
+                GLib.idle_add(lambda: self.close() or False)
+            else:
+                self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+
+        if self.eds.search_contacts(norm_num):
+            self._confirm_block_remove(raw_num, _do_block)
+            return
+
+        _do_block()
 
     def _confirm_block_remove(self, _number_str, on_confirm):
         """Show confirmation to block and remove from contacts."""

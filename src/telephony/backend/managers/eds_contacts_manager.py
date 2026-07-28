@@ -19,11 +19,53 @@ import gi
 gi.require_version('EBookContacts', '1.2')
 from gi.repository import EBookContacts
 from loguru import logger
+from gettext import gettext as _
 from ..utils.phone_utils import normalize_number, get_system_region
 from ..utils.vcard_utils import unfold_vcard
 
 
 class EdsContactsManager:
+    def get_display_name(self, number):
+        """Return the user-facing name for a number, honoring the blocklist."""
+        if self.db_ref and self.db_ref.is_blocked(number):
+            return _("Blocked Number")
+        return self.get_contact_name(number)
+
+    def remove_number_everywhere(self, number):
+        """Remove a number from all contacts, deleting contacts left otherwise empty."""
+        norm = normalize_number(number)
+        for c in self.search_contacts(norm):
+            uid = c[0]
+
+            with self.cache_lock:
+                full_contact = self.cache.get(uid)
+
+            should_delete = False
+            if full_contact:
+                phones = full_contact.get('phones', [])
+                other_phones = [p for p in phones if normalize_number(p[0]) != norm]
+                emails = full_contact.get('emails', [])
+
+                has_other_fields = False
+                vcard = self.get_contact_vcard(uid) or full_contact.get('vcard', '')
+                if vcard:
+                    for line in unfold_vcard(vcard).splitlines():
+                        if ":" not in line:
+                            continue
+                        key = line.split(":", 1)[0].split(";")[0].upper()
+                        if key in ["ORG", "TITLE", "ADR", "NOTE", "URL", "BDAY", "ANNIVERSARY"]:
+                            has_other_fields = True
+                            break
+
+                if not other_phones and not emails and not has_other_fields:
+                    should_delete = True
+
+            if should_delete:
+                logger.info(f"[EDS] Deleting contact {uid} (empty after removing {norm})")
+                self.delete_contact(uid)
+            else:
+                self.remove_number_from_contact(uid, norm)
+
     def get_contact_name(self, number):
         """Look up a contact name by phone number."""
         norm = normalize_number(number)
