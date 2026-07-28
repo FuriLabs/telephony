@@ -27,6 +27,8 @@ from gi.repository import EDataServer, GLib
 from loguru import logger
 from ..utils.phone_utils import normalize_number
 
+ADDRESS_BOOK_EXTENSION = "Address Book"
+
 
 class EdsSourcesManager:
     def _init_backend(self):
@@ -42,8 +44,7 @@ class EdsSourcesManager:
     def _load_sources_config(self):
         """Load configuration and initialize sources."""
         try:
-            extension_name = "Address Book"
-            all_sources = self.registry.list_sources(extension_name)
+            all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
 
             default_source = self.registry.ref_default_address_book()
             default_uid = default_source.get_uid() if default_source else None
@@ -243,8 +244,7 @@ class EdsSourcesManager:
     def get_sources_info(self):
         """Return list of all sources with their status/rank for Settings UI."""
         try:
-            extension_name = "Address Book"
-            all_sources = self.registry.list_sources(extension_name)
+            all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
             default_source = self.registry.ref_default_address_book()
             default_uid = default_source.get_uid() if default_source else None
 
@@ -310,8 +310,7 @@ class EdsSourcesManager:
 
     def _update_sources_task(self, new_config_list):
         """Intelligently update sources based on new configuration."""
-        extension_name = "Address Book"
-        all_sources = self.registry.list_sources(extension_name)
+        all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
 
         to_enable = {}
         to_disable = []
