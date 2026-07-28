@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import argparse
 import sys
 import os
 import datetime
@@ -60,15 +61,6 @@ class App(Adw.Application):
         """Initialize the Application."""
         super().__init__(application_id=application_id,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
-
-        self.add_main_option("start-monitoring", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Start in monitoring mode", None)
-        self.add_main_option("calls", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Calls mode", None)
-        self.add_main_option("messages", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Messages mode", None)
-        self.add_main_option("contacts", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Contacts mode", None)
-        self.add_main_option("full", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Full mode", None)
-        self.add_main_option("open-chat", 0, GLib.OptionFlags.NONE, GLib.OptionArg.STRING, "Open chat for number", "NUMBER")
-        self.add_main_option("debug", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Debug mode", None)
-        self.add_main_option("incall", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE, "Incall mode", None)
 
         self.db = None
         self.ofono = None
@@ -231,21 +223,41 @@ class App(Adw.Application):
         win.present()
         return
 
+    def _parse_command_line(self, argv):
+        """Parse command line arguments delivered to the primary instance."""
+        parser = argparse.ArgumentParser(prog="telephony", add_help=False)
+        parser.add_argument("--start-monitoring", action="store_true", help="Start in monitoring mode")
+        parser.add_argument("--calls", action="store_true", help="Calls mode")
+        parser.add_argument("--messages", action="store_true", help="Messages mode")
+        parser.add_argument("--contacts", action="store_true", help="Contacts mode")
+        parser.add_argument("--full", action="store_true", help="Full mode")
+        parser.add_argument("--open-chat", metavar="NUMBER", help="Open chat for number")
+        parser.add_argument("--debug", action="store_true", help="Debug mode")
+        parser.add_argument("--incall", action="store_true", help="Incall mode")
+        parser.add_argument("uris", nargs="*", help="tel:/sms: URIs to open")
+
+        opts, unknown = parser.parse_known_args(argv)
+        if unknown:
+            logger.warning(f"Ignoring unknown command line arguments: {unknown}")
+        return opts
+
     def do_command_line(self, command_line):
         """Handle command line arguments."""
-        options = command_line.get_options_dict()
+        try:
+            opts = self._parse_command_line(command_line.get_arguments()[1:])
+        except (argparse.ArgumentError, SystemExit) as e:
+            logger.warning(f"Failed to parse command line: {e}")
+            return 1
 
-        args = command_line.get_arguments()
-
-        if options.contains("debug"):
+        if opts.debug:
             logger.remove()
             logger.add(sys.stderr, level="DEBUG")
 
-        if options.contains("start-monitoring") or (options.contains("debug") and len(args) == 1):
+        if opts.start_monitoring or (opts.debug and not opts.uris):
             logger.info("Started in Monitoring/Debug Mode. Skipping background window creation.")
             return 0
 
-        if options.contains("incall"):
+        if opts.incall:
             logger.info("Opening InCallWindow requested via command line.")
             self._ensure_incall_window()
             if self.incall:
@@ -257,52 +269,39 @@ class App(Adw.Application):
         open_chat_number = None
         dialpad_number = None
 
-        if options.contains("calls"):
+        if opts.calls:
             focus_tab = "dialpad"
-        if options.contains("messages"):
+        if opts.messages:
             focus_tab = "messages"
-        if options.contains("contacts"):
+        if opts.contacts:
             focus_tab = "contacts"
-        if options.contains("open-chat"):
-            open_chat_number = options.lookup_value("open-chat", GLib.VariantType.new("s")).get_string()
+        if opts.open_chat:
+            open_chat_number = opts.open_chat
             focus_tab = "messages"
 
-        if len(args) > 1:
-            for arg in args[1:]:
-                if arg.startswith("tel:") or arg.startswith("callto:"):
-                    try:
-                        dialpad_number = unquote(arg.split(":", 1)[1])
-                        focus_tab = "dialpad"
-                    except IndexError:
-                        pass
-                elif arg.startswith("sms:") or arg.startswith("smsto:") or arg.startswith("mms:") or arg.startswith("mmsto:"):
-                    try:
-                        rest = arg.split(":", 1)[1]
-                        if "?" in rest:
-                            rest = rest.split("?", 1)[0]
-                        open_chat_number = unquote(rest)
-                        focus_tab = "messages"
-                    except IndexError:
-                        pass
+        for arg in opts.uris:
+            if arg.startswith(("tel:", "callto:")):
+                dialpad_number = unquote(arg.split(":", 1)[1])
+                focus_tab = "dialpad"
+            elif arg.startswith(("sms:", "smsto:", "mms:", "mmsto:")):
+                rest = arg.split(":", 1)[1]
+                if "?" in rest:
+                    rest = rest.split("?", 1)[0]
+                open_chat_number = unquote(rest)
+                focus_tab = "messages"
 
         mode_calls = True
         mode_messages = True
         mode_contacts = True
 
-        if options.contains("calls"):
+        if opts.calls:
             mode_messages = False
-        elif options.contains("contacts"):
+        elif opts.contacts:
             mode_calls = False
             mode_messages = False
-        elif options.contains("messages"):
+        elif opts.messages:
             mode_calls = False
             mode_contacts = False
-        elif options.contains("full"):
-            pass
-        elif focus_tab == "dialpad":
-            pass
-        elif focus_tab == "messages":
-            pass
 
         target_win = None
         for existing_win in self.get_windows():
