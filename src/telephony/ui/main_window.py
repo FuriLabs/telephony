@@ -666,12 +666,17 @@ class MainWindow(Adw.Window):
 
         status_msg = _("Calling (Anonymous)...") if hide_id else _("Calling {number}...").format(number=number)
         self.notify_success(status_msg)
-        success = False
-        if self.ofono:
-            success = self.ofono.dial(number, hide_id=hide_id)
-        if not success:
-            logger.error(f"[MainWindow] Call failed to {number}")
+
+        if not self.ofono:
             self.notify_error(_("Call Failed"))
+            return
+
+        def done(success):
+            if not success:
+                logger.error(f"[MainWindow] Call failed to {number}")
+                self.notify_error(_("Call Failed"))
+
+        run_in_background(self.ofono.dial, number, on_complete=done, hide_id=hide_id)
 
     def show_call_details(self, item):
         """Show details dialog for a history item."""

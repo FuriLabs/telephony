@@ -331,7 +331,11 @@ class ChatPage(Gtk.Box):
             self.messages_view.close_active_chat()
 
     def on_reschedule_message(self, item):
-        """Reschedule an existing message."""
+        """Reschedule a scheduled message or retry a failed one."""
+        if item.status == "failed":
+            self.on_retry_message(item)
+            return
+
         initial = None
         if item.scheduled_timestamp:
             try:
@@ -883,7 +887,9 @@ class ChatPage(Gtk.Box):
 
         if change == "insert":
             self._append_new_messages()
-        elif change in ("status", "draft"):
+        elif change == "status":
+            self._sync_message_statuses()
+        elif change == "draft":
             return
         else:
             self._reload_chat()
@@ -928,6 +934,36 @@ class ChatPage(Gtk.Box):
                 self._mark_read_debounced()
 
         run_in_background(fetch, on_complete=done)
+
+    def _sync_message_statuses(self):
+        """Refresh the status of recent items in place from the database."""
+        def fetch():
+            return self.db.get_chat_messages(self.number, limit=30, offset=0)
+
+        def done(rows):
+            by_id = {m[0]: m[4] for m in rows or []}
+            for i in range(self.store.get_n_items()):
+                item = self.store.get_item(i)
+                if not item.id or item.id not in by_id:
+                    continue
+                new_status = by_id[item.id]
+                if item.status == new_status:
+                    continue
+                replacement = MessageItem(item.id, item.direction, item.body, item.timestamp, new_status,
+                                          subject=item.subject, attachments=item.attachments,
+                                          sender=item.sender, scheduled_timestamp=item.scheduled_timestamp)
+                self.store.remove(i)
+                self.store.insert(i, replacement)
+
+        run_in_background(fetch, on_complete=done)
+
+    def on_retry_message(self, item):
+        """Resend a failed message."""
+        self.db.update_message_status(item.id, "sending")
+        if self.is_group or item.attachments:
+            run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), item.body, list(item.attachments or []), item.id)
+        else:
+            run_in_background(self.app_window.ofono.send_sms_tracked, self.number, item.body, item.id)
 
     def _reload_chat(self):
         """Reload the chat conversation."""
@@ -1274,22 +1310,11 @@ class ChatPage(Gtk.Box):
             self.btn_send.set_sensitive(True)
             return
 
-        success = False
-        if self.is_group or has_att:
-            success = self.app_window.mms.send_mms(self.recipients, body=text, attachment_paths=final_attachments)
-        else:
-            success = self.app_window.ofono.send_sms(self.number, text)
-
-        if not success:
-            self.app_window.notify_error(_("Failed to send message"))
-            self.btn_send.set_sensitive(True)
-            return
-
         self._draft_saved = True
         self.db.delete_drafts(self.number)
 
         now = format_timestamp()
-        row_id = self.db.add_message(self.number, 'outgoing', text, status='sent', subject=None, attachments=final_attachments, sender="Me")
+        row_id = self.db.add_message(self.number, 'outgoing', text, status='sending', subject=None, attachments=final_attachments, sender="Me")
         buffer.set_text("")
         self.attachments = []
         self.refresh_attachment_ui()
@@ -1297,6 +1322,11 @@ class ChatPage(Gtk.Box):
         self.store.insert(0, msg)
         self.scroll_to_bottom()
         self.btn_send.set_sensitive(True)
+
+        if self.is_group or has_att:
+            run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), text, final_attachments, row_id)
+        else:
+            run_in_background(self.app_window.ofono.send_sms_tracked, self.number, text, row_id)
 
     def on_scroll_changed(self, adj):
         """Handle scroll position change to mark read or fetch older."""

@@ -285,6 +285,7 @@ class ChatBubbleFactory:
             target_w["lbl_sender"].set_visible(False)
             target_w["actions"][3].set_visible(False)
 
+            target_w["bubble"].remove_css_class("chat-bubble-failed")
             if item.status == "scheduled":
                 target_w["bubble"].remove_css_class("chat-bubble-out")
                 target_w["bubble"].add_css_class("chat-bubble-scheduled")
@@ -295,6 +296,15 @@ class ChatBubbleFactory:
                         target_w["lbl_time"].set_text(_("Scheduled: {time}").format(time=short_ts))
                     except Exception as e:
                         logger.warning(f"Failed to format scheduled time: {e}")
+            elif item.status == "failed":
+                target_w["bubble"].remove_css_class("chat-bubble-scheduled")
+                target_w["bubble"].add_css_class("chat-bubble-out")
+                target_w["bubble"].add_css_class("chat-bubble-failed")
+                target_w["lbl_time"].set_text(_("Failed to send"))
+            elif item.status == "sending":
+                target_w["bubble"].remove_css_class("chat-bubble-scheduled")
+                target_w["bubble"].add_css_class("chat-bubble-out")
+                target_w["lbl_time"].set_text(_("Sending..."))
             else:
                 target_w["bubble"].remove_css_class("chat-bubble-scheduled")
                 target_w["bubble"].add_css_class("chat-bubble-out")
@@ -597,8 +607,19 @@ class ChatBubbleFactory:
             lambda x: ChatBubbleFactory._safe_run(_del_action, "Delete failed")
         )
 
-        if item.status == "scheduled" and reschedule_cb:
+        if item.status in ("scheduled", "failed") and reschedule_cb:
             b_resched.set_visible(True)
+
+            box = b_resched.get_child()
+            icon = box.get_first_child()
+            label = icon.get_next_sibling()
+            if item.status == "failed":
+                icon.set_from_icon_name("mail-send-symbolic")
+                label.set_label(_("Retry Send"))
+            else:
+                icon.set_from_icon_name("alarm-symbolic")
+                label.set_label(_("Re-Schedule"))
+
             if (b_resched.h is not None):
                 b_resched.disconnect(b_resched.h)
 

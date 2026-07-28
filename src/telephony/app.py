@@ -129,6 +129,7 @@ class App(Adw.Application):
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
         self._setup_css()
+        self._setup_icon_paths()
 
         init_locale()
 
@@ -161,6 +162,8 @@ class App(Adw.Application):
 
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
         self.scheduler.start()
+
+        run_in_background(self.db.fail_stale_sending)
 
         action_open = Gio.SimpleAction.new("open-chat", GLib.VariantType.new("s"))
         action_open.connect("activate", self.on_action_open_chat)
@@ -203,6 +206,14 @@ class App(Adw.Application):
         self._ensure_incall_window()
         self.release_keyboard_focus()
         GLib.idle_add(self._present_incall_window)
+
+    def _setup_icon_paths(self):
+        """Ensure the system icon directory is searched even under a minimal service environment."""
+        try:
+            theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+            theme.add_search_path("/usr/share/icons")
+        except Exception as e:
+            logger.warning(f"Icon path setup failed: {e}")
 
     def _setup_css(self):
         """Load and apply custom CSS."""

@@ -18,6 +18,7 @@ import os
 import random
 import shutil
 import tempfile
+import threading
 import time
 from loguru import logger
 from gettext import gettext as _
@@ -62,6 +63,11 @@ class MmsManager(GObject.Object):
         self._max_attachment_size = None
         self.active_chat_provider = None
 
+        self.inflight_mms = {}
+        self.inflight_mms_paths = {}
+        self.unclaimed_mms_states = {}
+        self.mms_send_lock = threading.Lock()
+
         if not mimetypes.inited:
             mimetypes.init()
 
@@ -76,6 +82,18 @@ class MmsManager(GObject.Object):
                 "org.ofono.mms", "org.ofono.mms.Service", "MessageAdded",
                 None, None, Gio.DBusSignalFlags.NONE,
                 self._on_message_added_raw, None
+            ))
+
+            self.subs.append(self.bus.signal_subscribe(
+                "org.ofono.mms", "org.ofono.mms.Message", "PropertyChanged",
+                None, None, Gio.DBusSignalFlags.NONE,
+                self._on_message_prop_changed, None
+            ))
+
+            self.subs.append(self.bus.signal_subscribe(
+                "org.ofono.mms", "org.ofono.mms.Service", "MessageSendError",
+                None, None, Gio.DBusSignalFlags.NONE,
+                self._on_message_send_error, None
             ))
 
             self._init_manager()
@@ -256,17 +274,91 @@ class MmsManager(GObject.Object):
             fmt_attachments.append((os.path.basename(path), ctype or "application/octet-stream", path))
 
         try:
-            self.proxy.call_sync("SendMessage",
-                                 GLib.Variant("(asva(sss))", (list(recipients), GLib.Variant('s', ""), fmt_attachments)),
-                                 Gio.DBusCallFlags.NONE, -1, None)
+            ret = self.proxy.call_sync("SendMessage",
+                                       GLib.Variant("(asva(sss))", (list(recipients), GLib.Variant('s', ""), fmt_attachments)),
+                                       Gio.DBusCallFlags.NONE, -1, None)
             self._cleanup(temp_files)
-            logger.debug("[MMS-LOG] SEND-SUCCESS | Handed off to ofono")
+            msg_path = ret.unpack()[0]
+            logger.debug(f"[MMS-LOG] SEND-SUCCESS | Handed off to mmsd as {msg_path}")
 
-            return True
+            return msg_path
         except Exception as e:
             self._cleanup(temp_files)
             logger.debug(f"[MMS-LOG] SEND-FAILED | {e}")
-            return False
+            return None
+
+    def send_mms_tracked(self, recipients, body, attachment_paths, row_id):
+        """Send an MMS and resolve the stored row's status from daemon signals."""
+        path = self.send_mms(recipients, body=body, attachment_paths=attachment_paths)
+        if not path:
+            self.db.update_message_status(row_id, "failed")
+            return
+
+        with self.mms_send_lock:
+            state = self.unclaimed_mms_states.pop(path, None)
+            if state is None:
+                self.inflight_mms[row_id] = path
+                self.inflight_mms_paths[path] = row_id
+
+        if state is not None:
+            self._resolve_mms(row_id, state)
+            return
+
+        GLib.timeout_add_seconds(180, self._timeout_mms, row_id)
+
+    def _resolve_mms(self, row_id, state):
+        """Write the final status for an in-flight MMS row."""
+        status = "sent" if state == "sent" else "failed"
+        logger.info(f"[MMS] Row {row_id} resolved: {status}")
+        self.db.update_message_status(row_id, status)
+
+    def _timeout_mms(self, row_id):
+        """Fail an MMS row that never received a state signal."""
+        with self.mms_send_lock:
+            if row_id not in self.inflight_mms:
+                return False
+            path = self.inflight_mms.pop(row_id)
+            self.inflight_mms_paths.pop(path, None)
+
+        logger.warning(f"[MMS] Row {row_id} timed out without a state signal")
+        self.db.update_message_status(row_id, "failed")
+        return False
+
+    def _on_message_prop_changed(self, conn, sender, path, iface, signal, params, user_data):
+        """Resolve in-flight sends from mmsd message status changes."""
+        try:
+            name, value = params.unpack()
+        except Exception:
+            return
+
+        if name != "status" or value != "sent":
+            return
+
+        row_id = None
+        with self.mms_send_lock:
+            row_id = self.inflight_mms_paths.pop(path, None)
+            if row_id is not None:
+                self.inflight_mms.pop(row_id, None)
+            else:
+                self.unclaimed_mms_states[path] = value
+                while len(self.unclaimed_mms_states) > 20:
+                    self.unclaimed_mms_states.pop(next(iter(self.unclaimed_mms_states)))
+
+        if row_id is not None:
+            self._resolve_mms(row_id, "sent")
+
+    def _on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
+        """Fail the oldest in-flight MMS when the daemon reports a send error."""
+        logger.warning(f"[MMS] MessageSendError from daemon: {params.unpack() if params else None}")
+        row_id = None
+        with self.mms_send_lock:
+            if self.inflight_mms:
+                row_id = next(iter(self.inflight_mms))
+                msg_path = self.inflight_mms.pop(row_id)
+                self.inflight_mms_paths.pop(msg_path, None)
+
+        if row_id is not None:
+            self._resolve_mms(row_id, "failed")
 
     def _cleanup(self, files):
         """Clean up temporary files."""

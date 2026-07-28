@@ -178,6 +178,39 @@ class DbMessagesUtils:
             logger.error(f"[DB] Delete Scheduled Messages Error: {e}")
             return False
 
+    def update_message_status(self, msg_id, status):
+        """Update a single message's status and notify listeners."""
+        try:
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("UPDATE messages SET status=? WHERE id=?", (status, msg_id))
+                c.execute("SELECT remote_number FROM messages WHERE id=?", (msg_id,))
+                row = c.fetchone()
+                self.conn_messages.commit()
+
+            self.invalidate_cache("conversations")
+            GLib.idle_add(self.emit, 'messages-updated', row[0] if row else "", "status")
+            return True
+        except Exception as e:
+            logger.error(f"[DB] Update Status Error: {e}")
+            return False
+
+    def fail_stale_sending(self):
+        """Mark messages stuck in sending state from a previous run as failed."""
+        try:
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("UPDATE messages SET status='failed' WHERE status='sending'")
+                changed = c.rowcount
+                self.conn_messages.commit()
+
+            if changed > 0:
+                logger.warning(f"[DB] Marked {changed} stale sending messages as failed")
+                self.invalidate_cache("conversations")
+                GLib.idle_add(self.emit, 'messages-updated', "", "status")
+        except Exception as e:
+            logger.error(f"[DB] Fail Stale Sending Error: {e}")
+
     def update_message_schedule(self, msg_id, status="sent", timestamp=None):
         """Update message status or reschedule it."""
         try:

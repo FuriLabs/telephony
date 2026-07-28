@@ -18,6 +18,7 @@ from .ofono_messaging_manager import OfonoMessagingManager
 from .ofono_trusted_actions_manager import OfonoTrustedActionsManager
 
 
+import threading
 import time
 from loguru import logger
 from gi.repository import Gio, GLib, GObject
@@ -73,6 +74,12 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         self.seen_sms_signatures = []
         self.last_sent_sms = None
         self.trusted_trigger_history = {}
+
+        self.inflight_sms = {}
+        self.inflight_sms_paths = {}
+        self.unclaimed_sms_states = {}
+        self.send_lock = threading.Lock()
+        self._sms_state_sub = None
 
         self.call_history_tracker = {}
         self.is_volume_boosted = False
@@ -185,6 +192,11 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
 
         self.vol_proxy = self._get_proxy("org.ofono.CallVolume")
+
+        if self._sms_state_sub is None and self.bus:
+            self._sms_state_sub = self.bus.signal_subscribe(
+                None, "org.ofono.Message", "PropertyChanged", None, None,
+                Gio.DBusSignalFlags.NONE, self._on_sms_state_signal, None)
 
         self._sync_existing_calls()
 

@@ -767,10 +767,9 @@ class TelephonyDaemonDBus:
         success = False
         if self.app and self.app.mms:
             numbers = [n.strip() for n in number.split(',') if n.strip()]
-            row_id = self.db.add_message(number, 'outgoing', text, status='draft', subject=None, attachments=attachments, sender="Me")
-            success = self.app.mms.send_mms(numbers, text, attachments)
-            if success:
-                self.db.update_message_schedule(row_id, status="sent", timestamp=None)
+            row_id = self.db.add_message(number, 'outgoing', text, status='sending', subject=None, attachments=attachments, sender="Me")
+            self.app.mms.send_mms_tracked(numbers, text, attachments, row_id)
+            success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
     def _handle_getsetting(self, parameters, invocation):
