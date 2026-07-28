@@ -17,9 +17,9 @@ from gi.repository import Gtk, Adw, Gdk, GLib
 from loguru import logger
 from gettext import gettext as _
 
-from ...backend.utils.phone_utils import normalize_number, parse_evolution_e164_param
+from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.thread_utils import run_in_background
-from ...backend.utils.vcard_utils import unfold_vcard
+from ...backend.utils.vcard_utils import extract_e164_number, unfold_vcard
 from .date_time_picker_window import DateTimePicker
 from .duplicate_resolution_window import DuplicateResolutionWindow
 
@@ -468,17 +468,7 @@ class ContactEditor(Adw.Window):
                     meta = parts[0].upper()
 
                     if "X-EVOLUTION-E164" in meta:
-                        try:
-                            m_parts = meta.split(";")
-                            for p in m_parts:
-                                if p.startswith("X-EVOLUTION-E164"):
-                                    val = p.split("=", 1)[1]
-                                    parsed_e164 = parse_evolution_e164_param(val)
-                                    if parsed_e164:
-                                        raw_number = parsed_e164
-                                    break
-                        except Exception:
-                            pass
+                        raw_number = extract_e164_number(parts[0], raw_number)
 
                     number = normalize_number(raw_number)
                     label = "Mobile"

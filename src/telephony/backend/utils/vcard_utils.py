@@ -54,7 +54,7 @@ def _get_email_label(meta):
     return "Home"
 
 
-def _extract_e164_number(key_part, default):
+def extract_e164_number(key_part, default):
     """Return the X-EVOLUTION-E164 number from a TEL key part, or default."""
     try:
         match = re.search(r'X-EVOLUTION-E164=([^;:]+)', key_part, re.IGNORECASE)
@@ -77,7 +77,7 @@ def _parse_tel_line(line):
     number = parts[1].strip()
 
     if "X-EVOLUTION-E164" in key_part.upper():
-        number = _extract_e164_number(key_part, number)
+        number = extract_e164_number(key_part, number)
 
     if number == "UNKNOWN":
         return None

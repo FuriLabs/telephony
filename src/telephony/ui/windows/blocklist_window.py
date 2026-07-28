@@ -127,7 +127,7 @@ class BlocklistView(Adw.Bin):
         num_lbl.set_text(item.number)
         note_lbl.set_text(item.notes if item.notes else _("No notes"))
 
-        if hasattr(del_btn, "h"):
+        if getattr(del_btn, "h", None) is not None:
             del_btn.disconnect(del_btn.h)
         del_btn.h = del_btn.connect("clicked", lambda b: self.confirm_delete_entry(item.id))
 

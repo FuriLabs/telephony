@@ -120,7 +120,7 @@ class ContactPicker(Adw.Window):
     def _update_source_map(self):
         """Update local map of source UIDs to names."""
         self.source_map = {}
-        if self.eds and hasattr(self.eds, 'get_sources_info'):
+        if self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 self.source_map[s['uid']] = s['name']

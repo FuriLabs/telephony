@@ -206,7 +206,7 @@ class DndBypassContactsListWindow(Adw.Window):
         has_results = False
 
         source_map = {}
-        if self.eds and hasattr(self.eds, 'get_sources_info'):
+        if self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 source_map[s['uid']] = s['name']
@@ -264,10 +264,9 @@ class DndBypassContactsListWindow(Adw.Window):
         if not row.get_sensitive():
             return
 
-        if not hasattr(row, "contact_data"):
+        data = getattr(row, "contact_data", None)
+        if data is None:
             return
-
-        data = row.contact_data
         name = data.get("name")
         raw_number = data.get("number")
         number = normalize_number(raw_number)

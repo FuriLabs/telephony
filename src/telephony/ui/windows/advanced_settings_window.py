@@ -22,6 +22,7 @@ from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
 
 from ...backend.utils.system_utils import restart_ril_modem
+from ...backend.utils.thread_utils import run_in_background
 
 
 class AdvancedSettingsWindow(Adw.Window):
@@ -162,18 +163,19 @@ class AdvancedSettingsWindow(Adw.Window):
         dm.present()
 
     def _open_action_window(self, mode):
-        """Open trusted action window with polkit auth."""
-        try:
-            res = subprocess.run(["pkexec", "true"])
-            if res.returncode != 0:
+        """Open the trusted action window after polkit authentication."""
+        def done(returncode):
+            if returncode != 0:
                 self._show_toast(_("Authentication cancelled"), True)
                 return
-        except Exception as e:
-            self._show_toast(_("Auth error: {e}").format(e=e), True)
-            return
+            win = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
+            win.present()
 
-        win = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
-        win.present()
+        def failed(error):
+            self._show_toast(_("Auth error: {e}").format(e=error), True)
+
+        run_in_background(lambda: subprocess.run(["pkexec", "true"]).returncode,
+                          on_complete=done, on_error=failed)
 
     def on_save_clicked(self, btn):
         """Apply all pending changes."""

@@ -246,8 +246,7 @@ class DataManagementDialog:
         self.app_window.notify_loading(_("Deleting contacts..."))
 
         def task():
-            if hasattr(self.eds, "delete_all_contacts"):
-                self.eds.delete_all_contacts(source_uid=source_uid)
+            self.eds.delete_all_contacts(source_uid=source_uid)
             GLib.idle_add(self.app_window.hide_loading)
 
             GLib.idle_add(lambda: self.app_window.notify_success(_("Contacts Deleted")))
@@ -261,14 +260,12 @@ class DataManagementDialog:
         self.app_window.notify_loading(_("Deleting address book..."))
 
         def task():
-            if hasattr(self.eds, "delete_addressbook"):
-                success = self.eds.delete_addressbook(source_uid)
-                GLib.idle_add(self.app_window.hide_loading)
-                if success:
-                    GLib.idle_add(lambda: self.app_window.notify_success(_("Address Book Deleted")))
-
-                else:
-                    GLib.idle_add(lambda: self.app_window.notify_error(_("Failed to delete Address Book")))
+            success = self.eds.delete_addressbook(source_uid)
+            GLib.idle_add(self.app_window.hide_loading)
+            if success:
+                GLib.idle_add(lambda: self.app_window.notify_success(_("Address Book Deleted")))
+            else:
+                GLib.idle_add(lambda: self.app_window.notify_error(_("Failed to delete Address Book")))
         run_in_background(task)
 
     def _do_clear_everything(self, source_uid=None):
@@ -277,8 +274,7 @@ class DataManagementDialog:
 
         def task():
             self.db.clear_everything()
-            if hasattr(self.eds, "delete_all_contacts"):
-                self.eds.delete_all_contacts(source_uid=source_uid)
+            self.eds.delete_all_contacts(source_uid=source_uid)
             try:
                 cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
                 if os.path.exists(cfg):

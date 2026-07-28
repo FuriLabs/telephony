@@ -132,8 +132,8 @@ class ChatMediaController:
             if "/tmp/" in path:
                 try:
                     os.remove(path)
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"[MediaController] Temp file removal failed: {e}")
 
             self.chat_page.on_attachment_captured(dest)
 

@@ -31,6 +31,8 @@ class TrustedActionsListWindow(Adw.Window):
         self.totp_btn = None
         try:
             self.mode = mode
+            self.gsettings_mgr = db
+            self.eds = eds
             self.get_contacts_func = None
             self.set_contacts_func = None
             self.get_enabled_func = None
@@ -65,10 +67,11 @@ class TrustedActionsListWindow(Adw.Window):
                 self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_remote_wipe_enabled
                 self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_remote_wipe_enabled
 
-            self.gsettings_mgr = db
-            self.eds = eds
-            self.app_window = parent.parent_win.main_window if hasattr(parent, 'parent_win') else (
-                parent.main_window if hasattr(parent, 'main_window') else None)
+            parent_win = getattr(parent, 'parent_win', None)
+            if parent_win is not None:
+                self.app_window = parent_win.main_window
+            else:
+                self.app_window = getattr(parent, 'main_window', None)
 
             title = _("Set \"Find my Telephony\"")
             if mode == "trusted_sms_silent_callback":
@@ -215,7 +218,7 @@ class TrustedActionsListWindow(Adw.Window):
             self.eds_signals = []
             self.db_signals = []
 
-            if self.app_window is not None and hasattr(self.app_window, "db"):
+            if self.app_window is not None:
                 sig_id = self.app_window.db.connect(
                     'blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
                 self.db_signals.append((self.app_window.db, sig_id))
@@ -430,7 +433,7 @@ class TrustedActionsListWindow(Adw.Window):
         has_results = False
 
         source_map = {}
-        if self.eds and hasattr(self.eds, 'get_sources_info'):
+        if self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 source_map[s['uid']] = s['name']
@@ -494,10 +497,9 @@ class TrustedActionsListWindow(Adw.Window):
         if not row.get_sensitive():
             return
 
-        if not hasattr(row, "contact_data"):
+        data = getattr(row, "contact_data", None)
+        if data is None:
             return
-
-        data = row.contact_data
         name = data.get("name")
         raw_number = data.get("number")
         number = normalize_number(raw_number)

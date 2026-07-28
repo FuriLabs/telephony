@@ -33,7 +33,7 @@ class CustomToneListWindow(Adw.Window):
             self.gsettings_mgr = db
             self.eds = eds
             self.mode = mode
-            self.app_window = parent.main_window if hasattr(parent, 'main_window') else None
+            self.app_window = getattr(parent, 'main_window', None)
             self.set_default_size(400, 700)
 
             self.local_tones = []
@@ -114,7 +114,7 @@ class CustomToneListWindow(Adw.Window):
             self.eds_signals = []
             self.db_signals = []
 
-            if self.app_window is not None and hasattr(self.app_window, "db"):
+            if self.app_window is not None:
                 sig_id = self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
                 self.db_signals.append((self.app_window.db, sig_id))
 
@@ -243,7 +243,7 @@ class CustomToneListWindow(Adw.Window):
         has_results = False
 
         source_map = {}
-        if self.eds and hasattr(self.eds, 'get_sources_info'):
+        if self.eds:
             sources = self.eds.get_sources_info()
             for s in sources:
                 source_map[s['uid']] = s['name']
@@ -304,10 +304,11 @@ class CustomToneListWindow(Adw.Window):
         if not row.get_sensitive():
             return
 
-        if not hasattr(row, "contact_data"):
+        data = getattr(row, "contact_data", None)
+        if data is None:
             return
 
-        self._open_audio_picker(row.contact_data)
+        self._open_audio_picker(data)
 
     def _open_audio_picker(self, contact_data):
         """Open file picker to select custom tone."""
