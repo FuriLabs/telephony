@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import hashlib
 import json
 
 from loguru import logger
@@ -41,13 +42,14 @@ class DbContactsUtils:
         try:
             with self.lock:
                 c = self.conn_contacts.cursor()
-                c.execute("SELECT uid, name, phones, emails, search_index_name, search_index_phones FROM contacts WHERE source_uid=?", (source_uid,))
+                c.execute("SELECT uid, name, phones, emails, search_index_name, search_index_phones, vcard FROM contacts WHERE source_uid=?", (source_uid,))
                 rows = c.fetchall()
                 results = []
                 for r in rows:
                     phones = json.loads(r[2]) if r[2] else []
                     emails = json.loads(r[3]) if r[3] else []
                     search_phones = json.loads(r[5]) if r[5] else []
+                    vcard = r[6] or ""
 
                     data = {
                         'uid': r[0],
@@ -55,7 +57,9 @@ class DbContactsUtils:
                         'phones': phones,
                         'emails': emails,
                         'idx_name': r[4],
-                        'idx_phones': search_phones
+                        'idx_phones': search_phones,
+                        'vcard_hash': hashlib.md5(vcard.encode('utf-8')).hexdigest() if vcard else None,
+                        'is_fav': "X-FOLKS-FAVOURITE:true" in vcard or "X-FOLKS-FAVOURITE:TRUE" in vcard
                     }
                     results.append(data)
                 return results

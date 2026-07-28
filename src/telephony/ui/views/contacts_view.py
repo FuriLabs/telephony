@@ -204,6 +204,7 @@ class ContactsView(Adw.Bin):
                         num_map[key].append(data)
 
             conflicts = []
+            identical_dupes = []
             for (num, s_uid), contacts in num_map.items():
                 if len(contacts) > 1:
                     unique_contacts = []
@@ -217,8 +218,7 @@ class ContactsView(Adw.Bin):
                             c['vcard_hash'] = h
 
                         if h and h in seen_hashes:
-                            logger.info(f"[ContactsView] Removing identical duplicate contact: {c['uid']}")
-                            self.app_window.eds.delete_contact(c['uid'])
+                            identical_dupes.append(c['uid'])
                         else:
                             if h:
                                 seen_hashes[h] = c
@@ -226,6 +226,10 @@ class ContactsView(Adw.Bin):
 
                     if len(unique_contacts) > 1:
                         conflicts.append((num, unique_contacts))
+
+            if identical_dupes:
+                logger.info(f"[ContactsView] Removing {len(identical_dupes)} identical duplicate contacts")
+                self.app_window.eds.delete_contacts(identical_dupes)
 
             GLib.idle_add(self.app_window.update_duplicate_status, conflicts)
             if done_callback:
