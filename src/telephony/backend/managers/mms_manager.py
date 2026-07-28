@@ -65,11 +65,7 @@ class MmsManager(GObject.Object, MmsParserManager):
         self.local_att_dir = os.path.join(GLib.get_user_data_dir(), "telephony", "attachments")
         self.mmsd_storage_dir = os.path.expanduser("~/.mms/modemmanager")
 
-        if not os.path.exists(self.local_att_dir):
-            try:
-                os.makedirs(self.local_att_dir, exist_ok=True)
-            except Exception as e:
-                logger.error(f"[MMS] Failed to create attachment dir: {e}")
+        os.makedirs(self.local_att_dir, exist_ok=True)
 
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         try:
