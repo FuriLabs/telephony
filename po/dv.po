@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "ގްރޫޕް ނަން ބަދަލުވެއްޖެ"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "ވީޑިއޯ ކުޑަކުރަނީ..."
+msgstr "ފޮޓޯ ކުޑަކުރަނީ..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "ފޮނުވަން ފޮޓޯ މާ ބޮޑު"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "ވީޑިއޯ ކުޑައެއް ނުކުރެވުނު"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "MMS އިން ފޮނުވަން ފައިލް މާ ބޮޑު"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "ފަށާ ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "ފަށާ ({count})"
+msgstr "ހުޅުވާ ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "ނަންބަރު އިތުރުކުރޭ: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "ގްރޫޕް ނަން"
+msgstr "ގްރޫޕް ޗެޓް"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "ޝެޑިއުލް ކުރެވިފައިވަނީ: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "ފޮނުވޭގޮތެއް ނުވި: {e}"
+msgstr "ނުފޮނުވުނު"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD ފޮނުވަނީ..."
+msgstr "ފޮނުވަނީ..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "މި ނަމުގައި ސޭވް ކުރޭ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "އަލުން ފޮނުވާ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "ކޮންޓެކްޓް ފޮހެނީ..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "ބްލޮކް ލިސްޓަށް ސޭވްއެއް ނުކުރެވުނު."
+msgstr "ކޮންޓެކްޓް ސޭވްއެއް ނުކުރެވުނު"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1992,6 +1987,9 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"ނޯޓް: މި އެކްސްޕޯޓް ބޭނުންކުރަނީ Android ފޯމެޓް. މި ފައިލް iOS "
+"ޑިވައިސްއަކަށް އިމްޕޯޓް ކުރާއިރު \"Import From Android\" އޮޕްޝަން "
+"ބޭނުންކުރޭ."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2242,9 +2240,9 @@ msgid "Message removed"
 msgstr "މެސެޖު އުނިކުރެވިއްޖެ"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "ޝެޑިއުލް ކުރި މެސެޖު {number} އަށް ފޮނުވިއްޖެ"
+msgstr "{number} އަށް މެސެޖު ފޮނުވަނީ..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2316,40 +2314,39 @@ msgid "Quick Response"
 msgstr "އަވަސް ޖަވާބު"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "ނޫނެކޭ ބުނާ މެސެޖު"
+msgstr "ނޫނެކޭ ބުނާ މެސެޖު އިތުރުކުރޭ"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "{number} އަށް ގުޅާ"
+msgstr "ކޯލްގެ އަޑު"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "އަޑު ގަދަކުރުން ހުއްދަކުރޭ"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr ""
+"ސްލައިޑަރުތައް 100% އަށްވުރެ މައްޗަށް ދާން ހުއްދަކުރޭ. ގަދަކުރި އަޑު "
+"ބަދަލުވެދާނެ."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "ކަންފަތު ސްޕީކަރު"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "ސްޕީކަރު ހުޅުވާލާ"
+msgstr "ސްޕީކަރު"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "ވާގަނޑު ހެޑްސެޓް"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2530,6 +2527,12 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"މިއީ ކޯލެއް ގުޅުމުން ހޮވި އައުޓްޕުޓަށް ބޭނުންކުރާ އަސާސީ ހާޑްވެއާ އަޑުގެ "
+"މިންވަރު. ކޯލެއްގެ ތެރޭގައި އަޑުގެ ބަޓަންތަކުން ހަމައެކަނި މި އަސާސީ "
+"މިންވަރުގެ މަތިން ކުދި ބަދަލުތައް ގެނެވޭނީ، އެހެންވީމާ އަސާސް 0% ނަމަ ކޯލް "
+"އަބަދުވެސް ހިމޭންވާނެ. 100% އަށްވުރެ މަތީ އަގުތަކުގައި ސޮފްޓްވެއާ އިން އަޑު "
+"ގަދަކުރެވި އަޑު ބަދަލުވެދާނެ. ވާގަނޑު ހެޑްސެޓް އަދި Bluetooth ގެ "
+"މިންވަރުތައް ކުރިއަށް އޮތް ރައުޓިން ސަޕޯޓަށް ރައްކާކުރެވޭ."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2581,7 +2584,7 @@ msgstr "ރެކޯޑިންގް މާ ބޮޑު. ކުޑަކޮށްލާ."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "ފީޗާ ބޭނުންކުރޭ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2645,11 +2648,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP ބަލާ ނުވަތަ ބަދަލުކުރޭ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP ސެޓަޕް ކުރޭ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2700,9 +2703,8 @@ msgstr ""
 "ކޯޑު ޖަހަންވާނެއެވެ."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "ލިޔުން ކޮޕީ ކުރޭ"
+msgstr "TOTP ކީ ކޮޕީކުރޭ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

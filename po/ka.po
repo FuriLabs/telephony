@@ -151,9 +151,9 @@ msgid "Set numbers in Settings."
 msgstr "დააყენეთ ნომრები პარამეტრებში."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "დარეკეთ {ნომერზე}"
+msgstr "დარეკვა: {number}"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
@@ -460,9 +460,9 @@ msgid "0s"
 msgstr "0 ს"
 
 #: src/telephony/backend/utils/model_utils.py:61
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{h}h {m}m"
-msgstr "{h}სთ {მ}წთ"
+msgstr "{h} სთ {m} წთ"
 
 #: src/telephony/backend/utils/model_utils.py:63
 #, python-brace-format
@@ -611,9 +611,9 @@ msgid "Calling (Anonymous)..."
 msgstr "დარეკვა (ანონიმური)..."
 
 #: src/telephony/ui/main_window.py:659
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Calling {number}..."
-msgstr "ირეკება {ნომერზე}..."
+msgstr "მიმდინარეობს დარეკვა: {number}..."
 
 #: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
 msgid "Call Failed"
@@ -624,7 +624,7 @@ msgid "Call Details"
 msgstr "ზარის დეტალები"
 
 #: src/telephony/ui/main_window.py:676
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Number: {number}\n"
 "Name: {name}\n"
@@ -633,8 +633,8 @@ msgid ""
 msgstr ""
 "ნომერი: {number}\n"
 "სახელი: {name}\n"
-"თარიღი: {თარიღი}\n"
-"ხანგრძლივობა: {ხანგრძლივობა}"
+"თარიღი: {date}\n"
+"ხანგრძლივობა: {duration}"
 
 #: src/telephony/ui/main_window.py:692
 #: src/telephony/ui/windows/blocklist_window.py:142
@@ -787,13 +787,13 @@ msgid "Me"
 msgstr "მე"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"გადაგზავნილი {sender}-ისგან:\n"
-"{სხეული}"
+"გადმოგზავნილია {sender}-სგან:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
 #, python-brace-format
@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "ჯგუფმა დაარქვეს სახელი"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "ვიდეოს შეკუმშვა..."
+msgstr "სურათის შეკუმშვა..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "სურათი ძალიან დიდია გასაგზავნად"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "ვიდეოს შეკუმშვა ვერ მოხერხ
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "ფაილი ძალიან დიდია MMS-ით გასაგზავნად"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "დაწყება ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "დაწყება ({count})"
+msgstr "გახსნა ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "ნომრის დამატება: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "ჯგუფის სახელი"
+msgstr "ჯგუფური ჩატი"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "დაგეგმილია: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "ვერ გაიგზავნა: {e}"
+msgstr "გაგზავნა ვერ მოხერხდა"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "იგზავნება USSD..."
+msgstr "იგზავნება..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "შენახვა როგორც"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "ხელახლა გაგზავნა"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "კონტაქტის წაშლა..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "დაბლოკილ სიაში შენახვა ვერ მოხერხდა."
+msgstr "კონტაქტის შენახვა ვერ მოხერხდა"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1816,9 +1811,9 @@ msgid "Keep this, Merge duplicates"
 msgstr "შეინახეთ ეს, შეაერთეთ დუბლიკატები"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:332
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Merging {current}/{total}..."
-msgstr "გაერთიანება {current}/{სულ}..."
+msgstr "გაერთიანება {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -2005,7 +2000,7 @@ msgstr "რისი ექსპორტი გსურთ?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "შენიშვნა: ეს ექსპორტი იყენებს Android-ის ფორმატს. ამ ფაილის iOS მოწყობილობაზე იმპორტისას გამოიყენეთ ვარიანტი \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2197,9 +2192,9 @@ msgid "Failed. Reboot Device."
 msgstr "ვერ მოხერხდა. მოწყობილობის გადატვირთვა."
 
 #: src/telephony/ui/windows/incall_window.py:643
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Verifying... {attempt}"
-msgstr "დადასტურება... {ttempt}"
+msgstr "მოწმდება... {attempt}"
 
 #: src/telephony/ui/windows/incall_window.py:702
 msgid "Mute Microphone"
@@ -2240,9 +2235,9 @@ msgid "Report bugs or request features"
 msgstr "შეატყობინეთ შეცდომების შესახებ ან მოითხოვეთ ფუნქციები"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "დაგეგმილი ({current}/{სულ})"
+msgstr "დაგეგმილი ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
 #, python-brace-format
@@ -2258,9 +2253,9 @@ msgid "Message removed"
 msgstr "შეტყობინება წაიშალა"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "დაგეგმილი შეტყობინება გაიგზავნა {number}-ზე"
+msgstr "შეტყობინება იგზავნება ნომერზე {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2334,40 +2329,37 @@ msgid "Quick Response"
 msgstr "სწრაფი რეაგირება"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "შეტყობინების უარყოფა"
+msgstr "უარყოფის შეტყობინების დამატება"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "დარეკეთ {ნომერზე}"
+msgstr "ზარის ხმის დონე"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "გაძლიერების დაშვება"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "სლაიდერებს 100%-ზე მაღლა ასვლის საშუალებას აძლევს. გაძლიერებული ხმა შეიძლება დამახინჯდეს."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "ყურის დინამიკი"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "დინამიკი"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "სადენიანი ყურსასმენი"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2563,7 +2555,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "ეს არის საბაზისო აპარატურული ხმის დონე, რომელიც ზარის დაკავშირებისას არჩეულ გამოსავალს ენიჭება. ზარის დროს ხმის ღილაკები მხოლოდ ამ საბაზისო დონის ზემოდან არეგულირებენ ზუსტ მართვას, ამიტომ თუ საბაზისო დონე 0%-ია, ზარი ყოველთვის უხმო დარჩება. 100%-ზე მაღალი მნიშვნელობები იყენებს პროგრამულ გაძლიერებას და ხმა შეიძლება დამახინჯდეს. სადენიანი ყურსასმენისა და Bluetooth-ის დონეები ინახება მომავალი მარშრუტიზაციის მხარდაჭერისთვის."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2621,7 +2613,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "ფუნქციის ჩართვა"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2696,11 +2688,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP-ის ნახვა ან რედაქტირება"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP-ის დაყენება"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2752,9 +2744,8 @@ msgstr ""
 "შემდეგ."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "ტექსტის კოპირება"
+msgstr "TOTP გასაღების კოპირება"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

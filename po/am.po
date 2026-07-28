@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "ቡድኑ ተሰየመ"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "ቪዲዮ በመጠቅለያ ላይ..."
+msgstr "ምስል በመጠቅለያ ላይ..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "ምስሉ ለመላክ በጣም ትልቅ ነው"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "የቪዲዮ መጠቅለያ አልተሳካም"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "ፋይሉ በ MMS ለመላክ በጣም ትልቅ ነው"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "ጀምር ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "ጀምር ({count})"
+msgstr "ክፈት ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "ቁጥር ጨምር: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "የቡድን ስም"
+msgstr "የቡድን ውይይት"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "ታቅዷል: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "መላክ አልተቻለም: {e}"
+msgstr "መላክ አልተሳካም"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD በመላክ ላይ..."
+msgstr "በመላክ ላይ..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "እንደ… አስቀምጥ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "እንደገና ላክ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "ኮንታክት በመሰረዝ ላይ..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "ወደ ብሎክሊስት ማስቀመጥ አልተሳካም።"
+msgstr "እውቂያን ማስቀመጥ አልተሳካም"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1997,6 +1992,8 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"ማስታወሻ: ይህ ወደ ውጭ መላክ የAndroid ቅርጸት ይጠቀማል። ይህን ፋይል ወደ iOS መሣሪያ ሲያስገቡ እባክዎ "
+"\"Import From Android\" የሚለውን አማራጭ ይጠቀሙ።"
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2247,9 +2244,9 @@ msgid "Message removed"
 msgstr "መልዕክቱ ተወግዷል"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "የታቀደ መልዕክት ለ {number} ተልኳል"
+msgstr "መልዕክት ወደ {number} በመላክ ላይ..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2321,40 +2318,37 @@ msgid "Quick Response"
 msgstr "ቀላል ምላሽ"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "የመቀበል አልባ መልዕክት"
+msgstr "የመቀበል አልባ መልዕክት አክል"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "{number}ን ይደውሉ"
+msgstr "የጥሪ ድምጽ መጠን"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "ማጉላትን ፍቀድ"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "ማንሸራተቻዎች ከ100% በላይ እንዲሄዱ ፍቀድ። የተጎላ ድምጽ ሊዛባ ይችላል።"
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "የጆሮ ማዳመጫ"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "ስፒከር ክፍት"
+msgstr "ስፒከር"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "ባለገመድ የጆሮ ማዳመጫ"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2541,6 +2535,10 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"ይህ ጥሪ ሲገናኝ ለተመረጠው ውፅዓት የሚተገበረው መሰረታዊ የሃርድዌር ድምጽ መጠን ነው። በጥሪ ጊዜ የድምጽ አዝራሮች "
+"በዚህ መሰረታዊ ደረጃ ላይ ጥቃቅን ማስተካከያ ብቻ ያደርጋሉ፣ ስለዚህ መሰረቱ 0% ከሆነ ጥሪው ምንም ቢሆን ጸጥ ይላል። "
+"ከ100% በላይ የሆኑ እሴቶች የሶፍትዌር ማጉላት ይጠቀማሉ እና ድምጽን ሊያዛቡ ይችላሉ። የባለገመድ የጆሮ ማዳመጫ እና "
+"የBluetooth ደረጃዎች ለሚመጣው የማዘዋወር ድጋፍ ተቀምጠዋል።"
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2592,7 +2590,7 @@ msgstr "መቅዳቱ ለ MMS ብዛት ብዙ ነው (ከ600KB በታች)። እ
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "ባህሪን አንቃ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2660,11 +2658,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP ይመልከቱ ወይም ያርትዑ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP ያዋቅሩ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2715,9 +2713,8 @@ msgstr ""
 "መተግበሪያቸው ከቁልፍ ቃሉ በኋላ ማከል አለባቸው።"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "ጽሁፍ ቅዳ"
+msgstr "የTOTP ቁልፍ ቅዳ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

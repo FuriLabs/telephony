@@ -151,18 +151,18 @@ msgid "Set numbers in Settings."
 msgstr "Setel nomer ing Setelan."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "Telpon {nomer}"
+msgstr "Telpon {number}"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
 msgstr "Konfirmasi Telpon Darurat"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {name}?"
-msgstr "Telpon {jeneng}?"
+msgstr "Telpon {name}?"
 
 #: src/telephony/backend/managers/emergency_manager.py:164
 msgid "🟢 Yes, Call"
@@ -208,9 +208,9 @@ msgid "Telephony - Incoming"
 msgstr "Telephony - mlebu"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
-msgstr "🟢 mlebu: {jeneng}"
+msgstr "🟢 Mlebu: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
 #: src/telephony/ui/windows/incall_window.py:387
@@ -244,9 +244,9 @@ msgid "Telephony - On Hold"
 msgstr "Telephony - Ditahan"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟠 {name} put as on hold"
-msgstr "🟠 {jeneng} ditahan"
+msgstr "🟠 {name} ditahan"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:201
 #: src/telephony/backend/managers/lockscreen_manager.py:217
@@ -268,9 +268,9 @@ msgid "MuteMic"
 msgstr "MuteMic"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
-msgstr "⏸️ {jeneng} (Ditahan)"
+msgstr "⏸️ {name} (Ditahan)"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔁 Resume"
@@ -281,9 +281,9 @@ msgid "Telephony - Active Call"
 msgstr "Telephony - Telpon Aktif"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Active: {name}"
-msgstr "🟢 Aktif: {jeneng}"
+msgstr "🟢 Aktif: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:224
 msgid "Active Call"
@@ -332,9 +332,9 @@ msgid "Error: {e}"
 msgstr "Salah: {e}"
 
 #: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Please wait 60 seconds before triggering {prefix} again."
-msgstr "Mangga ngenteni 60 detik sadurunge micu {awalan} maneh."
+msgstr "Enteni 60 detik sadurunge miwiti {prefix} maneh."
 
 #: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
 #, python-brace-format
@@ -540,9 +540,9 @@ msgid "Modem Connected"
 msgstr "Modem Disambungake"
 
 #: src/telephony/ui/main_window.py:391
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Modem Error: {message}"
-msgstr "Kesalahan Modem: {pesen}"
+msgstr "Kesalahan Modem: {message}"
 
 #: src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
@@ -611,9 +611,9 @@ msgid "Calling (Anonymous)..."
 msgstr "Telpon (Anonim)..."
 
 #: src/telephony/ui/main_window.py:659
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Calling {number}..."
-msgstr "Telpon {nomer}..."
+msgstr "Nelpon {number}..."
 
 #: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
 msgid "Call Failed"
@@ -624,17 +624,17 @@ msgid "Call Details"
 msgstr "Rincian Telpon"
 
 #: src/telephony/ui/main_window.py:676
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Number: {number}\n"
 "Name: {name}\n"
 "Date: {date}\n"
 "Duration: {duration}"
 msgstr ""
-"Nomer: {nomer}\n"
+"Nomer: {number}\n"
 "Jeneng: {name}\n"
-"Tanggal: {tanggal}\n"
-"Duration: {duration}"
+"Tanggal: {date}\n"
+"Suwene: {duration}"
 
 #: src/telephony/ui/main_window.py:692
 #: src/telephony/ui/windows/blocklist_window.py:142
@@ -700,9 +700,9 @@ msgid "Saving contact..."
 msgstr "Nyimpen kontak..."
 
 #: src/telephony/ui/main_window.py:802
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Added to {name}"
-msgstr "Ditambahake menyang {jeneng}"
+msgstr "Ditambahake menyang {name}"
 
 #: src/telephony/ui/main_window.py:805
 msgid "Failed to add number"
@@ -746,9 +746,9 @@ msgid "Scheduled time must be in the future"
 msgstr "Wektu sing dijadwal kudu ing mangsa ngarep"
 
 #: src/telephony/ui/views/chat_view.py:358
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Rescheduled for {time}"
-msgstr "Dijadwal maneh kanggo {wektu}"
+msgstr "Dijadwalake maneh kanggo {time}"
 
 #: src/telephony/ui/views/chat_view.py:362
 msgid "Re-Schedule Message"
@@ -787,18 +787,18 @@ msgid "Me"
 msgstr "kula"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"Diterusake saka {pangirim}:\n"
-"{awak}"
+"Diterusake saka {sender}:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Forwarded from {sender}"
-msgstr "Diterusake saka {pangirim}"
+msgstr "Diterusake saka {sender}"
 
 #: src/telephony/ui/views/chat_view.py:817
 msgid "Forward To"
@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Grup diganti jeneng"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Ngompres video..."
+msgstr "Ngompres gambar..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Gambar kegedhen kanggo dikirim"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Kompresi video gagal"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Berkas kegedhen kanggo dikirim liwat MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -851,9 +850,9 @@ msgid "Schedule Message"
 msgstr "Pesen Jadwal"
 
 #: src/telephony/ui/views/chat_view.py:1277
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Message scheduled for {time}"
-msgstr "Pesen dijadwal kanggo {wektu}"
+msgstr "Pesen dijadwalake kanggo {time}"
 
 #: src/telephony/ui/views/chat_view.py:1280
 #: src/telephony/ui/views/chat_view.py:1298
@@ -1047,19 +1046,18 @@ msgid "Start ({count})"
 msgstr "Miwiti ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Miwiti ({count})"
+msgstr "Bukak ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Add Number: {number}"
-msgstr "Tambah Nomer: {nomer}"
+msgstr "Tambah Nomer: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Jeneng Grup"
+msgstr "Obrolan grup"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1093,19 +1091,17 @@ msgstr "Mbusak"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:296
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled: {time}"
-msgstr "Dijadwal: {wektu}"
+msgstr "Dijadwalake: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Gagal ngirim: {e}"
+msgstr "Gagal ngirim"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Ngirim USSD..."
+msgstr "Ngirim..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1121,7 +1117,7 @@ msgstr "Simpen minangka"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Coba Kirim Maneh"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1136,14 +1132,14 @@ msgid "Hangup All Calls"
 msgstr "Hangup Kabeh Telpon"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:103
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{time} • Group"
-msgstr "{wektu} • Klompok"
+msgstr "{time} • Grup"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:109
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Draft: {message}"
-msgstr "Draft: {pesen}"
+msgstr "Konsep: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:32
 #: src/telephony/ui/windows/settings_window.py:352
@@ -1314,9 +1310,9 @@ msgid "Recording failed (File empty)."
 msgstr "Rekaman gagal (File kosong)."
 
 #: src/telephony/ui/windows/camera_video_window.py:388
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Video gedhe ({ukuran}KB). Bakal dikompres nalika dikirim."
+msgstr "Video gedhe ({size}KB). Bakal dikompres nalika dikirim."
 
 #: src/telephony/ui/windows/camera_video_window.py:405
 msgid "Cannot play empty file."
@@ -1482,9 +1478,9 @@ msgid "Select {title}"
 msgstr "Pilih {title}"
 
 #: src/telephony/ui/windows/contact_editor_window.py:381
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Copy {title}"
-msgstr "Salin {judul}"
+msgstr "Salin {title}"
 
 #: src/telephony/ui/windows/contact_editor_window.py:390
 #: src/telephony/ui/windows/trusted_actions_list_window.py:621
@@ -1504,9 +1500,8 @@ msgid "Deleting contact..."
 msgstr "Mbusak kontak..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Gagal disimpen ing dhaptar blokir."
+msgstr "Gagal nyimpen kontak"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1816,9 +1811,9 @@ msgid "Keep this, Merge duplicates"
 msgstr "Tansah iki, Gabung duplikat"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:332
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Merging {current}/{total}..."
-msgstr "Gabung {saiki}/{total}..."
+msgstr "Nggabungake {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -2000,7 +1995,7 @@ msgstr "Apa sing arep diekspor?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Cathetan: Ekspor iki nganggo format Android. Nalika ngimpor berkas iki menyang piranti iOS, gunakna pilihan \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2192,9 +2187,9 @@ msgid "Failed. Reboot Device."
 msgstr "Gagal. Urip maneh Piranti."
 
 #: src/telephony/ui/windows/incall_window.py:643
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Verifying... {attempt}"
-msgstr "Verifikasi... {nyoba}"
+msgstr "Verifikasi... {attempt}"
 
 #: src/telephony/ui/windows/incall_window.py:702
 msgid "Mute Microphone"
@@ -2234,14 +2229,14 @@ msgid "Report bugs or request features"
 msgstr "Laporan kewan omo utawa njaluk fitur"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "Dijadwal ({saiki}/{total})"
+msgstr "Dijadwalake ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "To: {name}"
-msgstr "Kanggo: {jeneng}"
+msgstr "Kanggo: {name}"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
 msgid "Send Now"
@@ -2252,9 +2247,9 @@ msgid "Message removed"
 msgstr "Pesen dibusak"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Dikirim pesen sing dijadwal menyang {nomer}"
+msgstr "Ngirim pesen menyang {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2327,40 +2322,37 @@ msgid "Quick Response"
 msgstr "Respon Cepet"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Nolak Pesen"
+msgstr "Tambah Pesen Nolak"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Telpon {nomer}"
+msgstr "Volume Telpon"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Idinake Amplifikasi"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Ngidini slider ngluwihi 100%. Audio sing dikuwatake bisa uga distorsi."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Speaker kuping"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "Speaker"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Headset Kabel"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2515,7 +2507,7 @@ msgid "Custom URL"
 msgstr "URL khusus"
 
 #: src/telephony/ui/windows/settings_window.py:574
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
 "'{number}' in the URL where the caller's phone number should go.\n"
@@ -2525,13 +2517,11 @@ msgid ""
 "When you tap the search button during a call, we will replace '{number}' "
 "with the actual phone number and open it in your default browser."
 msgstr ""
-"Ketik URL sing pengin digunakake kanggo nggoleki nomer sing ora dingerteni. "
-"Kalebu '{nomer}' ing URL sing kudu dilebokake nomer telpon sing nelpon.\n"
+"Lebokna URL sing arep digunakake kanggo nggoleki nomer sing ora dikenal. Lebokna '{number}' ing URL ing panggonan nomer telpon sing nelpon kudune ana.\n"
 "\n"
 "Contone: https://mysearch.com/?q={number}\n"
 "\n"
-"Nalika sampeyan nutul tombol telusuran nalika nelpon, kita bakal ngganti "
-"'{nomer}' karo nomer telpon sing asli lan mbukak ing browser gawan."
+"Nalika sampeyan menet tombol goleki nalika telpon, '{number}' bakal diganti karo nomer telpon sing sabenere lan dibukak ing browser gawan sampeyan."
 
 #: src/telephony/ui/windows/settings_window.py:578
 msgid "Custom Search URL"
@@ -2556,7 +2546,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Iki volume hardware dhasar sing ditrapake menyang output sing dipilih nalika telpon nyambung. Tombol volume nalika telpon mung ngatur penyetelan alus ing ndhuwur level dhasar iki, dadi yen dhasare 0% telpon tetep meneng wae. Nilai ing ndhuwur 100% nganggo amplifikasi software lan bisa nggawe audio distorsi. Level Headset Kabel lan Bluetooth disimpen kanggo dhukungan routing sabanjure."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2613,7 +2603,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Aktifake Fitur"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2686,11 +2676,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Ndeleng utawa nyunting TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Nyetel TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2741,9 +2731,8 @@ msgstr ""
 "kudu nambah kode 6 digit saiki saka otentikator kasebut sawise tembung kunci."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Salin Teks"
+msgstr "Salin kunci TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

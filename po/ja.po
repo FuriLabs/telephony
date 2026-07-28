@@ -151,18 +151,18 @@ msgid "Set numbers in Settings."
 msgstr "「設定」で数値を設定します。"
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "{番号}に電話します"
+msgstr "{number} に電話"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
 msgstr "緊急通報の確認"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {name}?"
-msgstr "{名前}に電話しますか？"
+msgstr "{name} に電話しますか？"
 
 #: src/telephony/backend/managers/emergency_manager.py:164
 msgid "🟢 Yes, Call"
@@ -208,9 +208,9 @@ msgid "Telephony - Incoming"
 msgstr "電話 - 着信"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
-msgstr "🟢 受信: {名前}"
+msgstr "🟢 着信: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
 #: src/telephony/ui/windows/incall_window.py:387
@@ -268,9 +268,9 @@ msgid "MuteMic"
 msgstr "ミュートマイク"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
-msgstr "⏸️ {名前} (保留中)"
+msgstr "⏸️ {name} (保留中)"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔁 Resume"
@@ -281,9 +281,9 @@ msgid "Telephony - Active Call"
 msgstr "電話 - アクティブ コール"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Active: {name}"
-msgstr "🟢 アクティブ: {名前}"
+msgstr "🟢 通話中: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:224
 msgid "Active Call"
@@ -466,9 +466,9 @@ msgid "{h}h {m}m"
 msgstr "{h}h {m}m"
 
 #: src/telephony/backend/utils/model_utils.py:63
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{m}m {s}s"
-msgstr "{分}分 {s}秒"
+msgstr "{m}分 {s}秒"
 
 #: src/telephony/backend/utils/model_utils.py:64
 #, python-brace-format
@@ -541,9 +541,9 @@ msgid "Modem Connected"
 msgstr "モデムが接続されました"
 
 #: src/telephony/ui/main_window.py:391
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Modem Error: {message}"
-msgstr "モデム エラー: {メッセージ}"
+msgstr "モデムエラー: {message}"
 
 #: src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
@@ -612,9 +612,9 @@ msgid "Calling (Anonymous)..."
 msgstr "電話中（匿名）..."
 
 #: src/telephony/ui/main_window.py:659
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Calling {number}..."
-msgstr "{番号} に電話をかけています..."
+msgstr "{number} に発信しています..."
 
 #: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
 msgid "Call Failed"
@@ -625,17 +625,17 @@ msgid "Call Details"
 msgstr "通話の詳細"
 
 #: src/telephony/ui/main_window.py:676
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Number: {number}\n"
 "Name: {name}\n"
 "Date: {date}\n"
 "Duration: {duration}"
 msgstr ""
-"番号: {番号}\n"
-"名前: {名前}\n"
-"日付: {日付}\n"
-"期間: {期間}"
+"番号: {number}\n"
+"名前: {name}\n"
+"日付: {date}\n"
+"通話時間: {duration}"
 
 #: src/telephony/ui/main_window.py:692
 #: src/telephony/ui/windows/blocklist_window.py:142
@@ -701,9 +701,9 @@ msgid "Saving contact..."
 msgstr "連絡先を保存しています..."
 
 #: src/telephony/ui/main_window.py:802
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Added to {name}"
-msgstr "{名前}に追加されました"
+msgstr "{name} に追加しました"
 
 #: src/telephony/ui/main_window.py:805
 msgid "Failed to add number"
@@ -788,18 +788,18 @@ msgid "Me"
 msgstr "自分"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"{送信者} から転送されました:\n"
-"{本体}"
+"{sender} から転送:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Forwarded from {sender}"
-msgstr "{送信者} から転送されました"
+msgstr "{sender} から転送"
 
 #: src/telephony/ui/views/chat_view.py:817
 msgid "Forward To"
@@ -823,13 +823,12 @@ msgid "Group renamed"
 msgstr "グループ名が変更されました"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "ビデオを圧縮しています..."
+msgstr "画像を圧縮しています..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "画像が大きすぎるため送信できません"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -841,7 +840,7 @@ msgstr "ビデオ圧縮に失敗しました"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "ファイルが大きすぎるためMMSで送信できません"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1048,9 +1047,9 @@ msgid "Start ({count})"
 msgstr "開始 ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "開始 ({count})"
+msgstr "開く ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1058,9 +1057,8 @@ msgid "Add Number: {number}"
 msgstr "番号を追加: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "グループ名"
+msgstr "グループチャット"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1094,19 +1092,17 @@ msgstr "消去"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:296
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled: {time}"
-msgstr "予定: {時間}"
+msgstr "予約: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "送信に失敗しました: {e}"
+msgstr "送信に失敗しました"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSDを送信中..."
+msgstr "送信中..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1122,7 +1118,7 @@ msgstr "名前を付けて保存"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "再送信"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1137,14 +1133,14 @@ msgid "Hangup All Calls"
 msgstr "すべての通話を切る"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:103
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{time} • Group"
-msgstr "{時間} • グループ"
+msgstr "{time} • グループ"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:109
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Draft: {message}"
-msgstr "草案: {メッセージ}"
+msgstr "下書き: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:32
 #: src/telephony/ui/windows/settings_window.py:352
@@ -1478,14 +1474,14 @@ msgid "Clear Date"
 msgstr "クリア日付"
 
 #: src/telephony/ui/windows/contact_editor_window.py:371
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Select {title}"
-msgstr "{タイトル}を選択してください"
+msgstr "{title} を選択"
 
 #: src/telephony/ui/windows/contact_editor_window.py:381
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Copy {title}"
-msgstr "{タイトル}をコピー"
+msgstr "{title} をコピー"
 
 #: src/telephony/ui/windows/contact_editor_window.py:390
 #: src/telephony/ui/windows/trusted_actions_list_window.py:621
@@ -1505,9 +1501,8 @@ msgid "Deleting contact..."
 msgstr "連絡先を削除しています..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "ブロックリストに保存できませんでした。"
+msgstr "連絡先を保存できませんでした"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1804,9 +1799,9 @@ msgid "{number} is saved to contacts:"
 msgstr "{number} は連絡先に保存されています:"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:142
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Address Book: {name}"
-msgstr "アドレス帳: {名前}"
+msgstr "アドレス帳: {name}"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:163
 msgid "Keep this, Remove duplicates"
@@ -2006,7 +2001,7 @@ msgstr "何を輸出したいのですか？"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "注意: このエクスポートはAndroid形式を使用しています。このファイルをiOSデバイスにインポートする場合は、「Androidからインポート」オプションを使用してください。"
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2198,9 +2193,9 @@ msgid "Failed. Reboot Device."
 msgstr "失敗した。デバイスを再起動します。"
 
 #: src/telephony/ui/windows/incall_window.py:643
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Verifying... {attempt}"
-msgstr "確認中... {試行}"
+msgstr "確認中... {attempt}"
 
 #: src/telephony/ui/windows/incall_window.py:702
 msgid "Mute Microphone"
@@ -2241,14 +2236,14 @@ msgid "Report bugs or request features"
 msgstr "バグの報告または機能のリクエスト"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "スケジュール済み ({現在}/{合計})"
+msgstr "予約済み ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "To: {name}"
-msgstr "宛先: {名前}"
+msgstr "宛先: {name}"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
 msgid "Send Now"
@@ -2259,9 +2254,9 @@ msgid "Message removed"
 msgstr "メッセージが削除されました"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "スケジュールされたメッセージを {number} に送信しました"
+msgstr "{number} にメッセージを送信しています..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2333,40 +2328,37 @@ msgid "Quick Response"
 msgstr "素早い対応"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "拒否メッセージ"
+msgstr "拒否メッセージを追加"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "{番号}に電話します"
+msgstr "通話音量"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "増幅を許可"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "スライダーを100%以上に設定できるようにします。増幅された音声は歪む場合があります。"
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "受話口"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "スピーカーオン"
+msgstr "スピーカー"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "有線ヘッドセット"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2559,7 +2551,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "これは通話接続時に選択した出力に適用される基本ハードウェア音量です。通話中の音量ボタンはこの基本レベルの上での微調整のみを行うため、基本が0%の場合は何をしても通話は無音のままです。100%を超える値はソフトウェア増幅を使用し、音声が歪む場合があります。有線ヘッドセットとBluetoothのレベルは、今後のルーティング対応のために保存されます。"
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2615,7 +2607,7 @@ msgstr "録音が MMS には大きすぎます (最大 600KB)。短くして再�
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "機能を有効にする"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2686,11 +2678,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTPを表示・編集"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTPを設定"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2741,9 +2733,8 @@ msgstr ""
 "キーワードの後に認証アプリからの現在の6桁のコードを追加する必要があります。"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "テキストをコピーする"
+msgstr "TOTPキーをコピー"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

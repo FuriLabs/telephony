@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "集团更名"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "正在压缩视频..."
+msgstr "正在压缩图片..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "图片太大，无法发送"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "视频压缩失败"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "文件太大，无法通过 MMS 发送"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "开始 ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "开始 ({count})"
+msgstr "打开 ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "添加号码：{number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "群组名称"
+msgstr "群聊"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "预定时间：{time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "发送失败：{e}"
+msgstr "发送失败"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "正在发送 USSD..."
+msgstr "正在发送..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "另存为"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "重试发送"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "正在删除联系人..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "无法保存到阻止列表。"
+msgstr "保存联系人失败"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1997,7 +1992,7 @@ msgstr "您想出口什么？"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "注意：此导出使用 Android 格式。在 iOS 设备上导入此文件时，请使用“从 Android 导入”选项。"
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2248,9 +2243,9 @@ msgid "Message removed"
 msgstr "消息已删除"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "已将预定消息发送至 {number}"
+msgstr "正在向 {number} 发送消息..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2322,40 +2317,37 @@ msgid "Quick Response"
 msgstr "快速反应"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "拒绝留言"
+msgstr "添加拒接消息"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "致电{number}"
+msgstr "通话音量"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "允许放大"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "允许滑块超过 100%。放大后的音频可能会失真。"
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "听筒"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "扬声器打开"
+msgstr "扬声器"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "有线耳机"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2540,7 +2532,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "这是通话接通时应用于所选输出的基础硬件音量。通话期间的音量按钮只在此基础级别之上进行微调，因此如果基础为 0%，无论如何通话都将保持静音。超过 100% 的值使用软件放大，可能会使音频失真。有线耳机和 Bluetooth 的级别已保存，以用于即将推出的路由支持。"
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2593,7 +2585,7 @@ msgstr "录制内容对于 MMS 来说太大（最大 600KB）。请重拍较短�
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "启用功能"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2661,11 +2653,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "查看或编辑 TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "设置 TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2716,9 +2708,8 @@ msgstr ""
 "份验证器的当前 6 位代码。"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "复制文本"
+msgstr "复制 TOTP 密钥"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

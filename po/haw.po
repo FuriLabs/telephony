@@ -823,13 +823,12 @@ msgid "Group renamed"
 msgstr "Kapa hou ʻia ka hui"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Ke kōmi ʻana i ka wikiō..."
+msgstr "Ke kōmi ʻana i ke kiʻi..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Nui loa ke kiʻi no ka hoʻouna ʻana"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -841,7 +840,7 @@ msgstr "ʻAʻole hiki ke kōmi wikiō"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Nui loa ka waihona no ka hoʻouna ʻana ma o ka MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1047,9 +1046,9 @@ msgid "Start ({count})"
 msgstr "Hoʻomaka ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Hoʻomaka ({count})"
+msgstr "Wehe ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1057,9 +1056,8 @@ msgid "Add Number: {number}"
 msgstr "Hoʻohui i ka helu: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Inoa Hui"
+msgstr "Kamaʻilio hui"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1098,14 +1096,12 @@ msgid "Scheduled: {time}"
 msgstr "Hoʻonohonoho ʻia: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "ʻAʻole i hoʻouna ʻia: {e}"
+msgstr "ʻAʻole i hoʻouna ʻia"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Hoʻouna ʻia ʻo USSD..."
+msgstr "Ke hoʻouna nei..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1121,7 +1117,7 @@ msgstr "E mālama e like me"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "E hoʻāʻo hou i ka hoʻouna"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1504,9 +1500,8 @@ msgid "Deleting contact..."
 msgstr "Ke holoi nei i ka pilina..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "ʻAʻole hiki ke mālama i ka papa inoa poloka."
+msgstr "ʻAʻole hiki ke mālama i ka hoapili"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2004,7 +1999,7 @@ msgstr "He aha kāu makemake e hoʻokuke aku?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "ʻŌlelo aʻo: hoʻohana kēia hoʻopuka i ke ʻano Android. I ka lawe ʻana mai i kēia waihona ma kahi hāmeʻa iOS, e ʻoluʻolu e hoʻohana i ke koho \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2257,9 +2252,9 @@ msgid "Message removed"
 msgstr "Wehe ʻia ka memo"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Hoʻouna ʻia ka memo i hoʻonohonoho ʻia iā {number}"
+msgstr "Ke hoʻouna nei i ka memo iā {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2332,40 +2327,37 @@ msgid "Quick Response"
 msgstr "Pane wikiwiki"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Hoʻole i ka leka"
+msgstr "Hoʻohui i ka memo hōʻole"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Kāhea iā {number}"
+msgstr "Ka leo o ke kelepona"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "E ʻae i ka hoʻonui leo"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "E ʻae i nā paheʻe e piʻi ma luna o 100%. Hiki ke ʻinoʻino ka leo i hoʻonui ʻia."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Mea hoʻolohe pepeiao"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "Spika"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Headset uea"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2565,7 +2557,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "ʻO kēia ka leo kumu o ka lako i hoʻohana ʻia i ka puka i koho ʻia ke pili ke kelepona. Hoʻoponopono liʻiliʻi wale nā pihi leo i ka wā kelepona ma luna o kēia pae kumu, no laila inā he 0% ke kumu, e noho mālie ke kelepona i nā manawa a pau. Hoʻohana nā waiwai ma luna o 100% i ka hoʻonui polokalamu a hiki ke ʻinoʻino ka leo. Mālama ʻia nā pae o ka Headset uea a me ka Bluetooth no ke kākoʻo alahele e hiki mai ana."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2621,7 +2613,7 @@ msgstr "Nui loa ka hoʻopaʻa ʻana no MMS (Max 600KB). E ʻoluʻolu e hoʻopōk
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Hoʻohana i ka hiʻohiʻona"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2695,11 +2687,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "E nānā a hoʻoponopono paha i ka TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Hoʻonohonoho i ka TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2751,9 +2743,8 @@ msgstr ""
 "ka huaʻōlelo."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "kope kikokikona"
+msgstr "Kope i ke kī TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

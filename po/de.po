@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Gruppe umbenannt"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Video wird komprimiert..."
+msgstr "Bild wird komprimiert..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Das Bild ist zu groß zum Senden"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Die Videokomprimierung ist fehlgeschlagen"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Die Datei ist zu groß für den Versand per MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1047,9 +1046,9 @@ msgid "Start ({count})"
 msgstr "Start ( {count} )"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Start ( {count} )"
+msgstr "Öffnen ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1057,9 +1056,8 @@ msgid "Add Number: {number}"
 msgstr "Nummer hinzufügen: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Gruppenname"
+msgstr "Gruppenchat"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1098,14 +1096,12 @@ msgid "Scheduled: {time}"
 msgstr "Geplant: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Senden fehlgeschlagen: {e}"
+msgstr "Senden fehlgeschlagen"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD wird gesendet..."
+msgstr "Wird gesendet..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1121,7 +1117,7 @@ msgstr "Speichern unter"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Erneut senden"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1506,9 +1502,8 @@ msgid "Deleting contact..."
 msgstr "Kontakt wird gelöscht..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Speichern in der Sperrliste fehlgeschlagen."
+msgstr "Kontakt konnte nicht gespeichert werden"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2013,6 +2008,9 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"Hinweis: Dieser Export verwendet das Android-Format. Wenn Sie diese Datei "
+"auf einem iOS-Gerät importieren, verwenden Sie bitte die Option \"Import "
+"From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2263,9 +2261,9 @@ msgid "Message removed"
 msgstr "Nachricht entfernt"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Geplante Nachricht an {number} gesendet"
+msgstr "Nachricht an {number} wird gesendet..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2339,40 +2337,38 @@ msgid "Quick Response"
 msgstr "Schnelle Antwort"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Nachricht ablehnen"
+msgstr "Ablehnungsnachricht hinzufügen"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Rufen Sie {number} an"
+msgstr "Anruflautstärke"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Verstärkung erlauben"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr ""
+"Regler über 100 % hinaus zulassen. Verstärkter Ton kann verzerrt klingen."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Hörmuschel"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "Lautsprecher an"
+msgstr "Lautsprecher"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Kabelgebundenes Headset"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2577,6 +2573,13 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"Dies ist die Basis-Hardwarelautstärke, die auf den ausgewählten Ausgang "
+"angewendet wird, wenn ein Anruf verbunden wird. Die Lautstärketasten während "
+"eines Anrufs nehmen nur eine Feinabstimmung über diesem Basispegel vor. Wenn "
+"die Basis also 0 % beträgt, bleibt der Anruf in jedem Fall stumm. Werte über "
+"100 % verwenden Softwareverstärkung und können den Ton verzerren. Die Pegel "
+"für kabelgebundenes Headset und Bluetooth werden für die kommende "
+"Routing-Unterstützung gespeichert."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2633,7 +2636,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Funktion aktivieren"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2712,11 +2715,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP anzeigen oder bearbeiten"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP einrichten"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2768,9 +2771,8 @@ msgstr ""
 "Schlüsselwort angehängt werden."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Text kopieren"
+msgstr "TOTP-Schlüssel kopieren"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

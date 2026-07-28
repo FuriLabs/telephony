@@ -244,9 +244,9 @@ msgid "Telephony - On Hold"
 msgstr "ទូរស័ព្ទ - រង់ចាំ"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟠 {name} put as on hold"
-msgstr "🟠 {ឈ្មោះ} ទុកអោយជាប់"
+msgstr "🟠 {name} ត្រូវបានផ្អាក"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:201
 #: src/telephony/backend/managers/lockscreen_manager.py:217
@@ -268,9 +268,9 @@ msgid "MuteMic"
 msgstr "MuteMic"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
-msgstr "⏸️ {ឈ្មោះ} (រង់ចាំ)"
+msgstr "⏸️ {name} (កំពុងផ្អាក)"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔁 Resume"
@@ -540,9 +540,9 @@ msgid "Modem Connected"
 msgstr "បានភ្ជាប់ម៉ូដឹម"
 
 #: src/telephony/ui/main_window.py:391
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Modem Error: {message}"
-msgstr "កំហុសម៉ូដឹម៖ {mesage}"
+msgstr "កំហុសម៉ូដឹម: {message}"
 
 #: src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
@@ -787,18 +787,18 @@ msgid "Me"
 msgstr "ខ្ញុំ"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"បញ្ជូនបន្តពី { sender}៖\n"
-"{រាងកាយ}"
+"បានបញ្ជូនបន្តពី {sender}៖\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Forwarded from {sender}"
-msgstr "បញ្ជូនបន្តពី { sender}"
+msgstr "បានបញ្ជូនបន្តពី {sender}"
 
 #: src/telephony/ui/views/chat_view.py:817
 msgid "Forward To"
@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "ក្រុមត្រូវបានប្តូរឈ្មោះ"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "កំពុង​បង្ហាប់​វីដេអូ..."
+msgstr "កំពុងបង្ហាប់រូបភាព..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "រូបភាពធំពេក មិនអាចផ្ញើបានទេ"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "ការបង្ហាប់វីដេអូបានបរាជ័
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "ឯកសារធំពេក មិនអាចផ្ញើតាម MMS បានទេ"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "ចាប់ផ្តើម ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "ចាប់ផ្តើម ({count})"
+msgstr "បើក ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "បន្ថែមលេខ៖ {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "ឈ្មោះក្រុម"
+msgstr "ជជែកជាក្រុម"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "កាលវិភាគ៖ {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "បរាជ័យក្នុងការផ្ញើ៖ {e}"
+msgstr "ផ្ញើមិនបានសម្រេច"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "កំពុងផ្ញើ USSD..."
+msgstr "កំពុងផ្ញើ..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "រក្សាទុកជា"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "ព្យាយាមផ្ញើម្ដងទៀត"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1139,9 +1135,9 @@ msgid "{time} • Group"
 msgstr "{time} • ក្រុម"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:109
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Draft: {message}"
-msgstr "សេចក្តីព្រាង៖ {mesage}"
+msgstr "សេចក្ដីព្រាង: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:32
 #: src/telephony/ui/windows/settings_window.py:352
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "កំពុងលុបទំនាក់ទំនង..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "បរាជ័យក្នុងការរក្សាទុកទៅក្នុងបញ្ជីទប់ស្កាត់។"
+msgstr "រក្សាទុកទំនាក់ទំនងមិនបានសម្រេច"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1997,7 +1992,7 @@ msgstr "តើអ្នកចង់នាំចេញអ្វី?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "ចំណាំ៖ ការនាំចេញនេះប្រើទម្រង់ Android។ ពេលនាំចូលឯកសារនេះទៅឧបករណ៍ iOS សូមប្រើជម្រើស \"Import From Android\"។"
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2230,9 +2225,9 @@ msgid "Report bugs or request features"
 msgstr "រាយការណ៍អំពីបញ្ហា ឬមុខងារស្នើសុំ"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "បានកំណត់ពេល ({បច្ចុប្បន្ន}/{សរុប})"
+msgstr "បានកំណត់ពេល ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
 #, python-brace-format
@@ -2248,9 +2243,9 @@ msgid "Message removed"
 msgstr "សារត្រូវបានដកចេញ"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "បាន​ផ្ញើ​សារ​ដែល​បាន​កំណត់​ពេល​វេលា​ទៅ {number}"
+msgstr "កំពុងផ្ញើសារទៅ {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2322,40 +2317,37 @@ msgid "Quick Response"
 msgstr "ការឆ្លើយតបរហ័ស"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "បដិសេធសារ"
+msgstr "បន្ថែមសារបដិសេធ"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "ហៅទៅ {number}"
+msgstr "កម្រិតសំឡេងហៅទូរស័ព្ទ"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "អនុញ្ញាតការពង្រីកសំឡេង"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "អនុញ្ញាតឱ្យរបាររំកិលលើសពី 100%។ សំឡេងដែលបានពង្រីកអាចមានការបំភ្លៃ។"
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "ឧបករណ៍ស្ដាប់ត្រចៀក"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "បើកវាគ្មិន"
+msgstr "ឧបករណ៍បំពងសំឡេង"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "កាសមានខ្សែ"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2544,7 +2536,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "នេះជាកម្រិតសំឡេងផ្នែករឹងមូលដ្ឋាន ដែលអនុវត្តទៅលើឧបករណ៍បញ្ចេញសំឡេងដែលបានជ្រើសរើស ពេលការហៅត្រូវបានតភ្ជាប់។ ប៊ូតុងសំឡេងក្នុងពេលហៅ គ្រាន់តែកែតម្រូវល្អិតល្អន់លើកម្រិតមូលដ្ឋាននេះប៉ុណ្ណោះ ដូច្នេះបើកម្រិតមូលដ្ឋានស្មើ 0% ការហៅនឹងនៅស្ងាត់ជានិច្ច។ តម្លៃលើសពី 100% ប្រើការពង្រីកសំឡេងដោយសូហ្វវែរ ហើយអាចធ្វើឱ្យសំឡេងបំភ្លៃ។ កម្រិតកាសមានខ្សែ និង Bluetooth ត្រូវបានរក្សាទុកសម្រាប់ការគាំទ្រនាំផ្លូវនាពេលខាងមុខ។"
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2600,7 +2592,7 @@ msgstr "ការថតមានទំហំធំពេកសម្រាប់
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "បើកមុខងារ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2672,11 +2664,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "មើល ឬកែសម្រួល TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "ដំឡើង TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2727,9 +2719,8 @@ msgstr ""
 "ខ្ទង់បច្ចុប្បន្នពីកម្មវិធីផ្ទៀងផ្ទាត់របស់ពួកគេបន្ទាប់ពីពាក្យគន្លឹះ។"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "ចម្លងអត្ថបទ"
+msgstr "ចម្លងកូនសោ TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

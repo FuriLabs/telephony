@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Grupo renonmita"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Densigante filmeron..."
+msgstr "Densigante bildon..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "La bildo estas tro granda por sendi"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Densigo malsukcesis"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "La dosiero estas tro granda por sendi per MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "Lanĉi ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Lanĉi ({count})"
+msgstr "Malfermi ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "Aldoni: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Grupnomo"
+msgstr "Grupa babilejo"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "Planita por: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Malsukcesis sendi: {e}"
+msgstr "Malsukcesis sendi"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Sendante USSD-on..."
+msgstr "Sendante..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "Konservi kiel"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Reprovi sendon"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "Forigante kontakton..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Malsukcesis konservi al bloklisto."
+msgstr "Malsukcesis konservi kontakton"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1998,6 +1993,8 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"Noto: Ĉi tiu eksporto uzas la formaton de Android. Kiam vi importas ĉi tiun "
+"dosieron en iOS-aparaton, bonvolu uzi la opcion \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2248,9 +2245,9 @@ msgid "Message removed"
 msgstr "Mesaĝo forigita"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Sendis planitan mesaĝon al {number}"
+msgstr "Sendante mesaĝon al {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2322,40 +2319,37 @@ msgid "Quick Response"
 msgstr "Rapida respondo"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Mesaĝo ĉe rifuzo"
+msgstr "Aldoni mesaĝon de rifuzo"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Voki {number}"
+msgstr "Voka laŭteco"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Permesi plifortigon"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Lasi ŝovilojn superi 100%. Plifortigita sono povas distordiĝi."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Orelparolilo"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "Parolilo ŝaltita"
+msgstr "Laŭtparolilo"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Drata kapaŭskultilo"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2543,6 +2537,12 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"Ĉi tio estas la baza aparatara laŭteco aplikata al la elektita eligo kiam "
+"voko konektiĝas. La laŭtecbutonoj dum voko nur fajne agordas super ĉi tiu "
+"baza nivelo, do se la bazo estas 0%, la voko restas silenta ĉiuokaze. "
+"Valoroj super 100% uzas programaran plifortigon kaj povas distordi la sonon. "
+"La niveloj por drata kapaŭskultilo kaj Bluetooth konserviĝas por venonta "
+"subteno de enkursigo."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2598,7 +2598,7 @@ msgstr "Registraĵo estas tro granda por MMS."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Ŝalti funkcion"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2669,11 +2669,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Vidi aŭ redakti TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Agordi TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2724,9 +2724,8 @@ msgstr ""
 "la nunan 6-ciferan kodon de sia aŭtentikilo post la ŝlosilvorto."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Kopii tekston"
+msgstr "Kopii TOTP-ŝlosilon"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

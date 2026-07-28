@@ -826,13 +826,12 @@ msgid "Group renamed"
 msgstr "Grupi u riemërua"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Videoja po kompresohet..."
+msgstr "Imazhi po kompresohet..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Imazhi është shumë i madh për t'u dërguar"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -844,7 +843,7 @@ msgstr "Kompresimi i videos dështoi"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Skedari është shumë i madh për t'u dërguar me MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1051,9 +1050,9 @@ msgid "Start ({count})"
 msgstr "Fillimi ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Fillimi ({count})"
+msgstr "Hap ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1061,9 +1060,8 @@ msgid "Add Number: {number}"
 msgstr "Shto numrin: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Emri i grupit"
+msgstr "Bisedë në grup"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1102,14 +1100,12 @@ msgid "Scheduled: {time}"
 msgstr "Planifikuar: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Dërgimi dështoi: {e}"
+msgstr "Dërgimi dështoi"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Po dërgon USSD..."
+msgstr "Po dërgohet..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1125,7 +1121,7 @@ msgstr "Ruaj si"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Riprovo dërgimin"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1509,9 +1505,8 @@ msgid "Deleting contact..."
 msgstr "Po fshin kontaktin..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Ruajtja në listën e bllokimit dështoi."
+msgstr "Ruajtja e kontaktit dështoi"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2013,7 +2008,7 @@ msgstr "Çfarë dëshironi të eksportoni?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Shënim: ky eksport përdor formatin e Android. Kur ta importoni këtë skedar në një pajisje iOS, ju lutemi përdorni opsionin \"Importo nga Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2266,9 +2261,9 @@ msgid "Message removed"
 msgstr "Mesazhi u hoq"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Dërguar mesazh të planifikuar te {number}"
+msgstr "Po dërgohet mesazhi te {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2342,40 +2337,37 @@ msgid "Quick Response"
 msgstr "Përgjigje e Shpejtë"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Refuzimi i mesazhit"
+msgstr "Shto mesazh refuzimi"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Telefono {number}"
+msgstr "Volumi i telefonatës"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Lejo amplifikimin"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Lejon rrëshqitësit të kalojnë mbi 100%. Audioja e amplifikuar mund të shtrembërohet."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Altoparlanti i veshit"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "FolësiOn"
+msgstr "Altoparlanti"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Kufje me tel"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2576,7 +2568,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Ky është volumi bazë harduerik që zbatohet në daljen e zgjedhur kur lidhet një telefonatë. Butonat e volumit gjatë telefonatës bëjnë vetëm rregullime të imëta mbi këtë nivel bazë, kështu që nëse baza është 0%, telefonata mbetet e heshtur në çdo rast. Vlerat mbi 100% përdorin amplifikim softuerik dhe mund ta shtrembërojnë audion. Nivelet për kufjet me tel dhe Bluetooth ruhen për mbështetjen e ardhshme të drejtimit."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2634,7 +2626,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Aktivizo funksionin"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2709,11 +2701,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Shiko ose modifiko TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Konfiguro TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2765,9 +2757,8 @@ msgstr ""
 "kyçe."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Kopjoni tekstin"
+msgstr "Kopjo çelësin TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Grupė pervadinta"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Suspaudžiamas vaizdo įrašas..."
+msgstr "Vaizdas glaudinamas..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Vaizdas per didelis išsiųsti"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Nepavyko suspausti vaizdo įrašo"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Failas per didelis siųsti per MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1047,9 +1046,9 @@ msgid "Start ({count})"
 msgstr "Pradėti ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Pradėti ({count})"
+msgstr "Atidaryti ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1057,9 +1056,8 @@ msgid "Add Number: {number}"
 msgstr "Pridėti numerį: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Grupės pavadinimas"
+msgstr "Grupinis pokalbis"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1098,14 +1096,12 @@ msgid "Scheduled: {time}"
 msgstr "Planuojama: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Nepavyko išsiųsti: {e}"
+msgstr "Nepavyko išsiųsti"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Siunčiamas USSD..."
+msgstr "Siunčiama..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1121,7 +1117,7 @@ msgstr "Išsaugoti kaip"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Bandyti siųsti dar kartą"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1504,9 +1500,8 @@ msgid "Deleting contact..."
 msgstr "Trinamas kontaktas..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Nepavyko išsaugoti blokavimo sąraše."
+msgstr "Nepavyko išsaugoti kontakto"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2002,7 +1997,7 @@ msgstr "Ką norite eksportuoti?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Pastaba: šis eksportas naudoja Android formatą. Importuodami šį failą į iOS įrenginį, naudokite parinktį \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2253,9 +2248,9 @@ msgid "Message removed"
 msgstr "Pranešimas pašalintas"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Išsiųstas suplanuotas pranešimas {number}"
+msgstr "Siunčiama žinutė numeriui {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2329,40 +2324,37 @@ msgid "Quick Response"
 msgstr "Greitas atsakymas"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Atmesti pranešimą"
+msgstr "Pridėti atmetimo žinutę"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Skambinkite {number}"
+msgstr "Skambučio garsumas"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Leisti stiprinimą"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Leidžia šliaužikliams viršyti 100%. Sustiprintas garsas gali būti iškraipytas."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Telefono ausinė"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "Garsiakalbis"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Laidinės ausinės"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2559,7 +2551,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Tai bazinis aparatinis garsumas, taikomas pasirinktai išvesčiai, kai skambutis sujungiamas. Garsumo mygtukai skambučio metu tik tiksliai reguliuoja virš šio bazinio lygio, todėl jei bazinis lygis 0%, skambutis liks tylus bet kokiu atveju. Didesnės nei 100% reikšmės naudoja programinį stiprinimą ir garsas gali būti iškraipytas. Laidinių ausinių ir Bluetooth lygiai išsaugomi būsimam maršruto parinkimo palaikymui."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2615,7 +2607,7 @@ msgstr "Įrašas per didelis MMS (maks. 600 KB). Prašome pakartoti trumpiau."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Įjungti funkciją"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2688,11 +2680,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Peržiūrėti ar redaguoti TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Nustatyti TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2744,9 +2736,8 @@ msgstr ""
 "raktažodžio."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Kopijuoti tekstą"
+msgstr "Kopijuoti TOTP raktą"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

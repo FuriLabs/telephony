@@ -151,9 +151,9 @@ msgid "Set numbers in Settings."
 msgstr "ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಸಂಖ್ಯೆಗಳನ್ನು ಹೊಂದಿಸಿ."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "ಕರೆ {ಸಂಖ್ಯೆ}"
+msgstr "{number} ಗೆ ಕರೆ ಮಾಡಿ"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
@@ -788,13 +788,13 @@ msgid "Me"
 msgstr "ನಾನು"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"{sender} ನಿಂದ ಫಾರ್ವರ್ಡ್ ಮಾಡಲಾಗಿದೆ:\n"
-"{ದೇಹ}"
+"{sender} ಇಂದ ಫಾರ್ವರ್ಡ್ ಮಾಡಲಾಗಿದೆ:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
 #, python-brace-format
@@ -823,13 +823,12 @@ msgid "Group renamed"
 msgstr "ಗುಂಪಿಗೆ ಮರುಹೆಸರಿಸಲಾಗಿದೆ"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "ವೀಡಿಯೊವನ್ನು ಕುಗ್ಗಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "ಚಿತ್ರವನ್ನು ಸಂಕುಚಿತಗೊಳಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "ಚಿತ್ರ ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ, ಕಳುಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -841,7 +840,7 @@ msgstr "ವೀಡಿಯೊ ಕಂಪ್ರೆಷನ್ ವಿಫಲವಾಗಿ�
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "ಫೈಲ್ ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ, MMS ಮೂಲಕ ಕಳುಹಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1047,9 +1046,9 @@ msgid "Start ({count})"
 msgstr "ಪ್ರಾರಂಭಿಸಿ ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "ಪ್ರಾರಂಭಿಸಿ ({count})"
+msgstr "ತೆರೆಯಿರಿ ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1057,9 +1056,8 @@ msgid "Add Number: {number}"
 msgstr "ಸಂಖ್ಯೆಯನ್ನು ಸೇರಿಸಿ: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "ಗುಂಪಿನ ಹೆಸರು"
+msgstr "ಗುಂಪು ಚಾಟ್"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1093,19 +1091,17 @@ msgstr "ಅಳಿಸಿ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:296
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled: {time}"
-msgstr "ನಿಗದಿಪಡಿಸಲಾಗಿದೆ: {ಸಮಯ}"
+msgstr "ನಿಗದಿ: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ: {e}"
+msgstr "ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1121,7 +1117,7 @@ msgstr "ಹೀಗೆ ಉಳಿಸಿ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "ಮತ್ತೆ ಕಳುಹಿಸಿ"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1505,9 +1501,8 @@ msgid "Deleting contact..."
 msgstr "ಸಂಪರ್ಕವನ್ನು ಅಳಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "ಬ್ಲಾಕ್‌ಲಿಸ್ಟ್‌ಗೆ ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "ಸಂಪರ್ಕವನ್ನು ಉಳಿಸಲು ವಿಫಲವಾಗಿದೆ"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2004,7 +1999,7 @@ msgstr "ನೀವು ಏನು ರಫ್ತು ಮಾಡಲು ಬಯಸುತ�
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "ಗಮನಿಸಿ: ಈ ರಫ್ತು Android ಸ್ವರೂಪವನ್ನು ಬಳಸುತ್ತದೆ. ಈ ಫೈಲ್ ಅನ್ನು iOS ಸಾಧನಕ್ಕೆ ಆಮದು ಮಾಡುವಾಗ, \"Import From Android\" ಆಯ್ಕೆಯನ್ನು ಬಳಸಿ."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2196,9 +2191,9 @@ msgid "Failed. Reboot Device."
 msgstr "ವಿಫಲವಾಗಿದೆ. ಸಾಧನವನ್ನು ರೀಬೂಟ್ ಮಾಡಿ."
 
 #: src/telephony/ui/windows/incall_window.py:643
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Verifying... {attempt}"
-msgstr "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ... {ಪ್ರಯತ್ನ}"
+msgstr "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ... {attempt}"
 
 #: src/telephony/ui/windows/incall_window.py:702
 msgid "Mute Microphone"
@@ -2237,9 +2232,9 @@ msgid "Report bugs or request features"
 msgstr "ದೋಷಗಳನ್ನು ವರದಿ ಮಾಡಿ ಅಥವಾ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ವಿನಂತಿಸಿ"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "ನಿಗದಿಪಡಿಸಲಾಗಿದೆ ({ಪ್ರಸ್ತುತ}/{ಒಟ್ಟು})"
+msgstr "ನಿಗದಿಪಡಿಸಲಾಗಿದೆ ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
 #, python-brace-format
@@ -2255,9 +2250,9 @@ msgid "Message removed"
 msgstr "ಸಂದೇಶವನ್ನು ತೆಗೆದುಹಾಕಲಾಗಿದೆ"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "ನಿಗದಿತ ಸಂದೇಶವನ್ನು {number} ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ"
+msgstr "{number} ಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2331,40 +2326,37 @@ msgid "Quick Response"
 msgstr "ತ್ವರಿತ ಪ್ರತಿಕ್ರಿಯೆ"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "ಸಂದೇಶವನ್ನು ನಿರಾಕರಿಸು"
+msgstr "ನಿರಾಕರಣೆ ಸಂದೇಶವನ್ನು ಸೇರಿಸಿ"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "ಕರೆ {ಸಂಖ್ಯೆ}"
+msgstr "ಕರೆ ವಾಲ್ಯೂಮ್"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "ವರ್ಧನೆಗೆ ಅನುಮತಿಸಿ"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "ಸ್ಲೈಡರ್‌ಗಳು 100% ಮೀರಲು ಅನುಮತಿಸುತ್ತದೆ. ವರ್ಧಿತ ಧ್ವನಿ ವಿರೂಪಗೊಳ್ಳಬಹುದು."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "ಇಯರ್‌ಪೀಸ್"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "ಸ್ಪೀಕರ್ಆನ್"
+msgstr "ಸ್ಪೀಕರ್"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "ವೈರ್ಡ್ ಹೆಡ್‌ಸೆಟ್"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2558,7 +2550,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "ಕರೆ ಸಂಪರ್ಕಗೊಂಡಾಗ ಆಯ್ಕೆ ಮಾಡಿದ ಔಟ್‌ಪುಟ್‌ಗೆ ಅನ್ವಯವಾಗುವ ಮೂಲ ಹಾರ್ಡ್‌ವೇರ್ ವಾಲ್ಯೂಮ್ ಇದು. ಕರೆ ಸಮಯದಲ್ಲಿ ವಾಲ್ಯೂಮ್ ಬಟನ್‌ಗಳು ಈ ಮೂಲ ಮಟ್ಟದ ಮೇಲೆ ಸೂಕ್ಷ್ಮ ಹೊಂದಾಣಿಕೆಯನ್ನು ಮಾತ್ರ ಮಾಡುತ್ತವೆ, ಆದ್ದರಿಂದ ಮೂಲ 0% ಆಗಿದ್ದರೆ ಕರೆ ಯಾವಾಗಲೂ ಮೌನವಾಗಿರುತ್ತದೆ. 100% ಮೀರಿದ ಮೌಲ್ಯಗಳು ಸಾಫ್ಟ್‌ವೇರ್ ವರ್ಧನೆಯನ್ನು ಬಳಸುತ್ತವೆ ಮತ್ತು ಧ್ವನಿ ವಿರೂಪಗೊಳ್ಳಬಹುದು. ವೈರ್ಡ್ ಹೆಡ್‌ಸೆಟ್ ಮತ್ತು Bluetooth ಮಟ್ಟಗಳನ್ನು ಮುಂಬರುವ ರೂಟಿಂಗ್ ಬೆಂಬಲಕ್ಕಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2616,7 +2608,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "ವೈಶಿಷ್ಟ್ಯವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2689,11 +2681,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP ವೀಕ್ಷಿಸಿ ಅಥವಾ ಸಂಪಾದಿಸಿ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP ಸೆಟಪ್ ಮಾಡಿ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2744,9 +2736,8 @@ msgstr ""
 "ಕೀವರ್ಡ್ ನಂತರ ತಮ್ಮ ದೃಢೀಕರಣಕಾರರಿಂದ ಪ್ರಸ್ತುತ 6-ಅಂಕಿಯ ಕೋಡ್ ಅನ್ನು ಸೇರಿಸಬೇಕು."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "ಪಠ್ಯವನ್ನು ನಕಲಿಸಿ"
+msgstr "TOTP ಕೀ ನಕಲಿಸಿ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

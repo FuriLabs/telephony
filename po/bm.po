@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Jɛkulu tɔgɔ jiginna"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "videyo ka compresser..."
+msgstr "Ja ka compresser..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Ja ka bon kojugu ka ci"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Wideyo sɛgɛsɛgɛli ma ɲɛ"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Filen ka bon kojugu ka ci MMS fɛ"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "A daminɛ ({count}) ."
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "A daminɛ ({count}) ."
+msgstr "A dayɛlɛ ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "Nimɔrɔ fara a kan: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Jɛkulu Tɔgɔ"
+msgstr "Jɛkulu baro"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1096,14 +1094,12 @@ msgid "Scheduled: {time}"
 msgstr "Waati bolodalen: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "A ma se ka ci: {e}"
+msgstr "A ma se ka ci"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Ka ci bila USSD..."
+msgstr "A bɛ ci la..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "Save as"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "A ci kokura"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "Deleting contact..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "A ma se ka mara ka don blocklist kɔnɔ."
+msgstr "A ma se ka contact mara"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2004,6 +1999,8 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"Kɔlɔsili: Nin cili in bɛ Android cogoya de labɛn. Ni i bɛ nin filen don iOS "
+"minɛn kɔnɔ, aw ye \"Import From Android\" sugandili de kɛ."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2254,9 +2251,9 @@ msgid "Message removed"
 msgstr "Cikan bɔra"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Cikan bolodalen cilen don {number} ma."
+msgstr "Cikan bɛ ci {number} ma..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2330,40 +2327,37 @@ msgid "Quick Response"
 msgstr "Jaabi teliya"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Cikan min bɛ ban"
+msgstr "Cikan min bɛ ban, o fara a kan"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "A wele {number} ."
+msgstr "Weleli mankan hakɛ"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Mankan bonyali to a la"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "A to sɛbɛnninw ka tɛmɛ 100% kan. Mankan bonyalen bɛ se ka tiɲɛ."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Tulola kumafɔla"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "KumafɔlaOn"
+msgstr "Kumafɔla"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Juru tulomasama"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2561,6 +2555,12 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"Nin ye hardware mankan basigilen ye min bɛ kɛ sugandilen bɔyɔrɔ la ni weleli "
+"sirilen don. Weleli senfɛ, mankan butɔniw bɛ fɛn fitinin dɔrɔn yɛlɛma nin "
+"basigilen sanfɛ, o la ni basigilen ye 0% ye, weleli bɛ to makun na cogo o "
+"cogo. Hakɛ minnu ka bon ni 100% ye, olu bɛ software mankan bonyali kɛ ani u "
+"bɛ se ka mankan tiɲɛ. Juru tulomasama ani Bluetooth hakɛw bɛ mara routing "
+"dɛmɛ nataw kama."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2616,7 +2616,7 @@ msgstr "Fɔli ka bon kojugu MMS (Max 600KB) ma. Aw ye Retake surunya."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Baarakɛcogo daminɛ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2690,11 +2690,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP lajɛ walima k'a yɛlɛma"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP labɛn"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2746,9 +2746,8 @@ msgstr ""
 "kumasen kɔfɛ."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Texte kopi kɛ"
+msgstr "TOTP konnɛgɛ kopi kɛ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

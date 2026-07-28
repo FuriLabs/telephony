@@ -818,13 +818,12 @@ msgid "Group renamed"
 msgstr "Gibag-o ang ngalan sa grupo"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Pag-compress sa video..."
+msgstr "Gi-compress ang hulagway..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Dako ra kaayo ang hulagway aron ipadala"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -836,7 +835,7 @@ msgstr "Napakyas ang pag-compress sa video"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Dako ra kaayo ang file aron ipadala pinaagi sa MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1043,9 +1042,9 @@ msgid "Start ({count})"
 msgstr "Sugdi ( {count} )"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Sugdi ( {count} )"
+msgstr "Ablihi ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1053,9 +1052,8 @@ msgid "Add Number: {number}"
 msgstr "Idugang ang Numero: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Ngalan sa Grupo"
+msgstr "Group chat"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1094,14 +1092,12 @@ msgid "Scheduled: {time}"
 msgstr "Gi-iskedyul: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Napakyas sa pagpadala: {e}"
+msgstr "Napakyas sa pagpadala"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Nagpadala sa USSD..."
+msgstr "Nagpadala..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1117,7 +1113,7 @@ msgstr "I-save ingon"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Ipadala Pag-usab"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1501,9 +1497,8 @@ msgid "Deleting contact..."
 msgstr "Pagtangtang sa kontak..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Napakyas sa pagtipig sa blocklist."
+msgstr "Napakyas sa pagtipig sa kontak"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2005,6 +2000,9 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"Timan-i: Kini nga pag-export naggamit sa Android format. Kung i-import kini "
+"nga file sa iOS device, palihug gamita ang \"Import From Android\" nga "
+"opsyon."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2257,9 +2255,9 @@ msgid "Message removed"
 msgstr "Gitangtang ang mensahe"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Gipadala ang naka-iskedyul nga mensahe sa {number}"
+msgstr "Nagpadala og mensahe sa {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2333,40 +2331,39 @@ msgid "Quick Response"
 msgstr "Dali nga Tubag"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Pagdumili sa Mensahe"
+msgstr "Idugang ang Mensahe sa Pagdumili"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Tawag {number}"
+msgstr "Volume sa Tawag"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Tugoti ang Amplification"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr ""
+"Tugoti ang mga slider nga molapas sa 100%. Ang gi-amplify nga audio mahimong "
+"madistorsyon."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Earpiece"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "Speaker"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Wired nga Headset"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2567,6 +2564,13 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"Kini ang base nga hardware volume nga gigamit sa gipili nga output kung "
+"makonektar ang tawag. Ang mga buton sa volume atol sa tawag mag-adjust lang "
+"og fine-tuning ibabaw niini nga base level, busa kung ang base 0%, ang tawag "
+"magpabiling hilom bisan unsa pa. Ang mga bili nga labaw sa 100% naggamit og "
+"software amplification ug mahimong madistorsyon ang audio. Ang mga level sa "
+"Wired nga Headset ug Bluetooth gitipigan alang sa umaabot nga routing "
+"support."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2624,7 +2628,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "I-enable ang Feature"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2701,11 +2705,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Tan-awa o usba ang TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "I-setup ang TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2757,9 +2761,8 @@ msgstr ""
 "gikan sa ilang authenticator human sa keyword."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Kopyaha ang Teksto"
+msgstr "Kopyaha ang TOTP key"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

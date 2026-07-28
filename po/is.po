@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Hópur endurnefndur"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Þjappar myndband..."
+msgstr "Þjappar mynd..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Myndin er of stór til að senda"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Myndbandsþjöppun mistókst"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Skráin er of stór til að senda með MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1046,9 +1045,9 @@ msgid "Start ({count})"
 msgstr "Byrja ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Byrja ({count})"
+msgstr "Opna ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1056,9 +1055,8 @@ msgid "Add Number: {number}"
 msgstr "Bæta við númeri: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Nafn hóps"
+msgstr "Hópspjall"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1097,14 +1095,12 @@ msgid "Scheduled: {time}"
 msgstr "Áætlað: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Mistókst að senda: {e}"
+msgstr "Mistókst að senda"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Sendir USSD..."
+msgstr "Sendir..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1120,7 +1116,7 @@ msgstr "Vista sem"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Reyna aftur að senda"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1503,9 +1499,8 @@ msgid "Deleting contact..."
 msgstr "Eyðir tengilið..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Mistókst að vista á bannlista."
+msgstr "Mistókst að vista tengilið"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1999,7 +1994,7 @@ msgstr "Hvað viltu flytja út?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Athugið: þessi útflutningur notar Android-sniðið. Þegar þessi skrá er flutt inn á iOS-tæki skal nota valkostinn \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2251,9 +2246,9 @@ msgid "Message removed"
 msgstr "Skilaboð fjarlægð"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Sendi áætluð skilaboð til {number}"
+msgstr "Sendi skilaboð til {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2326,40 +2321,37 @@ msgid "Quick Response"
 msgstr "Fljótt svar"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Afþakka skilaboð"
+msgstr "Bæta við höfnunarskilaboðum"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Hringja {number}"
+msgstr "Hljóðstyrkur símtals"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Leyfa mögnun"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Leyfa sleðum að fara yfir 100%. Magnað hljóð getur bjagast."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Eyrnatól"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "Hátalari á"
+msgstr "Hátalari"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Heyrnartól með snúru"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2556,7 +2548,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Þetta er grunnstyrkur vélbúnaðar sem beitt er á valið úttak þegar símtal tengist. Hljóðstyrkshnapparnir á meðan á símtali stendur fínstilla aðeins ofan á þetta grunnstig, þannig að ef grunnurinn er 0% helst símtalið hljóðlaust sama hvað. Gildi yfir 100% nota hugbúnaðarmögnun og geta bjagað hljóðið. Stig fyrir heyrnartól með snúru og Bluetooth eru geymd fyrir væntanlegan stuðning við beiningu."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2613,7 +2605,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Virkja eiginleika"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2688,11 +2680,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Skoða eða breyta TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Setja upp TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2744,9 +2736,8 @@ msgstr ""
 "eftir lykilorðinu."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Afritaðu texta"
+msgstr "Afrita TOTP-lykil"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

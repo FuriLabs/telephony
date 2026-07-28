@@ -817,13 +817,12 @@ msgid "Group renamed"
 msgstr "Grupa preimenovana"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Kompresija videa..."
+msgstr "Kompresija slike..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Slika je prevelika za slanje"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -835,7 +834,7 @@ msgstr "Video kompresija nije uspjela"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Datoteka je prevelika za slanje putem MMS-a"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1041,9 +1040,9 @@ msgid "Start ({count})"
 msgstr "Početak ( {count} )"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Početak ( {count} )"
+msgstr "Otvori ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1051,9 +1050,8 @@ msgid "Add Number: {number}"
 msgstr "Dodajte broj: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Ime grupe"
+msgstr "Grupni chat"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1092,14 +1090,12 @@ msgid "Scheduled: {time}"
 msgstr "Zakazano: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Slanje nije uspjelo: {e}"
+msgstr "Slanje nije uspjelo"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Slanje USSD..."
+msgstr "Slanje..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1115,7 +1111,7 @@ msgstr "Sačuvaj kao"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Pokušaj ponovo poslati"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1498,9 +1494,8 @@ msgid "Deleting contact..."
 msgstr "Brisanje kontakta..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Pohranjivanje na listu blokiranih nije uspjelo."
+msgstr "Pohranjivanje kontakta nije uspjelo"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1997,6 +1992,8 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"Napomena: Ovaj izvoz koristi Android format. Prilikom uvoza ove datoteke na "
+"iOS uređaj, molimo koristite opciju \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2249,9 +2246,9 @@ msgid "Message removed"
 msgstr "Poruka je uklonjena"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Poslana zakazana poruka na {number}"
+msgstr "Slanje poruke na {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2324,40 +2321,38 @@ msgid "Quick Response"
 msgstr "Brzi odgovor"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Odbij poruku"
+msgstr "Dodaj poruku odbijanja"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Pozovi {number}"
+msgstr "Jačina zvuka poziva"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Dozvoli pojačavanje"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr ""
+"Dozvolite klizačima da idu iznad 100%. Pojačani zvuk se može izobličiti."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Slušalica"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "Zvučnik"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Žičane slušalice"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2553,6 +2548,12 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"Ovo je osnovna hardverska jačina zvuka koja se primjenjuje na odabrani izlaz "
+"kada se poziv poveže. Dugmad za jačinu zvuka tokom poziva samo fino "
+"podešavaju iznad ovog osnovnog nivoa, pa ako je osnova 0%, poziv ostaje "
+"bezvučan u svakom slučaju. Vrijednosti iznad 100% koriste softversko "
+"pojačavanje i mogu izobličiti zvuk. Nivoi za žičane slušalice i Bluetooth se "
+"pohranjuju za buduću podršku rutiranja."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2608,7 +2609,7 @@ msgstr "Snimak je prevelik za MMS (maks. 600 KB). Ponovo polagajte kraće."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Omogući funkciju"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2681,11 +2682,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Pogledaj ili uredi TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Postavi TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2737,9 +2738,8 @@ msgstr ""
 "riječi."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Kopiraj tekst"
+msgstr "Kopiraj TOTP ključ"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

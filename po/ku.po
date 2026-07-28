@@ -151,9 +151,9 @@ msgid "Set numbers in Settings."
 msgstr "Di Mîhengan de hejmaran saz bikin."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "Telefonê {hejmar}"
+msgstr "Bang li {number} bike"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
@@ -362,14 +362,14 @@ msgid "Successfully exported {count} calls to XML."
 msgstr "Bangên {count} bi serketî ji XML re hatin şandin."
 
 #: src/telephony/backend/utils/exporter_local_utils.py:91
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Exported {count} messages to Chatty database."
-msgstr "Ji databasa Chatty re {hejmar} peyam hatin derxistin."
+msgstr "{count} peyam bo danegeha Chatty hatin derxistin."
 
 #: src/telephony/backend/utils/exporter_local_utils.py:147
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Ji databasa Gnome Calls re {hejmar} bang hatin derxistin."
+msgstr "{count} bang bo danegeha Gnome Calls hatin derxistin."
 
 #: src/telephony/backend/utils/exporter_local_utils.py:164
 msgid "Source database not found."
@@ -387,14 +387,14 @@ msgid "File not found."
 msgstr "Pelê nehat dîtin."
 
 #: src/telephony/backend/utils/importer_android_utils.py:129
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} messages from Android backup."
-msgstr "Ji paşgiriya Androidê {hejmar} peyam hatin importkirin."
+msgstr "{count} peyam ji cîgira Android hatin anîn."
 
 #: src/telephony/backend/utils/importer_android_utils.py:203
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} calls from Android backup."
-msgstr "Bangên {hejmar} ji paşvekêşana Androidê hatin împortkirin."
+msgstr "{count} bang ji cîgira Android hatin anîn."
 
 #: src/telephony/backend/utils/importer_ios_utils.py:63
 msgid "Could not find messages table in iOS database."
@@ -405,9 +405,9 @@ msgid "Failed to read iOS SMS database structure."
 msgstr "Xwendina avahiya databasa SMS-a iOS-ê têk çû."
 
 #: src/telephony/backend/utils/importer_ios_utils.py:196
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} messages from iOS backup."
-msgstr "Ji hilanînê iOS-ê {hejmar} peyam hatin importkirin."
+msgstr "{count} peyam ji cîgira iOS hatin anîn."
 
 #: src/telephony/backend/utils/importer_ios_utils.py:230
 msgid "Could not find call history table in iOS database."
@@ -418,9 +418,9 @@ msgid "Failed to read iOS Calls database structure."
 msgstr "Xwendina avahiya databasa Bangên iOS-ê têk çû."
 
 #: src/telephony/backend/utils/importer_ios_utils.py:303
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} calls from iOS backup."
-msgstr "Ji paşgira iOS-ê bangên {hejmar} hatin importkirin."
+msgstr "{count} bang ji cîgira iOS hatin anîn."
 
 #: src/telephony/backend/utils/importer_local_utils.py:31
 msgid "Chatty database not found."
@@ -435,9 +435,9 @@ msgid "Failed to read Chatty database structure."
 msgstr "Xwendina avahiya databasa Chatty têk çû."
 
 #: src/telephony/backend/utils/importer_local_utils.py:124
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} messages from Chatty."
-msgstr "Ji Chatty {hejmar} peyam hatin împort kirin."
+msgstr "{count} peyam ji Chatty hatin anîn."
 
 #: src/telephony/backend/utils/importer_local_utils.py:134
 msgid "Calls database not found."
@@ -452,9 +452,9 @@ msgid "Failed to read Calls database structure."
 msgstr "Xwendina avahiya databasa Bangan têk çû."
 
 #: src/telephony/backend/utils/importer_local_utils.py:213
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} calls."
-msgstr "Bangên {hejmar} hatin importkirin."
+msgstr "{count} bang hatin anîn."
 
 #: src/telephony/backend/utils/model_utils.py:56
 msgid "0s"
@@ -612,9 +612,9 @@ msgid "Calling (Anonymous)..."
 msgstr "Banga (Anonîm)..."
 
 #: src/telephony/ui/main_window.py:659
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Calling {number}..."
-msgstr "Gazîkirina {hejmar}..."
+msgstr "Bang li {number} tê kirin..."
 
 #: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
 msgid "Call Failed"
@@ -625,17 +625,17 @@ msgid "Call Details"
 msgstr "Details Bang"
 
 #: src/telephony/ui/main_window.py:676
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Number: {number}\n"
 "Name: {name}\n"
 "Date: {date}\n"
 "Duration: {duration}"
 msgstr ""
-"Hejmar: {hejmar}\n"
+"Hejmar: {number}\n"
 "Nav: {name}\n"
 "Dîrok: {date}\n"
-"Demjimêr: {duration}"
+"Dirêjahî: {duration}"
 
 #: src/telephony/ui/main_window.py:692
 #: src/telephony/ui/windows/blocklist_window.py:142
@@ -788,13 +788,13 @@ msgid "Me"
 msgstr "Min"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"Ji {sender} hat şandin:\n"
-"{beden}"
+"Ji {sender} hatiye şandin:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
 #, python-brace-format
@@ -823,13 +823,12 @@ msgid "Group renamed"
 msgstr "Navê komê hat guhertin"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Vîdyoyê komkirin..."
+msgstr "Wêne tê guvaştin..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Wêne pir mezin e ji bo şandinê"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -841,7 +840,7 @@ msgstr "Tevlihevkirina vîdyoyê têk çû"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Pel pir mezin e ku bi MMS were şandin"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1048,19 +1047,18 @@ msgid "Start ({count})"
 msgstr "Destpêk ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Destpêk ({count})"
+msgstr "Veke ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Add Number: {number}"
-msgstr "Hejmar zêde bike: {hejmar}"
+msgstr "Hejmarê Zêde Bike: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Navê Koma"
+msgstr "Sohbeta komê"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1099,14 +1097,12 @@ msgid "Scheduled: {time}"
 msgstr "Bername: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Nehat şandin: {e}"
+msgstr "Şandin bi ser neket"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD dişîne..."
+msgstr "Tê şandin..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1122,7 +1118,7 @@ msgstr "Save wek"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Dîsa Bişîne"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1478,14 +1474,14 @@ msgid "Clear Date"
 msgstr "Dîroka Clear"
 
 #: src/telephony/ui/windows/contact_editor_window.py:371
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Select {title}"
-msgstr "Hilbijêre {sernav}"
+msgstr "{title} hilbijêre"
 
 #: src/telephony/ui/windows/contact_editor_window.py:381
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Copy {title}"
-msgstr "Kopî bikin {sernav}"
+msgstr "{title} kopî bike"
 
 #: src/telephony/ui/windows/contact_editor_window.py:390
 #: src/telephony/ui/windows/trusted_actions_list_window.py:621
@@ -1505,9 +1501,8 @@ msgid "Deleting contact..."
 msgstr "Têkilî jêbirin..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Tomarkirina li lîsteya blokê bi ser neket."
+msgstr "Tomarkirina têkiliyê bi ser neket"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1801,9 +1796,9 @@ msgid "Remaining conflicts: {count}"
 msgstr "Pevçûnên mayî: {count}"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:126
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{number} is saved to contacts:"
-msgstr "{hejmar} li pêwendiyan tê tomarkirin:"
+msgstr "{number} di têkiliyan de tomarkirî ye:"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:142
 #, python-brace-format
@@ -1819,9 +1814,9 @@ msgid "Keep this, Merge duplicates"
 msgstr "Vê yekê bihêlin, dubareyên hev bikin"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:332
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Merging {current}/{total}..."
-msgstr "Yekkirina {niha}/{tevahiya}..."
+msgstr "Tê yekkirin {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1878,9 +1873,9 @@ msgid "No contacts found on SIM card."
 msgstr "Li ser SIM-kartê têkilî nehatin dîtin."
 
 #: src/telephony/ui/windows/import_export_window.py:111
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} contacts from SIM."
-msgstr "Ji SIMê {hejmar} têkilî hatin împortkirin."
+msgstr "{count} têkilî ji SIMê hatin anîn."
 
 #: src/telephony/ui/windows/import_export_window.py:116
 #, python-brace-format
@@ -2005,7 +2000,7 @@ msgstr "Ma hûn çi dixwazin hinarde bikin?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Nîşe: Ev derxistin formata Android bi kar tîne. Dema ku hûn vê pelê li ser amûreke iOS tînin, ji kerema xwe vebijarka \"Import From Android\" bi kar bînin."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2045,9 +2040,9 @@ msgid "Where do you want to import contacts?"
 msgstr "Hûn dixwazin têkiliyan li ku derê bînin?"
 
 #: src/telephony/ui/windows/import_export_window.py:473
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} contacts"
-msgstr "Têkilî {hejmar} hatin importkirin"
+msgstr "{count} têkilî hatin anîn"
 
 #: src/telephony/ui/windows/import_export_window.py:477
 #, python-brace-format
@@ -2072,9 +2067,9 @@ msgid "No contacts found to export"
 msgstr "Têkilî ji bo hinardekirinê nehat dîtin"
 
 #: src/telephony/ui/windows/import_export_window.py:575
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Exported {count} contacts"
-msgstr "Têkilî {hejmar} hatin derxistin"
+msgstr "{count} têkilî hatin derxistin"
 
 #: src/telephony/ui/windows/import_export_window.py:578
 #, python-brace-format
@@ -2197,9 +2192,9 @@ msgid "Failed. Reboot Device."
 msgstr "Bi ser neket. Amûra Reboot."
 
 #: src/telephony/ui/windows/incall_window.py:643
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Verifying... {attempt}"
-msgstr "Verastkirin... {hewldan}"
+msgstr "Tê piştrastkirin... {attempt}"
 
 #: src/telephony/ui/windows/incall_window.py:702
 msgid "Mute Microphone"
@@ -2240,9 +2235,9 @@ msgid "Report bugs or request features"
 msgstr "Bûyeran rapor bikin an taybetmendiyên daxwaz bikin"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "Bernamekirî ({niha}/{giştî})"
+msgstr "Hatiye plankirin ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
 #, python-brace-format
@@ -2258,9 +2253,9 @@ msgid "Message removed"
 msgstr "Peyam rakirin"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Peyama plansazkirî ji {hejmar} re şand"
+msgstr "Peyam ji {number} re tê şandin..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2334,40 +2329,37 @@ msgid "Quick Response"
 msgstr "Bersiva bilez"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Decline Message"
+msgstr "Peyama Redkirinê Zêde Bike"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Telefonê {hejmar}"
+msgstr "Asta Dengê Bangê"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Destûrê bide gurkirina dengê"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Bihêle sirêder ji 100% derbas bibin. Dengê gurkirî dibe ku xera bibe."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Guhika telefonê"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpeakerOn"
+msgstr "Hoparlor"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Bihîstoka bi têl"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2524,7 +2516,7 @@ msgid "Custom URL"
 msgstr "URL Custom"
 
 #: src/telephony/ui/windows/settings_window.py:574
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
 "'{number}' in the URL where the caller's phone number should go.\n"
@@ -2534,14 +2526,11 @@ msgid ""
 "When you tap the search button during a call, we will replace '{number}' "
 "with the actual phone number and open it in your default browser."
 msgstr ""
-"URL-ya ku hûn dixwazin ji bo lêgerîna hejmarên nenas bikar bînin binivîse. "
-"Di URL-a ku divê jimareya têlefonê ya ku lê digere biçe '{hejmar}' "
-"bihewîne.\n"
+"URLya ku hûn dixwazin ji bo lêgerîna hejmarên nenas bi kar bînin binivîsin. '{number}' li cihê ku hejmara telefona bangkerê lê were danîn di URLyê de bi cih bikin.\n"
 "\n"
-"Mînakî: https://mysearch.com/?q={number}\n"
+"Mînak: https://mysearch.com/?q={number}\n"
 "\n"
-"Dema ku hûn di dema bangekê de li bişkoja lêgerînê bixin, em ê '{hejmar}' bi "
-"jimareya têlefonê ya rastîn biguherînin û di geroka weya xwerû de vekin."
+"Dema hûn di dema bangê de bişkoka lêgerînê bitikînin, em ê '{number}' bi hejmara telefonê ya rastîn biguherînin û di geroka we ya standard de vekin."
 
 #: src/telephony/ui/windows/settings_window.py:578
 msgid "Custom Search URL"
@@ -2566,7 +2555,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Ev asta dengê hardware ya bingehîn e ku dema bang tê girêdan li derana hilbijartî tê sepandin. Bişkokên deng di dema bangê de tenê li ser vê asta bingehîn sererastkirina hûr dikin, ji ber vê yekê heke bingeh 0% be, bang her tim bêdeng dimîne. Nirxên ji 100% zêdetir gurkirina nermalavê bi kar tînin û dibe ku deng xera bibe. Astên Bihîstoka bi têl û Bluetooth ji bo piştgiriya rêgezkirinê ya bê têne tomarkirin."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2624,7 +2613,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Taybetmendiyê Çalak Bike"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2698,11 +2687,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP bibîne an biguherîne"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP saz bike"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2753,9 +2742,8 @@ msgstr ""
 "ew koda 6-reqemî ya heyî ya ji rastnaskerê xwe piştî peyva key lê zêde bikin."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Nivîsarê kopî bikin"
+msgstr "Kilîta TOTP kopî bike"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

@@ -816,13 +816,12 @@ msgid "Group renamed"
 msgstr "গ্রুপের নাম পরিবর্তন করা হয়েছে"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "ভিডিও কম্প্রেস করা হচ্ছে..."
+msgstr "ছবি কম্প্রেস করা হচ্ছে..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "ছবিটি পাঠানোর জন্য খুব বড়"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -834,7 +833,7 @@ msgstr "ভিডিও কম্প্রেশন ব্যর্থ হয়
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "ফাইলটি MMS এর মাধ্যমে পাঠানোর জন্য খুব বড়"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1039,9 +1038,9 @@ msgid "Start ({count})"
 msgstr "শুরু করুন ( {count} )"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "শুরু করুন ( {count} )"
+msgstr "খুলুন ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1049,9 +1048,8 @@ msgid "Add Number: {number}"
 msgstr "নম্বর যোগ করুন: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "গ্রুপের নাম"
+msgstr "গ্রুপ চ্যাট"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1090,14 +1088,12 @@ msgid "Scheduled: {time}"
 msgstr "নির্ধারিত: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "পাঠাতে ব্যর্থ হয়েছে: {e}"
+msgstr "পাঠাতে ব্যর্থ হয়েছে"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD পাঠানো হচ্ছে..."
+msgstr "পাঠানো হচ্ছে..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1113,7 +1109,7 @@ msgstr "হিসাবে সংরক্ষণ করুন"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "আবার পাঠান"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1496,9 +1492,8 @@ msgid "Deleting contact..."
 msgstr "পরিচিতি মুছে ফেলা হচ্ছে..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "ব্লকলিস্টে সংরক্ষণ করতে ব্যর্থ হয়েছে৷"
+msgstr "পরিচিতি সংরক্ষণ করতে ব্যর্থ হয়েছে"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1995,6 +1990,8 @@ msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
+"দ্রষ্টব্য: এই এক্সপোর্টটি Android ফরম্যাট ব্যবহার করে। এই ফাইলটি iOS ডিভাইসে "
+"ইম্পোর্ট করার সময়, অনুগ্রহ করে \"Import From Android\" অপশনটি ব্যবহার করুন।"
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2245,9 +2242,9 @@ msgid "Message removed"
 msgstr "বার্তা সরানো হয়েছে"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "{number} এ নির্ধারিত বার্তা পাঠানো হয়েছে"
+msgstr "{number} এ বার্তা পাঠানো হচ্ছে..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2320,40 +2317,38 @@ msgid "Quick Response"
 msgstr "দ্রুত প্রতিক্রিয়া"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "বার্তা প্রত্যাখ্যান করুন"
+msgstr "প্রত্যাখ্যান বার্তা যোগ করুন"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "কল করুন {number}"
+msgstr "কল ভলিউম"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "অ্যামপ্লিফিকেশনের অনুমতি দিন"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr ""
+"স্লাইডারগুলিকে 100% এর উপরে যেতে দিন। অ্যামপ্লিফাই করা অডিও বিকৃত হতে পারে।"
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "ইয়ারপিস"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "স্পিকার অন"
+msgstr "স্পিকার"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "তারযুক্ত হেডসেট"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2545,6 +2540,12 @@ msgid ""
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
 msgstr ""
+"এটি হল মূল হার্ডওয়্যার ভলিউম যা কল সংযুক্ত হলে নির্বাচিত আউটপুটে প্রয়োগ "
+"করা হয়। কলের সময় ভলিউম বোতামগুলি শুধুমাত্র এই মূল স্তরের উপরে সূক্ষ্ম "
+"সমন্বয় করে, তাই মূলটি 0% হলে কলটি যাই হোক না কেন নীরব থাকে। 100% এর উপরের "
+"মানগুলি সফ্টওয়্যার অ্যামপ্লিফিকেশন ব্যবহার করে এবং অডিও বিকৃত করতে পারে। "
+"তারযুক্ত হেডসেট এবং Bluetooth স্তরগুলি আসন্ন রাউটিং সমর্থনের জন্য সংরক্ষণ "
+"করা হয়।"
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2601,7 +2602,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "ফিচার সক্ষম করুন"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2673,11 +2674,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP দেখুন বা সম্পাদনা করুন"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP সেটআপ করুন"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2730,9 +2731,8 @@ msgstr ""
 "সংখ্যার কোডটি যোগ করতে হবে।"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "টেক্সট কপি করুন"
+msgstr "TOTP কী কপি করুন"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

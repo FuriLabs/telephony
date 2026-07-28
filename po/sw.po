@@ -824,13 +824,12 @@ msgid "Group renamed"
 msgstr "Kikundi kimepewa jina jipya"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "Inabana video..."
+msgstr "Inabana picha..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Picha ni kubwa mno kutumwa"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -842,7 +841,7 @@ msgstr "Mfinyazo wa video umeshindwa"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Faili ni kubwa mno kutumwa kupitia MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1049,9 +1048,9 @@ msgid "Start ({count})"
 msgstr "Anza ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Anza ({count})"
+msgstr "Fungua ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1059,9 +1058,8 @@ msgid "Add Number: {number}"
 msgstr "Ongeza Nambari: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Jina la Kikundi"
+msgstr "Gumzo la kikundi"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1100,14 +1098,12 @@ msgid "Scheduled: {time}"
 msgstr "Imeratibiwa: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Imeshindwa kutuma: {e}"
+msgstr "Imeshindwa kutuma"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "Inatuma USSD..."
+msgstr "Inatuma..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1123,7 +1119,7 @@ msgstr "Hifadhi kama"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Jaribu Kutuma Tena"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1506,9 +1502,8 @@ msgid "Deleting contact..."
 msgstr "Inafuta anwani..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Imeshindwa kuhifadhi kwenye orodha iliyozuiwa."
+msgstr "Imeshindwa kuhifadhi anwani"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -2005,7 +2000,7 @@ msgstr "Unataka kusafirisha nini?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Kumbuka: uhamishaji huu unatumia muundo wa Android. Unapoleta faili hili kwenye kifaa cha iOS, tafadhali tumia chaguo la \"Import From Android\"."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2258,9 +2253,9 @@ msgid "Message removed"
 msgstr "Ujumbe umeondolewa"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Ilituma ujumbe ulioratibiwa kwa {number}"
+msgstr "Inatuma ujumbe kwa {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2334,40 +2329,37 @@ msgid "Quick Response"
 msgstr "Majibu ya Haraka"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Kataa Ujumbe"
+msgstr "Ongeza Ujumbe wa Kukataa"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Piga simu {number}"
+msgstr "Sauti ya Simu"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Ruhusu Ukuzaji wa Sauti"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Ruhusu vitelezi kupita 100%. Sauti iliyokuzwa inaweza kupotoshwa."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Spika ya sikioni"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpikaImewashwa"
+msgstr "Spika"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Hedseti yenye waya"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2564,7 +2556,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Hiki ni kiwango cha msingi cha sauti ya maunzi kinachotumika kwa njia ya kutoa sauti iliyochaguliwa simu inapounganishwa. Vitufe vya sauti wakati wa simu hurekebisha tu kwa usahihi juu ya kiwango hiki cha msingi, kwa hivyo ikiwa msingi ni 0%, simu hubaki kimya vyovyote vile. Thamani zaidi ya 100% hutumia ukuzaji wa programu na zinaweza kupotosha sauti. Viwango vya Hedseti yenye waya na Bluetooth huhifadhiwa kwa ajili ya usaidizi ujao wa uelekezaji."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2621,7 +2613,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Washa Kipengele"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2695,11 +2687,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Tazama au hariri TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Sanidi TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2751,9 +2743,8 @@ msgstr ""
 "ya neno kuu."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Nakili Maandishi"
+msgstr "Nakili ufunguo wa TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

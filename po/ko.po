@@ -151,18 +151,18 @@ msgid "Set numbers in Settings."
 msgstr "설정에서 숫자를 설정하세요."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "{번호}번으로 전화하세요"
+msgstr "{number}에게 전화"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
 msgstr "긴급전화 확인"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {name}?"
-msgstr "{이름}에게 전화하시겠습니까?"
+msgstr "{name}에게 전화할까요?"
 
 #: src/telephony/backend/managers/emergency_manager.py:164
 msgid "🟢 Yes, Call"
@@ -208,9 +208,9 @@ msgid "Telephony - Incoming"
 msgstr "전화 통신 - 수신"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
-msgstr "🟢 수신: {이름}"
+msgstr "🟢 수신: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
 #: src/telephony/ui/windows/incall_window.py:387
@@ -281,9 +281,9 @@ msgid "Telephony - Active Call"
 msgstr "전화 통신 - 활성 통화"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Active: {name}"
-msgstr "🟢 활성: {이름}"
+msgstr "🟢 통화 중: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:224
 msgid "Active Call"
@@ -465,14 +465,14 @@ msgid "{h}h {m}m"
 msgstr "{h}h {m}m"
 
 #: src/telephony/backend/utils/model_utils.py:63
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{m}m {s}s"
-msgstr "{분}분 {초}초"
+msgstr "{m}분 {s}초"
 
 #: src/telephony/backend/utils/model_utils.py:64
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{s}s"
-msgstr "{봄 여름 시즌"
+msgstr "{s}초"
 
 #: src/telephony/ui/main_window.py:79
 msgid "Telephony"
@@ -540,9 +540,9 @@ msgid "Modem Connected"
 msgstr "모뎀 연결됨"
 
 #: src/telephony/ui/main_window.py:391
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Modem Error: {message}"
-msgstr "모뎀 오류: {메시지}"
+msgstr "모뎀 오류: {message}"
 
 #: src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
@@ -611,9 +611,9 @@ msgid "Calling (Anonymous)..."
 msgstr "(익명) 전화 중..."
 
 #: src/telephony/ui/main_window.py:659
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Calling {number}..."
-msgstr "{번호}번에 전화하는 중..."
+msgstr "{number}(으)로 전화 거는 중..."
 
 #: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
 msgid "Call Failed"
@@ -624,17 +624,17 @@ msgid "Call Details"
 msgstr "통화 세부정보"
 
 #: src/telephony/ui/main_window.py:676
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Number: {number}\n"
 "Name: {name}\n"
 "Date: {date}\n"
 "Duration: {duration}"
 msgstr ""
-"번호: {번호}\n"
-"이름: {이름}\n"
-"날짜: {날짜}\n"
-"기간: {duration}"
+"번호: {number}\n"
+"이름: {name}\n"
+"날짜: {date}\n"
+"통화 시간: {duration}"
 
 #: src/telephony/ui/main_window.py:692
 #: src/telephony/ui/windows/blocklist_window.py:142
@@ -700,9 +700,9 @@ msgid "Saving contact..."
 msgstr "연락처 저장 중..."
 
 #: src/telephony/ui/main_window.py:802
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Added to {name}"
-msgstr "{이름}에 추가됨"
+msgstr "{name}에 추가됨"
 
 #: src/telephony/ui/main_window.py:805
 msgid "Failed to add number"
@@ -787,13 +787,13 @@ msgid "Me"
 msgstr "나"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"{sender}로부터 전달됨:\n"
-"{본문}"
+"{sender}에게서 전달됨:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
 #, python-brace-format
@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "그룹 이름이 변경됨"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "동영상 압축 중..."
+msgstr "이미지 압축 중..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "이미지가 너무 커서 보낼 수 없습니다"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "비디오 압축 실패"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "파일이 너무 커서 MMS로 보낼 수 없습니다"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -1045,9 +1044,9 @@ msgid "Start ({count})"
 msgstr "시작({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "시작({count})"
+msgstr "열기 ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
 #, python-brace-format
@@ -1055,9 +1054,8 @@ msgid "Add Number: {number}"
 msgstr "번호 추가: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "그룹 이름"
+msgstr "그룹 채팅"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1091,19 +1089,17 @@ msgstr "삭제"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:296
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled: {time}"
-msgstr "예정: {시간}"
+msgstr "예약: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "전송 실패: {e}"
+msgstr "전송 실패"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "USSD 보내는 중..."
+msgstr "전송 중..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1119,7 +1115,7 @@ msgstr "다른 이름으로 저장"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "다시 보내기"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1134,14 +1130,14 @@ msgid "Hangup All Calls"
 msgstr "모든 통화 끊기"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:103
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{time} • Group"
-msgstr "{시간} • 그룹"
+msgstr "{time} • 그룹"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:109
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Draft: {message}"
-msgstr "초안: {메시지}"
+msgstr "임시 저장: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:32
 #: src/telephony/ui/windows/settings_window.py:352
@@ -1475,14 +1471,14 @@ msgid "Clear Date"
 msgstr "날짜 지우기"
 
 #: src/telephony/ui/windows/contact_editor_window.py:371
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Select {title}"
-msgstr "{제목} 선택"
+msgstr "{title} 선택"
 
 #: src/telephony/ui/windows/contact_editor_window.py:381
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Copy {title}"
-msgstr "{제목} 복사"
+msgstr "{title} 복사"
 
 #: src/telephony/ui/windows/contact_editor_window.py:390
 #: src/telephony/ui/windows/trusted_actions_list_window.py:621
@@ -1502,9 +1498,8 @@ msgid "Deleting contact..."
 msgstr "연락처 삭제 중..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "차단 목록에 저장하지 못했습니다."
+msgstr "연락처를 저장하지 못했습니다"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1800,9 +1795,9 @@ msgid "{number} is saved to contacts:"
 msgstr "{number}이(가) 연락처에 저장되었습니다:"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:142
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Address Book: {name}"
-msgstr "주소록: {이름}"
+msgstr "주소록: {name}"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:163
 msgid "Keep this, Remove duplicates"
@@ -1813,9 +1808,9 @@ msgid "Keep this, Merge duplicates"
 msgstr "이것을 유지하고 중복 항목을 병합하세요."
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:332
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Merging {current}/{total}..."
-msgstr "{현재}/{총계} 병합 중..."
+msgstr "병합 중 {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1997,7 +1992,7 @@ msgstr "무엇을 내보내시겠습니까?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "참고: 이 내보내기는 Android 형식을 사용합니다. 이 파일을 iOS 기기로 가져올 때는 \"Import From Android\" 옵션을 사용하세요."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2189,9 +2184,9 @@ msgid "Failed. Reboot Device."
 msgstr "실패한. 장치를 재부팅하십시오."
 
 #: src/telephony/ui/windows/incall_window.py:643
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Verifying... {attempt}"
-msgstr "확인 중... {시도}"
+msgstr "확인 중... {attempt}"
 
 #: src/telephony/ui/windows/incall_window.py:702
 msgid "Mute Microphone"
@@ -2231,14 +2226,14 @@ msgid "Report bugs or request features"
 msgstr "버그 신고 또는 기능 요청"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "예약됨({현재}/{총})"
+msgstr "예약됨 ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "To: {name}"
-msgstr "받는 사람: {이름}"
+msgstr "받는 사람: {name}"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
 msgid "Send Now"
@@ -2249,9 +2244,9 @@ msgid "Message removed"
 msgstr "메시지가 삭제되었습니다."
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "예약된 메시지를 {number}번으로 보냈습니다."
+msgstr "{number}에게 메시지 전송 중..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2323,40 +2318,37 @@ msgid "Quick Response"
 msgstr "빠른 응답"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "거절 메시지"
+msgstr "거절 메시지 추가"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "{번호}번으로 전화하세요"
+msgstr "통화 음량"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "증폭 허용"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "슬라이더를 100% 이상으로 올릴 수 있게 합니다. 증폭된 오디오는 왜곡될 수 있습니다."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "수화부"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "스피커온"
+msgstr "스피커"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "유선 헤드셋"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2505,7 +2497,7 @@ msgid "Custom URL"
 msgstr "맞춤 URL"
 
 #: src/telephony/ui/windows/settings_window.py:574
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
 "'{number}' in the URL where the caller's phone number should go.\n"
@@ -2515,13 +2507,11 @@ msgid ""
 "When you tap the search button during a call, we will replace '{number}' "
 "with the actual phone number and open it in your default browser."
 msgstr ""
-"모르는 번호 검색에 사용할 URL을 입력하세요. 발신자의 전화번호가 연결되어야 하"
-"는 URL에 '{번호}'를 포함하세요.\n"
+"알 수 없는 번호를 검색할 때 사용할 URL을 입력하세요. 발신자의 전화번호가 들어갈 자리에 '{number}'를 URL에 포함하세요.\n"
 "\n"
-"예: https://mysearch.com/?q={번호}\n"
+"예: https://mysearch.com/?q={number}\n"
 "\n"
-"통화 중 검색 버튼을 탭하면 '{번호}'가 실제 전화번호로 바뀌고 기본 브라우저에"
-"서 열립니다."
+"통화 중 검색 버튼을 누르면 '{number}'가 실제 전화번호로 바뀌어 기본 브라우저에서 열립니다."
 
 #: src/telephony/ui/windows/settings_window.py:578
 msgid "Custom Search URL"
@@ -2546,7 +2536,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "이것은 통화가 연결될 때 선택한 출력에 적용되는 기본 하드웨어 음량입니다. 통화 중 음량 버튼은 이 기본 수준 위에서 미세 조정만 하므로, 기본이 0%이면 통화는 계속 무음 상태가 됩니다. 100%를 넘는 값은 소프트웨어 증폭을 사용하며 오디오가 왜곡될 수 있습니다. 유선 헤드셋과 Bluetooth 수준은 향후 라우팅 지원을 위해 저장됩니다."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2604,7 +2594,7 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "기능 사용"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2675,11 +2665,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "TOTP 보기 또는 편집"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "TOTP 설정"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2730,9 +2720,8 @@ msgstr ""
 "증 앱의 현재 6자리 코드를 추가해야 합니다."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "텍스트 복사"
+msgstr "TOTP 키 복사"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668

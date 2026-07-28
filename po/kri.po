@@ -151,18 +151,18 @@ msgid "Set numbers in Settings."
 msgstr "Sɛt nɔmba dɛn na Sɛtin dɛn."
 
 #: src/telephony/backend/managers/emergency_manager.py:148
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {number}"
-msgstr "Kɔl {nɔmba}."
+msgstr "Kɔl {number}"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
 msgstr "Kɔnfɛm Imejɛnsi Kɔl"
 
 #: src/telephony/backend/managers/emergency_manager.py:162
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Call {name}?"
-msgstr "Kɔl {nem}?"
+msgstr "Kɔl {name}?"
 
 #: src/telephony/backend/managers/emergency_manager.py:164
 msgid "🟢 Yes, Call"
@@ -208,9 +208,9 @@ msgid "Telephony - Incoming"
 msgstr "Telefoni - Inkam"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:188
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Incoming: {name}"
-msgstr "🟢 Inkam: {nem}."
+msgstr "🟢 Kɔl de kam: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:189
 #: src/telephony/ui/windows/incall_window.py:387
@@ -244,9 +244,9 @@ msgid "Telephony - On Hold"
 msgstr "Telefoni - Na Hold"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:200
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟠 {name} put as on hold"
-msgstr "🟠 {nem} put as na hold"
+msgstr "🟠 {name} dɔn put fɔ wet"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:201
 #: src/telephony/backend/managers/lockscreen_manager.py:217
@@ -268,9 +268,9 @@ msgid "MuteMic"
 msgstr "MuteMic we dɛn kɔl"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:216
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "⏸️ {name} (On Hold)"
-msgstr "⏸️ {nem} (On Hold)"
+msgstr "⏸️ {name} (De Wet)"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔁 Resume"
@@ -281,9 +281,9 @@ msgid "Telephony - Active Call"
 msgstr "Telefoni - Aktiv Kɔl"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:223
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "🟢 Active: {name}"
-msgstr "🟢 Aktiv: {nem}."
+msgstr "🟢 Aktiv: {name}"
 
 #: src/telephony/backend/managers/lockscreen_manager.py:224
 msgid "Active Call"
@@ -361,14 +361,14 @@ msgid "Successfully exported {count} calls to XML."
 msgstr "Saksesfully ɛkspɔt {count} kɔl dɛn to XML."
 
 #: src/telephony/backend/utils/exporter_local_utils.py:91
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Exported {count} messages to Chatty database."
-msgstr "Ekspɔt {kɔnt} mɛsej dɛn to Chatty database."
+msgstr "Dɔn ɛkspot {count} mɛsej dɛn go na Chatty detabes."
 
 #: src/telephony/backend/utils/exporter_local_utils.py:147
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Exported {count} calls to Gnome Calls database."
-msgstr "Ekspɔt {kɔnt} kɔl dɛn to Gnome Kɔl database."
+msgstr "Dɔn ɛkspot {count} kɔl dɛn go na Gnome Calls detabes."
 
 #: src/telephony/backend/utils/exporter_local_utils.py:164
 msgid "Source database not found."
@@ -386,9 +386,9 @@ msgid "File not found."
 msgstr "Fayl nɔ fɛn."
 
 #: src/telephony/backend/utils/importer_android_utils.py:129
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} messages from Android backup."
-msgstr "Impɔt {kɔnt} mɛsej frɔm Andrɔyd bak-ap."
+msgstr "Dɔn impot {count} mɛsej dɛn frɔm Android bakɔp."
 
 #: src/telephony/backend/utils/importer_android_utils.py:203
 #, python-brace-format
@@ -404,9 +404,9 @@ msgid "Failed to read iOS SMS database structure."
 msgstr "Fail fɔ rid iOS SMS database strɔkchɔ."
 
 #: src/telephony/backend/utils/importer_ios_utils.py:196
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} messages from iOS backup."
-msgstr "Impɔt {kɔnt} mɛsej frɔm iOS bak-ap."
+msgstr "Dɔn impot {count} mɛsej dɛn frɔm iOS bakɔp."
 
 #: src/telephony/backend/utils/importer_ios_utils.py:230
 msgid "Could not find call history table in iOS database."
@@ -434,9 +434,9 @@ msgid "Failed to read Chatty database structure."
 msgstr "Fail fɔ rid Chatty database strɔkchɔ."
 
 #: src/telephony/backend/utils/importer_local_utils.py:124
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} messages from Chatty."
-msgstr "Impɔt {kɔnt} mɛsej dɛn frɔm Chatty."
+msgstr "Dɔn impot {count} mɛsej dɛn frɔm Chatty."
 
 #: src/telephony/backend/utils/importer_local_utils.py:134
 msgid "Calls database not found."
@@ -451,9 +451,9 @@ msgid "Failed to read Calls database structure."
 msgstr "Failed fɔ rid Kɔl database strɔkchɔ."
 
 #: src/telephony/backend/utils/importer_local_utils.py:213
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} calls."
-msgstr "Impɔt {kɔnt} kɔl dɛn."
+msgstr "Dɔn impot {count} kɔl dɛn."
 
 #: src/telephony/backend/utils/model_utils.py:56
 msgid "0s"
@@ -540,9 +540,9 @@ msgid "Modem Connected"
 msgstr "Modem we dɛn dɔn kɔnɛkt"
 
 #: src/telephony/ui/main_window.py:391
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Modem Error: {message}"
-msgstr "Modem Erɔd: {mɛsej}."
+msgstr "Modɛm Ɛrɔ: {message}"
 
 #: src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
@@ -611,9 +611,9 @@ msgid "Calling (Anonymous)..."
 msgstr "We yu de kɔl (Anonymous)..."
 
 #: src/telephony/ui/main_window.py:659
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Calling {number}..."
-msgstr "We yu de kɔl {nɔmba}..."
+msgstr "De kɔl {number}..."
 
 #: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
 msgid "Call Failed"
@@ -624,17 +624,17 @@ msgid "Call Details"
 msgstr "Di Ditiɛl dɛn fɔ Kɔl"
 
 #: src/telephony/ui/main_window.py:676
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Number: {number}\n"
 "Name: {name}\n"
 "Date: {date}\n"
 "Duration: {duration}"
 msgstr ""
-"Nɔmba: {nɔmba}\n"
-"Nem: {nem}.\n"
-"Deti: {deti}.\n"
-"Di tɛm we i fɔ tek: {di tɛm we i fɔ tek}."
+"Nɔmba: {number}\n"
+"Nem: {name}\n"
+"Det: {date}\n"
+"Aw lɔng: {duration}"
 
 #: src/telephony/ui/main_window.py:692
 #: src/telephony/ui/windows/blocklist_window.py:142
@@ -700,9 +700,9 @@ msgid "Saving contact..."
 msgstr "Sevin kɔntakt..."
 
 #: src/telephony/ui/main_window.py:802
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Added to {name}"
-msgstr "Add to {nem}."
+msgstr "Dɔn ad to {name}"
 
 #: src/telephony/ui/main_window.py:805
 msgid "Failed to add number"
@@ -746,9 +746,9 @@ msgid "Scheduled time must be in the future"
 msgstr "Di tɛm we dɛn dɔn sɛtul fɔ bi tumara bambay"
 
 #: src/telephony/ui/views/chat_view.py:358
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Rescheduled for {time}"
-msgstr "Rischeduled fɔ {tɛm}."
+msgstr "Dɔn skedul bak fɔ {time}"
 
 #: src/telephony/ui/views/chat_view.py:362
 msgid "Re-Schedule Message"
@@ -787,13 +787,13 @@ msgid "Me"
 msgstr "Mi"
 
 #: src/telephony/ui/views/chat_view.py:808
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr ""
-"Fɔwad frɔm {sender}:\n"
-"{bɔdi}"
+"Dɔn fɔwad frɔm {sender}:\n"
+"{body}"
 
 #: src/telephony/ui/views/chat_view.py:808
 #, python-brace-format
@@ -822,13 +822,12 @@ msgid "Group renamed"
 msgstr "Grup we dɛn chenj in nem"
 
 #: src/telephony/ui/views/chat_view.py:1008
-#, fuzzy
 msgid "Compressing image..."
-msgstr "We yu de kɔmprɛs di fim..."
+msgstr "De kɔmprɛs di pikchɔ..."
 
 #: src/telephony/ui/views/chat_view.py:1010
 msgid "Image is too large to send"
-msgstr ""
+msgstr "Di pikchɔ big tumɔs fɔ sɛn"
 
 #: src/telephony/ui/views/chat_view.py:1012
 msgid "Compressing video..."
@@ -840,7 +839,7 @@ msgstr "Vidio kɔmpreshɔn nɔ bin wok"
 
 #: src/telephony/ui/views/chat_view.py:1016
 msgid "File is too large to send via MMS"
-msgstr ""
+msgstr "Di fayl big tumɔs fɔ sɛn wit MMS"
 
 #: src/telephony/ui/views/chat_view.py:1224
 msgid "Nothing to schedule"
@@ -851,9 +850,9 @@ msgid "Schedule Message"
 msgstr "Skedul Mɛsej"
 
 #: src/telephony/ui/views/chat_view.py:1277
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Message scheduled for {time}"
-msgstr "Mesej we dɛn dɔn schedul fɔ {tɛm}."
+msgstr "Mɛsej dɔn skedul fɔ {time}"
 
 #: src/telephony/ui/views/chat_view.py:1280
 #: src/telephony/ui/views/chat_view.py:1298
@@ -1041,24 +1040,23 @@ msgid "Search Messages..."
 msgstr "Sɔch Mɛsej dɛn..."
 
 #: src/telephony/ui/views/messages_view.py:621
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Start ({count})"
-msgstr "Start ({kɔnt}) ."
+msgstr "Stat ({count})"
 
 #: src/telephony/ui/views/messages_view.py:628
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Open ({count})"
-msgstr "Start ({kɔnt}) ."
+msgstr "Opin ({count})"
 
 #: src/telephony/ui/views/messages_view.py:700
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Add Number: {number}"
-msgstr "Add Nɔmba: {nɔmba}"
+msgstr "Ad Nɔmba: {number}"
 
 #: src/telephony/ui/views/messages_view.py:733
-#, fuzzy
 msgid "Group chat"
-msgstr "Grup Nem"
+msgstr "Grup chat"
 
 #: src/telephony/ui/views/messages_view.py:741
 #: src/telephony/ui/windows/custom_tone_list_window.py:297
@@ -1092,19 +1090,17 @@ msgstr "Dilit"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:296
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled: {time}"
-msgstr "Scheduled: {tɛm} we dɛn dɔn sɛtul."
+msgstr "Skedul: {time}"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:303
-#, fuzzy
 msgid "Failed to send"
-msgstr "Failed fɔ sɛn: {e}."
+msgstr "I nɔ sɛn"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:307
-#, fuzzy
 msgid "Sending..."
-msgstr "We yu de sɛn USSD..."
+msgstr "De sɛn..."
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:537
 msgid "Open with"
@@ -1120,7 +1116,7 @@ msgstr "Sev as"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:618
 msgid "Retry Send"
-msgstr ""
+msgstr "Tray fɔ Sɛn Bak"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:692
 msgid "Open With..."
@@ -1135,14 +1131,14 @@ msgid "Hangup All Calls"
 msgstr "Hangup Ɔl di Kɔl dɛn"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:103
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{time} • Group"
-msgstr "{tɛm} • Grup"
+msgstr "{time} • Grup"
 
 #: src/telephony/ui/widgets/messages_rows_widget.py:109
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Draft: {message}"
-msgstr "Draft: {mɛsej}."
+msgstr "Draf: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:32
 #: src/telephony/ui/windows/settings_window.py:352
@@ -1313,9 +1309,9 @@ msgid "Recording failed (File empty)."
 msgstr "Di rikodin nɔ wok (Fayla ɛmti)."
 
 #: src/telephony/ui/windows/camera_video_window.py:388
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Large video ({size}KB). Will be compressed on send."
-msgstr "Big fim ({sayz}KB). Wi go kɔmprɛs we dɛn sɛn am."
+msgstr "Big vidio ({size}KB). I go kɔmprɛs we yu sɛn am."
 
 #: src/telephony/ui/windows/camera_video_window.py:405
 msgid "Cannot play empty file."
@@ -1476,14 +1472,14 @@ msgid "Clear Date"
 msgstr "Klia Deti fɔ yu"
 
 #: src/telephony/ui/windows/contact_editor_window.py:371
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Select {title}"
-msgstr "Selekt {taytul}."
+msgstr "Pik {title}"
 
 #: src/telephony/ui/windows/contact_editor_window.py:381
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Copy {title}"
-msgstr "Kɔpi {taytul}."
+msgstr "Kɔpi {title}"
 
 #: src/telephony/ui/windows/contact_editor_window.py:390
 #: src/telephony/ui/windows/trusted_actions_list_window.py:621
@@ -1503,9 +1499,8 @@ msgid "Deleting contact..."
 msgstr "Dilit kɔntakt..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:822
-#, fuzzy
 msgid "Failed to save contact"
-msgstr "Failed fɔ sev to blɔklist."
+msgstr "I nɔ ebul sev di kɔntakt"
 
 #: src/telephony/ui/windows/contact_editor_window.py:829
 msgid ""
@@ -1565,9 +1560,9 @@ msgid "Custom tone removed (Click Save to commit)"
 msgstr "Di kɔstɔm tɔyn dɔn pul (Klik Sɛv fɔ kɔmit)"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:315
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Select Tone for {name}"
-msgstr "Selekt Tɔn fɔ {nem}."
+msgstr "Pik Ton fɔ {name}"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:318
 #: src/telephony/ui/windows/settings_window.py:405
@@ -1671,9 +1666,9 @@ msgstr ""
 "Dis go wayp am frɔm di sistɛm."
 
 #: src/telephony/ui/windows/data_management_window.py:154
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
-msgstr "Yu shɔ se yu want fɔ dilit di '{nem}' adrɛs buk fɔ ɔltɛm?"
+msgstr "Yu shɔ se yu want dilit di '{name}' adrɛs buk fɔ ɛva?"
 
 #: src/telephony/ui/windows/data_management_window.py:169
 msgid "Delete EVERYTHING"
@@ -1791,19 +1786,19 @@ msgid "Merging Contacts..."
 msgstr "We yu de jɔyn Kɔntakt dɛn..."
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:108
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Remaining conflicts: {count}"
-msgstr "Di kɔnflikt dɛn we lɛf: {kɔnt}"
+msgstr "Kɔnflikt dɛn we lɛf: {count}"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:126
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{number} is saved to contacts:"
-msgstr "{nɔmba} de sev to kɔntakt dɛn:"
+msgstr "{number} dɔn sev na kɔntakt dɛn:"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:142
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Address Book: {name}"
-msgstr "Adrɛs Buk: {nem}."
+msgstr "Adrɛs Buk: {name}"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:163
 msgid "Keep this, Remove duplicates"
@@ -1814,9 +1809,9 @@ msgid "Keep this, Merge duplicates"
 msgstr "Kip dis, Merge dupliket"
 
 #: src/telephony/ui/windows/duplicate_resolution_window.py:332
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Merging {current}/{total}..."
-msgstr "Merging {kɔrɛnt}/{tɔtal}..."
+msgstr "De jɔyn {current}/{total}..."
 
 #: src/telephony/ui/windows/import_export_window.py:43
 msgid ""
@@ -1873,9 +1868,9 @@ msgid "No contacts found on SIM card."
 msgstr "No kɔntakt nɔ de we dɛn fɛn na SIM kad."
 
 #: src/telephony/ui/windows/import_export_window.py:111
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} contacts from SIM."
-msgstr "Impɔt {kɔnt} kɔntakt dɛn frɔm SIM."
+msgstr "Dɔn impot {count} kɔntakt dɛn frɔm SIM."
 
 #: src/telephony/ui/windows/import_export_window.py:116
 #, python-brace-format
@@ -1998,7 +1993,7 @@ msgstr "Wetin yu wan fɔ ɛkspɔt?"
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr ""
+msgstr "Nɔt: Dis ɛkspot de yuz di Android fɔmat. We yu de impot dis fayl na iOS fon, duya yuz di \"Import From Android\" ɔpshɔn."
 
 #: src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
@@ -2038,9 +2033,9 @@ msgid "Where do you want to import contacts?"
 msgstr "Usay yu want fɔ import kɔntakt dɛn?"
 
 #: src/telephony/ui/windows/import_export_window.py:473
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Imported {count} contacts"
-msgstr "Impɔt {kɔnt} kɔntakt dɛn"
+msgstr "Dɔn impot {count} kɔntakt dɛn"
 
 #: src/telephony/ui/windows/import_export_window.py:477
 #, python-brace-format
@@ -2231,14 +2226,14 @@ msgid "Report bugs or request features"
 msgstr "Ripɔt bɔg ɔ rikwest ficha dɛn"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Scheduled ({current}/{total})"
-msgstr "Scheduled ({kɔrɛnt}/{tɔtal}) ."
+msgstr "Dɔn skedul ({current}/{total})"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "To: {name}"
-msgstr "To: {nem}."
+msgstr "To: {name}"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
 msgid "Send Now"
@@ -2249,9 +2244,9 @@ msgid "Message removed"
 msgstr "Dɛn dɔn pul di mɛsej"
 
 #: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Sending message to {number}..."
-msgstr "Sɛn mɛsej we dɛn dɔn sɛtul to {nɔmba}."
+msgstr "De sɛn mɛsej to {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:88
 #: src/telephony/ui/windows/settings_window.py:389
@@ -2325,40 +2320,37 @@ msgid "Quick Response"
 msgstr "Kwik Rispɔns"
 
 #: src/telephony/ui/windows/settings_window.py:230
-#, fuzzy
 msgid "Add Decline Message"
-msgstr "Diklayn Mɛsej"
+msgstr "Ad Mɛsej fɔ Nɔ Gri"
 
 #: src/telephony/ui/windows/settings_window.py:245
 #: src/telephony/ui/windows/settings_window.py:812
-#, fuzzy
 msgid "Call Volume"
-msgstr "Kɔl {nɔmba}."
+msgstr "Kɔl Volyum"
 
 #: src/telephony/ui/windows/settings_window.py:257
 msgid "Allow Amplification"
-msgstr ""
+msgstr "Alaw fɔ Big di Saund"
 
 #: src/telephony/ui/windows/settings_window.py:259
 msgid "Let sliders go above 100%. Amplified audio may distort."
-msgstr ""
+msgstr "Lɛ di slayda dɛn pas 100%. Di saund we dɔn big pas mak go pwɛl smɔl."
 
 #: src/telephony/ui/windows/settings_window.py:268
 msgid "Earpiece"
-msgstr ""
+msgstr "Ia Spika"
 
 #: src/telephony/ui/windows/settings_window.py:269
-#, fuzzy
 msgid "Speaker"
-msgstr "SpikaOn"
+msgstr "Spika"
 
 #: src/telephony/ui/windows/settings_window.py:270
 msgid "Wired Headset"
-msgstr ""
+msgstr "Ɛdsɛt we gɛt Waya"
 
 #: src/telephony/ui/windows/settings_window.py:271
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #: src/telephony/ui/windows/settings_window.py:286
 msgid "Notification Exceptions"
@@ -2508,7 +2500,7 @@ msgid "Custom URL"
 msgstr "Kastom URL we yu want"
 
 #: src/telephony/ui/windows/settings_window.py:574
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
 "'{number}' in the URL where the caller's phone number should go.\n"
@@ -2518,13 +2510,11 @@ msgid ""
 "When you tap the search button during a call, we will replace '{number}' "
 "with the actual phone number and open it in your default browser."
 msgstr ""
-"Ɛntay di URL we yu want fɔ yuz fɔ fɛn nɔmba dɛn we yu nɔ no. Put '{nɔmba}' "
-"na di URL usay di pɔsin we kɔl in fon nɔmba fɔ go.\n"
+"Rayt di URL we yu want yuz fɔ sach nɔmba dɛn we yu nɔ no. Put '{number}' insay di URL na di ples we di pɔsin we de kɔl in fon nɔmba fɔ go.\n"
 "\n"
-"Fɔ ɛgzampul: https://mysearch.com/?q={nɔmba}\n"
+"Fɔ ɛgzampul: https://mysearch.com/?q={number}\n"
 "\n"
-"We yu tap di sɔch bɔtin we yu de kɔl, wi go riples ‘{nɔmba}’ wit di rial fon "
-"nɔmba ɛn opin am na yu difɔlt brawza."
+"We yu prɛs di sach bɔtin we kɔl de go, wi go chenj '{number}' to di rial fon nɔmba ɛn opin am na yu difɔlt brawza."
 
 #: src/telephony/ui/windows/settings_window.py:578
 msgid "Custom Search URL"
@@ -2549,7 +2539,7 @@ msgid ""
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr ""
+msgstr "Dis na di men adwɛa volyum we dɛn de put pan di awtput we yu pik we kɔl kɔnɛkt. Di volyum bɔtin dɛn we kɔl de go, dɛn de jɔs fayn-tyun pan tap dis men lɛvɛl, so if di men lɛvɛl na 0%, di kɔl go tan salɛnt no mata wetin. Valyu dɛn we pas 100% de yuz sɔftwɛa fɔ big di saund ɛn i go ebul pwɛl di saund. Dɛn de sev di lɛvɛl dɛn fɔ Ɛdsɛt we gɛt Waya ɛn Bluetooth fɔ di rutin sɔpot we de kam."
 
 #: src/telephony/ui/windows/settings_window.py:822
 msgid "Decline Message"
@@ -2605,7 +2595,7 @@ msgstr "Rikɔdin tu big fɔ MMS (Max 600KB). Duya Ritek shɔt wan."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:123
 msgid "Enable Feature"
-msgstr ""
+msgstr "Mek di Fitcha Wok"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:151
 msgid ""
@@ -2677,11 +2667,11 @@ msgstr ""
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:265
 msgid "View or edit TOTP"
-msgstr ""
+msgstr "Luk ɔ chenj TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:267
 msgid "Setup TOTP"
-msgstr ""
+msgstr "Sɛtɔp TOTP"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:337
 msgid "Secret message"
@@ -2732,9 +2722,8 @@ msgstr ""
 "put di kɔrɛnt 6-diji kɔd kɔmɔt na dɛn ɔtɛntiketɔ afta di kiwɔd."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:615
-#, fuzzy
 msgid "Copy TOTP key"
-msgstr "Kɔpi Tɛks"
+msgstr "Kɔpi TOTP ki"
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:626
 #: src/telephony/ui/windows/trusted_actions_list_window.py:668
