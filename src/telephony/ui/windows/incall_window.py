@@ -389,9 +389,9 @@ class InCallWindow(Gtk.Window):
             if self.is_ringing:
                 self.audio.stop_ringing()
                 self.is_ringing = False
+            self._apply_call_volume()
             self.audio.set_voice_profile(True)
             self.audio.mute(self.is_muted)
-            self._apply_call_volume()
             self.controls_stack.set_visible_child_name("active")
             self._toggle_blue(self.btn_output, self.is_speaker)
             self._toggle_blue(self.btn_input, self.is_muted)
