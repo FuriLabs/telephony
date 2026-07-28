@@ -886,31 +886,95 @@ class ChatPage(Gtk.Box):
             self.title_widget.set_title(new_name)
             self.app_window.notify_success(_("Group renamed"))
 
+    def _remaining_attachment_budget(self):
+        """Return how many bytes of MMS attachment budget are still available."""
+        budget = self.app_window.mms.get_max_attachment_size()
+        used = sum(os.path.getsize(p) for p in self.attachments if os.path.exists(p))
+        return budget - used
+
     def on_attachment_captured(self, path):
         """Callback when an attachment is created by a helper window."""
-        if not path or not os.path.exists(path):
+        if not path or not os.path.exists(path) or path in self.attachments:
             return
 
-        if path not in self.attachments:
-            processed_path = path
-            try:
-                size = os.path.getsize(path)
-                limit = 600 * 1024
-                if size > limit:
-                    mime, _encoding = mimetypes.guess_type(path)
-                    if mime and mime.startswith("video/"):
-                        self.app_window.notify_success(_("Compressing video..."))
-                        compressed = self._compress_video(path)
-                        if compressed:
-                            processed_path = compressed
-                        else:
-                            self.app_window.notify_error(_("Video compression failed"))
-                            return
-            except Exception as e:
-                logger.warning(f"[Chat] Video check failed: {e}")
+        try:
+            size = os.path.getsize(path)
+            remaining = self._remaining_attachment_budget()
+        except Exception as e:
+            logger.warning(f"[Chat] Attachment size check failed: {e}")
+            self._append_attachment(path)
+            return
 
-            self.attachments.append(processed_path)
+        if size <= remaining:
+            self._append_attachment(path)
+            return
+
+        mime, _encoding = mimetypes.guess_type(path)
+
+        if mime and mime.startswith("image/"):
+            self.app_window.notify_success(_("Compressing image..."))
+            run_in_background(self._compress_image, path, remaining,
+                              on_complete=lambda result: self._on_compressed(result, _("Image is too large to send")))
+        elif mime and mime.startswith("video/"):
+            self.app_window.notify_success(_("Compressing video..."))
+            run_in_background(self._compress_video_to_fit, path, remaining,
+                              on_complete=lambda result: self._on_compressed(result, _("Video compression failed")))
+        else:
+            self.app_window.notify_error(_("File is too large to send via MMS"))
+
+    def _on_compressed(self, result_path, error_message):
+        """Handle a finished background compression."""
+        if result_path:
+            self._append_attachment(result_path)
+        else:
+            self.app_window.notify_error(error_message)
+
+    def _append_attachment(self, path):
+        """Add a processed attachment and refresh the chip area."""
+        if path not in self.attachments:
+            self.attachments.append(path)
             self.refresh_attachment_ui()
+
+    def _compress_video_to_fit(self, path, max_bytes):
+        """Compress a video and verify it fits the remaining budget."""
+        compressed = self._compress_video(path)
+        if compressed and os.path.getsize(compressed) <= max_bytes:
+            return compressed
+        if compressed and os.path.exists(compressed):
+            os.remove(compressed)
+        return None
+
+    def _compress_image(self, src_path, max_bytes):
+        """Downscale and re-encode an image until it fits the byte budget."""
+        from PIL import Image, ImageOps
+
+        try:
+            with Image.open(src_path) as img:
+                img = ImageOps.exif_transpose(img)
+                if img.mode != "RGB":
+                    img = img.convert("RGB")
+
+                quality = 85
+                scale = 1.0
+                for _attempt in range(8):
+                    width = max(1, int(img.width * scale))
+                    height = max(1, int(img.height * scale))
+                    resized = img if scale == 1.0 else img.resize((width, height), Image.LANCZOS)
+
+                    tmp_path = os.path.join(tempfile.gettempdir(), f"img_c_{int(time.time())}_{_attempt}.jpg")
+                    resized.save(tmp_path, "JPEG", quality=quality, optimize=True)
+
+                    if os.path.getsize(tmp_path) <= max_bytes:
+                        return tmp_path
+
+                    os.remove(tmp_path)
+                    if quality > 45:
+                        quality -= 15
+                    else:
+                        scale *= 0.7
+        except Exception as e:
+            logger.error(f"[Chat] Image compression error: {e}")
+        return None
 
     def refresh_attachment_ui(self):
         """Update attachment UI area."""

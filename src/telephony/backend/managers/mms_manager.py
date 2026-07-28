@@ -31,6 +31,8 @@ NOTIFY_DBUS_NAME = "org.freedesktop.Notifications"
 NOTIFY_DBUS_PATH = "/org/freedesktop/Notifications"
 NOTIFY_INTERFACE = "org.freedesktop.Notifications"
 
+DEFAULT_MAX_ATTACHMENT_SIZE = 1100 * 1024
+
 
 class MmsManager(GObject.Object):
     """
@@ -58,6 +60,7 @@ class MmsManager(GObject.Object):
         self.seen_mms_signatures = []
         self.processed_paths = set()
         self.last_sent_mms = None
+        self._max_attachment_size = None
 
         if not mimetypes.inited:
             mimetypes.init()
@@ -195,6 +198,26 @@ class MmsManager(GObject.Object):
             logger.debug(f"[MMS-LOG] MSG-CLEANUP | Removed {msg_path} from daemon storage")
         except Exception as e:
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
+
+    def get_max_attachment_size(self):
+        """Return the total attachment size budget reported by mmsd, cached after first read."""
+        if self._max_attachment_size:
+            return self._max_attachment_size
+
+        try:
+            if self.proxy:
+                ret = self.proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
+                props = ret.unpack()[0]
+                val = props.get("TotalMaxAttachmentSize")
+                if isinstance(val, GLib.Variant):
+                    val = val.unpack()
+                if val and int(val) > 0:
+                    self._max_attachment_size = int(val)
+                    return self._max_attachment_size
+        except Exception as e:
+            logger.debug(f"[MMS-LOG] SIZE-QUERY-FAILED | {e}")
+
+        return DEFAULT_MAX_ATTACHMENT_SIZE
 
     def send_mms(self, recipients, subject=None, body=None, attachment_paths=[]):
         """Send an MMS message."""
