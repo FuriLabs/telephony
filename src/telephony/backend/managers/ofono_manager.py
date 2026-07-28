@@ -68,6 +68,7 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
 
         self.active_calls = {}
         self.active_chat_number = None
+        self.focus_provider = None
 
         self.seen_sms_signatures = []
         self.last_sent_sms = None
@@ -90,7 +91,26 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
 
     def set_active_chat(self, number):
         """Set the currently active chat to suppress notifications."""
-        self.active_chat_number = normalize_number(number) if number else None
+        if not number:
+            self.active_chat_number = None
+        elif isinstance(number, list):
+            self.active_chat_number = ",".join(sorted(normalize_number(n) for n in number))
+        elif "," in number:
+            self.active_chat_number = number
+        else:
+            self.active_chat_number = normalize_number(number)
+
+    def set_focus_provider(self, provider):
+        """Set a callable reporting whether an application window is focused."""
+        self.focus_provider = provider
+
+    def is_app_focused(self):
+        """Return True when the focus provider reports an active window."""
+        try:
+            return bool(self.focus_provider and self.focus_provider())
+        except Exception as e:
+            logger.debug(f"[OfonoManager] Focus provider error: {e}")
+            return False
 
     def _on_monitor_status(self, monitor, status, msg):
         """Handle monitor status changes."""

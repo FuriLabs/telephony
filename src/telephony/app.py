@@ -147,7 +147,10 @@ class App(Adw.Application):
 
         self.ofono.connect('call-added', self._on_global_call_added)
 
+        self.ofono.set_focus_provider(self._any_window_active)
+
         self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager)
+        self.mms.active_chat_provider = lambda: (self.ofono.active_chat_number, self._any_window_active())
         self.mms.connect('message-received', self.on_mms_received)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
@@ -178,6 +181,10 @@ class App(Adw.Application):
                 return True
 
             self.incall.connect("close-request", _on_incall_closed)
+
+    def _any_window_active(self):
+        """Return True when any application window currently has focus."""
+        return any(win.is_active() for win in self.get_windows())
 
     def release_keyboard_focus(self):
         """Drop entry focus in all windows so the on-screen keyboard dismisses."""

@@ -61,6 +61,7 @@ class MmsManager(GObject.Object):
         self.processed_paths = set()
         self.last_sent_mms = None
         self._max_attachment_size = None
+        self.active_chat_provider = None
 
         if not mimetypes.inited:
             mimetypes.init()
@@ -352,12 +353,22 @@ class MmsManager(GObject.Object):
             else:
                 saved_remote_number = clean_list
 
+            status = "unread"
+            if self.active_chat_provider:
+                try:
+                    active_chat, focused = self.active_chat_provider()
+                    chat_id = saved_remote_number if isinstance(saved_remote_number, str) else ",".join(saved_remote_number)
+                    if active_chat and focused and chat_id == active_chat:
+                        status = "read"
+                except Exception as e:
+                    logger.debug(f"[MMS] Active chat check failed: {e}")
+
             if self.db:
                 self.db.add_message(
                     remote_number=saved_remote_number,
                     direction="incoming",
                     body=body_text,
-                    status="unread",
+                    status=status,
                     subject=None,
                     attachments=final_atts,
                     sender=sender

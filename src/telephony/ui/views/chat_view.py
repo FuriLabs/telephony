@@ -95,6 +95,7 @@ class ChatPage(Gtk.Box):
         self.is_loading = True
         self.target_highlight_id = target_id
         self.has_active_divider = False
+        self._pending_initial_read = False
 
         self.full_history = []
         self.newest_db_offset = 0
@@ -107,7 +108,7 @@ class ChatPage(Gtk.Box):
         self.db_signals = []
         self.eds_signals = []
 
-        sig_id = self.db.connect('messages-updated', lambda *args: GLib.idle_add(self._reload_chat))
+        sig_id = self.db.connect('messages-updated', self._on_messages_updated)
         self.db_signals.append((self.db, sig_id))
 
         self._setup_ui()
@@ -533,7 +534,9 @@ class ChatPage(Gtk.Box):
 
             self.is_loading = False
             if self.app_window.is_active():
-                self.check_read_status()
+                self._mark_read_debounced()
+            else:
+                self._pending_initial_read = True
             return False
 
         GLib.timeout_add(50, reveal)
@@ -847,6 +850,61 @@ class ChatPage(Gtk.Box):
             self._reload_chat()
 
         self.app_window.confirm_action(_("Delete Message"), _("Are you sure you want to delete this message?"), on_confirm_delete)
+
+    def _on_messages_updated(self, _db, chat_id, change):
+        """React to database changes relevant to this conversation."""
+        if chat_id and chat_id != self.db_number:
+            return
+        if self.is_loading:
+            return
+
+        if change == "insert":
+            self._append_new_messages()
+        elif change in ("status", "draft"):
+            return
+        else:
+            self._reload_chat()
+
+    def _newest_item_id(self):
+        """Return the id of the newest real message currently in the store."""
+        for i in range(self.store.get_n_items()):
+            item = self.store.get_item(i)
+            if item.id:
+                return item.id
+        return 0
+
+    def _append_new_messages(self):
+        """Fetch rows newer than the current newest item and prepend them."""
+        newest_id = self._newest_item_id()
+
+        def fetch():
+            return self.db.get_chat_messages(self.number, limit=20, offset=0)
+
+        def done(rows):
+            fresh = [m for m in (rows or []) if m[0] > newest_id]
+            if not fresh:
+                return
+
+            for i in reversed(range(self.store.get_n_items())):
+                item = self.store.get_item(i)
+                if item.id == 0 and not item.is_divider:
+                    self.store.remove(i)
+
+            items = []
+            for m in fresh:
+                subject = m[5] if len(m) > 5 else None
+                att = m[6] if len(m) > 6 else []
+                sender_val = m[7] if len(m) > 7 else "Unknown"
+                sched_ts = m[8] if len(m) > 8 else None
+                items.append(MessageItem(m[0], m[1], m[2], m[3], m[4], subject=subject, attachments=att, sender=sender_val, scheduled_timestamp=sched_ts))
+
+            self.store.splice(0, 0, items)
+
+            if self.v_adj.get_value() <= 20 and self.app_window.is_active():
+                self.scroll_to_bottom()
+                self._mark_read_debounced()
+
+        run_in_background(fetch, on_complete=done)
 
     def _reload_chat(self):
         """Reload the chat conversation."""
@@ -1254,7 +1312,13 @@ class ChatPage(Gtk.Box):
 
     def on_window_focus_changed(self, window, param):
         """Handle window focus change."""
-        if window.is_active():
+        if not window.is_active():
+            return
+
+        if self._pending_initial_read:
+            self._pending_initial_read = False
+            self._mark_read_debounced()
+        else:
             self.check_read_status()
 
     def on_delete_conversation(self, btn):
@@ -1303,6 +1367,12 @@ class ChatPage(Gtk.Box):
         """Cleanup on widget unmap."""
         if not self._draft_saved:
             self._save_draft()
+
+        for timer_attr in ("_read_timer", "_refresh_timer", "search_timer"):
+            timer_id = getattr(self, timer_attr)
+            if timer_id:
+                GLib.source_remove(timer_id)
+                setattr(self, timer_attr, None)
 
         if self.app_window and (self.focus_handler_id is not None):
             if self.app_window.handler_is_connected(self.focus_handler_id):

@@ -116,7 +116,7 @@ class OfonoMessagingManager:
             self._check_secret_actions(msg_sender, body)
 
             status = "unread"
-            if self.active_chat_number and msg_sender == self.active_chat_number:
+            if self.active_chat_number and msg_sender == self.active_chat_number and self.is_app_focused():
                 status = "read"
 
             self.db.add_message(msg_sender, "incoming", body, status, sender=msg_sender)

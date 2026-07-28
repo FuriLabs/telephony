@@ -49,6 +49,7 @@ class MessagesView(Adw.Bin):
         self.page_limit = 50
         self.page_offset = 0
         self.is_fetching = False
+        self.last_fetch_has_more = False
 
         self.selected_recipients = set()
         self._is_programmatic_update = False
@@ -286,7 +287,7 @@ class MessagesView(Adw.Bin):
 
     def on_scroll_changed(self, adj):
         """Handle scroll position change."""
-        if self.is_fetching:
+        if self.is_fetching or not self.last_fetch_has_more:
             return
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
         if is_at_bottom:
@@ -422,7 +423,7 @@ class MessagesView(Adw.Bin):
 
     def add_chunk(self, model, items):
         """Add processed items to the model."""
-        self.is_fetching = not self.last_fetch_has_more
+        self.is_fetching = False
         self.list_view.set_opacity(1)
 
         real_items_count = 0
@@ -501,14 +502,7 @@ class MessagesView(Adw.Bin):
 
         unread_count = 0
         if not target_msg_id:
-            try:
-                for i in range(self.model.get_n_items()):
-                    item = self.model.get_item(i)
-                    if item.number == target_number:
-                        unread_count = item.unread_count
-                        break
-            except Exception as e:
-                logger.warning(f"[MessagesView] Unread count loop error: {e}")
+            unread_count = self.db.get_unread_count(target_number)
 
         page = Adw.NavigationPage(title=name, tag=chat_tag)
 
@@ -518,8 +512,10 @@ class MessagesView(Adw.Bin):
 
         page.set_child(self.active_chat_page)
 
+        created_page = self.active_chat_page
+
         def on_pop(p):
-            if self.active_chat_number == target_number:
+            if self.active_chat_page is created_page:
                 self.active_chat_number = None
                 self.active_chat_page = None
                 self.app_window.ofono.set_active_chat(None)
@@ -531,8 +527,7 @@ class MessagesView(Adw.Bin):
         page.connect("hidden", on_pop)
         self.nav_view.push(page)
 
-        if not isinstance(target_number, list):
-            self.app_window.ofono.set_active_chat(target_number)
+        self.app_window.ofono.set_active_chat(target_number)
 
     def set_search_mode(self, mode):
         """Set the search mode to either 'contacts' or 'messages'."""
