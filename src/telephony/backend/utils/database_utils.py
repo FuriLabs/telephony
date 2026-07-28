@@ -98,6 +98,14 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
         if cache_type == "conversations" or cache_type == "all":
             self._conversations_cache = None
 
+    def _tune_connection(self, conn):
+        """Apply WAL journaling and relaxed sync for faster commits."""
+        try:
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA synchronous=NORMAL")
+        except Exception as e:
+            logger.warning(f"[DB] Connection tuning failed: {e}")
+
     def init_dbs(self):
         """Initialize all database connections and tables."""
         try:
@@ -111,6 +119,7 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 os.makedirs(att_dir, exist_ok=True)
 
             self.conn_contacts = sqlite3.connect(os.path.join(data_dir, "contacts.db"), check_same_thread=False)
+            self._tune_connection(self.conn_contacts)
             c = self.conn_contacts.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS contacts
                          (uid TEXT PRIMARY KEY,
@@ -133,6 +142,7 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
             self.conn_contacts.commit()
 
             self.conn_calls = sqlite3.connect(os.path.join(data_dir, "calls.db"), check_same_thread=False)
+            self._tune_connection(self.conn_calls)
             c = self.conn_calls.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS history
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -141,9 +151,12 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                           direction TEXT,
                           duration INTEGER,
                           timestamp DATETIME)''')
+            c.execute("CREATE INDEX IF NOT EXISTS idx_history_ts ON history(timestamp DESC, id DESC)")
+            c.execute("CREATE INDEX IF NOT EXISTS idx_history_number ON history(number)")
             self.conn_calls.commit()
 
             self.conn_messages = sqlite3.connect(os.path.join(data_dir, "messages.db"), check_same_thread=False)
+            self._tune_connection(self.conn_messages)
             c = self.conn_messages.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS messages
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -158,6 +171,8 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                           sender TEXT)''')
             c.execute('''CREATE TABLE IF NOT EXISTS group_names
                          (id TEXT PRIMARY KEY, name TEXT)''')
+            c.execute("CREATE INDEX IF NOT EXISTS idx_messages_conv ON messages(remote_number, timestamp DESC, id DESC)")
+            c.execute("CREATE INDEX IF NOT EXISTS idx_messages_unread ON messages(remote_number) WHERE status='unread' AND direction='incoming'")
 
             try:
                 c.execute("SELECT sql FROM sqlite_master WHERE name='messages_search'")
@@ -187,6 +202,7 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
             self._rebuild_fts()
 
             self.conn_blocklist = sqlite3.connect(os.path.join(data_dir, "blocklist.db"), check_same_thread=False)
+            self._tune_connection(self.conn_blocklist)
             c = self.conn_blocklist.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS blocklist
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
