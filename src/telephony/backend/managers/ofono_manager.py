@@ -47,8 +47,6 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         'call-missed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'notification-cleared': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'ussd-request': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'call-log-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     def __init__(self, db_manager, gsettings_mgr=None):
@@ -312,14 +310,10 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         if status == "missed":
             self.emit('call-missed', num)
 
-        self.emit('call-log-changed')
-
     def on_ussd_signal(self, proxy, sender, signal, params):
         """Handle USSD signals."""
         if signal == "NotificationReceived":
             self.emit('ussd-notification', params.unpack()[0])
-        elif signal == "RequestReceived":
-            self.emit('ussd-request', params.unpack()[0])
 
     def _check_priority_contact(self, sender):
         """Check if sender is a priority contact and override volume."""

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Adw, GObject, GLib
+from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
 
@@ -23,10 +23,6 @@ from ...backend.utils.vcard_utils import unfold_vcard
 
 class BlocklistEditor(Adw.Window):
     """Window to add a new number to the blocklist."""
-
-    __gsignals__ = {
-        'saved': (GObject.SignalFlags.RUN_FIRST, None, ()),
-    }
 
     def __init__(self, db_manager, eds_manager, parent_window, number_preset=None, name_preset=None):
         """Initialize the Blocklist Editor."""
@@ -123,7 +119,6 @@ class BlocklistEditor(Adw.Window):
 
                     self.db.update_history_names([norm_num], _("Blocked Number"))
 
-                    self.emit("saved")
                     GLib.idle_add(lambda: self.close() or False)
                 else:
                     self._show_error(_("Database Error"), _("Failed to save to blocklist."))
@@ -140,7 +135,6 @@ class BlocklistEditor(Adw.Window):
         if success:
             logger.info(f"[Blocklist] Added number: {norm_num}")
             self.db.update_history_names([norm_num], _("Blocked Number"))
-            self.emit("saved")
             GLib.idle_add(lambda: self.close() or False)
         else:
             logger.error(f"[Blocklist] DB Add Failed for {norm_num}")

@@ -37,10 +37,6 @@ class EdsManager(GObject.Object, EdsSourcesManager, EdsCacheManager, EdsEventsMa
     """
     __gsignals__ = {
         'contacts-loaded': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        'contact-added': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'contact-removed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'contact-modified': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        'source-switched': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     def __init__(self):

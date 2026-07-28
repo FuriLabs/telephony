@@ -56,9 +56,6 @@ class MessagesView(Adw.Bin):
         self.db.connect('messages-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
         self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
         if self.app_window.eds:
-            self.app_window.eds.connect('contact-modified', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
-            self.app_window.eds.connect('contact-added', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
-            self.app_window.eds.connect('contact-removed', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
             self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
 
         self.main_page = Adw.NavigationPage(tag="main_list")

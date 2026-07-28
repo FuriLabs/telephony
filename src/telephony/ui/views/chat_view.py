@@ -110,12 +110,6 @@ class ChatPage(Gtk.Box):
         sig_id = self.db.connect('messages-updated', lambda *args: GLib.idle_add(self._reload_chat))
         self.db_signals.append((self.db, sig_id))
 
-        if self.app_window.eds:
-            sig_id = self.app_window.eds.connect('contact-modified', lambda *args: GLib.idle_add(self._reload_chat))
-            self.eds_signals.append((self.app_window.eds, sig_id))
-            sig_id = self.app_window.eds.connect('contact-added', lambda *args: GLib.idle_add(self._reload_chat))
-            self.eds_signals.append((self.app_window.eds, sig_id))
-
         self._setup_ui()
 
         if prefill_text:

@@ -53,9 +53,6 @@ class HistoryView(Adw.Bin):
         self.db.connect('history-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
         self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
         if self.app_window.eds:
-            self.app_window.eds.connect('contact-modified', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
-            self.app_window.eds.connect('contact-added', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
-            self.app_window.eds.connect('contact-removed', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
             self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)

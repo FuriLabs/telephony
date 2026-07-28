@@ -47,9 +47,6 @@ class ContactsView(Adw.Bin):
 
         self.app_window.db.connect('contacts-updated', lambda *args: GLib.idle_add(lambda: self.refresh()))
         if self.app_window.eds:
-            self.app_window.eds.connect('contact-modified', lambda *args: GLib.idle_add(lambda: self.refresh()))
-            self.app_window.eds.connect('contact-added', lambda *args: GLib.idle_add(lambda: self.refresh()))
-            self.app_window.eds.connect('contact-removed', lambda *args: GLib.idle_add(lambda: self.refresh()))
             self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(self.on_contacts_loaded_signal))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -105,8 +102,6 @@ class ContactsView(Adw.Bin):
         self.set_child(box)
 
         self.connect("map", self.on_map)
-        if (self.app_window and self.app_window.eds is not None):
-            self.app_window.eds.connect('source-switched', self.on_source_switched)
 
         self.refresh()
 
@@ -160,11 +155,6 @@ class ContactsView(Adw.Bin):
         if self.app_window.eds.is_ready and not self._duplicates_checked:
             self.app_window.enqueue_popup(lambda cb: self.check_duplicates(cb))
 
-    def on_source_switched(self, *args):
-        """Handle source switch."""
-        self._update_add_button_sensitivity()
-        self._update_source_map()
-        self.refresh()
 
     def check_duplicates(self, done_callback=None):
         """Check for contacts sharing the same phone number."""

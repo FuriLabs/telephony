@@ -38,8 +38,6 @@ class MmsManager(GObject.Object):
     """
     __gsignals__ = {
         'message-received': (GObject.SignalFlags.RUN_FIRST, None, (str, object, str, str, object, str)),
-        'message-added': (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
-        'message-removed': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
     def __init__(self, db_manager, eds_manager=None, gsettings_mgr=None, notification_manager=None):
@@ -75,12 +73,6 @@ class MmsManager(GObject.Object):
                 "org.ofono.mms", "org.ofono.mms.Service", "MessageAdded",
                 None, None, Gio.DBusSignalFlags.NONE,
                 self._on_message_added_raw, None
-            ))
-
-            self.subs.append(self.bus.signal_subscribe(
-                "org.ofono.mms", "org.ofono.mms.Service", "MessageRemoved",
-                None, None, Gio.DBusSignalFlags.NONE,
-                self._on_message_removed_raw, None
             ))
 
             self._init_manager()
@@ -138,7 +130,6 @@ class MmsManager(GObject.Object):
             msg_path, props = params.unpack()
             logger.debug(f"[MMS-LOG] SIGNAL-RECV | New message signal at {msg_path}")
             self._process_message_signal(msg_path, props)
-            self.emit('message-added', msg_path, props)
         except Exception as e:
             logger.debug(f"[MMS-LOG] SIGNAL-ERROR | {e}")
 
@@ -204,15 +195,6 @@ class MmsManager(GObject.Object):
             logger.debug(f"[MMS-LOG] MSG-CLEANUP | Removed {msg_path} from daemon storage")
         except Exception as e:
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
-
-    def _on_message_removed_raw(self, conn, sender, path, iface, signal, params, user_data):
-        """Handle raw DBus MessageRemoved signal."""
-        try:
-            msg_path = params.unpack()[0]
-            logger.debug(f"[MMS-LOG] SIGNAL-REMOVE | Message {msg_path} removed from daemon")
-            self.emit('message-removed', msg_path)
-        except Exception as e:
-            logger.debug(f"[MMS-LOG] REMOVE-SIGNAL-ERR | {e}")
 
     def send_mms(self, recipients, subject=None, body=None, attachment_paths=[]):
         """Send an MMS message."""

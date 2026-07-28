@@ -147,7 +147,6 @@ class MainWindow(Adw.Window):
             self.ofono.connect('ussd-notification', lambda obj, msg: self.show_ussd_dialog(msg))
 
         self.eds.connect('contacts-loaded', self.on_contacts_loaded)
-        self.eds.connect('source-switched', lambda *a: self.notify_loading(_("Switching address book...")))
 
         if self.msgs_page:
             self.db.connect('messages-updated', lambda *args: self.update_unread_badge())

@@ -216,17 +216,6 @@ class TrustedActionsListWindow(Adw.Window):
             self.eds_signals = []
             self.db_signals = []
 
-            if self.eds:
-                sig_id = self.eds.connect(
-                    'contact-modified', lambda *args: GLib.idle_add(self._refresh_list))
-                self.eds_signals.append((self.eds, sig_id))
-                sig_id = self.eds.connect(
-                    'contact-added', lambda *args: GLib.idle_add(self._refresh_list))
-                self.eds_signals.append((self.eds, sig_id))
-                sig_id = self.eds.connect(
-                    'contact-removed', lambda *args: GLib.idle_add(self._refresh_list))
-                self.eds_signals.append((self.eds, sig_id))
-
             if self.app_window is not None and hasattr(self.app_window, "db"):
                 sig_id = self.app_window.db.connect(
                     'blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
