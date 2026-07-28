@@ -536,6 +536,8 @@ class MessagesView(Adw.Bin):
             name = _("Unknown")
 
         if self.active_chat_number == target_number and not target_msg_id:
+            if (prefill_text or prefill_attachments) and self.active_chat_page:
+                self.active_chat_page.append_prefill(prefill_text, prefill_attachments)
             return
 
         self.nav_view.pop_to_page(self.main_page)

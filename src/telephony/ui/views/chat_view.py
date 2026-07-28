@@ -56,6 +56,7 @@ class ChatPage(Gtk.Box):
         self._refresh_timer = None
         self.focus_handler_id = None
         self.search_timer = None
+        self._draft_saved = False
         """Initialize the ChatPage."""
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.db = db
@@ -442,11 +443,10 @@ class ChatPage(Gtk.Box):
 
             draft_msg = None
             if msgs:
-                for i in range(min(5, len(msgs))):
-                    if msgs[i][4] == 'draft':
-                        draft_msg = msgs[i]
-                        msgs.pop(i)
-                        break
+                drafts = [m for m in msgs if m[4] == 'draft']
+                if drafts:
+                    draft_msg = drafts[0]
+                    msgs = [m for m in msgs if m[4] != 'draft']
 
             has_more = False
             if len(msgs) > limit:
@@ -465,16 +465,16 @@ class ChatPage(Gtk.Box):
         items = []
 
         if draft_msg:
-            body = draft_msg[2]
-            atts = draft_msg[6]
-            self.msg_buffer.set_text(body if body else "")
-            if atts:
-                for a in atts:
-                    if a not in self.attachments:
-                        self.attachments.append(a)
-                self.refresh_attachment_ui()
-
-            self.db.delete_message(draft_msg[0])
+            has_prefill = self.msg_buffer.get_char_count() > 0 or bool(self.attachments)
+            if not has_prefill:
+                body = draft_msg[2]
+                atts = draft_msg[6]
+                self.msg_buffer.set_text(body if body else "")
+                if atts:
+                    for a in atts:
+                        if a not in self.attachments:
+                            self.attachments.append(a)
+                    self.refresh_attachment_ui()
 
         if not has_more:
             self.all_messages_loaded = True
@@ -861,6 +861,19 @@ class ChatPage(Gtk.Box):
 
         self.app_window.confirm_action(_("Delete Message"), _("Are you sure you want to delete this message?"), on_confirm_delete)
 
+    def append_prefill(self, text, attachments=None):
+        """Merge forwarded content into the open composer."""
+        if text:
+            start, end = self.msg_buffer.get_bounds()
+            existing = self.msg_buffer.get_text(start, end, True)
+            self.msg_buffer.set_text(f"{existing}\n{text}" if existing.strip() else text)
+
+        if attachments:
+            for p in attachments:
+                if p not in self.attachments:
+                    self.attachments.append(p)
+            self.refresh_attachment_ui()
+
     def _on_messages_updated(self, _db, chat_id, change):
         """React to database changes relevant to this conversation."""
         if chat_id and chat_id != self.db_number:
@@ -891,7 +904,7 @@ class ChatPage(Gtk.Box):
             return self.db.get_chat_messages(self.number, limit=20, offset=0)
 
         def done(rows):
-            fresh = [m for m in (rows or []) if m[0] > newest_id]
+            fresh = [m for m in (rows or []) if m[0] > newest_id and m[4] != 'draft']
             if not fresh:
                 return
 
@@ -1223,11 +1236,6 @@ class ChatPage(Gtk.Box):
         if not text and not has_att:
             return
 
-        self._draft_saved = True
-
-        if (self.db is not None):
-            self.db.delete_drafts(self.number)
-
         self.btn_send.set_sensitive(False)
         final_attachments = []
         if has_att:
@@ -1248,6 +1256,8 @@ class ChatPage(Gtk.Box):
                     final_attachments.append(src)
 
         if scheduled_timestamp:
+            self._draft_saved = True
+            self.db.delete_drafts(self.number)
             row_id = self.db.add_message(self.number, 'outgoing', text, status='scheduled', subject=None, attachments=final_attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
             if (self.app_window and self.app_window.scheduler is not None):
                 self.app_window.scheduler.add_cron(row_id, scheduled_timestamp)
@@ -1274,6 +1284,9 @@ class ChatPage(Gtk.Box):
             self.app_window.notify_error(_("Failed to send message"))
             self.btn_send.set_sensitive(True)
             return
+
+        self._draft_saved = True
+        self.db.delete_drafts(self.number)
 
         now = format_timestamp()
         row_id = self.db.add_message(self.number, 'outgoing', text, status='sent', subject=None, attachments=final_attachments, sender="Me")
@@ -1406,7 +1419,7 @@ class ChatPage(Gtk.Box):
         self.eds_signals.clear()
 
     def _save_draft(self):
-        """Save current input as draft if not empty."""
+        """Replace any stored draft with the current composer content."""
         if not self.msg_view.get_editable():
             return
 
@@ -1415,6 +1428,8 @@ class ChatPage(Gtk.Box):
         text = buffer.get_text(start, end, True).strip()
 
         has_att = len(self.attachments) > 0
+
+        self.db.delete_drafts(self.number)
 
         if not text and not has_att:
             return

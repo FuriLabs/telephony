@@ -524,10 +524,13 @@ class DbMessagesUtils:
             with self.lock:
                 c = self.conn_messages.cursor()
                 c.execute("DELETE FROM messages WHERE remote_number=? AND status='draft'", (norm_number,))
+                changed = c.rowcount
                 self.conn_messages.commit()
+
+            if changed > 0:
                 self.invalidate_cache("conversations")
                 GLib.idle_add(self.emit, 'messages-updated', norm_number, "draft")
-                return True
+            return True
         except Exception as e:
             logger.error(f"[DB] Delete Drafts Error: {e}")
             return False
