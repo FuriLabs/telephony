@@ -13,16 +13,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .mms_parser_manager import MmsParserManager
-
-
+import magic
 import mimetypes
 import os
+import random
+import shutil
 import tempfile
 import time
 from loguru import logger
 from gettext import gettext as _
 from gi.repository import Gio, GLib, GObject
+
+from ..utils.phone_utils import get_own_number, normalize_number
 
 
 NOTIFY_DBUS_NAME = "org.freedesktop.Notifications"
@@ -30,7 +32,7 @@ NOTIFY_DBUS_PATH = "/org/freedesktop/Notifications"
 NOTIFY_INTERFACE = "org.freedesktop.Notifications"
 
 
-class MmsManager(GObject.Object, MmsParserManager):
+class MmsManager(GObject.Object):
     """
     Manages MMS sending, receiving, and storage, interfacing with ofono and mmsd.
     """
@@ -63,7 +65,6 @@ class MmsManager(GObject.Object, MmsParserManager):
             mimetypes.init()
 
         self.local_att_dir = os.path.join(GLib.get_user_data_dir(), "telephony", "attachments")
-        self.mmsd_storage_dir = os.path.expanduser("~/.mms/modemmanager")
 
         os.makedirs(self.local_att_dir, exist_ok=True)
 
@@ -270,3 +271,193 @@ class MmsManager(GObject.Object, MmsParserManager):
                     os.remove(tmp)
                 except Exception as e:
                     logger.debug(f"[MMS-LOG] CLEANUP-FAIL | {e}")
+
+    def _parse_and_store(self, path, props):
+        """Parse message content and attachments, and store in database."""
+        try:
+            sender = props.get('Sender', None) or "Unknown"
+            if isinstance(sender, GLib.Variant):
+                sender = sender.unpack()
+
+            recipients = props.get('Recipients', [])
+            if isinstance(recipients, GLib.Variant):
+                recipients = recipients.unpack()
+
+            date = props.get('Date', '')
+            if isinstance(date, GLib.Variant):
+                date = date.unpack()
+
+            attachments = props.get('Attachments', [])
+            if isinstance(attachments, GLib.Variant):
+                attachments = attachments.unpack()
+
+            final_atts = []
+            body_text = ""
+
+            logger.debug(f"[MMS] Parsing message with {len(attachments)} attachments")
+
+            for att in attachments:
+                if len(att) < 3:
+                    continue
+
+                mime, src_path = str(att[1]), att[2]
+                real_mime = self._detect_mime(src_path)
+                is_file_only = any(x in real_mime.lower() for x in ["vcard", "smil", "shellscript", "python", "javascript"])
+
+                if real_mime == "text/plain" and not is_file_only:
+                    content = self._read_text_safely(src_path)
+                    if content and not body_text:
+                        body_text = content
+                        logger.debug(f"[MMS] Body extracted ({len(content)} chars)")
+                elif "smil" not in real_mime.lower():
+                    dest = self._sanitize_and_store(src_path, mime)
+                    if dest:
+                        final_atts.append(dest)
+                        logger.debug(f"[MMS] Attachment saved: {real_mime} -> {os.path.basename(dest)}")
+
+            logger.debug(f"[MMS] Parsing complete, {len(final_atts)} attachments saved")
+
+            sender_name = sender
+            if self.eds and sender != "Unknown":
+                name = self.eds.get_contact_name(sender)
+                if name:
+                    sender_name = name
+
+            own_number = get_own_number()
+            if not own_number and self.db:
+                own_number = self.gsettings_mgr.get_setting("own_number") if self.gsettings_mgr else ""
+
+            valid_recipients = [r for r in recipients if r and r.strip()]
+            participants = set(valid_recipients)
+
+            if sender != "Unknown":
+                participants.add(sender)
+
+            if own_number:
+                norm_own = normalize_number(own_number)
+                participants.discard(own_number)
+                participants.discard(norm_own)
+
+            clean_list = sorted([normalize_number(p) for p in participants if p])
+
+            if len(clean_list) == 0:
+                saved_remote_number = sender
+            elif len(clean_list) == 1:
+                saved_remote_number = clean_list[0]
+            else:
+                saved_remote_number = clean_list
+
+            if self.db:
+                self.db.add_message(
+                    remote_number=saved_remote_number,
+                    direction="incoming",
+                    body=body_text,
+                    status="unread",
+                    subject=None,
+                    attachments=final_atts,
+                    sender=sender
+                )
+
+            self.emit('message-received', sender, recipients, str(date), body_text, final_atts, sender_name)
+
+        except Exception as e:
+            logger.error(f"[MMS] Parse error: {e}")
+
+    def _read_text_safely(self, path):
+        """Safely read text content from a file."""
+        try:
+            if os.path.exists(path):
+                with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                    return f.read()
+        except Exception as e:
+            logger.debug(f"[MMS] Text read failed: {e}")
+        return None
+
+    def _detect_mime(self, path):
+        """Detect MIME type of a file using python-magic."""
+        try:
+            mime = magic.from_file(path, mime=True)
+            if mime and mime in ["text/html", "text/plain", "text/xml", "application/xml"]:
+                try:
+                    with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                        header = f.read(1024)
+                        if "<smil" in header.lower():
+                            return "application/smil+xml"
+                except Exception as e:
+                    logger.warning(f"[MMS] Failed to sniff content for SMIL: {e}")
+
+            if mime:
+                return mime
+        except Exception as e:
+            logger.debug(f"[MMS] MIME detection failed: {e}")
+        return "application/octet-stream"
+
+    def _sanitize_and_store(self, src_path, mime_hint=None):
+        """Sanitize filename and store attachment in local storage."""
+        try:
+            if not os.path.exists(src_path):
+                return None
+            detected = self._detect_mime(src_path)
+            final_mime = detected if detected != "application/octet-stream" else (mime_hint or detected)
+
+            if not mimetypes.inited:
+                mimetypes.init()
+
+            ext = mimetypes.guess_extension(final_mime)
+
+            manual_map = {
+                "image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif",
+                "image/bmp": ".bmp", "image/tiff": ".tiff", "image/webp": ".webp",
+                "image/heic": ".heic", "image/heif": ".heif", "image/jp2": ".jp2",
+                "image/svg+xml": ".svg", "image/x-icon": ".ico",
+
+                "video/mp4": ".mp4", "video/x-matroska": ".mkv", "video/webm": ".webm",
+                "video/x-msvideo": ".avi", "video/quicktime": ".mov",
+                "video/3gpp": ".3gp", "video/3gpp2": ".3g2",
+                "video/x-ms-wmv": ".wmv", "video/mpeg": ".mpg", "video/x-flv": ".flv",
+
+                "audio/mpeg": ".mp3", "audio/flac": ".flac", "audio/x-wav": ".wav",
+                "audio/wav": ".wav", "audio/ogg": ".ogg", "audio/amr": ".amr",
+                "audio/mp4": ".m4a", "audio/aac": ".aac", "audio/x-m4a": ".m4a",
+                "audio/midi": ".mid", "audio/x-matroska": ".mka",
+
+                "application/pdf": ".pdf", "application/rtf": ".rtf",
+                "application/msword": ".doc", "application/vnd.ms-excel": ".xls",
+                "application/vnd.ms-powerpoint": ".ppt",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx",
+                "application/vnd.oasis.opendocument.text": ".odt",
+                "application/vnd.oasis.opendocument.spreadsheet": ".ods",
+                "application/vnd.oasis.opendocument.presentation": ".odp",
+                "text/plain": ".txt", "text/csv": ".csv", "text/x-log": ".log",
+                "text/vcard": ".vcf", "text/calendar": ".ics", "text/html": ".html",
+                "application/json": ".json", "text/yaml": ".yaml", "text/xml": ".xml",
+                "text/x-python": ".py", "text/x-shellscript": ".sh",
+
+                "application/zip": ".zip", "application/x-tar": ".tar",
+                "application/gzip": ".tar.gz", "application/x-bzip2": ".tar.bz2",
+                "application/x-xz": ".tar.xz", "application/x-rar-compressed": ".rar",
+                "application/x-7z-compressed": ".7z",
+                "application/vnd.debian.binary-package": ".deb",
+                "application/x-debian-package": ".deb", "application/vnd.android.package-archive": ".apk",
+                "application/java-archive": ".jar", "application/smil+xml": ".smil"
+            }
+            if final_mime in manual_map:
+                ext = manual_map[final_mime]
+            if not ext:
+                ext = ".bin"
+
+            new_name = f"mms_{int(time.time())}_{random.randint(1000, 9999)}{ext}"
+            dest_path = os.path.join(self.local_att_dir, new_name)
+            shutil.copy2(src_path, dest_path)
+
+            fd = os.open(dest_path, os.O_RDONLY)
+            try:
+                os.fsync(fd)
+            finally:
+                os.close(fd)
+            return dest_path
+        except Exception as e:
+            logger.debug(f"[MMS] Attachment store failed: {e}")
+            return None
