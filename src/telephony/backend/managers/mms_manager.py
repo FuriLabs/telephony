@@ -328,7 +328,8 @@ class MmsManager(GObject.Object):
         """Resolve in-flight sends from mmsd message status changes."""
         try:
             name, value = params.unpack()
-        except Exception:
+        except Exception as e:
+            logger.debug(f"[MMS] Message state unpack failed: {e}")
             return
 
         if name != "status" or value != "sent":

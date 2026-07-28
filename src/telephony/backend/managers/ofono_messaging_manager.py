@@ -108,7 +108,8 @@ class OfonoMessagingManager:
         """Resolve in-flight sends from org.ofono.Message state changes."""
         try:
             name, value = params.unpack()
-        except Exception:
+        except Exception as e:
+            logger.debug(f"[OfonoManager] Message state unpack failed: {e}")
             return
 
         if name != "State" or value not in ("sent", "failed"):

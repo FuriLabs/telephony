@@ -566,7 +566,7 @@ class ContactEditor(Adw.Window):
 
         self.main_window.notify_loading(_("Deleting contact..."))
 
-        if hasattr(self.main_window, 'contacts_view') and self.main_window.contacts_view:
+        if self.main_window.contacts_view:
             self.main_window.contacts_view.search.set_text("")
 
         def task():
@@ -757,7 +757,7 @@ class ContactEditor(Adw.Window):
             self.main_window.notify_loading(_("Saving contact..."))
             self.btn_save.set_sensitive(False)
 
-            if hasattr(self.main_window, 'contacts_view') and self.main_window.contacts_view:
+            if self.main_window.contacts_view:
                 self.main_window.contacts_view.search.set_text("")
 
             final_vcard = self._generate_vcard_from_ui(phones_to_save)

@@ -356,13 +356,14 @@ class TelephonyAudioManager:
                 continue
             try:
                 return pulse.get_sink_by_name(name)
-            except Exception:
-                continue
+            except Exception as e:
+                logger.debug(f"[Audio] Sink {name} not found: {e}")
 
         info = pulse.server_info()
         try:
             return pulse.get_sink_by_name(info.default_sink_name)
-        except Exception:
+        except Exception as e:
+            logger.debug(f"[Audio] Default sink lookup failed: {e}")
             return None
 
     def push_call_volume(self, level):
