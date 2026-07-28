@@ -38,7 +38,7 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
 
     __gsignals__ = {
         'history-updated': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        'messages-updated': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'messages-updated': (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
         'blocklist-updated': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'contacts-updated': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
@@ -73,7 +73,7 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 c = self.conn_messages.cursor()
                 query_sql = '''
                     SELECT m.remote_number, m.body, m.timestamp,
-                           (SELECT COUNT(*) FROM messages WHERE remote_number = m.remote_number AND status = 'unread') as unread_count,
+                           (SELECT COUNT(*) FROM messages WHERE remote_number = m.remote_number AND status = 'unread' AND direction = 'incoming') as unread_count,
                            m.id,
                            m.status
                     FROM messages m
@@ -302,7 +302,7 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 self.conn_messages.execute("VACUUM")
 
             self.invalidate_cache("conversations")
-            GLib.idle_add(self.emit, 'messages-updated')
+            GLib.idle_add(self.emit, 'messages-updated', "", "delete")
             return True
         except Exception as e:
             logger.error(f"[DB] Clear Messages Error: {e}")

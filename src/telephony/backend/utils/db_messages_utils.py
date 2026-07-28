@@ -70,7 +70,7 @@ class DbMessagesUtils:
                 rowid = c.lastrowid
 
             self.invalidate_cache("conversations")
-            GLib.idle_add(self.emit, 'messages-updated')
+            GLib.idle_add(self.emit, 'messages-updated', norm_number, "insert")
             return rowid
         except Exception as e:
             logger.error(f"[DB] Add Message Error: {e}")
@@ -136,7 +136,7 @@ class DbMessagesUtils:
                 placeholders = ",".join("?" * len(ids_list))
                 c.execute(f"DELETE FROM messages WHERE id IN ({placeholders})", ids_list)
                 self.conn_messages.commit()
-                GLib.idle_add(self.emit, 'messages-updated')
+                GLib.idle_add(self.emit, 'messages-updated', "", "delete")
                 return True
         except Exception as e:
             logger.error(f"[DB] Delete Scheduled Messages Error: {e}")
@@ -154,8 +154,10 @@ class DbMessagesUtils:
                     c.execute("UPDATE messages SET status=?, timestamp=?, scheduled_timestamp=NULL WHERE id=?", (status, now_str, msg_id))
                 else:
                     c.execute("UPDATE messages SET status=? WHERE id=?", (status, msg_id))
+                c.execute("SELECT remote_number FROM messages WHERE id=?", (msg_id,))
+                row = c.fetchone()
                 self.conn_messages.commit()
-                GLib.idle_add(self.emit, 'messages-updated')
+                GLib.idle_add(self.emit, 'messages-updated', row[0] if row else "", "status")
                 return True
         except Exception as e:
             logger.error(f"[DB] Update Schedule Error: {e}")
@@ -395,9 +397,12 @@ class DbMessagesUtils:
             with self.lock:
                 c = self.conn_messages.cursor()
                 c.execute("UPDATE messages SET status='read' WHERE remote_number=? AND status='unread' AND direction='incoming'", (norm_number,))
+                changed = c.rowcount
                 self.conn_messages.commit()
-            self.invalidate_cache("conversations")
-            GLib.idle_add(self.emit, 'messages-updated')
+
+            if changed > 0:
+                self.invalidate_cache("conversations")
+                GLib.idle_add(self.emit, 'messages-updated', norm_number, "status")
         except Exception as e:
             logger.error(f"[DB] Mark Read Error: {e}")
 
@@ -420,9 +425,29 @@ class DbMessagesUtils:
                 c.execute("UPDATE messages SET status='unread' WHERE remote_number=? AND direction='incoming' AND status='read' AND (timestamp > ? OR (timestamp = ? AND id >= ?))", (norm_number, target_ts, target_ts, message_id))
                 self.conn_messages.commit()
             self.invalidate_cache("conversations")
-            GLib.idle_add(self.emit, 'messages-updated')
+            GLib.idle_add(self.emit, 'messages-updated', norm_number, "status")
         except Exception as e:
             logger.error(f"[DB] Mark Unread Error: {e}")
+
+    def get_unread_count(self, number):
+        """Count unread incoming messages for a single conversation."""
+        try:
+            if isinstance(number, list):
+                cleaned = [normalize_number(n, permissive=True) for n in number]
+                norm_number = ",".join(sorted(cleaned))
+            elif "," in str(number):
+                norm_number = number
+            else:
+                norm_number = normalize_number(number, permissive=True)
+
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("SELECT COUNT(*) FROM messages WHERE remote_number=? AND status='unread' AND direction='incoming'", (norm_number,))
+                row = c.fetchone()
+                return row[0] if row else 0
+        except Exception as e:
+            logger.error(f"[DB] Get Unread Count Error: {e}")
+            return 0
 
     def get_total_unread_count(self):
         """Get the global count of unread messages."""
@@ -441,10 +466,12 @@ class DbMessagesUtils:
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
+                c.execute("SELECT remote_number FROM messages WHERE id=?", (msg_id,))
+                row = c.fetchone()
                 c.execute("DELETE FROM messages WHERE id=?", (msg_id,))
                 self.conn_messages.commit()
                 self.invalidate_cache("conversations")
-                GLib.idle_add(self.emit, 'messages-updated')
+                GLib.idle_add(self.emit, 'messages-updated', row[0] if row else "", "delete")
                 return True
         except Exception as e:
             logger.error(f"[DB] Delete Msg Error: {e}")
@@ -463,7 +490,7 @@ class DbMessagesUtils:
                 c.execute("DELETE FROM messages WHERE remote_number=? AND status='draft'", (norm_number,))
                 self.conn_messages.commit()
                 self.invalidate_cache("conversations")
-                GLib.idle_add(self.emit, 'messages-updated')
+                GLib.idle_add(self.emit, 'messages-updated', norm_number, "draft")
                 return True
         except Exception as e:
             logger.error(f"[DB] Delete Drafts Error: {e}")
@@ -482,7 +509,7 @@ class DbMessagesUtils:
                 c.execute("DELETE FROM messages WHERE remote_number=?", (norm_number,))
                 self.conn_messages.commit()
                 self.invalidate_cache("conversations")
-                GLib.idle_add(self.emit, 'messages-updated')
+                GLib.idle_add(self.emit, 'messages-updated', norm_number, "delete")
                 return True
         except Exception as e:
             logger.error(f"[DB] Delete Conv Error: {e}")
