@@ -20,6 +20,8 @@ from gettext import gettext as _
 from ..utils.phone_utils import normalize_number
 import time
 
+OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
+
 
 class OfonoTrustedActionsManager:
     def _check_rate_limit(self, sender_clean, prefix):
@@ -81,19 +83,17 @@ class OfonoTrustedActionsManager:
                 if normalize_number(t.get("number", "")) == sender_clean:
                     is_trusted = True
                     break
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"[Security] Trusted contact lookup failed: {e}")
 
         if is_trusted:
-            if (now - history['last_attempt']) < 5.0:
-                logger.warning(f"[Security] Brute force rate limit hit for {sender_clean}")
-                history['last_attempt'] = now
-                self.trusted_trigger_history[sender_clean] = history
-
-                return False
-
+            last_attempt = history['last_attempt']
             history['last_attempt'] = now
             self.trusted_trigger_history[sender_clean] = history
+
+            if (now - last_attempt) < 5.0:
+                logger.warning(f"[Security] Brute force rate limit hit for {sender_clean}")
+                return False
 
         if self._check_trusted_sms_location_request(sender_clean, body_clean):
             return True
@@ -119,22 +119,25 @@ class OfonoTrustedActionsManager:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
-                if t_num and t_msg and sender_clean == t_num:
-                    if body_clean.startswith(t_msg + " "):
-                        parts = body_clean[len(t_msg):].strip().split(" ")
-                        if len(parts) == 1 and self._verify_totp(seed, parts[0]):
-                            limited, history = self._check_rate_limit(sender_clean, "FindMyTelephony")
-                            if limited:
-                                return True
+                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
+                    continue
 
-                            self._mark_success(sender_clean, history)
-                            logger.info(f"[FindMyTelephony] Trigger MATCH from {sender_clean}")
+                parts = body_clean[len(t_msg):].strip().split(" ")
+                if len(parts) != 1 or not self._verify_totp(seed, parts[0]):
+                    continue
 
-                            self.location_manager.get_current_location(
-                                callback=lambda lat, lon, acc: self._send_location_response(sender_clean, lat, lon, acc),
-                                progress_callback=lambda msg: self._send_progress_sms(sender_clean, msg)
-                            )
-                            return True
+                limited, history = self._check_rate_limit(sender_clean, "FindMyTelephony")
+                if limited:
+                    return True
+
+                self._mark_success(sender_clean, history)
+                logger.info(f"[FindMyTelephony] Trigger MATCH from {sender_clean}")
+
+                self.location_manager.get_current_location(
+                    callback=lambda lat, lon, acc: self._send_location_response(sender_clean, lat, lon, acc),
+                    progress_callback=lambda msg: self._send_progress_sms(sender_clean, msg)
+                )
+                return True
         except Exception as e:
             logger.error(f"[FindMyTelephony] Check error: {e}")
         return False
@@ -150,18 +153,21 @@ class OfonoTrustedActionsManager:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
-                if t_num and t_msg and sender_clean == t_num:
-                    if body_clean.startswith(t_msg + " "):
-                        parts = body_clean[len(t_msg):].strip().split(" ")
-                        if len(parts) == 1 and self._verify_totp(seed, parts[0]):
-                            limited, history = self._check_rate_limit(sender_clean, "TrustedCallback")
-                            if limited:
-                                return True
+                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
+                    continue
 
-                            self._mark_success(sender_clean, history)
-                            logger.info(f"[TrustedCallback] Trigger MATCH from {sender_clean}")
-                            self.callback_manager.execute_callback(sender_clean)
-                            return True
+                parts = body_clean[len(t_msg):].strip().split(" ")
+                if len(parts) != 1 or not self._verify_totp(seed, parts[0]):
+                    continue
+
+                limited, history = self._check_rate_limit(sender_clean, "TrustedCallback")
+                if limited:
+                    return True
+
+                self._mark_success(sender_clean, history)
+                logger.info(f"[TrustedCallback] Trigger MATCH from {sender_clean}")
+                self.callback_manager.execute_callback(sender_clean)
+                return True
         except Exception as e:
             logger.error(f"[TrustedCallback] Check error: {e}")
         return False
@@ -177,19 +183,22 @@ class OfonoTrustedActionsManager:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
-                if t_num and t_msg and sender_clean == t_num:
-                    if body_clean.startswith(t_msg + " "):
-                        parts = body_clean[len(t_msg):].strip().split(" ", 2)
-                        if len(parts) == 3 and self._verify_totp(seed, parts[0]):
-                            limited, history = self._check_rate_limit(sender_clean, "SMSRelay")
-                            if limited:
-                                return True
+                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
+                    continue
 
-                            self._mark_success(sender_clean, history)
-                            target_number = parts[1]
-                            message = parts[2]
-                            self.relay_manager.execute_relay(sender_clean, target_number, message)
-                            return True
+                parts = body_clean[len(t_msg):].strip().split(" ", 2)
+                if len(parts) != 3 or not self._verify_totp(seed, parts[0]):
+                    continue
+
+                limited, history = self._check_rate_limit(sender_clean, "SMSRelay")
+                if limited:
+                    return True
+
+                self._mark_success(sender_clean, history)
+                target_number = parts[1]
+                message = parts[2]
+                self.relay_manager.execute_relay(sender_clean, target_number, message)
+                return True
         except Exception as e:
             logger.error(f"[SMSRelay] Check error: {e}")
         return False
@@ -205,18 +214,21 @@ class OfonoTrustedActionsManager:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
-                if t_num and t_msg and sender_clean == t_num:
-                    if body_clean.startswith(t_msg + " "):
-                        parts = body_clean[len(t_msg):].strip().split(" ")
-                        if len(parts) == 1 and self._verify_totp(seed, parts[0]):
-                            limited, history = self._check_rate_limit(sender_clean, "SMStmate")
-                            if limited:
-                                return True
+                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
+                    continue
 
-                            self._mark_success(sender_clean, history)
-                            logger.info(f"[SMStmate] Trigger MATCH from {sender_clean}")
-                            self.tmate_manager.start_session(sender_clean)
-                            return True
+                parts = body_clean[len(t_msg):].strip().split(" ")
+                if len(parts) != 1 or not self._verify_totp(seed, parts[0]):
+                    continue
+
+                limited, history = self._check_rate_limit(sender_clean, "SMStmate")
+                if limited:
+                    return True
+
+                self._mark_success(sender_clean, history)
+                logger.info(f"[SMStmate] Trigger MATCH from {sender_clean}")
+                self.tmate_manager.start_session(sender_clean)
+                return True
         except Exception as e:
             logger.error(f"[SMStmate] Check error: {e}")
         return False
@@ -232,21 +244,24 @@ class OfonoTrustedActionsManager:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
-                if t_num and t_msg and sender_clean == t_num:
-                    if body_clean.startswith(t_msg + " "):
-                        parts = body_clean[len(t_msg):].strip().split(" ", 3)
-                        if len(parts) == 4 and self._verify_totp(seed, parts[0]):
-                            limited, history = self._check_rate_limit(sender_clean, "WipeDevice")
-                            if limited:
-                                return True
+                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
+                    continue
 
-                            self._mark_success(sender_clean, history)
-                            current_pin = parts[1]
-                            new_pin = parts[2]
-                            sudo_pw = parts[3]
-                            logger.info(f"[WipeDevice] Trigger MATCH from {sender_clean}")
-                            self.device_lock_manager.lock_device(current_pin, new_pin, sudo_pw)
-                            return True
+                parts = body_clean[len(t_msg):].strip().split(" ", 3)
+                if len(parts) != 4 or not self._verify_totp(seed, parts[0]):
+                    continue
+
+                limited, history = self._check_rate_limit(sender_clean, "WipeDevice")
+                if limited:
+                    return True
+
+                self._mark_success(sender_clean, history)
+                current_pin = parts[1]
+                new_pin = parts[2]
+                sudo_pw = parts[3]
+                logger.info(f"[WipeDevice] Trigger MATCH from {sender_clean}")
+                self.device_lock_manager.lock_device(current_pin, new_pin, sudo_pw)
+                return True
         except Exception as e:
             logger.error(f"[WipeDevice] Check error: {e}")
         return False
@@ -262,7 +277,7 @@ class OfonoTrustedActionsManager:
     def _send_location_response(self, number, lat, lon, accuracy=None):
         """Send location back to trusted contact."""
         if lat is not None and lon is not None:
-            link = f"https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=16/{lat}/{lon}"
+            link = f"{OPENSTREETMAP_URL}?mlat={lat}&mlon={lon}#map=16/{lat}/{lon}"
             acc_str = _(" (Accuracy: {acc}m)").format(acc=int(accuracy)) if accuracy is not None else ""
             logger.info(f"[Trusted] Sending location to {number}")
             msg_body = _("I am here: {link}{acc_str}").format(link=link, acc_str=acc_str)
