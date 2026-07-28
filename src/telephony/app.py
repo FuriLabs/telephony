@@ -208,9 +208,15 @@ class App(Adw.Application):
         GLib.idle_add(self._present_incall_window)
 
     def _setup_icon_paths(self):
-        """Ensure the system icon directory is searched even under a minimal service environment."""
+        """
+        Ensure icon lookup works under the daemon's startup conditions.
+        Re-registers libadwaita's internal resource icons, whose registration
+        can be missed when the process starts at session bring-up, and adds
+        the system icon directory for minimal service environments.
+        """
         try:
             theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+            theme.add_resource_path("/org/gnome/Adwaita/icons")
             theme.add_search_path("/usr/share/icons")
         except Exception as e:
             logger.warning(f"Icon path setup failed: {e}")
