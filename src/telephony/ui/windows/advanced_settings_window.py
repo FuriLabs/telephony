@@ -204,8 +204,5 @@ class AdvancedSettingsWindow(Adw.Window):
     def _on_restart_modem(self, btn):
         """Handle restart modem action."""
         self._show_toast(_("Restarting Modem..."), False)
-        try:
-            restart_ril_modem()
-            GLib.idle_add(lambda: self.close() or False)
-        except Exception as e:
-            logger.warning(f"[Settings] Restart modem failed: {e}")
+        restart_ril_modem()
+        GLib.idle_add(lambda: self.close() or False)

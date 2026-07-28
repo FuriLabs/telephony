@@ -99,10 +99,7 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         if status == "offline" or status == "error":
             if len(self.active_calls) > 0:
                 logger.error("[OfonoManager] Modem lost during active call! Triggering RIL restart.")
-                try:
-                    restart_ril_modem()
-                except Exception as e:
-                    logger.error(f"[OfonoManager] Failed to restart RIL: {e}")
+                restart_ril_modem()
 
             self._cleanup_state()
 

@@ -578,10 +578,7 @@ class InCallWindow(Gtk.Window):
         """Force restart the RIL."""
         self.btn_restart.set_sensitive(False)
         self.btn_restart.set_label(_("Restarting RIL..."))
-        try:
-            restart_ril_modem()
-        except Exception as e:
-            logger.error(f"RIL Restart Failed: {e}")
+        restart_ril_modem()
         self.restart_attempts = 0
         GLib.timeout_add(2000, self._check_restart_success)
 
