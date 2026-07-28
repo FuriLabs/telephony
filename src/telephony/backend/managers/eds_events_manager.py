@@ -16,7 +16,6 @@
 from ..utils.thread_utils import run_in_background
 
 from gi.repository import GLib
-from loguru import logger
 from ..utils.phone_utils import normalize_number
 from ..utils.vcard_utils import parse_contact_safe
 
@@ -27,7 +26,6 @@ class EdsEventsManager:
         if source_uid not in self.sources:
             return
 
-        has_changes = False
         rank = self.sources[source_uid]['rank']
         db_batch = []
         for c in contacts:
@@ -36,47 +34,39 @@ class EdsEventsManager:
             if not uid:
                 continue
 
-            existing = None
             with self.cache_lock:
                 existing = self.cache.get(uid)
 
-            is_different = True
-            if existing:
-                if (existing.get('name') == data.get('name') and
-                        existing.get('phones') == data.get('phones') and
-                        existing.get('emails') == data.get('emails') and
-                        existing.get('vcard_hash') == data.get('vcard_hash')):
-                    is_different = False
+            if (existing and
+                    existing.get('name') == data.get('name') and
+                    existing.get('phones') == data.get('phones') and
+                    existing.get('emails') == data.get('emails') and
+                    existing.get('vcard_hash') == data.get('vcard_hash')):
+                continue
 
-            if is_different:
-                has_changes = True
-                with self.cache_lock:
-                    if existing and 'phones' in existing:
-                        for p in existing['phones']:
-                            norm = normalize_number(p[0])
-                            if norm and norm in self.lookup_map:
-                                self.lookup_map[norm] = [x for x in self.lookup_map[norm] if x[3] != uid]
-                                if not self.lookup_map[norm]:
-                                    del self.lookup_map[norm]
+            with self.cache_lock:
+                for p in existing.get('phones', []) if existing else []:
+                    norm = normalize_number(p[0])
+                    if norm and norm in self.lookup_map:
+                        self.lookup_map[norm] = [x for x in self.lookup_map[norm] if x[3] != uid]
+                        if not self.lookup_map[norm]:
+                            del self.lookup_map[norm]
 
-                    cache_data = data.copy()
-                    if 'vcard' in cache_data:
-                        del cache_data['vcard']
+                cache_data = data.copy()
+                cache_data.pop('vcard', None)
+                self.cache[uid] = cache_data
 
-                    self.cache[uid] = cache_data
+                for p_data in data['phones']:
+                    norm = normalize_number(p_data[0])
+                    if not norm:
+                        continue
+                    self.lookup_map.setdefault(norm, []).append((rank, data['name'], source_uid, uid))
+                    if existing:
+                        GLib.idle_add(lambda n=norm, fn=data['name']: self.gsettings_mgr.update_special_list_names(n, fn) or False)
 
-                    for p_data in data['phones']:
-                        norm = normalize_number(p_data[0])
-                        if norm:
-                            if norm not in self.lookup_map:
-                                self.lookup_map[norm] = []
-                            self.lookup_map[norm].append((rank, data['name'], source_uid, uid))
-                            if has_changes and is_different and existing:
-                                GLib.idle_add(lambda n=norm, fn=data['name']: self.gsettings_mgr.update_special_list_names(n, fn) or False)
+            db_batch.append(data)
 
-                db_batch.append(data)
-
-        if has_changes:
+        if db_batch:
             self.db_ref.upsert_contacts_batch(db_batch, source_uid)
             GLib.idle_add(self.emit, 'contacts-loaded')
 
@@ -91,23 +81,17 @@ class EdsEventsManager:
     def _on_objects_removed(self, view, uids, source_uid):
         """Handle objects removed signal."""
         def task():
-            try:
-                with self.cache_lock:
-                    for real_uid in uids:
-                        uid = self._make_composite_uid(source_uid, real_uid)
-                        if uid in self.cache:
-                            contact = self.cache[uid]
-                            if contact.get('phones'):
-                                for p in contact['phones']:
-                                    norm = normalize_number(p[0])
-                                    if norm and norm in self.lookup_map:
-                                        self.lookup_map[norm] = [x for x in self.lookup_map[norm] if x[3] != uid]
-                                        if not self.lookup_map[norm]:
-                                            del self.lookup_map[norm]
-                            del self.cache[uid]
-                        self.db_ref.delete_contact(uid)
-                GLib.idle_add(self.emit, 'contacts-loaded')
-            except Exception as e:
-                logger.error(f"[EDS] Object removal task error: {e}")
+            with self.cache_lock:
+                for real_uid in uids:
+                    uid = self._make_composite_uid(source_uid, real_uid)
+                    contact = self.cache.pop(uid, None)
+                    for p in contact.get('phones', []) if contact else []:
+                        norm = normalize_number(p[0])
+                        if norm and norm in self.lookup_map:
+                            self.lookup_map[norm] = [x for x in self.lookup_map[norm] if x[3] != uid]
+                            if not self.lookup_map[norm]:
+                                del self.lookup_map[norm]
+                    self.db_ref.delete_contact(uid)
+            GLib.idle_add(self.emit, 'contacts-loaded')
 
         run_in_background(task)
