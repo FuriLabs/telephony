@@ -46,26 +46,41 @@ class TrustedActionsListWindow(Adw.Window):
                 self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_location_request
                 self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_location_request_enabled
                 self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_location_request_enabled
+                self.get_seed_func = self.gsettings_mgr.get_trusted_sms_location_request_totp_seed
+                self.set_seed_func = self.gsettings_mgr.set_trusted_sms_location_request_totp_seed
+                self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_location_request_totp_seed
             elif self.mode == "trusted_sms_silent_callback":
                 self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_silent_callback
                 self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_silent_callback
                 self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_silent_callback_enabled
                 self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_silent_callback_enabled
+                self.get_seed_func = self.gsettings_mgr.get_trusted_sms_silent_callback_totp_seed
+                self.set_seed_func = self.gsettings_mgr.set_trusted_sms_silent_callback_totp_seed
+                self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_silent_callback_totp_seed
             elif self.mode == "trusted_sms_relay":
                 self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_relay
                 self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_relay
                 self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_relay_enabled
                 self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_relay_enabled
+                self.get_seed_func = self.gsettings_mgr.get_trusted_sms_relay_totp_seed
+                self.set_seed_func = self.gsettings_mgr.set_trusted_sms_relay_totp_seed
+                self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_relay_totp_seed
             elif self.mode == "trusted_sms_ssh_access":
                 self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_ssh_access
                 self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_ssh_access
                 self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_ssh_access_enabled
                 self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_ssh_access_enabled
+                self.get_seed_func = self.gsettings_mgr.get_trusted_sms_ssh_access_totp_seed
+                self.set_seed_func = self.gsettings_mgr.set_trusted_sms_ssh_access_totp_seed
+                self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_ssh_access_totp_seed
             elif self.mode == "trusted_sms_remote_wipe":
                 self.get_contacts_func = self.gsettings_mgr.get_trusted_sms_remote_wipe
                 self.set_contacts_func = self.gsettings_mgr.set_trusted_sms_remote_wipe
                 self.get_enabled_func = self.gsettings_mgr.get_trusted_sms_remote_wipe_enabled
                 self.set_enabled_func = self.gsettings_mgr.set_trusted_sms_remote_wipe_enabled
+                self.get_seed_func = self.gsettings_mgr.get_trusted_sms_remote_wipe_totp_seed
+                self.set_seed_func = self.gsettings_mgr.set_trusted_sms_remote_wipe_totp_seed
+                self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_remote_wipe_totp_seed
 
             parent_win = getattr(parent, 'parent_win', None)
             if parent_win is not None:
@@ -147,6 +162,7 @@ class TrustedActionsListWindow(Adw.Window):
             search_box.append(self.search_entry)
 
             self.search_timer = None
+            self.search_token = 0
 
             self.content_box.append(search_box)
 
