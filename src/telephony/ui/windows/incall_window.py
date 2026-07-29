@@ -252,6 +252,7 @@ class InCallWindow(Gtk.Window):
         """Create a circular icon button with a caption underneath."""
         btn = self._mk_btn(icon, cb, cls)
         btn.set_size_request(64, 64)
+        btn.set_halign(Gtk.Align.CENTER)
 
         lbl = Gtk.Label(label=caption, css_classes=["caption", "dim-label"])
         lbl.set_ellipsize(Pango.EllipsizeMode.END)

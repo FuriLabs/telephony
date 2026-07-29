@@ -28,31 +28,17 @@ def create_truncated_label(text, css_classes=[], max_chars=20):
 
 
 class DynamicHangupButton(Gtk.Button):
-    """Hangup button that changes appearance based on number of active calls."""
+    """Wide hangup pill whose label follows the number of active calls."""
 
     def __init__(self):
         """Initialize the button."""
         super().__init__()
-        self._set_icon_mode()
         self.add_css_class("destructive-action")
-
-    def update_mode(self, count):
-        """Update button mode based on call count."""
-        if count > 1:
-            self._set_text_mode()
-        else:
-            self._set_icon_mode()
-
-    def _set_text_mode(self):
-        """Switch to text mode (Hangup All)."""
-        self.set_child(Gtk.Label(label=_("Hangup All Calls"), css_classes=["title-4"]))
-        self.remove_css_class("circular")
         self.add_css_class("pill")
         self.set_size_request(260, 60)
+        self.update_mode(1)
 
-    def _set_icon_mode(self):
-        """Switch to icon mode (Single Hangup)."""
-        self.set_child(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
-        self.remove_css_class("pill")
-        self.add_css_class("circular")
-        self.set_size_request(70, 70)
+    def update_mode(self, count):
+        """Update the label based on the call count."""
+        label = _("Hangup All Calls") if count > 1 else _("Hang Up")
+        self.set_child(Gtk.Label(label=label, css_classes=["title-4"]))
