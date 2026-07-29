@@ -229,7 +229,7 @@ class InCallWindow(Gtk.Window):
         self.err_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, valign=Gtk.Align.CENTER, halign=Gtk.Align.CENTER)
         self.err_box.add_css_class("error-box")
         lbl_err = Gtk.Label(label=_("Modem Stuck"), css_classes=["error-title"])
-        lbl_err_msg = Gtk.Label(label=_("The call failed to disconnect."), css_classes=["body"])
+        lbl_err_msg = Gtk.Label(label=_("The call failed to disconnect."), css_classes=["body", "error-text"])
         self.btn_restart = Gtk.Button(label=_("🔴 Reboot Modem"))
         self.btn_restart.add_css_class("destructive-action")
         self.btn_restart.add_css_class("pill")
