@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 00:09+0300\n"
+"POT-Creation-Date: 2026-07-30 00:48+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -50,10 +50,10 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:164
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:373
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:386
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:409
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:541
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:374
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:410
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:542
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
@@ -206,7 +206,7 @@ msgstr "緊急電話"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:233
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:736
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:737
 msgid "🔴 Reboot Modem"
 msgstr "🔴重新啟動數據機"
 
@@ -221,7 +221,7 @@ msgstr "🟢 傳入：{name}"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:464
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
 msgid "Incoming Call..."
 msgstr "來電..."
 
@@ -1138,9 +1138,13 @@ msgstr "開啟方式..."
 msgid "Save File As"
 msgstr "文件另存為"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
 msgid "Hangup All Calls"
 msgstr "掛斷所有電話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr ""
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
 #, python-brace-format
@@ -2220,7 +2224,7 @@ msgid "Hangup and Send SMS"
 msgstr "掛斷並發送短信"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:193
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:562
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:563
 msgid "Silence"
 msgstr "靜音"
 
@@ -2248,59 +2252,59 @@ msgstr "保持"
 msgid "The call failed to disconnect."
 msgstr "通話未能斷開。"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:297
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:298
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:772
 msgid "Output"
 msgstr "輸出"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:312
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:790
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:313
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
 msgid "Input"
 msgstr "輸入"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:464
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
 msgid "Silenced Incoming Call"
 msgstr "來電靜音"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:554
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:555
 msgid "Swap"
 msgstr "切換"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:558
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:559
 msgid "Answer"
 msgstr "接聽"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:566
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:567
 msgid "Message"
 msgstr "短信"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:572
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:573
 msgid "Answering holds the current call"
 msgstr "接聽將保持當前通話"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:590
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "我現在不能說話。"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:712
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:713
 msgid "Restarting RIL..."
 msgstr "正在重新啟動 RIL..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:721
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:722
 msgid "Restored!"
 msgstr "恢復了！"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:727
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:728
 msgid "Failed. Reboot Device."
 msgstr "失敗的。重新啟動設備。"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:729
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:730
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "正在驗證...{attempt}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:757
 msgid "Not connected"
 msgstr "未連接"
 

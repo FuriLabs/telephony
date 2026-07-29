@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 00:09+0300\n"
+"POT-Creation-Date: 2026-07-30 00:48+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -50,10 +50,10 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:164
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:373
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:386
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:409
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:541
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:374
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:410
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:542
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
@@ -206,7 +206,7 @@ msgstr "Telephony आणीबाणी"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:233
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:736
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:737
 msgid "🔴 Reboot Modem"
 msgstr "🔴 मोडेम रीबूट करा"
 
@@ -221,7 +221,7 @@ msgstr "🟢 येणारे: {name}"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:464
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
 msgid "Incoming Call..."
 msgstr "येणारा कॉल..."
 
@@ -1138,9 +1138,13 @@ msgstr "यासह उघडा..."
 msgid "Save File As"
 msgstr "फाइल म्हणून सेव्ह करा"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
 msgid "Hangup All Calls"
 msgstr "सर्व कॉल हँगअप करा"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr ""
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
 #, python-brace-format
@@ -2222,7 +2226,7 @@ msgid "Hangup and Send SMS"
 msgstr "हँगअप करा आणि SMS पाठवा"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:193
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:562
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:563
 msgid "Silence"
 msgstr "शांत करा"
 
@@ -2250,59 +2254,59 @@ msgstr "होल्ड"
 msgid "The call failed to disconnect."
 msgstr "कॉल डिस्कनेक्ट होऊ शकला नाही."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:297
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:298
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:772
 msgid "Output"
 msgstr "आउटपुट"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:312
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:790
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:313
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
 msgid "Input"
 msgstr "इनपुट"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:464
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
 msgid "Silenced Incoming Call"
 msgstr "सायलेंस केलेला इनकमिंग कॉल"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:554
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:555
 msgid "Swap"
 msgstr "स्वॅप"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:558
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:559
 msgid "Answer"
 msgstr "उत्तर द्या"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:566
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:567
 msgid "Message"
 msgstr "संदेश"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:572
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:573
 msgid "Answering holds the current call"
 msgstr "उत्तर दिल्याने सध्याचा कॉल होल्डवर जाईल"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:590
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "मी आत्ता बोलू शकत नाही."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:712
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:713
 msgid "Restarting RIL..."
 msgstr "RIL रीस्टार्ट करत आहे..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:721
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:722
 msgid "Restored!"
 msgstr "पुनर्संचयित!"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:727
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:728
 msgid "Failed. Reboot Device."
 msgstr "अयशस्वी. डिव्हाइस रीबूट करा."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:729
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:730
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "पडताळत आहे... {attempt}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:757
 msgid "Not connected"
 msgstr "कनेक्ट केलेले नाही"
 
