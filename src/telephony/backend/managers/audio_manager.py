@@ -461,10 +461,15 @@ class TelephonyAudioManager:
             logger.error(f"[Audio] Save media state failed: {e}")
 
     def _pick_media_port(self, sink):
-        """Choose the output port to return to after the last call ends."""
+        """
+        Choose the output port to return to after the last call ends.
+        The earpiece is never a media port, so a stale earpiece snapshot
+        cannot leave media playing through it after a call.
+        """
         usable = [p.name for p in sink.port_list if getattr(p, 'available', None) != 'no']
 
-        if self._pre_call_port and self._pre_call_port != "output-parking" and self._pre_call_port in usable:
+        blocked = ("output-parking", "output-earpiece")
+        if self._pre_call_port and self._pre_call_port not in blocked and self._pre_call_port in usable:
             return self._pre_call_port
 
         for name in ("output-wired_headphone", "output-wired_headset", "output-speaker"):
