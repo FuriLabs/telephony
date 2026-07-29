@@ -99,8 +99,7 @@ class TelephonyAudioManager:
                 None
             )
             if res:
-                val = res.unpack()[0]
-                self.is_near = val.get_boolean()
+                self.is_near = bool(res.unpack()[0])
             else:
                 cached = self.sensor_proxy.get_cached_property("ProximityNear")
                 if cached:
