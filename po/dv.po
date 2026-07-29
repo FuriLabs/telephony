@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 23:43+0300\n"
+"POT-Creation-Date: 2026-07-30 00:09+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -49,11 +49,11 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:141
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:311
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:324
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:347
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:476
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:373
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:386
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:409
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:541
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
@@ -192,7 +192,7 @@ msgid "Waiting for satellite fix..."
 msgstr "ސެޓަލައިޓް ގުޅުމަށް މަޑުކުރަނީ..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:201
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:231
 msgid "Modem Stuck"
 msgstr "މޮޑެމް ތާށިވެއްޖެ"
 
@@ -205,8 +205,8 @@ msgid "Telephony Emergency"
 msgstr "Telephony އިމަޖެންސީ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:203
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:665
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:736
 msgid "🔴 Reboot Modem"
 msgstr "🔴 މޮޑެމް ރީބޫޓް ކުރޭ"
 
@@ -221,7 +221,7 @@ msgstr "🟢 އަންނަނީ: {name}"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:402
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:464
 msgid "Incoming Call..."
 msgstr "ކޯލެއް އެބައާދޭ..."
 
@@ -673,7 +673,7 @@ msgid "Add to Existing Contact"
 msgstr "މިހާރު ހުރި ކޮންޓެކްޓަކަށް އިތުރުކުރޭ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
 msgid "Search Number"
 msgstr "ނަންބަރު ހޯދާ"
 
@@ -2177,53 +2177,127 @@ msgstr "މަޑުކުރަނީ..."
 msgid "Disconnected"
 msgstr "ކެނޑިއްޖެ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:167
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:269
+msgid "Earpiece"
+msgstr "ކަންފަތު ސްޕީކަރު"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:270
+msgid "Speaker"
+msgstr "ސްޕީކަރު"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:54
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:271
+msgid "Wired Headset"
+msgstr "ވާގަނޑު ހެޑްސެޓް"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:55
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:272
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:64
+msgid "Microphone"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:65
+msgid "Wired Mic"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:66
+msgid "Bluetooth Mic"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:190
 msgid "Hangup and Send SMS"
 msgstr "ކަނޑާލާފައި SMS އެއް ފޮނުވާ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:193
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:562
+msgid "Silence"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:194
+msgid "Decline"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:195
+msgid "Accept"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+msgid "Mute"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+msgid "Keypad"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:217
+msgid "Hold"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:232
 msgid "The call failed to disconnect."
 msgstr "ކޯލް ކަނޑައެއް ނުލެވުނު."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:235
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:684
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:297
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
 msgid "Output"
 msgstr "އައުޓްޕުޓް"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:250
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:712
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:312
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:790
 msgid "Input"
 msgstr "އިންޕުޓް"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:402
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:464
 msgid "Silenced Incoming Call"
 msgstr "އަންނަ ކޯލް ސައިލެންޓް ކުރެވިފައި"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:518
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:554
+msgid "Swap"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:558
+msgid "Answer"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:566
+msgid "Message"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:572
+msgid "Answering holds the current call"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "މިވަގުތު ވާހަކައެއް ނުދެއްކޭނެ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:641
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:712
 msgid "Restarting RIL..."
 msgstr "RIL ރީސްޓާޓް ކުރަނީ..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:650
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:721
 msgid "Restored!"
 msgstr "އަލުން ލިބިއްޖެ!"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:656
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:727
 msgid "Failed. Reboot Device."
 msgstr "ނުވި. ފޯނު ރީސްޓާޓް ކުރޭ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:658
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:729
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "ޗެކް ކުރަނީ... {attempt}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:717
-msgid "Mute Microphone"
-msgstr "މައިކް ބަންދުކުރޭ"
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
+msgid "Not connected"
+msgstr ""
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:28
 msgid "About Telephony"
@@ -2365,22 +2439,6 @@ msgstr "އަޑު ގަދަކުރުން ހުއްދަކުރޭ"
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:260
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr "ސްލައިޑަރުތައް 100% އަށްވުރެ މައްޗަށް ދާން ހުއްދަކުރޭ. ގަދަކުރި އަޑު ބަދަލުވެދާނެ."
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:269
-msgid "Earpiece"
-msgstr "ކަންފަތު ސްޕީކަރު"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:270
-msgid "Speaker"
-msgstr "ސްޕީކަރު"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:271
-msgid "Wired Headset"
-msgstr "ވާގަނޑު ހެޑްސެޓް"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:272
-msgid "Bluetooth"
-msgstr "Bluetooth"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:288
 msgid "Notification Exceptions"
@@ -2766,6 +2824,9 @@ msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr "މީގެ ސަބަބުން ކޮންޓެކްޓްގެ އޮތެންޓިކޭޓަރ އެޕްގައި އިންނަ ކޯޑު ބާތިލުވާނެއެވެ. ޔަގީންތަ؟"
+
+#~ msgid "Mute Microphone"
+#~ msgstr "މައިކް ބަންދުކުރޭ"
 
 #~ msgid "Failed to send to {number}"
 #~ msgstr "{number} އަށް ފޮނުވޭގޮތެއް ނުވި"
