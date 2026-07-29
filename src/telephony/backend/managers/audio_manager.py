@@ -71,6 +71,7 @@ class TelephonyAudioManager:
 
         self._pre_call_vol = None
         self._pre_call_sink_name = None
+        self._pre_call_port = None
 
         self.is_near = False
         self.proximity_claimed = False
@@ -365,24 +366,44 @@ class TelephonyAudioManager:
             logger.debug(f"[Audio] Default sink lookup failed: {e}")
             return None
 
-    def save_media_volume(self):
+    def prepare_call_audio(self, level):
         """
-        Snapshot the sink volume once, before the voicecall profile switch,
-        so restore_call_volume can bring the media level back after the call.
+        Save the media port and volume once, then prime the earpiece port at
+        the configured call level so voicecall routing starts with it.
         """
-        if self._pre_call_vol is not None:
-            return
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
                 sink = self._get_call_sink(pulse)
                 if not sink:
-                    logger.warning("[Audio] No sink found to save media volume")
+                    logger.warning("[Audio] No sink found to prepare call audio")
                     return
-                self._pre_call_sink_name = sink.name
-                self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
-                logger.info(f"[Audio] Saved media volume {int(self._pre_call_vol * 100)}% on {sink.name}")
+
+                if self._pre_call_vol is None:
+                    self._pre_call_sink_name = sink.name
+                    self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
+                    self._pre_call_port = sink.port_active.name if sink.port_active else None
+
+                try:
+                    pulse.sink_port_set(sink.index, "output-earpiece")
+                except Exception as e:
+                    logger.debug(f"[Audio] Earpiece port set failed: {e}")
+
+                pulse.volume_set_all_chans(sink, level)
+                logger.info(f"[Audio] Prepared earpiece at {int(level * 100)}% for call start")
         except Exception as e:
-            logger.error(f"[Audio] Save media volume failed: {e}")
+            logger.error(f"[Audio] Prepare call audio failed: {e}")
+
+    def _pick_media_port(self, sink):
+        """Choose the output port to return to after the last call ends."""
+        usable = [p.name for p in sink.port_list if getattr(p, 'available', None) != 'no']
+
+        if self._pre_call_port and self._pre_call_port != "output-parking" and self._pre_call_port in usable:
+            return self._pre_call_port
+
+        for name in ("output-wired_headphone", "output-wired_headset", "output-speaker"):
+            if name in usable:
+                return name
+        return None
 
     def push_call_volume(self, level):
         """
@@ -407,15 +428,21 @@ class TelephonyAudioManager:
             logger.error(f"[Audio] Push call volume failed: {e}")
 
     def restore_call_volume(self):
-        """Restore the sink volume saved by push_call_volume."""
+        """Restore the media output port and volume saved by prepare_call_audio."""
         if self._pre_call_vol is None:
             return
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
                 sink = self._get_call_sink(pulse, self._pre_call_sink_name)
                 if sink:
+                    target_port = self._pick_media_port(sink)
+                    if target_port:
+                        try:
+                            pulse.sink_port_set(sink.index, target_port)
+                        except Exception as e:
+                            logger.debug(f"[Audio] Media port restore failed: {e}")
                     pulse.volume_set_all_chans(sink, self._pre_call_vol)
-                    logger.info(f"[Audio] Restored call volume on {sink.name}")
+                    logger.info(f"[Audio] Restored media audio on {sink.name} port {target_port}")
                 else:
                     logger.warning("[Audio] Could not find sink to restore call volume")
         except Exception as e:
@@ -423,6 +450,7 @@ class TelephonyAudioManager:
         finally:
             self._pre_call_vol = None
             self._pre_call_sink_name = None
+            self._pre_call_port = None
 
     def mute(self, muted=True):
         """Mute or unmute the default source."""

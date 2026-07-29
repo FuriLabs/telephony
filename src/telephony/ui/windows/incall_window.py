@@ -390,9 +390,8 @@ class InCallWindow(Gtk.Window):
             if self.is_ringing:
                 self.audio.stop_ringing()
                 self.is_ringing = False
-            self.audio.save_media_volume()
-            self.audio.set_voice_profile(True)
             self._apply_call_volume()
+            self.audio.set_voice_profile(True)
             self.audio.mute(self.is_muted)
             self.controls_stack.set_visible_child_name("active")
             self._toggle_blue(self.btn_output, self.is_speaker)
@@ -736,24 +735,19 @@ class InCallWindow(Gtk.Window):
             self.input_group.add(row)
 
     def _apply_call_volume(self):
-        """Push the configured base volume for the current output route."""
+        """Prime the earpiece port at its configured level before routing starts."""
         if self.call_volume_applied:
             return
         self.call_volume_applied = True
-        self._push_route_volume()
-        GLib.timeout_add(500, self._repush_route_volume)
+        levels = self.gsettings_mgr.get_call_volume_levels()
+        level = levels.get(self.current_route, 80) / 100.0
+        self.audio.prepare_call_audio(level)
 
     def _push_route_volume(self):
         """Set the call sink volume to the current route's configured level."""
         levels = self.gsettings_mgr.get_call_volume_levels()
         level = levels.get(self.current_route, 80) / 100.0
         self.audio.push_call_volume(level)
-
-    def _repush_route_volume(self):
-        """Re-apply the route volume once the routing dance has settled."""
-        if self.call_volume_applied:
-            self._push_route_volume()
-        return False
 
     def _on_volume_settings_changed(self, settings, key):
         """Re-apply the active route's level live when its slider changes mid-call."""
@@ -768,8 +762,7 @@ class InCallWindow(Gtk.Window):
         self.audio.set_audio_route(route_id)
         self.current_route = route_id
         if self.call_volume_applied:
-            self.call_volume_applied = False
-            self._apply_call_volume()
+            self._push_route_volume()
         if route_id == "speaker":
             self.is_speaker = True
             self.btn_output.set_icon_name("audio-speakers-symbolic")
