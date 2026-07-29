@@ -108,6 +108,7 @@ class ChatPage(Gtk.Box):
 
         if self.app_window:
             self.focus_handler_id = self.app_window.connect("notify::is-active", lambda obj, pspec: self.on_window_focus_changed(obj, pspec))
+            self.connect("map", self.on_map)
             self.connect("unmap", self.on_unmap)
 
         self.db_signals = []
@@ -1400,6 +1401,23 @@ class ChatPage(Gtk.Box):
             return False
         GLib.idle_add(_do)
 
+    def on_map(self, widget):
+        """Reconnect listeners dropped on unmap and catch up missed changes."""
+        self._draft_saved = False
+
+        if self.app_window and self.focus_handler_id is None:
+            self.focus_handler_id = self.app_window.connect("notify::is-active", lambda obj, pspec: self.on_window_focus_changed(obj, pspec))
+
+        if self.db_signals:
+            return
+
+        sig_id = self.db.connect('messages-updated', self._on_messages_updated)
+        self.db_signals.append((self.db, sig_id))
+
+        if not self.is_loading:
+            self._append_new_messages()
+            self._sync_message_statuses()
+
     def on_unmap(self, widget):
         """Cleanup on widget unmap."""
         if not self._draft_saved:
@@ -1417,6 +1435,7 @@ class ChatPage(Gtk.Box):
                     self.app_window.disconnect(self.focus_handler_id)
                 except Exception as e:
                     logger.debug(f"[ChatPage] Disconnect focus handler warning: {e}")
+            self.focus_handler_id = None
 
         for obj, sig_id in self.db_signals:
             if obj.handler_is_connected(sig_id):
