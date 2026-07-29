@@ -178,7 +178,6 @@ class App(Adw.Application):
         if self.incall is None:
             logger.info("Initializing InCallWindow (Lazy Load)")
             self.incall = InCallWindow(self.gsettings_mgr, self.ofono, self.eds, self.db)
-            self.incall.ringback = self.ringback
 
             def _on_incall_closed(_w):
                 logger.info("InCallWindow hidden.")

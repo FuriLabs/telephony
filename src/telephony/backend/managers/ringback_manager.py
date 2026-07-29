@@ -250,24 +250,6 @@ class RingbackManager(GObject.Object):
             logger.error(f"[RingbackManager] Start ringback error: {e}")
             self._stop_ringback()
 
-    def refresh_route(self):
-        """
-        Reattach the loopback after an output route change.
-        The droid sink reopens its HAL stream when the port flips, and the
-        existing loopback stream keeps writing into a stream the HAL no
-        longer mixes, so a fresh loopback stream is needed.
-        """
-        if not self.pipeline or not self.pulse_client or self.loopback_module_id is None:
-            return
-        try:
-            self.pulse_client.module_unload(self.loopback_module_id)
-            self.loopback_module_id = None
-            mod = self.pulse_client.module_load("module-loopback", "source=call_injector.monitor sink=sink.primary_output")
-            self.loopback_module_id = int(mod)
-            logger.info(f"[RingbackManager] Reloaded loopback after route change: {self.loopback_module_id}")
-        except Exception as e:
-            logger.error(f"[RingbackManager] Loopback reload failed: {e}")
-
     def _stop_ringback(self):
         """Stop ringback playback and unload modules."""
         if self.loop_timer_id:

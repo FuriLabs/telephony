@@ -102,7 +102,6 @@ class InCallWindow(Gtk.Window):
         self.dtmf_visible = False
         self.current_route = "earpiece"
         self.current_input_route = "mic"
-        self.ringback = None
         self.call_volume_applied = False
         self.gsettings_mgr.gsettings.connect("changed", self._on_volume_settings_changed)
         self.call_history = {}
@@ -468,8 +467,9 @@ class InCallWindow(Gtk.Window):
             if self.is_ringing:
                 self.audio.stop_ringing()
                 self.is_ringing = False
-            self._apply_call_volume()
+            self.audio.save_media_state()
             self.audio.set_voice_profile(True)
+            self._apply_call_volume()
             self.audio.mute(self.is_muted)
             self.controls_stack.set_visible_child_name("active")
             self.lbl_output_route.set_text(route_label(self.current_route))
@@ -503,11 +503,11 @@ class InCallWindow(Gtk.Window):
         self.audio.stop_ringing()
         self.is_ringing = False
 
-        self.audio.restore_call_volume()
         self.call_volume_applied = False
         self.current_route = "earpiece"
 
         self.audio.set_voice_profile(False)
+        self.audio.restore_call_volume()
         self.audio.mute(False)
         self.audio.update_hardware_state(False)
 
@@ -701,9 +701,9 @@ class InCallWindow(Gtk.Window):
         self.audio.play_hangup()
         self.fader.set_active(False)
         self.audio.update_hardware_state(False)
-        self.audio.restore_call_volume()
         self.call_volume_applied = False
         self.audio.set_voice_profile(False)
+        self.audio.restore_call_volume()
         self.is_speaker = False
         self.controls_stack.set_visible_child_name("error")
         self.lock_manager.show_stuck_notification()
@@ -808,19 +808,24 @@ class InCallWindow(Gtk.Window):
             self.input_group.add(row)
 
     def _apply_call_volume(self):
-        """Prime the earpiece port at its configured level before routing starts."""
+        """Route the new call and apply its configured volume once."""
         if self.call_volume_applied:
             return
         self.call_volume_applied = True
-        levels = self.gsettings_mgr.get_call_volume_levels()
-        level = levels.get(self.current_route, 80) / 100.0
-        self.audio.prepare_call_audio(level)
+
+        self.current_route = self.audio.initial_call_route()
+        self.is_speaker = self.current_route == "speaker"
+        self.lbl_output_route.set_text(route_label(self.current_route))
+
+        self.audio.set_audio_route(self.current_route)
+        self.audio.ensure_sink_unmuted()
+        self._push_route_volume()
 
     def _push_route_volume(self):
-        """Set the call sink volume to the current route's configured level."""
+        """Apply the current route's configured level to the voice stream."""
         levels = self.gsettings_mgr.get_call_volume_levels()
         level = levels.get(self.current_route, 80) / 100.0
-        self.audio.push_call_volume(level)
+        self.audio.set_voice_volume_level(level)
 
     def _on_volume_settings_changed(self, settings, key):
         """Re-apply the active route's level live when its slider changes mid-call."""
@@ -835,13 +840,11 @@ class InCallWindow(Gtk.Window):
         self.audio.set_audio_route(route_id)
         self.current_route = route_id
         if self.call_volume_applied:
+            self.audio.ensure_sink_unmuted()
             self._push_route_volume()
 
         self.is_speaker = route_id == "speaker"
         self.lbl_output_route.set_text(route_label(route_id))
-
-        if self.ringback:
-            self.ringback.refresh_route()
 
         self._proximity_tick()
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
@@ -891,6 +894,19 @@ class InCallWindow(Gtk.Window):
         else:
             btn.remove_css_class("blue-active")
 
+    def _sync_external_route_change(self):
+        """Adopt port changes made outside the app, like a headset plug."""
+        route = self.audio.get_active_output_route()
+        if not route or route == self.current_route:
+            return
+
+        logger.info(f"[InCall] Output route moved externally to {route}")
+        self.current_route = route
+        self.is_speaker = route == "speaker"
+        self.lbl_output_route.set_text(route_label(route))
+        self.audio.ensure_sink_unmuted()
+        self._push_route_volume()
+
     def _update_timer(self):
         """Update call duration timer."""
         if not self.is_visible():
@@ -900,6 +916,9 @@ class InCallWindow(Gtk.Window):
             if d and d['state'] == 'active':
                 diff = int(time.time() - d.get('start', time.time()))
                 self.lbl_status.set_text(f"{diff // 60:02}:{diff % 60:02}")
+
+        if self.call_volume_applied and not self.is_closing and not self.in_error_mode:
+            self._sync_external_route_change()
 
         if not self.is_closing and not self.in_error_mode:
             calls = self.ofono.active_calls

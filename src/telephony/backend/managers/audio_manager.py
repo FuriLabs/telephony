@@ -263,40 +263,118 @@ class TelephonyAudioManager:
 
                 if target_card:
                     pulse.card_profile_set(target_card, profile_name)
-                    if not enable:
-                        sink = pulse.get_sink_by_name("sink.primary_output")
-                        if sink:
-                            pulse.sink_port_set(sink.index, "output-speaker")
                 else:
                     logger.warning("[Audio] droid_card.primary not found")
 
         except Exception as e:
             logger.error(f"[Audio] Set profile failed: {e}")
 
-    def set_audio_route(self, mode="earpiece"):
-        """Route audio to earpiece, speaker, or dummy routes."""
+    def _pick_route_port(self, sink, mode):
+        """Map a route id to the sink port to activate, or None when absent."""
+        if mode == "earpiece":
+            return "output-earpiece"
         if mode == "speaker":
-            port_name = "output-speaker"
-        elif mode == "earpiece":
-            port_name = "output-earpiece"
-        else:
-            logger.info(f"[Audio] Setting dummy output route: {mode}")
-            return
+            return "output-speaker"
+        if mode == "wired":
+            for name in ("output-wired_headset", "output-wired_headphone"):
+                for p in sink.port_list:
+                    if p.name == name and getattr(p, 'available', None) != 'no':
+                        return name
+        return None
 
+    def set_audio_route(self, mode="earpiece"):
+        """
+        Route call audio with a single direct port switch on the primary sink.
+        A parking hop is never used here: parking is only meant for profile
+        changes and the droid card module parks by itself around those.
+        """
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
-                if sink:
-                    pulse.sink_port_set(sink.index, "output-parking")
-                    pulse.sink_port_set(sink.index, port_name)
-                else:
+                if not sink:
                     logger.warning("[Audio] sink.primary_output not found")
+                    return
+
+                port_name = self._pick_route_port(sink, mode)
+                if not port_name:
+                    logger.info(f"[Audio] No port for output route: {mode}")
+                    return
+
+                pulse.sink_port_set(sink.index, port_name)
+                logger.info(f"[Audio] Output route set to {mode} ({port_name})")
         except Exception as e:
             logger.error(f"[Audio] Set route failed: {e}")
 
     def set_input_route(self, mode="mic"):
         """Route input audio to mic or dummy routes."""
         logger.info(f"[Audio] Setting input route: {mode}")
+
+    def initial_call_route(self):
+        """Return the route a new call should start on."""
+        try:
+            with pulsectl.Pulse('telephony-audio') as pulse:
+                sink = pulse.get_sink_by_name("sink.primary_output")
+                if sink and self._pick_route_port(sink, "wired"):
+                    return "wired"
+        except Exception as e:
+            logger.debug(f"[Audio] Initial route probe failed: {e}")
+        return "earpiece"
+
+    def get_active_output_route(self):
+        """Map the primary sink's active port to a route id, or None when parked."""
+        name = None
+        try:
+            with pulsectl.Pulse('telephony-audio') as pulse:
+                sink = pulse.get_sink_by_name("sink.primary_output")
+                if sink and sink.port_active:
+                    name = sink.port_active.name
+        except Exception as e:
+            logger.debug(f"[Audio] Active route probe failed: {e}")
+
+        if name == "output-earpiece":
+            return "earpiece"
+        if name == "output-speaker":
+            return "speaker"
+        if name and "wired" in name:
+            return "wired"
+        return None
+
+    def set_voice_volume_level(self, level):
+        """
+        Apply the call volume by setting the phone-role virtual stream volume.
+        The droid module forwards only actual changes to the HAL voice volume,
+        so the value is written twice with a small nudge in between.
+        """
+        level = max(0.0, min(1.0, level))
+        nudge = level + 0.01 if level <= 0.5 else level - 0.01
+        try:
+            with pulsectl.Pulse('telephony-audio') as pulse:
+                stream = None
+                for si in pulse.sink_input_list():
+                    if si.proplist.get('media.role') == 'phone':
+                        stream = si
+                        break
+
+                if not stream:
+                    logger.warning("[Audio] No phone-role stream found for voice volume")
+                    return
+
+                pulse.volume_set_all_chans(stream, nudge)
+                pulse.volume_set_all_chans(stream, level)
+                logger.info(f"[Audio] Voice volume set to {int(level * 100)}%")
+        except Exception as e:
+            logger.error(f"[Audio] Set voice volume failed: {e}")
+
+    def ensure_sink_unmuted(self):
+        """Clear any mute that module-device-restore re-applied on a port change."""
+        try:
+            with pulsectl.Pulse('telephony-audio') as pulse:
+                sink = pulse.get_sink_by_name("sink.primary_output")
+                if sink and sink.mute:
+                    pulse.sink_mute(sink.index, False)
+                    logger.info("[Audio] Cleared restored sink mute")
+        except Exception as e:
+            logger.error(f"[Audio] Unmute failed: {e}")
 
     def get_available_outputs(self):
         """Return the output routes with per-route availability."""
@@ -367,32 +445,23 @@ class TelephonyAudioManager:
             logger.debug(f"[Audio] Default sink lookup failed: {e}")
             return None
 
-    def prepare_call_audio(self, level):
-        """
-        Save the media port and volume once, then prime the earpiece port at
-        the configured call level so voicecall routing starts with it.
-        """
+    def save_media_state(self):
+        """Snapshot the media volume and active port once before a call."""
+        if self._pre_call_vol is not None:
+            return
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
                 sink = self._get_call_sink(pulse)
                 if not sink:
-                    logger.warning("[Audio] No sink found to prepare call audio")
+                    logger.warning("[Audio] No sink found to save media state")
                     return
 
-                if self._pre_call_vol is None:
-                    self._pre_call_sink_name = sink.name
-                    self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
-                    self._pre_call_port = sink.port_active.name if sink.port_active else None
-
-                try:
-                    pulse.sink_port_set(sink.index, "output-earpiece")
-                except Exception as e:
-                    logger.debug(f"[Audio] Earpiece port set failed: {e}")
-
-                pulse.volume_set_all_chans(sink, level)
-                logger.info(f"[Audio] Prepared earpiece at {int(level * 100)}% for call start")
+                self._pre_call_sink_name = sink.name
+                self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
+                self._pre_call_port = sink.port_active.name if sink.port_active else None
+                logger.info(f"[Audio] Saved media state: {int(self._pre_call_vol * 100)}% on {self._pre_call_port}")
         except Exception as e:
-            logger.error(f"[Audio] Prepare call audio failed: {e}")
+            logger.error(f"[Audio] Save media state failed: {e}")
 
     def _pick_media_port(self, sink):
         """Choose the output port to return to after the last call ends."""
@@ -406,30 +475,13 @@ class TelephonyAudioManager:
                 return name
         return None
 
-    def push_call_volume(self, level):
-        """
-        Apply the configured base call volume to the call sink.
-        The previous volume is saved once; restore with restore_call_volume.
-        Values above 1.0 apply software amplification.
-        """
-        try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
-                sink = self._get_call_sink(pulse)
-                if not sink:
-                    logger.warning("[Audio] No sink found for call volume push")
-                    return
-
-                if self._pre_call_vol is None:
-                    self._pre_call_sink_name = sink.name
-                    self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
-
-                pulse.volume_set_all_chans(sink, level)
-                logger.info(f"[Audio] Call volume set to {int(level * 100)}% on {sink.name}")
-        except Exception as e:
-            logger.error(f"[Audio] Push call volume failed: {e}")
-
     def restore_call_volume(self):
-        """Restore the media output port and volume saved by prepare_call_audio."""
+        """
+        Restore the media output port and volume saved by save_media_state.
+        Run after the profile is back to default: the port switch commits the
+        normal mode in the HAL, and the volume is written as an actual change
+        because the pcm gain stays frozen for equal values after a call.
+        """
         if self._pre_call_vol is None:
             return
         try:
@@ -442,6 +494,9 @@ class TelephonyAudioManager:
                             pulse.sink_port_set(sink.index, target_port)
                         except Exception as e:
                             logger.debug(f"[Audio] Media port restore failed: {e}")
+
+                    nudge = self._pre_call_vol + 0.01 if self._pre_call_vol <= 0.5 else self._pre_call_vol - 0.01
+                    pulse.volume_set_all_chans(sink, nudge)
                     pulse.volume_set_all_chans(sink, self._pre_call_vol)
                     logger.info(f"[Audio] Restored media audio on {sink.name} port {target_port}")
                 else:
