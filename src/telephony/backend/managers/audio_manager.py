@@ -69,6 +69,9 @@ class TelephonyAudioManager:
         self._pre_max_vol = None
         self._pre_max_sink_name = None
 
+        self._pre_call_vol = None
+        self._pre_call_sink_name = None
+
         self.is_near = False
         self.proximity_claimed = False
         self.sensor_proxy = None
@@ -346,25 +349,62 @@ class TelephonyAudioManager:
 
         return routes
 
-    def set_voice_stream_volume(self, level):
+    def _get_call_sink(self, pulse, preferred_name=None):
+        """Return the sink used for call audio, preferring the droid primary output."""
+        for name in (preferred_name, "sink.primary_output"):
+            if not name:
+                continue
+            try:
+                return pulse.get_sink_by_name(name)
+            except Exception as e:
+                logger.debug(f"[Audio] Sink {name} not found: {e}")
+
+        info = pulse.server_info()
+        try:
+            return pulse.get_sink_by_name(info.default_sink_name)
+        except Exception as e:
+            logger.debug(f"[Audio] Default sink lookup failed: {e}")
+            return None
+
+    def push_call_volume(self, level):
         """
-        Set the in-call voice volume through the droid phone-role stream,
-        which the audio HAL applies to the active call. Returns False when
-        the stream does not exist yet.
+        Apply the configured base call volume to the call sink.
+        The previous volume is saved once; restore with restore_call_volume.
+        Values above 1.0 apply software amplification.
         """
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
-                for stream in pulse.sink_input_list():
-                    if stream.proplist.get('media.role') == 'phone':
-                        pulse.volume_set_all_chans(stream, level)
-                        logger.info(f"[Audio] Voice stream volume set to {int(level * 100)}%")
-                        return True
+                sink = self._get_call_sink(pulse)
+                if not sink:
+                    logger.warning("[Audio] No sink found for call volume push")
+                    return
 
-            logger.debug("[Audio] Voice stream not present yet")
-            return False
+                if self._pre_call_vol is None:
+                    self._pre_call_sink_name = sink.name
+                    self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
+
+                pulse.volume_set_all_chans(sink, level)
+                logger.info(f"[Audio] Call volume set to {int(level * 100)}% on {sink.name}")
         except Exception as e:
-            logger.error(f"[Audio] Set voice stream volume failed: {e}")
-            return False
+            logger.error(f"[Audio] Push call volume failed: {e}")
+
+    def restore_call_volume(self):
+        """Restore the sink volume saved by push_call_volume."""
+        if self._pre_call_vol is None:
+            return
+        try:
+            with pulsectl.Pulse('telephony-audio') as pulse:
+                sink = self._get_call_sink(pulse, self._pre_call_sink_name)
+                if sink:
+                    pulse.volume_set_all_chans(sink, self._pre_call_vol)
+                    logger.info(f"[Audio] Restored call volume on {sink.name}")
+                else:
+                    logger.warning("[Audio] Could not find sink to restore call volume")
+        except Exception as e:
+            logger.error(f"[Audio] Restore call volume failed: {e}")
+        finally:
+            self._pre_call_vol = None
+            self._pre_call_sink_name = None
 
     def mute(self, muted=True):
         """Mute or unmute the default source."""

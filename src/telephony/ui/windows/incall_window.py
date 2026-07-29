@@ -66,7 +66,6 @@ class InCallWindow(Gtk.Window):
         self.dtmf_visible = False
         self.current_route = "earpiece"
         self.call_volume_applied = False
-        self._voice_volume_attempts = 0
         self.call_history = {}
         self.ignored_calls = set()
 
@@ -390,9 +389,9 @@ class InCallWindow(Gtk.Window):
             if self.is_ringing:
                 self.audio.stop_ringing()
                 self.is_ringing = False
+            self._apply_call_volume()
             self.audio.set_voice_profile(True)
             self.audio.mute(self.is_muted)
-            self._apply_call_volume()
             self.controls_stack.set_visible_child_name("active")
             self._toggle_blue(self.btn_output, self.is_speaker)
             self._toggle_blue(self.btn_input, self.is_muted)
@@ -425,6 +424,7 @@ class InCallWindow(Gtk.Window):
         self.audio.stop_ringing()
         self.is_ringing = False
 
+        self.audio.restore_call_volume()
         self.call_volume_applied = False
         self.current_route = "earpiece"
 
@@ -613,6 +613,7 @@ class InCallWindow(Gtk.Window):
         self.audio.play_hangup()
         self.fader.set_active(False)
         self.audio.update_hardware_state(False)
+        self.audio.restore_call_volume()
         self.call_volume_applied = False
         self.audio.set_voice_profile(False)
         self.is_speaker = False
@@ -733,30 +734,13 @@ class InCallWindow(Gtk.Window):
             self.input_group.add(row)
 
     def _apply_call_volume(self):
-        """Push the configured in-call volume for the current route to the voice stream."""
+        """Push the configured base volume for the current output route."""
         if self.call_volume_applied:
             return
-        self.call_volume_applied = True
-        self._voice_volume_attempts = 0
-        self._push_voice_volume()
-
-    def _push_voice_volume(self):
-        """Set the voice stream volume, retrying briefly until the stream exists."""
-        if not self.ofono.active_calls:
-            return False
-
         levels = self.gsettings_mgr.get_call_volume_levels()
         level = levels.get(self.current_route, 80) / 100.0
-
-        if self.audio.set_voice_stream_volume(level):
-            return False
-
-        self._voice_volume_attempts += 1
-        if self._voice_volume_attempts < 10:
-            GLib.timeout_add(200, self._push_voice_volume)
-        else:
-            logger.warning("[InCall] Voice stream never appeared, volume not applied")
-        return False
+        self.audio.push_call_volume(level)
+        self.call_volume_applied = True
 
     def _handle_output_selection(self, route_id):
         """Handle output route selection."""
