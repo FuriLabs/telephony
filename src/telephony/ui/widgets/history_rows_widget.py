@@ -62,6 +62,7 @@ class HistoryRowFactory:
         rbox.append(time_lbl)
 
         call_btn = Gtk.Button(icon_name="call-start-symbolic")
+        call_btn.handler_id = None
         call_btn.add_css_class("circular")
         call_btn.add_css_class("call-btn-small")
         call_btn.set_size_request(34, 34)
@@ -69,6 +70,7 @@ class HistoryRowFactory:
         call_btn.set_vexpand(False)
 
         info_btn = Gtk.Button(icon_name="dialog-information-symbolic")
+        info_btn.handler_id = None
         info_btn.add_css_class("circular")
         info_btn.add_css_class("secondary-btn")
         info_btn.set_size_request(34, 34)

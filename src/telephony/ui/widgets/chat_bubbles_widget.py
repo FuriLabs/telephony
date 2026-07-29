@@ -67,6 +67,7 @@ class ChatBubbleFactory:
 
         media_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         media_box.set_visible(False)
+        media_box.last_paths = []
         content_box.append(media_box)
 
         clamp = Adw.Clamp()
@@ -109,6 +110,7 @@ class ChatBubbleFactory:
 
         def create_menu_btn(icon, label, style_class="suggested-action"):
             b = Gtk.Button()
+            b.h = None
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
             box.append(Gtk.Image(icon_name=icon))
             box.append(Gtk.Label(label=label))
