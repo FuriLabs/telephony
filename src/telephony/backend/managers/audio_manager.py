@@ -339,34 +339,28 @@ class TelephonyAudioManager:
             return "wired"
         return None
 
-    def set_voice_volume_level(self, level):
+    def set_call_volume_level(self, level):
         """
-        Apply the call volume by setting the phone-role virtual stream volume.
-        The droid module forwards only actual changes to the HAL voice volume,
-        so the value is written twice with a small nudge in between.
-        Returns True when the volume reached a control stream.
+        Apply the call volume by setting the primary sink volume, which is the
+        effective call loudness on this stack; the phone-role stream is only
+        the fine trim on top and is left to the user. The value is written
+        twice with a small nudge so the flat volume propagation also
+        re-asserts the HAL voice volume after routing changes.
         """
         level = max(0.0, min(1.0, level))
         nudge = level + 0.01 if level <= 0.5 else level - 0.01
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
-                stream = None
-                for si in pulse.sink_input_list():
-                    if si.proplist.get('media.role') == 'phone':
-                        stream = si
-                        break
+                sink = pulse.get_sink_by_name("sink.primary_output")
+                if not sink:
+                    logger.warning("[Audio] sink.primary_output not found for call volume")
+                    return
 
-                if not stream:
-                    logger.warning("[Audio] No phone-role stream found for voice volume")
-                    return False
-
-                pulse.volume_set_all_chans(stream, nudge)
-                pulse.volume_set_all_chans(stream, level)
-                logger.info(f"[Audio] Voice volume {int(level * 100)}% on stream #{stream.index} ({stream.name})")
-                return True
+                pulse.volume_set_all_chans(sink, nudge)
+                pulse.volume_set_all_chans(sink, level)
+                logger.info(f"[Audio] Call volume set to {int(level * 100)}% on {sink.name}")
         except Exception as e:
-            logger.error(f"[Audio] Set voice volume failed: {e}")
-            return False
+            logger.error(f"[Audio] Set call volume failed: {e}")
 
     def ensure_sink_unmuted(self):
         """Clear any mute that module-device-restore re-applied on a port change."""
