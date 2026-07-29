@@ -155,14 +155,14 @@ class InCallWindow(Gtk.Window):
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_child(self.main_box)
 
-        self.bg_scrolled = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=220)
-        self.bg_calls_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin_top=15, margin_bottom=15, margin_start=15, margin_end=15)
+        self.bg_scrolled = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=180)
+        self.bg_calls_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_top=10, margin_bottom=10, margin_start=15, margin_end=15)
         self.bg_scrolled.set_child(self.bg_calls_box)
         self.main_box.append(self.bg_scrolled)
 
         self.info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6, vexpand=True, valign=Gtk.Align.CENTER)
-        self.lbl_name = create_truncated_label(_("Unknown"), ["title-1"], max_chars=18)
-        self.lbl_number = Gtk.Label(css_classes=["title-2", "dim-label"])
+        self.lbl_name = create_truncated_label(_("Unknown"), ["title-2"], max_chars=20)
+        self.lbl_number = create_truncated_label("", ["title-4", "dim-label"], max_chars=26)
         self.lbl_status = Gtk.Label(css_classes=["body", "accent"])
         for lbl in [self.lbl_name, self.lbl_number, self.lbl_status]:
             self.info_box.append(lbl)
@@ -171,7 +171,7 @@ class InCallWindow(Gtk.Window):
         self.pad_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_UP)
         pad_grid = Gtk.Grid(row_spacing=8, column_spacing=15, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=14)
         for i, c in enumerate(KEYPAD_LAYOUT):
-            b = Gtk.Button(label=c, css_classes=["pill", "dialpad-btn"], width_request=60, height_request=50)
+            b = Gtk.Button(label=c, css_classes=["pill", "dialpad-btn"], width_request=60, height_request=46)
             b.connect("clicked", lambda x, ch=c: GLib.idle_add(lambda: self.ofono.send_dtmf(ch) or False))
             pad_grid.attach(b, i % 3, i // 3, 1, 1)
         self.pad_revealer.set_child(pad_grid)
@@ -180,7 +180,7 @@ class InCallWindow(Gtk.Window):
         self.controls_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         self.main_box.append(self.controls_stack)
 
-        inc_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, valign=Gtk.Align.END, margin_bottom=40)
+        inc_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16, valign=Gtk.Align.END, margin_bottom=20)
 
         self.btn_search_unknown = Gtk.Button(label=_("Search Number"), css_classes=["pill"], halign=Gtk.Align.CENTER)
         self.btn_search_unknown.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_search_unknown_click(b) or False))
@@ -200,7 +200,7 @@ class InCallWindow(Gtk.Window):
         inc_box.append(inc_row)
         self.controls_stack.add_named(inc_box, "incoming")
 
-        act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16, valign=Gtk.Align.END, margin_bottom=40)
+        act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, valign=Gtk.Align.END, margin_bottom=20)
 
         self.route_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_start=40, margin_end=40)
         self.btn_output, self.lbl_output_route = self._mk_selector_btn("audio-headphones-symbolic", route_label("earpiece"), self.on_output_routing_click)
@@ -540,12 +540,12 @@ class InCallWindow(Gtk.Window):
             if not name or name == "Unknown":
                 name = _("Unknown")
 
-            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6, css_classes=["card"])
-            lbl_title = create_truncated_label(f"{name} ({call_state_label(data['state'])})", ["heading"], max_chars=26)
+            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, css_classes=["card"])
+            lbl_title = create_truncated_label(f"{name} ({call_state_label(data['state'])})", ["caption-heading"], max_chars=30)
             lbl_title.set_halign(Gtk.Align.START)
             card.append(lbl_title)
 
-            lbl_num = create_truncated_label(data['number'], ["caption", "dim-label"], max_chars=26)
+            lbl_num = create_truncated_label(data['number'], ["caption", "dim-label"], max_chars=30)
             lbl_num.set_halign(Gtk.Align.START)
             card.append(lbl_num)
 
