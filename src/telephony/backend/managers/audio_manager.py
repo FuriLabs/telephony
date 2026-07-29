@@ -365,6 +365,25 @@ class TelephonyAudioManager:
             logger.debug(f"[Audio] Default sink lookup failed: {e}")
             return None
 
+    def save_media_volume(self):
+        """
+        Snapshot the sink volume once, before the voicecall profile switch,
+        so restore_call_volume can bring the media level back after the call.
+        """
+        if self._pre_call_vol is not None:
+            return
+        try:
+            with pulsectl.Pulse('telephony-audio') as pulse:
+                sink = self._get_call_sink(pulse)
+                if not sink:
+                    logger.warning("[Audio] No sink found to save media volume")
+                    return
+                self._pre_call_sink_name = sink.name
+                self._pre_call_vol = max(sink.volume.values) if sink.volume.values else 1.0
+                logger.info(f"[Audio] Saved media volume {int(self._pre_call_vol * 100)}% on {sink.name}")
+        except Exception as e:
+            logger.error(f"[Audio] Save media volume failed: {e}")
+
     def push_call_volume(self, level):
         """
         Apply the configured base call volume to the call sink.

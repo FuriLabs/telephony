@@ -390,8 +390,9 @@ class InCallWindow(Gtk.Window):
             if self.is_ringing:
                 self.audio.stop_ringing()
                 self.is_ringing = False
-            self._apply_call_volume()
+            self.audio.save_media_volume()
             self.audio.set_voice_profile(True)
+            self._apply_call_volume()
             self.audio.mute(self.is_muted)
             self.controls_stack.set_visible_child_name("active")
             self._toggle_blue(self.btn_output, self.is_speaker)
@@ -738,10 +739,21 @@ class InCallWindow(Gtk.Window):
         """Push the configured base volume for the current output route."""
         if self.call_volume_applied:
             return
+        self.call_volume_applied = True
+        self._push_route_volume()
+        GLib.timeout_add(500, self._repush_route_volume)
+
+    def _push_route_volume(self):
+        """Set the call sink volume to the current route's configured level."""
         levels = self.gsettings_mgr.get_call_volume_levels()
         level = levels.get(self.current_route, 80) / 100.0
         self.audio.push_call_volume(level)
-        self.call_volume_applied = True
+
+    def _repush_route_volume(self):
+        """Re-apply the route volume once the routing dance has settled."""
+        if self.call_volume_applied:
+            self._push_route_volume()
+        return False
 
     def _on_volume_settings_changed(self, settings, key):
         """Re-apply the active route's level live when its slider changes mid-call."""
@@ -749,9 +761,7 @@ class InCallWindow(Gtk.Window):
             return
         if not self.call_volume_applied:
             return
-        levels = self.gsettings_mgr.get_call_volume_levels()
-        level = levels.get(self.current_route, 80) / 100.0
-        self.audio.push_call_volume(level)
+        self._push_route_volume()
 
     def _handle_output_selection(self, route_id):
         """Handle output route selection."""
