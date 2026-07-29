@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 02:02+0300\n"
+"POT-Creation-Date: 2026-07-29 23:43+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -13,617 +13,629 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/telephony/app.py:530 src/telephony/app.py:564
-#: src/telephony/backend/managers/lockscreen_manager.py:132
-#: src/telephony/backend/managers/lockscreen_manager.py:142
-#: src/telephony/backend/managers/lockscreen_manager.py:398
-#: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
-#: src/telephony/ui/views/chat_view.py:93
-#: src/telephony/ui/views/chat_view.py:142
-#: src/telephony/ui/views/chat_view.py:152
-#: src/telephony/ui/views/chat_view.py:156
-#: src/telephony/ui/views/chat_view.py:700
-#: src/telephony/ui/views/chat_view.py:704
-#: src/telephony/ui/views/chat_view.py:800
-#: src/telephony/ui/views/chat_view.py:806
-#: src/telephony/ui/views/chat_view.py:965
-#: src/telephony/ui/views/chat_view.py:967
-#: src/telephony/ui/views/chat_view.py:1160
-#: src/telephony/ui/views/dialpad_view.py:158
-#: src/telephony/ui/views/history_view.py:411
-#: src/telephony/ui/views/messages_view.py:363
-#: src/telephony/ui/views/messages_view.py:366
-#: src/telephony/ui/views/messages_view.py:437
-#: src/telephony/ui/views/messages_view.py:441
-#: src/telephony/ui/views/messages_view.py:531
-#: src/telephony/ui/views/messages_view.py:868
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
-#: src/telephony/ui/widgets/history_rows_widget.py:121
-#: src/telephony/ui/widgets/messages_rows_widget.py:97
-#: src/telephony/ui/windows/custom_tone_list_window.py:166
-#: src/telephony/ui/windows/custom_tone_list_window.py:260
-#: src/telephony/ui/windows/duplicate_resolution_window.py:145
-#: src/telephony/ui/windows/incall_window.py:126
-#: src/telephony/ui/windows/incall_window.py:296
-#: src/telephony/ui/windows/incall_window.py:309
-#: src/telephony/ui/windows/incall_window.py:332
-#: src/telephony/ui/windows/incall_window.py:461
-#: src/telephony/ui/windows/trusted_actions_list_window.py:309
-#: src/telephony/ui/windows/trusted_actions_list_window.py:447
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:536
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:398
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:704
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:708
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:804
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:810
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:974
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:976
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:368
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:439
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:533
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:870
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/history_rows_widget.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:141
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:311
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:347
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:476
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
 msgstr "తెలియదు"
 
-#: src/telephony/app.py:541
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:540
+msgid "Missed Call"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:547
 msgid "Call Back"
 msgstr "తిరిగి కాల్ చేయండి"
 
-#: src/telephony/app.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:577
 #, python-brace-format
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} కొత్త సందేశం"
 msgstr[1] "{count} కొత్త సందేశాలు"
 
-#: src/telephony/app.py:575
-#: src/telephony/ui/windows/contact_picker_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:581
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:31
 msgid "Open"
 msgstr "తెరవండి"
 
-#: src/telephony/app.py:579
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:585
 msgid "Call"
 msgstr "కాల్ చేయండి"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
-#: src/telephony/backend/utils/db_blocklist_utils.py:35
-#: src/telephony/ui/views/messages_view.py:357
-#: src/telephony/ui/views/messages_view.py:428
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/eds_contacts_manager.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:35
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:430
 msgid "Blocked Number"
 msgstr "బ్లాక్ చేయబడిన సంఖ్య"
 
-#: src/telephony/backend/managers/emergency_manager.py:118
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency Mode"
 msgstr "అత్యవసర మోడ్"
 
-#: src/telephony/backend/managers/emergency_manager.py:118
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency calls only."
 msgstr "అత్యవసర కాల్‌లు మాత్రమే."
 
-#: src/telephony/backend/managers/emergency_manager.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:119
 msgid "Start Emergency Process"
 msgstr "అత్యవసర ప్రక్రియను ప్రారంభించండి"
 
-#: src/telephony/backend/managers/emergency_manager.py:132
-#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
-#: src/telephony/ui/views/history_view.py:81
-#: src/telephony/ui/views/messages_view.py:114
-#: src/telephony/ui/windows/advanced_settings_window.py:48
-#: src/telephony/ui/windows/blocklist_editor_window.py:42
-#: src/telephony/ui/windows/blocklist_editor_window.py:111
-#: src/telephony/ui/windows/camera_photo_window.py:69
-#: src/telephony/ui/windows/camera_video_window.py:80
-#: src/telephony/ui/windows/contact_editor_window.py:123
-#: src/telephony/ui/windows/contact_editor_window.py:832
-#: src/telephony/ui/windows/contact_picker_window.py:46
-#: src/telephony/ui/windows/custom_tone_list_window.py:56
-#: src/telephony/ui/windows/custom_tone_list_window.py:319
-#: src/telephony/ui/windows/data_management_window.py:76
-#: src/telephony/ui/windows/data_management_window.py:134
-#: src/telephony/ui/windows/data_management_window.py:181
-#: src/telephony/ui/windows/date_time_picker_window.py:40
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
-#: src/telephony/ui/windows/duplicate_resolution_window.py:61
-#: src/telephony/ui/windows/import_export_window.py:74
-#: src/telephony/ui/windows/import_export_window.py:171
-#: src/telephony/ui/windows/import_export_window.py:197
-#: src/telephony/ui/windows/import_export_window.py:307
-#: src/telephony/ui/windows/import_export_window.py:336
-#: src/telephony/ui/windows/import_export_window.py:437
-#: src/telephony/ui/windows/import_export_window.py:497
-#: src/telephony/ui/windows/import_wizard_window.py:48
-#: src/telephony/ui/windows/settings_window.py:65
-#: src/telephony/ui/windows/settings_window.py:406
-#: src/telephony/ui/windows/sound_recorder_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:105
-#: src/telephony/ui/windows/trusted_actions_list_window.py:553
-#: src/telephony/ui/windows/trusted_actions_list_window.py:646
-#: src/telephony/ui/windows/trusted_actions_list_window.py:667
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:462
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:631
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:69
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:320
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:197
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:497
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:408
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:685
 msgid "Cancel"
 msgstr "రద్దు చేయి"
 
-#: src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
 msgid "Return to Lockscreen"
 msgstr "లాక్‌స్క్రీన్‌కి తిరిగి వెళ్ళు"
 
-#: src/telephony/backend/managers/emergency_manager.py:133
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:133
 msgid "Back"
 msgstr "వెనుకకు"
 
-#: src/telephony/backend/managers/emergency_manager.py:137
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
 msgid "No Numbers Configured"
 msgstr "సంఖ్యలు ఏవీ కాన్ఫిగర్ చేయబడలేదు"
 
-#: src/telephony/backend/managers/emergency_manager.py:137
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
 msgid "Set numbers in Settings."
 msgstr "సెట్టింగ్‌లలో సంఖ్యలను సెట్ చేయండి."
 
-#: src/telephony/backend/managers/emergency_manager.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:148
 #, python-brace-format
 msgid "Call {number}"
 msgstr "{number}కి కాల్ చేయండి"
 
-#: src/telephony/backend/managers/emergency_manager.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
 msgstr "అత్యవసర కాల్‌ని నిర్ధారించండి"
 
-#: src/telephony/backend/managers/emergency_manager.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
 #, python-brace-format
 msgid "Call {name}?"
 msgstr "{name}కి కాల్ చేయాలా?"
 
-#: src/telephony/backend/managers/emergency_manager.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
 msgid "🟢 Yes, Call"
 msgstr "🟢 అవును, కాల్ చేయండి"
 
-#: src/telephony/backend/managers/emergency_manager.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
 msgid "🔴 No, Return"
 msgstr "🔴 లేదు, తిరిగి వెళ్ళు"
 
-#: src/telephony/backend/managers/location_manager.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:63
 msgid "Initializing location services..."
 msgstr "స్థాన సేవలను ప్రారంభిస్తోంది..."
 
-#: src/telephony/backend/managers/location_manager.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:128
 msgid "Waiting for location service..."
 msgstr "స్థాన సేవ కోసం వేచి ఉంది..."
 
-#: src/telephony/backend/managers/location_manager.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:145
 msgid "Waiting for satellite fix..."
 msgstr "ఉపగ్రహ పరిష్కారం కోసం వేచి ఉంది..."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:80
-#: src/telephony/ui/windows/incall_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:201
 msgid "Modem Stuck"
 msgstr "మోడెమ్ ఇరుక్కుపోయింది"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:81
 msgid "Call failed to disconnect."
 msgstr "డిస్‌కనెక్ట్ చేయడంలో కాల్ విఫలమైంది."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:83
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:83
 msgid "Telephony Emergency"
 msgstr "టెలిఫోనీ ఎమర్జెన్సీ"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:85
-#: src/telephony/ui/windows/incall_window.py:188
-#: src/telephony/ui/windows/incall_window.py:650
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:203
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:665
 msgid "🔴 Reboot Modem"
 msgstr "🔴 రీబూట్ మోడెమ్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
 msgid "Telephony - Incoming"
 msgstr "టెలిఫోనీ - ఇన్కమింగ్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
 #, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 ఇన్‌కమింగ్: {name}"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:189
-#: src/telephony/ui/windows/incall_window.py:387
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:402
 msgid "Incoming Call..."
 msgstr "ఇన్‌కమింగ్ కాల్..."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:192
-#: src/telephony/backend/managers/lockscreen_manager.py:204
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
 msgid "🔁 Swap"
 msgstr "🔁 మార్పిడి"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:194
 msgid "🟢 Answer"
 msgstr "🟢 సమాధానం"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:195
-#: src/telephony/backend/managers/lockscreen_manager.py:207
-#: src/telephony/backend/managers/lockscreen_manager.py:219
-#: src/telephony/backend/managers/lockscreen_manager.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:229
 msgid "🔴 Hangup"
 msgstr "🔴 హ్యాంగ్అప్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:196
-#: src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:196
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
 msgid "🔴 SMS&End"
 msgstr "🔴 SMS&ఎండ్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:199
-#: src/telephony/backend/managers/lockscreen_manager.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:215
 msgid "Telephony - On Hold"
 msgstr "టెలిఫోనీ - హోల్డ్‌లో ఉంది"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
 #, python-brace-format
 msgid "🟠 {name} put as on hold"
 msgstr "🟠 {name} హోల్డ్‌లో ఉంచబడింది"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:201
-#: src/telephony/backend/managers/lockscreen_manager.py:217
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:217
 msgid "Call On Hold..."
 msgstr "కాల్ హోల్డ్..."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
 msgid "🔴 Decline"
 msgstr "🔴 తగ్గుదల"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:211
-#: src/telephony/backend/managers/lockscreen_manager.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
 msgid "UnmuteMic"
 msgstr "అన్‌మ్యూట్‌మిక్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:211
-#: src/telephony/backend/managers/lockscreen_manager.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
 msgid "MuteMic"
 msgstr "మ్యూట్‌మిక్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 #, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (హోల్డ్‌లో ఉంది)"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:218
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔁 Resume"
 msgstr "🔁 రెజ్యూమ్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:222
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:222
 msgid "Telephony - Active Call"
 msgstr "టెలిఫోనీ - యాక్టివ్ కాల్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:223
 #, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 సక్రియం: {name}"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:224
 msgid "Active Call"
 msgstr "యాక్టివ్ కాల్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:227
 msgid "🔴 HangupAll"
 msgstr "🔴 హ్యాంగప్ అన్నీ"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:237
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
 msgid "SpeakerOff"
 msgstr "స్పీకర్ ఆఫ్"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:237
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
 msgid "SpeakerOn"
 msgstr "స్పీకర్ ఆన్"
 
-#: src/telephony/backend/managers/mms_manager.py:245
-#: src/telephony/backend/managers/ofono_calls_manager.py:39
-#: src/telephony/backend/managers/ofono_messaging_manager.py:29
-#: src/telephony/ui/main_window.py:447
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:447
 msgid "Modem not ready"
 msgstr "మోడెమ్ సిద్ధంగా లేదు"
 
-#: src/telephony/backend/managers/ofono_calls_manager.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:53
 msgid "Cannot dial while in another call"
 msgstr "మరొక కాల్‌లో ఉన్నప్పుడు డయల్ చేయలేరు"
 
-#: src/telephony/backend/managers/ofono_calls_manager.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:65
 #, python-brace-format
 msgid "Dial Error: {e}"
 msgstr "డయల్ లోపం: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:47
 #, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "పంపడంలో విఫలమైంది: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:144
 msgid "Not supported"
 msgstr "మద్దతు లేదు"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:149
 #, python-brace-format
 msgid "Error: {e}"
 msgstr "లోపం: {e}"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
 #, python-brace-format
 msgid "Please wait 60 seconds before triggering {prefix} again."
 msgstr "దయచేసి {prefix}ని మళ్లీ ట్రిగ్గర్ చేయడానికి ముందు 60 సెకన్లు వేచి ఉండండి."
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
 #, python-brace-format
 msgid " (Accuracy: {acc}m)"
 msgstr "(ఖచ్చితత్వం: {acc}m)"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
 #, python-brace-format
 msgid "I am here: {link}{acc_str}"
 msgstr "నేను ఇక్కడ ఉన్నాను: {link}{acc_str}"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
 msgid "Failed to obtain location after trying all methods."
 msgstr "అన్ని పద్ధతులను ప్రయత్నించిన తర్వాత స్థానాన్ని పొందడంలో విఫలమైంది."
 
-#: src/telephony/backend/utils/exporter_android_utils.py:139
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:139
 #, python-brace-format
 msgid "Successfully exported {count} messages to XML."
 msgstr "XMLకి {count} సందేశాలు విజయవంతంగా ఎగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/exporter_android_utils.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:205
 #, python-brace-format
 msgid "Successfully exported {count} calls to XML."
 msgstr "XMLకి {count} కాల్‌లు విజయవంతంగా ఎగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:91
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:91
 #, python-brace-format
 msgid "Exported {count} messages to Chatty database."
 msgstr "చాటీ డేటాబేస్‌కి {count} సందేశాలు ఎగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:147
 #, python-brace-format
 msgid "Exported {count} calls to Gnome Calls database."
 msgstr "గ్నోమ్ కాల్స్ డేటాబేస్‌కి {count} కాల్‌లు ఎగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:164
 msgid "Source database not found."
 msgstr "మూల డేటాబేస్ కనుగొనబడలేదు."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:167
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:167
 msgid "Exported Telephony database successfully."
 msgstr "టెలిఫోనీ డేటాబేస్ విజయవంతంగా ఎగుమతి చేయబడింది."
 
-#: src/telephony/backend/utils/importer_android_utils.py:33
-#: src/telephony/backend/utils/importer_android_utils.py:138
-#: src/telephony/backend/utils/importer_ios_utils.py:34
-#: src/telephony/backend/utils/importer_ios_utils.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:34
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:205
 msgid "File not found."
 msgstr "ఫైల్ కనుగొనబడలేదు."
 
-#: src/telephony/backend/utils/importer_android_utils.py:129
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:129
 #, python-brace-format
 msgid "Imported {count} messages from Android backup."
 msgstr "Android బ్యాకప్ నుండి {count} సందేశాలు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/importer_android_utils.py:203
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:203
 #, python-brace-format
 msgid "Imported {count} calls from Android backup."
 msgstr "Android బ్యాకప్ నుండి {count} కాల్‌లు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:63
 msgid "Could not find messages table in iOS database."
 msgstr "iOS డేటాబేస్‌లో సందేశాల పట్టికను కనుగొనడం సాధ్యపడలేదు."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:70
 msgid "Failed to read iOS SMS database structure."
 msgstr "iOS SMS డేటాబేస్ నిర్మాణాన్ని చదవడం విఫలమైంది."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:196
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:196
 #, python-brace-format
 msgid "Imported {count} messages from iOS backup."
 msgstr "iOS బ్యాకప్ నుండి {count} సందేశాలు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:230
 msgid "Could not find call history table in iOS database."
 msgstr "iOS డేటాబేస్‌లో కాల్ చరిత్ర పట్టికను కనుగొనడం సాధ్యపడలేదు."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:237
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:237
 msgid "Failed to read iOS Calls database structure."
 msgstr "iOS కాల్స్ డేటాబేస్ నిర్మాణాన్ని చదవడం విఫలమైంది."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:303
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:303
 #, python-brace-format
 msgid "Imported {count} calls from iOS backup."
 msgstr "iOS బ్యాకప్ నుండి {count} కాల్‌లు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/importer_local_utils.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:31
 msgid "Chatty database not found."
 msgstr "చాటీ డేటాబేస్ కనుగొనబడలేదు."
 
-#: src/telephony/backend/utils/importer_local_utils.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:53
 msgid "Could not find messages table in Chatty database."
 msgstr "చాటీ డేటాబేస్‌లో సందేశాల పట్టిక కనుగొనబడలేదు."
 
-#: src/telephony/backend/utils/importer_local_utils.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:60
 msgid "Failed to read Chatty database structure."
 msgstr "చాటీ డేటాబేస్ నిర్మాణాన్ని చదవడంలో విఫలమైంది."
 
-#: src/telephony/backend/utils/importer_local_utils.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:124
 #, python-brace-format
 msgid "Imported {count} messages from Chatty."
 msgstr "Chatty నుండి {count} సందేశాలు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/importer_local_utils.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:134
 msgid "Calls database not found."
 msgstr "కాల్స్ డేటాబేస్ కనుగొనబడలేదు."
 
-#: src/telephony/backend/utils/importer_local_utils.py:154
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:154
 msgid "Could not find call history table in Calls database."
 msgstr "కాల్స్ డేటాబేస్‌లో కాల్ హిస్టరీ టేబుల్‌ని కనుగొనడం సాధ్యపడలేదు."
 
-#: src/telephony/backend/utils/importer_local_utils.py:161
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:161
 msgid "Failed to read Calls database structure."
 msgstr "కాల్స్ డేటాబేస్ నిర్మాణాన్ని చదవడంలో విఫలమైంది."
 
-#: src/telephony/backend/utils/importer_local_utils.py:213
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:213
 #, python-brace-format
 msgid "Imported {count} calls."
 msgstr "{count} కాల్‌లు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/backend/utils/model_utils.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:56
 msgid "0s"
 msgstr "0సె"
 
-#: src/telephony/backend/utils/model_utils.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:61
 #, python-brace-format
 msgid "{h}h {m}m"
 msgstr "{h}h {m}m"
 
-#: src/telephony/backend/utils/model_utils.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:63
 #, python-brace-format
 msgid "{m}m {s}s"
 msgstr "{m}m {s}s"
 
-#: src/telephony/backend/utils/model_utils.py:64
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:64
 #, python-brace-format
 msgid "{s}s"
 msgstr "{s}లు"
 
-#: src/telephony/ui/main_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:79
 msgid "Telephony"
 msgstr "టెలిఫోనీ"
 
-#: src/telephony/ui/main_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:110
 msgid "Dialpad"
 msgstr "డయల్‌ప్యాడ్"
 
-#: src/telephony/ui/main_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:111
 msgid "History"
 msgstr "చరిత్ర"
 
-#: src/telephony/ui/main_window.py:114
-#: src/telephony/ui/views/messages_view.py:63
-#: src/telephony/ui/windows/settings_window.py:605
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:607
 msgid "Messages"
 msgstr "సందేశాలు"
 
-#: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:606
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:608
 msgid "Contacts"
 msgstr "పరిచయాలు"
 
-#: src/telephony/ui/main_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:162
 msgid "Syncing Contacts..."
 msgstr "పరిచయాలను సమకాలీకరిస్తోంది..."
 
-#: src/telephony/ui/main_window.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:245
 msgid "Set your number in Settings"
 msgstr "సెట్టింగ్‌లలో మీ నంబర్‌ని సెట్ చేయండి"
 
-#: src/telephony/ui/main_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:260
 msgid "Please set Default Country Code in Settings"
 msgstr "దయచేసి సెట్టింగ్‌లలో డిఫాల్ట్ దేశ కోడ్‌ని సెట్ చేయండి"
 
-#: src/telephony/ui/main_window.py:273
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:273
 msgid "Setup Emergency Numbers in Settings"
 msgstr "సెట్టింగ్‌లలో ఎమర్జెన్సీ నంబర్‌లను సెటప్ చేయండి"
 
-#: src/telephony/ui/main_window.py:289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:289
 msgid "Resolve Duplicates"
 msgstr "నకిలీలను పరిష్కరించండి"
 
-#: src/telephony/ui/main_window.py:295
-#: src/telephony/ui/windows/settings_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:295
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:41
 msgid "Settings"
 msgstr "సెట్టింగ్‌లు"
 
-#: src/telephony/ui/main_window.py:300
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:300
 msgid "Reload Contacts"
 msgstr "పరిచయాలను రీలోడ్ చేయండి"
 
-#: src/telephony/ui/main_window.py:305
-#: src/telephony/ui/windows/import_export_window.py:43
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
 msgid "Import / Export"
 msgstr "దిగుమతి / ఎగుమతి"
 
-#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:527
 msgid "Blocklist"
 msgstr "బ్లాక్‌లిస్ట్"
 
-#: src/telephony/ui/main_window.py:389
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:389
 msgid "Modem Connected"
 msgstr "మోడెమ్ కనెక్ట్ చేయబడింది"
 
-#: src/telephony/ui/main_window.py:391
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:391
 #, python-brace-format
 msgid "Modem Error: {message}"
 msgstr "మోడెమ్ లోపం: {message}"
 
-#: src/telephony/ui/main_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
 msgstr "USSDని పంపుతోంది..."
 
-#: src/telephony/ui/main_window.py:452
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:452
 msgid "USSD Result"
 msgstr "USSD ఫలితం"
 
-#: src/telephony/ui/main_window.py:454
-#: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:848
-#: src/telephony/ui/windows/settings_window.py:457
-#: src/telephony/ui/windows/settings_window.py:469
-#: src/telephony/ui/windows/settings_window.py:815
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:459
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:471
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:831
 msgid "OK"
 msgstr "సరే"
 
-#: src/telephony/ui/main_window.py:463
-#: src/telephony/ui/windows/date_time_picker_window.py:41
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:463
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:41
 msgid "Confirm"
 msgstr "నిర్ధారించండి"
 
-#: src/telephony/ui/main_window.py:499
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:499
 #, python-brace-format
 msgid "Found {count} duplicate contact. Check menu."
 msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "{count} నకిలీ పరిచయం కనుగొనబడింది. మెనుని తనిఖీ చేయండి."
 msgstr[1] "{count} నకిలీ పరిచయాలు కనుగొనబడ్డాయి. మెనుని తనిఖీ చేయండి."
 
-#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:576
 msgid "Contacts syncing..."
 msgstr "పరిచయాలు సమకాలీకరించబడుతున్నాయి..."
 
-#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
-#: src/telephony/ui/windows/chat_media_controller_window.py:148
-#: src/telephony/ui/windows/contact_editor_window.py:103
-#: src/telephony/ui/windows/data_management_window.py:65
-#: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:368
-#: src/telephony/ui/windows/settings_window.py:392
-#: src/telephony/ui/windows/settings_window.py:443
-#: src/telephony/ui/windows/settings_window.py:581
-#: src/telephony/ui/windows/settings_window.py:858
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:544
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:782
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:370
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:394
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:445
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:583
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:874
 msgid "Close"
 msgstr "మూసివేయి"
 
-#: src/telephony/ui/main_window.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:570
 msgid "Reloading Contacts..."
 msgstr "పరిచయాలను రీలోడ్ చేస్తోంది..."
 
-#: src/telephony/ui/main_window.py:586
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:586
 msgid "Multiple Contacts Found"
 msgstr "బహుళ పరిచయాలు కనుగొనబడ్డాయి"
 
-#: src/telephony/ui/main_window.py:587
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:587
 msgid "Which contact would you like to edit?"
 msgstr "మీరు ఏ పరిచయాన్ని సవరించాలనుకుంటున్నారు?"
 
-#: src/telephony/ui/main_window.py:600
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:600
 msgid "Unknown Addressbook"
 msgstr "తెలియని చిరునామా పుస్తకం"
 
-#: src/telephony/ui/main_window.py:659
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
 msgid "Calling (Anonymous)..."
 msgstr "కాల్ చేస్తోంది (అజ్ఞాత)..."
 
-#: src/telephony/ui/main_window.py:659
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "{number}కి కాల్ చేస్తోంది..."
 
-#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:669
 msgid "Call Failed"
 msgstr "కాల్ విఫలమైంది"
 
-#: src/telephony/ui/main_window.py:675
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:675
 msgid "Call Details"
 msgstr "కాల్ వివరాలు"
 
-#: src/telephony/ui/main_window.py:676
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:676
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -636,157 +648,158 @@ msgstr ""
 "తేదీ: {date}\n"
 "వ్యవధి: {duration}"
 
-#: src/telephony/ui/main_window.py:692
-#: src/telephony/ui/windows/blocklist_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
 msgid "Unblock Number"
 msgstr "అన్‌బ్లాక్ నంబర్"
 
-#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:698
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:770
 msgid "Unblocked"
 msgstr "అన్‌బ్లాక్ చేయబడింది"
 
-#: src/telephony/ui/main_window.py:706
-#: src/telephony/ui/windows/contact_editor_window.py:395
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:395
 msgid "Edit Contact"
 msgstr "పరిచయాన్ని సవరించండి"
 
-#: src/telephony/ui/main_window.py:706
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "పరిచయాలకు జోడించండి"
 
-#: src/telephony/ui/main_window.py:717
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:717
 msgid "Add to Existing Contact"
 msgstr "ఇప్పటికే ఉన్న పరిచయానికి జోడించండి"
 
-#: src/telephony/ui/main_window.py:726
-#: src/telephony/ui/windows/incall_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:162
 msgid "Search Number"
 msgstr "శోధన సంఖ్య"
 
-#: src/telephony/ui/main_window.py:750
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:750
 msgid "Send Message"
 msgstr "సందేశం పంపండి"
 
-#: src/telephony/ui/main_window.py:755
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:755
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "కాపీ సంఖ్య"
 
-#: src/telephony/ui/main_window.py:760
-#: src/telephony/ui/windows/blocklist_editor_window.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:760
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "బ్లాక్ నంబర్"
 
-#: src/telephony/ui/main_window.py:773
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:773
 msgid "Delete this call"
 msgstr "ఈ కాల్‌ని తొలగించండి"
 
-#: src/telephony/ui/main_window.py:778
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
 msgid "Delete Call"
 msgstr "కాల్‌ని తొలగించండి"
 
-#: src/telephony/ui/main_window.py:778
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
 msgid "Remove this call?"
 msgstr "ఈ కాల్‌ని తీసివేయాలా?"
 
-#: src/telephony/ui/main_window.py:792
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:792
 msgid "Number copied"
 msgstr "నంబర్ కాపీ చేయబడింది"
 
-#: src/telephony/ui/main_window.py:798
-#: src/telephony/ui/windows/contact_editor_window.py:757
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:798
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:747
 msgid "Saving contact..."
 msgstr "పరిచయాన్ని సేవ్ చేస్తోంది..."
 
-#: src/telephony/ui/main_window.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:802
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "{name}కి జోడించబడింది"
 
-#: src/telephony/ui/main_window.py:805
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:805
 msgid "Failed to add number"
 msgstr "సంఖ్యను జోడించడంలో విఫలమైంది"
 
-#: src/telephony/ui/main_window.py:813
-#: src/telephony/ui/windows/contact_editor_window.py:184
-#: src/telephony/ui/windows/settings_window.py:213
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:184
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:214
 msgid "Add Number"
 msgstr "సంఖ్యను జోడించండి"
 
-#: src/telephony/ui/main_window.py:814
-#: src/telephony/ui/windows/advanced_settings_window.py:52
-#: src/telephony/ui/windows/blocklist_editor_window.py:46
-#: src/telephony/ui/windows/contact_editor_window.py:127
-#: src/telephony/ui/windows/custom_tone_list_window.py:60
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
-#: src/telephony/ui/windows/settings_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:110
-#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:814
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:575
 msgid "Save"
 msgstr "సేవ్ చేయండి"
 
-#: src/telephony/ui/views/chat_view.py:133
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:137
 #, python-brace-format
 msgid "Draft to {count} recipients"
 msgstr "{count} గ్రహీతలకు చిత్తుప్రతి"
 
-#: src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:164
 #, python-brace-format
 msgid "{count} Participants"
 msgstr "{count} పాల్గొనేవారు"
 
-#: src/telephony/ui/views/chat_view.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:310
 msgid "Replies not supported for this sender"
 msgstr "ఈ పంపినవారికి ప్రత్యుత్తరాలకు మద్దతు లేదు"
 
-#: src/telephony/ui/views/chat_view.py:350
-#: src/telephony/ui/views/chat_view.py:1230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:354
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1239
 msgid "Scheduled time must be in the future"
 msgstr "షెడ్యూల్ చేయబడిన సమయం తప్పనిసరిగా భవిష్యత్తులో ఉండాలి"
 
-#: src/telephony/ui/views/chat_view.py:358
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:362
 #, python-brace-format
 msgid "Rescheduled for {time}"
 msgstr "{time}కి మళ్లీ షెడ్యూల్ చేయబడింది"
 
-#: src/telephony/ui/views/chat_view.py:362
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:366
 msgid "Re-Schedule Message"
 msgstr "సందేశాన్ని మళ్లీ షెడ్యూల్ చేయండి"
 
-#: src/telephony/ui/views/chat_view.py:497
-#: src/telephony/ui/views/chat_view.py:562
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:566
 msgid "— New Messages —"
 msgstr "— కొత్త సందేశాలు —"
 
-#: src/telephony/ui/views/chat_view.py:600
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:604
 msgid "No results found in this conversation"
 msgstr "ఈ సంభాషణలో ఫలితాలు ఏవీ కనుగొనబడలేదు"
 
-#: src/telephony/ui/views/chat_view.py:672
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:676
 msgid "Group Name"
 msgstr "సమూహం పేరు"
 
-#: src/telephony/ui/views/chat_view.py:673
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:677
 msgid "Set group name..."
 msgstr "సమూహం పేరును సెట్ చేయండి..."
 
-#: src/telephony/ui/views/chat_view.py:681
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:685
 msgid "Participants"
 msgstr "పాల్గొనేవారు"
 
-#: src/telephony/ui/views/chat_view.py:781
-#: src/telephony/ui/views/chat_view.py:1387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:785
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
 msgid "Delete Conversation"
 msgstr "సంభాషణను తొలగించండి"
 
-#: src/telephony/ui/views/chat_view.py:798
-#: src/telephony/ui/views/chat_view.py:1162
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:340
 msgid "Me"
 msgstr "నేను"
 
-#: src/telephony/ui/views/chat_view.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
 #, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
@@ -795,457 +808,457 @@ msgstr ""
 "{sender} నుండి ఫార్వార్డ్ చేయబడింది:\n"
 "{body}"
 
-#: src/telephony/ui/views/chat_view.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
 #, python-brace-format
 msgid "Forwarded from {sender}"
 msgstr "{sender} నుండి ఫార్వార్డ్ చేయబడింది"
 
-#: src/telephony/ui/views/chat_view.py:817
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:821
 msgid "Forward To"
 msgstr "ఫార్వర్డ్ టు"
 
-#: src/telephony/ui/views/chat_view.py:818
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:149
 msgid "Forward"
 msgstr "ముందుకు"
 
-#: src/telephony/ui/views/chat_view.py:843
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
 msgid "Delete Message"
 msgstr "సందేశాన్ని తొలగించండి"
 
-#: src/telephony/ui/views/chat_view.py:843
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
 msgid "Are you sure you want to delete this message?"
 msgstr "మీరు ఖచ్చితంగా ఈ సందేశాన్ని తొలగించాలనుకుంటున్నారా?"
 
-#: src/telephony/ui/views/chat_view.py:980
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:989
 msgid "Group renamed"
 msgstr "సమూహం పేరు మార్చబడింది"
 
-#: src/telephony/ui/views/chat_view.py:1008
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1017
 msgid "Compressing image..."
 msgstr "చిత్రాన్ని కుదిస్తోంది..."
 
-#: src/telephony/ui/views/chat_view.py:1010
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1019
 msgid "Image is too large to send"
 msgstr "చిత్రం పంపడానికి చాలా పెద్దది"
 
-#: src/telephony/ui/views/chat_view.py:1012
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1021
 msgid "Compressing video..."
 msgstr "వీడియోను కుదించడం..."
 
-#: src/telephony/ui/views/chat_view.py:1014
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1023
 msgid "Video compression failed"
 msgstr "వీడియో కంప్రెషన్ విఫలమైంది"
 
-#: src/telephony/ui/views/chat_view.py:1016
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1025
 msgid "File is too large to send via MMS"
 msgstr "ఫైల్ MMS ద్వారా పంపడానికి చాలా పెద్దది"
 
-#: src/telephony/ui/views/chat_view.py:1224
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1233
 msgid "Nothing to schedule"
 msgstr "షెడ్యూల్ చేయడానికి ఏమీ లేదు"
 
-#: src/telephony/ui/views/chat_view.py:1238
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1247
 msgid "Schedule Message"
 msgstr "సందేశాన్ని షెడ్యూల్ చేయండి"
 
-#: src/telephony/ui/views/chat_view.py:1277
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1286
 #, python-brace-format
 msgid "Message scheduled for {time}"
 msgstr "సందేశం {time}కి షెడ్యూల్ చేయబడింది"
 
-#: src/telephony/ui/views/chat_view.py:1280
-#: src/telephony/ui/views/chat_view.py:1298
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1307
 msgid "[Attachment]"
 msgstr "[అటాచ్మెంట్]"
 
-#: src/telephony/ui/views/chat_view.py:1387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
 msgid "Delete Group"
 msgstr "సమూహాన్ని తొలగించండి"
 
-#: src/telephony/ui/views/chat_view.py:1388
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1397
 msgid ""
 "This will permanently delete the conversation history and all saved media "
 "files."
 msgstr "ఇది సంభాషణ చరిత్ర మరియు సేవ్ చేయబడిన అన్ని మీడియా ఫైల్‌లను శాశ్వతంగా తొలగిస్తుంది."
 
-#: src/telephony/ui/views/contacts_view.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:60
 msgid "Search contacts"
 msgstr "పరిచయాలను శోధించండి"
 
-#: src/telephony/ui/views/contacts_view.py:119
-#: src/telephony/ui/windows/contact_editor_window.py:71
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/custom_tone_list_window.py:229
-#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:435
 msgid "Mobile"
 msgstr "మొబైల్"
 
-#: src/telephony/ui/views/contacts_view.py:120
-#: src/telephony/ui/windows/contact_editor_window.py:72
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/contact_editor_window.py:435
-#: src/telephony/ui/windows/custom_tone_list_window.py:230
-#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:436
 msgid "Work"
 msgstr "పని"
 
-#: src/telephony/ui/views/contacts_view.py:121
-#: src/telephony/ui/windows/contact_editor_window.py:73
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/contact_editor_window.py:435
-#: src/telephony/ui/windows/custom_tone_list_window.py:231
-#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:437
 msgid "Home"
 msgstr "హోమ్"
 
-#: src/telephony/ui/views/contacts_view.py:122
-#: src/telephony/ui/windows/contact_editor_window.py:74
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/custom_tone_list_window.py:232
-#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:438
 msgid "Fax"
 msgstr "ఫ్యాక్స్"
 
-#: src/telephony/ui/views/contacts_view.py:123
-#: src/telephony/ui/windows/contact_editor_window.py:75
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/contact_editor_window.py:435
-#: src/telephony/ui/windows/custom_tone_list_window.py:233
-#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:439
 msgid "Other"
 msgstr "ఇతర"
 
-#: src/telephony/ui/views/contacts_view.py:124
-#: src/telephony/ui/windows/contact_editor_window.py:76
-#: src/telephony/ui/windows/custom_tone_list_window.py:234
-#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:440
 msgid "Main"
 msgstr "ప్రధాన"
 
-#: src/telephony/ui/views/contacts_view.py:424
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:424
 msgid "Call Anonymous"
 msgstr "అనామకుడికి కాల్ చేయండి"
 
-#: src/telephony/ui/views/dialpad_view.py:41
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:41
 msgid "Enter number"
 msgstr "నంబర్‌ని నమోదు చేయండి"
 
-#: src/telephony/ui/views/dialpad_view.py:48
-#: src/telephony/ui/views/dialpad_view.py:149
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:149
 msgid "Telephony Smart Dialpad at your service"
 msgstr "మీ సేవలో టెలిఫోనీ స్మార్ట్ డయల్‌ప్యాడ్"
 
-#: src/telephony/ui/views/dialpad_view.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:246
 msgid "Invalid number in clipboard"
 msgstr "క్లిప్‌బోర్డ్‌లో చెల్లని నంబర్"
 
-#: src/telephony/ui/views/dialpad_view.py:248
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:248
 msgid "Invalid number"
 msgstr "చెల్లని సంఖ్య"
 
-#: src/telephony/ui/views/history_view.py:125
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:125
 msgid "All"
 msgstr "అన్నీ"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "Any duration"
 msgstr "ఏదైనా వ్యవధి"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "Unanswered"
 msgstr "సమాధానం ఇవ్వలేదు"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "1s - 60s"
 msgstr "1సె - 60సె"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "1-3 mins"
 msgstr "1-3 నిమిషాలు"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "3-10 mins"
 msgstr "3-10 నిమిషాలు"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "> 15 mins"
 msgstr "> 15 నిమిషాలు"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Any date"
 msgstr "ఏదైనా తేదీ"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Today"
 msgstr "ఈరోజు"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 3 days"
 msgstr "గత 3 రోజులు"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 14 days"
 msgstr "గత 14 రోజులు"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 30 days"
 msgstr "గత 30 రోజులు"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 60 days"
 msgstr "గత 60 రోజులు"
 
-#: src/telephony/ui/views/messages_view.py:106
-#: src/telephony/ui/views/messages_view.py:575
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:577
 msgid "Search Contacts..."
 msgstr "పరిచయాలను శోధించండి..."
 
-#: src/telephony/ui/views/messages_view.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:226
 msgid "All Messages"
 msgstr "అన్ని సందేశాలు"
 
-#: src/telephony/ui/views/messages_view.py:225
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:227
 msgid "Unread Messages"
 msgstr "చదవని సందేశాలు"
 
-#: src/telephony/ui/views/messages_view.py:226
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:228
 msgid "Unknown Numbers"
 msgstr "తెలియని నంబర్లు"
 
-#: src/telephony/ui/views/messages_view.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:229
 msgid "Saved Contacts"
 msgstr "సేవ్ చేసిన పరిచయాలు"
 
-#: src/telephony/ui/views/messages_view.py:228
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:230
 msgid "Group Messages"
 msgstr "సమూహ సందేశాలు"
 
-#: src/telephony/ui/views/messages_view.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:231
 msgid "Individual Messages"
 msgstr "వ్యక్తిగత సందేశాలు"
 
-#: src/telephony/ui/views/messages_view.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:232
 msgid "Alphabetical Senders"
 msgstr "అక్షరమాల పంపినవారు"
 
-#: src/telephony/ui/views/messages_view.py:322
-#: src/telephony/ui/views/messages_view.py:444
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:446
 msgid "[Multimedia Message]"
 msgstr "[మల్టీమీడియా సందేశం]"
 
-#: src/telephony/ui/views/messages_view.py:579
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:581
 msgid "Search Messages..."
 msgstr "సందేశాలను శోధించండి..."
 
-#: src/telephony/ui/views/messages_view.py:621
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:623
 #, python-brace-format
 msgid "Start ({count})"
 msgstr "ప్రారంభం ({count})"
 
-#: src/telephony/ui/views/messages_view.py:628
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:630
 #, python-brace-format
 msgid "Open ({count})"
 msgstr "తెరవండి ({count})"
 
-#: src/telephony/ui/views/messages_view.py:700
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:702
 #, python-brace-format
 msgid "Add Number: {number}"
 msgstr "సంఖ్యను జోడించండి: {number}"
 
-#: src/telephony/ui/views/messages_view.py:733
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:735
 msgid "Group chat"
 msgstr "గ్రూప్ చాట్"
 
-#: src/telephony/ui/views/messages_view.py:741
-#: src/telephony/ui/windows/custom_tone_list_window.py:297
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
-#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:743
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:297
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:506
 msgid "No contacts found"
 msgstr "పరిచయాలు ఏవీ కనుగొనబడలేదు"
 
-#: src/telephony/ui/views/messages_view.py:856
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:858
 msgid "No results found"
 msgstr "ఫలితాలు ఏవీ కనుగొనబడలేదు"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:145
 msgid "Copy Text"
 msgstr "వచనాన్ని కాపీ చేయండి"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:201
 msgid "Re-Schedule"
 msgstr "మళ్లీ షెడ్యూల్ చేయండి"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:150
 msgid "Mark as Unread"
 msgstr "చదవనిదిగా గుర్తించండి"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
-#: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:778
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:780
 msgid "Delete"
 msgstr "తొలగించు"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "మళ్లీ పంపడానికి ప్రయత్నించండి"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:146
 #, python-brace-format
 msgid "Scheduled: {time}"
 msgstr "షెడ్యూల్ చేయబడింది: {time}"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:370
 msgid "Failed to send"
 msgstr "పంపడంలో విఫలమైంది"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:374
 msgid "Sending..."
 msgstr "పంపుతోంది..."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:631
 msgid "Open with"
 msgstr "దీనితో తెరవండి"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:632
 msgid "Copy"
 msgstr "కాపీ చేయండి"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:633
 msgid "Save as"
 msgstr "ఇలా సేవ్ చేయండి"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
-msgid "Retry Send"
-msgstr "మళ్లీ పంపడానికి ప్రయత్నించండి"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:677
 msgid "Open With..."
 msgstr "దీనితో తెరవండి..."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:698
 msgid "Save File As"
 msgstr "ఫైల్‌ని ఇలా సేవ్ చేయండి"
 
-#: src/telephony/ui/widgets/incall_elements_widget.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:48
 msgid "Hangup All Calls"
 msgstr "అన్ని కాల్‌లను హ్యాంగ్అప్ చేయండి"
 
-#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
 #, python-brace-format
 msgid "{time} • Group"
 msgstr "{time} • సమూహం"
 
-#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:109
 #, python-brace-format
 msgid "Draft: {message}"
 msgstr "డ్రాఫ్ట్: {message}"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:32
-#: src/telephony/ui/windows/settings_window.py:352
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:354
 msgid "Advanced Settings"
 msgstr "అధునాతన సెట్టింగ్‌లు"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:66
 msgid "Loading..."
 msgstr "లోడ్ అవుతోంది..."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:102
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:103
 #, python-brace-format
 msgid "Error loading settings: {e}"
 msgstr "సెట్టింగ్‌లను లోడ్ చేయడంలో లోపం: {e}"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:111
 msgid "Secret SMS Triggers"
 msgstr "రహస్య SMS ట్రిగ్గర్స్"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:113
-#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:91
 msgid "Set \"Find my Telephony\""
 msgstr "\"నా టెలిఫోనీని కనుగొనండి\"ని సెట్ చేయండి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:119
-#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:93
 msgid "Set \"Trusted Callback\""
 msgstr "\"విశ్వసనీయ కాల్‌బ్యాక్\"ని సెట్ చేయండి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:125
-#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:95
 msgid "Set \"SMS -Relay\""
 msgstr "\"SMS-రిలే\" సెట్ చేయండి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:131
-#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:97
 msgid "Set \"SMS -tmate\""
 msgstr "\"SMS -tmate\"ని సెట్ చేయండి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:137
-#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:99
 msgid "Set \"SMS Switch Wipe Device\""
 msgstr "\"SMS స్విచ్ వైప్ డివైస్\"ని సెట్ చేయండి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:146
 msgid "Restart Modem"
 msgstr "మోడెమ్ పునఃప్రారంభించండి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:153
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:154
 msgid "Data Management"
 msgstr "డేటా నిర్వహణ"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:169
 msgid "Authentication cancelled"
 msgstr "ప్రమాణీకరణ రద్దు చేయబడింది"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:175
 #, python-brace-format
 msgid "Auth error: {e}"
 msgstr "ప్రామాణీకరణ లోపం: {e}"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:180
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:182
 msgid "Advanced Settings Applied"
 msgstr "అధునాతన సెట్టింగ్‌లు వర్తింపజేయబడ్డాయి"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:187
 msgid "Restarting Modem..."
 msgstr "మోడెమ్‌ని పునఃప్రారంభిస్తోంది..."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:55
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:55
 msgid "Number Details"
 msgstr "సంఖ్య వివరాలు"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:56
 msgid "Calls from this number will be automatically rejected."
 msgstr "ఈ నంబర్ నుండి వచ్చే కాల్స్ స్వయంచాలకంగా తిరస్కరించబడతాయి."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:774
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:776
 msgid "Number"
 msgstr "సంఖ్య"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:67
 msgid "Note (Optional)"
 msgstr "గమనిక (ఐచ్ఛికం)"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
 msgid "Duplicate"
 msgstr "నకిలీ"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
 msgid "This number is already blocked."
 msgstr "ఈ నంబర్ ఇప్పటికే బ్లాక్ చేయబడింది."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
 msgid "Database Error"
 msgstr "డేటాబేస్ లోపం"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
 msgid "Failed to save to blocklist."
 msgstr "బ్లాక్‌లిస్ట్‌లో సేవ్ చేయడంలో విఫలమైంది."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:828
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:818
 msgid "Conflict"
 msgstr "సంఘర్షణ"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:108
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1255,253 +1268,253 @@ msgstr ""
 "\n"
 "మీరు బ్లాక్ చేయడాన్ని కొనసాగించాలనుకుంటున్నారా మరియు పరిచయాల నుండి నంబర్‌ను తీసివేయాలనుకుంటున్నారా?"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:112
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:112
 msgid "Yes, Block"
 msgstr "అవును, బ్లాక్ చేయండి"
 
-#: src/telephony/ui/windows/blocklist_window.py:38
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:38
 msgid "Blocked Numbers"
 msgstr "బ్లాక్ చేయబడిన సంఖ్యలు"
 
-#: src/telephony/ui/windows/blocklist_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:128
 msgid "No notes"
 msgstr "గమనికలు లేవు"
 
-#: src/telephony/ui/windows/blocklist_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
 msgid "Are you sure you want to unblock this number?"
 msgstr "మీరు ఖచ్చితంగా ఈ నంబర్‌ని అన్‌బ్లాక్ చేయాలనుకుంటున్నారా?"
 
-#: src/telephony/ui/windows/blocklist_window.py:155
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:155
 msgid "Unblocked number"
 msgstr "అన్‌బ్లాక్ చేయబడిన నంబర్"
 
-#: src/telephony/ui/windows/camera_photo_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:40
 msgid "Take Picture"
 msgstr "చిత్రాన్ని తీయండి"
 
-#: src/telephony/ui/windows/camera_photo_window.py:140
-#: src/telephony/ui/windows/camera_video_window.py:172
-#: src/telephony/ui/windows/sound_recorder_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:144
 msgid "Retake"
 msgstr "తిరిగి తీసుకోండి"
 
-#: src/telephony/ui/windows/camera_photo_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:145
 msgid "Attach Photo"
 msgstr "ఫోటోను అటాచ్ చేయండి"
 
-#: src/telephony/ui/windows/camera_video_window.py:47
-#: src/telephony/ui/windows/chat_media_controller_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:61
 msgid "Record Video"
 msgstr "వీడియో రికార్డ్ చేయండి"
 
-#: src/telephony/ui/windows/camera_video_window.py:177
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:177
 msgid "Attach Video"
 msgstr "వీడియోను అటాచ్ చేయండి"
 
-#: src/telephony/ui/windows/camera_video_window.py:314
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:314
 #, python-brace-format
 msgid "Failed to record video: {error_msg}"
 msgstr "వీడియో రికార్డ్ చేయడంలో విఫలమైంది: {error_msg}"
 
-#: src/telephony/ui/windows/camera_video_window.py:384
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:384
 msgid "Recording failed (File empty)."
 msgstr "రికార్డింగ్ విఫలమైంది (ఫైల్ ఖాళీ)."
 
-#: src/telephony/ui/windows/camera_video_window.py:388
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:388
 #, python-brace-format
 msgid "Large video ({size}KB). Will be compressed on send."
 msgstr "పెద్ద వీడియో ({size}KB). పంపినప్పుడు కుదించబడుతుంది."
 
-#: src/telephony/ui/windows/camera_video_window.py:405
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:405
 msgid "Cannot play empty file."
 msgstr "ఖాళీ ఫైల్‌ను ప్లే చేయడం సాధ్యపడదు."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:60
 msgid "Take Photo"
 msgstr "ఫోటో తీయండి"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:62
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:62
 msgid "Record Audio"
 msgstr "రికార్డ్ ఆడియో"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:63
 msgid "Choose File"
 msgstr "ఫైల్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:64
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:64
 msgid "Schedule"
 msgstr "షెడ్యూల్"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:79
-#: src/telephony/ui/windows/chat_media_controller_window.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
 msgid "Camera Error"
 msgstr "కెమెరా లోపం"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
 msgid "Could not start the camera."
 msgstr "కెమెరాను ప్రారంభించడం సాధ్యపడలేదు."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
 msgid "Could not start video recording."
 msgstr "వీడియో రికార్డింగ్‌ని ప్రారంభించడం సాధ్యపడలేదు."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
 msgid "Audio Error"
 msgstr "ఆడియో లోపం"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
 msgid "Could not start audio recorder."
 msgstr "ఆడియో రికార్డర్‌ను ప్రారంభించడం సాధ్యపడలేదు."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:101
 msgid "Select Attachment"
 msgstr "అటాచ్‌మెంట్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
 msgid "Attachment Error"
 msgstr "అటాచ్‌మెంట్ ఎర్రర్"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
 msgid "Failed to prepare attachment."
 msgstr "జోడింపును సిద్ధం చేయడంలో విఫలమైంది."
 
-#: src/telephony/ui/windows/contact_editor_window.py:36
-#: src/telephony/ui/windows/contact_editor_window.py:402
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:402
 msgid "Contact Details"
 msgstr "సంప్రదింపు వివరాలు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:107
-#: src/telephony/ui/windows/custom_tone_list_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:179
 msgid "Edit"
 msgstr "సవరించు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:141
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:141
 msgid "Identity"
 msgstr "గుర్తింపు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
 msgid "Favorite"
 msgstr "ఇష్టమైనది"
 
-#: src/telephony/ui/windows/contact_editor_window.py:152
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:152
 msgid "Full Name"
 msgstr "పూర్తి పేరు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:158
 msgid "Name"
 msgstr "పేరు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:162
-#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:665
 msgid "Yes"
 msgstr "అవును"
 
-#: src/telephony/ui/windows/contact_editor_window.py:168
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:168
 msgid "Phone Numbers"
 msgstr "ఫోన్ నంబర్లు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:195
-#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:160
 msgid "Email Addresses"
 msgstr "ఇమెయిల్ చిరునామాలు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:205
 msgid "Add Email"
 msgstr "ఇమెయిల్ జోడించండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:216
 msgid "Additional Details"
 msgstr "అదనపు వివరాలు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
 msgid "Organization"
 msgstr "సంస్థ"
 
-#: src/telephony/ui/windows/contact_editor_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
 msgid "Job Title"
 msgstr "ఉద్యోగ శీర్షిక"
 
-#: src/telephony/ui/windows/contact_editor_window.py:220
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
 msgid "Address"
 msgstr "చిరునామా"
 
-#: src/telephony/ui/windows/contact_editor_window.py:220
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
 msgid "Notes"
 msgstr "గమనికలు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:221
-#: src/telephony/ui/windows/info_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:101
 msgid "Website"
 msgstr "వెబ్సైట్"
 
-#: src/telephony/ui/windows/contact_editor_window.py:246
-#: src/telephony/ui/windows/contact_editor_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:251
 msgid "Birthday"
 msgstr "పుట్టినరోజు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:247
-#: src/telephony/ui/windows/contact_editor_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:247
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:254
 msgid "Anniversary"
 msgstr "వార్షికోత్సవం"
 
-#: src/telephony/ui/windows/contact_editor_window.py:263
-#: src/telephony/ui/windows/contact_editor_window.py:554
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:263
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
 msgid "Delete Contact"
 msgstr "పరిచయాన్ని తొలగించండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:274
-#: src/telephony/ui/windows/settings_window.py:162
-#: src/telephony/ui/windows/settings_window.py:440
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:274
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:442
 msgid "Address Books"
 msgstr "చిరునామా పుస్తకాలు"
 
-#: src/telephony/ui/windows/contact_editor_window.py:294
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:294
 msgid "Unknown Source"
 msgstr "తెలియని మూలం"
 
-#: src/telephony/ui/windows/contact_editor_window.py:318
-#: src/telephony/ui/windows/contact_editor_window.py:356
-#: src/telephony/ui/windows/date_time_picker_window.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:356
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:29
 msgid "Select Date"
 msgstr "తేదీని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:329
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:329
 msgid "Clear Date"
 msgstr "తేదీని క్లియర్ చేయండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:371
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:371
 #, python-brace-format
 msgid "Select {title}"
 msgstr "{title}ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:381
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:381
 #, python-brace-format
 msgid "Copy {title}"
 msgstr "{title}ని కాపీ చేయండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:390
-#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:390
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:639
 msgid "Copied to clipboard"
 msgstr "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
 
-#: src/telephony/ui/windows/contact_editor_window.py:535
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:525
 msgid "Export Contact"
 msgstr "పరిచయాన్ని ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/contact_editor_window.py:554
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
 msgid "Are you sure you want to delete this contact?"
 msgstr "మీరు ఖచ్చితంగా ఈ పరిచయాన్ని తొలగించాలనుకుంటున్నారా?"
 
-#: src/telephony/ui/windows/contact_editor_window.py:567
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:557
 msgid "Deleting contact..."
 msgstr "పరిచయాన్ని తొలగిస్తోంది..."
 
-#: src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:812
 msgid "Failed to save contact"
 msgstr "పరిచయాన్ని సేవ్ చేయడంలో విఫలమైంది"
 
-#: src/telephony/ui/windows/contact_editor_window.py:829
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:819
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1511,37 +1524,37 @@ msgstr ""
 "\n"
 "మీరు అన్‌బ్లాకింగ్‌తో కొనసాగి, కాంటాక్ట్‌లకు నంబర్‌ను జోడించాలనుకుంటున్నారా?"
 
-#: src/telephony/ui/windows/contact_editor_window.py:833
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:823
 msgid "Yes, Add to Contacts"
 msgstr "అవును, పరిచయాలకు జోడించండి"
 
-#: src/telephony/ui/windows/contact_picker_window.py:30
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:30
 msgid "Pick Contact"
 msgstr "పరిచయాన్ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/contact_picker_window.py:62
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:62
 msgid "Name or Number"
 msgstr "పేరు లేదా సంఖ్య"
 
-#: src/telephony/ui/windows/contact_picker_window.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:192
 msgid "No number"
 msgstr "సంఖ్య లేదు"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:31
-#: src/telephony/ui/windows/settings_window.py:323
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:325
 msgid "Individual SMS Notifications"
 msgstr "వ్యక్తిగత SMS నోటిఫికేషన్‌లు"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:31
-#: src/telephony/ui/windows/settings_window.py:334
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:336
 msgid "Individual Ringtones"
 msgstr "వ్యక్తిగత రింగ్‌టోన్‌లు"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:73
 msgid "Find contact to add..."
 msgstr "జోడించడానికి పరిచయాన్ని కనుగొనండి..."
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:80
 msgid ""
 "Select a contact and choose a custom sound file (.ogg or .oga). The file "
 "will be copied to your local storage."
@@ -1549,112 +1562,112 @@ msgstr ""
 "పరిచయాన్ని ఎంచుకుని, అనుకూల సౌండ్ ఫైల్‌ను (.ogg లేదా .oga) ఎంచుకోండి. ఫైల్ మీ స్థానిక నిల్వకు కాపీ "
 "చేయబడుతుంది."
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:186
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:167
 msgid "Remove"
 msgstr "తొలగించు"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:202
 msgid "Custom tone removed (Click Save to commit)"
 msgstr "అనుకూల టోన్ తీసివేయబడింది (కమిట్ చేయడానికి సేవ్ చేయి క్లిక్ చేయండి)"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:316
 #, python-brace-format
 msgid "Select Tone for {name}"
 msgstr "{name} కోసం టోన్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:318
-#: src/telephony/ui/windows/settings_window.py:405
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:319
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:407
 msgid "Select"
 msgstr "ఎంచుకోండి"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:323
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:324
 msgid "Supported Audio (OGG)"
 msgstr "మద్దతు ఉన్న ఆడియో (OGG)"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:351
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:352
 msgid "Only .ogg or .oga files are supported"
 msgstr ".ogg లేదా .oga ఫైల్‌లకు మాత్రమే మద్దతు ఉంది"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:362
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:363
 msgid "Failed to copy audio file"
 msgstr "ఆడియో ఫైల్‌ను కాపీ చేయడంలో విఫలమైంది"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:382
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:383
 msgid "Custom tone added"
 msgstr "కస్టమ్ టోన్ జోడించబడింది"
 
-#: src/telephony/ui/windows/data_management_window.py:32
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
 msgid "Database Management"
 msgstr "డేటాబేస్ నిర్వహణ"
 
-#: src/telephony/ui/windows/data_management_window.py:32
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
 msgid "Select data to permanently delete."
 msgstr "శాశ్వతంగా తొలగించడానికి డేటాను ఎంచుకోండి."
 
-#: src/telephony/ui/windows/data_management_window.py:47
-#: src/telephony/ui/windows/data_management_window.py:90
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
 msgid "Delete Call History"
 msgstr "కాల్ హిస్టరీని తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:48
-#: src/telephony/ui/windows/data_management_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
 msgid "Delete All Messages"
 msgstr "అన్ని సందేశాలను తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:49
 msgid "Delete All Group Names"
 msgstr "అన్ని గుంపు పేర్లను తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:50
-#: src/telephony/ui/windows/data_management_window.py:102
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:50
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
 msgid "Delete Blocklist"
 msgstr "బ్లాక్‌లిస్ట్‌ని తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:51
-#: src/telephony/ui/windows/data_management_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:51
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
 msgid "Delete All Contacts"
 msgstr "అన్ని పరిచయాలను తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:52
-#: src/telephony/ui/windows/data_management_window.py:130
-#: src/telephony/ui/windows/data_management_window.py:153
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:130
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:153
 msgid "Delete Address Book"
 msgstr "చిరునామా పుస్తకాన్ని తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:60
 msgid "DELETE EVERYTHING"
 msgstr "ప్రతిదీ తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:90
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
 msgid "Are you sure? This cannot be undone."
 msgstr "మీరు ఖచ్చితంగా ఉన్నారా? ఇది రద్దు చేయబడదు."
 
-#: src/telephony/ui/windows/data_management_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
 msgid "This will delete all SMS/MMS and attachments."
 msgstr "ఇది అన్ని SMS/MMS మరియు జోడింపులను తొలగిస్తుంది."
 
-#: src/telephony/ui/windows/data_management_window.py:98
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
 msgid "Delete Group Names"
 msgstr "గుంపు పేర్లను తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:98
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
 msgid "Reset all custom group chat names?"
 msgstr "అన్ని అనుకూల సమూహ చాట్ పేర్లను రీసెట్ చేయాలా?"
 
-#: src/telephony/ui/windows/data_management_window.py:102
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
 msgid "Unblock all numbers?"
 msgstr "అన్ని నంబర్‌లను అన్‌బ్లాక్ చేయాలా?"
 
-#: src/telephony/ui/windows/data_management_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
 msgid "No deletable address books"
 msgstr "తొలగించగల చిరునామా పుస్తకాలు లేవు"
 
-#: src/telephony/ui/windows/data_management_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
 msgid "There are no custom address books that can be deleted."
 msgstr "తొలగించగల అనుకూల చిరునామా పుస్తకాలు ఏవీ లేవు."
 
-#: src/telephony/ui/windows/data_management_window.py:131
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:131
 msgid ""
 "Which address book do you want to delete permanently?\n"
 "\n"
@@ -1664,107 +1677,107 @@ msgstr ""
 "\n"
 "ఇది సిస్టమ్ నుండి దానిని తుడిచివేస్తుంది."
 
-#: src/telephony/ui/windows/data_management_window.py:154
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:154
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "మీరు ఖచ్చితంగా '{name}' చిరునామా పుస్తకాన్ని శాశ్వతంగా తొలగించాలనుకుంటున్నారా?"
 
-#: src/telephony/ui/windows/data_management_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
 msgid "Delete EVERYTHING"
 msgstr "ప్రతిదీ తొలగించండి"
 
-#: src/telephony/ui/windows/data_management_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
 msgid "Wipe database, config files and contacts? App will reset."
 msgstr "డేటాబేస్, కాన్ఫిగర్ ఫైల్‌లు మరియు పరిచయాలను తుడిచివేయాలా? యాప్ రీసెట్ చేయబడుతుంది."
 
-#: src/telephony/ui/windows/data_management_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
 msgid "Really delete everyone from your address book?"
 msgstr "మీ చిరునామా పుస్తకం నుండి ప్రతి ఒక్కరినీ నిజంగా తొలగించాలా?"
 
-#: src/telephony/ui/windows/data_management_window.py:178
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:178
 msgid "Select which address book to clear:"
 msgstr "ఏ చిరునామా పుస్తకాన్ని క్లియర్ చేయాలో ఎంచుకోండి:"
 
-#: src/telephony/ui/windows/data_management_window.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:189
 msgid "All Address Books"
 msgstr "అన్ని చిరునామా పుస్తకాలు"
 
-#: src/telephony/ui/windows/data_management_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:219
 msgid "Call History Deleted"
 msgstr "కాల్ చరిత్ర తొలగించబడింది"
 
-#: src/telephony/ui/windows/data_management_window.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:223
 msgid "Deleting messages..."
 msgstr "సందేశాలను తొలగిస్తోంది..."
 
-#: src/telephony/ui/windows/data_management_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:229
 msgid "Messages & Attachments Deleted"
 msgstr "సందేశాలు & జోడింపులు తొలగించబడ్డాయి"
 
-#: src/telephony/ui/windows/data_management_window.py:236
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:236
 msgid "Group Names Reset"
 msgstr "గుంపు పేర్లు రీసెట్"
 
-#: src/telephony/ui/windows/data_management_window.py:242
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:242
 msgid "Blocklist Cleared"
 msgstr "బ్లాక్‌లిస్ట్ క్లియర్ చేయబడింది"
 
-#: src/telephony/ui/windows/data_management_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:246
 msgid "Deleting contacts..."
 msgstr "పరిచయాలను తొలగిస్తోంది..."
 
-#: src/telephony/ui/windows/data_management_window.py:253
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:252
 msgid "Contacts Deleted"
 msgstr "పరిచయాలు తొలగించబడ్డాయి"
 
-#: src/telephony/ui/windows/data_management_window.py:261
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:260
 msgid "Deleting address book..."
 msgstr "చిరునామా పుస్తకాన్ని తొలగిస్తోంది..."
 
-#: src/telephony/ui/windows/data_management_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:266
 msgid "Address Book Deleted"
 msgstr "చిరునామా పుస్తకం తొలగించబడింది"
 
-#: src/telephony/ui/windows/data_management_window.py:271
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:268
 msgid "Failed to delete Address Book"
 msgstr "చిరునామా పుస్తకాన్ని తొలగించడంలో విఫలమైంది"
 
-#: src/telephony/ui/windows/data_management_window.py:276
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:273
 msgid "Wiping Database..."
 msgstr "డేటాబేస్ను తుడిచివేయడం..."
 
-#: src/telephony/ui/windows/data_management_window.py:290
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:286
 msgid "App Reset Complete"
 msgstr "యాప్ రీసెట్ పూర్తయింది"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:62
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:62
 msgid "Year"
 msgstr "సంవత్సరం"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:81
 msgid "Month"
 msgstr "నెల"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:116
 msgid "Hour"
 msgstr "గంట"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:135
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:135
 msgid "Minute"
 msgstr "నిమిషం"
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
-#: src/telephony/ui/windows/settings_window.py:305
-#: src/telephony/ui/windows/settings_window.py:466
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:468
 msgid "Notification Overrides"
 msgstr "నోటిఫికేషన్ ఓవర్‌రైడ్‌లు"
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:161
 msgid "Find and add contacts..."
 msgstr "పరిచయాలను కనుగొని, జోడించండి..."
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
 msgid ""
 "Contacts in this list will always play notifications at full volume, even if "
 "the phone is in Silent or Do Not Disturb mode."
@@ -1772,47 +1785,47 @@ msgstr ""
 "ఫోన్ సైలెంట్ లేదా డిస్టర్బ్ చేయవద్దు మోడ్‌లో ఉన్నప్పటికీ, ఈ జాబితాలోని పరిచయాలు పూర్తి వాల్యూమ్‌లో నోటిఫికేషన్‌లను ప్లే "
 "చేస్తాయి."
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:36
 msgid "Duplicate Contact"
 msgstr "డూప్లికేట్ కాంటాక్ట్"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:65
 msgid "Merge all"
 msgstr "అన్నింటినీ విలీనం చేయండి"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:89
 msgid "Merging Contacts..."
 msgstr "పరిచయాలను విలీనం చేస్తోంది..."
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:108
 #, python-brace-format
 msgid "Remaining conflicts: {count}"
 msgstr "మిగిలిన వైరుధ్యాలు: {count}"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:126
 #, python-brace-format
 msgid "{number} is saved to contacts:"
 msgstr "{number} పరిచయాలకు సేవ్ చేయబడింది:"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:142
 #, python-brace-format
 msgid "Address Book: {name}"
 msgstr "చిరునామా పుస్తకం: {name}"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:163
 msgid "Keep this, Remove duplicates"
 msgstr "దీన్ని ఉంచండి, నకిలీలను తీసివేయండి"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:169
 msgid "Keep this, Merge duplicates"
 msgstr "దీన్ని ఉంచండి, నకిలీలను విలీనం చేయండి"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:332
 #, python-brace-format
 msgid "Merging {current}/{total}..."
 msgstr "{current}/{total}ని విలీనం చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:43
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
 msgid ""
 "Extract, transform, load (ETL).\n"
 "Select data source or destination."
@@ -1820,567 +1833,593 @@ msgstr ""
 "ఎక్స్‌ట్రాక్ట్, ట్రాన్స్‌ఫార్మ్, లోడ్ (ETL).\n"
 "డేటా మూలం లేదా గమ్యాన్ని ఎంచుకోండి."
 
-#: src/telephony/ui/windows/import_export_window.py:59
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:59
 msgid "Import Contacts from vCard"
 msgstr "vCard నుండి పరిచయాలను దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:60
 msgid "Export Contacts to vCard"
 msgstr "vCardకి పరిచయాలను ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:61
 msgid "Import Contacts from SIM card"
 msgstr "SIM కార్డ్ నుండి పరిచయాలను దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:65
 msgid "Import From local Chatty"
 msgstr "స్థానిక చాటీ నుండి దిగుమతి చేసుకోండి"
 
-#: src/telephony/ui/windows/import_export_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:66
 msgid "Import From local Calls"
 msgstr "స్థానిక కాల్‌ల నుండి దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:67
-#: src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
 msgid "Import From Android"
 msgstr "Android నుండి దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:68
-#: src/telephony/ui/windows/import_export_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:68
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
 msgid "Import From iOS"
 msgstr "iOS నుండి దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:72
 msgid "Export Calls or Messages"
 msgstr "కాల్‌లు లేదా సందేశాలను ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:83
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:83
 msgid "Importing contacts from SIM..."
 msgstr "SIM నుండి పరిచయాలను దిగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:92
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:92
 msgid "No modem found for SIM import"
 msgstr "SIM దిగుమతి కోసం మోడెమ్ కనుగొనబడలేదు"
 
-#: src/telephony/ui/windows/import_export_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:101
 msgid "No contacts found on SIM card."
 msgstr "SIM కార్డ్‌లో పరిచయాలు ఏవీ కనుగొనబడలేదు."
 
-#: src/telephony/ui/windows/import_export_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:111
 #, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "SIM నుండి {count} పరిచయాలు దిగుమతి చేయబడ్డాయి."
 
-#: src/telephony/ui/windows/import_export_window.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:116
 #, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "SIM దిగుమతి విఫలమైంది: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:124
 msgid "Importing Chatty..."
 msgstr "చాటీని దిగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:143
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:143
 msgid "Importing Calls..."
 msgstr "కాల్‌లను దిగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:159
-#: src/telephony/ui/windows/import_export_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
 msgid "Select an option:"
 msgstr "ఒక ఎంపికను ఎంచుకోండి:"
 
-#: src/telephony/ui/windows/import_export_window.py:169
-#: src/telephony/ui/windows/import_export_window.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:194
 msgid "Select SMS/MMS file"
 msgstr "SMS/MMS ఫైల్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_export_window.py:170
-#: src/telephony/ui/windows/import_export_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:195
 msgid "Select Call history file"
 msgstr "కాల్ హిస్టరీ ఫైల్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_export_window.py:191
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:191
 msgid "Direct USB Import (Recommended)"
 msgstr "డైరెక్ట్ USB దిగుమతి (సిఫార్సు చేయబడింది)"
 
-#: src/telephony/ui/windows/import_export_window.py:207
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:207
 msgid "No iOS device detected. Please connect your iPhone via USB."
 msgstr "iOS పరికరం ఏదీ కనుగొనబడలేదు. దయచేసి USB ద్వారా మీ iPhoneని కనెక్ట్ చేయండి."
 
-#: src/telephony/ui/windows/import_export_window.py:210
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:210
 msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
 msgstr "పరికరం విశ్వసించబడలేదు. దయచేసి మీ iPhoneని అన్‌లాక్ చేసి, 'ట్రస్ట్' నొక్కండి."
 
-#: src/telephony/ui/windows/import_export_window.py:213
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:213
 msgid "Extracting backup from iPhone... This may take a long time!"
 msgstr "iPhone నుండి బ్యాకప్‌ని సంగ్రహిస్తోంది... దీనికి చాలా సమయం పట్టవచ్చు!"
 
-#: src/telephony/ui/windows/import_export_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:221
 #, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "USB బ్యాకప్ విఫలమైంది: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:226
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:226
 msgid "No SMS database found in backup."
 msgstr "బ్యాకప్‌లో SMS డేటాబేస్ కనుగొనబడలేదు."
 
-#: src/telephony/ui/windows/import_export_window.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:227
 msgid "No Call History database found in backup."
 msgstr "బ్యాకప్‌లో కాల్ హిస్టరీ డేటాబేస్ ఏదీ కనుగొనబడలేదు."
 
-#: src/telephony/ui/windows/import_export_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:230
 msgid "Importing iPhone SMS..."
 msgstr "iPhone SMSని దిగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:234
 msgid "Importing iPhone Calls..."
 msgstr "iPhone కాల్‌లను దిగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:243
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:243
 #, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "iOS దిగుమతి సమయంలో లోపం: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:251
-#: src/telephony/ui/windows/import_wizard_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:117
 msgid "Select File"
 msgstr "ఫైల్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_export_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:254
 msgid "XML Files"
 msgstr "XML ఫైల్స్"
 
-#: src/telephony/ui/windows/import_export_window.py:268
-#: src/telephony/ui/windows/import_export_window.py:459
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:459
 msgid "Importing..."
 msgstr "దిగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:292
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
 msgid "Export Data"
 msgstr "డేటాను ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:292
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
 msgid "Select destination format:"
 msgstr "గమ్యం ఆకృతిని ఎంచుకోండి:"
 
-#: src/telephony/ui/windows/import_export_window.py:302
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:302
 msgid "Linux - Chatty/Calls"
 msgstr "Linux - చాటీ/కాల్స్"
 
-#: src/telephony/ui/windows/import_export_window.py:303
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:303
 msgid "Linux - Telephony"
 msgstr "Linux - టెలిఫోనీ"
 
-#: src/telephony/ui/windows/import_export_window.py:304
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:304
 msgid "Android"
 msgstr "ఆండ్రాయిడ్"
 
-#: src/telephony/ui/windows/import_export_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:305
 msgid "iOS"
 msgstr "iOS"
 
-#: src/telephony/ui/windows/import_export_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
 #, python-brace-format
 msgid "Export to {fmt}"
 msgstr "{fmt}కి ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
 msgid "What do you want to export?"
 msgstr "మీరు ఏమి ఎగుమతి చేయాలనుకుంటున్నారు?"
 
-#: src/telephony/ui/windows/import_export_window.py:322
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:322
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
-msgstr "గమనిక: ఈ ఎగుమతి Android ఆకృతిని ఉపయోగిస్తుంది. ఈ ఫైల్‌ను iOS పరికరంలో దిగుమతి చేసేటప్పుడు, దయచేసి \"Import From Android\" ఎంపికను ఉపయోగించండి."
+msgstr ""
+"గమనిక: ఈ ఎగుమతి Android ఆకృతిని ఉపయోగిస్తుంది. ఈ ఫైల్‌ను iOS పరికరంలో దిగుమతి చేసేటప్పుడు, "
+"దయచేసి \"Import From Android\" ఎంపికను ఉపయోగించండి."
 
-#: src/telephony/ui/windows/import_export_window.py:333
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
 msgstr "సందేశాలు (SMS/MMS)"
 
-#: src/telephony/ui/windows/import_export_window.py:334
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:334
 msgid "Call History"
 msgstr "కాల్ చరిత్ర"
 
-#: src/telephony/ui/windows/import_export_window.py:344
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:344
 msgid "Export File"
 msgstr "ఫైల్‌ను ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:370
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:370
 msgid "Exporting..."
 msgstr "ఎగుమతి చేస్తోంది..."
 
-#: src/telephony/ui/windows/import_export_window.py:404
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:404
 msgid "Import VCard"
 msgstr "VCardని దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:406
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:406
 msgid "VCard Files"
 msgstr "VCard ఫైల్స్"
 
-#: src/telephony/ui/windows/import_export_window.py:425
-#: src/telephony/ui/windows/import_export_window.py:489
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:425
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:489
 msgid "No enabled address books found"
 msgstr "ప్రారంభించబడిన చిరునామా పుస్తకాలు ఏవీ కనుగొనబడలేదు"
 
-#: src/telephony/ui/windows/import_export_window.py:433
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:433
 msgid "Select Address Book"
 msgstr "చిరునామా పుస్తకాన్ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_export_window.py:434
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:434
 msgid "Where do you want to import contacts?"
 msgstr "మీరు పరిచయాలను ఎక్కడ దిగుమతి చేయాలనుకుంటున్నారు?"
 
-#: src/telephony/ui/windows/import_export_window.py:473
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:473
 #, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "{count} పరిచయాలు దిగుమతి చేయబడ్డాయి"
 
-#: src/telephony/ui/windows/import_export_window.py:477
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:477
 #, python-brace-format
 msgid "Import failed: {e}"
 msgstr "దిగుమతి విఫలమైంది: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:493
-#: src/telephony/ui/windows/import_export_window.py:531
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:531
 msgid "Export Contacts"
 msgstr "పరిచయాలను ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:494
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:494
 msgid "Which address book do you want to export?"
 msgstr "మీరు ఏ చిరునామా పుస్తకాన్ని ఎగుమతి చేయాలనుకుంటున్నారు?"
 
-#: src/telephony/ui/windows/import_export_window.py:505
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:505
 msgid "Export All Address Books"
 msgstr "అన్ని చిరునామా పుస్తకాలను ఎగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_export_window.py:559
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:559
 msgid "No contacts found to export"
 msgstr "ఎగుమతి చేయడానికి పరిచయాలు ఏవీ కనుగొనబడలేదు"
 
-#: src/telephony/ui/windows/import_export_window.py:575
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:575
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "{count} పరిచయాలు ఎగుమతి చేయబడ్డాయి"
 
-#: src/telephony/ui/windows/import_export_window.py:578
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:578
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "ఎగుమతి లోపం: {e}"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
 msgid "Import Messages"
 msgstr "సందేశాలను దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
 msgid "Import Call History"
 msgstr "కాల్ హిస్టరీని దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:70
 msgid "Waiting for selection..."
 msgstr "ఎంపిక కోసం వేచి ఉంది..."
 
-#: src/telephony/ui/windows/import_wizard_window.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:93
 msgid "Where do you want to import from?"
 msgstr "మీరు ఎక్కడ నుండి దిగుమతి చేయాలనుకుంటున్నారు?"
 
-#: src/telephony/ui/windows/import_wizard_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:101
 msgid "System Database"
 msgstr "సిస్టమ్ డేటాబేస్"
 
-#: src/telephony/ui/windows/import_wizard_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:103
 msgid "Import from local Chatty installation"
 msgstr "స్థానిక చాటీ ఇన్‌స్టాలేషన్ నుండి దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:105
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:105
 msgid "Import from local Calls installation"
 msgstr "స్థానిక కాల్స్ ఇన్‌స్టాలేషన్ నుండి దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:107
 msgid "Import"
 msgstr "దిగుమతి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:114
 msgid "Custom Database Backup"
 msgstr "కస్టమ్ డేటాబేస్ బ్యాకప్"
 
-#: src/telephony/ui/windows/import_wizard_window.py:115
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:115
 msgid "Select an exported SQLite DB file"
 msgstr "ఎగుమతి చేయబడిన SQLite DB ఫైల్‌ను ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:142
 msgid "Select Database File"
 msgstr "డేటాబేస్ ఫైల్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:160
 msgid "MMS Attachments (Optional)"
 msgstr "MMS జోడింపులు (ఐచ్ఛికం)"
 
-#: src/telephony/ui/windows/import_wizard_window.py:168
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:168
 msgid "MMS Folder Backup"
 msgstr "MMS ఫోల్డర్ బ్యాకప్"
 
-#: src/telephony/ui/windows/import_wizard_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:169
 msgid "Select the directory containing images/videos"
 msgstr "చిత్రాలు/వీడియోలు ఉన్న డైరెక్టరీని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:171
 msgid "Select Folder"
 msgstr "ఫోల్డర్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:178
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:178
 msgid "Skip Attachments"
 msgstr "జోడింపులను దాటవేయి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:179
 msgid "Import SMS and texts only"
 msgstr "SMS మరియు టెక్స్ట్‌లను మాత్రమే దిగుమతి చేయండి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:185
 msgid "Skip"
 msgstr "దాటవేయి"
 
-#: src/telephony/ui/windows/import_wizard_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:195
 msgid "Select MMS Folder"
 msgstr "MMS ఫోల్డర్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/incall_window.py:152
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:38
+msgid "Active"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:39
+msgid "On Hold"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:40
+msgid "Dialing..."
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:41
+msgid "Alerting..."
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
+msgid "Disconnected"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:167
 msgid "Hangup and Send SMS"
 msgstr "హ్యాంగ్అప్ చేసి SMS పంపండి"
 
-#: src/telephony/ui/windows/incall_window.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:202
 msgid "The call failed to disconnect."
 msgstr "కాల్ డిస్‌కనెక్ట్ చేయడంలో విఫలమైంది."
 
-#: src/telephony/ui/windows/incall_window.py:220
-#: src/telephony/ui/windows/incall_window.py:669
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:235
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:684
 msgid "Output"
 msgstr "అవుట్‌పుట్"
 
-#: src/telephony/ui/windows/incall_window.py:235
-#: src/telephony/ui/windows/incall_window.py:697
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:250
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:712
 msgid "Input"
 msgstr "ఇన్పుట్"
 
-#: src/telephony/ui/windows/incall_window.py:387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:402
 msgid "Silenced Incoming Call"
 msgstr "నిశ్శబ్ద ఇన్‌కమింగ్ కాల్"
 
-#: src/telephony/ui/windows/incall_window.py:503
-#: src/telephony/ui/windows/settings_window.py:241
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:518
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "నేను ఇప్పుడు మాట్లాడలేను."
 
-#: src/telephony/ui/windows/incall_window.py:626
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:641
 msgid "Restarting RIL..."
 msgstr "RILని పునఃప్రారంభిస్తోంది..."
 
-#: src/telephony/ui/windows/incall_window.py:635
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:650
 msgid "Restored!"
 msgstr "పునరుద్ధరించబడింది!"
 
-#: src/telephony/ui/windows/incall_window.py:641
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:656
 msgid "Failed. Reboot Device."
 msgstr "విఫలమైంది. పరికరాన్ని రీబూట్ చేయండి."
 
-#: src/telephony/ui/windows/incall_window.py:643
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:658
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "ధృవీకరిస్తోంది... {attempt}"
 
-#: src/telephony/ui/windows/incall_window.py:702
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:717
 msgid "Mute Microphone"
 msgstr "మైక్రోఫోన్‌ను మ్యూట్ చేయండి"
 
-#: src/telephony/ui/windows/info_window.py:28
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:28
 msgid "About Telephony"
 msgstr "టెలిఫోనీ గురించి"
 
-#: src/telephony/ui/windows/info_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:53
 msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgstr "FLX1 మరియు FLX1ల కోసం రూపొందించబడిన ఫాస్ట్ ఫోన్ డయలర్ మరియు మెసేజింగ్ క్లయింట్."
 
-#: src/telephony/ui/windows/info_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:71
 msgid "Version"
 msgstr "వెర్షన్"
 
-#: src/telephony/ui/windows/info_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:72
 msgid "Developer"
 msgstr "డెవలపర్"
 
-#: src/telephony/ui/windows/info_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:73
 msgid "License"
 msgstr "లైసెన్స్"
 
-#: src/telephony/ui/windows/info_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:77
 msgid "Links"
 msgstr "లింకులు"
 
-#: src/telephony/ui/windows/info_window.py:109
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:109
 msgid "Issue Tracker"
 msgstr "ఇష్యూ ట్రాకర్"
 
-#: src/telephony/ui/windows/info_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:110
 msgid "Report bugs or request features"
 msgstr "బగ్‌లను నివేదించండి లేదా ఫీచర్‌లను అభ్యర్థించండి"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:83
 #, python-brace-format
 msgid "Scheduled ({current}/{total})"
 msgstr "షెడ్యూల్ చేయబడింది ({current}/{total})"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:92
 #, python-brace-format
 msgid "To: {name}"
 msgstr "వీరికి: {name}"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:156
 msgid "Send Now"
 msgstr "ఇప్పుడే పంపండి"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:174
 msgid "Message removed"
 msgstr "సందేశం తీసివేయబడింది"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:219
 #, python-brace-format
 msgid "Sending message to {number}..."
 msgstr "{number}కి సందేశం పంపుతోంది..."
 
-#: src/telephony/ui/windows/settings_window.py:88
-#: src/telephony/ui/windows/settings_window.py:389
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:391
 msgid "Ringback Tone"
 msgstr "రింగ్‌బ్యాక్ టోన్"
 
-#: src/telephony/ui/windows/settings_window.py:91
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:92
 msgid "Enable Local Ringback"
 msgstr "స్థానిక రింగ్‌బ్యాక్‌ని ప్రారంభించండి"
 
-#: src/telephony/ui/windows/settings_window.py:106
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:107
 msgid "Selected Tone"
 msgstr "ఎంచుకున్న టోన్"
 
-#: src/telephony/ui/windows/settings_window.py:109
-#: src/telephony/ui/windows/settings_window.py:378
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:380
 msgid "System Default"
 msgstr "సిస్టమ్ డిఫాల్ట్"
 
-#: src/telephony/ui/windows/settings_window.py:136
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:137
 msgid "SIM Settings"
 msgstr "SIM సెట్టింగ్‌లు"
 
-#: src/telephony/ui/windows/settings_window.py:139
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:140
 msgid "My Number"
 msgstr "నా నంబర్"
 
-#: src/telephony/ui/windows/settings_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:141
 msgid "My Number (International Format)"
 msgstr "నా నంబర్ (అంతర్జాతీయ ఫార్మాట్)"
 
-#: src/telephony/ui/windows/settings_window.py:146
-#: src/telephony/ui/windows/settings_window.py:147
-#: src/telephony/ui/windows/settings_window.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:367
 msgid "Default Country Code"
 msgstr "డిఫాల్ట్ దేశం కోడ్"
 
-#: src/telephony/ui/windows/settings_window.py:173
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:174
 msgid "Address Book Info"
 msgstr "చిరునామా పుస్తకం సమాచారం"
 
-#: src/telephony/ui/windows/settings_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:182
 msgid "Default Address Book"
 msgstr "డిఫాల్ట్ చిరునామా పుస్తకం"
 
-#: src/telephony/ui/windows/settings_window.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:188
 msgid "Duplicate Resolver"
 msgstr "డూప్లికేట్ రిసోల్వర్"
 
-#: src/telephony/ui/windows/settings_window.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:190
 msgid ""
 "Scan for duplicate numbers and show a resolution banner in the Contacts view."
 msgstr "డూప్లికేట్ నంబర్‌ల కోసం స్కాన్ చేయండి మరియు పరిచయాల వీక్షణలో రిజల్యూషన్ బ్యానర్‌ను చూపండి."
 
-#: src/telephony/ui/windows/settings_window.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:203
 msgid "Lockscreen Emergency"
 msgstr "లాక్‌స్క్రీన్ ఎమర్జెన్సీ"
 
-#: src/telephony/ui/windows/settings_window.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:206
 msgid "Show Emergency Button"
 msgstr "అత్యవసర బటన్‌ను చూపు"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:211
 msgid "Emergency Numbers"
 msgstr "అత్యవసర సంఖ్యలు"
 
-#: src/telephony/ui/windows/settings_window.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:228
 msgid "Quick Response"
 msgstr "త్వరిత ప్రతిస్పందన"
 
-#: src/telephony/ui/windows/settings_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:231
 msgid "Add Decline Message"
 msgstr "తిరస్కరణ సందేశాన్ని జోడించండి"
 
-#: src/telephony/ui/windows/settings_window.py:245
-#: src/telephony/ui/windows/settings_window.py:812
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:828
 msgid "Call Volume"
 msgstr "కాల్ వాల్యూమ్"
 
-#: src/telephony/ui/windows/settings_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:258
 msgid "Allow Amplification"
 msgstr "యాంప్లిఫికేషన్‌ను అనుమతించండి"
 
-#: src/telephony/ui/windows/settings_window.py:259
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:260
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr "స్లయిడర్‌లను 100% పైకి వెళ్లనివ్వండి. యాంప్లిఫై చేసిన ఆడియో వక్రీకరించబడవచ్చు."
 
-#: src/telephony/ui/windows/settings_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:269
 msgid "Earpiece"
 msgstr "ఇయర్‌పీస్"
 
-#: src/telephony/ui/windows/settings_window.py:269
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:270
 msgid "Speaker"
 msgstr "స్పీకర్"
 
-#: src/telephony/ui/windows/settings_window.py:270
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:271
 msgid "Wired Headset"
 msgstr "వైర్డ్ హెడ్‌సెట్"
 
-#: src/telephony/ui/windows/settings_window.py:271
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:272
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: src/telephony/ui/windows/settings_window.py:286
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:288
 msgid "Notification Exceptions"
 msgstr "నోటిఫికేషన్ మినహాయింపులు"
 
-#: src/telephony/ui/windows/settings_window.py:289
-#: src/telephony/ui/windows/settings_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:291
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:456
 msgid "Repeated Calls Bypass"
 msgstr "పునరావృత కాల్స్ బైపాస్"
 
-#: src/telephony/ui/windows/settings_window.py:291
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:293
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr "అదే నంబర్ 5 నిమిషాల్లో 3 సార్లు కాల్ చేస్తే, గరిష్ట వాల్యూమ్‌ను ఫోర్స్ చేయండి."
 
-#: src/telephony/ui/windows/settings_window.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:308
 msgid "Manage contacts that always play sound"
 msgstr "ఎల్లప్పుడూ ధ్వనిని ప్లే చేసే పరిచయాలను నిర్వహించండి"
 
-#: src/telephony/ui/windows/settings_window.py:315
-#: src/telephony/ui/windows/settings_window.py:327
-#: src/telephony/ui/windows/settings_window.py:338
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:317
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:329
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:340
 msgid "Manage"
 msgstr "నిర్వహించండి"
 
-#: src/telephony/ui/windows/settings_window.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:327
 msgid "Set custom notification sounds for specific contacts"
 msgstr "నిర్దిష్ట పరిచయాల కోసం అనుకూల నోటిఫికేషన్ సౌండ్‌లను సెట్ చేయండి"
 
-#: src/telephony/ui/windows/settings_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:338
 msgid "Set custom ringtones for specific contacts"
 msgstr "నిర్దిష్ట పరిచయాల కోసం అనుకూల రింగ్‌టోన్‌లను సెట్ చేయండి"
 
-#: src/telephony/ui/windows/settings_window.py:361
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:363
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2399,7 +2438,7 @@ msgstr ""
 "మీరు 2-అక్షరాల ISO రీజియన్ కోడ్ (ఉదా. US, FI, DE) లేదా కాలింగ్ కోడ్ (ఉదా. +358, 358, +1, 1) "
 "నమోదు చేయడం ద్వారా ఇక్కడ మాన్యువల్‌గా భర్తీ చేయవచ్చు."
 
-#: src/telephony/ui/windows/settings_window.py:382
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:384
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2414,15 +2453,15 @@ msgstr ""
 "\n"
 "మీరు మీ స్వంత సంగీత ఫైల్‌ని ఎంచుకోవచ్చు లేదా ప్రామాణిక సిస్టమ్ టోన్‌ని ఉపయోగించడానికి దాన్ని క్లియర్ చేయవచ్చు."
 
-#: src/telephony/ui/windows/settings_window.py:402
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:404
 msgid "Select Ringback Tone"
 msgstr "రింగ్‌బ్యాక్ టోన్‌ని ఎంచుకోండి"
 
-#: src/telephony/ui/windows/settings_window.py:410
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:412
 msgid "Audio Files"
 msgstr "ఆడియో ఫైల్స్"
 
-#: src/telephony/ui/windows/settings_window.py:436
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:438
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2436,7 +2475,7 @@ msgstr ""
 "టోగుల్‌ని ఉపయోగించవచ్చు, కానీ డిజేబుల్ చేయబడినా కూడా, మెరుగైన అనుభవం కోసం దీన్ని ప్రారంభించడాన్ని మేము "
 "ప్రోత్సహిస్తాము."
 
-#: src/telephony/ui/windows/settings_window.py:455
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:457
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2445,7 +2484,7 @@ msgstr ""
 "ప్రారంభించబడినప్పుడు, అదే ఫోన్ నంబర్ మీకు 5 నిమిషాలలోపు 3 సార్లు కాల్ చేస్తే, మూడవ కాల్ (మరియు విండోలో "
 "తదుపరిది) ఫోన్‌ని సైలెంట్ లేదా డిస్టర్బ్ చేయవద్దు మోడ్‌లను దాటవేసి గరిష్ట వాల్యూమ్‌లో రింగ్ అయ్యేలా చేస్తుంది."
 
-#: src/telephony/ui/windows/settings_window.py:467
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:469
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2453,48 +2492,48 @@ msgstr ""
 "ఫోన్ సైలెంట్ లేదా డిస్టర్బ్ చేయవద్దు మోడ్‌లో ఉన్నప్పుడు కూడా పూర్తి వాల్యూమ్‌లో నోటిఫికేషన్‌లను ప్లే చేసే "
 "కాంటాక్ట్‌లను ఎంచుకోండి."
 
-#: src/telephony/ui/windows/settings_window.py:488
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:490
 msgid "Unknown Callers"
 msgstr "తెలియని కాలర్లు"
 
-#: src/telephony/ui/windows/settings_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:495
 msgid "Unknown Callers Action"
 msgstr "తెలియని కాలర్‌ల చర్య"
 
-#: src/telephony/ui/windows/settings_window.py:495
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:497
 msgid "Applies also to hidden numbers."
 msgstr "దాచిన సంఖ్యలకు కూడా వర్తిస్తుంది."
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:500
 msgid "Do Nothing"
 msgstr "ఏమీ చేయవద్దు"
 
-#: src/telephony/ui/windows/settings_window.py:499
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:501
 msgid "Block Completely"
 msgstr "పూర్తిగా నిరోధించండి"
 
-#: src/telephony/ui/windows/settings_window.py:500
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:502
 msgid "Silence and Hide UI"
 msgstr "నిశ్శబ్దం మరియు UIని దాచండి"
 
-#: src/telephony/ui/windows/settings_window.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:503
 msgid "Silence Only"
 msgstr "నిశ్శబ్దం మాత్రమే"
 
-#: src/telephony/ui/windows/settings_window.py:509
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:511
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr "ఇన్‌కాల్ విండోకు శోధన బటన్‌ను మరియు తెలియని కాలర్‌ల కోసం కాల్ చరిత్రను జోడించండి"
 
-#: src/telephony/ui/windows/settings_window.py:515
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:517
 msgid "Search Engine"
 msgstr "శోధన ఇంజిన్"
 
-#: src/telephony/ui/windows/settings_window.py:519
-#: src/telephony/ui/windows/settings_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:521
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:526
 msgid "Custom URL"
 msgstr "అనుకూల URL"
 
-#: src/telephony/ui/windows/settings_window.py:574
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:576
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2513,84 +2552,89 @@ msgstr ""
 "మీరు కాల్ సమయంలో శోధన బటన్‌ను నొక్కినప్పుడు, మేము '{number}'ని అసలు ఫోన్ నంబర్‌తో భర్తీ చేస్తాము "
 "మరియు దానిని మీ డిఫాల్ట్ బ్రౌజర్‌లో తెరుస్తాము."
 
-#: src/telephony/ui/windows/settings_window.py:578
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:580
 msgid "Custom Search URL"
 msgstr "అనుకూల శోధన URL"
 
-#: src/telephony/ui/windows/settings_window.py:599
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:601
 msgid "Desktop Shortcuts"
 msgstr "డెస్క్‌టాప్ సత్వరమార్గాలు"
 
-#: src/telephony/ui/windows/settings_window.py:604
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:606
 msgid "Calls"
 msgstr "కాల్స్"
 
-#: src/telephony/ui/windows/settings_window.py:770
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:772
 msgid "Name (e.g. Mom)"
 msgstr "పేరు (ఉదా. అమ్మ)"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:829
 msgid ""
 "This is the base hardware volume applied to the selected output when a call "
 "connects. The volume buttons during a call only adjust fine-tuning on top of "
 "this base level, so if the base is 0% the call stays silent no matter what. "
 "Values above 100% use software amplification and may distort audio. Wired "
 "Headset and Bluetooth levels are stored for upcoming routing support."
-msgstr "కాల్ కనెక్ట్ అయినప్పుడు ఎంచుకున్న అవుట్‌పుట్‌కు వర్తించే ప్రాథమిక హార్డ్‌వేర్ వాల్యూమ్ ఇది. కాల్ సమయంలో వాల్యూమ్ బటన్‌లు ఈ ప్రాథమిక స్థాయిపై సూక్ష్మ సర్దుబాట్లు మాత్రమే చేస్తాయి, కాబట్టి ప్రాథమికం 0% అయితే కాల్ ఎట్టి పరిస్థితుల్లోనూ నిశ్శబ్దంగా ఉంటుంది. 100% పైన ఉన్న విలువలు సాఫ్ట్‌వేర్ యాంప్లిఫికేషన్‌ను ఉపయోగిస్తాయి మరియు ఆడియోను వక్రీకరించవచ్చు. వైర్డ్ హెడ్‌సెట్ మరియు Bluetooth స్థాయిలు రాబోయే రూటింగ్ మద్దతు కోసం నిల్వ చేయబడతాయి."
+msgstr ""
+"కాల్ కనెక్ట్ అయినప్పుడు ఎంచుకున్న అవుట్‌పుట్‌కు వర్తించే ప్రాథమిక హార్డ్‌వేర్ వాల్యూమ్ ఇది. కాల్ సమయంలో "
+"వాల్యూమ్ బటన్‌లు ఈ ప్రాథమిక స్థాయిపై సూక్ష్మ సర్దుబాట్లు మాత్రమే చేస్తాయి, కాబట్టి ప్రాథమికం 0% అయితే కాల్ ఎట్టి "
+"పరిస్థితుల్లోనూ నిశ్శబ్దంగా ఉంటుంది. 100% పైన ఉన్న విలువలు సాఫ్ట్‌వేర్ యాంప్లిఫికేషన్‌ను ఉపయోగిస్తాయి మరియు "
+"ఆడియోను వక్రీకరించవచ్చు. వైర్డ్ హెడ్‌సెట్ మరియు Bluetooth స్థాయిలు రాబోయే రూటింగ్ మద్దతు కోసం నిల్వ "
+"చేయబడతాయి."
 
-#: src/telephony/ui/windows/settings_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:838
 msgid "Decline Message"
 msgstr "సందేశాన్ని తిరస్కరించండి"
 
-#: src/telephony/ui/windows/settings_window.py:893
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:909
 msgid "System Default (Always Enabled)"
 msgstr "సిస్టమ్ డిఫాల్ట్ (ఎల్లప్పుడూ ప్రారంభించబడి ఉంటుంది)"
 
-#: src/telephony/ui/windows/settings_window.py:904
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:920
 msgid "Personal Address Book"
 msgstr "వ్యక్తిగత చిరునామా పుస్తకం"
 
-#: src/telephony/ui/windows/settings_window.py:905
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:921
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
 msgstr "మీరు సిస్టమ్ సెట్టింగ్‌లలో దీన్ని ఎంచుకుంటే ఆండ్రోమెడకు సమకాలీకరించబడే చిరునామా పుస్తకం ఇది."
 
-#: src/telephony/ui/windows/settings_window.py:913
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:929
 msgid "Andromeda Contacts"
 msgstr "ఆండ్రోమెడ పరిచయాలు"
 
-#: src/telephony/ui/windows/settings_window.py:914
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:930
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
 msgstr "మీరు సిస్టమ్ సెట్టింగ్‌లలో దీన్ని ఎంచుకుంటే ఆండ్రోమెడ నుండి సమకాలీకరించబడే చిరునామా పుస్తకం ఇది."
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1055
 msgid "Settings Saved"
 msgstr "సెట్టింగ్‌లు సేవ్ చేయబడ్డాయి"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
 msgstr "వాయిస్ సందేశం"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:91
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:91
 msgid "Tap to Record"
 msgstr "రికార్డ్ చేయడానికి నొక్కండి"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:137
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:137
 msgid "Attach Voice Note"
 msgstr "వాయిస్ నోట్‌ని అటాచ్ చేయండి"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:224
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
 msgstr "MMS (గరిష్టంగా 600KB) కోసం రికార్డింగ్ చాలా పెద్దది. దయచేసి చిన్నదిగా మళ్లీ తీసుకోండి."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:141
 msgid "Enable Feature"
 msgstr "ఫీచర్‌ను ప్రారంభించండి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:170
 msgid ""
 "Contacts can trigger an action by sending a secret SMS message. Add contacts "
 "below and set their secret trigger phrase."
@@ -2598,7 +2642,7 @@ msgstr ""
 "పరిచయాలు రహస్య SMS సందేశాన్ని పంపడం ద్వారా చర్యను ప్రారంభించవచ్చు. దిగువ పరిచయాలను జోడించి, వారి "
 "రహస్య ట్రిగ్గర్ పదబంధాన్ని సెట్ చేయండి."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:154
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:173
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
 "TOTP is mandatory for this feature to work. Add contacts below and set their "
@@ -2609,7 +2653,7 @@ msgstr ""
 "TOTP తప్పనిసరి. దిగువ పరిచయాలను జోడించి, వారి రహస్య ట్రిగ్గర్ పదబంధాన్ని సెట్ చేయండి. ఉదాహరణ టెంప్లేట్: "
 "'SECRET TOTP' నిజ జీవిత ఉదాహరణ: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:157
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:176
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -2620,7 +2664,7 @@ msgstr ""
 "పనిచేయడానికి TOTP తప్పనిసరి. దిగువ పరిచయాలను జోడించి, వారి రహస్య ట్రిగ్గర్ పదబంధాన్ని సెట్ చేయండి. ఉదాహరణ "
 "టెంప్లేట్: 'SECRET TOTP' నిజ జీవిత ఉదాహరణ: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:179
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
@@ -2631,7 +2675,7 @@ msgstr ""
 "జోడించి, వారి రహస్య ట్రిగ్గర్ పదబంధాన్ని సెట్ చేయండి. ఉదాహరణ టెంప్లేట్: 'SECRET TOTP +1234567890 "
 "MESSAGE' నిజ జీవిత ఉదాహరణ: 'Gorilla 123456 +1234567890 Hello'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:182
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -2643,7 +2687,7 @@ msgstr ""
 "రహస్య ట్రిగ్గర్ పదబంధాన్ని సెట్ చేయండి. ఉదాహరణ టెంప్లేట్: 'SECRET TOTP' నిజ జీవిత ఉదాహరణ: "
 "'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:185
 msgid ""
 "Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
 "work. Add contacts below and set their secret trigger phrase. Example "
@@ -2655,39 +2699,39 @@ msgstr ""
 "SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' నిజ జీవిత ఉదాహరణ: 'Gorilla 123456 "
 "0000 1234 SupportYourLocalFootball'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:284
 msgid "View or edit TOTP"
 msgstr "TOTPని వీక్షించండి లేదా సవరించండి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:286
 msgid "Setup TOTP"
 msgstr "TOTPని సెటప్ చేయండి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:337
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:356
 msgid "Secret message"
 msgstr "రహస్య సందేశం"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:349
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:368
 msgid "Remove Contact"
 msgstr "పరిచయాన్ని తీసివేయండి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:373
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:392
 msgid "Contact removed (Click Save to commit)"
 msgstr "పరిచయం తీసివేయబడింది (కమిట్ చేయడానికి సేవ్ చేయి క్లిక్ చేయండి)"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:508
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:526
 msgid "Contact already in trusted list"
 msgstr "విశ్వసనీయ జాబితాలో ఇప్పటికే సంప్రదించండి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "Contact added"
 msgstr "పరిచయం జోడించబడింది"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:540
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:558
 msgid "TOTP Setup"
 msgstr "TOTP సెటప్"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:586
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:604
 msgid ""
 "Share this code with your trusted contact. They should add it to an "
 "authenticator app such as Gnome Authenticator.\n"
@@ -2711,35 +2755,35 @@ msgstr ""
 "ప్రతి చర్యకు దాని స్వంత కోడ్ ఉంటుంది. SMS ద్వారా చర్యను ప్రేరేపించేటప్పుడు, వారు కీవర్డ్ తర్వాత వారి "
 "అథెంటికేటర్ నుండి ప్రస్తుత 6-అంకెల కోడ్‌ను జోడించాలి."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Copy TOTP key"
 msgstr "TOTP కీని కాపీ చేయండి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:626
-#: src/telephony/ui/windows/trusted_actions_list_window.py:668
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:644
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:686
 msgid "Regenerate"
 msgstr "పునరుత్పత్తి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:633
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:651
 msgid "Remove current TOTP"
 msgstr "ప్రస్తుత TOTPని తీసివేయి"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:642
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:660
 msgid "Remove TOTP Key?"
 msgstr "TOTP కీని తీసివేయాలా?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:643
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:661
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
 msgstr ""
 "మీరు ఖచ్చితంగా TOTP కీని తీసివేయాలనుకుంటున్నారా? ఈ చర్య ఈ ఫీచర్ కోసం TOTP ధృవీకరణను నిలిపివేస్తుంది."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:681
 msgid "Regenerate Code?"
 msgstr "కోడ్‌ని పునరుత్పత్తి చేయాలా?"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:682
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"

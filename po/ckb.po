@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-29 02:02+0300\n"
+"POT-Creation-Date: 2026-07-29 23:43+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -13,618 +13,630 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/telephony/app.py:530 src/telephony/app.py:564
-#: src/telephony/backend/managers/lockscreen_manager.py:132
-#: src/telephony/backend/managers/lockscreen_manager.py:142
-#: src/telephony/backend/managers/lockscreen_manager.py:398
-#: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:598 src/telephony/ui/views/chat_view.py:88
-#: src/telephony/ui/views/chat_view.py:93
-#: src/telephony/ui/views/chat_view.py:142
-#: src/telephony/ui/views/chat_view.py:152
-#: src/telephony/ui/views/chat_view.py:156
-#: src/telephony/ui/views/chat_view.py:700
-#: src/telephony/ui/views/chat_view.py:704
-#: src/telephony/ui/views/chat_view.py:800
-#: src/telephony/ui/views/chat_view.py:806
-#: src/telephony/ui/views/chat_view.py:965
-#: src/telephony/ui/views/chat_view.py:967
-#: src/telephony/ui/views/chat_view.py:1160
-#: src/telephony/ui/views/dialpad_view.py:158
-#: src/telephony/ui/views/history_view.py:411
-#: src/telephony/ui/views/messages_view.py:363
-#: src/telephony/ui/views/messages_view.py:366
-#: src/telephony/ui/views/messages_view.py:437
-#: src/telephony/ui/views/messages_view.py:441
-#: src/telephony/ui/views/messages_view.py:531
-#: src/telephony/ui/views/messages_view.py:868
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:245
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:250
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:256
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:262
-#: src/telephony/ui/widgets/history_rows_widget.py:121
-#: src/telephony/ui/widgets/messages_rows_widget.py:97
-#: src/telephony/ui/windows/custom_tone_list_window.py:166
-#: src/telephony/ui/windows/custom_tone_list_window.py:260
-#: src/telephony/ui/windows/duplicate_resolution_window.py:145
-#: src/telephony/ui/windows/incall_window.py:126
-#: src/telephony/ui/windows/incall_window.py:296
-#: src/telephony/ui/windows/incall_window.py:309
-#: src/telephony/ui/windows/incall_window.py:332
-#: src/telephony/ui/windows/incall_window.py:461
-#: src/telephony/ui/windows/trusted_actions_list_window.py:309
-#: src/telephony/ui/windows/trusted_actions_list_window.py:447
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:536
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:398
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:704
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:708
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:804
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:810
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:974
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:976
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:368
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:439
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:533
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:870
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/history_rows_widget.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:141
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:311
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:347
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:476
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
 msgstr "نەزانراو"
 
-#: src/telephony/app.py:541
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:540
+msgid "Missed Call"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:547
 msgid "Call Back"
 msgstr "پەیوەندی بکەوە"
 
-#: src/telephony/app.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:577
 #, python-brace-format
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} پەیامی نوێ"
 msgstr[1] "{count} پەیامی نوێ"
 
-#: src/telephony/app.py:575
-#: src/telephony/ui/windows/contact_picker_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:581
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:31
 msgid "Open"
 msgstr "کردنەوە"
 
-#: src/telephony/app.py:579
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:585
 msgid "Call"
 msgstr "پەیوەندی"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
-#: src/telephony/backend/utils/db_blocklist_utils.py:35
-#: src/telephony/ui/views/messages_view.py:357
-#: src/telephony/ui/views/messages_view.py:428
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/eds_contacts_manager.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:35
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:430
 msgid "Blocked Number"
 msgstr "ژمارەی بلۆککراو"
 
-#: src/telephony/backend/managers/emergency_manager.py:118
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency Mode"
 msgstr "دۆخی فریاگوزاری"
 
-#: src/telephony/backend/managers/emergency_manager.py:118
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
 msgid "Emergency calls only."
 msgstr "تەنها پەیوەندی فریاگوزاری."
 
-#: src/telephony/backend/managers/emergency_manager.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:119
 msgid "Start Emergency Process"
 msgstr "دەستپێکردنی پرۆسەی فریاگوزاری"
 
-#: src/telephony/backend/managers/emergency_manager.py:132
-#: src/telephony/ui/main_window.py:462 src/telephony/ui/main_window.py:631
-#: src/telephony/ui/views/history_view.py:81
-#: src/telephony/ui/views/messages_view.py:114
-#: src/telephony/ui/windows/advanced_settings_window.py:48
-#: src/telephony/ui/windows/blocklist_editor_window.py:42
-#: src/telephony/ui/windows/blocklist_editor_window.py:111
-#: src/telephony/ui/windows/camera_photo_window.py:69
-#: src/telephony/ui/windows/camera_video_window.py:80
-#: src/telephony/ui/windows/contact_editor_window.py:123
-#: src/telephony/ui/windows/contact_editor_window.py:832
-#: src/telephony/ui/windows/contact_picker_window.py:46
-#: src/telephony/ui/windows/custom_tone_list_window.py:56
-#: src/telephony/ui/windows/custom_tone_list_window.py:319
-#: src/telephony/ui/windows/data_management_window.py:76
-#: src/telephony/ui/windows/data_management_window.py:134
-#: src/telephony/ui/windows/data_management_window.py:181
-#: src/telephony/ui/windows/date_time_picker_window.py:40
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
-#: src/telephony/ui/windows/duplicate_resolution_window.py:61
-#: src/telephony/ui/windows/import_export_window.py:74
-#: src/telephony/ui/windows/import_export_window.py:171
-#: src/telephony/ui/windows/import_export_window.py:197
-#: src/telephony/ui/windows/import_export_window.py:307
-#: src/telephony/ui/windows/import_export_window.py:336
-#: src/telephony/ui/windows/import_export_window.py:437
-#: src/telephony/ui/windows/import_export_window.py:497
-#: src/telephony/ui/windows/import_wizard_window.py:48
-#: src/telephony/ui/windows/settings_window.py:65
-#: src/telephony/ui/windows/settings_window.py:406
-#: src/telephony/ui/windows/sound_recorder_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:105
-#: src/telephony/ui/windows/trusted_actions_list_window.py:553
-#: src/telephony/ui/windows/trusted_actions_list_window.py:646
-#: src/telephony/ui/windows/trusted_actions_list_window.py:667
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:462
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:631
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:69
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:320
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:197
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:497
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:408
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:685
 msgid "Cancel"
 msgstr "ڕەتکردنەوە"
 
-#: src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
 msgid "Return to Lockscreen"
 msgstr "گەڕانەوە بۆ Lockscreen"
 
-#: src/telephony/backend/managers/emergency_manager.py:133
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:133
 msgid "Back"
 msgstr "گەڕانەوە"
 
-#: src/telephony/backend/managers/emergency_manager.py:137
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
 msgid "No Numbers Configured"
 msgstr "هیچ ژمارەیەک ڕێکخراو نەکراوە"
 
-#: src/telephony/backend/managers/emergency_manager.py:137
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
 msgid "Set numbers in Settings."
 msgstr "ژمارەکان لە ڕێکخستنەکاندا دابنێ."
 
-#: src/telephony/backend/managers/emergency_manager.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:148
 #, python-brace-format
 msgid "Call {number}"
 msgstr "پەیوەندی بکەن بە {number}"
 
-#: src/telephony/backend/managers/emergency_manager.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
 msgid "Confirm Emergency Call"
 msgstr "پەیوەندی فریاگوزاری پشتڕاست بکەرەوە"
 
-#: src/telephony/backend/managers/emergency_manager.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
 #, python-brace-format
 msgid "Call {name}?"
 msgstr "پەیوەندی بکەن بە {name} ؟"
 
-#: src/telephony/backend/managers/emergency_manager.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
 msgid "🟢 Yes, Call"
 msgstr "🟢 بەڵێ، پەیوەندی بکە"
 
-#: src/telephony/backend/managers/emergency_manager.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
 msgid "🔴 No, Return"
 msgstr "🔴 نەخێر، گەڕانەوە"
 
-#: src/telephony/backend/managers/location_manager.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:63
 msgid "Initializing location services..."
 msgstr "دەستپێکردنی خزمەتگوزارییەکانی شوێن..."
 
-#: src/telephony/backend/managers/location_manager.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:128
 msgid "Waiting for location service..."
 msgstr "چاوەڕوانی خزمەتگوزاری شوێن..."
 
-#: src/telephony/backend/managers/location_manager.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:145
 msgid "Waiting for satellite fix..."
 msgstr "چاوەڕێی چاککردنەوەی مانگی دەستکردین..."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:80
-#: src/telephony/ui/windows/incall_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:201
 msgid "Modem Stuck"
 msgstr "مۆدێم گیر بوو"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:81
 msgid "Call failed to disconnect."
 msgstr "پەیوەندییەکە شکستی هێنا لە پچڕان."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:83
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:83
 msgid "Telephony Emergency"
 msgstr "فریاگوزاری تەلەفۆن"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:85
-#: src/telephony/ui/windows/incall_window.py:188
-#: src/telephony/ui/windows/incall_window.py:650
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:203
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:665
 msgid "🔴 Reboot Modem"
 msgstr "🔴 مۆدێم دووبارە هەڵبکەنەوە"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
 msgid "Telephony - Incoming"
 msgstr "تەلەفۆن - هاتنە ژوورەوە"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
 #, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 هاتنە ژوورەوە: {name}"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:189
-#: src/telephony/ui/windows/incall_window.py:387
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:402
 msgid "Incoming Call..."
 msgstr "پەیوەندی هاتوو..."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:192
-#: src/telephony/backend/managers/lockscreen_manager.py:204
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
 msgid "🔁 Swap"
 msgstr "🔁 گۆڕینەوە"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:194
 msgid "🟢 Answer"
 msgstr "🟢 وەڵام"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:195
-#: src/telephony/backend/managers/lockscreen_manager.py:207
-#: src/telephony/backend/managers/lockscreen_manager.py:219
-#: src/telephony/backend/managers/lockscreen_manager.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:229
 msgid "🔴 Hangup"
 msgstr "🔴 ھەنگوپ"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:196
-#: src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:196
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
 msgid "🔴 SMS&End"
 msgstr "🔴 کورتەنامە&کۆتایی"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:199
-#: src/telephony/backend/managers/lockscreen_manager.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:215
 msgid "Telephony - On Hold"
 msgstr "تەلەفۆن - لە ڕاگرتندایە"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
 #, python-brace-format
 msgid "🟠 {name} put as on hold"
 msgstr "🟠 {name} وەک ڕاگرتن دانراوە"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:201
-#: src/telephony/backend/managers/lockscreen_manager.py:217
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:217
 msgid "Call On Hold..."
 msgstr "پەیوەندیکردن بە ڕاگرتن..."
 
-#: src/telephony/backend/managers/lockscreen_manager.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
 msgid "🔴 Decline"
 msgstr "🔴 دابەزین"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:211
-#: src/telephony/backend/managers/lockscreen_manager.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
 msgid "UnmuteMic"
 msgstr "UnmuteMic"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:211
-#: src/telephony/backend/managers/lockscreen_manager.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
 msgid "MuteMic"
 msgstr "MuteMic"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 #, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (لە ڕاگرتندایە)"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:218
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔁 Resume"
 msgstr "🔁 سیڤی"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:222
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:222
 msgid "Telephony - Active Call"
 msgstr "تەلەفۆن - پەیوەندی چالاک"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:223
 #, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 ئەکتیڤ: {name}"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:224
 msgid "Active Call"
 msgstr "پەیوەندی چالاک"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:227
 msgid "🔴 HangupAll"
 msgstr "🔴 HangupAll"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:237
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
 msgid "SpeakerOff"
 msgstr "SpeakerOff"
 
-#: src/telephony/backend/managers/lockscreen_manager.py:237
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
 msgid "SpeakerOn"
 msgstr "SpeakerOn"
 
-#: src/telephony/backend/managers/mms_manager.py:245
-#: src/telephony/backend/managers/ofono_calls_manager.py:39
-#: src/telephony/backend/managers/ofono_messaging_manager.py:29
-#: src/telephony/ui/main_window.py:447
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:447
 msgid "Modem not ready"
 msgstr "مۆدێم ئامادە نییە"
 
-#: src/telephony/backend/managers/ofono_calls_manager.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:53
 msgid "Cannot dial while in another call"
 msgstr "ناتوانرێت پەیوەندی بکات لەکاتێکدا لە پەیوەندییەکی تردایە"
 
-#: src/telephony/backend/managers/ofono_calls_manager.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:65
 #, python-brace-format
 msgid "Dial Error: {e}"
 msgstr "هەڵەی پەیوەندیکردن: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:47
 #, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "ناردنی شکستی هێنا: {e}"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:144
 msgid "Not supported"
 msgstr "پشتگیری ناکرێت"
 
-#: src/telephony/backend/managers/ofono_messaging_manager.py:149
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:149
 #, python-brace-format
 msgid "Error: {e}"
 msgstr "هەڵە: {e}"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
 #, python-brace-format
 msgid "Please wait 60 seconds before triggering {prefix} again."
 msgstr "تکایە ٦٠ چرکە چاوەڕێ بکە پێش ئەوەی جارێکی تر {prefix} دەستپێبکەیتەوە."
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
 #, python-brace-format
 msgid " (Accuracy: {acc}m)"
 msgstr "(وردی: {acc} m)"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
 #, python-brace-format
 msgid "I am here: {link}{acc_str}"
 msgstr "من لێرەم: {link} {acc_str}"
 
-#: src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
 msgid "Failed to obtain location after trying all methods."
 msgstr "دوای تاقیکردنەوەی هەموو شێوازەکان شکستی هێنا لە بەدەستهێنانی شوێن."
 
-#: src/telephony/backend/utils/exporter_android_utils.py:139
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:139
 #, python-brace-format
 msgid "Successfully exported {count} messages to XML."
 msgstr "بە سەرکەوتوویی پەیامەکانی {count} هەناردە کرا بۆ XML."
 
-#: src/telephony/backend/utils/exporter_android_utils.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:205
 #, python-brace-format
 msgid "Successfully exported {count} calls to XML."
 msgstr "بە سەرکەوتوویی پەیوەندییەکانی {count} هەناردە کرا بۆ XML."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:91
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:91
 #, python-brace-format
 msgid "Exported {count} messages to Chatty database."
 msgstr "پەیامەکانی {count} هەناردە کراوە بۆ بنکەدراوەی چاتی."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:147
 #, python-brace-format
 msgid "Exported {count} calls to Gnome Calls database."
 msgstr "پەیوەندییەکانی {count} هەناردە کراوە بۆ بنکەدراوەی Gnome Calls."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:164
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:164
 msgid "Source database not found."
 msgstr "بنکەدراوەی سەرچاوە نەدۆزراوەتەوە."
 
-#: src/telephony/backend/utils/exporter_local_utils.py:167
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:167
 msgid "Exported Telephony database successfully."
 msgstr "بنکەدراوەی تەلەفۆنی بە سەرکەوتوویی هەناردە کرا."
 
-#: src/telephony/backend/utils/importer_android_utils.py:33
-#: src/telephony/backend/utils/importer_android_utils.py:138
-#: src/telephony/backend/utils/importer_ios_utils.py:34
-#: src/telephony/backend/utils/importer_ios_utils.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:34
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:205
 msgid "File not found."
 msgstr "فایل نەدۆزرایەوە."
 
-#: src/telephony/backend/utils/importer_android_utils.py:129
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:129
 #, python-brace-format
 msgid "Imported {count} messages from Android backup."
 msgstr "هاوردەکردنی نامەی {count} لە پاشەکەوتی ئەندرۆیدەوە."
 
-#: src/telephony/backend/utils/importer_android_utils.py:203
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:203
 #, python-brace-format
 msgid "Imported {count} calls from Android backup."
 msgstr "پەیوەندییەکانی {count} لە پاشەکەوتی ئەندرۆیدەوە هاوردە کراوە."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:63
 msgid "Could not find messages table in iOS database."
 msgstr "نەتوانرا خشتەی نامەکان لە بنکەدراوەی iOS بدۆزرێتەوە."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:70
 msgid "Failed to read iOS SMS database structure."
 msgstr "شکستی هێنا لە خوێندنەوەی پێکهاتەی بنکەدراوەی کورتەنامەی iOS."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:196
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:196
 #, python-brace-format
 msgid "Imported {count} messages from iOS backup."
 msgstr "هاوردەکردنی نامەی {count} لە پاشەکەوتی iOS."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:230
 msgid "Could not find call history table in iOS database."
 msgstr "نەتوانرا خشتەی مێژووی پەیوەندی لە بنکەدراوەی iOS بدۆزرێتەوە."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:237
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:237
 msgid "Failed to read iOS Calls database structure."
 msgstr "شکستی هێنا لە خوێندنەوەی پێکهاتەی بنکەدراوەی پەیوەندییەکانی iOS."
 
-#: src/telephony/backend/utils/importer_ios_utils.py:303
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:303
 #, python-brace-format
 msgid "Imported {count} calls from iOS backup."
 msgstr "پەیوەندییەکانی {count} لە پاشەکەوتی iOS هاوردە کراوە."
 
-#: src/telephony/backend/utils/importer_local_utils.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:31
 msgid "Chatty database not found."
 msgstr "بنکەدراوەی چاتی نەدۆزرایەوە."
 
-#: src/telephony/backend/utils/importer_local_utils.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:53
 msgid "Could not find messages table in Chatty database."
 msgstr "نەتوانرا خشتەی نامەکان لە بنکەدراوەی چاتی بدۆزرێتەوە."
 
-#: src/telephony/backend/utils/importer_local_utils.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:60
 msgid "Failed to read Chatty database structure."
 msgstr "شکستی هێنا لە خوێندنەوەی پێکهاتەی بنکەدراوەی چاتی."
 
-#: src/telephony/backend/utils/importer_local_utils.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:124
 #, python-brace-format
 msgid "Imported {count} messages from Chatty."
 msgstr "هاوردەکردنی نامەی {count} لە چاتی."
 
-#: src/telephony/backend/utils/importer_local_utils.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:134
 msgid "Calls database not found."
 msgstr "بنکەدراوەی پەیوەندییەکان نەدۆزرایەوە."
 
-#: src/telephony/backend/utils/importer_local_utils.py:154
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:154
 msgid "Could not find call history table in Calls database."
 msgstr ""
 "نەتوانرا خشتەی مێژووی پەیوەندییەکان لە بنکەدراوەی پەیوەندییەکان بدۆزرێتەوە."
 
-#: src/telephony/backend/utils/importer_local_utils.py:161
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:161
 msgid "Failed to read Calls database structure."
 msgstr "شکستی هێنا لە خوێندنەوەی پێکهاتەی بنکەدراوەی Calls."
 
-#: src/telephony/backend/utils/importer_local_utils.py:213
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:213
 #, python-brace-format
 msgid "Imported {count} calls."
 msgstr "پەیوەندییەکانی {count} هاوردە کراوە."
 
-#: src/telephony/backend/utils/model_utils.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:56
 msgid "0s"
 msgstr "0s"
 
-#: src/telephony/backend/utils/model_utils.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:61
 #, python-brace-format
 msgid "{h}h {m}m"
 msgstr "{h} h {m} م"
 
-#: src/telephony/backend/utils/model_utils.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:63
 #, python-brace-format
 msgid "{m}m {s}s"
 msgstr "{m} m {s} s"
 
-#: src/telephony/backend/utils/model_utils.py:64
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:64
 #, python-brace-format
 msgid "{s}s"
 msgstr "{s} s"
 
-#: src/telephony/ui/main_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:79
 msgid "Telephony"
 msgstr "تەلەفۆن"
 
-#: src/telephony/ui/main_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:110
 msgid "Dialpad"
 msgstr "دایاڵپاد"
 
-#: src/telephony/ui/main_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:111
 msgid "History"
 msgstr "مێژوو"
 
-#: src/telephony/ui/main_window.py:114
-#: src/telephony/ui/views/messages_view.py:63
-#: src/telephony/ui/windows/settings_window.py:605
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:607
 msgid "Messages"
 msgstr "پەیامەکان"
 
-#: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:606
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:608
 msgid "Contacts"
 msgstr "پەیوەندییەکان"
 
-#: src/telephony/ui/main_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:162
 msgid "Syncing Contacts..."
 msgstr "هاوکاتکردنی پەیوەندییەکان..."
 
-#: src/telephony/ui/main_window.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:245
 msgid "Set your number in Settings"
 msgstr "ژمارەکەت لە ڕێکخستنەکان دابنێ"
 
-#: src/telephony/ui/main_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:260
 msgid "Please set Default Country Code in Settings"
 msgstr "تکایە کۆدی وڵاتی پێشوەختە لە ڕێکخستنەکاندا دابنێ"
 
-#: src/telephony/ui/main_window.py:273
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:273
 msgid "Setup Emergency Numbers in Settings"
 msgstr "ژمارەی فریاگوزاری لە ڕێکخستنەکاندا ڕێکبخە"
 
-#: src/telephony/ui/main_window.py:289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:289
 msgid "Resolve Duplicates"
 msgstr "چارەسەرکردنی دووبارەبووەکان"
 
-#: src/telephony/ui/main_window.py:295
-#: src/telephony/ui/windows/settings_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:295
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:41
 msgid "Settings"
 msgstr "ڕێکخستنەکان"
 
-#: src/telephony/ui/main_window.py:300
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:300
 msgid "Reload Contacts"
 msgstr "پەیوەندییەکان دووبارە باربکەرەوە"
 
-#: src/telephony/ui/main_window.py:305
-#: src/telephony/ui/windows/import_export_window.py:43
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
 msgid "Import / Export"
 msgstr "هاوردە / هەناردەکردن"
 
-#: src/telephony/ui/main_window.py:315 src/telephony/ui/main_window.py:527
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:527
 msgid "Blocklist"
 msgstr "لیستی بلۆک"
 
-#: src/telephony/ui/main_window.py:389
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:389
 msgid "Modem Connected"
 msgstr "مۆدێم پەیوەست کراوە"
 
-#: src/telephony/ui/main_window.py:391
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:391
 #, python-brace-format
 msgid "Modem Error: {message}"
 msgstr "هەڵەی مۆدێم: {message}"
 
-#: src/telephony/ui/main_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:437
 msgid "Sending USSD..."
 msgstr "ناردنی USSD..."
 
-#: src/telephony/ui/main_window.py:452
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:452
 msgid "USSD Result"
 msgstr "ئەنجامی USSD"
 
-#: src/telephony/ui/main_window.py:454
-#: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:848
-#: src/telephony/ui/windows/settings_window.py:457
-#: src/telephony/ui/windows/settings_window.py:469
-#: src/telephony/ui/windows/settings_window.py:815
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:459
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:471
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:831
 msgid "OK"
 msgstr "باشە"
 
-#: src/telephony/ui/main_window.py:463
-#: src/telephony/ui/windows/date_time_picker_window.py:41
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:463
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:41
 msgid "Confirm"
 msgstr "دڵنیاکردنەوە"
 
-#: src/telephony/ui/main_window.py:499
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:499
 #, python-brace-format
 msgid "Found {count} duplicate contact. Check menu."
 msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "{count} پەیوەندی دووبارە دۆزرایەوە. پێرستەکە بپشکنە."
 msgstr[1] "{count} پەیوەندی دووبارە دۆزرایەوە. پێرستەکە بپشکنە."
 
-#: src/telephony/ui/main_window.py:524 src/telephony/ui/main_window.py:576
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:576
 msgid "Contacts syncing..."
 msgstr "هاوکاتکردنی پەیوەندییەکان..."
 
-#: src/telephony/ui/main_window.py:544 src/telephony/ui/main_window.py:782
-#: src/telephony/ui/windows/chat_media_controller_window.py:148
-#: src/telephony/ui/windows/contact_editor_window.py:103
-#: src/telephony/ui/windows/data_management_window.py:65
-#: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:368
-#: src/telephony/ui/windows/settings_window.py:392
-#: src/telephony/ui/windows/settings_window.py:443
-#: src/telephony/ui/windows/settings_window.py:581
-#: src/telephony/ui/windows/settings_window.py:858
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:544
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:782
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:370
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:394
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:445
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:583
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:874
 msgid "Close"
 msgstr "داخستن"
 
-#: src/telephony/ui/main_window.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:570
 msgid "Reloading Contacts..."
 msgstr "دووبارە بارکردنی پەیوەندییەکان..."
 
-#: src/telephony/ui/main_window.py:586
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:586
 msgid "Multiple Contacts Found"
 msgstr "چەندین پەیوەندی دۆزرایەوە"
 
-#: src/telephony/ui/main_window.py:587
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:587
 msgid "Which contact would you like to edit?"
 msgstr "حەز دەکەیت دەستکاری کام پەیوەندی بکەیت؟"
 
-#: src/telephony/ui/main_window.py:600
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:600
 msgid "Unknown Addressbook"
 msgstr "کتێبی ناونیشانی نەناسراو"
 
-#: src/telephony/ui/main_window.py:659
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
 msgid "Calling (Anonymous)..."
 msgstr "پەیوەندیکردن بە (بێناو)..."
 
-#: src/telephony/ui/main_window.py:659
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "پەیوەندیکردن بە {number} ..."
 
-#: src/telephony/ui/main_window.py:663 src/telephony/ui/main_window.py:669
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:669
 msgid "Call Failed"
 msgstr "پەیوەندیکردن شکستی هێنا"
 
-#: src/telephony/ui/main_window.py:675
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:675
 msgid "Call Details"
 msgstr "وردەکاری پەیوەندی"
 
-#: src/telephony/ui/main_window.py:676
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:676
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -633,232 +645,233 @@ msgid ""
 "Duration: {duration}"
 msgstr "ژمارە: {number} ناو: {name} بەروار: {date} ماوەی کارکردن: {duration}"
 
-#: src/telephony/ui/main_window.py:692
-#: src/telephony/ui/windows/blocklist_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
 msgid "Unblock Number"
 msgstr "ژمارەی بلۆککردن"
 
-#: src/telephony/ui/main_window.py:698 src/telephony/ui/views/chat_view.py:766
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:698
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:770
 msgid "Unblocked"
 msgstr "بلۆک نەکراوە"
 
-#: src/telephony/ui/main_window.py:706
-#: src/telephony/ui/windows/contact_editor_window.py:395
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:395
 msgid "Edit Contact"
 msgstr "دەستکاری پەیوەندی بکە"
 
-#: src/telephony/ui/main_window.py:706
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "زیادکردن بۆ پەیوەندییەکان"
 
-#: src/telephony/ui/main_window.py:717
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:717
 msgid "Add to Existing Contact"
 msgstr "زیادکردن بۆ پەیوەندی هەبوو"
 
-#: src/telephony/ui/main_window.py:726
-#: src/telephony/ui/windows/incall_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:162
 msgid "Search Number"
 msgstr "ژمارەی گەڕان"
 
-#: src/telephony/ui/main_window.py:750
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:750
 msgid "Send Message"
 msgstr "نامە بنێرە"
 
-#: src/telephony/ui/main_window.py:755
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:755
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "ژمارەی کۆپی"
 
-#: src/telephony/ui/main_window.py:760
-#: src/telephony/ui/windows/blocklist_editor_window.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:760
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "ژمارەی بلۆک"
 
-#: src/telephony/ui/main_window.py:773
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:773
 msgid "Delete this call"
 msgstr "ئەم پەیوەندییە بسڕەوە"
 
-#: src/telephony/ui/main_window.py:778
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
 msgid "Delete Call"
 msgstr "سڕینەوەی پەیوەندی"
 
-#: src/telephony/ui/main_window.py:778
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
 msgid "Remove this call?"
 msgstr "ئەم بانگەوازە لاببە؟"
 
-#: src/telephony/ui/main_window.py:792
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:792
 msgid "Number copied"
 msgstr "ژمارە کۆپی کراوە"
 
-#: src/telephony/ui/main_window.py:798
-#: src/telephony/ui/windows/contact_editor_window.py:757
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:798
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:747
 msgid "Saving contact..."
 msgstr "پاشەکەوتکردنی پەیوەندی..."
 
-#: src/telephony/ui/main_window.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:802
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "زیادکراوە بۆ {name}"
 
-#: src/telephony/ui/main_window.py:805
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:805
 msgid "Failed to add number"
 msgstr "شکستی هێنا لە زیادکردنی ژمارە"
 
-#: src/telephony/ui/main_window.py:813
-#: src/telephony/ui/windows/contact_editor_window.py:184
-#: src/telephony/ui/windows/settings_window.py:213
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:184
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:214
 msgid "Add Number"
 msgstr "ژمارە زیاد بکە"
 
-#: src/telephony/ui/main_window.py:814
-#: src/telephony/ui/windows/advanced_settings_window.py:52
-#: src/telephony/ui/windows/blocklist_editor_window.py:46
-#: src/telephony/ui/windows/contact_editor_window.py:127
-#: src/telephony/ui/windows/custom_tone_list_window.py:60
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
-#: src/telephony/ui/windows/settings_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:110
-#: src/telephony/ui/windows/trusted_actions_list_window.py:557
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:814
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:575
 msgid "Save"
 msgstr "هەڵگرتن"
 
-#: src/telephony/ui/views/chat_view.py:133
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:137
 #, python-brace-format
 msgid "Draft to {count} recipients"
 msgstr "ڕەشنووس بۆ وەرگرانی {count}"
 
-#: src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:164
 #, python-brace-format
 msgid "{count} Participants"
 msgstr "{count} بەشداربووان"
 
-#: src/telephony/ui/views/chat_view.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:310
 msgid "Replies not supported for this sender"
 msgstr "وەڵامەکان پشتگیری ناکرێت بۆ ئەم نێرەر"
 
-#: src/telephony/ui/views/chat_view.py:350
-#: src/telephony/ui/views/chat_view.py:1230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:354
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1239
 msgid "Scheduled time must be in the future"
 msgstr "کاتی دیاریکراو دەبێت لە داهاتوودا بێت"
 
-#: src/telephony/ui/views/chat_view.py:358
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:362
 #, python-brace-format
 msgid "Rescheduled for {time}"
 msgstr "دووبارە بەرنامە بۆ داڕێژراوە بۆ {time}"
 
-#: src/telephony/ui/views/chat_view.py:362
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:366
 msgid "Re-Schedule Message"
 msgstr "دووبارە خشتەی بەرنامە بۆ پەیام"
 
-#: src/telephony/ui/views/chat_view.py:497
-#: src/telephony/ui/views/chat_view.py:562
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:566
 msgid "— New Messages —"
 msgstr "— پەیامی نوێ —"
 
-#: src/telephony/ui/views/chat_view.py:600
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:604
 msgid "No results found in this conversation"
 msgstr "هیچ ئەنجامێک لەم گفتوگۆیەدا نەدۆزراوەتەوە"
 
-#: src/telephony/ui/views/chat_view.py:672
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:676
 msgid "Group Name"
 msgstr "ناوی گروپ"
 
-#: src/telephony/ui/views/chat_view.py:673
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:677
 msgid "Set group name..."
 msgstr "ناوی گروپەکە دابنێ..."
 
-#: src/telephony/ui/views/chat_view.py:681
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:685
 msgid "Participants"
 msgstr "بەشداربووان"
 
-#: src/telephony/ui/views/chat_view.py:781
-#: src/telephony/ui/views/chat_view.py:1387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:785
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
 msgid "Delete Conversation"
 msgstr "گفتوگۆ بسڕەوە"
 
-#: src/telephony/ui/views/chat_view.py:798
-#: src/telephony/ui/views/chat_view.py:1162
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:340
 msgid "Me"
 msgstr "من"
 
-#: src/telephony/ui/views/chat_view.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
 #, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr "لە {sender} ەوە نێردراوە: {body}"
 
-#: src/telephony/ui/views/chat_view.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
 #, python-brace-format
 msgid "Forwarded from {sender}"
 msgstr "لە {sender} ەوە نێردراوە"
 
-#: src/telephony/ui/views/chat_view.py:817
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:821
 msgid "Forward To"
 msgstr "بۆ پێشەوە بۆ"
 
-#: src/telephony/ui/views/chat_view.py:818
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:149
 msgid "Forward"
 msgstr "بۆ پێشەوە"
 
-#: src/telephony/ui/views/chat_view.py:843
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
 msgid "Delete Message"
 msgstr "سڕینەوەی پەیام"
 
-#: src/telephony/ui/views/chat_view.py:843
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
 msgid "Are you sure you want to delete this message?"
 msgstr "دڵنیای کە دەتەوێت ئەم پەیامە بسڕیتەوە؟"
 
-#: src/telephony/ui/views/chat_view.py:980
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:989
 msgid "Group renamed"
 msgstr "ناوی گروپەکە گۆڕدرا"
 
-#: src/telephony/ui/views/chat_view.py:1008
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1017
 msgid "Compressing image..."
 msgstr "پاڵپێوەنانی وێنە..."
 
-#: src/telephony/ui/views/chat_view.py:1010
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1019
 msgid "Image is too large to send"
 msgstr "وێنەکە زۆر گەورەیە بۆ ناردن"
 
-#: src/telephony/ui/views/chat_view.py:1012
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1021
 msgid "Compressing video..."
 msgstr "پاڵپێوەنانی ڤیدیۆ..."
 
-#: src/telephony/ui/views/chat_view.py:1014
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1023
 msgid "Video compression failed"
 msgstr "پاڵپێوەنانی ڤیدیۆ شکستی هێنا"
 
-#: src/telephony/ui/views/chat_view.py:1016
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1025
 msgid "File is too large to send via MMS"
 msgstr "فایلەکە زۆر گەورەیە بۆ ناردن بە MMS"
 
-#: src/telephony/ui/views/chat_view.py:1224
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1233
 msgid "Nothing to schedule"
 msgstr "هیچ شتێک نییە بۆ بەرنامەدانان"
 
-#: src/telephony/ui/views/chat_view.py:1238
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1247
 msgid "Schedule Message"
 msgstr "پەیامی خشتەی کار"
 
-#: src/telephony/ui/views/chat_view.py:1277
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1286
 #, python-brace-format
 msgid "Message scheduled for {time}"
 msgstr "بڕیارە نامە بۆ {time}"
 
-#: src/telephony/ui/views/chat_view.py:1280
-#: src/telephony/ui/views/chat_view.py:1298
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1307
 msgid "[Attachment]"
 msgstr "[هاوپێچ]"
 
-#: src/telephony/ui/views/chat_view.py:1387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
 msgid "Delete Group"
 msgstr "سڕینەوەی گروپ"
 
-#: src/telephony/ui/views/chat_view.py:1388
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1397
 msgid ""
 "This will permanently delete the conversation history and all saved media "
 "files."
@@ -866,383 +879,383 @@ msgstr ""
 "بەم شێوەیە مێژووی گفتوگۆ و هەموو فایلە میدیاییە هەڵگیراوەکان بۆ هەمیشە "
 "دەسڕێتەوە."
 
-#: src/telephony/ui/views/contacts_view.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:60
 msgid "Search contacts"
 msgstr "گەڕان بەدوای پەیوەندییەکان"
 
-#: src/telephony/ui/views/contacts_view.py:119
-#: src/telephony/ui/windows/contact_editor_window.py:71
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/custom_tone_list_window.py:229
-#: src/telephony/ui/windows/trusted_actions_list_window.py:416
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:435
 msgid "Mobile"
 msgstr "مۆبایل"
 
-#: src/telephony/ui/views/contacts_view.py:120
-#: src/telephony/ui/windows/contact_editor_window.py:72
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/contact_editor_window.py:435
-#: src/telephony/ui/windows/custom_tone_list_window.py:230
-#: src/telephony/ui/windows/trusted_actions_list_window.py:417
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:436
 msgid "Work"
 msgstr "کار"
 
-#: src/telephony/ui/views/contacts_view.py:121
-#: src/telephony/ui/windows/contact_editor_window.py:73
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/contact_editor_window.py:435
-#: src/telephony/ui/windows/custom_tone_list_window.py:231
-#: src/telephony/ui/windows/trusted_actions_list_window.py:418
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:437
 msgid "Home"
 msgstr "ماڵەوە"
 
-#: src/telephony/ui/views/contacts_view.py:122
-#: src/telephony/ui/windows/contact_editor_window.py:74
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/custom_tone_list_window.py:232
-#: src/telephony/ui/windows/trusted_actions_list_window.py:419
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:438
 msgid "Fax"
 msgstr "فاکس"
 
-#: src/telephony/ui/views/contacts_view.py:123
-#: src/telephony/ui/windows/contact_editor_window.py:75
-#: src/telephony/ui/windows/contact_editor_window.py:411
-#: src/telephony/ui/windows/contact_editor_window.py:435
-#: src/telephony/ui/windows/custom_tone_list_window.py:233
-#: src/telephony/ui/windows/trusted_actions_list_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:439
 msgid "Other"
 msgstr "ئی تر"
 
-#: src/telephony/ui/views/contacts_view.py:124
-#: src/telephony/ui/windows/contact_editor_window.py:76
-#: src/telephony/ui/windows/custom_tone_list_window.py:234
-#: src/telephony/ui/windows/trusted_actions_list_window.py:421
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:440
 msgid "Main"
 msgstr "سەرەکی"
 
-#: src/telephony/ui/views/contacts_view.py:424
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:424
 msgid "Call Anonymous"
 msgstr "پەیوەندی بە بێناوەوە بکە"
 
-#: src/telephony/ui/views/dialpad_view.py:41
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:41
 msgid "Enter number"
 msgstr "ژمارە داخڵ بکە"
 
-#: src/telephony/ui/views/dialpad_view.py:48
-#: src/telephony/ui/views/dialpad_view.py:149
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:149
 msgid "Telephony Smart Dialpad at your service"
 msgstr "تەلەفۆنی سمارت دایاڵپاد لە خزمەتتاندایە"
 
-#: src/telephony/ui/views/dialpad_view.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:246
 msgid "Invalid number in clipboard"
 msgstr "ژمارەیەکی نادروست لە کلیپبۆرددا"
 
-#: src/telephony/ui/views/dialpad_view.py:248
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:248
 msgid "Invalid number"
 msgstr "ژمارەیەکی نادروست"
 
-#: src/telephony/ui/views/history_view.py:125
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:125
 msgid "All"
 msgstr "گشت"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "Any duration"
 msgstr "هەر ماوەیەک"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "Unanswered"
 msgstr "بێ وەڵام"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "1s - 60s"
 msgstr "1s - 60s"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "1-3 mins"
 msgstr "1-3 خولەک"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "3-10 mins"
 msgstr "٣-١٠ خولەک"
 
-#: src/telephony/ui/views/history_view.py:182
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
 msgid "> 15 mins"
 msgstr "> 15 خولەک"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Any date"
 msgstr "هەر بەروارێک"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Today"
 msgstr "ئەمڕۆ"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 3 days"
 msgstr "٣ ڕۆژی ڕابردوو"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 14 days"
 msgstr "١٤ ڕۆژی ڕابردوو"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 30 days"
 msgstr "٣٠ ڕۆژی ڕابردوو"
 
-#: src/telephony/ui/views/history_view.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
 msgid "Last 60 days"
 msgstr "٦٠ ڕۆژی ڕابردوو"
 
-#: src/telephony/ui/views/messages_view.py:106
-#: src/telephony/ui/views/messages_view.py:575
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:577
 msgid "Search Contacts..."
 msgstr "گەڕان بەدوای پەیوەندییەکان..."
 
-#: src/telephony/ui/views/messages_view.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:226
 msgid "All Messages"
 msgstr "هەموو پەیامەکان"
 
-#: src/telephony/ui/views/messages_view.py:225
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:227
 msgid "Unread Messages"
 msgstr "پەیامی نەخوێندراو"
 
-#: src/telephony/ui/views/messages_view.py:226
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:228
 msgid "Unknown Numbers"
 msgstr "ژمارە نەناسراوەکان"
 
-#: src/telephony/ui/views/messages_view.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:229
 msgid "Saved Contacts"
 msgstr "پەیوەندییە پاشەکەوتکراوەکان"
 
-#: src/telephony/ui/views/messages_view.py:228
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:230
 msgid "Group Messages"
 msgstr "پەیامی گروپی"
 
-#: src/telephony/ui/views/messages_view.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:231
 msgid "Individual Messages"
 msgstr "پەیامی تاکەکەسی"
 
-#: src/telephony/ui/views/messages_view.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:232
 msgid "Alphabetical Senders"
 msgstr "نێرەری ئەلفوبێ"
 
-#: src/telephony/ui/views/messages_view.py:322
-#: src/telephony/ui/views/messages_view.py:444
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:446
 msgid "[Multimedia Message]"
 msgstr "[پەیامی مالتیمیدیا]"
 
-#: src/telephony/ui/views/messages_view.py:579
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:581
 msgid "Search Messages..."
 msgstr "گەڕان بەدوای پەیامەکاندا..."
 
-#: src/telephony/ui/views/messages_view.py:621
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:623
 #, python-brace-format
 msgid "Start ({count})"
 msgstr "دەست پێ بکە ( {count} )"
 
-#: src/telephony/ui/views/messages_view.py:628
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:630
 #, python-brace-format
 msgid "Open ({count})"
 msgstr "بیکەرەوە ({count})"
 
-#: src/telephony/ui/views/messages_view.py:700
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:702
 #, python-brace-format
 msgid "Add Number: {number}"
 msgstr "ژمارەی زیادکردن: {number}"
 
-#: src/telephony/ui/views/messages_view.py:733
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:735
 msgid "Group chat"
 msgstr "چاتی گرووپ"
 
-#: src/telephony/ui/views/messages_view.py:741
-#: src/telephony/ui/windows/custom_tone_list_window.py:297
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
-#: src/telephony/ui/windows/trusted_actions_list_window.py:487
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:743
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:297
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:506
 msgid "No contacts found"
 msgstr "هیچ پەیوەندییەک نەدۆزراوەتەوە"
 
-#: src/telephony/ui/views/messages_view.py:856
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:858
 msgid "No results found"
 msgstr "هیچ ئەنجامێک نەدۆزرایەوە"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:145
 msgid "Copy Text"
 msgstr "دەق کۆپی بکە"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:124
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:621
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:201
 msgid "Re-Schedule"
 msgstr "دووبارە خشتەی کارەکان"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:150
 msgid "Mark as Unread"
 msgstr "وەک نەخوێندراو نیشانە بکە"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:128
-#: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:778
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:780
 msgid "Delete"
 msgstr "سڕینەوە"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:296
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "دووبارە ناردنەوە"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:146
 #, python-brace-format
 msgid "Scheduled: {time}"
 msgstr "بەرنامە بۆ داڕێژراو: {time}"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:303
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:370
 msgid "Failed to send"
 msgstr "ناردن شکستی هێنا"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:374
 msgid "Sending..."
 msgstr "دەنێردرێت..."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:537
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:631
 msgid "Open with"
 msgstr "بکەرەوە لەگەڵ"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:538
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:632
 msgid "Copy"
 msgstr "کۆپی بکە"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:539
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:633
 msgid "Save as"
 msgstr "پاشەکەوت بکە وەک"
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:618
-msgid "Retry Send"
-msgstr "دووبارە ناردنەوە"
-
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:677
 msgid "Open With..."
 msgstr "بکەرەوە لەگەڵ..."
 
-#: src/telephony/ui/widgets/chat_bubbles_widget.py:713
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:698
 msgid "Save File As"
 msgstr "پاشەکەوتکردنی فایلەکە وەک"
 
-#: src/telephony/ui/widgets/incall_elements_widget.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:48
 msgid "Hangup All Calls"
 msgstr "هەموو پەیوەندییەکان هەڵواسین"
 
-#: src/telephony/ui/widgets/messages_rows_widget.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
 #, python-brace-format
 msgid "{time} • Group"
 msgstr "{time} • گروپ"
 
-#: src/telephony/ui/widgets/messages_rows_widget.py:109
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:109
 #, python-brace-format
 msgid "Draft: {message}"
 msgstr "ڕەشنووس: {message}"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:32
-#: src/telephony/ui/windows/settings_window.py:352
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:354
 msgid "Advanced Settings"
 msgstr "ڕێکخستنە پێشکەوتووەکان"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:66
 msgid "Loading..."
 msgstr "بارکردن..."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:102
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:103
 #, python-brace-format
 msgid "Error loading settings: {e}"
 msgstr "هەڵە لە ڕێکخستنەکانی بارکردندا: {e}"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:111
 msgid "Secret SMS Triggers"
 msgstr "تریگەری کورتەنامە نهێنییەکان"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:113
-#: src/telephony/ui/windows/trusted_actions_list_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:91
 msgid "Set \"Find my Telephony\""
 msgstr "\"تەلەفۆنەکەم بدۆزەرەوە\" دابنێ."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:119
-#: src/telephony/ui/windows/trusted_actions_list_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:93
 msgid "Set \"Trusted Callback\""
 msgstr "\"کۆکردنەوەی متمانەپێکراو\" دابنێ."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:125
-#: src/telephony/ui/windows/trusted_actions_list_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:95
 msgid "Set \"SMS -Relay\""
 msgstr "\"SMS -Relay\" دابنێ."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:131
-#: src/telephony/ui/windows/trusted_actions_list_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:97
 msgid "Set \"SMS -tmate\""
 msgstr "\"SMS -tmate\" دابنێ."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:137
-#: src/telephony/ui/windows/trusted_actions_list_window.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:99
 msgid "Set \"SMS Switch Wipe Device\""
 msgstr "\"ئامێری سڕینەوەی سویچی کورتەنامە\" دابنێ."
 
-#: src/telephony/ui/windows/advanced_settings_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:146
 msgid "Restart Modem"
 msgstr "دووبارە دەستپێکردنەوەی مۆدێم"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:153
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:154
 msgid "Data Management"
 msgstr "بەڕێوەبردنی داتا"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:169
 msgid "Authentication cancelled"
 msgstr "ڕەسەنایەتی هەڵوەشایەوە"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:175
 #, python-brace-format
 msgid "Auth error: {e}"
 msgstr "هەڵەی ڕەسەنایەتی: {e}"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:180
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:182
 msgid "Advanced Settings Applied"
 msgstr "ڕێکخستنە پێشکەوتووەکان جێبەجێ کراوە"
 
-#: src/telephony/ui/windows/advanced_settings_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:187
 msgid "Restarting Modem..."
 msgstr "دووبارە دەستپێکردنەوەی مۆدێم..."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:55
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:55
 msgid "Number Details"
 msgstr "وردەکاری ژمارە"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:56
 msgid "Calls from this number will be automatically rejected."
 msgstr "پەیوەندیەکان لەم ژمارەیەوە بە شێوەیەکی ئۆتۆماتیکی ڕەت دەکرێنەوە."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:774
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:776
 msgid "Number"
 msgstr "ژمارە"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:67
 msgid "Note (Optional)"
 msgstr "تێبینی (ئیختیاری)"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
 msgid "Duplicate"
 msgstr "دووبارەکردنەوە"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
 msgid "This number is already blocked."
 msgstr "ئەم ژمارەیە پێشتر بلۆک کراوە."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
 msgid "Database Error"
 msgstr "هەڵەی بنکەدراوە"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
 msgid "Failed to save to blocklist."
 msgstr "شکستی هێنا لە پاشەکەوتکردن بۆ لیستی بلۆک."
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:828
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:818
 msgid "Conflict"
 msgstr "ناکۆکی"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:108
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1252,253 +1265,253 @@ msgstr ""
 "\n"
 "دەتەوێت بەردەوام بیت لە Blocking و ژمارەکە لە Contacts لاببەیت؟"
 
-#: src/telephony/ui/windows/blocklist_editor_window.py:112
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:112
 msgid "Yes, Block"
 msgstr "بەڵێ، بلۆک"
 
-#: src/telephony/ui/windows/blocklist_window.py:38
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:38
 msgid "Blocked Numbers"
 msgstr "ژمارە بلۆککراوەکان"
 
-#: src/telephony/ui/windows/blocklist_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:128
 msgid "No notes"
 msgstr "بێ تێبینی"
 
-#: src/telephony/ui/windows/blocklist_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
 msgid "Are you sure you want to unblock this number?"
 msgstr "دڵنیای کە دەتەوێت ئەم ژمارەیە بلۆک بکەیتەوە؟"
 
-#: src/telephony/ui/windows/blocklist_window.py:155
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:155
 msgid "Unblocked number"
 msgstr "ژمارەی بلۆک نەکراو"
 
-#: src/telephony/ui/windows/camera_photo_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:40
 msgid "Take Picture"
 msgstr "وێنە بگرە"
 
-#: src/telephony/ui/windows/camera_photo_window.py:140
-#: src/telephony/ui/windows/camera_video_window.py:172
-#: src/telephony/ui/windows/sound_recorder_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:144
 msgid "Retake"
 msgstr "دووبارە وەرگرتنەوە"
 
-#: src/telephony/ui/windows/camera_photo_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:145
 msgid "Attach Photo"
 msgstr "وێنە هاوپێچ بکە"
 
-#: src/telephony/ui/windows/camera_video_window.py:47
-#: src/telephony/ui/windows/chat_media_controller_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:61
 msgid "Record Video"
 msgstr "تۆمارکردنی ڤیدیۆ"
 
-#: src/telephony/ui/windows/camera_video_window.py:177
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:177
 msgid "Attach Video"
 msgstr "ڤیدیۆ هاوپێچ بکە"
 
-#: src/telephony/ui/windows/camera_video_window.py:314
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:314
 #, python-brace-format
 msgid "Failed to record video: {error_msg}"
 msgstr "شکستی هێنا لە تۆمارکردنی ڤیدیۆ: {error_msg}"
 
-#: src/telephony/ui/windows/camera_video_window.py:384
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:384
 msgid "Recording failed (File empty)."
 msgstr "تۆمارکردن شکستی هێنا (فایلەکە بەتاڵ بوو)."
 
-#: src/telephony/ui/windows/camera_video_window.py:388
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:388
 #, python-brace-format
 msgid "Large video ({size}KB). Will be compressed on send."
 msgstr "ڤیدیۆیەکی گەورە ( {size} KB). لە کاتی ناردندا پاڵەپەستۆ دەکرێت."
 
-#: src/telephony/ui/windows/camera_video_window.py:405
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:405
 msgid "Cannot play empty file."
 msgstr "ناتوانرێت فایلێکی بەتاڵ یاری پێبکات."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:60
 msgid "Take Photo"
 msgstr "وێنە بگرە"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:62
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:62
 msgid "Record Audio"
 msgstr "تۆمارکردنی دەنگ"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:63
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:63
 msgid "Choose File"
 msgstr "File هەڵبژێرە"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:64
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:64
 msgid "Schedule"
 msgstr "خشتە"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:79
-#: src/telephony/ui/windows/chat_media_controller_window.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
 msgid "Camera Error"
 msgstr "هەڵەی کامێرا"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
 msgid "Could not start the camera."
 msgstr "نەتوانرا کامێراکە دەستپێبکات."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
 msgid "Could not start video recording."
 msgstr "نەتوانرا دەست بە تۆمارکردنی ڤیدیۆ بکات."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
 msgid "Audio Error"
 msgstr "هەڵەی دەنگ"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
 msgid "Could not start audio recorder."
 msgstr "نەتوانرا تۆمارکەری دەنگی دەستپێبکات."
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:101
 msgid "Select Attachment"
 msgstr "هاوپێچ هەڵبژێرە"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
 msgid "Attachment Error"
 msgstr "هەڵەی هاوپێچکردن"
 
-#: src/telephony/ui/windows/chat_media_controller_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
 msgid "Failed to prepare attachment."
 msgstr "شکستی هێنا لە ئامادەکردنی وابەستە."
 
-#: src/telephony/ui/windows/contact_editor_window.py:36
-#: src/telephony/ui/windows/contact_editor_window.py:402
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:402
 msgid "Contact Details"
 msgstr "زانیاری پەیوەندی"
 
-#: src/telephony/ui/windows/contact_editor_window.py:107
-#: src/telephony/ui/windows/custom_tone_list_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:179
 msgid "Edit"
 msgstr "بژارکردن"
 
-#: src/telephony/ui/windows/contact_editor_window.py:141
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:141
 msgid "Identity"
 msgstr "ناسنامە"
 
-#: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
 msgid "Favorite"
 msgstr "خوازراو"
 
-#: src/telephony/ui/windows/contact_editor_window.py:152
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:152
 msgid "Full Name"
 msgstr "ناوی تەواو"
 
-#: src/telephony/ui/windows/contact_editor_window.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:158
 msgid "Name"
 msgstr "ناو"
 
-#: src/telephony/ui/windows/contact_editor_window.py:162
-#: src/telephony/ui/windows/trusted_actions_list_window.py:647
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:665
 msgid "Yes"
 msgstr "بەڵێ"
 
-#: src/telephony/ui/windows/contact_editor_window.py:168
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:168
 msgid "Phone Numbers"
 msgstr "ژمارەی تەلەفۆن"
 
-#: src/telephony/ui/windows/contact_editor_window.py:195
-#: src/telephony/ui/windows/duplicate_resolution_window.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:160
 msgid "Email Addresses"
 msgstr "ناونیشانی ئیمەیڵ"
 
-#: src/telephony/ui/windows/contact_editor_window.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:205
 msgid "Add Email"
 msgstr "ئیمەیڵ زیاد بکە"
 
-#: src/telephony/ui/windows/contact_editor_window.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:216
 msgid "Additional Details"
 msgstr "وردەکاری زیاتر"
 
-#: src/telephony/ui/windows/contact_editor_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
 msgid "Organization"
 msgstr "ڕێکخراو"
 
-#: src/telephony/ui/windows/contact_editor_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
 msgid "Job Title"
 msgstr "ناونیشانی کار"
 
-#: src/telephony/ui/windows/contact_editor_window.py:220
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
 msgid "Address"
 msgstr "ناونیشان"
 
-#: src/telephony/ui/windows/contact_editor_window.py:220
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
 msgid "Notes"
 msgstr "تێبینی"
 
-#: src/telephony/ui/windows/contact_editor_window.py:221
-#: src/telephony/ui/windows/info_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:101
 msgid "Website"
 msgstr "ماڵپەڕ"
 
-#: src/telephony/ui/windows/contact_editor_window.py:246
-#: src/telephony/ui/windows/contact_editor_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:251
 msgid "Birthday"
 msgstr "ڕۆژی لەدایک بوون"
 
-#: src/telephony/ui/windows/contact_editor_window.py:247
-#: src/telephony/ui/windows/contact_editor_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:247
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:254
 msgid "Anniversary"
 msgstr "ساڵانە"
 
-#: src/telephony/ui/windows/contact_editor_window.py:263
-#: src/telephony/ui/windows/contact_editor_window.py:554
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:263
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
 msgid "Delete Contact"
 msgstr "سڕینەوەی پەیوەندی"
 
-#: src/telephony/ui/windows/contact_editor_window.py:274
-#: src/telephony/ui/windows/settings_window.py:162
-#: src/telephony/ui/windows/settings_window.py:440
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:274
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:442
 msgid "Address Books"
 msgstr "کتێبی ناونیشان"
 
-#: src/telephony/ui/windows/contact_editor_window.py:294
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:294
 msgid "Unknown Source"
 msgstr "سەرچاوەیەکی نادیار"
 
-#: src/telephony/ui/windows/contact_editor_window.py:318
-#: src/telephony/ui/windows/contact_editor_window.py:356
-#: src/telephony/ui/windows/date_time_picker_window.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:356
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:29
 msgid "Select Date"
 msgstr "بەروار هەڵبژێرە"
 
-#: src/telephony/ui/windows/contact_editor_window.py:329
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:329
 msgid "Clear Date"
 msgstr "بەرواری ڕوون بکەرەوە"
 
-#: src/telephony/ui/windows/contact_editor_window.py:371
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:371
 #, python-brace-format
 msgid "Select {title}"
 msgstr "{title} هەڵبژێرە"
 
-#: src/telephony/ui/windows/contact_editor_window.py:381
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:381
 #, python-brace-format
 msgid "Copy {title}"
 msgstr "کۆپی بکە {title}"
 
-#: src/telephony/ui/windows/contact_editor_window.py:390
-#: src/telephony/ui/windows/trusted_actions_list_window.py:621
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:390
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:639
 msgid "Copied to clipboard"
 msgstr "کۆپی کراوە بۆ کلیپبۆرد"
 
-#: src/telephony/ui/windows/contact_editor_window.py:535
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:525
 msgid "Export Contact"
 msgstr "پەیوەندی هەناردەکردن"
 
-#: src/telephony/ui/windows/contact_editor_window.py:554
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
 msgid "Are you sure you want to delete this contact?"
 msgstr "ئایا دڵنیای کە دەتەوێت ئەم پەیوەندییە بسڕیتەوە؟"
 
-#: src/telephony/ui/windows/contact_editor_window.py:567
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:557
 msgid "Deleting contact..."
 msgstr "سڕینەوەی پەیوەندی..."
 
-#: src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:812
 msgid "Failed to save contact"
 msgstr "پاشەکەوتکردنی کۆنتاکت شکستی هێنا"
 
-#: src/telephony/ui/windows/contact_editor_window.py:829
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:819
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1508,37 +1521,37 @@ msgstr ""
 "\n"
 "دەتەوێت بەردەوام بیت لە Unblocking و ژمارەکە زیاد بکەیت بۆ Contacts؟"
 
-#: src/telephony/ui/windows/contact_editor_window.py:833
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:823
 msgid "Yes, Add to Contacts"
 msgstr "بەڵێ، زیادکردن بۆ پەیوەندییەکان"
 
-#: src/telephony/ui/windows/contact_picker_window.py:30
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:30
 msgid "Pick Contact"
 msgstr "پەیوەندی هەڵبژێرە"
 
-#: src/telephony/ui/windows/contact_picker_window.py:62
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:62
 msgid "Name or Number"
 msgstr "ناو یان ژمارە"
 
-#: src/telephony/ui/windows/contact_picker_window.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:192
 msgid "No number"
 msgstr "ژمارە نییە"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:31
-#: src/telephony/ui/windows/settings_window.py:323
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:325
 msgid "Individual SMS Notifications"
 msgstr "ئاگادارکردنەوەی کورتەنامەی تاکەکەسی"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:31
-#: src/telephony/ui/windows/settings_window.py:334
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:336
 msgid "Individual Ringtones"
 msgstr "زەنگی تاکەکەسی"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:73
 msgid "Find contact to add..."
 msgstr "پەیوەندی بدۆزەرەوە بۆ زیادکردنی..."
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:80
 msgid ""
 "Select a contact and choose a custom sound file (.ogg or .oga). The file "
 "will be copied to your local storage."
@@ -1546,112 +1559,112 @@ msgstr ""
 "پەیوەندییەک هەڵبژێرە و فایلێکی دەنگی تایبەت (.ogg یان .oga) هەڵبژێرە. "
 "فایلەکە کۆپی دەکرێت بۆ کۆگای ناوخۆیی خۆت."
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:186
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:167
 msgid "Remove"
 msgstr "لابردن"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:202
 msgid "Custom tone removed (Click Save to commit)"
 msgstr "تۆنی تایبەت لابرا (بۆ پابەندبوون کلیک لە پاشەکەوت بکە)"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:316
 #, python-brace-format
 msgid "Select Tone for {name}"
 msgstr "بۆ {name} تۆن هەڵبژێرە"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:318
-#: src/telephony/ui/windows/settings_window.py:405
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:319
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:407
 msgid "Select"
 msgstr "دەسنیاشنکردن"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:323
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:324
 msgid "Supported Audio (OGG)"
 msgstr "دەنگی پشتگیریکراو (OGG)"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:351
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:352
 msgid "Only .ogg or .oga files are supported"
 msgstr "تەنها فایلەکانی .ogg یان .oga پشتگیری دەکرێن"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:362
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:363
 msgid "Failed to copy audio file"
 msgstr "شکستی هێنا لە کۆپیکردنی فایلە دەنگییەکە"
 
-#: src/telephony/ui/windows/custom_tone_list_window.py:382
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:383
 msgid "Custom tone added"
 msgstr "تۆنی تایبەت زیاد کرا"
 
-#: src/telephony/ui/windows/data_management_window.py:32
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
 msgid "Database Management"
 msgstr "بەڕێوەبردنی بنکەدراوە"
 
-#: src/telephony/ui/windows/data_management_window.py:32
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
 msgid "Select data to permanently delete."
 msgstr "داتا هەڵبژێرە بۆ ئەوەی بۆ هەمیشە بیسڕیتەوە."
 
-#: src/telephony/ui/windows/data_management_window.py:47
-#: src/telephony/ui/windows/data_management_window.py:90
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
 msgid "Delete Call History"
 msgstr "مێژووی پەیوەندی بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:48
-#: src/telephony/ui/windows/data_management_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
 msgid "Delete All Messages"
 msgstr "هەموو نامەکان بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:49
 msgid "Delete All Group Names"
 msgstr "هەموو ناوی گروپەکان بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:50
-#: src/telephony/ui/windows/data_management_window.py:102
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:50
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
 msgid "Delete Blocklist"
 msgstr "لیستی بلۆک بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:51
-#: src/telephony/ui/windows/data_management_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:51
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
 msgid "Delete All Contacts"
 msgstr "هەموو پەیوەندییەکان بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:52
-#: src/telephony/ui/windows/data_management_window.py:130
-#: src/telephony/ui/windows/data_management_window.py:153
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:130
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:153
 msgid "Delete Address Book"
 msgstr "کتێبی ناونیشان بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:60
 msgid "DELETE EVERYTHING"
 msgstr "هەموو شتێک بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:90
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
 msgid "Are you sure? This cannot be undone."
 msgstr "دڵنیای؟ ئەمەش ناتوانرێت هەڵبوەشێتەوە."
 
-#: src/telephony/ui/windows/data_management_window.py:94
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
 msgid "This will delete all SMS/MMS and attachments."
 msgstr "بەم شێوەیە هەموو SMS/MMS و هاوپێچەکان دەسڕدرێتەوە."
 
-#: src/telephony/ui/windows/data_management_window.py:98
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
 msgid "Delete Group Names"
 msgstr "ناوی گروپەکان بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:98
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
 msgid "Reset all custom group chat names?"
 msgstr "هەموو ناوە تایبەتەکانی چاتی گروپەکان ڕێست بکەرەوە؟"
 
-#: src/telephony/ui/windows/data_management_window.py:102
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
 msgid "Unblock all numbers?"
 msgstr "بلۆککردنی هەموو ژمارەکان؟"
 
-#: src/telephony/ui/windows/data_management_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
 msgid "No deletable address books"
 msgstr "هیچ کتێبێکی ناونیشانی بسڕدرێتەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
 msgid "There are no custom address books that can be deleted."
 msgstr "هیچ کتێبێکی ناونیشانی تایبەت نییە کە بتوانرێت بسڕدرێتەوە."
 
-#: src/telephony/ui/windows/data_management_window.py:131
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:131
 msgid ""
 "Which address book do you want to delete permanently?\n"
 "\n"
@@ -1661,108 +1674,108 @@ msgstr ""
 "\n"
 "بەم شێوەیە لە سیستەمەکە دەیسڕێتەوە."
 
-#: src/telephony/ui/windows/data_management_window.py:154
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:154
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "ئایا دڵنیای کە دەتەوێت بۆ هەمیشە کتێبی ناونیشانی ' {name} ' بسڕیتەوە؟"
 
-#: src/telephony/ui/windows/data_management_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
 msgid "Delete EVERYTHING"
 msgstr "هەموو شتێک بسڕەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
 msgid "Wipe database, config files and contacts? App will reset."
 msgstr ""
 "بنکەدراوە و فایلەکانی ڕێکخستن و پەیوەندییەکان بسڕەوە؟ ئەپەکە ڕێست دەبێتەوە."
 
-#: src/telephony/ui/windows/data_management_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
 msgid "Really delete everyone from your address book?"
 msgstr "بەڕاستی هەموو کەسێک لە کتێبی ناونیشانەکانت بسڕەوە؟"
 
-#: src/telephony/ui/windows/data_management_window.py:178
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:178
 msgid "Select which address book to clear:"
 msgstr "کام کتێبی ناونیشانەکان پاک بکەیتەوە هەڵبژێرە:"
 
-#: src/telephony/ui/windows/data_management_window.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:189
 msgid "All Address Books"
 msgstr "هەموو کتێبی ناونیشانەکان"
 
-#: src/telephony/ui/windows/data_management_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:219
 msgid "Call History Deleted"
 msgstr "مێژووی پەیوەندی سڕاوەتەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:223
 msgid "Deleting messages..."
 msgstr "سڕینەوەی نامەکان..."
 
-#: src/telephony/ui/windows/data_management_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:229
 msgid "Messages & Attachments Deleted"
 msgstr "پەیام و هاوپێچەکان سڕاونەتەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:236
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:236
 msgid "Group Names Reset"
 msgstr "ناوی گروپەکان Reset"
 
-#: src/telephony/ui/windows/data_management_window.py:242
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:242
 msgid "Blocklist Cleared"
 msgstr "لیستی بلۆکەکان پاککرایەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:246
 msgid "Deleting contacts..."
 msgstr "سڕینەوەی پەیوەندییەکان..."
 
-#: src/telephony/ui/windows/data_management_window.py:253
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:252
 msgid "Contacts Deleted"
 msgstr "پەیوەندییەکان سڕاونەتەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:261
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:260
 msgid "Deleting address book..."
 msgstr "سڕینەوەی کتێبی ناونیشانەکان..."
 
-#: src/telephony/ui/windows/data_management_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:266
 msgid "Address Book Deleted"
 msgstr "کتێبی ناونیشان سڕاوەتەوە"
 
-#: src/telephony/ui/windows/data_management_window.py:271
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:268
 msgid "Failed to delete Address Book"
 msgstr "شکستی هێنا لە سڕینەوەی کتێبی ناونیشان"
 
-#: src/telephony/ui/windows/data_management_window.py:276
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:273
 msgid "Wiping Database..."
 msgstr "بنکەدراوەی سڕینەوە..."
 
-#: src/telephony/ui/windows/data_management_window.py:290
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:286
 msgid "App Reset Complete"
 msgstr "ڕێستکردنی ئەپ تەواو بووە"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:62
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:62
 msgid "Year"
 msgstr "ساڵ"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:81
 msgid "Month"
 msgstr "مانگ"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:116
 msgid "Hour"
 msgstr "کاتژمێر"
 
-#: src/telephony/ui/windows/date_time_picker_window.py:135
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:135
 msgid "Minute"
 msgstr "خولەک"
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
-#: src/telephony/ui/windows/settings_window.py:305
-#: src/telephony/ui/windows/settings_window.py:466
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:468
 msgid "Notification Overrides"
 msgstr "ئاگادارکردنەوە سەرپێچی دەکات"
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
-#: src/telephony/ui/windows/trusted_actions_list_window.py:143
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:161
 msgid "Find and add contacts..."
 msgstr "پەیوەندییەکان بدۆزەرەوە و زیاد بکە..."
 
-#: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
 msgid ""
 "Contacts in this list will always play notifications at full volume, even if "
 "the phone is in Silent or Do Not Disturb mode."
@@ -1770,47 +1783,47 @@ msgstr ""
 "پەیوەندییەکانی ئەم لیستە هەمیشە ئاگادارکردنەوەکان بە دەنگی تەواو دەژەنن، "
 "تەنانەت ئەگەر مۆبایلەکە لە دۆخی بێدەنگ یان تێک مەکە."
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:36
 msgid "Duplicate Contact"
 msgstr "پەیوەندی دووبارە"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:65
 msgid "Merge all"
 msgstr "هەموویان تێکەڵ بکە"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:89
 msgid "Merging Contacts..."
 msgstr "تێکەڵکردنی پەیوەندییەکان..."
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:108
 #, python-brace-format
 msgid "Remaining conflicts: {count}"
 msgstr "ناکۆکییەکانی ماوەتەوە: {count}"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:126
 #, python-brace-format
 msgid "{number} is saved to contacts:"
 msgstr "{number} بۆ پەیوەندییەکان هەڵدەگیرێت:"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:142
 #, python-brace-format
 msgid "Address Book: {name}"
 msgstr "کتێبی ناونیشان: {name}"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:163
 msgid "Keep this, Remove duplicates"
 msgstr "ئەمە بهێڵەرەوە، دووبارەبووەکان لابەرە"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:169
 msgid "Keep this, Merge duplicates"
 msgstr "ئەمە بهێڵەرەوە، Merge duplicates"
 
-#: src/telephony/ui/windows/duplicate_resolution_window.py:332
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:332
 #, python-brace-format
 msgid "Merging {current}/{total}..."
 msgstr "یەکگرتنی {current} / {total} ..."
 
-#: src/telephony/ui/windows/import_export_window.py:43
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
 msgid ""
 "Extract, transform, load (ETL).\n"
 "Select data source or destination."
@@ -1818,579 +1831,602 @@ msgstr ""
 "دەرهێنان، گۆڕین، بارکردن (ETL).\n"
 "سەرچاوەی داتا یان شوێنی مەبەست هەڵبژێرە."
 
-#: src/telephony/ui/windows/import_export_window.py:59
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:59
 msgid "Import Contacts from vCard"
 msgstr "هاوردەکردنی پەیوەندییەکان لە vCard ەوە"
 
-#: src/telephony/ui/windows/import_export_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:60
 msgid "Export Contacts to vCard"
 msgstr "هەناردەکردنی پەیوەندییەکان بۆ vCard"
 
-#: src/telephony/ui/windows/import_export_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:61
 msgid "Import Contacts from SIM card"
 msgstr "هاوردەکردنی پەیوەندییەکان لە سیمکارتەوە"
 
-#: src/telephony/ui/windows/import_export_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:65
 msgid "Import From local Chatty"
 msgstr "هاوردەکردن لە چاتی ناوخۆییەوە"
 
-#: src/telephony/ui/windows/import_export_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:66
 msgid "Import From local Calls"
 msgstr "هاوردەکردن لە پەیوەندییە ناوخۆییەکانەوە"
 
-#: src/telephony/ui/windows/import_export_window.py:67
-#: src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
 msgid "Import From Android"
 msgstr "هاوردەکردن لە ئەندرۆیدەوە"
 
-#: src/telephony/ui/windows/import_export_window.py:68
-#: src/telephony/ui/windows/import_export_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:68
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
 msgid "Import From iOS"
 msgstr "هاوردەکردن لە iOS"
 
-#: src/telephony/ui/windows/import_export_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:72
 msgid "Export Calls or Messages"
 msgstr "هەناردەکردنی پەیوەندی یان نامە"
 
-#: src/telephony/ui/windows/import_export_window.py:83
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:83
 msgid "Importing contacts from SIM..."
 msgstr "هاوردەکردنی پەیوەندییەکان لە سیمەوە..."
 
-#: src/telephony/ui/windows/import_export_window.py:92
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:92
 msgid "No modem found for SIM import"
 msgstr "هیچ مۆدێمێک نەدۆزراوەتەوە بۆ هاوردەکردنی سیم"
 
-#: src/telephony/ui/windows/import_export_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:101
 msgid "No contacts found on SIM card."
 msgstr "هیچ پەیوەندییەک لە سیمکارتدا نەدۆزراوەتەوە."
 
-#: src/telephony/ui/windows/import_export_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:111
 #, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "پەیوەندییەکانی {count} لە سیمەوە هاوردە کراوە."
 
-#: src/telephony/ui/windows/import_export_window.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:116
 #, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "هاوردەکردنی سیمکارت شکستی هێنا: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:124
 msgid "Importing Chatty..."
 msgstr "هاوردەکردنی چاتی..."
 
-#: src/telephony/ui/windows/import_export_window.py:143
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:143
 msgid "Importing Calls..."
 msgstr "هاوردەکردنی پەیوەندییەکان..."
 
-#: src/telephony/ui/windows/import_export_window.py:159
-#: src/telephony/ui/windows/import_export_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
 msgid "Select an option:"
 msgstr "بژاردەیەک هەڵبژێرە:"
 
-#: src/telephony/ui/windows/import_export_window.py:169
-#: src/telephony/ui/windows/import_export_window.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:194
 msgid "Select SMS/MMS file"
 msgstr "فایلە SMS/MMS هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_export_window.py:170
-#: src/telephony/ui/windows/import_export_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:195
 msgid "Select Call history file"
 msgstr "پەڕگەی مێژووی پەیوەندی هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_export_window.py:191
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:191
 msgid "Direct USB Import (Recommended)"
 msgstr "هاوردەکردنی ڕاستەوخۆی USB (پێشنیارکراوە)"
 
-#: src/telephony/ui/windows/import_export_window.py:207
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:207
 msgid "No iOS device detected. Please connect your iPhone via USB."
 msgstr ""
 "هیچ ئامێرێکی iOS دەستنیشان نەکراوە. تکایە ئایفۆنەکەت لە ڕێگەی USB ەوە ببەستە."
 
-#: src/telephony/ui/windows/import_export_window.py:210
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:210
 msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
 msgstr ""
 "ئامێرەکە متمانەپێکراو نییە. تکایە قفڵی ئایفۆنەکەت بکەرەوە و پەنجە بنێ بە "
 "'متمانە'."
 
-#: src/telephony/ui/windows/import_export_window.py:213
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:213
 msgid "Extracting backup from iPhone... This may take a long time!"
 msgstr "دەرهێنانی پاشەکەوت لە ئایفۆن... ڕەنگە ئەمە کاتێکی زۆری بخایەنێت!"
 
-#: src/telephony/ui/windows/import_export_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:221
 #, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "USB Backup شکستی هێنا: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:226
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:226
 msgid "No SMS database found in backup."
 msgstr "هیچ بنکەدراوەیەکی کورتەنامە لە پاشەکەوتدا نەدۆزراوەتەوە."
 
-#: src/telephony/ui/windows/import_export_window.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:227
 msgid "No Call History database found in backup."
 msgstr "هیچ بنکەدراوەیەکی مێژووی پەیوەندیکردن لە پاشەکەوتدا نەدۆزراوەتەوە."
 
-#: src/telephony/ui/windows/import_export_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:230
 msgid "Importing iPhone SMS..."
 msgstr "هاوردەکردنی کورتەنامەی ئایفۆن..."
 
-#: src/telephony/ui/windows/import_export_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:234
 msgid "Importing iPhone Calls..."
 msgstr "هاوردەکردنی پەیوەندی ئایفۆن..."
 
-#: src/telephony/ui/windows/import_export_window.py:243
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:243
 #, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "هەڵە لە کاتی هاوردەکردنی iOS: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:251
-#: src/telephony/ui/windows/import_wizard_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:117
 msgid "Select File"
 msgstr "File هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_export_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:254
 msgid "XML Files"
 msgstr "فایلەکانی XML"
 
-#: src/telephony/ui/windows/import_export_window.py:268
-#: src/telephony/ui/windows/import_export_window.py:459
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:459
 msgid "Importing..."
 msgstr "هاوردەکردنی..."
 
-#: src/telephony/ui/windows/import_export_window.py:292
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
 msgid "Export Data"
 msgstr "هەناردەکردنی داتا"
 
-#: src/telephony/ui/windows/import_export_window.py:292
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
 msgid "Select destination format:"
 msgstr "فۆرماتە شوێنی مەبەست هەڵبژێرە:"
 
-#: src/telephony/ui/windows/import_export_window.py:302
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:302
 msgid "Linux - Chatty/Calls"
 msgstr "لینوکس - چاتی/پەیوەندی"
 
-#: src/telephony/ui/windows/import_export_window.py:303
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:303
 msgid "Linux - Telephony"
 msgstr "لینوکس - تەلەفۆن"
 
-#: src/telephony/ui/windows/import_export_window.py:304
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:304
 msgid "Android"
 msgstr "ئەندرۆید"
 
-#: src/telephony/ui/windows/import_export_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:305
 msgid "iOS"
 msgstr "ئای ئۆ ئێس"
 
-#: src/telephony/ui/windows/import_export_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
 #, python-brace-format
 msgid "Export to {fmt}"
 msgstr "هەناردەکردن بۆ {fmt}"
 
-#: src/telephony/ui/windows/import_export_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
 msgid "What do you want to export?"
 msgstr "دەتەوێت چی هەناردە بکەیت؟"
 
-#: src/telephony/ui/windows/import_export_window.py:322
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:322
 msgid ""
 "Note: This export uses the Android format. When importing this file onto an "
 "iOS device, please use the \"Import From Android\" option."
 msgstr ""
 "تێبینی: ئەم هەناردەیە فۆرماتی Android بەکاردەهێنێت. کاتێک ئەم فایلە لەسەر "
-"ئامێرێکی iOS هاوردە دەکەیت، تکایە بژاردەی \"Import From Android\" "
-"بەکاربهێنە."
+"ئامێرێکی iOS هاوردە دەکەیت، تکایە بژاردەی \"Import From Android\" بەکاربهێنە."
 
-#: src/telephony/ui/windows/import_export_window.py:333
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:333
 msgid "Messages (SMS/MMS)"
 msgstr "پەیامەکان (SMS/MMS)"
 
-#: src/telephony/ui/windows/import_export_window.py:334
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:334
 msgid "Call History"
 msgstr "مێژووی پەیوەندی"
 
-#: src/telephony/ui/windows/import_export_window.py:344
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:344
 msgid "Export File"
 msgstr "هەناردەکردنی فایل"
 
-#: src/telephony/ui/windows/import_export_window.py:370
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:370
 msgid "Exporting..."
 msgstr "هەناردەکردنی..."
 
-#: src/telephony/ui/windows/import_export_window.py:404
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:404
 msgid "Import VCard"
 msgstr "هاوردەکردنی VCard"
 
-#: src/telephony/ui/windows/import_export_window.py:406
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:406
 msgid "VCard Files"
 msgstr "فایلەکانی VCard"
 
-#: src/telephony/ui/windows/import_export_window.py:425
-#: src/telephony/ui/windows/import_export_window.py:489
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:425
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:489
 msgid "No enabled address books found"
 msgstr "هیچ کتێبێکی ناونیشانی چالاککراو نەدۆزراوەتەوە"
 
-#: src/telephony/ui/windows/import_export_window.py:433
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:433
 msgid "Select Address Book"
 msgstr "کتێبی ناونیشان هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_export_window.py:434
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:434
 msgid "Where do you want to import contacts?"
 msgstr "دەتەوێت پەیوەندییەکان لە کوێ هاوردە بکەیت؟"
 
-#: src/telephony/ui/windows/import_export_window.py:473
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:473
 #, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "پەیوەندییەکانی {count} هاوردە کراوە"
 
-#: src/telephony/ui/windows/import_export_window.py:477
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:477
 #, python-brace-format
 msgid "Import failed: {e}"
 msgstr "هاوردەکردن شکستی هێنا: {e}"
 
-#: src/telephony/ui/windows/import_export_window.py:493
-#: src/telephony/ui/windows/import_export_window.py:531
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:531
 msgid "Export Contacts"
 msgstr "هەناردەکردنی پەیوەندییەکان"
 
-#: src/telephony/ui/windows/import_export_window.py:494
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:494
 msgid "Which address book do you want to export?"
 msgstr "دەتەوێت کام کتێبی ناونیشان هەناردە بکەیت؟"
 
-#: src/telephony/ui/windows/import_export_window.py:505
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:505
 msgid "Export All Address Books"
 msgstr "هەناردەکردنی هەموو کتێبی ناونیشانەکان"
 
-#: src/telephony/ui/windows/import_export_window.py:559
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:559
 msgid "No contacts found to export"
 msgstr "هیچ پەیوەندییەک نەدۆزراوەتەوە بۆ هەناردەکردن"
 
-#: src/telephony/ui/windows/import_export_window.py:575
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:575
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "پەیوەندییەکانی {count} هەناردە کراوە"
 
-#: src/telephony/ui/windows/import_export_window.py:578
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:578
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "هەڵەی هەناردەکردن: {e}"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
 msgid "Import Messages"
 msgstr "هاوردەکردنی پەیامەکان"
 
-#: src/telephony/ui/windows/import_wizard_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
 msgid "Import Call History"
 msgstr "مێژووی پەیوەندی هاوردەکردن"
 
-#: src/telephony/ui/windows/import_wizard_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:70
 msgid "Waiting for selection..."
 msgstr "چاوەڕێی هەڵبژاردنە..."
 
-#: src/telephony/ui/windows/import_wizard_window.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:93
 msgid "Where do you want to import from?"
 msgstr "دەتەوێت لە کوێوە هاوردە بکەیت؟"
 
-#: src/telephony/ui/windows/import_wizard_window.py:101
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:101
 msgid "System Database"
 msgstr "بنکەدراوەی سیستەم"
 
-#: src/telephony/ui/windows/import_wizard_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:103
 msgid "Import from local Chatty installation"
 msgstr "لە دامەزراندنی ناوخۆیی چاتی هاوردە بکە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:105
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:105
 msgid "Import from local Calls installation"
 msgstr "هاوردەکردن لە دامەزراندنی پەیوەندییە ناوخۆییەکانەوە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:107
 msgid "Import"
 msgstr "هاوردەکردن"
 
-#: src/telephony/ui/windows/import_wizard_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:114
 msgid "Custom Database Backup"
 msgstr "پاشەکەوتی بنکەدراوەی تایبەت"
 
-#: src/telephony/ui/windows/import_wizard_window.py:115
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:115
 msgid "Select an exported SQLite DB file"
 msgstr "فایلێکی SQLite DB ی هەناردەکراو هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:142
 msgid "Select Database File"
 msgstr "فایلە بنکەدراوە هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:160
 msgid "MMS Attachments (Optional)"
 msgstr "هاوپێچەکانی MMS (ئیختیاری)"
 
-#: src/telephony/ui/windows/import_wizard_window.py:168
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:168
 msgid "MMS Folder Backup"
 msgstr "پاشەکەوتی فۆڵدەری MMS"
 
-#: src/telephony/ui/windows/import_wizard_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:169
 msgid "Select the directory containing images/videos"
 msgstr "ئەو دایرێکتۆرییە هەڵبژێرە کە وێنە/ڤیدیۆی تێدایە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:171
 msgid "Select Folder"
 msgstr "Folder هەڵبژێرە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:178
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:178
 msgid "Skip Attachments"
 msgstr "هاوپێچەکان بەجێبهێڵە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:179
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:179
 msgid "Import SMS and texts only"
 msgstr "تەنها کورتەنامە و دەق هاوردە بکە"
 
-#: src/telephony/ui/windows/import_wizard_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:185
 msgid "Skip"
 msgstr "بازدان"
 
-#: src/telephony/ui/windows/import_wizard_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:195
 msgid "Select MMS Folder"
 msgstr "فۆڵدەری MMS هەڵبژێرە"
 
-#: src/telephony/ui/windows/incall_window.py:152
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:38
+msgid "Active"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:39
+msgid "On Hold"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:40
+msgid "Dialing..."
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:41
+msgid "Alerting..."
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
+msgid "Disconnected"
+msgstr ""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:167
 msgid "Hangup and Send SMS"
 msgstr "هانگپ و ناردنی کورتەنامە"
 
-#: src/telephony/ui/windows/incall_window.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:202
 msgid "The call failed to disconnect."
 msgstr "پەیوەندییەکە نەیتوانی پەیوەندییەکە بپچڕێت."
 
-#: src/telephony/ui/windows/incall_window.py:220
-#: src/telephony/ui/windows/incall_window.py:669
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:235
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:684
 msgid "Output"
 msgstr "دەرچوون"
 
-#: src/telephony/ui/windows/incall_window.py:235
-#: src/telephony/ui/windows/incall_window.py:697
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:250
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:712
 msgid "Input"
 msgstr "ئینپوت"
 
-#: src/telephony/ui/windows/incall_window.py:387
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:402
 msgid "Silenced Incoming Call"
 msgstr "پەیوەندی هاتوو بێدەنگ"
 
-#: src/telephony/ui/windows/incall_window.py:503
-#: src/telephony/ui/windows/settings_window.py:241
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:518
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "لە ئێستادا ناتوانم قسە بکەم."
 
-#: src/telephony/ui/windows/incall_window.py:626
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:641
 msgid "Restarting RIL..."
 msgstr "دووبارە دەستپێکردنەوەی RIL..."
 
-#: src/telephony/ui/windows/incall_window.py:635
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:650
 msgid "Restored!"
 msgstr "گەڕێنرایەوە!"
 
-#: src/telephony/ui/windows/incall_window.py:641
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:656
 msgid "Failed. Reboot Device."
 msgstr "شکستی هێنا. ئامێری دووبارە هەڵکردنەوە."
 
-#: src/telephony/ui/windows/incall_window.py:643
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:658
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "پشتڕاستکردنەوە... {attempt}"
 
-#: src/telephony/ui/windows/incall_window.py:702
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:717
 msgid "Mute Microphone"
 msgstr "مایکرۆفۆنی بێدەنگ"
 
-#: src/telephony/ui/windows/info_window.py:28
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:28
 msgid "About Telephony"
 msgstr "دەربارەی تەلەفۆن"
 
-#: src/telephony/ui/windows/info_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:53
 msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgstr ""
 "پەیوەندی تەلەفۆنی خێرا و کرێدەری نامە ناردن کە بۆ FLX1 و FLX1s دیزاین کراوە."
 
-#: src/telephony/ui/windows/info_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:71
 msgid "Version"
 msgstr "وەشان"
 
-#: src/telephony/ui/windows/info_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:72
 msgid "Developer"
 msgstr "گەشەپێدەر"
 
-#: src/telephony/ui/windows/info_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:73
 msgid "License"
 msgstr "مۆڵەت"
 
-#: src/telephony/ui/windows/info_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:77
 msgid "Links"
 msgstr "بەستەرەکان"
 
-#: src/telephony/ui/windows/info_window.py:109
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:109
 msgid "Issue Tracker"
 msgstr "شوێنپێهەڵگری کێشەکان"
 
-#: src/telephony/ui/windows/info_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:110
 msgid "Report bugs or request features"
 msgstr "ڕاپۆرتی هەڵە یان تایبەتمەندی داوای بکە"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:83
 #, python-brace-format
 msgid "Scheduled ({current}/{total})"
 msgstr "بەرنامە بۆ داڕێژراو ( {current} / {total} )"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:92
 #, python-brace-format
 msgid "To: {name}"
 msgstr "بۆ: {name}"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:156
 msgid "Send Now"
 msgstr "ئێستا بنێرە"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:174
 msgid "Message removed"
 msgstr "پەیامەکە لابرا"
 
-#: src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:219
 #, python-brace-format
 msgid "Sending message to {number}..."
 msgstr "پەیام دەنێردرێت بۆ {number}..."
 
-#: src/telephony/ui/windows/settings_window.py:88
-#: src/telephony/ui/windows/settings_window.py:389
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:391
 msgid "Ringback Tone"
 msgstr "تۆنی ڕینگباک"
 
-#: src/telephony/ui/windows/settings_window.py:91
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:92
 msgid "Enable Local Ringback"
 msgstr "ڕینگباکی ناوخۆیی چالاک بکە"
 
-#: src/telephony/ui/windows/settings_window.py:106
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:107
 msgid "Selected Tone"
 msgstr "تۆنی هەڵبژێردراو"
 
-#: src/telephony/ui/windows/settings_window.py:109
-#: src/telephony/ui/windows/settings_window.py:378
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:380
 msgid "System Default"
 msgstr "سیستەمی پێشوەختە"
 
-#: src/telephony/ui/windows/settings_window.py:136
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:137
 msgid "SIM Settings"
 msgstr "ڕێکخستنەکانی سیم"
 
-#: src/telephony/ui/windows/settings_window.py:139
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:140
 msgid "My Number"
 msgstr "ژمارەی من"
 
-#: src/telephony/ui/windows/settings_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:141
 msgid "My Number (International Format)"
 msgstr "ژمارەکەم (فۆرماتی نێودەوڵەتی)"
 
-#: src/telephony/ui/windows/settings_window.py:146
-#: src/telephony/ui/windows/settings_window.py:147
-#: src/telephony/ui/windows/settings_window.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:367
 msgid "Default Country Code"
 msgstr "کۆدی وڵاتی پێشوەختە"
 
-#: src/telephony/ui/windows/settings_window.py:173
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:174
 msgid "Address Book Info"
 msgstr "زانیاری کتێبی ناونیشان"
 
-#: src/telephony/ui/windows/settings_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:182
 msgid "Default Address Book"
 msgstr "کتێبی ناونیشانی پێشوەختە"
 
-#: src/telephony/ui/windows/settings_window.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:188
 msgid "Duplicate Resolver"
 msgstr "چارەسەرکەری دووبارە"
 
-#: src/telephony/ui/windows/settings_window.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:190
 msgid ""
 "Scan for duplicate numbers and show a resolution banner in the Contacts view."
 msgstr ""
 "بۆ ژمارە دووبارەکان سکان بکە و بانەرێکی ڕوونی لە دیمەنی پەیوەندییەکان پیشان "
 "بدە."
 
-#: src/telephony/ui/windows/settings_window.py:202
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:203
 msgid "Lockscreen Emergency"
 msgstr "فریاگوزاری شاشەی قفڵ"
 
-#: src/telephony/ui/windows/settings_window.py:205
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:206
 msgid "Show Emergency Button"
 msgstr "دوگمەی فریاگوزاری پیشان بدە"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:211
 msgid "Emergency Numbers"
 msgstr "ژمارەی فریاگوزاری"
 
-#: src/telephony/ui/windows/settings_window.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:228
 msgid "Quick Response"
 msgstr "وەڵامدانەوەی خێرا"
 
-#: src/telephony/ui/windows/settings_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:231
 msgid "Add Decline Message"
 msgstr "پەیامی ڕەتکردنەوە زیاد بکە"
 
-#: src/telephony/ui/windows/settings_window.py:245
-#: src/telephony/ui/windows/settings_window.py:812
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:828
 msgid "Call Volume"
 msgstr "دەنگی پەیوەندی"
 
-#: src/telephony/ui/windows/settings_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:258
 msgid "Allow Amplification"
 msgstr "ڕێگەدان بە بەهێزکردن"
 
-#: src/telephony/ui/windows/settings_window.py:259
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:260
 msgid "Let sliders go above 100%. Amplified audio may distort."
 msgstr ""
 "ڕێگە بدە خلیسکێنەرەکان لە 100% تێپەڕن. دەنگی بەهێزکراو لەوانەیە تێکبچێت."
 
-#: src/telephony/ui/windows/settings_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:269
 msgid "Earpiece"
 msgstr "بیستۆکی گوێ"
 
-#: src/telephony/ui/windows/settings_window.py:269
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:270
 msgid "Speaker"
 msgstr "بڵندگۆ"
 
-#: src/telephony/ui/windows/settings_window.py:270
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:271
 msgid "Wired Headset"
 msgstr "هێدسێتی تەلدار"
 
-#: src/telephony/ui/windows/settings_window.py:271
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:272
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: src/telephony/ui/windows/settings_window.py:286
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:288
 msgid "Notification Exceptions"
 msgstr "ئیستسنای ئاگادارکردنەوە"
 
-#: src/telephony/ui/windows/settings_window.py:289
-#: src/telephony/ui/windows/settings_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:291
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:456
 msgid "Repeated Calls Bypass"
 msgstr "پەیوەندییە دووبارەبووەکان بای پاس"
 
-#: src/telephony/ui/windows/settings_window.py:291
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:293
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr ""
 "ئەگەر هەمان ژمارە لە ماوەی ٥ خولەکدا ٣ جار پەیوەندی کرد، force max volume "
 "بکە."
 
-#: src/telephony/ui/windows/settings_window.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:308
 msgid "Manage contacts that always play sound"
 msgstr "بەڕێوەبردنی ئەو پەیوەندیانەی کە هەمیشە دەنگ دەژەنن"
 
-#: src/telephony/ui/windows/settings_window.py:315
-#: src/telephony/ui/windows/settings_window.py:327
-#: src/telephony/ui/windows/settings_window.py:338
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:317
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:329
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:340
 msgid "Manage"
 msgstr "بەڕێوەبردن"
 
-#: src/telephony/ui/windows/settings_window.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:327
 msgid "Set custom notification sounds for specific contacts"
 msgstr "دەنگەکانی ئاگادارکردنەوەی تایبەت بۆ پەیوەندییە تایبەتەکان دابنێ"
 
-#: src/telephony/ui/windows/settings_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:338
 msgid "Set custom ringtones for specific contacts"
 msgstr "زەنگی تایبەت بۆ پەیوەندییە تایبەتەکان دابنێ"
 
-#: src/telephony/ui/windows/settings_window.py:361
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:363
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2410,7 +2446,7 @@ msgstr ""
 "دەتوانیت لێرەدا بە دەستی جێبەجێی بکەیت بە داخڵکردنی کۆدی ناوچەی ISO 2 پیت "
 "(بۆ نموونە US, FI, DE) یان کۆدی پەیوەندیکردن (بۆ نموونە +358, 358, +1, 1)."
 
-#: src/telephony/ui/windows/settings_window.py:382
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:384
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2426,15 +2462,15 @@ msgstr ""
 "دەتوانیت فایلێکی مۆسیقای خۆت هەڵبژێریت، یان پاکی بکەیتەوە بۆ بەکارهێنانی "
 "تۆنی سیستەمی ستاندارد."
 
-#: src/telephony/ui/windows/settings_window.py:402
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:404
 msgid "Select Ringback Tone"
 msgstr "Ringback Tone هەڵبژێرە"
 
-#: src/telephony/ui/windows/settings_window.py:410
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:412
 msgid "Audio Files"
 msgstr "فایلە دەنگییەکان"
 
-#: src/telephony/ui/windows/settings_window.py:436
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:438
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2449,7 +2485,7 @@ msgstr ""
 "بەڕێوەبردنی دووبارەبووەکان، بەڵام تەنانەت ئەگەر لەکاربخرێت، ئێمە هانی "
 "چالاککردنی دەدەین بۆ ئەزموونێکی باشتر."
 
-#: src/telephony/ui/windows/settings_window.py:455
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:457
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2460,7 +2496,7 @@ msgstr ""
 "مۆبایلەکە ناچار دەکات بە زۆرترین دەنگ زەنگ لێبدات، بەدەر لە دۆخەکانی بێدەنگ "
 "یان تێک مەدە."
 
-#: src/telephony/ui/windows/settings_window.py:467
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:469
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2468,50 +2504,50 @@ msgstr ""
 "ئەو پەیوەندیانە هەڵبژێرە کە هەمیشە ئاگادارکردنەوەکان بە دەنگی تەواو دەژەنن، "
 "تەنانەت کاتێک مۆبایلەکە لە دۆخی بێدەنگ یان تێک مەدە."
 
-#: src/telephony/ui/windows/settings_window.py:488
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:490
 msgid "Unknown Callers"
 msgstr "پەیوەندیکەرانی نەناسراو"
 
-#: src/telephony/ui/windows/settings_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:495
 msgid "Unknown Callers Action"
 msgstr "پەیوەندیکەرانی نەناسراو کردار"
 
-#: src/telephony/ui/windows/settings_window.py:495
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:497
 msgid "Applies also to hidden numbers."
 msgstr "هەروەها ژمارە شاراوەکانیش دەگرێتەوە."
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:500
 msgid "Do Nothing"
 msgstr "هیچ مەکە"
 
-#: src/telephony/ui/windows/settings_window.py:499
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:501
 msgid "Block Completely"
 msgstr "بلۆک بە تەواوی"
 
-#: src/telephony/ui/windows/settings_window.py:500
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:502
 msgid "Silence and Hide UI"
 msgstr "بێدەنگ و شاردنەوەی UI"
 
-#: src/telephony/ui/windows/settings_window.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:503
 msgid "Silence Only"
 msgstr "تەنها بێدەنگی"
 
-#: src/telephony/ui/windows/settings_window.py:509
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:511
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr ""
 "دوگمەی گەڕان زیاد بکە بۆ پەنجەرەی InCall و مێژووی پەیوەندی بۆ پەیوەندیکەرانی "
 "نەناسراو"
 
-#: src/telephony/ui/windows/settings_window.py:515
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:517
 msgid "Search Engine"
 msgstr "بزوێنەری گەڕان"
 
-#: src/telephony/ui/windows/settings_window.py:519
-#: src/telephony/ui/windows/settings_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:521
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:526
 msgid "Custom URL"
 msgstr "URL ی تایبەتمەند"
 
-#: src/telephony/ui/windows/settings_window.py:574
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:576
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2530,23 +2566,23 @@ msgstr ""
 "دوگمەی گەڕانەکەت لێدەدەیت، ئێمە ' {number} ' بە ژمارەی تەلەفۆنی ڕاستەقینە "
 "دەگۆڕین و لە وێبگەڕی پێشوەختەدا دەیکەینەوە."
 
-#: src/telephony/ui/windows/settings_window.py:578
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:580
 msgid "Custom Search URL"
 msgstr "URL ی گەڕانی تایبەتمەند"
 
-#: src/telephony/ui/windows/settings_window.py:599
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:601
 msgid "Desktop Shortcuts"
 msgstr "کورتە ڕێگاکانی سەر مێز"
 
-#: src/telephony/ui/windows/settings_window.py:604
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:606
 msgid "Calls"
 msgstr "پەیوەندییەکان"
 
-#: src/telephony/ui/windows/settings_window.py:770
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:772
 msgid "Name (e.g. Mom)"
 msgstr "ناو (بۆ نموونە دایک)"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:829
 msgid ""
 "This is the base hardware volume applied to the selected output when a call "
 "connects. The volume buttons during a call only adjust fine-tuning on top of "
@@ -2561,19 +2597,19 @@ msgstr ""
 "سۆفتوێر بەکاردەهێنن و لەوانەیە دەنگ تێکبدەن. ئاستەکانی هێدسێتی تەلدار و "
 "Bluetooth هەڵدەگیرێن بۆ پشتگیری ئاراستەکردنی داهاتوو."
 
-#: src/telephony/ui/windows/settings_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:838
 msgid "Decline Message"
 msgstr "پەیامی ڕەتکردنەوە"
 
-#: src/telephony/ui/windows/settings_window.py:893
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:909
 msgid "System Default (Always Enabled)"
 msgstr "سیستەمی پێشوەختە (هەمیشە چالاک کراوە)"
 
-#: src/telephony/ui/windows/settings_window.py:904
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:920
 msgid "Personal Address Book"
 msgstr "کتێبی ناونیشانی کەسی"
 
-#: src/telephony/ui/windows/settings_window.py:905
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:921
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2581,11 +2617,11 @@ msgstr ""
 "ئەمە کتێبی ناونیشانەکانە کە هاوکات دەکرێت لەگەڵ ئەندرۆمێدا ئەگەر لە "
 "ڕێکخستنەکانی سیستەمدا هەڵبژێریت."
 
-#: src/telephony/ui/windows/settings_window.py:913
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:929
 msgid "Andromeda Contacts"
 msgstr "پەیوەندییەکانی ئەندرۆمێدا"
 
-#: src/telephony/ui/windows/settings_window.py:914
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:930
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2593,31 +2629,31 @@ msgstr ""
 "ئەمە کتێبی ناونیشانەکانە کە لە ئەندرۆمێدا هاوکات دەکرێت ئەگەر لە "
 "ڕێکخستنەکانی سیستەمدا هەڵبژێریت."
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1055
 msgid "Settings Saved"
 msgstr "ڕێکخستنەکان پاشەکەوتکراون"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:40
 msgid "Voice Message"
 msgstr "پەیامی دەنگی"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:91
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:91
 msgid "Tap to Record"
 msgstr "بۆ تۆمارکردن پەنجە بنێ"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:137
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:137
 msgid "Attach Voice Note"
 msgstr "تێبینی دەنگی هاوپێچ بکە"
 
-#: src/telephony/ui/windows/sound_recorder_window.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:224
 msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
 msgstr "تۆمارکردن زۆر گەورەیە بۆ MMS (Max 600KB). تکایە کورتتر وەریبگرن."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:141
 msgid "Enable Feature"
 msgstr "تایبەتمەندی چالاک بکە"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:170
 msgid ""
 "Contacts can trigger an action by sending a secret SMS message. Add contacts "
 "below and set their secret trigger phrase."
@@ -2625,7 +2661,7 @@ msgstr ""
 "پەیوەندییەکان دەتوانن بە ناردنی کورتەنامەیەکی نهێنی کردارێک دەستپێبکەن. لە "
 "خوارەوە پەیوەندییەکان زیاد بکە و دەستەواژەی دەستپێکەری نهێنی خۆیان دابنێ."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:154
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:173
 msgid ""
 "Trusted contacts can request your location by sending a secret SMS message. "
 "TOTP is mandatory for this feature to work. Add contacts below and set their "
@@ -2637,7 +2673,7 @@ msgstr ""
 "خوارەوە پەیوەندییەکان زیاد بکە و دەستەواژەی دەستپێکەری نهێنی خۆیان دابنێ. "
 "نموونەی قاڵب: 'SECRET TOTP' نموونەی ژیانی ڕاستەقینە: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:157
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:176
 msgid ""
 "Trusted contacts can silently trigger a callback by sending a secret SMS "
 "message. TOTP is mandatory for this feature to work. Add contacts below and "
@@ -2650,7 +2686,7 @@ msgstr ""
 "خۆیان دابنێ. نموونەی قاڵب: 'SECRET TOTP' نموونەی ژیانی ڕاستەقینە: 'Gorilla "
 "123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:179
 msgid ""
 "Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
 "to work. Add contacts below and set their secret trigger phrase. Example "
@@ -2663,7 +2699,7 @@ msgstr ""
 "+1234567890 MESSAGE' نموونەی ژیانی ڕاستەقینە: 'Gorilla 123456 +1234567890 "
 "Hello'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:182
 msgid ""
 "Trusted contacts can start a tmate SSH session and receive the SSH access "
 "string by sending a secret SMS message. TOTP is mandatory for this feature "
@@ -2676,7 +2712,7 @@ msgstr ""
 "بکە و دەستەواژەی دەستپێکەری نهێنی خۆیان دابنێ. نموونەی قاڵب: 'SECRET TOTP' "
 "نموونەی ژیانی ڕاستەقینە: 'Gorilla 123456'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:185
 msgid ""
 "Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
 "work. Add contacts below and set their secret trigger phrase. Example "
@@ -2689,39 +2725,39 @@ msgstr ""
 "SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' نموونەی ژیانی ڕاستەقینە: 'Gorilla "
 "123456 0000 1234 SupportYourLocalFootball'"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:265
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:284
 msgid "View or edit TOTP"
 msgstr "TOTP ببینە یان دەستکاری بکە"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:267
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:286
 msgid "Setup TOTP"
 msgstr "TOTP ڕێکبخە"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:337
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:356
 msgid "Secret message"
 msgstr "پەیامی نهێنی"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:349
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:368
 msgid "Remove Contact"
 msgstr "لابردنی پەیوەندی"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:373
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:392
 msgid "Contact removed (Click Save to commit)"
 msgstr "پەیوەندی لابرا (بۆ پابەندبوون کلیک لە Save بکە)"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:508
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:526
 msgid "Contact already in trusted list"
 msgstr "پەیوەندی پێشتر لە لیستی متمانەپێکراودایە"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:522
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:540
 msgid "Contact added"
 msgstr "پەیوەندی زیادکرا"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:540
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:558
 msgid "TOTP Setup"
 msgstr "ڕێکخستنی TOTP"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:586
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:604
 msgid ""
 "Share this code with your trusted contact. They should add it to an "
 "authenticator app such as Gnome Authenticator.\n"
@@ -2746,24 +2782,24 @@ msgstr ""
 "دەستپێدەکات، پێویستە کۆدی 6 ژمارەیی ئێستا لە بەرنامەی ڕەسەنایەتییەکەیان لە "
 "دوای وشەی سەرەکییەکە زیاد بکەن."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:615
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:633
 msgid "Copy TOTP key"
 msgstr "کلیلی TOTP کۆپی بکە"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:626
-#: src/telephony/ui/windows/trusted_actions_list_window.py:668
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:644
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:686
 msgid "Regenerate"
 msgstr "دروستکردنەوە"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:633
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:651
 msgid "Remove current TOTP"
 msgstr "لابردنی TOTPـی ئێستا"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:642
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:660
 msgid "Remove TOTP Key?"
 msgstr "کلیلی TOTP لادەبەیت؟"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:643
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:661
 msgid ""
 "Are you sure you want to remove the TOTP key? This action will disable TOTP "
 "verification for this feature."
@@ -2771,11 +2807,11 @@ msgstr ""
 "دڵنیایت کە دەتەوێت کلیلی TOTP لاببەیت؟ ئەم کردارە پشتڕاستکردنەوەی TOTP بۆ "
 "ئەم تایبەتمەندییە لەکاردەخات."
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:681
 msgid "Regenerate Code?"
 msgstr "کۆد دروست دەکەیتەوە؟"
 
-#: src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:682
 msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
