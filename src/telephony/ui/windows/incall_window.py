@@ -46,6 +46,28 @@ def call_state_label(state):
     return labels.get(state, state)
 
 
+def route_label(route_id):
+    """Return the translated display label for an audio route."""
+    labels = {
+        "earpiece": _("Earpiece"),
+        "speaker": _("Speaker"),
+        "wired": _("Wired Headset"),
+        "bluetooth": _("Bluetooth"),
+        "mic": _("Microphone"),
+    }
+    return labels.get(route_id, route_id)
+
+
+def input_route_label(route_id):
+    """Return the translated display label for an audio input route."""
+    labels = {
+        "mic": _("Microphone"),
+        "wired": _("Wired Mic"),
+        "bluetooth": _("Bluetooth Mic"),
+    }
+    return labels.get(route_id, route_id)
+
+
 class InCallWindow(Gtk.Window):
     """Main call window handling active calls, incoming calls, and call controls."""
 
@@ -79,6 +101,7 @@ class InCallWindow(Gtk.Window):
         self.is_muted = False
         self.dtmf_visible = False
         self.current_route = "earpiece"
+        self.current_input_route = "mic"
         self.call_volume_applied = False
         self.gsettings_mgr.gsettings.connect("changed", self._on_volume_settings_changed)
         self.call_history = {}
@@ -146,7 +169,7 @@ class InCallWindow(Gtk.Window):
         self.main_box.append(self.info_box)
 
         self.pad_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_UP)
-        pad_grid = Gtk.Grid(row_spacing=8, column_spacing=15, halign=Gtk.Align.CENTER)
+        pad_grid = Gtk.Grid(row_spacing=8, column_spacing=15, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=14)
         for i, c in enumerate(KEYPAD_LAYOUT):
             b = Gtk.Button(label=c, css_classes=["pill", "dialpad-btn"], width_request=60, height_request=50)
             b.connect("clicked", lambda x, ch=c: GLib.idle_add(lambda: self.ofono.send_dtmf(ch) or False))
@@ -166,33 +189,40 @@ class InCallWindow(Gtk.Window):
 
         btn_msg = Gtk.Button(label=_("Hangup and Send SMS"), css_classes=["pill"], halign=Gtk.Align.CENTER)
         btn_msg.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_reject_with_msg(b) or False))
-        inc_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20, halign=Gtk.Align.CENTER)
-        inc_row.append(self._mk_btn("audio-volume-muted-symbolic", self.on_silent_click))
-        inc_row.append(self._mk_btn("call-start-symbolic", self.on_answer_click, "btn-green"))
-        inc_row.append(self._mk_btn("call-stop-symbolic", self.on_hangup_click, "destructive-action"))
+        inc_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, halign=Gtk.Align.CENTER)
+        silent_wrap, _silent_btn = self._mk_labeled_btn("audio-volume-muted-symbolic", _("Silence"), self.on_silent_click)
+        decline_wrap, _decline_btn = self._mk_labeled_btn("call-stop-symbolic", _("Decline"), self.on_hangup_click, "destructive-action")
+        accept_wrap, _accept_btn = self._mk_labeled_btn("call-start-symbolic", _("Accept"), self.on_answer_click, "btn-green")
+        inc_row.append(silent_wrap)
+        inc_row.append(decline_wrap)
+        inc_row.append(accept_wrap)
         inc_box.append(btn_msg)
         inc_box.append(inc_row)
         self.controls_stack.add_named(inc_box, "incoming")
 
-        act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, valign=Gtk.Align.END, margin_bottom=40)
-        grid = Gtk.Grid(row_spacing=15, column_spacing=25, halign=Gtk.Align.CENTER)
-        self.btn_output = self._mk_btn("audio-headphones-symbolic", self.on_output_routing_click)
-        self.btn_input = self._mk_btn("audio-input-microphone-symbolic", self.on_input_routing_click)
+        act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16, valign=Gtk.Align.END, margin_bottom=40)
+
+        self.route_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_start=40, margin_end=40)
+        self.btn_output, self.lbl_output_route = self._mk_selector_btn("audio-headphones-symbolic", route_label("earpiece"), self.on_output_routing_click)
+        self.btn_input, self.lbl_input_route = self._mk_selector_btn("audio-input-microphone-symbolic", input_route_label("mic"), self.on_input_routing_click)
+        self.route_box.append(self.btn_output)
+        self.route_box.append(self.btn_input)
+        act_box.append(self.route_box)
 
         self._setup_audio_routing_popover()
 
-        self.btn_pad = self._mk_btn("input-dialpad-symbolic", self.on_pad_toggle)
-        self.btn_hold = self._mk_btn("media-playback-pause-symbolic", self.on_hold_toggle)
-
-        grid.attach(self.btn_output, 0, 0, 1, 1)
-        grid.attach(self.btn_input, 1, 0, 1, 1)
-        grid.attach(self.btn_pad, 0, 1, 1, 1)
-        grid.attach(self.btn_hold, 1, 1, 1, 1)
+        btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, halign=Gtk.Align.CENTER)
+        mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
+        pad_wrap, self.btn_pad = self._mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
+        hold_wrap, self.btn_hold = self._mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
+        btn_row.append(mute_wrap)
+        btn_row.append(pad_wrap)
+        btn_row.append(hold_wrap)
+        act_box.append(btn_row)
 
         self.btn_hangup_act = DynamicHangupButton()
         self.btn_hangup_act.set_halign(Gtk.Align.CENTER)
         self.btn_hangup_act.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_hangup_click(b) or False))
-        act_box.append(grid)
         act_box.append(self.btn_hangup_act)
         self.controls_stack.add_named(act_box, "active")
 
@@ -217,6 +247,38 @@ class InCallWindow(Gtk.Window):
             b.add_css_class(cls)
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: cb(btn) or False))
         return b
+
+    def _mk_labeled_btn(self, icon, caption, cb, cls=None):
+        """Create a circular icon button with a caption underneath."""
+        btn = self._mk_btn(icon, cb, cls)
+        btn.set_size_request(64, 64)
+
+        lbl = Gtk.Label(label=caption, css_classes=["caption", "dim-label"])
+        lbl.set_ellipsize(Pango.EllipsizeMode.END)
+        lbl.set_max_width_chars(12)
+
+        wrap = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, halign=Gtk.Align.CENTER)
+        wrap.append(btn)
+        wrap.append(lbl)
+        return wrap, btn
+
+    def _mk_selector_btn(self, icon, text, cb):
+        """Create a full-width route selector button showing the current choice."""
+        btn = Gtk.Button(css_classes=["pill"])
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        row.append(Gtk.Image.new_from_icon_name(icon))
+
+        lbl = Gtk.Label(label=text, hexpand=True, xalign=0)
+        lbl.set_ellipsize(Pango.EllipsizeMode.END)
+        row.append(lbl)
+
+        chevron = Gtk.Image.new_from_icon_name("pan-up-symbolic")
+        chevron.add_css_class("dim-label")
+        row.append(chevron)
+
+        btn.set_child(row)
+        btn.connect("clicked", lambda b: GLib.idle_add(lambda: cb(b) or False))
+        return btn, lbl
 
     def _setup_audio_routing_popover(self):
         """Setup the audio routing popover menu."""
@@ -408,8 +470,8 @@ class InCallWindow(Gtk.Window):
             self.audio.set_voice_profile(True)
             self.audio.mute(self.is_muted)
             self.controls_stack.set_visible_child_name("active")
-            self._toggle_blue(self.btn_output, self.is_speaker)
-            self._toggle_blue(self.btn_input, self.is_muted)
+            self.lbl_output_route.set_text(route_label(self.current_route))
+            self._toggle_blue(self.btn_mute, self.is_muted)
 
             can_hold = p_data['state'] in ['active', 'held']
             self.btn_hold.set_sensitive(can_hold)
@@ -455,10 +517,13 @@ class InCallWindow(Gtk.Window):
         self.ignored_calls.clear()
         self.fader.set_active(False)
 
-        self._toggle_blue(self.btn_output, False)
-        self._toggle_blue(self.btn_input, False)
+        self.current_input_route = "mic"
+        self.lbl_output_route.set_text(route_label("earpiece"))
+        self.lbl_input_route.set_text(input_route_label("mic"))
+        self._toggle_blue(self.btn_mute, False)
         self._toggle_blue(self.btn_pad, False)
         self.pad_revealer.set_reveal_child(False)
+        self.route_box.set_visible(True)
 
         self.call_history.clear()
         if self.is_visible():
@@ -475,32 +540,38 @@ class InCallWindow(Gtk.Window):
             if not name or name == "Unknown":
                 name = _("Unknown")
 
-            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, css_classes=["card"])
-            lbl_title = create_truncated_label(f"{name} ({call_state_label(data['state'])})", ["heading"], max_chars=22)
+            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6, css_classes=["card"])
+            lbl_title = create_truncated_label(f"{name} ({call_state_label(data['state'])})", ["heading"], max_chars=26)
             lbl_title.set_halign(Gtk.Align.START)
             card.append(lbl_title)
 
-            btn_box = Gtk.Box(spacing=15, halign=Gtk.Align.END)
-            b_hide = Gtk.Button(icon_name="call-stop-symbolic", css_classes=["circular", "destructive-action", "bg-btn"])
-            b_hide.set_size_request(50, 50)
-            b_hide.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.on_ignore_call(p) or False))
-            btn_box.append(b_hide)
+            lbl_num = create_truncated_label(data['number'], ["caption", "dim-label"], max_chars=26)
+            lbl_num.set_halign(Gtk.Align.START)
+            card.append(lbl_num)
 
-            b_sms = Gtk.Button(icon_name="mail-message-new-symbolic", css_classes=["circular", "bg-btn"])
-            b_sms.set_size_request(50, 50)
-            b_sms.connect("clicked", lambda b, p=path, n=data['number']: GLib.idle_add(lambda: self.on_ignore_with_sms(b, p, n) or False))
-            btn_box.append(b_sms)
-
-            b_act = Gtk.Button(css_classes=["circular", "btn-green", "bg-btn"])
-            b_act.set_size_request(50, 50)
+            btn_box = Gtk.Box(spacing=8, margin_top=4, homogeneous=True)
             if data['state'] == 'held':
-                b_act.set_icon_name("call-start-symbolic")
-                b_act.connect("clicked", lambda b: GLib.idle_add(lambda: self.ofono.swap_calls() or False))
+                b_swap = Gtk.Button(label=_("Swap"), css_classes=["pill", "bg-action"])
+                b_swap.connect("clicked", lambda b: GLib.idle_add(lambda: self.ofono.swap_calls() or False))
+                btn_box.append(b_swap)
             elif data['state'] in ['incoming', 'waiting']:
-                b_act.set_icon_name("call-start-symbolic")
+                b_act = Gtk.Button(label=_("Answer"), css_classes=["pill", "btn-green", "bg-action"])
                 b_act.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.ofono.answer_call(p) or False))
-            btn_box.append(b_act)
+                btn_box.append(b_act)
+
+                b_hide = Gtk.Button(label=_("Silence"), css_classes=["pill", "bg-action"])
+                b_hide.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.on_ignore_call(p) or False))
+                btn_box.append(b_hide)
+
+                b_sms = Gtk.Button(label=_("Message"), css_classes=["pill", "bg-action"])
+                b_sms.connect("clicked", lambda b, p=path, n=data['number']: GLib.idle_add(lambda: self.on_ignore_with_sms(b, p, n) or False))
+                btn_box.append(b_sms)
             card.append(btn_box)
+
+            if data['state'] in ['incoming', 'waiting']:
+                lbl_hint = Gtk.Label(label=_("Answering holds the current call"), css_classes=["caption", "dim-label"], xalign=0)
+                card.append(lbl_hint)
+
             self.bg_calls_box.append(card)
 
     def on_ignore_call(self, path):
@@ -676,6 +747,22 @@ class InCallWindow(Gtk.Window):
             self.ignored_calls.remove(p)
         self.update_state()
 
+    def _mk_route_row(self, route, name, selected):
+        """Build one selectable route row for a routing popover."""
+        row = Adw.ActionRow(title=name)
+        row.add_prefix(Gtk.Image.new_from_icon_name(route['icon']))
+
+        if not route.get('available', True):
+            row.set_subtitle(_("Not connected"))
+            row.set_sensitive(False)
+            return row
+
+        if selected:
+            row.add_suffix(Gtk.Image.new_from_icon_name("object-select-symbolic"))
+
+        row.set_activatable(True)
+        return row
+
     def on_output_routing_click(self, btn):
         """Populate and show the output routing popover."""
         self.output_popover.popup()
@@ -684,24 +771,15 @@ class InCallWindow(Gtk.Window):
         self.output_group = Adw.PreferencesGroup(title=_("Output"))
         self.out_pop_box.append(self.output_group)
 
-        out_routes = self.audio.get_available_outputs()
-
-        for r in out_routes:
-            row = Adw.ActionRow(title=r['name'])
-            icon = Gtk.Image.new_from_icon_name(r['icon'])
-            row.add_prefix(icon)
-
+        for r in self.audio.get_available_outputs():
             route_id = r['id']
-            if route_id == ("speaker" if self.is_speaker else "earpiece"):
-                img_check = Gtk.Image.new_from_icon_name("object-select-symbolic")
-                row.add_suffix(img_check)
-
-            row.set_activatable(True)
+            row = self._mk_route_row(r, route_label(route_id), route_id == self.current_route)
 
             def _cb_out(row_widget, r_id=route_id):
                 GLib.idle_add(lambda: self.output_popover.popdown() or False)
                 self._handle_output_selection(r_id)
-            row.connect("activated", _cb_out)
+            if row.get_sensitive():
+                row.connect("activated", _cb_out)
             self.output_group.add(row)
 
     def on_input_routing_click(self, btn):
@@ -712,40 +790,19 @@ class InCallWindow(Gtk.Window):
         self.input_group = Adw.PreferencesGroup(title=_("Input"))
         self.in_pop_box.append(self.input_group)
 
-        in_routes = self.audio.get_available_inputs()
-
-        mute_row = Adw.ActionRow(title=_("Mute Microphone"))
-        mute_icon = Gtk.Image.new_from_icon_name("microphone-sensitivity-muted-symbolic")
-        mute_row.add_prefix(mute_icon)
-        if self.is_muted:
-            mute_check = Gtk.Image.new_from_icon_name("object-select-symbolic")
-            mute_row.add_suffix(mute_check)
-        mute_row.set_activatable(True)
-
-        def _cb_mute(row_widget):
-            GLib.idle_add(lambda: self.input_popover.popdown() or False)
-            self.on_mute_toggle(None)
-        mute_row.connect("activated", _cb_mute)
-        self.input_group.add(mute_row)
-
-        for r in in_routes:
-            row = Adw.ActionRow(title=r['name'])
-            icon = Gtk.Image.new_from_icon_name(r['icon'])
-            row.add_prefix(icon)
-
+        for r in self.audio.get_available_inputs():
             route_id = r['id']
-            if route_id == "mic" and not self.is_muted:
-                img_check = Gtk.Image.new_from_icon_name("object-select-symbolic")
-                row.add_suffix(img_check)
-
-            row.set_activatable(True)
+            row = self._mk_route_row(r, input_route_label(route_id), route_id == self.current_input_route)
 
             def _cb_in(row_widget, r_id=route_id):
                 GLib.idle_add(lambda: self.input_popover.popdown() or False)
                 if self.is_muted:
                     self.on_mute_toggle(None)
                 self.audio.set_input_route(r_id)
-            row.connect("activated", _cb_in)
+                self.current_input_route = r_id
+                self.lbl_input_route.set_text(input_route_label(r_id))
+            if row.get_sensitive():
+                row.connect("activated", _cb_in)
             self.input_group.add(row)
 
     def _apply_call_volume(self):
@@ -777,18 +834,9 @@ class InCallWindow(Gtk.Window):
         self.current_route = route_id
         if self.call_volume_applied:
             self._push_route_volume()
-        if route_id == "speaker":
-            self.is_speaker = True
-            self.btn_output.set_icon_name("audio-speakers-symbolic")
-            self._toggle_blue(self.btn_output, True)
-        elif route_id == "earpiece":
-            self.is_speaker = False
-            self.btn_output.set_icon_name("audio-headphones-symbolic")
-            self._toggle_blue(self.btn_output, False)
-        else:
-            self.is_speaker = False
-            self.btn_output.set_icon_name("audio-headphones-symbolic")
-            self._toggle_blue(self.btn_output, True)
+
+        self.is_speaker = route_id == "speaker"
+        self.lbl_output_route.set_text(route_label(route_id))
 
         self._proximity_tick()
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
@@ -797,8 +845,7 @@ class InCallWindow(Gtk.Window):
         """Toggle microphone mute."""
         self.is_muted = not self.is_muted
         self.audio.mute(self.is_muted)
-        self.btn_input.set_icon_name("microphone-sensitivity-muted-symbolic" if self.is_muted else "audio-input-microphone-symbolic")
-        self._toggle_blue(self.btn_input, self.is_muted)
+        self._toggle_blue(self.btn_mute, self.is_muted)
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
     def on_speaker_toggle(self, btn):
@@ -813,9 +860,10 @@ class InCallWindow(Gtk.Window):
         self.ofono.swap_calls()
 
     def on_pad_toggle(self, btn):
-        """Toggle dialpad visibility."""
+        """Toggle dialpad visibility, giving the pad the selector rows' space."""
         self.dtmf_visible = not self.dtmf_visible
         self.pad_revealer.set_reveal_child(self.dtmf_visible)
+        self.route_box.set_visible(not self.dtmf_visible)
         self._toggle_blue(btn, self.dtmf_visible)
 
     def on_reject_with_msg(self, btn):

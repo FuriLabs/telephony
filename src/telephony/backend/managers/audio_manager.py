@@ -299,55 +299,56 @@ class TelephonyAudioManager:
         logger.info(f"[Audio] Setting input route: {mode}")
 
     def get_available_outputs(self):
-        """Return a list of available output routes."""
-        routes = [{"id": "earpiece", "name": "Earpiece", "icon": "audio-headphones-symbolic"},
-                  {"id": "speaker", "name": "Speaker", "icon": "audio-speakers-symbolic"}]
+        """Return the output routes with per-route availability."""
+        has_bt = False
+        has_wired = False
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
-                cards = pulse.card_list()
-                for c in cards:
+                for c in pulse.card_list():
                     if "bluez" in c.name:
-                        routes.append({"id": "bluetooth", "name": "Bluetooth", "icon": "bluetooth-active-symbolic"})
+                        has_bt = True
                         break
                 sink = pulse.get_sink_by_name("sink.primary_output")
                 if sink:
                     for p in sink.port_list:
                         if "wired_headphone" in p.name or "headset" in p.name:
-                            routes.append({"id": "wired", "name": "Wired Headset", "icon": "audio-headphones-symbolic"})
-                            break
+                            if getattr(p, 'available', None) != 'no':
+                                has_wired = True
+                                break
         except Exception as e:
-            logger.warning(f"[Audio] Failed to get available outputs: {e}")
-            if not any(r['id'] == 'earpiece' for r in routes):
-                routes.append({"id": "earpiece", "name": "Earpiece", "icon": "audio-headphones-symbolic"})
-            if not any(r['id'] == 'speaker' for r in routes):
-                routes.append({"id": "speaker", "name": "Speaker", "icon": "audio-speakers-symbolic"})
+            logger.warning(f"[Audio] Failed to probe output routes: {e}")
 
-        if not any(r['id'] == 'wired' for r in routes):
-            routes.append({"id": "wired", "name": "Wired Headset", "icon": "audio-headphones-symbolic"})
-        if not any(r['id'] == 'bluetooth' for r in routes):
-            routes.append({"id": "bluetooth", "name": "Bluetooth", "icon": "bluetooth-active-symbolic"})
-
-        return routes
+        return [
+            {"id": "earpiece", "name": "Earpiece", "icon": "audio-headphones-symbolic", "available": True},
+            {"id": "speaker", "name": "Speaker", "icon": "audio-speakers-symbolic", "available": True},
+            {"id": "wired", "name": "Wired Headset", "icon": "audio-headphones-symbolic", "available": has_wired},
+            {"id": "bluetooth", "name": "Bluetooth", "icon": "bluetooth-active-symbolic", "available": has_bt},
+        ]
 
     def get_available_inputs(self):
-        """Return a list of available input routes."""
-        routes = [{"id": "mic", "name": "Microphone", "icon": "audio-input-microphone-symbolic"}]
+        """Return the input routes with per-route availability."""
+        has_bt = False
+        has_wired = False
         try:
             with pulsectl.Pulse('telephony-audio') as pulse:
-                cards = pulse.card_list()
-                for c in cards:
+                for c in pulse.card_list():
                     if "bluez" in c.name:
-                        routes.append({"id": "bluetooth", "name": "Bluetooth Mic", "icon": "bluetooth-active-symbolic"})
+                        has_bt = True
                         break
+                sink = pulse.get_sink_by_name("sink.primary_output")
+                if sink:
+                    for p in sink.port_list:
+                        if "headset" in p.name and getattr(p, 'available', None) != 'no':
+                            has_wired = True
+                            break
         except Exception as e:
-            logger.warning(f"[Audio] Failed to get available inputs: {e}")
+            logger.warning(f"[Audio] Failed to probe input routes: {e}")
 
-        if not any(r['id'] == 'wired' for r in routes):
-            routes.append({"id": "wired", "name": "Wired Mic", "icon": "audio-input-microphone-symbolic"})
-        if not any(r['id'] == 'bluetooth' for r in routes):
-            routes.append({"id": "bluetooth", "name": "Bluetooth Mic", "icon": "bluetooth-active-symbolic"})
-
-        return routes
+        return [
+            {"id": "mic", "name": "Microphone", "icon": "audio-input-microphone-symbolic", "available": True},
+            {"id": "wired", "name": "Wired Mic", "icon": "audio-input-microphone-symbolic", "available": has_wired},
+            {"id": "bluetooth", "name": "Bluetooth Mic", "icon": "bluetooth-active-symbolic", "available": has_bt},
+        ]
 
     def _get_call_sink(self, pulse, preferred_name=None):
         """Return the sink used for call audio, preferring the droid primary output."""

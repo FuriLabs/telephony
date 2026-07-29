@@ -158,8 +158,8 @@ stack {
 .circular:active { background-color: alpha(@theme_fg_color, 0.1); transform: translateY(2px); }
 .dialpad-btn:active { background-color: #3584e4; color: white; }
 
-/* Transparent background button: Removes padding and background for pure icon buttons. */
-.bg-btn { padding: 0; }
+/* Background call card action: Compact labeled pill buttons on held/waiting call cards. */
+.bg-action { padding: 6px 10px; font-size: 14px; }
 
 /* Error message box styling: A visually distinct dark red container for displaying critical errors. */
 .error-box { background-color: #3d1414; border-radius: 15px; padding: 20px; }
