@@ -923,6 +923,8 @@ class ChatPage(Gtk.Box):
 
         def done(rows):
             by_id = {m[0]: m[4] for m in rows or []}
+            was_at_bottom = self.v_adj.get_value() <= 20
+            changed = False
             for i in range(self.store.get_n_items()):
                 item = self.store.get_item(i)
                 if not item.id or item.id not in by_id:
@@ -933,8 +935,11 @@ class ChatPage(Gtk.Box):
                 replacement = MessageItem(item.id, item.direction, item.body, item.timestamp, new_status,
                                           subject=item.subject, attachments=item.attachments,
                                           sender=item.sender, scheduled_timestamp=item.scheduled_timestamp)
-                self.store.remove(i)
-                self.store.insert(i, replacement)
+                self.store.splice(i, 1, [replacement])
+                changed = True
+
+            if changed and was_at_bottom:
+                self.scroll_to_bottom()
 
         run_in_background(fetch, on_complete=done)
 
