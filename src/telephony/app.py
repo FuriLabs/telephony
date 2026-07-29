@@ -537,7 +537,7 @@ class App(Adw.Application):
 
         now_str = datetime.datetime.now().strftime("%H:%M")
 
-        title = f"{_('Missed Call')} {now_str}"
+        title = "{} {}".format(_("Missed Call"), now_str)
         body = f"{display_name}"
 
         actions = {}

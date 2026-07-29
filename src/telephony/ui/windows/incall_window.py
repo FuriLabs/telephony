@@ -32,6 +32,20 @@ from ...backend.utils.phone_utils import normalize_number
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
 
 
+def call_state_label(state):
+    """Return the translated display label for an ofono call state."""
+    labels = {
+        "active": _("Active"),
+        "held": _("On Hold"),
+        "dialing": _("Dialing..."),
+        "alerting": _("Alerting..."),
+        "incoming": _("Incoming Call..."),
+        "waiting": _("Waiting..."),
+        "disconnected": _("Disconnected"),
+    }
+    return labels.get(state, state)
+
+
 class InCallWindow(Gtk.Window):
     """Main call window handling active calls, incoming calls, and call controls."""
 
@@ -401,7 +415,7 @@ class InCallWindow(Gtk.Window):
             self.btn_hold.set_sensitive(can_hold)
 
             self._toggle_blue(self.btn_hold, p_data['state'] == 'held')
-            self.lbl_status.set_text(_(p_data['state']).capitalize())
+            self.lbl_status.set_text(call_state_label(p_data['state']))
 
         bg_list = [(x[1], x[2]) for x in sorted_c[1:]]
         self._render_bg(bg_list)
@@ -462,7 +476,7 @@ class InCallWindow(Gtk.Window):
                 name = _("Unknown")
 
             card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, css_classes=["card"])
-            lbl_title = create_truncated_label(f"{name} ({_(data['state'])})", ["heading"], max_chars=22)
+            lbl_title = create_truncated_label(f"{name} ({call_state_label(data['state'])})", ["heading"], max_chars=22)
             lbl_title.set_halign(Gtk.Align.START)
             card.append(lbl_title)
 
