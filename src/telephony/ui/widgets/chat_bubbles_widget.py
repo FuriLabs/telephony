@@ -36,6 +36,8 @@ class ChatBubbleFactory:
     """Factory for creating chat message bubbles in the chat view."""
 
     _executor = ThreadPoolExecutor(max_workers=4)
+    _thumb_meta_cache = {}
+    _texture_cache = {}
 
     @staticmethod
     def _safe_run(func, error_msg="Action failed"):
@@ -78,7 +80,6 @@ class ChatBubbleFactory:
         lbl_msg.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
         lbl_msg.set_natural_wrap_mode(Gtk.NaturalWrapMode.INHERIT)
         lbl_msg.set_use_markup(True)
-        lbl_msg.set_selectable(True)
         clamp.set_child(lbl_msg)
         content_box.append(clamp)
 
@@ -100,46 +101,6 @@ class ChatBubbleFactory:
         btn_menu = Gtk.MenuButton(icon_name="view-more-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat", "bubble-menu"])
         btn_menu.set_opacity(1)
 
-        pop = Gtk.Popover()
-
-        menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        menu_box.set_margin_start(6)
-        menu_box.set_margin_end(6)
-        menu_box.set_margin_top(6)
-        menu_box.set_margin_bottom(6)
-
-        def create_menu_btn(icon, label, style_class="suggested-action"):
-            b = Gtk.Button()
-            b.h = None
-            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            box.append(Gtk.Image(icon_name=icon))
-            box.append(Gtk.Label(label=label))
-            b.set_child(box)
-            if style_class:
-                b.add_css_class(style_class)
-            return b
-
-        btn_copy = create_menu_btn("edit-copy-symbolic", _("Copy Text"))
-        btn_copy_num = create_menu_btn("edit-copy-symbolic", _("Copy Number"))
-        btn_add_contact = create_menu_btn("contact-new-symbolic", _("Add to Contacts"), "suggested-action")
-        btn_add_contact.set_visible(False)
-        btn_resched = create_menu_btn("alarm-symbolic", _("Re-Schedule"), "suggested-action")
-        btn_resched.set_visible(False)
-        btn_forward = create_menu_btn("mail-forward-symbolic", _("Forward"))
-        btn_unread = create_menu_btn("mail-unread-symbolic", _("Mark as Unread"))
-        btn_del = create_menu_btn("user-trash-symbolic", _("Delete"), "destructive-action")
-
-        menu_box.append(btn_add_contact)
-        menu_box.append(btn_resched)
-        menu_box.append(btn_copy)
-        menu_box.append(btn_copy_num)
-        menu_box.append(btn_forward)
-        menu_box.append(btn_unread)
-        menu_box.append(btn_del)
-
-        pop.set_child(menu_box)
-        btn_menu.set_popover(pop)
-
         spacer = Gtk.Box(hexpand=True)
 
         if is_incoming:
@@ -151,11 +112,125 @@ class ChatBubbleFactory:
             row.append(btn_menu)
             row.append(bubble)
 
-        return {
+        widgets = {
             "root": row, "bubble": bubble, "media_box": media_box,
             "lbl_msg": lbl_msg, "lbl_time": lbl_time, "lbl_sender": lbl_sender,
-            "pop": pop, "actions": (btn_copy, btn_copy_num, btn_del, btn_add_contact, btn_forward, btn_resched, btn_unread)
+            "btn_menu": btn_menu, "pop": None, "actions": None, "menu_ctx": None
         }
+        btn_menu.set_create_popup_func(lambda mb: ChatBubbleFactory._prepare_menu(widgets))
+        return widgets
+
+    @staticmethod
+    def _build_menu(w):
+        """Build the bubble context menu lazily on first open."""
+        pop = Gtk.Popover()
+
+        menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        menu_box.set_margin_start(6)
+        menu_box.set_margin_end(6)
+        menu_box.set_margin_top(6)
+        menu_box.set_margin_bottom(6)
+
+        def create_menu_btn(icon, label, action, style_class="suggested-action"):
+            b = Gtk.Button()
+            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            box.append(Gtk.Image(icon_name=icon))
+            box.append(Gtk.Label(label=label))
+            b.set_child(box)
+            if style_class:
+                b.add_css_class(style_class)
+            b.connect("clicked", lambda x: ChatBubbleFactory._safe_run(lambda: ChatBubbleFactory._run_menu_action(w, action), "Menu action failed"))
+            return b
+
+        btn_copy = create_menu_btn("edit-copy-symbolic", _("Copy Text"), "copy")
+        btn_copy_num = create_menu_btn("edit-copy-symbolic", _("Copy Number"), "copy_number")
+        btn_add_contact = create_menu_btn("contact-new-symbolic", _("Add to Contacts"), "add_contact", "suggested-action")
+        btn_resched = create_menu_btn("alarm-symbolic", _("Re-Schedule"), "reschedule", "suggested-action")
+        btn_forward = create_menu_btn("mail-forward-symbolic", _("Forward"), "forward")
+        btn_unread = create_menu_btn("mail-unread-symbolic", _("Mark as Unread"), "unread")
+        btn_del = create_menu_btn("user-trash-symbolic", _("Delete"), "delete", "destructive-action")
+
+        menu_box.append(btn_add_contact)
+        menu_box.append(btn_resched)
+        menu_box.append(btn_copy)
+        menu_box.append(btn_copy_num)
+        menu_box.append(btn_forward)
+        menu_box.append(btn_unread)
+        menu_box.append(btn_del)
+
+        pop.set_child(menu_box)
+        w["pop"] = pop
+        w["actions"] = (btn_copy, btn_copy_num, btn_del, btn_add_contact, btn_forward, btn_resched, btn_unread)
+        w["btn_menu"].set_popover(pop)
+
+    @staticmethod
+    def _prepare_menu(w):
+        """Materialize the context menu and sync it to the bound message."""
+        if w["pop"] is None:
+            ChatBubbleFactory._build_menu(w)
+
+        ctx = w["menu_ctx"]
+        if not ctx:
+            return
+
+        b_copy, b_copy_num, b_del, b_add, b_fwd, b_resched, b_unread = w["actions"]
+        item = ctx["item"]
+
+        found_number = None
+        if item.body:
+            match = re.search(r'(?:\d *){4,}', item.body)
+            if match:
+                found_number = match.group(0).replace(" ", "")
+        ctx["found_number"] = found_number
+        b_copy_num.set_visible(found_number is not None)
+
+        b_add.set_visible(ctx["add_contact_cb"] is not None)
+        b_unread.set_visible(item.direction == "incoming")
+
+        show_resched = item.status in ("scheduled", "failed") and ctx["reschedule_cb"] is not None
+        b_resched.set_visible(show_resched)
+        if show_resched:
+            box = b_resched.get_child()
+            icon = box.get_first_child()
+            label = icon.get_next_sibling()
+            if item.status == "failed":
+                icon.set_from_icon_name("mail-send-symbolic")
+                label.set_label(_("Retry Send"))
+            else:
+                icon.set_from_icon_name("alarm-symbolic")
+                label.set_label(_("Re-Schedule"))
+
+    @staticmethod
+    def _run_menu_action(w, action):
+        """Execute a context menu action against the currently bound message."""
+        ctx = w["menu_ctx"]
+        if not ctx:
+            return
+
+        item = ctx["item"]
+        w["pop"].popdown()
+
+        if action == "copy":
+            Gdk.Display.get_default().get_clipboard().set(item.body or "")
+        elif action == "copy_number":
+            if ctx.get("found_number"):
+                Gdk.Display.get_default().get_clipboard().set(ctx["found_number"])
+        elif action == "forward":
+            if ctx["forward_cb"]:
+                GLib.timeout_add(50, lambda: ctx["forward_cb"](item) or False)
+        elif action == "delete":
+            if ctx["delete_cb"]:
+                GLib.timeout_add(50, lambda: ctx["delete_cb"](item.id) or False)
+        elif action == "reschedule":
+            if ctx["reschedule_cb"]:
+                GLib.timeout_add(50, lambda: ctx["reschedule_cb"](item) or False)
+        elif action == "unread":
+            if ctx["unread_cb"]:
+                GLib.timeout_add(50, lambda: ctx["unread_cb"](item.id) or False)
+        elif action == "add_contact":
+            cb = ctx["add_contact_cb"]
+            if cb:
+                GLib.timeout_add(50, lambda: cb(number_preset=ctx["sender_num"]) or False)
 
     @staticmethod
     def setup(factory, list_item):
@@ -240,6 +315,9 @@ class ChatBubbleFactory:
 
             m_box.last_paths = new_paths_sig
 
+        show_add_contact = False
+        add_contact_num = None
+
         if item.direction == "incoming":
             sender_num = item.sender
             sender_name = None
@@ -269,23 +347,10 @@ class ChatBubbleFactory:
                 target_w["lbl_sender"].set_visible(False)
 
             if not sender_name and add_contact_cb and sender_num and check_unknown:
-                target_w["actions"][3].set_visible(True)
-                if (target_w["actions"][3].h is not None):
-                    target_w["actions"][3].disconnect(target_w["actions"][3].h)
-
-                def _add_contact_action():
-                    target_w["pop"].popdown()
-                    GLib.timeout_add(50, lambda: add_contact_cb(number_preset=sender_num) or False)
-
-                target_w["actions"][3].h = target_w["actions"][3].connect(
-                    "clicked",
-                    lambda x: ChatBubbleFactory._safe_run(_add_contact_action, "Add contact failed")
-                )
-            else:
-                target_w["actions"][3].set_visible(False)
+                show_add_contact = True
+                add_contact_num = sender_num
         else:
             target_w["lbl_sender"].set_visible(False)
-            target_w["actions"][3].set_visible(False)
 
             target_w["bubble"].remove_css_class("chat-bubble-failed")
             if item.status == "scheduled":
@@ -311,7 +376,15 @@ class ChatBubbleFactory:
                 target_w["bubble"].remove_css_class("chat-bubble-scheduled")
                 target_w["bubble"].add_css_class("chat-bubble-out")
 
-        ChatBubbleFactory._connect_actions(target_w, item, delete_callback, target_w["bubble"], processed_files, forward_callback, reschedule_cb, unread_callback)
+        target_w["menu_ctx"] = {
+            "item": item,
+            "delete_cb": delete_callback,
+            "forward_cb": forward_callback,
+            "reschedule_cb": reschedule_cb,
+            "unread_cb": unread_callback,
+            "add_contact_cb": add_contact_cb if show_add_contact else None,
+            "sender_num": add_contact_num,
+        }
 
     @staticmethod
     def _resolve_icon_name(mime, path):
@@ -441,54 +514,73 @@ class ChatBubbleFactory:
 
             return thumb_path, icon_name, is_video
 
+        def _update_ui(thumb_path, icon_name, is_video):
+            if not check_func():
+                return False
+
+            if icon_name:
+                icon_widget.set_from_icon_name(icon_name)
+
+            if thumb_path and os.path.exists(thumb_path):
+                pic = Gtk.Picture()
+                pic.set_content_fit(Gtk.ContentFit.COVER)
+                pic.set_can_shrink(True)
+                pic.set_paintable(ChatBubbleFactory._get_cached_texture(thumb_path))
+
+                if is_video:
+                    overlay = Gtk.Overlay()
+                    overlay.set_child(pic)
+
+                    play_icon = Gtk.Image.new_from_icon_name("media-playback-start-symbolic")
+                    play_icon.set_pixel_size(24)
+                    play_icon.set_halign(Gtk.Align.CENTER)
+                    play_icon.set_valign(Gtk.Align.CENTER)
+                    play_icon.add_css_class("icon-white-shadow")
+                    overlay.add_overlay(play_icon)
+                    stack_ref.add_named(overlay, "thumb")
+                else:
+                    stack_ref.add_named(pic, "thumb")
+
+                stack_ref.set_visible_child_name("thumb")
+
+            return False
+
+        cached = ChatBubbleFactory._thumb_meta_cache.get(path)
+        if cached is not None:
+            GLib.idle_add(lambda: _update_ui(*cached))
+            return
+
         def _on_done(f):
             if not check_func():
                 return
 
             try:
                 res = f.result()
-                thumb_path, icon_name, is_video = res
 
-                def _update_ui():
-                    if not check_func():
-                        return False
+                if os.path.exists(path):
+                    meta_cache = ChatBubbleFactory._thumb_meta_cache
+                    meta_cache[path] = res
+                    while len(meta_cache) > 256:
+                        meta_cache.pop(next(iter(meta_cache)))
 
-                    if icon_name:
-                        icon_widget.set_from_icon_name(icon_name)
-
-                    if thumb_path and os.path.exists(thumb_path):
-                        if is_video:
-                            overlay = Gtk.Overlay()
-                            pic = Gtk.Picture()
-                            pic.set_content_fit(Gtk.ContentFit.COVER)
-                            pic.set_can_shrink(True)
-                            pic.set_filename(thumb_path)
-                            overlay.set_child(pic)
-
-                            play_icon = Gtk.Image.new_from_icon_name("media-playback-start-symbolic")
-                            play_icon.set_pixel_size(24)
-                            play_icon.set_halign(Gtk.Align.CENTER)
-                            play_icon.set_valign(Gtk.Align.CENTER)
-                            play_icon.add_css_class("icon-white-shadow")
-                            overlay.add_overlay(play_icon)
-                            stack_ref.add_named(overlay, "thumb")
-                        else:
-                            pic = Gtk.Picture()
-                            pic.set_content_fit(Gtk.ContentFit.COVER)
-                            pic.set_can_shrink(True)
-                            pic.set_filename(thumb_path)
-                            stack_ref.add_named(pic, "thumb")
-
-                        stack_ref.set_visible_child_name("thumb")
-
-                    return False
-
-                GLib.idle_add(_update_ui)
+                GLib.idle_add(lambda: _update_ui(*res))
 
             except Exception as e:
                 logger.debug(f"Async detection done error: {e}")
 
         ChatBubbleFactory._executor.submit(_bg_task).add_done_callback(_on_done)
+
+    @staticmethod
+    def _get_cached_texture(thumb_path):
+        """Return a texture for a thumbnail file, decoding it only once."""
+        cache = ChatBubbleFactory._texture_cache
+        tex = cache.get(thumb_path)
+        if tex is None:
+            tex = Gdk.Texture.new_from_filename(thumb_path)
+            cache[thumb_path] = tex
+            while len(cache) > 128:
+                cache.pop(next(iter(cache)))
+        return tex
 
     @staticmethod
     def _create_attachment_layout(container, files, widget_ref, check_func):
@@ -543,115 +635,6 @@ class ChatBubbleFactory:
         pop.set_child(box)
         pop.set_parent(btn)
         GLib.idle_add(lambda: pop.popup() or False)
-
-    @staticmethod
-    def _connect_actions(w, item, delete_callback, widget_ref, processed_files, forward_callback, reschedule_cb, unread_callback):
-        """Connect actions to the bubble menu."""
-        b_copy, b_copy_num, b_del, _, b_fwd, b_resched, btn_unread = w["actions"]
-
-        if (b_copy.h is not None):
-            b_copy.disconnect(b_copy.h)
-
-        def _copy_action():
-            Gdk.Display.get_default().get_clipboard().set(item.body or "")
-            w["pop"].popdown()
-
-        b_copy.h = b_copy.connect(
-            "clicked",
-            lambda x: ChatBubbleFactory._safe_run(_copy_action, "Copy text failed")
-        )
-
-        found_number = None
-        if item.body:
-            match = re.search(r'(?:\d *){4,}', item.body)
-            if match:
-                found_number = match.group(0).replace(" ", "")
-
-        if found_number:
-            b_copy_num.set_visible(True)
-            if (b_copy_num.h is not None):
-                b_copy_num.disconnect(b_copy_num.h)
-
-            def _copy_num_action():
-                Gdk.Display.get_default().get_clipboard().set(found_number)
-                w["pop"].popdown()
-
-            b_copy_num.h = b_copy_num.connect(
-                "clicked",
-                lambda x: ChatBubbleFactory._safe_run(_copy_num_action, "Copy number failed")
-            )
-        else:
-            b_copy_num.set_visible(False)
-
-        if (b_fwd.h is not None):
-            b_fwd.disconnect(b_fwd.h)
-
-        def _fwd_action():
-            w["pop"].popdown()
-            if forward_callback:
-                GLib.timeout_add(50, lambda: forward_callback(item) or False)
-
-        b_fwd.h = b_fwd.connect(
-            "clicked",
-            lambda x: ChatBubbleFactory._safe_run(_fwd_action, "Forward failed")
-        )
-
-        if (b_del.h is not None):
-            b_del.disconnect(b_del.h)
-
-        def _del_action():
-            w["pop"].popdown()
-            if delete_callback:
-                GLib.timeout_add(50, lambda: delete_callback(item.id) or False)
-
-        b_del.h = b_del.connect(
-            "clicked",
-            lambda x: ChatBubbleFactory._safe_run(_del_action, "Delete failed")
-        )
-
-        if item.status in ("scheduled", "failed") and reschedule_cb:
-            b_resched.set_visible(True)
-
-            box = b_resched.get_child()
-            icon = box.get_first_child()
-            label = icon.get_next_sibling()
-            if item.status == "failed":
-                icon.set_from_icon_name("mail-send-symbolic")
-                label.set_label(_("Retry Send"))
-            else:
-                icon.set_from_icon_name("alarm-symbolic")
-                label.set_label(_("Re-Schedule"))
-
-            if (b_resched.h is not None):
-                b_resched.disconnect(b_resched.h)
-
-            def _resched_action():
-                w["pop"].popdown()
-                GLib.timeout_add(50, lambda: reschedule_cb(item) or False)
-
-            b_resched.h = b_resched.connect(
-                "clicked",
-                lambda x: ChatBubbleFactory._safe_run(_resched_action, "Reschedule failed")
-            )
-        else:
-            b_resched.set_visible(False)
-
-        if item.direction == "incoming":
-            btn_unread.set_visible(True)
-            if (btn_unread.h is not None):
-                btn_unread.disconnect(btn_unread.h)
-
-            def _unread_action():
-                w["pop"].popdown()
-                if unread_callback:
-                    GLib.timeout_add(50, lambda: unread_callback(item.id) or False)
-
-            btn_unread.h = btn_unread.connect(
-                "clicked",
-                lambda x: ChatBubbleFactory._safe_run(_unread_action, "Mark Unread failed")
-            )
-        else:
-            btn_unread.set_visible(False)
 
     @staticmethod
     def _get_root_window(widget):
