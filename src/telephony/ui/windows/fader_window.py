@@ -27,7 +27,6 @@ class ProximityFader(Gtk.Window):
         super().__init__()
 
         self.is_active_internal = False
-        self.mode = 'none'
         self.sys_state = SystemStateService()
         self.is_idle = self.sys_state.is_idle
         self.is_locked = self.sys_state.is_locked
@@ -38,10 +37,10 @@ class ProximityFader(Gtk.Window):
 
         self.set_title("Fader")
         self.set_decorated(False)
-        self.set_modal(True)
         self.set_css_classes(["black-fader"])
 
     def set_active(self, active):
+        """Enable or disable the fader, blanking by power key when locked."""
         if active == self.is_active_internal:
             return
 
@@ -52,19 +51,14 @@ class ProximityFader(Gtk.Window):
                 if not self.is_idle:
                     self._fader_turned_off_screen = True
                     self._press_power_key()
-                self.mode = 'hardware'
             else:
                 self._enable_software_fader()
-                self.mode = 'software'
         else:
             self._disable_software_fader()
 
-            if self.is_idle and self._fader_turned_off_screen:
+            if self._fader_turned_off_screen and self.is_idle:
                 self._press_power_key()
-
-            self._fader_turned_off_screen = False
-
-            self.mode = 'none'
+                self._fader_turned_off_screen = False
 
     def _press_power_key(self):
         """Simulates Power Button Press via wtype"""
@@ -85,19 +79,25 @@ class ProximityFader(Gtk.Window):
             self.hide()
 
     def _on_idle_changed(self, monitor, is_idle):
+        """Track screen idle state and recover a wake-up the fader still owes."""
         self.is_idle = is_idle
 
         if not self.is_idle:
             self._fader_turned_off_screen = False
+            if self.is_active_internal:
+                if self.is_locked:
+                    self._fader_turned_off_screen = True
+                    self._press_power_key()
+                else:
+                    self._enable_software_fader()
+            return
 
-        if self.is_active_internal and not self.is_idle:
-            if self.is_locked:
-                self._fader_turned_off_screen = True
-                self._press_power_key()
-            else:
-                self._enable_software_fader()
+        if not self.is_active_internal and self._fader_turned_off_screen:
+            self._press_power_key()
+            self._fader_turned_off_screen = False
 
     def _on_lock_changed(self, monitor, is_locked):
+        """Switch between hardware and software blanking when the lock state changes."""
         self.is_locked = is_locked
 
         if self.is_active_internal:
@@ -106,7 +106,5 @@ class ProximityFader(Gtk.Window):
                 if not self.is_idle:
                     self._fader_turned_off_screen = True
                     self._press_power_key()
-                self.mode = 'hardware'
             else:
                 self._enable_software_fader()
-                self.mode = 'software'
