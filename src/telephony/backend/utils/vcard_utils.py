@@ -103,41 +103,6 @@ def _build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fa
     }
 
 
-def _parse_contact_api(contact, source_uid):
-    """Extract contact details through the EBookContacts API."""
-    real_uid = contact.get_const(EBookContacts.ContactField.UID) or ""
-    name = contact.get_const(EBookContacts.ContactField.FULL_NAME) or "Unknown"
-
-    try:
-        vcard = unfold_vcard(contact.to_string(1))
-    except Exception:
-        vcard = ""
-
-    phones = []
-    try:
-        for line in vcard.splitlines():
-            if line.startswith("TEL"):
-                parsed = _parse_tel_line(line)
-                if parsed:
-                    phones.append(parsed)
-    except Exception as e:
-        logger.error(f"[VCardUtils] Raw phone parse failed: {e}")
-        for attr in contact.get_attributes(EBookContacts.ContactField.TEL):
-            val = attr.get_value()
-            if val:
-                phones.append((normalize_number(val), "Mobile"))
-
-    emails = []
-    for attr in contact.get_attributes(EBookContacts.ContactField.EMAIL):
-        val = attr.get_value()
-        if val:
-            emails.append((val, _get_email_label(attr.get_param("TYPE") or "")))
-
-    is_fav = "X-FOLKS-FAVOURITE:true" in vcard or "X-FOLKS-FAVOURITE:TRUE" in vcard
-
-    return _build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fav)
-
-
 def _parse_contact_raw(contact, source_uid):
     """Extract contact details by parsing the raw vcard string."""
     try:
@@ -186,11 +151,11 @@ def _parse_contact_raw(contact, source_uid):
 
 def parse_contact_safe(contact, source_uid):
     """
-    Safely extract contact details (UID, name, phones, emails, and generated vcard hash)
-    from an EBookContacts.Contact object. Falls back to raw string parsing if API throws an error.
+    Extract contact details (UID, name, phones, emails, and generated vcard hash)
+    from an EBookContacts.Contact object by parsing its serialized vcard.
+
+    The EContact field accessors (get_const/get) return raw gconstpointer values
+    that PyGObject marshals as integers, so the string-based parser is the only
+    path that works from Python.
     """
-    try:
-        return _parse_contact_api(contact, source_uid)
-    except Exception as e:
-        logger.debug(f"[VCardUtils] API parse failed, falling back to raw vcard: {e}")
-        return _parse_contact_raw(contact, source_uid)
+    return _parse_contact_raw(contact, source_uid)
