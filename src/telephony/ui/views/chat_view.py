@@ -96,6 +96,8 @@ class ChatPage(Gtk.Box):
 
         self.is_loading = True
         self.is_jumping = False
+        self.is_fetching_older = False
+        self.all_messages_loaded = False
         self.target_highlight_id = target_id
         self.has_active_divider = False
         self._pending_initial_read = False

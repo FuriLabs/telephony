@@ -45,6 +45,8 @@ class MessagesView(Adw.Bin):
         self.load_token = 0
         self.search_timer = None
         self.search_mode = 'contacts'
+        self.contact_search_token = 0
+        self.message_search_token = 0
 
         self.page_limit = 50
         self.page_offset = 0
@@ -600,12 +602,12 @@ class MessagesView(Adw.Bin):
 
     def do_search_debounced(self):
         """Perform search after a short delay."""
+        self.search_timer = None
         query = self.search_entry.get_text()
         if self.search_mode == "contacts":
             self.perform_contact_search(query)
         else:
             self.perform_message_search(query)
-        self.search_timer = None
         return False
 
     def _update_compose_button(self):
