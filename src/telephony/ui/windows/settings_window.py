@@ -785,7 +785,12 @@ class SettingsWindow(Adw.Window):
         self.emergency_rows = [x for x in self.emergency_rows if x[0] != row]
 
     def _on_volume_scale_changed(self, scale):
-        """Debounce persisting slider moves so an active call hears them live."""
+        """Snap drags to steps of ten and debounce persisting the values."""
+        snapped = round(scale.get_value() / 10) * 10
+        if int(scale.get_value()) != snapped:
+            scale.set_value(snapped)
+            return
+
         if self._volume_commit_timer is not None:
             GLib.source_remove(self._volume_commit_timer)
         self._volume_commit_timer = GLib.timeout_add(200, self._commit_volume_levels)
@@ -793,7 +798,7 @@ class SettingsWindow(Adw.Window):
     def _commit_volume_levels(self):
         """Write the current slider values to settings."""
         self._volume_commit_timer = None
-        volume_levels = {route: int(scale.get_value())
+        volume_levels = {route: max(10, min(100, int(scale.get_value())))
                          for route, scale in self.volume_scales.items()}
         self.main_window.gsettings_mgr.set_call_volume_levels(volume_levels)
         return False

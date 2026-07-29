@@ -824,8 +824,15 @@ class InCallWindow(Gtk.Window):
     def _push_route_volume(self):
         """Apply the current route's configured level to the voice stream."""
         levels = self.gsettings_mgr.get_call_volume_levels()
-        level = levels.get(self.current_route, 80) / 100.0
-        self.audio.set_voice_volume_level(level)
+        level = max(10, min(100, levels.get(self.current_route, 80))) / 100.0
+        if not self.audio.set_voice_volume_level(level):
+            GLib.timeout_add(500, self._retry_route_volume, level)
+
+    def _retry_route_volume(self, level):
+        """Retry the voice volume once when the control stream was not up yet."""
+        if self.call_volume_applied:
+            self.audio.set_voice_volume_level(level)
+        return False
 
     def _on_volume_settings_changed(self, settings, key):
         """Re-apply the active route's level live when its slider changes mid-call."""

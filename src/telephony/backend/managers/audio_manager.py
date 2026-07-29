@@ -344,6 +344,7 @@ class TelephonyAudioManager:
         Apply the call volume by setting the phone-role virtual stream volume.
         The droid module forwards only actual changes to the HAL voice volume,
         so the value is written twice with a small nudge in between.
+        Returns True when the volume reached a control stream.
         """
         level = max(0.0, min(1.0, level))
         nudge = level + 0.01 if level <= 0.5 else level - 0.01
@@ -357,13 +358,15 @@ class TelephonyAudioManager:
 
                 if not stream:
                     logger.warning("[Audio] No phone-role stream found for voice volume")
-                    return
+                    return False
 
                 pulse.volume_set_all_chans(stream, nudge)
                 pulse.volume_set_all_chans(stream, level)
-                logger.info(f"[Audio] Voice volume set to {int(level * 100)}%")
+                logger.info(f"[Audio] Voice volume {int(level * 100)}% on stream #{stream.index} ({stream.name})")
+                return True
         except Exception as e:
             logger.error(f"[Audio] Set voice volume failed: {e}")
+            return False
 
     def ensure_sink_unmuted(self):
         """Clear any mute that module-device-restore re-applied on a port change."""
