@@ -34,6 +34,7 @@ class SettingsWindow(Adw.Window):
     """Main settings window for the application."""
 
     def __init__(self, main_window, eds_manager, ofono_manager):
+        self._volume_commit_timer = None
         self.source_rows = None
         self.sources_state = None
         """Initialize Settings Window."""
@@ -279,6 +280,7 @@ class SettingsWindow(Adw.Window):
             scale.set_draw_value(True)
             scale.set_value_pos(Gtk.PositionType.RIGHT)
             scale.add_mark(100, Gtk.PositionType.BOTTOM, None)
+            scale.connect("value-changed", self._on_volume_scale_changed)
             row.add_suffix(scale)
             self.grp_call_volume.add(row)
             self.volume_scales[route_id] = scale
@@ -792,6 +794,20 @@ class SettingsWindow(Adw.Window):
         """Remove an emergency row."""
         self.grp_emerg_list.remove(row)
         self.emergency_rows = [x for x in self.emergency_rows if x[0] != row]
+
+    def _on_volume_scale_changed(self, scale):
+        """Debounce persisting slider moves so an active call hears them live."""
+        if self._volume_commit_timer is not None:
+            GLib.source_remove(self._volume_commit_timer)
+        self._volume_commit_timer = GLib.timeout_add(200, self._commit_volume_levels)
+
+    def _commit_volume_levels(self):
+        """Write the current slider values to settings."""
+        self._volume_commit_timer = None
+        volume_levels = {route: int(scale.get_value())
+                         for route, scale in self.volume_scales.items()}
+        self.main_window.gsettings_mgr.set_call_volume_levels(volume_levels)
+        return False
 
     def _on_volume_boost_toggled(self, row, _param):
         """Extend or clamp the volume slider range based on the boost switch."""

@@ -66,6 +66,7 @@ class InCallWindow(Gtk.Window):
         self.dtmf_visible = False
         self.current_route = "earpiece"
         self.call_volume_applied = False
+        self.gsettings_mgr.gsettings.connect("changed", self._on_volume_settings_changed)
         self.call_history = {}
         self.ignored_calls = set()
 
@@ -741,6 +742,16 @@ class InCallWindow(Gtk.Window):
         level = levels.get(self.current_route, 80) / 100.0
         self.audio.push_call_volume(level)
         self.call_volume_applied = True
+
+    def _on_volume_settings_changed(self, settings, key):
+        """Re-apply the active route's level live when its slider changes mid-call."""
+        if key != "call-volume-levels":
+            return
+        if not self.call_volume_applied:
+            return
+        levels = self.gsettings_mgr.get_call_volume_levels()
+        level = levels.get(self.current_route, 80) / 100.0
+        self.audio.push_call_volume(level)
 
     def _handle_output_selection(self, route_id):
         """Handle output route selection."""
