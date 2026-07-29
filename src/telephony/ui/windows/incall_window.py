@@ -102,6 +102,7 @@ class InCallWindow(Gtk.Window):
         self.dtmf_visible = False
         self.current_route = "earpiece"
         self.current_input_route = "mic"
+        self.ringback = None
         self.call_volume_applied = False
         self.gsettings_mgr.gsettings.connect("changed", self._on_volume_settings_changed)
         self.call_history = {}
@@ -838,6 +839,9 @@ class InCallWindow(Gtk.Window):
 
         self.is_speaker = route_id == "speaker"
         self.lbl_output_route.set_text(route_label(route_id))
+
+        if self.ringback:
+            self.ringback.refresh_route()
 
         self._proximity_tick()
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
