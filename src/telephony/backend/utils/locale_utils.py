@@ -26,8 +26,8 @@ def init_locale():
         logger.warning(f"[Utils] Failed to set default locale: {e}")
         try:
             locale.setlocale(locale.LC_ALL, 'C.UTF-8')
-        except Exception:
-            pass
+        except Exception as e2:
+            logger.warning(f"[Utils] Fallback locale failed too: {e2}")
 
 
 def get_date_format():

@@ -137,6 +137,10 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                     logger.warning(f"[Importer] Error parsing iOS message date {date}: {e}")
                     time_str = format_timestamp()
 
+                if not norm_number or not dir_str or not time_str:
+                    logger.warning("[Importer] Skipping iOS message: missing required details")
+                    continue
+
                 sig = (norm_number, str(text), time_str, dir_str)
                 if sig in existing_messages:
                     continue
@@ -173,9 +177,6 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                     if local_atts:
                         attachments_json = json.dumps(local_atts)
 
-                if not norm_number or not dir_str or not time_str:
-                    logger.warning("[Importer] Skipping iOS message: missing required details (timestamp missing)")
-                    continue
                 to_insert.append((norm_number, dir_str, str(text), "read", time_str, msg_type, attachments_json, sender))
 
             except Exception as e:

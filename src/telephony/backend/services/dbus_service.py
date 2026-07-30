@@ -24,6 +24,7 @@ import uuid
 from telephony.backend.utils.importer_local_utils import import_local_chatty, import_local_calls
 from telephony.backend.utils.importer_android_utils import import_android_sms, import_android_calls
 from telephony.backend.utils.importer_ios_utils import import_ios_sms, import_ios_calls
+from telephony.backend.utils.thread_utils import run_in_background
 
 DAEMON_INTERFACE_XML = """
 <node>
@@ -621,41 +622,49 @@ class TelephonyDaemonDBus:
         for uid in uids_to_delete:
             self.eds.delete_contact(uid)
 
+    def _clear_contacts_task(self, source_uid, is_protected):
+        """Delete contacts per the source filter; runs on a worker thread."""
+        if not self.eds:
+            return
+        if not source_uid:
+            self._delete_unprotected_contacts()
+        elif not is_protected:
+            self.eds.delete_all_contacts(source_uid=source_uid)
+
+    def _run_task_then_reply(self, invocation, task):
+        """Run task off the main thread, then reply to the invocation."""
+        def done(_result):
+            invocation.return_value(None)
+
+        def failed(error):
+            logger.error(f"[DBus] Background task failed: {error}")
+            invocation.return_value(None)
+
+        run_in_background(task, on_complete=done, on_error=failed)
+
     def _handle_clearcontacts(self, parameters, invocation):
         """Handle ClearContacts command."""
         source_uid = parameters.unpack()[0]
-
         is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
-
-        if not source_uid and self.eds:
-            self._delete_unprotected_contacts()
-            invocation.return_value(None)
-            return
-
-        if not is_protected and self.eds:
-            self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
-        invocation.return_value(None)
-
+        self._run_task_then_reply(invocation, lambda: self._clear_contacts_task(source_uid, is_protected))
 
     def _handle_cleareverything(self, parameters, invocation):
         """Handle ClearEverything command."""
         source_uid = parameters.unpack()[0]
-        if self.db:
-            self.db.clear_everything()
-
         is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
 
-        if not source_uid and self.eds:
-            self._delete_unprotected_contacts()
-        elif not is_protected and self.eds:
-            self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
-        try:
-            cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
-            if os.path.exists(cfg):
-                os.remove(cfg)
-        except Exception:
-            pass
-        invocation.return_value(None)
+        def task():
+            if self.db:
+                self.db.clear_everything()
+            self._clear_contacts_task(source_uid, is_protected)
+            try:
+                cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
+                if os.path.exists(cfg):
+                    os.remove(cfg)
+            except Exception as e:
+                logger.warning(f"[DBus] Config removal failed: {e}")
+
+        self._run_task_then_reply(invocation, task)
 
     def _handle_deleteaddressbook(self, parameters, invocation):
         """Handle DeleteAddressBook command."""
@@ -668,59 +677,50 @@ class TelephonyDaemonDBus:
             success = self.eds.delete_addressbook(source_uid)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
+    def _run_import(self, invocation, task):
+        """Run an importer off the main thread and reply with its result."""
+        def done(result):
+            success, msg = result
+            invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+
+        def failed(error):
+            logger.error(f"[DBus] Import failed: {error}")
+            invocation.return_value(GLib.Variant("(bs)", (False, str(error))))
+
+        if not self.db:
+            invocation.return_value(GLib.Variant("(bs)", (False, "")))
+            return
+        run_in_background(task, on_complete=done, on_error=failed)
+
     def _handle_importchatty(self, parameters, invocation):
         """Handle ImportChatty command."""
         db_path, mms_path = parameters.unpack()
-        success = False
-        msg = ""
-        if self.db:
-            success, msg = import_local_chatty(self.db, db_path, mms_path)
-        invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+        self._run_import(invocation, lambda: import_local_chatty(self.db, db_path, mms_path))
 
     def _handle_importlocalcalls(self, parameters, invocation):
         """Handle ImportLocalCalls command."""
         db_path = parameters.unpack()[0]
-        success = False
-        msg = ""
-        if self.db:
-            success, msg = import_local_calls(self.db, db_path)
-        invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+        self._run_import(invocation, lambda: import_local_calls(self.db, db_path))
 
     def _handle_importandroidsms(self, parameters, invocation):
         """Handle ImportAndroidSms command."""
         file_path = parameters.unpack()[0]
-        success = False
-        msg = ""
-        if self.db:
-            success, msg = import_android_sms(self.db, file_path)
-        invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+        self._run_import(invocation, lambda: import_android_sms(self.db, file_path))
 
     def _handle_importandroidcalls(self, parameters, invocation):
         """Handle ImportAndroidCalls command."""
         file_path = parameters.unpack()[0]
-        success = False
-        msg = ""
-        if self.db:
-            success, msg = import_android_calls(self.db, file_path)
-        invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+        self._run_import(invocation, lambda: import_android_calls(self.db, file_path))
 
     def _handle_importiossms(self, parameters, invocation):
         """Handle ImportIosSms command."""
         file_path = parameters.unpack()[0]
-        success = False
-        msg = ""
-        if self.db:
-            success, msg = import_ios_sms(self.db, file_path)
-        invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+        self._run_import(invocation, lambda: import_ios_sms(self.db, file_path))
 
     def _handle_importioscalls(self, parameters, invocation):
         """Handle ImportIosCalls command."""
         file_path = parameters.unpack()[0]
-        success = False
-        msg = ""
-        if self.db:
-            success, msg = import_ios_calls(self.db, file_path)
-        invocation.return_value(GLib.Variant("(bs)", (success, msg)))
+        self._run_import(invocation, lambda: import_ios_calls(self.db, file_path))
 
     def _handle_clearcallhistory(self, parameters, invocation):
         """Handle ClearCallHistory command."""

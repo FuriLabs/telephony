@@ -15,6 +15,8 @@
 
 from datetime import datetime
 
+from loguru import logger
+
 STANDARD_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
@@ -31,5 +33,6 @@ def parse_timestamp(ts_str):
     except Exception:
         try:
             return datetime.strptime(ts_str, STANDARD_FORMAT)
-        except Exception:
+        except Exception as e:
+            logger.debug(f"[Utils] Unparseable timestamp {ts_str!r}, using now: {e}")
             return datetime.now()

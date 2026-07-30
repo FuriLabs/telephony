@@ -24,8 +24,11 @@ from .phone_utils import normalize_number
 
 class DbContactsUtils:
     def get_contacts_lookup_map(self):
-        """Get the current contact lookup map."""
-        return self.eds.lookup_map if self.eds else {}
+        """Get a snapshot of the current contact lookup map."""
+        if not self.eds:
+            return {}
+        with self.eds.cache_lock:
+            return dict(self.eds.lookup_map)
 
     def search_contacts(self, query="", limit=None, offset=0):
         """Search contacts via EDS."""

@@ -70,6 +70,10 @@ def import_android_sms(db_manager, file_path):
                 ts = _get_xml_value(msg, ['date', 'time', 'timestamp', 'created'])
                 time_str = _parse_generic_timestamp(ts)
 
+                if not norm_number or not dir_str or not time_str:
+                    logger.warning("[Importer] Skipping android message: missing required details")
+                    continue
+
                 sig = (norm_number, str(body), time_str, dir_str)
                 if sig in existing_messages:
                     continue
@@ -106,9 +110,6 @@ def import_android_sms(db_manager, file_path):
                             db_msg_type = "mms"
 
                 sender = "Me" if dir_str == "outgoing" else norm_number
-                if not norm_number or not dir_str or not time_str:
-                    logger.warning("[Importer] Skipping android message: missing required details (timestamp missing)")
-                    continue
                 to_insert.append((norm_number, dir_str, str(body), "read", time_str, db_msg_type, attachments_json, sender))
 
                 count += 1
@@ -174,6 +175,9 @@ def import_android_calls(db_manager, file_path):
                 time_str = _parse_generic_timestamp(ts)
 
                 norm_number = normalize_number(str(phone))
+                if not norm_number or not time_str:
+                    logger.warning("[Importer] Skipping android call: missing required details")
+                    continue
 
                 sig = (norm_number, time_str, duration, dir_str)
                 if sig in existing_calls:

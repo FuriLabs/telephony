@@ -16,7 +16,6 @@
 import os
 import json
 import base64
-import time
 import xml.etree.ElementTree as ET
 from gettext import gettext as _
 
@@ -26,11 +25,7 @@ from .datetime_utils import parse_timestamp
 
 def _dt_to_android_ms(ts_str):
     """Convert a timestamp string to Android millisecond epoch string."""
-    try:
-        dt = parse_timestamp(ts_str)
-        return str(int(dt.timestamp() * 1000))
-    except Exception:
-        return str(int(time.time() * 1000))
+    return str(int(parse_timestamp(ts_str).timestamp() * 1000))
 
 
 def export_android_sms(db_manager, file_path):
@@ -73,7 +68,8 @@ def export_android_sms(db_manager, file_path):
 
                     try:
                         attachments = json.loads(attachments_json)
-                    except Exception:
+                    except Exception as e:
+                        logger.warning(f"[Exporter] Bad attachment JSON, skipping attachments: {e}")
                         attachments = []
 
                     if msg_type_db == 'mms' or attachments:

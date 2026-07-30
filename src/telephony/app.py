@@ -368,7 +368,7 @@ class App(Adw.Application):
             elif dialpad_number:
                 logger.info(f"Auto-opening dialpad for: {dialpad_number}")
                 target_win.open_dialpad_with_number(dialpad_number)
-            elif focus_tab and hasattr(target_win, 'stack') and target_win.stack.get_child_by_name(focus_tab):
+            elif focus_tab and target_win.stack and target_win.stack.get_child_by_name(focus_tab):
                 target_win.stack.set_visible_child_name(focus_tab)
 
             return 0
@@ -393,7 +393,7 @@ class App(Adw.Application):
         elif dialpad_number:
             logger.info(f"Auto-opening dialpad for: {dialpad_number}")
             win.open_dialpad_with_number(dialpad_number)
-        elif focus_tab and hasattr(win, 'stack') and win.stack.get_child_by_name(focus_tab):
+        elif focus_tab and win.stack and win.stack.get_child_by_name(focus_tab):
             win.stack.set_visible_child_name(focus_tab)
 
         return 0

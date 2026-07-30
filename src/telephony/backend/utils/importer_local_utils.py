@@ -102,7 +102,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
                 sender = "Me" if dir_str == "outgoing" else norm_number
 
                 if not norm_number or not dir_str or not time_str:
-                    logger.warning("[Importer] Skipping local message: missing required details (timestamp missing)")
+                    logger.warning("[Importer] Skipping local message: missing required details")
                     continue
                 to_insert.append((norm_number, dir_str, str(text), "read", time_str, msg_type, att_json, sender))
             except Exception as e:
@@ -185,6 +185,9 @@ def import_local_calls(db_manager, db_path=None):
 
                 time_str = _parse_generic_timestamp(start_time)
                 norm_number = normalize_number(str(target))
+                if not norm_number or not time_str:
+                    logger.warning("[Importer] Skipping local call: missing required details")
+                    continue
 
                 sig = (norm_number, time_str, duration, dir_str)
                 if sig in existing_calls:

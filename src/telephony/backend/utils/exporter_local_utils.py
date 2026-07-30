@@ -23,10 +23,7 @@ from .datetime_utils import parse_timestamp
 
 def _dt_to_unix(ts_str):
     """Convert timestamp string to unix epoch."""
-    try:
-        return int(parse_timestamp(ts_str).timestamp())
-    except Exception:
-        return 0
+    return int(parse_timestamp(ts_str).timestamp())
 
 
 def export_linux_chatty(db_manager, dest_db_path):
@@ -157,7 +154,7 @@ def export_linux_telephony(db_manager, dest_db_path, is_messages=True):
     In a true ETL sense, this is a direct raw data transfer where the source schema and destination schema are identical.
     """
     try:
-        data_dir = os.path.join(os.path.expanduser("~"), ".local", "share", "telephony")
+        data_dir = db_manager.get_data_dir()
         source_db = os.path.join(data_dir, "messages.db" if is_messages else "calls.db")
 
         if not os.path.exists(source_db):

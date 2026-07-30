@@ -241,8 +241,10 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 else:
                     c.execute("INSERT OR REPLACE INTO group_names (id, name) VALUES (?, ?)", (group_id, name))
                 self.conn_messages.commit()
+            return True
         except Exception as e:
             logger.error(f"[DB] Set Group Name Error: {e}")
+            return False
 
     def get_all_group_names(self):
         """Return the full mapping of conversation ids to custom group names."""
