@@ -76,7 +76,8 @@ class ScheduleManager:
             self._timer_id = GLib.timeout_add(int(seconds_until * 1000), self._on_timeout_run)
 
         except Exception as e:
-            logger.error(f"[ScheduleManager] Date parse error: {e}")
+            logger.error(f"[ScheduleManager] Date parse error for {next_ts_str}, retrying in 60s: {e}")
+            self._timer_id = GLib.timeout_add_seconds(60, self._on_timeout_run)
 
     def _on_timeout_run(self):
         """Callback for the GLib timer."""

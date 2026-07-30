@@ -50,7 +50,7 @@ class LockScreenManager:
         self.active_notifications = {}
         self.respawn_timers = {}
         self.is_locked = True
-        self.manually_closed = False
+        self.self_closed_ids = set()
 
     def set_locked(self, locked):
         """Update the lock state."""
@@ -255,9 +255,8 @@ class LockScreenManager:
         if nid == 0:
             return
 
-        self.manually_closed = True
+        self.self_closed_ids.add(nid)
         self.monitor.call_close(nid)
-        self.manually_closed = False
         del self.active_notifications[path]
 
         if not self.active_notifications:
@@ -336,16 +335,19 @@ class LockScreenManager:
             self.window.on_restart_modem_click(None)
 
     def _on_notification_closed_signal(self, monitor, nid, reason):
-        """Handle notification closed signal."""
+        """Handle notification closed signal, respawning externally closed calls."""
+        if nid in self.self_closed_ids:
+            self.self_closed_ids.discard(nid)
+            return
+
         target_path = None
         for p, id_ in self.active_notifications.items():
             if id_ == nid:
                 target_path = p
                 break
 
-        if target_path and not self.manually_closed:
-            if target_path not in self.respawn_timers:
-                self.respawn_timers[target_path] = GLib.timeout_add(1000, self._scheduled_respawn, target_path)
+        if target_path and target_path not in self.respawn_timers:
+            self.respawn_timers[target_path] = GLib.timeout_add(1000, self._scheduled_respawn, target_path)
 
     def _scheduled_respawn(self, path):
         """Respawn notification if still relevant."""

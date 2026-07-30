@@ -470,11 +470,21 @@ class TelephonyDaemonDBus:
                     self.ofono.send_quick_response(number, sms_text)
         invocation.return_value(None)
 
+    def _normalize_schedule_timestamp(self, ts):
+        """Return the timestamp in the scheduler's format, or None when invalid."""
+        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+            try:
+                return datetime.datetime.strptime(ts, fmt).strftime("%Y-%m-%d %H:%M:%S")
+            except ValueError as e:
+                logger.debug(f"[DBus] Schedule timestamp {ts} does not match {fmt}: {e}")
+        return None
+
     def _handle_schedulesms(self, parameters, invocation):
         """Handle ScheduleSms command."""
         number, text, scheduled_timestamp = parameters.unpack()
         success = False
-        if self.app and self.app.scheduler:
+        scheduled_timestamp = self._normalize_schedule_timestamp(scheduled_timestamp)
+        if scheduled_timestamp and self.app and self.app.scheduler:
             row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
@@ -491,7 +501,8 @@ class TelephonyDaemonDBus:
             logger.warning(f"Failed to parse attachments: {e}")
 
         success = False
-        if self.app and self.app.scheduler:
+        scheduled_timestamp = self._normalize_schedule_timestamp(scheduled_timestamp)
+        if scheduled_timestamp and self.app and self.app.scheduler:
             row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
@@ -540,7 +551,9 @@ class TelephonyDaemonDBus:
         recipients, new_name = parameters.unpack()
         success = False
         if self.db:
-            pass
+            recipients_list = [r.strip() for r in recipients.split(",") if r.strip()]
+            if recipients_list:
+                success = bool(self.db.set_group_name(recipients_list, new_name))
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
     def _handle_cleargroupnames(self, parameters, invocation):
@@ -788,26 +801,29 @@ class TelephonyDaemonDBus:
     def _handle_setsetting(self, parameters, invocation):
         """Handle SetSetting command."""
         key, value = parameters.unpack()
+        key = key.replace("_", "-")
         if self.app and self.app.gsettings_mgr:
             schema = self.app.gsettings_mgr.gsettings.get_property('settings-schema')
-            if schema and schema.has_key(key):
-                key_type = schema.get_key(key).get_value_type().dup_string()
+            if not schema or not schema.has_key(key):
+                invocation.return_error_literal(Gio.dbus_error_quark(), Gio.DBusError.INVALID_ARGS, f"Unknown setting: {key}")
+                return
+            key_type = schema.get_key(key).get_value_type().dup_string()
 
-                try:
-                    if key_type == 'b':
-                        parsed_val = value.lower() in ['true', '1', 'yes']
-                        self.app.gsettings_mgr.gsettings.set_boolean(key, parsed_val)
-                    elif key_type == 'i':
-                        self.app.gsettings_mgr.gsettings.set_int(key, int(value))
-                    elif key_type in ['as', 'aa{ss}']:
-                        parsed_val = json.loads(value)
-                        self.app.gsettings_mgr.set_setting(key, parsed_val)
-                    else:
-                        self.app.gsettings_mgr.set_setting(key, value)
-                except Exception as e:
-                    logger.error(f"Failed to parse and set advanced setting: {e}")
-                    invocation.return_error_literal(Gio.dbus_error_quark(), Gio.DBusError.INVALID_ARGS, str(e))
-                    return
+            try:
+                if key_type == 'b':
+                    parsed_val = value.lower() in ['true', '1', 'yes']
+                    self.app.gsettings_mgr.gsettings.set_boolean(key, parsed_val)
+                elif key_type == 'i':
+                    self.app.gsettings_mgr.gsettings.set_int(key, int(value))
+                elif key_type in ['as', 'aa{ss}']:
+                    parsed_val = json.loads(value)
+                    self.app.gsettings_mgr.set_setting(key, parsed_val)
+                else:
+                    self.app.gsettings_mgr.set_setting(key, value)
+            except Exception as e:
+                logger.error(f"Failed to parse and set advanced setting: {e}")
+                invocation.return_error_literal(Gio.dbus_error_quark(), Gio.DBusError.INVALID_ARGS, str(e))
+                return
 
         invocation.return_value(None)
 
