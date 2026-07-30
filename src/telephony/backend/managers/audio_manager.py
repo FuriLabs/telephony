@@ -360,12 +360,9 @@ class TelephonyAudioManager:
         """
         Apply the call volume by setting the primary sink volume, which is the
         effective call loudness on this stack; the phone-role stream is only
-        the fine trim on top and is left to the user. The value is written
-        twice with a small nudge so the flat volume propagation also
-        re-asserts the HAL voice volume after routing changes.
+        the fine trim on top and is left to the user.
         """
         level = max(0.0, min(1.0, level))
-        nudge = level + 0.01 if level <= 0.5 else level - 0.01
         try:
             with self._pulse() as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
@@ -373,7 +370,6 @@ class TelephonyAudioManager:
                     logger.warning("[Audio] sink.primary_output not found for call volume")
                     return
 
-                pulse.volume_set_all_chans(sink, nudge)
                 pulse.volume_set_all_chans(sink, level)
                 logger.info(f"[Audio] Call volume set to {int(level * 100)}% on {sink.name}")
         except Exception as e:
@@ -514,8 +510,6 @@ class TelephonyAudioManager:
                         except Exception as e:
                             logger.debug(f"[Audio] Media port restore failed: {e}")
 
-                    nudge = self._pre_call_vol + 0.01 if self._pre_call_vol <= 0.5 else self._pre_call_vol - 0.01
-                    pulse.volume_set_all_chans(sink, nudge)
                     pulse.volume_set_all_chans(sink, self._pre_call_vol)
                     logger.info(f"[Audio] Restored media audio on {sink.name} port {target_port}")
                 else:
