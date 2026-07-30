@@ -15,6 +15,9 @@
 
 import os
 import time
+import threading
+from contextlib import contextmanager
+
 import gi
 import pulsectl
 from loguru import logger
@@ -73,10 +76,41 @@ class TelephonyAudioManager:
         self._pre_call_sink_name = None
         self._pre_call_port = None
 
+        self._pulse_conn = None
+        self._pulse_lock = threading.RLock()
+
         self.is_near = False
         self.proximity_claimed = False
         self.sensor_proxy = None
         self._init_sensor_proxy()
+
+    @contextmanager
+    def _pulse(self):
+        """Yield the shared pulsectl connection under a lock.
+
+        The connection is created on first use and reused afterwards; when an
+        operation fails with a pulsectl error the connection is dropped so the
+        next operation reconnects to the daemon.
+        """
+        with self._pulse_lock:
+            if self._pulse_conn is None or not self._pulse_conn.connected:
+                self._close_pulse()
+                self._pulse_conn = pulsectl.Pulse('telephony-audio')
+            try:
+                yield self._pulse_conn
+            except pulsectl.PulseError:
+                self._close_pulse()
+                raise
+
+    def _close_pulse(self):
+        """Close the shared pulsectl connection if one exists."""
+        if self._pulse_conn is None:
+            return
+        try:
+            self._pulse_conn.close()
+        except Exception as e:
+            logger.debug(f"[Audio] Pulse close error (ignorable): {e}")
+        self._pulse_conn = None
 
     def _init_sensor_proxy(self):
         """Initialize the DBus proxy for the sensor daemon."""
@@ -236,7 +270,7 @@ class TelephonyAudioManager:
         """Set the PulseAudio card profile to voicecall or default."""
         profile_name = "voicecall" if enable else "default"
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 cards = pulse.card_list()
                 target_card = None
                 for c in cards:
@@ -272,7 +306,7 @@ class TelephonyAudioManager:
         changes and the droid card module parks by itself around those.
         """
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
                 if not sink:
                     logger.warning("[Audio] sink.primary_output not found")
@@ -295,7 +329,7 @@ class TelephonyAudioManager:
     def initial_call_route(self):
         """Return the route a new call should start on."""
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
                 if sink and self._pick_route_port(sink, "wired"):
                     return "wired"
@@ -307,7 +341,7 @@ class TelephonyAudioManager:
         """Map the primary sink's active port to a route id, or None when parked."""
         name = None
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
                 if sink and sink.port_active:
                     name = sink.port_active.name
@@ -333,7 +367,7 @@ class TelephonyAudioManager:
         level = max(0.0, min(1.0, level))
         nudge = level + 0.01 if level <= 0.5 else level - 0.01
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
                 if not sink:
                     logger.warning("[Audio] sink.primary_output not found for call volume")
@@ -348,7 +382,7 @@ class TelephonyAudioManager:
     def ensure_sink_unmuted(self):
         """Clear any mute that module-device-restore re-applied on a port change."""
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = pulse.get_sink_by_name("sink.primary_output")
                 if sink and sink.mute:
                     pulse.sink_mute(sink.index, False)
@@ -361,7 +395,7 @@ class TelephonyAudioManager:
         has_bt = False
         has_wired = False
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 for c in pulse.card_list():
                     if "bluez" in c.name:
                         has_bt = True
@@ -388,7 +422,7 @@ class TelephonyAudioManager:
         has_bt = False
         has_wired = False
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 for c in pulse.card_list():
                     if "bluez" in c.name:
                         has_bt = True
@@ -430,7 +464,7 @@ class TelephonyAudioManager:
         if self._pre_call_vol is not None:
             return
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = self._get_call_sink(pulse)
                 if not sink:
                     logger.warning("[Audio] No sink found to save media state")
@@ -470,7 +504,7 @@ class TelephonyAudioManager:
         if self._pre_call_vol is None:
             return
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 sink = self._get_call_sink(pulse, self._pre_call_sink_name)
                 if sink:
                     target_port = self._pick_media_port(sink)
@@ -499,7 +533,7 @@ class TelephonyAudioManager:
             return
 
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 info = pulse.server_info()
                 default_source_name = info.default_source_name
 
@@ -526,7 +560,7 @@ class TelephonyAudioManager:
                     set_feedbackd_profile(self._pre_max_fb_profile)
                     self._pre_max_fb_profile = None
 
-                with pulsectl.Pulse('telephony-audio') as pulse:
+                with self._pulse() as pulse:
                     target_sink_name = self._pre_max_sink_name
                     sink = None
                     if target_sink_name:
@@ -566,7 +600,7 @@ class TelephonyAudioManager:
             set_feedbackd_profile("full")
 
         try:
-            with pulsectl.Pulse('telephony-audio') as pulse:
+            with self._pulse() as pulse:
                 info = pulse.server_info()
                 sink = pulse.get_sink_by_name(info.default_sink_name)
 
