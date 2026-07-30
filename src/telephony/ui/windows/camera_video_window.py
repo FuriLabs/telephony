@@ -28,6 +28,24 @@ from loguru import logger
 if not Gst.is_initialized():
     Gst.init(None)
 
+VIEWFINDER_START_DELAY_MS = 200
+RECORD_START_DELAY_MS = 500
+RECORD_RETRY_DELAY_MS = 1000
+MAX_RECORD_RETRIES = 3
+RECORD_TIMER_INTERVAL_MS = 100
+PLAYBACK_PROGRESS_INTERVAL_MS = 500
+EOS_TIMEOUT_MS = 3000
+MAX_RECORD_SECONDS = 8
+MIN_VALID_VIDEO_BYTES = 1000
+LARGE_VIDEO_WARN_BYTES = 300 * 1024
+PROGRESS_BAR_WIDTH = 200
+
+
+def _format_duration(seconds):
+    """Format a duration in whole seconds as M:SS."""
+    total = int(seconds)
+    return f"{total // 60}:{total % 60:02d}"
+
 
 class CameraVideo(Adw.Window):
     """Camera window for recording videos."""
@@ -50,19 +68,65 @@ class CameraVideo(Adw.Window):
         self.toast_overlay = None
 
         self.pipeline = None
+        self.bus = None
+        self.bus_handler_id = None
         self.player = None
+        self.player_bus = None
+        self.player_bus_handler_id = None
         self.is_recording = False
         self.start_time = 0
         self.timer_id = None
-        self.max_seconds = 8
+        self.eos_timeout_id = None
+        self.progress_timer_id = None
+        self.max_seconds = MAX_RECORD_SECONDS
 
         self.retry_count = 0
-        self.max_retries = 3
+        self.max_retries = MAX_RECORD_RETRIES
+
+        self._closed = False
+        self._timeout_ids = set()
 
         self._setup_ui()
         self.connect("close-request", self._on_close_request)
 
-        GLib.timeout_add(200, self._start_viewfinder)
+        self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
+
+    def _schedule_timeout(self, interval_ms, callback):
+        """Schedule a tracked GLib timeout that is cancelled when the window closes."""
+        holder = {"id": 0}
+
+        def _wrapper():
+            """Run the callback unless the window is closed, untracking one-shot sources."""
+            if self._closed:
+                self._timeout_ids.discard(holder["id"])
+                return False
+            keep_going = bool(callback())
+            if not keep_going:
+                self._timeout_ids.discard(holder["id"])
+            return keep_going
+
+        holder["id"] = GLib.timeout_add(interval_ms, _wrapper)
+        self._timeout_ids.add(holder["id"])
+        return holder["id"]
+
+    def _cancel_timeout(self, source_id):
+        """Cancel a tracked GLib timeout if it is still pending."""
+        if source_id in self._timeout_ids:
+            GLib.source_remove(source_id)
+            self._timeout_ids.discard(source_id)
+
+    def _cancel_tracked_timeouts(self):
+        """Remove every pending GLib timeout owned by this window."""
+        for source_id in list(self._timeout_ids):
+            GLib.source_remove(source_id)
+        self._timeout_ids.clear()
+
+    def _watch_bus(self, element, handler):
+        """Attach a tracked signal watch to the element's bus."""
+        bus = element.get_bus()
+        bus.add_signal_watch()
+        handler_id = bus.connect("message", handler)
+        return bus, handler_id
 
     def _setup_ui(self):
         """Build the UI components."""
@@ -112,7 +176,7 @@ class CameraVideo(Adw.Window):
         ctrl_box.set_margin_top(20)
         ctrl_box.set_margin_bottom(20)
 
-        self.lbl_timer = Gtk.Label(label="00:00 / 00:15")
+        self.lbl_timer = Gtk.Label(label=self._recording_timer_text(0))
         self.lbl_timer.add_css_class("title-2")
         self.lbl_timer.add_css_class("numeric")
         ctrl_box.append(self.lbl_timer)
@@ -167,6 +231,16 @@ class CameraVideo(Adw.Window):
         b_p_box.append(self.btn_play)
         act_box.append(b_p_box)
 
+        self.lbl_progress = Gtk.Label(label=self._playback_progress_text(0, 0))
+        self.lbl_progress.add_css_class("numeric")
+        self.lbl_progress.add_css_class("dim-label")
+        act_box.append(self.lbl_progress)
+
+        self.progress_bar = Gtk.ProgressBar()
+        self.progress_bar.set_size_request(PROGRESS_BAR_WIDTH, -1)
+        self.progress_bar.set_halign(Gtk.Align.CENTER)
+        act_box.append(self.progress_bar)
+
         row_btns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
 
         btn_retake = Gtk.Button(label=_("Retake"))
@@ -184,6 +258,14 @@ class CameraVideo(Adw.Window):
         self.page_review.append(act_box)
         self.stack.add_named(self.page_review, "review")
 
+    def _recording_timer_text(self, elapsed_seconds):
+        """Build the elapsed/limit recording timer text."""
+        return f"{_format_duration(elapsed_seconds)} / {_format_duration(self.max_seconds)}"
+
+    def _playback_progress_text(self, position_seconds, duration_seconds):
+        """Build the position/duration playback progress text."""
+        return f"{_format_duration(position_seconds)} / {_format_duration(duration_seconds)}"
+
     def _update_timer(self):
         """Update recording timer."""
         if not self.is_recording:
@@ -196,12 +278,14 @@ class CameraVideo(Adw.Window):
             self._stop_recording()
             return False
 
-        secs = int(diff)
-        self.lbl_timer.set_label(f"00:{secs:02d} / 00:{self.max_seconds}")
+        self.lbl_timer.set_label(self._recording_timer_text(diff))
         return True
 
     def _start_viewfinder(self):
         """Start the camera viewfinder pipeline."""
+        if self._closed:
+            return False
+
         self._stop_pipeline()
 
         try:
@@ -217,9 +301,7 @@ class CameraVideo(Adw.Window):
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
 
-            bus = self.pipeline.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message", self._on_viewfinder_message)
+            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_viewfinder_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             return False
@@ -236,14 +318,20 @@ class CameraVideo(Adw.Window):
             logger.error(f"[Camera-Video] Viewfinder error: {err} : {debug}")
 
     def _stop_pipeline(self):
-        """Stop the GStreamer pipeline."""
+        """Stop the GStreamer pipeline and release its bus watch."""
         self.viewfinder_widget.set_paintable(None)
+        if self.bus:
+            if self.bus_handler_id:
+                self.bus.disconnect(self.bus_handler_id)
+            self.bus.remove_signal_watch()
+            self.bus = None
+            self.bus_handler_id = None
         if self.pipeline:
             logger.debug("[Camera-Video] Stopping pipeline...")
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline = None
         if self.timer_id:
-            GLib.source_remove(self.timer_id)
+            self._cancel_timeout(self.timer_id)
             self.timer_id = None
 
     def _on_record_toggle(self, btn):
@@ -254,7 +342,7 @@ class CameraVideo(Adw.Window):
             self.btn_record.set_sensitive(False)
             self._stop_pipeline()
             self.retry_count = 0
-            GLib.timeout_add(500, self._attempt_recording)
+            self._schedule_timeout(RECORD_START_DELAY_MS, self._attempt_recording)
 
     def _attempt_recording(self):
         """Attempt to start the recording pipeline."""
@@ -284,9 +372,7 @@ class CameraVideo(Adw.Window):
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
 
-            bus = self.pipeline.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message", self._on_record_message)
+            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_record_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             self.is_recording = True
@@ -294,7 +380,7 @@ class CameraVideo(Adw.Window):
             self.btn_record.set_icon_name("media-playback-stop-symbolic")
             self.btn_record.set_sensitive(True)
 
-            self.timer_id = GLib.timeout_add(100, self._update_timer)
+            self.timer_id = self._schedule_timeout(RECORD_TIMER_INTERVAL_MS, self._update_timer)
 
         except Exception as e:
             logger.error(f"[Camera-Video] Failed to start recording: {e}")
@@ -305,10 +391,13 @@ class CameraVideo(Adw.Window):
         self._stop_pipeline()
         self.is_recording = False
 
+        if self._closed:
+            return
+
         self.retry_count += 1
         if self.retry_count < self.max_retries:
             logger.warning(f"[Camera-Video] Recording failed, retrying in 1s... ({error_msg})")
-            GLib.timeout_add(1000, self._attempt_recording)
+            self._schedule_timeout(RECORD_RETRY_DELAY_MS, self._attempt_recording)
         else:
             logger.error(f"[Camera-Video] All retries failed. Last error: {error_msg}")
             self._show_error(_("Failed to record video: {error_msg}").format(error_msg=error_msg))
@@ -323,7 +412,7 @@ class CameraVideo(Adw.Window):
         self.btn_record.set_sensitive(False)
 
         if self.timer_id:
-            GLib.source_remove(self.timer_id)
+            self._cancel_timeout(self.timer_id)
             self.timer_id = None
 
         if self.pipeline:
@@ -347,7 +436,7 @@ class CameraVideo(Adw.Window):
                     eos_sent = True
 
             if eos_sent:
-                GLib.timeout_add(3000, lambda: self._force_stop() if self.pipeline else False)
+                self.eos_timeout_id = self._schedule_timeout(EOS_TIMEOUT_MS, self._force_stop)
             else:
                 self._force_stop()
         else:
@@ -358,7 +447,12 @@ class CameraVideo(Adw.Window):
         t = message.type
         if t == Gst.MessageType.EOS:
             logger.info("[Camera-Video] EOS received, stopping pipeline.")
+            if self.eos_timeout_id:
+                self._cancel_timeout(self.eos_timeout_id)
+                self.eos_timeout_id = None
             self._stop_pipeline()
+            if self._closed:
+                return
             self.btn_record.set_sensitive(True)
             GLib.idle_add(self._show_review)
         elif t == Gst.MessageType.ERROR:
@@ -370,21 +464,26 @@ class CameraVideo(Adw.Window):
     def _force_stop(self):
         """Force stop the pipeline if EOS times out."""
         logger.warning("[Camera-Video] EOS timeout, forcing stop.")
+        self.eos_timeout_id = None
         self._stop_pipeline()
+        if self._closed:
+            return False
         self.btn_record.set_sensitive(True)
         self._show_review()
         return False
 
     def _show_review(self):
         """Show the review page."""
-        if os.path.exists(self.output_path):
+        if self._closed:
+            return
+        if self.output_path and os.path.exists(self.output_path):
             size = os.path.getsize(self.output_path)
             logger.info(f"[Camera-Video] Video recorded. Size: {size}")
-            if size < 1000:
+            if size < MIN_VALID_VIDEO_BYTES:
                 self._show_error(_("Recording failed (File empty)."))
                 self._on_retake_clicked(None)
                 return
-            elif size > 300 * 1024:
+            elif size > LARGE_VIDEO_WARN_BYTES:
                 self._show_error(_("Large video ({size}KB). Will be compressed on send.").format(size=size // 1024))
 
         self.stack.set_visible_child_name("review")
@@ -418,23 +517,50 @@ class CameraVideo(Adw.Window):
             paintable = sink.get_property("paintable")
             self.review_widget.set_paintable(paintable)
 
-            bus = self.player.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message", self._on_player_message)
+            self.player_bus, self.player_bus_handler_id = self._watch_bus(self.player, self._on_player_message)
 
             self.player.set_state(Gst.State.PLAYING)
             self.btn_play.set_icon_name("media-playback-pause-symbolic")
+
+            self.progress_timer_id = self._schedule_timeout(
+                PLAYBACK_PROGRESS_INTERVAL_MS, self._update_playback_progress)
 
         except Exception as e:
             logger.error(f"[Camera-Video] Playback failed: {e}")
             self._show_error(str(e))
 
+    def _update_playback_progress(self):
+        """Refresh the playback position label and progress bar."""
+        if not self.player:
+            return False
+
+        ok_pos, position = self.player.query_position(Gst.Format.TIME)
+        ok_dur, duration = self.player.query_duration(Gst.Format.TIME)
+        if not ok_pos or not ok_dur or duration <= 0:
+            return True
+
+        self.lbl_progress.set_label(
+            self._playback_progress_text(position // Gst.SECOND, duration // Gst.SECOND))
+        self.progress_bar.set_fraction(min(position / duration, 1.0))
+        return True
+
     def _stop_playback(self):
-        """Stop video playback."""
+        """Stop video playback and release playback resources."""
+        if self.progress_timer_id:
+            self._cancel_timeout(self.progress_timer_id)
+            self.progress_timer_id = None
+        if self.player_bus:
+            if self.player_bus_handler_id:
+                self.player_bus.disconnect(self.player_bus_handler_id)
+            self.player_bus.remove_signal_watch()
+            self.player_bus = None
+            self.player_bus_handler_id = None
         if self.player:
             self.player.set_state(Gst.State.NULL)
             self.player = None
         self.btn_play.set_icon_name("media-playback-start-symbolic")
+        self.lbl_progress.set_label(self._playback_progress_text(0, 0))
+        self.progress_bar.set_fraction(0.0)
 
     def _on_player_message(self, bus, message):
         """Handle playback messages."""
@@ -448,8 +574,11 @@ class CameraVideo(Adw.Window):
 
     def _restart_viewfinder_safe(self):
         """Restart viewfinder and reset UI state."""
+        if self._closed:
+            return False
         self.btn_record.set_sensitive(True)
         self._start_viewfinder()
+        return False
 
     def _on_retake_clicked(self, btn):
         """Handle retake button click."""
@@ -460,10 +589,10 @@ class CameraVideo(Adw.Window):
             except Exception as e:
                 logger.warning(f"[Camera-Video] Failed to remove temp file: {e}")
         self.output_path = None
-        self.lbl_timer.set_label(f"00:00 / 00:{self.max_seconds}")
+        self.lbl_timer.set_label(self._recording_timer_text(0))
         self.stack.set_visible_child_name("capture")
 
-        GLib.timeout_add(500, self._restart_viewfinder_safe)
+        self._schedule_timeout(RECORD_START_DELAY_MS, self._restart_viewfinder_safe)
 
     def _on_attach_clicked(self, btn):
         """Handle attach button click."""
@@ -479,6 +608,8 @@ class CameraVideo(Adw.Window):
 
     def _on_close_request(self, win):
         """Handle window close request."""
+        self._closed = True
+        self._cancel_tracked_timeouts()
         self._stop_pipeline()
         self._stop_playback()
         return False

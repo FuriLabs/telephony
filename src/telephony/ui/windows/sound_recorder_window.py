@@ -28,6 +28,19 @@ from loguru import logger  # noqa: E402
 if not Gst.is_initialized():
     Gst.init(None)
 
+MAX_RECORD_SECONDS = 120
+RECORD_TIMER_INTERVAL_MS = 1000
+PLAYBACK_PROGRESS_INTERVAL_MS = 500
+EOS_TIMEOUT_MS = 3000
+MAX_MMS_AUDIO_BYTES = 600 * 1024
+PROGRESS_BAR_WIDTH = 200
+
+
+def _format_duration(seconds):
+    """Format a duration in whole seconds as M:SS."""
+    total = int(seconds)
+    return f"{total // 60}:{total % 60:02d}"
+
 
 class SoundRecorder(Adw.Window):
     """A simple sound recorder dialog for capturing voice notes."""
@@ -40,19 +53,66 @@ class SoundRecorder(Adw.Window):
         self.set_title(_("Voice Message"))
 
         self.output_path = None
-        self.max_seconds = 120
+        self.max_seconds = MAX_RECORD_SECONDS
 
         self.pipeline = None
+        self.bus = None
+        self.bus_handler_id = None
         self.player = None
+        self.player_bus = None
+        self.player_bus_handler_id = None
         self.toast_overlay = None
 
         self.is_recording = False
         self.is_playing = False
         self.start_time = 0
+        self.record_elapsed = 0
         self.timer_id = None
+        self.eos_timeout_id = None
+        self.progress_timer_id = None
+
+        self._closed = False
+        self._timeout_ids = set()
 
         self._setup_ui()
         self.connect("close-request", self._on_close_request)
+
+    def _schedule_timeout(self, interval_ms, callback):
+        """Schedule a tracked GLib timeout that is cancelled when the window closes."""
+        holder = {"id": 0}
+
+        def _wrapper():
+            """Run the callback unless the window is closed, untracking one-shot sources."""
+            if self._closed:
+                self._timeout_ids.discard(holder["id"])
+                return False
+            keep_going = bool(callback())
+            if not keep_going:
+                self._timeout_ids.discard(holder["id"])
+            return keep_going
+
+        holder["id"] = GLib.timeout_add(interval_ms, _wrapper)
+        self._timeout_ids.add(holder["id"])
+        return holder["id"]
+
+    def _cancel_timeout(self, source_id):
+        """Cancel a tracked GLib timeout if it is still pending."""
+        if source_id in self._timeout_ids:
+            GLib.source_remove(source_id)
+            self._timeout_ids.discard(source_id)
+
+    def _cancel_tracked_timeouts(self):
+        """Remove every pending GLib timeout owned by this window."""
+        for source_id in list(self._timeout_ids):
+            GLib.source_remove(source_id)
+        self._timeout_ids.clear()
+
+    def _watch_bus(self, element, handler):
+        """Attach a tracked signal watch to the element's bus."""
+        bus = element.get_bus()
+        bus.add_signal_watch()
+        handler_id = bus.connect("message", handler)
+        return bus, handler_id
 
     def _setup_ui(self):
         """Build the UI components."""
@@ -83,7 +143,7 @@ class SoundRecorder(Adw.Window):
         page_record.set_halign(Gtk.Align.CENTER)
         page_record.set_margin_bottom(40)
 
-        self.lbl_timer = Gtk.Label(label="00:00")
+        self.lbl_timer = Gtk.Label(label=self._recording_timer_text(0))
         self.lbl_timer.add_css_class("display-1")
         self.lbl_timer.add_css_class("numeric")
         page_record.append(self.lbl_timer)
@@ -115,8 +175,9 @@ class SoundRecorder(Adw.Window):
         icon.set_pixel_size(64)
         page_review.append(icon)
 
-        self.lbl_duration = Gtk.Label(label="00:00")
+        self.lbl_duration = Gtk.Label(label=_format_duration(0))
         self.lbl_duration.add_css_class("title-2")
+        self.lbl_duration.add_css_class("numeric")
         page_review.append(self.lbl_duration)
 
         self.btn_play = Gtk.Button(icon_name="media-playback-start-symbolic")
@@ -130,6 +191,16 @@ class SoundRecorder(Adw.Window):
         box_play.set_halign(Gtk.Align.CENTER)
         box_play.append(self.btn_play)
         page_review.append(box_play)
+
+        self.lbl_progress = Gtk.Label(label=self._playback_progress_text(0, 0))
+        self.lbl_progress.add_css_class("numeric")
+        self.lbl_progress.add_css_class("dim-label")
+        page_review.append(self.lbl_progress)
+
+        self.progress_bar = Gtk.ProgressBar()
+        self.progress_bar.set_size_request(PROGRESS_BAR_WIDTH, -1)
+        self.progress_bar.set_halign(Gtk.Align.CENTER)
+        page_review.append(self.progress_bar)
 
         actions_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         actions_box.set_margin_top(20)
@@ -151,6 +222,16 @@ class SoundRecorder(Adw.Window):
 
         self.stack.add_named(page_review, "review")
 
+    def _recording_timer_text(self, elapsed_seconds):
+        """Build the elapsed/limit recording timer text."""
+        return (f"{_format_duration(elapsed_seconds)} / "
+                f"{_format_duration(self.max_seconds)}")
+
+    def _playback_progress_text(self, position_seconds, duration_seconds):
+        """Build the position/duration playback progress text."""
+        return (f"{_format_duration(position_seconds)} / "
+                f"{_format_duration(duration_seconds)}")
+
     def _update_timer(self):
         """Update recording timer."""
         if not self.is_recording:
@@ -163,9 +244,7 @@ class SoundRecorder(Adw.Window):
             self._stop_recording()
             return False
 
-        mins = int(diff // 60)
-        secs = int(diff % 60)
-        self.lbl_timer.set_label(f"{mins:02d}:{secs:02d}")
+        self.lbl_timer.set_label(self._recording_timer_text(diff))
         return True
 
     def _on_record_toggle(self, btn):
@@ -188,12 +267,17 @@ class SoundRecorder(Adw.Window):
         try:
             self.pipeline = Gst.parse_launch(pipeline_str)
 
+            self.bus, self.bus_handler_id = self._watch_bus(
+                self.pipeline, self._on_record_message)
+
             self.pipeline.set_state(Gst.State.PLAYING)
             self.is_recording = True
             self.start_time = time.time()
+            self.record_elapsed = 0
             self.btn_record.set_icon_name("media-playback-stop-symbolic")
 
-            self.timer_id = GLib.timeout_add(100, self._update_timer)
+            self.timer_id = self._schedule_timeout(
+                RECORD_TIMER_INTERVAL_MS, self._update_timer)
             logger.info("Recording started")
 
         except Exception as e:
@@ -201,25 +285,80 @@ class SoundRecorder(Adw.Window):
             self._show_error(str(e))
 
     def _stop_recording(self):
-        """Stop the recording pipeline."""
-        if self.pipeline:
-            self.pipeline.set_state(Gst.State.NULL)
-            self.pipeline = None
-
+        """Stop recording, letting the pipeline flush via EOS before finalizing."""
+        was_recording = self.is_recording
         self.is_recording = False
+
         if self.timer_id:
-            GLib.source_remove(self.timer_id)
+            self._cancel_timeout(self.timer_id)
             self.timer_id = None
 
         self.btn_record.set_icon_name("media-record-symbolic")
 
-        self.lbl_duration.set_label(self.lbl_timer.get_label())
+        if not self.pipeline:
+            return
+
+        if was_recording:
+            self.record_elapsed = int(time.time() - self.start_time)
+
+        if self._closed:
+            self._finalize_recording()
+            return
+
+        logger.info("Stopping recording (sending EOS)...")
+        self.btn_record.set_sensitive(False)
+        self.pipeline.send_event(Gst.Event.new_eos())
+        self.eos_timeout_id = self._schedule_timeout(
+            EOS_TIMEOUT_MS, self._force_stop_recording)
+
+    def _force_stop_recording(self):
+        """Force stop the recording pipeline if EOS times out."""
+        logger.warning("Recording EOS timeout, forcing stop.")
+        self.eos_timeout_id = None
+        self._finalize_recording()
+        return False
+
+    def _on_record_message(self, bus, message):
+        """Handle recording pipeline bus messages."""
+        t = message.type
+        if t == Gst.MessageType.EOS:
+            logger.info("Recording EOS received, finalizing file.")
+            self._finalize_recording()
+        elif t == Gst.MessageType.ERROR:
+            err, debug = message.parse_error()
+            logger.error(f"Recording error: {err} : {debug}")
+            self._finalize_recording()
+            if not self._closed:
+                self._show_error(str(err))
+
+    def _finalize_recording(self):
+        """Tear down the recording pipeline and show the review page."""
+        if self.eos_timeout_id:
+            self._cancel_timeout(self.eos_timeout_id)
+            self.eos_timeout_id = None
+
+        if self.bus:
+            if self.bus_handler_id:
+                self.bus.disconnect(self.bus_handler_id)
+            self.bus.remove_signal_watch()
+            self.bus = None
+            self.bus_handler_id = None
+
+        if self.pipeline:
+            self.pipeline.set_state(Gst.State.NULL)
+            self.pipeline = None
+
+        if self._closed:
+            return
+
+        self.btn_record.set_sensitive(True)
+        self.lbl_duration.set_label(_format_duration(self.record_elapsed))
         self.stack.set_visible_child_name("review")
 
         if self.output_path and os.path.exists(self.output_path):
             size = os.path.getsize(self.output_path)
             logger.info(f"Recording finished. Size: {size} bytes")
-            if size > 600 * 1024:
+            if size > MAX_MMS_AUDIO_BYTES:
                 self._show_error(_(
                     "Recording is too large for MMS (Max 600KB). "
                     "Please Retake shorter."
@@ -241,23 +380,51 @@ class SoundRecorder(Adw.Window):
             self.player = Gst.parse_launch(
                 f"playbin uri=file://{self.output_path}")
 
-            bus = self.player.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message", self._on_player_message)
+            self.player_bus, self.player_bus_handler_id = self._watch_bus(
+                self.player, self._on_player_message)
 
             self.player.set_state(Gst.State.PLAYING)
             self.is_playing = True
             self.btn_play.set_icon_name("media-playback-pause-symbolic")
+
+            self.progress_timer_id = self._schedule_timeout(
+                PLAYBACK_PROGRESS_INTERVAL_MS, self._update_playback_progress)
         except Exception as e:
             logger.error(f"Playback failed: {e}")
 
+    def _update_playback_progress(self):
+        """Refresh the playback position label and progress bar."""
+        if not self.player:
+            return False
+
+        ok_pos, position = self.player.query_position(Gst.Format.TIME)
+        ok_dur, duration = self.player.query_duration(Gst.Format.TIME)
+        if not ok_pos or not ok_dur or duration <= 0:
+            return True
+
+        self.lbl_progress.set_label(self._playback_progress_text(
+            position // Gst.SECOND, duration // Gst.SECOND))
+        self.progress_bar.set_fraction(min(position / duration, 1.0))
+        return True
+
     def _stop_playback(self):
-        """Stop audio playback."""
+        """Stop audio playback and release playback resources."""
+        if self.progress_timer_id:
+            self._cancel_timeout(self.progress_timer_id)
+            self.progress_timer_id = None
+        if self.player_bus:
+            if self.player_bus_handler_id:
+                self.player_bus.disconnect(self.player_bus_handler_id)
+            self.player_bus.remove_signal_watch()
+            self.player_bus = None
+            self.player_bus_handler_id = None
         if self.player:
             self.player.set_state(Gst.State.NULL)
             self.player = None
         self.is_playing = False
         self.btn_play.set_icon_name("media-playback-start-symbolic")
+        self.lbl_progress.set_label(self._playback_progress_text(0, 0))
+        self.progress_bar.set_fraction(0.0)
 
     def _on_player_message(self, bus, message):
         """Handle GStreamer bus messages."""
@@ -279,7 +446,8 @@ class SoundRecorder(Adw.Window):
                 logger.warning(
                     f"[SoundRecorder] Failed to remove temp file: {e}")
         self.output_path = None
-        self.lbl_timer.set_label("00:00")
+        self.record_elapsed = 0
+        self.lbl_timer.set_label(self._recording_timer_text(0))
         self.stack.set_visible_child_name("record")
 
     def _on_attach_clicked(self, btn):
@@ -296,6 +464,8 @@ class SoundRecorder(Adw.Window):
 
     def _on_close_request(self, win):
         """Handle window close request."""
+        self._closed = True
+        self._cancel_tracked_timeouts()
         self._stop_recording()
         self._stop_playback()
         return False

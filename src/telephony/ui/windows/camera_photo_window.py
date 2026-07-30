@@ -25,8 +25,18 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
+from ...backend.utils.thread_utils import run_in_background
+
 if not Gst.is_initialized():
     Gst.init(None)
+
+VIEWFINDER_START_DELAY_MS = 200
+CAPTURE_START_DELAY_MS = 500
+CAPTURE_RETRY_DELAY_MS = 1000
+MAX_CAPTURE_RETRIES = 3
+WARMUP_FRAME_COUNT = 20
+MAX_IMAGE_DIMENSION = 800
+JPEG_QUALITY = 80
 
 
 class CameraPhoto(Adw.Window):
@@ -43,15 +53,67 @@ class CameraPhoto(Adw.Window):
         self.temp_capture_path = None
 
         self.pipeline = None
+        self.bus = None
+        self.bus_handler_id = None
         self.toast_overlay = None
 
         self.retry_count = 0
-        self.max_retries = 3
+        self.max_retries = MAX_CAPTURE_RETRIES
+
+        self._closed = False
+        self._timeout_ids = set()
 
         self._setup_ui()
         self.connect("close-request", self._on_close_request)
 
-        GLib.timeout_add(200, self._start_viewfinder)
+        self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
+
+    def _schedule_timeout(self, interval_ms, callback):
+        """Schedule a tracked GLib timeout that is cancelled when the window closes."""
+        holder = {"id": 0}
+
+        def _wrapper():
+            """Run the callback unless the window is closed, untracking one-shot sources."""
+            if self._closed:
+                self._timeout_ids.discard(holder["id"])
+                return False
+            keep_going = bool(callback())
+            if not keep_going:
+                self._timeout_ids.discard(holder["id"])
+            return keep_going
+
+        holder["id"] = GLib.timeout_add(interval_ms, _wrapper)
+        self._timeout_ids.add(holder["id"])
+        return holder["id"]
+
+    def _cancel_timeout(self, source_id):
+        """Cancel a tracked GLib timeout if it is still pending."""
+        if source_id in self._timeout_ids:
+            GLib.source_remove(source_id)
+            self._timeout_ids.discard(source_id)
+
+    def _cancel_tracked_timeouts(self):
+        """Remove every pending GLib timeout owned by this window."""
+        for source_id in list(self._timeout_ids):
+            GLib.source_remove(source_id)
+        self._timeout_ids.clear()
+
+    def _watch_bus(self, element, handler):
+        """Attach a tracked signal watch to the element's bus."""
+        bus = element.get_bus()
+        bus.add_signal_watch()
+        handler_id = bus.connect("message", handler)
+        return bus, handler_id
+
+    def _release_bus(self):
+        """Detach the signal watch from the current pipeline bus."""
+        if not self.bus:
+            return
+        if self.bus_handler_id:
+            self.bus.disconnect(self.bus_handler_id)
+        self.bus.remove_signal_watch()
+        self.bus = None
+        self.bus_handler_id = None
 
     def _setup_ui(self):
         """Build the UI components."""
@@ -153,6 +215,9 @@ class CameraPhoto(Adw.Window):
 
     def _start_viewfinder(self):
         """Start the camera viewfinder pipeline."""
+        if self._closed:
+            return False
+
         self._stop_pipeline()
 
         try:
@@ -172,9 +237,7 @@ class CameraPhoto(Adw.Window):
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
 
-            bus = self.pipeline.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message", self._on_viewfinder_message)
+            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_viewfinder_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             return False
@@ -194,6 +257,7 @@ class CameraPhoto(Adw.Window):
     def _stop_pipeline(self):
         """Stop the GStreamer pipeline."""
         self.viewfinder_widget.set_paintable(None)
+        self._release_bus()
         if self.pipeline:
             logger.debug("[Camera-Photo] Stopping pipeline...")
             self.pipeline.set_state(Gst.State.NULL)
@@ -206,7 +270,7 @@ class CameraPhoto(Adw.Window):
         logger.info("[Camera-Photo] Viewfinder stopped, scheduling capture in 500ms...")
 
         self.retry_count = 0
-        GLib.timeout_add(500, self._attempt_capture)
+        self._schedule_timeout(CAPTURE_START_DELAY_MS, self._attempt_capture)
 
     def _attempt_capture(self):
         """Attempt to start the capture pipeline."""
@@ -231,9 +295,7 @@ class CameraPhoto(Adw.Window):
             if sink:
                 sink.connect("new-sample", self._on_new_sample)
 
-            bus = self.pipeline.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message", self._on_capture_message)
+            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_capture_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             logger.info("[Camera-Photo] Capture pipeline playing...")
@@ -249,7 +311,7 @@ class CameraPhoto(Adw.Window):
             return Gst.FlowReturn.ERROR
 
         self.frame_count += 1
-        if self.frame_count < 20:
+        if self.frame_count < WARMUP_FRAME_COUNT:
             return Gst.FlowReturn.OK
 
         logger.info("[Camera-Photo] Got sample from appsink")
@@ -282,63 +344,102 @@ class CameraPhoto(Adw.Window):
         """Handle failure with retries."""
         self._stop_pipeline()
 
+        if self._closed:
+            return
+
         self.retry_count += 1
         if self.retry_count < self.max_retries:
             logger.warning(f"[Camera-Photo] Capture failed, retrying in 1s... ({error_msg})")
-            GLib.timeout_add(1000, self._attempt_capture)
+            self._schedule_timeout(CAPTURE_RETRY_DELAY_MS, self._attempt_capture)
         else:
             logger.error(f"[Camera-Photo] All retries failed. Last error: {error_msg}")
             self._show_error(f"Failed to take photo: {error_msg}")
             self._restart_viewfinder_safe()
 
     def _on_capture_done(self):
-        """Finalize capture and show review."""
+        """Finalize capture and process the image off the main thread."""
+        if self._closed:
+            return False
+
         self._stop_pipeline()
-        self.btn_shutter.set_sensitive(True)
 
-        if os.path.exists(self.temp_capture_path):
-            self._process_image(self.temp_capture_path)
-
-            self.review_image.set_filename(self.output_path)
-            self.stack.set_visible_child_name("review")
-        else:
+        if not os.path.exists(self.temp_capture_path):
+            self.btn_shutter.set_sensitive(True)
             self._show_error("Captured file not found.")
             self._restart_viewfinder_safe()
+            return False
 
+        run_in_background(
+            self._process_image,
+            self.temp_capture_path,
+            on_complete=self._on_image_processed,
+            on_error=self._on_image_process_error,
+        )
         return False
+
+    def _on_image_processed(self, output_path):
+        """Apply the processed image to the review page."""
+        if self._closed:
+            self._remove_file_quietly(output_path)
+            return
+
+        self.output_path = output_path
+        self.btn_shutter.set_sensitive(True)
+        self.review_image.set_filename(self.output_path)
+        self.stack.set_visible_child_name("review")
+
+    def _on_image_process_error(self, error):
+        """Recover from an image processing failure."""
+        logger.error(f"[Camera-Photo] Image processing task failed: {error}")
+        if self._closed:
+            return
+
+        self.btn_shutter.set_sensitive(True)
+        self._show_error(f"Save failed: {error}")
+        self._restart_viewfinder_safe()
 
     def _restart_viewfinder_safe(self):
         """Restart viewfinder and reset UI state."""
+        if self._closed:
+            return
         self.btn_shutter.set_sensitive(True)
         self._start_viewfinder()
 
     def _process_image(self, path):
-        """Compress image to self.output_path."""
+        """Compress the captured image and return the final file path."""
         from PIL import Image
 
-        self.output_path = path
+        output_path = path
         try:
             img = Image.open(path)
             w, h = img.size
-            if w > 800 or h > 800:
-                img.thumbnail((800, 800))
+            if w > MAX_IMAGE_DIMENSION or h > MAX_IMAGE_DIMENSION:
+                img.thumbnail((MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION))
 
-            self.output_path = os.path.join(tempfile.gettempdir(), f"photo_{int(time.time())}.jpg")
-            img.save(self.output_path, "JPEG", quality=80)
+            output_path = os.path.join(tempfile.gettempdir(), f"photo_{int(time.time())}.jpg")
+            img.save(output_path, "JPEG", quality=JPEG_QUALITY)
 
-            if path != self.output_path:
+            if path != output_path:
                 os.remove(path)
 
         except Exception as e:
             logger.warning(f"[Camera-Photo] Image processing failed: {e}")
+            return path
+
+        return output_path
+
+    def _remove_file_quietly(self, path):
+        """Delete a temp file, logging failures without raising."""
+        if not path or not os.path.exists(path):
+            return
+        try:
+            os.remove(path)
+        except Exception as e:
+            logger.warning(f"[Camera-Photo] Failed to remove temp file: {e}")
 
     def _on_retake_clicked(self, btn):
         """Handle retake button click."""
-        if self.output_path and os.path.exists(self.output_path):
-            try:
-                os.remove(self.output_path)
-            except Exception as e:
-                logger.warning(f"[Camera-Photo] Failed to remove temp file: {e}")
+        self._remove_file_quietly(self.output_path)
         self.output_path = None
         self.stack.set_visible_child_name("capture")
         self._start_viewfinder()
@@ -357,6 +458,8 @@ class CameraPhoto(Adw.Window):
 
     def _on_close_request(self, win):
         """Handle window close request."""
+        self._closed = True
+        self._cancel_tracked_timeouts()
         self._stop_pipeline()
         return False
 
