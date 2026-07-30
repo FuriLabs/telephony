@@ -411,8 +411,9 @@ class EdsSourcesManager:
                 self._rebuild_lookup_map()
 
                 try:
-                    self.db_ref.conn_contacts.execute("DELETE FROM contacts WHERE source_uid=?", (source_uid,))
-                    self.db_ref.conn_contacts.commit()
+                    with self.db_ref.lock:
+                        self.db_ref.conn_contacts.execute("DELETE FROM contacts WHERE source_uid=?", (source_uid,))
+                        self.db_ref.conn_contacts.commit()
                 except Exception as e:
                     logger.warning(f"[EDS] Failed to clear local db for source {source_uid}: {e}")
 

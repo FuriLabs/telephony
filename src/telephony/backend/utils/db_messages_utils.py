@@ -339,20 +339,21 @@ class DbMessagesUtils:
         except Exception as e:
             logger.error(f"[DB] Search Error: {e}")
             try:
-                c = self.conn_messages.cursor()
-                sql = "SELECT remote_number, body, timestamp, id FROM messages WHERE (body LIKE ? OR remote_number LIKE ?)"
-                like_query = f"%{query}%"
-                params = [like_query, like_query]
+                with self.lock:
+                    c = self.conn_messages.cursor()
+                    sql = "SELECT remote_number, body, timestamp, id FROM messages WHERE (body LIKE ? OR remote_number LIKE ?)"
+                    like_query = f"%{query}%"
+                    params = [like_query, like_query]
 
-                if chat_id:
-                    sql += " AND remote_number = ?"
-                    params.append(chat_id)
+                    if chat_id:
+                        sql += " AND remote_number = ?"
+                        params.append(chat_id)
 
-                sql += " ORDER BY timestamp DESC, id DESC LIMIT ? OFFSET ?"
-                params.extend([limit, offset])
+                    sql += " ORDER BY timestamp DESC, id DESC LIMIT ? OFFSET ?"
+                    params.extend([limit, offset])
 
-                c.execute(sql, params)
-                return c.fetchall()
+                    c.execute(sql, params)
+                    return c.fetchall()
             except Exception as e:
                 logger.error(f"[DB] Fallback Search Error: {e}")
                 return []
