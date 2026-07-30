@@ -23,10 +23,12 @@ from ..utils.vcard_utils import parse_contact_safe
 class EdsEventsManager:
     def _handle_backend_update(self, contacts, source_uid):
         """Handle updates from the EDS backend for a specific source."""
-        if source_uid not in self.sources:
+        with self.sources_lock:
+            source_info = self.sources.get(source_uid)
+            rank = source_info['rank'] if source_info else None
+        if source_info is None:
             return
 
-        rank = self.sources[source_uid]['rank']
         db_batch = []
         for c in contacts:
             data = parse_contact_safe(c, source_uid)
@@ -81,6 +83,7 @@ class EdsEventsManager:
     def _on_objects_removed(self, view, uids, source_uid):
         """Handle objects removed signal."""
         def task():
+            removed_uids = []
             with self.cache_lock:
                 for real_uid in uids:
                     uid = self._make_composite_uid(source_uid, real_uid)
@@ -91,7 +94,9 @@ class EdsEventsManager:
                             self.lookup_map[norm] = [x for x in self.lookup_map[norm] if x[3] != uid]
                             if not self.lookup_map[norm]:
                                 del self.lookup_map[norm]
-                    self.db_ref.delete_contact(uid)
+                    removed_uids.append(uid)
+            for uid in removed_uids:
+                self.db_ref.delete_contact(uid)
             GLib.idle_add(self.emit, 'contacts-loaded')
 
         run_in_background(task)

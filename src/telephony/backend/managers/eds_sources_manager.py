@@ -52,8 +52,9 @@ class EdsSourcesManager:
         """Tear down all source connections and reload configuration and contacts."""
         def task():
             with self.sources_lock:
-                for uid in list(self.sources.keys()):
-                    self._remove_source(uid)
+                uids = list(self.sources.keys())
+            for uid in uids:
+                self._remove_source(uid)
             self.invalidate_sources_info()
             self._load_sources_config()
 
@@ -151,9 +152,9 @@ class EdsSourcesManager:
 
             with self.sources_lock:
                 self.sources = {}
-                for item in final_sources_list:
-                    if item['enabled']:
-                        self._init_source(item)
+            for item in final_sources_list:
+                if item['enabled']:
+                    self._init_source(item)
 
             self.is_ready = True
             GLib.idle_add(self.emit, 'contacts-loaded')
@@ -200,13 +201,16 @@ class EdsSourcesManager:
 
             if success:
                 source_info['view'] = view
-                view.connect("objects-added", partial(self._on_objects_added, source_uid=uid))
-                view.connect("objects-modified", partial(self._on_objects_modified, source_uid=uid))
-                view.connect("objects-removed", partial(self._on_objects_removed, source_uid=uid))
+                source_info['view_handlers'] = [
+                    view.connect("objects-added", partial(self._on_objects_added, source_uid=uid)),
+                    view.connect("objects-modified", partial(self._on_objects_modified, source_uid=uid)),
+                    view.connect("objects-removed", partial(self._on_objects_removed, source_uid=uid)),
+                ]
                 view.start()
                 logger.info(f"[EDS] Live view started for {uid}")
 
-            self.sources[uid] = source_info
+            with self.sources_lock:
+                self.sources[uid] = source_info
 
         except Exception as e:
             logger.error(f"[EDS] Client Connect Error for {uid}: {e}")
@@ -370,12 +374,11 @@ class EdsSourcesManager:
         if not to_enable and not to_disable and not rank_changed:
             return
 
-        with self.sources_lock:
-            for uid in to_disable:
-                self._remove_source(uid)
+        for uid in to_disable:
+            self._remove_source(uid)
 
-            for uid, info in to_enable.items():
-                self._init_source(info)
+        for uid, info in to_enable.items():
+            self._init_source(info)
 
         if rank_changed or to_enable or to_disable:
             self._rebuild_lookup_map()
@@ -425,19 +428,31 @@ class EdsSourcesManager:
         return False
 
     def _remove_source(self, uid):
-        """Stop monitoring a source and remove its contacts from cache."""
-        if uid in self.sources:
-            info = self.sources[uid]
-            if info.get('view'):
+        """Stop monitoring a source and remove its contacts from cache and lookup map."""
+        with self.sources_lock:
+            info = self.sources.pop(uid, None)
+
+        view = info.get('view') if info else None
+        if view:
+            for handler_id in info.get('view_handlers', []):
                 try:
-                    info['view'].stop()
+                    view.disconnect(handler_id)
                 except Exception as e:
-                    logger.debug(f"[EDS] View stop error (ignorable): {e}")
-            del self.sources[uid]
+                    logger.debug(f"[EDS] View handler disconnect error (ignorable): {e}")
+            try:
+                view.stop()
+            except Exception as e:
+                logger.debug(f"[EDS] View stop error (ignorable): {e}")
 
         with self.cache_lock:
             to_remove = [k for k, v in self.cache.items() if v.get('source_uid') == uid]
             for k in to_remove:
                 del self.cache[k]
+            for norm in list(self.lookup_map.keys()):
+                remaining = [entry for entry in self.lookup_map[norm] if entry[2] != uid]
+                if not remaining:
+                    del self.lookup_map[norm]
+                elif len(remaining) != len(self.lookup_map[norm]):
+                    self.lookup_map[norm] = remaining
 
         logger.info(f"[EDS] Removed source: {uid}")

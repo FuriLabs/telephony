@@ -590,9 +590,9 @@ class TelephonyDaemonDBus:
         """Return True when a contact's source is protected, without logging."""
         if source_uid == "system-address-book":
             return True
-        if not (self.eds.sources and source_uid in self.eds.sources):
-            return False
-        return self.eds.sources[source_uid].get('name') == "Andromeda Contacts"
+        with self.eds.sources_lock:
+            info = self.eds.sources.get(source_uid)
+        return bool(info) and info.get('name') == "Andromeda Contacts"
 
     def _is_protected_contact(self, contact, uid, verb):
         """Return True when the contact lives in a protected source.
@@ -610,8 +610,11 @@ class TelephonyDaemonDBus:
 
     def _delete_unprotected_contacts(self):
         """Delete every cached contact that is not in a protected source."""
+        with self.eds.cache_lock:
+            cached_items = list(self.eds.cache.items())
+
         uids_to_delete = []
-        for uid, contact in list(self.eds.cache.items()):
+        for uid, contact in cached_items:
             if not self._is_protected_contact_source(contact.get('source_uid')):
                 uids_to_delete.append(uid)
 
@@ -935,7 +938,8 @@ class TelephonyDaemonDBus:
         """Handle DeleteContact command."""
         uid = parameters.unpack()[0]
         if self.eds:
-            contact = self.eds.cache.get(uid)
+            with self.eds.cache_lock:
+                contact = self.eds.cache.get(uid)
             if contact and self._is_protected_contact(contact, uid, "delete"):
                 invocation.return_value(None)
                 return
@@ -946,7 +950,8 @@ class TelephonyDaemonDBus:
         """Handle ModifyContact command."""
         uid, name, number = parameters.unpack()
         if self.eds:
-            contact = self.eds.cache.get(uid)
+            with self.eds.cache_lock:
+                contact = self.eds.cache.get(uid)
             if contact and self._is_protected_contact(contact, uid, "modify"):
                 invocation.return_value(None)
                 return

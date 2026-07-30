@@ -189,14 +189,21 @@ class EdsContactsManager:
                 return results[offset:offset + limit]
             return results[offset:] if offset else results
 
+    def _is_andromeda_source(self, source_uid):
+        """Return True when the source is the read-only Andromeda Contacts book."""
+        with self.sources_lock:
+            info = self.sources.get(source_uid)
+        return bool(info) and info.get('name') == "Andromeda Contacts"
+
     def _get_writable_client(self, source_uid=None):
         """Get a writable client, preferably source_uid, otherwise highest rank."""
-        if source_uid and source_uid in self.sources:
-            return self.sources[source_uid].get('client')
+        with self.sources_lock:
+            if source_uid and source_uid in self.sources:
+                return self.sources[source_uid].get('client')
 
-        sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
-        if sorted_sources:
-            return sorted_sources[0].get('client')
+            sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
+            if sorted_sources:
+                return sorted_sources[0].get('client')
         return None
 
     def save_contact(self, vcard_string, uid=None, source_uid=None):
@@ -238,11 +245,13 @@ class EdsContactsManager:
                     r_uid = uid
 
                 if not s_uid:
-                    if uid in self.cache:
-                        s_uid = self.cache[uid].get('source_uid')
+                    with self.cache_lock:
+                        cached = self.cache.get(uid)
+                    if cached:
+                        s_uid = cached.get('source_uid')
 
                 if s_uid:
-                    if s_uid in self.sources and self.sources[s_uid].get('name') == "Andromeda Contacts":
+                    if self._is_andromeda_source(s_uid):
                         logger.warning(f"[EDS] Refusing to modify Andromeda Contact {uid}")
                         return False
 
@@ -252,7 +261,7 @@ class EdsContactsManager:
                     logger.error(f"[EDS] Save failed: Could not determine source for UID {uid}")
                     return False
             else:
-                if source_uid and source_uid in self.sources and self.sources[source_uid].get('name') == "Andromeda Contacts":
+                if source_uid and self._is_andromeda_source(source_uid):
                     logger.warning("[EDS] Refusing to save new Andromeda Contact")
                     return False
 
@@ -294,8 +303,10 @@ class EdsContactsManager:
         s_uid, r_uid = self._parse_composite_uid(uid)
 
         if not s_uid:
-            if uid in self.cache:
-                s_uid = self.cache[uid].get('source_uid')
+            with self.cache_lock:
+                cached = self.cache.get(uid)
+            if cached:
+                s_uid = cached.get('source_uid')
                 r_uid = uid
             else:
                 logger.warning(f"[EDS] Delete warning: UID {uid} not found in cache and no source specified.")
@@ -308,7 +319,7 @@ class EdsContactsManager:
             logger.error(f"[EDS] Delete failed: Unknown source for {uid}")
             return False
 
-        if s_uid in self.sources and self.sources[s_uid].get('name') == "Andromeda Contacts":
+        if self._is_andromeda_source(s_uid):
             logger.warning(f"[EDS] Refusing to delete Andromeda Contact {uid}")
             return False
 
@@ -334,14 +345,15 @@ class EdsContactsManager:
         for uid in uids:
             s_uid, r_uid = self._parse_composite_uid(uid)
             if not s_uid:
-                if uid in self.cache:
-                    s_uid = self.cache[uid].get('source_uid')
+                with self.cache_lock:
+                    cached = self.cache.get(uid)
+                if cached:
+                    s_uid = cached.get('source_uid')
                     r_uid = uid
-                else:
-                    if ":" in uid:
-                        parts = uid.split(":", 1)
-                        s_uid = parts[0]
-                        r_uid = parts[1]
+                elif ":" in uid:
+                    parts = uid.split(":", 1)
+                    s_uid = parts[0]
+                    r_uid = parts[1]
 
             if s_uid:
                 if s_uid not in uids_by_source:
@@ -352,7 +364,7 @@ class EdsContactsManager:
 
         success = True
         for s_uid, r_uids in uids_by_source.items():
-            if s_uid in self.sources and self.sources[s_uid].get('name') == "Andromeda Contacts":
+            if self._is_andromeda_source(s_uid):
                 logger.warning(f"[EDS] Refusing to batch delete Andromeda Contacts from {s_uid}")
                 success = False
                 continue
@@ -378,15 +390,14 @@ class EdsContactsManager:
         Delete all contacts (Dangerous).
         If source_uid is provided, only deletes from that source.
         """
-        uids = list(self.cache.keys())
-        count = 0
-
-        for uid in uids:
+        with self.cache_lock:
             if source_uid:
-                contact = self.cache.get(uid)
-                if not contact or contact.get('source_uid') != source_uid:
-                    continue
+                uids = [uid for uid, c in self.cache.items() if c.get('source_uid') == source_uid]
+            else:
+                uids = list(self.cache.keys())
 
+        count = 0
+        for uid in uids:
             if self.delete_contact(uid):
                 count += 1
 
