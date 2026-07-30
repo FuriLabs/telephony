@@ -126,6 +126,7 @@ class MainWindow(Adw.Window):
         self.switcher = Adw.ViewSwitcherBar(stack=self.stack, reveal=True)
         main_vbox.append(self.switcher)
 
+        self._notif_hide_id = None
         self.notif_revealer = Gtk.Revealer(valign=Gtk.Align.END, halign=Gtk.Align.CENTER)
         self.notif_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
         self.notif_revealer.set_margin_bottom(60)
@@ -236,6 +237,9 @@ class MainWindow(Adw.Window):
 
         if self.contacts_view:
             self.contacts_view.cleanup()
+
+        if self.dialpad_view:
+            self.dialpad_view.cleanup()
 
         self.switcher = None
         self.stack = None
@@ -350,8 +354,17 @@ class MainWindow(Adw.Window):
         self.notif_box.remove_css_class("notif-info")
         self.notif_box.add_css_class(style_class)
         self.notif_revealer.set_reveal_child(True)
+        if self._notif_hide_id:
+            GLib.source_remove(self._notif_hide_id)
+            self._notif_hide_id = None
         if duration > 0:
-            GLib.timeout_add_seconds(duration, lambda: self.notif_revealer.set_reveal_child(False))
+            self._notif_hide_id = GLib.timeout_add_seconds(duration, self._hide_top_notif)
+
+    def _hide_top_notif(self):
+        """Hide the top notification banner."""
+        self._notif_hide_id = None
+        self.notif_revealer.set_reveal_child(False)
+        return False
 
     def notify_error(self, message):
         """Helper to show error notification."""

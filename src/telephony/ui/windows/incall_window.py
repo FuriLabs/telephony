@@ -89,6 +89,9 @@ def input_route_icon(route_id):
     return icons.get(route_id, "audio-input-microphone-symbolic")
 
 
+HANGUP_VERIFY_DELAY_MS = 3500
+
+
 class InCallWindow(Gtk.Window):
     """Main call window handling active calls, incoming calls, and call controls."""
 
@@ -137,6 +140,9 @@ class InCallWindow(Gtk.Window):
 
         self._timer_id = None
         self._proximity_timer_id = None
+        self._hangup_verify_id = None
+        self._priority_timer_ids = []
+        self._route_poll_running = False
 
         self._setup_ui()
 
@@ -479,12 +485,14 @@ class InCallWindow(Gtk.Window):
                 is_silenced = True
 
             if not self.manual_hangup and len(calls) == 1:
-                if override_volume:
+                if override_volume and not self.call_history[self.active_path].get('boosted', False):
                     logger.info(f"[Priority] Call from {p_data['number']} - forcing MAX volume")
-                    from gi.repository import GLib
+                    self.call_history[self.active_path]['boosted'] = True
                     self.audio.force_max_feedback()
-                    GLib.timeout_add_seconds(1, lambda: self.audio.force_max_feedback() or False)
-                    GLib.timeout_add_seconds(5, lambda: self.audio.force_max_feedback(restore=True) or False)
+                    self._priority_timer_ids = [
+                        GLib.timeout_add_seconds(1, lambda: self.audio.force_max_feedback() or False),
+                        GLib.timeout_add_seconds(5, lambda: self.audio.force_max_feedback(restore=True) or False),
+                    ]
 
                 if not self.is_ringing and not is_silenced:
                     custom_ring = self._get_custom_ringtone(p_data['number'])
@@ -532,6 +540,12 @@ class InCallWindow(Gtk.Window):
     def _clean_reset(self):
         """Reset window state to idle."""
         self._stop_timers()
+        if self._hangup_verify_id:
+            GLib.source_remove(self._hangup_verify_id)
+            self._hangup_verify_id = None
+        for timer_id in self._priority_timer_ids:
+            GLib.source_remove(timer_id)
+        self._priority_timer_ids = []
         self.lock_manager.clear_all()
         self.audio.stop_ringing()
         self.is_ringing = False
@@ -715,10 +729,13 @@ class InCallWindow(Gtk.Window):
         """Start the call closing animation/logic."""
         self.is_closing = True
         self.audio.stop_ringing()
-        GLib.timeout_add(3500, self._verify_hangup_success)
+        if self._hangup_verify_id:
+            GLib.source_remove(self._hangup_verify_id)
+        self._hangup_verify_id = GLib.timeout_add(HANGUP_VERIFY_DELAY_MS, self._verify_hangup_success)
 
     def _verify_hangup_success(self):
         """Verify calls are actually gone, otherwise trigger error state."""
+        self._hangup_verify_id = None
         if not self.ofono.active_calls:
             self.is_closing = False
             self._clean_reset()
@@ -928,8 +945,25 @@ class InCallWindow(Gtk.Window):
             btn.remove_css_class("blue-active")
 
     def _sync_external_route_change(self):
+        """Poll the active output port off the main thread and adopt changes."""
+        if self._route_poll_running:
+            return
+        self._route_poll_running = True
+
+        def done(route):
+            self._route_poll_running = False
+            self._adopt_external_route(route)
+
+        def failed(error):
+            self._route_poll_running = False
+            logger.debug(f"[InCall] Route poll failed: {error}")
+
+        run_in_background(self.audio.get_active_output_route, on_complete=done, on_error=failed)
+
+    def _adopt_external_route(self, route):
         """Adopt port changes made outside the app, like a headset plug."""
-        route = self.audio.get_active_output_route()
+        if self.is_closing or self.in_error_mode or not self.call_volume_applied:
+            return
         if not route or route == self.current_route:
             return
 
@@ -952,17 +986,6 @@ class InCallWindow(Gtk.Window):
 
         if self.call_volume_applied and not self.is_closing and not self.in_error_mode:
             self._sync_external_route_change()
-
-        if not self.is_closing and not self.in_error_mode:
-            calls = self.ofono.active_calls
-            should_knock = False
-            for p, d in calls.items():
-                if d['state'] in ['waiting', 'incoming'] and p != self.active_path:
-                    if p not in self.ignored_calls:
-                        should_knock = True
-                        break
-            if should_knock:
-                self.audio.play_knock()
 
         return True
 

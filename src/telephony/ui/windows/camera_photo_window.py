@@ -244,7 +244,7 @@ class CameraPhoto(Adw.Window):
 
         except Exception as e:
             logger.error(f"[Camera-Photo] Failed to start viewfinder: {e}")
-            self._show_error(f"Camera Error: {e}")
+            self._show_error(_("Error: {e}").format(e=e))
             return False
 
     def _on_viewfinder_message(self, bus, message):
@@ -282,6 +282,7 @@ class CameraPhoto(Adw.Window):
         """Capture a single frame from the camera."""
         self.temp_capture_path = os.path.join(tempfile.gettempdir(), f"cam_cap_{int(time.time())}.jpg")
         self.frame_count = 0
+        self._capture_taken = False
 
         pipeline_str = (
             "droidcamsrc camera_device=0 mode=2 ! videoconvert ! videoflip video-direction=auto ! jpegenc ! "
@@ -314,6 +315,10 @@ class CameraPhoto(Adw.Window):
         if self.frame_count < WARMUP_FRAME_COUNT:
             return Gst.FlowReturn.OK
 
+        if self._capture_taken:
+            return Gst.FlowReturn.OK
+        self._capture_taken = True
+
         logger.info("[Camera-Photo] Got sample from appsink")
         buf = sample.get_buffer()
         result, map_info = buf.map(Gst.MapFlags.READ)
@@ -324,7 +329,7 @@ class CameraPhoto(Adw.Window):
                 GLib.idle_add(self._on_capture_done)
             except Exception as e:
                 logger.error(f"[Camera-Photo] Failed to save sample: {e}")
-                GLib.idle_add(self._show_error, f"Save failed: {e}")
+                GLib.idle_add(self._show_error, _("Error: {e}").format(e=e))
                 GLib.idle_add(self._restart_viewfinder_safe)
             finally:
                 buf.unmap(map_info)
@@ -353,7 +358,7 @@ class CameraPhoto(Adw.Window):
             self._schedule_timeout(CAPTURE_RETRY_DELAY_MS, self._attempt_capture)
         else:
             logger.error(f"[Camera-Photo] All retries failed. Last error: {error_msg}")
-            self._show_error(f"Failed to take photo: {error_msg}")
+            self._show_error(_("Error: {e}").format(e=error_msg))
             self._restart_viewfinder_safe()
 
     def _on_capture_done(self):
@@ -365,7 +370,7 @@ class CameraPhoto(Adw.Window):
 
         if not os.path.exists(self.temp_capture_path):
             self.btn_shutter.set_sensitive(True)
-            self._show_error("Captured file not found.")
+            self._show_error(_("File not found."))
             self._restart_viewfinder_safe()
             return False
 
@@ -395,7 +400,7 @@ class CameraPhoto(Adw.Window):
             return
 
         self.btn_shutter.set_sensitive(True)
-        self._show_error(f"Save failed: {error}")
+        self._show_error(_("Error: {e}").format(e=error))
         self._restart_viewfinder_safe()
 
     def _restart_viewfinder_safe(self):
@@ -461,6 +466,7 @@ class CameraPhoto(Adw.Window):
         self._closed = True
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
+        self._remove_file_quietly(self.temp_capture_path)
         return False
 
     def _show_error(self, message):

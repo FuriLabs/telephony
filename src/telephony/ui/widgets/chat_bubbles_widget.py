@@ -769,7 +769,6 @@ class ChatBubbleFactory:
         """Teardown the chat bubble widgets."""
         if (list_item.get_child() is not None) and list_item.widgets:
             for w in list_item.widgets.values():
-                if hasattr(w, "unparent"):
-                    w.unparent()
+                w.unparent()
             list_item.widgets = None
         list_item.set_child(None)

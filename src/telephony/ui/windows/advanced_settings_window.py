@@ -20,6 +20,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
+from loguru import logger
 
 from ...backend.utils.system_utils import restart_ril_modem
 from ...backend.utils.thread_utils import run_in_background
@@ -85,7 +86,28 @@ class AdvancedSettingsWindow(Adw.Window):
         self.stack.add_named(scroll, "content")
 
         self.stack.set_visible_child_name("loading")
-        GLib.timeout_add(100, self._load_data)
+        self._pending_timeouts = set()
+        self.connect("close-request", self._on_close_request)
+        self._add_timeout(100, self._load_data)
+
+    def _add_timeout(self, interval_ms, callback):
+        """Schedule a tracked one-shot timeout cancelled on close."""
+        holder = {}
+
+        def fire():
+            self._pending_timeouts.discard(holder["id"])
+            callback()
+            return False
+
+        holder["id"] = GLib.timeout_add(interval_ms, fire)
+        self._pending_timeouts.add(holder["id"])
+
+    def _on_close_request(self, win):
+        """Cancel pending timeouts when the window closes."""
+        for source_id in self._pending_timeouts:
+            GLib.source_remove(source_id)
+        self._pending_timeouts.clear()
+        return False
 
     def _show_toast(self, message, is_error=False):
         """Display a toast message."""
@@ -95,13 +117,13 @@ class AdvancedSettingsWindow(Adw.Window):
         self.overlay.add_toast(toast)
 
     def _load_data(self):
-        """Background loader for modem settings."""
+        """Build the settings UI after the loading page is shown."""
         try:
             self._build_ui()
             self.stack.set_visible_child_name("content")
         except Exception as e:
+            logger.error(f"[AdvancedSettings] Load error: {e}")
             self._show_toast(_("Error loading settings: {e}").format(e=e), True)
-        return False
 
     def _build_ui(self):
         """Construct the settings UI."""
@@ -180,7 +202,7 @@ class AdvancedSettingsWindow(Adw.Window):
     def on_save_clicked(self, btn):
         """Apply all pending changes."""
         self.overlay.add_toast(Adw.Toast.new(_("Advanced Settings Applied")))
-        GLib.timeout_add(1500, lambda: self.close() or False)
+        self._add_timeout(1500, self.close)
 
     def _on_restart_modem(self, btn):
         """Handle restart modem action."""

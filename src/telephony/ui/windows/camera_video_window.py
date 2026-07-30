@@ -60,6 +60,7 @@ class CameraVideo(Adw.Window):
             logger.info("[Camera-Video] Disabled droidvdec to force software decoding.")
 
         self.on_attach_callback = on_attach_callback
+        self._attached = False
         self.set_modal(True)
         self.set_default_size(360, 600)
         self.set_title(_("Record Video"))
@@ -307,7 +308,7 @@ class CameraVideo(Adw.Window):
             return False
         except Exception as e:
             logger.error(f"[Camera-Video] Failed to start viewfinder: {e}")
-            self._show_error(f"Camera Error: {e}")
+            self._show_error(_("Error: {e}").format(e=e))
             return False
 
     def _on_viewfinder_message(self, bus, message):
@@ -599,6 +600,7 @@ class CameraVideo(Adw.Window):
         self._stop_playback()
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
+                self._attached = True
                 self.on_attach_callback(self.output_path)
         GLib.idle_add(lambda: self.close() or False)
 
@@ -612,7 +614,18 @@ class CameraVideo(Adw.Window):
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
         self._stop_playback()
+        self._discard_unattached_output()
         return False
+
+    def _discard_unattached_output(self):
+        """Delete the recorded file when the window closes without attaching."""
+        if self._attached or not self.output_path:
+            return
+        try:
+            if os.path.exists(self.output_path):
+                os.remove(self.output_path)
+        except Exception as e:
+            logger.warning(f"[Camera-Video] Temp file removal failed: {e}")
 
     def _show_error(self, message):
         """Show an error toast."""

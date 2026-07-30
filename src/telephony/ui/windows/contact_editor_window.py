@@ -29,11 +29,11 @@ class ContactEditor(Adw.Window):
     """Window for editing or viewing contact details."""
 
     def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None):
+        """Initialize the Contact Editor."""
         self.btn_save = None
         self.source_toggles = None
         self.switch_fav = None
         self._saving_in_progress = False
-        """Initialize the Contact Editor."""
         super().__init__(title=_("Contact Details"))
         self.eds = eds_manager
         self.main_window = main_window

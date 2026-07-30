@@ -48,6 +48,7 @@ class SoundRecorder(Adw.Window):
     def __init__(self, parent_window, on_attach_callback):
         super().__init__(transient_for=parent_window)
         self.on_attach_callback = on_attach_callback
+        self._attached = False
         self.set_modal(True)
         self.set_default_size(360, 450)
         self.set_title(_("Voice Message"))
@@ -455,6 +456,7 @@ class SoundRecorder(Adw.Window):
         self._stop_playback()
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
+                self._attached = True
                 self.on_attach_callback(self.output_path)
         GLib.idle_add(lambda: self.close() or False)
 
@@ -468,7 +470,18 @@ class SoundRecorder(Adw.Window):
         self._cancel_tracked_timeouts()
         self._stop_recording()
         self._stop_playback()
+        self._discard_unattached_output()
         return False
+
+    def _discard_unattached_output(self):
+        """Delete the recorded file when the window closes without attaching."""
+        if self._attached or not self.output_path:
+            return
+        try:
+            if os.path.exists(self.output_path):
+                os.remove(self.output_path)
+        except Exception as e:
+            logger.warning(f"[SoundRecorder] Temp file removal failed: {e}")
 
     def _show_error(self, message):
         """Show an error toast."""

@@ -19,7 +19,7 @@ from gettext import gettext as _
 
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.phone_utils import normalize_number
-from ..widgets.common_widget import populate_contact_search_results
+from ..widgets.common_widget import populate_contact_search_results, translate_phone_label
 
 
 class DndBypassContactsListWindow(Adw.Window):
@@ -72,6 +72,7 @@ class DndBypassContactsListWindow(Adw.Window):
             search_box.append(self.search_entry)
 
             self.search_timer = None
+            self.connect("unmap", self._on_unmap)
 
             main_box.append(search_box)
 
@@ -206,6 +207,12 @@ class DndBypassContactsListWindow(Adw.Window):
                 return True
         return False
 
+    def _on_unmap(self, widget):
+        """Cancel the pending search debounce timer."""
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+            self.search_timer = None
+
     def _build_search_results(self, contacts, query):
         """Build search results UI."""
         populate_contact_search_results(
@@ -214,7 +221,8 @@ class DndBypassContactsListWindow(Adw.Window):
             self.eds,
             is_added=self._is_result_added,
             on_add=lambda row: self._on_result_activated(None, row),
-            unknown_name="Unknown"
+            translate_label=translate_phone_label,
+            unknown_name=_("Unknown")
         )
 
     def _on_result_activated(self, listbox, row):

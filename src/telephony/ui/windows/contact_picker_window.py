@@ -38,6 +38,7 @@ class ContactPicker(Adw.Window):
         self.set_default_size(360, 500)
         self.load_token = 0
         self.search_timer = None
+        self.connect("unmap", self._on_unmap)
         self.source_map = {}
         self._update_source_map()
 
@@ -109,6 +110,12 @@ class ContactPicker(Adw.Window):
         if self.search_timer:
             GLib.source_remove(self.search_timer)
         self.search_timer = GLib.timeout_add(200, self.do_search_debounced)
+
+    def _on_unmap(self, widget):
+        """Cancel the pending search debounce timer."""
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+            self.search_timer = None
 
     def do_search_debounced(self):
         """Execute search."""

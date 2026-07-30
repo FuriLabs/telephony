@@ -35,6 +35,7 @@ class SettingsWindow(Adw.Window):
 
     def __init__(self, main_window, eds_manager, ofono_manager):
         self._volume_commit_timer = None
+        self.connect("unmap", self._on_settings_unmap)
         self.source_rows = None
         self.sources_state = None
         """Initialize Settings Window."""
@@ -170,7 +171,8 @@ class SettingsWindow(Adw.Window):
 
         try:
             self.grp_contacts.set_header_suffix(btn_info_contacts)
-        except AttributeError:
+        except AttributeError as e:
+            logger.debug(f"[Settings] set_header_suffix unavailable, using row fallback: {e}")
             row_info = Adw.ActionRow(title=_("Address Book Info"))
             row_info.add_suffix(btn_info_contacts)
             self.grp_contacts.add(row_info)
@@ -794,6 +796,13 @@ class SettingsWindow(Adw.Window):
         if self._volume_commit_timer is not None:
             GLib.source_remove(self._volume_commit_timer)
         self._volume_commit_timer = GLib.timeout_add(200, self._commit_volume_levels)
+
+    def _on_settings_unmap(self, widget):
+        """Flush a pending volume commit so closing quickly cannot drop it."""
+        if self._volume_commit_timer is not None:
+            GLib.source_remove(self._volume_commit_timer)
+            self._volume_commit_timer = None
+            self._commit_volume_levels()
 
     def _commit_volume_levels(self):
         """Write the current slider values to settings."""

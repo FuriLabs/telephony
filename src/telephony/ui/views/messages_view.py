@@ -886,8 +886,8 @@ class MessagesView(Adw.Bin):
                 try:
                     dt = parse_timestamp(str(ts))
                     date_str = dt.strftime(get_date_format())
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(f"[MessagesView] Date format failed for {ts}: {e}")
                 row.add_suffix(Gtk.Label(label=date_str, css_classes=["caption", "dim-label"]))
 
                 btn = Gtk.Button(icon_name="go-next-symbolic", css_classes=["flat"])

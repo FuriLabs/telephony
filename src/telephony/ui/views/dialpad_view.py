@@ -140,6 +140,12 @@ class DialpadView(Adw.Bin):
             GLib.source_remove(self._lookup_timer)
         self._lookup_timer = GLib.timeout_add(200, self._perform_lookup)
 
+    def cleanup(self):
+        """Cancel the pending contact lookup timer."""
+        if self._lookup_timer:
+            GLib.source_remove(self._lookup_timer)
+            self._lookup_timer = None
+
     def _perform_lookup(self):
         """Perform contact lookup."""
         self._lookup_timer = None

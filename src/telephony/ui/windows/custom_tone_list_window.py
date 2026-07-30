@@ -116,18 +116,33 @@ class CustomToneListWindow(Adw.Window):
 
             self.eds_signals = []
             self.db_signals = []
+            self._connect_external_signals()
 
-            if self.app_window is not None:
-                sig_id = self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
-                self.db_signals.append((self.app_window.db, sig_id))
-
+            self.connect("map", self._on_map)
             self.connect("unmap", self._on_unmap)
 
             self._refresh_list()
         except Exception as e:
             logger.error(f"[CustomToneListWindow] Init error: {e}")
 
+    def _connect_external_signals(self):
+        """Connect the external refresh signals if not already connected."""
+        if self.db_signals:
+            return
+        if self.app_window is not None:
+            sig_id = self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
+            self.db_signals.append((self.app_window.db, sig_id))
+
+    def _on_map(self, widget):
+        """Reconnect external signals and catch up when shown again."""
+        self._connect_external_signals()
+        self._refresh_list()
+
     def _on_unmap(self, widget):
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+            self.search_timer = None
+
         for obj, sig_id in self.eds_signals:
             if obj.handler_is_connected(sig_id):
                 obj.disconnect(sig_id)
