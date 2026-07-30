@@ -120,7 +120,6 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
                 db_manager.conn_messages.commit()
             count = len(to_insert)
 
-        db_manager.invalidate_cache("conversations")
         return True, _(f"Imported {count} messages from Chatty.")
     except Exception as e:
         logger.error(f"[Importer] Error importing Chatty: {e}")
@@ -209,7 +208,6 @@ def import_local_calls(db_manager, db_path=None):
                 db_manager.conn_calls.commit()
             count = len(to_insert)
 
-        db_manager.invalidate_cache("history")
         return True, _(f"Imported {count} calls.")
     except Exception as e:
         logger.error(f"[Importer] Error importing Calls: {e}")

@@ -105,7 +105,6 @@ class DbMessagesUtils:
                 self.conn_messages.commit()
                 rowid = c.lastrowid
 
-            self.invalidate_cache("conversations")
             GLib.idle_add(self.emit, 'messages-updated', norm_number, "insert")
             return rowid
         except Exception as e:
@@ -188,7 +187,6 @@ class DbMessagesUtils:
                 row = c.fetchone()
                 self.conn_messages.commit()
 
-            self.invalidate_cache("conversations")
             GLib.idle_add(self.emit, 'messages-updated', row[0] if row else "", "status")
             return True
         except Exception as e:
@@ -206,7 +204,6 @@ class DbMessagesUtils:
 
             if changed > 0:
                 logger.warning(f"[DB] Marked {changed} stale sending messages as failed")
-                self.invalidate_cache("conversations")
                 GLib.idle_add(self.emit, 'messages-updated', "", "status")
         except Exception as e:
             logger.error(f"[DB] Fail Stale Sending Error: {e}")
@@ -235,10 +232,6 @@ class DbMessagesUtils:
     def get_conversations(self, query=None, limit=50, offset=0, filter_type="all"):
         """Retrieve a list of recent conversations."""
         try:
-            if offset == 0 and not query and self._conversations_cache is not None and filter_type == "all":
-                if len(self._conversations_cache) >= limit or len(self._conversations_cache) < 51:
-                    return self._conversations_cache[:limit]
-
             with self.lock:
                 c = self.conn_messages.cursor()
 
@@ -471,7 +464,6 @@ class DbMessagesUtils:
                 self.conn_messages.commit()
 
             if changed > 0:
-                self.invalidate_cache("conversations")
                 GLib.idle_add(self.emit, 'messages-updated', norm_number, "status")
         except Exception as e:
             logger.error(f"[DB] Mark Read Error: {e}")
@@ -494,7 +486,6 @@ class DbMessagesUtils:
                 target_ts = row[0]
                 c.execute("UPDATE messages SET status='unread' WHERE remote_number=? AND direction='incoming' AND status='read' AND (timestamp > ? OR (timestamp = ? AND id >= ?))", (norm_number, target_ts, target_ts, message_id))
                 self.conn_messages.commit()
-            self.invalidate_cache("conversations")
             GLib.idle_add(self.emit, 'messages-updated', norm_number, "status")
         except Exception as e:
             logger.error(f"[DB] Mark Unread Error: {e}")
@@ -540,7 +531,6 @@ class DbMessagesUtils:
                 row = c.fetchone()
                 c.execute("DELETE FROM messages WHERE id=?", (msg_id,))
                 self.conn_messages.commit()
-                self.invalidate_cache("conversations")
                 GLib.idle_add(self.emit, 'messages-updated', row[0] if row else "", "delete")
                 return True
         except Exception as e:
@@ -562,7 +552,6 @@ class DbMessagesUtils:
                 self.conn_messages.commit()
 
             if changed > 0:
-                self.invalidate_cache("conversations")
                 GLib.idle_add(self.emit, 'messages-updated', norm_number, "draft")
             return True
         except Exception as e:
@@ -581,7 +570,6 @@ class DbMessagesUtils:
                 c = self.conn_messages.cursor()
                 c.execute("DELETE FROM messages WHERE remote_number=?", (norm_number,))
                 self.conn_messages.commit()
-                self.invalidate_cache("conversations")
                 GLib.idle_add(self.emit, 'messages-updated', norm_number, "delete")
                 return True
         except Exception as e:

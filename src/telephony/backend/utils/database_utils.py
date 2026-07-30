@@ -18,7 +18,6 @@ from .db_messages_utils import DbMessagesUtils
 from .db_blocklist_utils import DbBlocklistUtils
 from .db_contacts_utils import DbContactsUtils
 
-from .thread_utils import run_in_background
 from .phone_utils import normalize_number
 
 
@@ -54,49 +53,8 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
         self.conn_blocklist = None
         self.conn_contacts = None
 
-        self._history_cache = None
-        self._conversations_cache = None
-
         self.lock = threading.Lock()
         self.init_dbs()
-
-    def preload_caches(self):
-        """Preload initial data into RAM caches."""
-        try:
-            with self.lock:
-                c = self.conn_calls.cursor()
-                sql = "SELECT id, number, name, direction, duration, timestamp FROM history ORDER BY timestamp DESC, id DESC LIMIT 51"
-                c.execute(sql)
-                self._history_cache = c.fetchall()
-
-            with self.lock:
-                c = self.conn_messages.cursor()
-                query_sql = '''
-                    SELECT m.remote_number, m.body, m.timestamp,
-                           (SELECT COUNT(*) FROM messages WHERE remote_number = m.remote_number AND status = 'unread' AND direction = 'incoming') as unread_count,
-                           m.id,
-                           m.status
-                    FROM messages m
-                    WHERE m.id IN (
-                        SELECT id FROM messages m2
-                        WHERE m2.remote_number = m.remote_number
-                        ORDER BY m2.timestamp DESC, m2.id DESC LIMIT 1
-                    )
-                    ORDER BY m.timestamp DESC, m.id DESC LIMIT 51
-                '''
-                c.execute(query_sql)
-                self._conversations_cache = c.fetchall()
-
-            logger.info("[DB] Caches preloaded.")
-        except Exception as e:
-            logger.error(f"[DB] Preload caches error: {e}")
-
-    def invalidate_cache(self, cache_type="all"):
-        """Invalidate specific cache to force reload on next access."""
-        if cache_type == "history" or cache_type == "all":
-            self._history_cache = None
-        if cache_type == "conversations" or cache_type == "all":
-            self._conversations_cache = None
 
     def _tune_connection(self, conn):
         """Apply WAL journaling and relaxed sync for faster commits."""
@@ -211,7 +169,6 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
             self.conn_blocklist.commit()
 
             logger.info("[DB] Databases initialized.")
-            run_in_background(self.preload_caches)
         except Exception as e:
             logger.error(f"[DB] Init Error: {e}")
 
@@ -328,7 +285,6 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
             with self.lock:
                 self.conn_messages.execute("VACUUM")
 
-            self.invalidate_cache("conversations")
             GLib.idle_add(self.emit, 'messages-updated', "", "delete")
             return True
         except Exception as e:
@@ -365,7 +321,6 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 c = self.conn_calls.cursor()
                 c.execute("DELETE FROM history")
                 self.conn_calls.commit()
-            self.invalidate_cache("history")
             GLib.idle_add(self.emit, 'history-updated')
         except Exception as e:
             logger.error(f"[DB] Clear History Error: {e}")
@@ -387,7 +342,6 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 self.conn_calls.execute("VACUUM")
                 self.conn_blocklist.execute("VACUUM")
 
-                self.invalidate_cache("all")
 
                 GLib.idle_add(self.emit, 'history-updated')
                 GLib.idle_add(self.emit, 'blocklist-updated')

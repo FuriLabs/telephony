@@ -38,7 +38,6 @@ class DbCallsUtils:
                     c.execute("INSERT INTO history (number, name, direction, duration, timestamp) VALUES (?, ?, ?, ?, ?)",
                               (norm_number, real_name, direction, duration, now_str))
                     self.conn_calls.commit()
-                self.invalidate_cache("history")
                 GLib.idle_add(self.emit, 'history-updated')
             except Exception as e:
                 logger.error(f"[DB] Add Call Error: {e}")
@@ -47,10 +46,6 @@ class DbCallsUtils:
     def get_history(self, direction=None, limit=200, offset=0):
         """Retrieve call history with optional filtering."""
         try:
-            if offset == 0 and (not direction or direction == "all") and self._history_cache is not None:
-                if len(self._history_cache) >= limit or len(self._history_cache) < 51:
-                    return self._history_cache[:limit]
-
             with self.lock:
                 c = self.conn_calls.cursor()
                 sql = "SELECT id, number, name, direction, duration, timestamp FROM history"
@@ -117,7 +112,6 @@ class DbCallsUtils:
                     c = self.conn_calls.cursor()
                     c.execute("DELETE FROM history WHERE id=?", (call_id,))
                     self.conn_calls.commit()
-                self.invalidate_cache("history")
                 GLib.idle_add(self.emit, 'history-updated')
             except Exception as e:
                 logger.error(f"[DB] Delete Call Error: {e}")
@@ -142,7 +136,6 @@ class DbCallsUtils:
                 c.execute(sql, params)
                 self.conn_calls.commit()
                 logger.info(f"[DB] Updated history names for {len(numbers)} numbers.")
-            self.invalidate_cache("history")
             GLib.idle_add(self.emit, 'history-updated')
         except Exception as e:
             logger.error(f"[DB] Update history names error: {e}")

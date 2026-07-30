@@ -125,7 +125,6 @@ def import_android_sms(db_manager, file_path):
                 db_manager.conn_messages.commit()
             count = len(to_insert)
 
-        db_manager.invalidate_cache("conversations")
         return True, _(f"Imported {count} messages from Android backup.")
     except Exception as e:
         logger.error(f"[Importer] Error importing Android SMS: {e}")
@@ -199,7 +198,6 @@ def import_android_calls(db_manager, file_path):
                 db_manager.conn_calls.commit()
             count = len(to_insert)
 
-        db_manager.invalidate_cache("history")
         return True, _(f"Imported {count} calls from Android backup.")
     except Exception as e:
         logger.error(f"[Importer] Error importing Android Calls: {e}")
