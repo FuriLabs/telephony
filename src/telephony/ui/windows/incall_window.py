@@ -47,13 +47,12 @@ def call_state_label(state):
 
 
 def route_label(route_id):
-    """Return the translated display label for an audio route."""
+    """Return the translated display label for an audio output route."""
     labels = {
         "earpiece": _("Earpiece"),
         "speaker": _("Speaker"),
         "wired": _("Wired Headset"),
         "bluetooth": _("Bluetooth"),
-        "mic": _("Microphone"),
     }
     return labels.get(route_id, route_id)
 

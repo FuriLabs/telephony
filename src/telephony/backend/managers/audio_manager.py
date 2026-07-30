@@ -60,6 +60,7 @@ class TelephonyAudioManager:
 
         self.is_ringing = False
         self.ringing_event = None
+        self.ringing_id = None
 
         self.last_knock_time = 0
         self.knock_pipeline = None
@@ -163,7 +164,7 @@ class TelephonyAudioManager:
         if not self.is_ringing:
             return
 
-        if hasattr(self, 'ringing_id') and self.ringing_id:
+        if self.ringing_id:
             try:
                 bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
                 proxy = Gio.DBusProxy.new_sync(

@@ -333,8 +333,7 @@ class LockScreenManager:
             self._close_notification(target_path)
             self.window.on_hangup_click(None)
         elif action == "app.restart-modem":
-            if hasattr(self.window, "on_restart_modem_click"):
-                self.window.on_restart_modem_click(None)
+            self.window.on_restart_modem_click(None)
 
     def _on_notification_closed_signal(self, monitor, nid, reason):
         """Handle notification closed signal."""
