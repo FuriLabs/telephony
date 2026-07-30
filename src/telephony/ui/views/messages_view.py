@@ -418,7 +418,7 @@ class MessagesView(Adw.Bin):
             raw_rows = raw_rows[:current_limit]
 
         for r in raw_rows:
-            num, body, ts, unread, _ignored, status = r[0], r[1], r[2], r[3], r[4], r[5]
+            num, body, ts, unread, status = r[0], r[1], r[2], r[3], r[5]
 
             if "," in num:
                 recipients = [n.strip() for n in num.split(',')]
