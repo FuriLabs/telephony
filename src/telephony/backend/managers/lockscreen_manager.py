@@ -192,24 +192,13 @@ class LockScreenManager:
                 add_action("app.answer", _("🔁 Swap"))
             else:
                 add_action("app.answer", _("🟢 Answer"))
-            add_action("app.decline", _("🔴 Hangup"))
-            add_action("app.sms", _("🔴 SMS&End"))
+                add_action("app.decline", _("🔴 Hangup"))
 
         elif state == 'waiting':
-            display_app_name = _("Telephony - On Hold")
-            title = _("🟠 {name} put as on hold").format(name=name)
-            body = _("Call On Hold...")
-
-            if has_multiple_calls:
-                add_action("app.answer", _("🔁 Swap"))
-                add_action("app.decline", _("🔴 Decline"))
-            else:
-                add_action("app.decline", _("🔴 Hangup"))
-                add_action("app.sms", _("🔴 SMS&End"))
-
-                is_muted = self.window.is_muted if self.window else False
-                mute_lbl = _("UnmuteMic") if is_muted else _("MuteMic")
-                add_action("app.mute", mute_lbl)
+            display_app_name = _("Telephony - Incoming")
+            title = _("🟢 Incoming: {name}").format(name=name)
+            body = _("Waiting...")
+            add_action("app.answer", _("🔁 Swap"))
 
         elif state == 'held':
             display_app_name = _("Telephony - On Hold")
@@ -227,15 +216,6 @@ class LockScreenManager:
                 add_action("app.hangup", _("🔴 HangupAll"))
             else:
                 add_action("app.hangup", _("🔴 Hangup"))
-
-            if state == 'active':
-                is_muted = self.window.is_muted if self.window else False
-                mute_lbl = _("UnmuteMic") if is_muted else _("MuteMic")
-                add_action("app.mute", mute_lbl)
-
-                is_spk = self.window.is_speaker if self.window else False
-                spk_lbl = _("SpeakerOff") if is_spk else _("SpeakerOn")
-                add_action("app.speaker", spk_lbl)
 
         hints = {
             'action-icons': GLib.Variant('b', True),
@@ -352,15 +332,6 @@ class LockScreenManager:
         elif action == "app.hangup":
             self._close_notification(target_path)
             self.window.on_hangup_click(None)
-        elif action == "app.sms":
-            if has_multiple:
-                self.window.on_ignore_with_sms(target_path, self.ofono.active_calls[target_path]['number'])
-            else:
-                self.window.on_reject_with_msg(None)
-        elif action == "app.mute":
-            self.window.on_mute_toggle(None)
-        elif action == "app.speaker":
-            self.window.on_speaker_toggle(None)
         elif action == "app.restart-modem":
             if hasattr(self.window, "on_restart_modem_click"):
                 self.window.on_restart_modem_click(None)
