@@ -395,51 +395,50 @@ class ContactEditor(Adw.Window):
 
     def _add_phone_row(self, text="", label="Mobile"):
         """Add a phone number entry row."""
-        row = Adw.ActionRow()
         label_keys = ["Mobile", "Work", "Home", "Fax", "Other"]
         display_labels = [_("Mobile"), _("Work"), _("Home"), _("Fax"), _("Other")]
-        dropdown = Gtk.DropDown.new_from_strings(display_labels)
-        if label in label_keys:
-            dropdown.set_selected(label_keys.index(label))
-        dropdown.set_valign(Gtk.Align.CENTER)
-
-        entry = Gtk.Entry(text=text)
-        entry.set_valign(Gtk.Align.CENTER)
-        entry.set_hexpand(True)
-        entry.set_input_purpose(Gtk.InputPurpose.PHONE)
-
-        btn_remove = Gtk.Button(icon_name="user-trash-symbolic", css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
-        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: [self.phone_rows_box.remove(row), self.phone_entries.remove((entry, dropdown))] and False))
-
-        row.add_prefix(dropdown)
-        row.add_suffix(entry)
-        row.add_suffix(btn_remove)
-        self.phone_rows_box.append(row)
-        self.phone_entries.append((entry, dropdown))
+        self._add_field_row(self.phone_rows_box, self.phone_entries,
+                            label_keys, display_labels, label, text,
+                            Gtk.InputPurpose.PHONE)
 
     def _add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
-        row = Adw.ActionRow()
         label_keys = ["Home", "Work", "Other"]
         display_labels = [_("Home"), _("Work"), _("Other")]
+        self._add_field_row(self.email_rows_box, self.email_entries,
+                            label_keys, display_labels, label, text,
+                            Gtk.InputPurpose.EMAIL)
+
+    def _add_field_row(self, rows_box, entries_list, label_keys, display_labels, label, text, purpose):
+        """Add a two-line field card: label selector and remove button on
+        top, full-width value entry below."""
+        row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6, css_classes=["card"])
+
+        top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
+                      margin_top=6, margin_start=10, margin_end=6)
         dropdown = Gtk.DropDown.new_from_strings(display_labels)
         if label in label_keys:
             dropdown.set_selected(label_keys.index(label))
         dropdown.set_valign(Gtk.Align.CENTER)
-
-        entry = Gtk.Entry(text=text)
-        entry.set_input_purpose(Gtk.InputPurpose.EMAIL)
-        entry.set_valign(Gtk.Align.CENTER)
-        entry.set_hexpand(True)
+        dropdown.add_css_class("flat")
+        top.append(dropdown)
+        top.append(Gtk.Box(hexpand=True))
 
         btn_remove = Gtk.Button(icon_name="user-trash-symbolic", css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
-        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: [self.email_rows_box.remove(row), self.email_entries.remove((entry, dropdown))] and False))
+        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: [rows_box.remove(row), entries_list.remove((entry, dropdown))] and False))
+        top.append(btn_remove)
+        row.append(top)
 
-        row.add_prefix(dropdown)
-        row.add_suffix(entry)
-        row.add_suffix(btn_remove)
-        self.email_rows_box.append(row)
-        self.email_entries.append((entry, dropdown))
+        entry = Gtk.Entry(text=text)
+        entry.set_input_purpose(purpose)
+        entry.set_hexpand(True)
+        entry.set_margin_start(10)
+        entry.set_margin_end(10)
+        entry.set_margin_bottom(10)
+        row.append(entry)
+
+        rows_box.append(row)
+        entries_list.append((entry, dropdown))
 
     def _extract_phones_with_labels(self):
         """Parse phone numbers from vCard data."""
