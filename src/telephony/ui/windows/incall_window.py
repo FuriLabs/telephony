@@ -90,6 +90,7 @@ def input_route_icon(route_id):
 
 
 HANGUP_VERIFY_DELAY_MS = 3500
+KNOCK_REPEAT_SECONDS = 5
 
 
 class InCallWindow(Gtk.Window):
@@ -143,6 +144,7 @@ class InCallWindow(Gtk.Window):
         self._hangup_verify_id = None
         self._priority_timer_ids = []
         self._route_poll_running = False
+        self._next_knock_time = 0
 
         self._setup_ui()
 
@@ -432,27 +434,10 @@ class InCallWindow(Gtk.Window):
         if len(calls) > 1 and has_incoming and not self.manual_hangup:
             for score, path, c_data in sorted_c:
                 if c_data['state'] == 'incoming':
-                    caller_norm = normalize_number(c_data['number'])
-                    override_volume = False
-                    try:
-                        priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
-                        for p in priority_list:
-                            p_num = normalize_number(p.get("number", ""))
-                            if p_num and p_num == caller_norm:
-                                override_volume = True
-                                break
-                    except Exception as e:
-                        logger.warning(f"[InCall] Priority caller check failed: {e}")
-
-                    is_silenced = c_data.get('silenced', False)
-                    uc_action = self.gsettings_mgr.get_setting("unknown_callers") or "none"
-                    c_unknown = self.call_history[path]['name'] == _("Unknown")
-                    if uc_action in ["hide", "silence"] and c_unknown and not override_volume:
-                        is_silenced = True
-
-                    if not self.call_history[path].get('knocked', False) and not is_silenced:
+                    if not self.call_history[path].get('knocked', False) and not self._bg_call_is_silenced(path, c_data):
                         self.audio.play_knock()
                         self.call_history[path]['knocked'] = True
+                        self._next_knock_time = time.time() + KNOCK_REPEAT_SECONDS
 
         if p_data['state'] == 'incoming':
             uc_search = self.gsettings_mgr.get_setting("unknown_callers_search") == "true"
@@ -537,9 +522,47 @@ class InCallWindow(Gtk.Window):
                     return path
         return None
 
+    def _bg_call_is_silenced(self, path, c_data):
+        """Return True when a background incoming call must stay silent."""
+        caller_norm = normalize_number(c_data['number'])
+        override_volume = False
+        try:
+            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+            for p in priority_list:
+                p_num = normalize_number(p.get("number", ""))
+                if p_num and p_num == caller_norm:
+                    override_volume = True
+                    break
+        except Exception as e:
+            logger.warning(f"[InCall] Priority caller check failed: {e}")
+
+        is_silenced = c_data.get('silenced', False)
+        uc_action = self.gsettings_mgr.get_setting("unknown_callers") or "none"
+        c_unknown = self.call_history.get(path, {}).get('name') == _("Unknown")
+        if uc_action in ["hide", "silence"] and c_unknown and not override_volume:
+            is_silenced = True
+        return is_silenced
+
+    def _maybe_repeat_knock(self):
+        """Repeat the call-waiting knock for eligible background calls."""
+        now = time.time()
+        if now < self._next_knock_time:
+            return
+        for path, data in self.ofono.active_calls.items():
+            if data['state'] not in ('waiting', 'incoming') or path == self.active_path:
+                continue
+            if path in self.ignored_calls:
+                continue
+            if self._bg_call_is_silenced(path, data):
+                continue
+            self.audio.play_knock()
+            self._next_knock_time = now + KNOCK_REPEAT_SECONDS
+            return
+
     def _clean_reset(self):
         """Reset window state to idle."""
         self._stop_timers()
+        self._next_knock_time = 0
         if self._hangup_verify_id:
             GLib.source_remove(self._hangup_verify_id)
             self._hangup_verify_id = None
@@ -986,6 +1009,9 @@ class InCallWindow(Gtk.Window):
 
         if self.call_volume_applied and not self.is_closing and not self.in_error_mode:
             self._sync_external_route_change()
+
+        if not self.is_closing and not self.in_error_mode:
+            self._maybe_repeat_knock()
 
         return True
 
