@@ -20,6 +20,14 @@ from loguru import logger
 from ...backend.utils.phone_utils import normalize_number
 from .secret_manager import SecretManager
 
+SPECIAL_LIST_KEYS = [
+    "trusted_sms_location_request", "trusted_sms_silent_callback",
+    "trusted_sms_relay", "trusted_sms_ssh_access",
+    "trusted_sms_remote_wipe", "notification_override_dnd_bypass_contacts",
+    "notification_override_sms_custom_tone_contacts",
+    "notification_override_call_custom_contacts"
+]
+
 
 class GSettingsManager:
     """Manages reading and writing application settings via GSettings."""
@@ -119,101 +127,70 @@ class GSettingsManager:
         except Exception as e:
             logger.error(f"[GSettings] Set Reject Messages Error: {e}")
 
-    def get_emergency_numbers(self):
+    def _get_json_setting(self, key, error_label):
+        """Load a JSON-encoded list setting, returning [] on absence or error."""
         try:
-            val = self.get_setting("emergency_numbers")
+            val = self.get_setting(key)
             if val:
                 return json.loads(val)
         except Exception as e:
-            logger.error(f"[GSettings] Get Emergency Numbers Error: {e}")
+            logger.error(f"[GSettings] Get {error_label} Error: {e}")
         return []
+
+    def _set_json_setting(self, key, value, error_label):
+        """Store a value as a JSON-encoded setting."""
+        try:
+            self.set_setting(key, json.dumps(value))
+        except Exception as e:
+            logger.error(f"[GSettings] Set {error_label} Error: {e}")
+
+    def get_emergency_numbers(self):
+        """Return the configured emergency numbers list."""
+        return self._get_json_setting("emergency_numbers", "Emergency Numbers")
 
     def set_emergency_numbers(self, numbers_list):
-        try:
-            val = json.dumps(numbers_list)
-            self.set_setting("emergency_numbers", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set Emergency Numbers Error: {e}")
+        """Persist the emergency numbers list."""
+        self._set_json_setting("emergency_numbers", numbers_list, "Emergency Numbers")
 
     def get_trusted_sms_location_request(self):
-        try:
-            val = self.get_setting("trusted_sms_location_request")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get Location Request Error: {e}")
-        return []
+        """Return the trusted location request contacts list."""
+        return self._get_json_setting("trusted_sms_location_request", "Location Request")
 
     def set_trusted_sms_location_request(self, contacts_list):
-        try:
-            val = json.dumps(contacts_list)
-            self.set_setting("trusted_sms_location_request", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set Location Request Error: {e}")
+        """Persist the trusted location request contacts list."""
+        self._set_json_setting("trusted_sms_location_request", contacts_list, "Location Request")
 
     def get_trusted_sms_silent_callback(self):
-        try:
-            val = self.get_setting("trusted_sms_silent_callback")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get Callback Error: {e}")
-        return []
+        """Return the trusted silent callback contacts list."""
+        return self._get_json_setting("trusted_sms_silent_callback", "Callback")
 
     def set_trusted_sms_silent_callback(self, contacts_list):
-        try:
-            val = json.dumps(contacts_list)
-            self.set_setting("trusted_sms_silent_callback", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set Callback Error: {e}")
+        """Persist the trusted silent callback contacts list."""
+        self._set_json_setting("trusted_sms_silent_callback", contacts_list, "Callback")
 
     def get_trusted_sms_relay(self):
-        try:
-            val = self.get_setting("trusted_sms_relay")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get Relay Error: {e}")
-        return []
+        """Return the trusted relay contacts list."""
+        return self._get_json_setting("trusted_sms_relay", "Relay")
 
     def set_trusted_sms_relay(self, contacts_list):
-        try:
-            val = json.dumps(contacts_list)
-            self.set_setting("trusted_sms_relay", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set Relay Error: {e}")
+        """Persist the trusted relay contacts list."""
+        self._set_json_setting("trusted_sms_relay", contacts_list, "Relay")
 
     def get_trusted_sms_ssh_access(self):
-        try:
-            val = self.get_setting("trusted_sms_ssh_access")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get SSH Access Error: {e}")
-        return []
+        """Return the trusted SSH access contacts list."""
+        return self._get_json_setting("trusted_sms_ssh_access", "SSH Access")
 
     def set_trusted_sms_ssh_access(self, contacts_list):
-        try:
-            val = json.dumps(contacts_list)
-            self.set_setting("trusted_sms_ssh_access", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set SSH Access Error: {e}")
+        """Persist the trusted SSH access contacts list."""
+        self._set_json_setting("trusted_sms_ssh_access", contacts_list, "SSH Access")
 
     def get_trusted_sms_remote_wipe(self):
-        try:
-            val = self.get_setting("trusted_sms_remote_wipe")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get Remote Wipe Error: {e}")
-        return []
+        """Return the trusted remote wipe contacts list."""
+        return self._get_json_setting("trusted_sms_remote_wipe", "Remote Wipe")
 
     def set_trusted_sms_remote_wipe(self, contacts_list):
-        try:
-            val = json.dumps(contacts_list)
-            self.set_setting("trusted_sms_remote_wipe", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set Remote Wipe Error: {e}")
+        """Persist the trusted remote wipe contacts list."""
+        self._set_json_setting("trusted_sms_remote_wipe", contacts_list, "Remote Wipe")
 
 
     def set_trusted_sms_location_request_enabled(self, val):
@@ -234,77 +211,92 @@ class GSettingsManager:
     def get_trusted_sms_location_request_enabled(self):
         return self.get_setting("trusted_sms_location_request_enabled") == "true"
 
-    def get_trusted_sms_location_request_totp_seed(self):
-        secret = self.secret_manager.get_secret("trusted_sms_location_request")
+    def _get_totp_seed(self, action):
+        """Fetch the stored TOTP seed for an action, returning "" when absent."""
+        secret = self.secret_manager.get_secret(action)
         if not secret:
             return ""
         return secret
 
+    def _set_totp_seed(self, action, seed):
+        """Store the TOTP seed for an action."""
+        self.secret_manager.store_secret(action, seed)
+
+    def _remove_totp_seed(self, action):
+        """Clear the stored TOTP seed for an action."""
+        self.secret_manager.clear_secret(action)
+
+    def get_trusted_sms_location_request_totp_seed(self):
+        """Return the location request TOTP seed."""
+        return self._get_totp_seed("trusted_sms_location_request")
+
     def set_trusted_sms_location_request_totp_seed(self, val):
-        self.secret_manager.store_secret("trusted_sms_location_request", val)
+        """Store the location request TOTP seed."""
+        self._set_totp_seed("trusted_sms_location_request", val)
 
     def remove_trusted_sms_location_request_totp_seed(self):
-        self.secret_manager.clear_secret("trusted_sms_location_request")
+        """Clear the location request TOTP seed."""
+        self._remove_totp_seed("trusted_sms_location_request")
 
     def get_trusted_sms_silent_callback_enabled(self):
         return self.get_setting("trusted_sms_silent_callback_enabled") == "true"
 
     def get_trusted_sms_silent_callback_totp_seed(self):
-        secret = self.secret_manager.get_secret("trusted_sms_silent_callback")
-        if not secret:
-            return ""
-        return secret
+        """Return the silent callback TOTP seed."""
+        return self._get_totp_seed("trusted_sms_silent_callback")
 
     def set_trusted_sms_silent_callback_totp_seed(self, val):
-        self.secret_manager.store_secret("trusted_sms_silent_callback", val)
+        """Store the silent callback TOTP seed."""
+        self._set_totp_seed("trusted_sms_silent_callback", val)
 
     def remove_trusted_sms_silent_callback_totp_seed(self):
-        self.secret_manager.clear_secret("trusted_sms_silent_callback")
+        """Clear the silent callback TOTP seed."""
+        self._remove_totp_seed("trusted_sms_silent_callback")
 
     def get_trusted_sms_relay_enabled(self):
         return self.get_setting("trusted_sms_relay_enabled") == "true"
 
     def get_trusted_sms_relay_totp_seed(self):
-        secret = self.secret_manager.get_secret("trusted_sms_relay")
-        if not secret:
-            return ""
-        return secret
+        """Return the relay TOTP seed."""
+        return self._get_totp_seed("trusted_sms_relay")
 
     def set_trusted_sms_relay_totp_seed(self, val):
-        self.secret_manager.store_secret("trusted_sms_relay", val)
+        """Store the relay TOTP seed."""
+        self._set_totp_seed("trusted_sms_relay", val)
 
     def remove_trusted_sms_relay_totp_seed(self):
-        self.secret_manager.clear_secret("trusted_sms_relay")
+        """Clear the relay TOTP seed."""
+        self._remove_totp_seed("trusted_sms_relay")
 
     def get_trusted_sms_ssh_access_enabled(self):
         return self.get_setting("trusted_sms_ssh_access_enabled") == "true"
 
     def get_trusted_sms_ssh_access_totp_seed(self):
-        secret = self.secret_manager.get_secret("trusted_sms_ssh_access")
-        if not secret:
-            return ""
-        return secret
+        """Return the SSH access TOTP seed."""
+        return self._get_totp_seed("trusted_sms_ssh_access")
 
     def set_trusted_sms_ssh_access_totp_seed(self, val):
-        self.secret_manager.store_secret("trusted_sms_ssh_access", val)
+        """Store the SSH access TOTP seed."""
+        self._set_totp_seed("trusted_sms_ssh_access", val)
 
     def remove_trusted_sms_ssh_access_totp_seed(self):
-        self.secret_manager.clear_secret("trusted_sms_ssh_access")
+        """Clear the SSH access TOTP seed."""
+        self._remove_totp_seed("trusted_sms_ssh_access")
 
     def get_trusted_sms_remote_wipe_enabled(self):
         return self.get_setting("trusted_sms_remote_wipe_enabled") == "true"
 
     def get_trusted_sms_remote_wipe_totp_seed(self):
-        secret = self.secret_manager.get_secret("trusted_sms_remote_wipe")
-        if not secret:
-            return ""
-        return secret
+        """Return the remote wipe TOTP seed."""
+        return self._get_totp_seed("trusted_sms_remote_wipe")
 
     def set_trusted_sms_remote_wipe_totp_seed(self, val):
-        self.secret_manager.store_secret("trusted_sms_remote_wipe", val)
+        """Store the remote wipe TOTP seed."""
+        self._set_totp_seed("trusted_sms_remote_wipe", val)
 
     def remove_trusted_sms_remote_wipe_totp_seed(self):
-        self.secret_manager.clear_secret("trusted_sms_remote_wipe")
+        """Clear the remote wipe TOTP seed."""
+        self._remove_totp_seed("trusted_sms_remote_wipe")
 
     def generate_totp_seed(self):
         """Generates a random base32 TOTP seed."""
@@ -315,52 +307,28 @@ class GSettingsManager:
         return f"otpauth://totp/Telephony:{action_name}?secret={seed}&issuer=Telephony&period=60"
 
     def get_notification_override_dnd_bypass_contacts(self):
-        try:
-            val = self.get_setting("notification_override_dnd_bypass_contacts")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get DND Bypass Error: {e}")
-        return []
+        """Return the DND bypass contacts list."""
+        return self._get_json_setting("notification_override_dnd_bypass_contacts", "DND Bypass")
 
     def set_notification_override_dnd_bypass_contacts(self, contacts_list):
-        try:
-            val = json.dumps(contacts_list)
-            self.set_setting("notification_override_dnd_bypass_contacts", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set DND Bypass Error: {e}")
+        """Persist the DND bypass contacts list."""
+        self._set_json_setting("notification_override_dnd_bypass_contacts", contacts_list, "DND Bypass")
 
     def get_notification_override_sms_custom_tone_contacts(self):
-        try:
-            val = self.get_setting("notification_override_sms_custom_tone_contacts")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get SMS Custom Tones Error: {e}")
-        return []
+        """Return the SMS custom tone contacts list."""
+        return self._get_json_setting("notification_override_sms_custom_tone_contacts", "SMS Custom Tones")
 
     def set_notification_override_sms_custom_tone_contacts(self, tones_list):
-        try:
-            val = json.dumps(tones_list)
-            self.set_setting("notification_override_sms_custom_tone_contacts", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set SMS Custom Tones Error: {e}")
+        """Persist the SMS custom tone contacts list."""
+        self._set_json_setting("notification_override_sms_custom_tone_contacts", tones_list, "SMS Custom Tones")
 
     def get_notification_override_call_custom_contacts(self):
-        try:
-            val = self.get_setting("notification_override_call_custom_contacts")
-            if val:
-                return json.loads(val)
-        except Exception as e:
-            logger.error(f"[GSettings] Get Ring Custom Tones Error: {e}")
-        return []
+        """Return the call custom tone contacts list."""
+        return self._get_json_setting("notification_override_call_custom_contacts", "Ring Custom Tones")
 
     def set_notification_override_call_custom_contacts(self, tones_list):
-        try:
-            val = json.dumps(tones_list)
-            self.set_setting("notification_override_call_custom_contacts", val)
-        except Exception as e:
-            logger.error(f"[GSettings] Set Ring Custom Tones Error: {e}")
+        """Persist the call custom tone contacts list."""
+        self._set_json_setting("notification_override_call_custom_contacts", tones_list, "Ring Custom Tones")
 
     def _update_special_list(self, key, target_number, action, new_name=None):
         """Helper to update special lists (Trusted, Priority, Custom Tones)."""
@@ -403,34 +371,16 @@ class GSettingsManager:
             logger.error(f"[GSettings] Update special list error for {key}: {e}")
 
     def remove_from_special_lists(self, number):
-        keys = [
-            "trusted_sms_location_request", "trusted_sms_silent_callback",
-            "trusted_sms_relay", "trusted_sms_ssh_access",
-            "trusted_sms_remote_wipe", "notification_override_dnd_bypass_contacts",
-            "notification_override_sms_custom_tone_contacts",
-            "notification_override_call_custom_contacts"
-        ]
-        for k in keys:
+        """Remove a number from every special list."""
+        for k in SPECIAL_LIST_KEYS:
             self._update_special_list(k, number, "remove")
 
     def update_special_list_names(self, number, new_name):
-        keys = [
-            "trusted_sms_location_request", "trusted_sms_silent_callback",
-            "trusted_sms_relay", "trusted_sms_ssh_access",
-            "trusted_sms_remote_wipe", "notification_override_dnd_bypass_contacts",
-            "notification_override_sms_custom_tone_contacts",
-            "notification_override_call_custom_contacts"
-        ]
-        for k in keys:
+        """Update the stored contact name for a number in every special list."""
+        for k in SPECIAL_LIST_KEYS:
             self._update_special_list(k, number, "update_name", new_name=new_name)
 
     def reset_special_list_names(self, number):
-        keys = [
-            "trusted_sms_location_request", "trusted_sms_silent_callback",
-            "trusted_sms_relay", "trusted_sms_ssh_access",
-            "trusted_sms_remote_wipe", "notification_override_dnd_bypass_contacts",
-            "notification_override_sms_custom_tone_contacts",
-            "notification_override_call_custom_contacts"
-        ]
-        for k in keys:
+        """Reset the stored contact name to Unknown in every special list."""
+        for k in SPECIAL_LIST_KEYS:
             self._update_special_list(k, number, "reset_name")
