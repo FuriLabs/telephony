@@ -74,7 +74,7 @@ class ContactPicker(Adw.Window):
         factory.connect("teardown", self.teardown_row)
 
         self.list_view = Gtk.ListView(model=self.selection, factory=factory)
-        self.list_view.connect("activate", lambda b: self.on_activate(b))
+        self.list_view.connect("activate", lambda lv, pos: self.on_activate(lv, pos))
 
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_child(self.list_view)

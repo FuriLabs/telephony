@@ -60,7 +60,6 @@ class TelephonyAudioManager:
 
         self.is_ringing = False
         self.ringing_event = None
-        self.ringing_id = None
 
         self.last_knock_time = 0
         self.knock_pipeline = None
@@ -163,23 +162,6 @@ class TelephonyAudioManager:
         """Stop the ringing feedback."""
         if not self.is_ringing:
             return
-
-        if self.ringing_id:
-            try:
-                bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-                proxy = Gio.DBusProxy.new_sync(
-                    bus, Gio.DBusProxyFlags.NONE, None,
-                    "org.sigxcpu.feedbackd", "/org/sigxcpu/feedbackd",
-                    "org.sigxcpu.Feedback", None
-                )
-                proxy.call_sync(
-                    "EndFeedback",
-                    GLib.Variant('(u)', (self.ringing_id,)),
-                    Gio.DBusCallFlags.NONE, -1, None
-                )
-            except Exception as e:
-                logger.warning(f"[Audio] Manual EndFeedback failed: {e}")
-            self.ringing_id = None
 
         if self.ringing_event:
             try:
@@ -597,7 +579,7 @@ class TelephonyAudioManager:
 
                     if self._pre_max_vol is None:
                         if sink.volume.values:
-                            self._pre_max_vol = max(sink.volume.values) / 65536.0
+                            self._pre_max_vol = max(sink.volume.values)
                         else:
                             self._pre_max_vol = 0.5
 

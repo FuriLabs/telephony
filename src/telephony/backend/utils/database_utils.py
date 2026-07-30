@@ -381,7 +381,8 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                 self.conn_calls.commit()
                 self.conn_blocklist.execute("DELETE FROM blocklist")
                 self.conn_blocklist.commit()
-                self.clear_group_names()
+                self.conn_messages.execute("DELETE FROM group_names")
+                self.conn_messages.commit()
 
                 self.conn_calls.execute("VACUUM")
                 self.conn_blocklist.execute("VACUUM")

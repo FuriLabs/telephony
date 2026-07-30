@@ -21,7 +21,6 @@ import tempfile
 import threading
 import time
 from loguru import logger
-from gettext import gettext as _
 from gi.repository import Gio, GLib, GObject
 
 from ..utils.phone_utils import get_own_number, normalize_number
@@ -242,7 +241,7 @@ class MmsManager(GObject.Object):
         if not self.proxy:
             self._init_manager()
             if not self.proxy:
-                self.emit('action-error', _("Modem not ready"))
+                logger.error("[MMS] Cannot send: MMS service not ready")
                 return False
 
         current_sig = f"{sorted(recipients)}_{body}_{len(attachment_paths)}"

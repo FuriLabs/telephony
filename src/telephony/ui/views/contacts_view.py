@@ -45,9 +45,10 @@ class ContactsView(Adw.Bin):
         self.is_fetching = False
         self.current_query = ""
 
-        self.app_window.db.connect('contacts-updated', lambda *args: GLib.idle_add(lambda: self.refresh()))
+        self.signal_ids = []
+        self.signal_ids.append((self.app_window.db, self.app_window.db.connect('contacts-updated', lambda *args: GLib.idle_add(lambda: self.refresh()))))
         if self.app_window.eds:
-            self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(self.on_contacts_loaded_signal))
+            self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(self.on_contacts_loaded_signal))))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         header = Gtk.Box(spacing=6)
@@ -79,7 +80,7 @@ class ContactsView(Adw.Bin):
         factory.connect("teardown", self.teardown_row)
 
         self.list_view = Gtk.ListView(model=self.selection, factory=factory)
-        self.list_view.connect("activate", lambda b: self.on_activate(b))
+        self.list_view.connect("activate", lambda lv, pos: self.on_activate(lv, pos))
 
         self.scrolled = Gtk.ScrolledWindow()
         self.scrolled.set_child(self.list_view)
@@ -146,6 +147,17 @@ class ContactsView(Adw.Bin):
             self.btn_add.set_sensitive(False)
         else:
             self.btn_add.set_sensitive(True)
+
+    def cleanup(self):
+        """Cleanup resources before destruction."""
+        if self._refresh_timer:
+            GLib.source_remove(self._refresh_timer)
+            self._refresh_timer = None
+
+        for obj, sig_id in self.signal_ids:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.signal_ids.clear()
 
     def on_contacts_loaded_signal(self, *args):
         """Handle contacts loaded signal."""

@@ -56,6 +56,7 @@ class ChatPage(Gtk.Box):
         self._refresh_timer = None
         self.focus_handler_id = None
         self.search_timer = None
+        self.search_token = 0
         self._draft_saved = False
         """Initialize the ChatPage."""
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
@@ -208,6 +209,7 @@ class ChatPage(Gtk.Box):
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self._on_factory_setup)
         factory.connect("bind", self._on_factory_bind)
+        factory.connect("unbind", ChatBubbleFactory.unbind)
         factory.connect("teardown", ChatBubbleFactory.teardown)
 
         self.list_view = Gtk.ListView(model=self.selection, factory=factory)

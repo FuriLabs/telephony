@@ -39,7 +39,9 @@ class BlocklistView(Adw.Bin):
         lbl.set_hexpand(True)
         lbl.set_xalign(0)
 
-        self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self.refresh))
+        self._blocklist_sig = self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self.refresh))
+        self.connect("map", self._on_map)
+        self.connect("unmap", self._on_unmap)
 
         self.btn_add = Gtk.Button(icon_name="list-add-symbolic")
         self.btn_add.add_css_class("suggested-action")
@@ -68,6 +70,23 @@ class BlocklistView(Adw.Bin):
 
         self.set_child(box)
         self.refresh()
+
+    def _on_map(self, widget):
+        """Reconnect the blocklist listener and catch up after being hidden."""
+        if self._blocklist_sig is not None:
+            return
+        self._blocklist_sig = self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self.refresh))
+        self.refresh()
+
+    def _on_unmap(self, widget):
+        """Drop the blocklist listener and pending refresh while hidden."""
+        if self._refresh_timer:
+            GLib.source_remove(self._refresh_timer)
+            self._refresh_timer = None
+
+        if self._blocklist_sig is not None and self.db.handler_is_connected(self._blocklist_sig):
+            self.db.disconnect(self._blocklist_sig)
+        self._blocklist_sig = None
 
     def refresh(self):
         """Reload the blocklist from DB."""

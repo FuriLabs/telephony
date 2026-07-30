@@ -134,7 +134,7 @@ class MissedScheduledMessagesDialog:
 
                 if processed_files:
                     media_box.set_visible(True)
-                    ChatBubbleFactory._create_attachment_layout(media_box, processed_files, bubble_box)
+                    ChatBubbleFactory._create_attachment_layout(media_box, processed_files, bubble_box, lambda: True)
             except Exception as ex:
                 logger.error(f"[MissedScheduled] Attachment processing error: {ex}")
 

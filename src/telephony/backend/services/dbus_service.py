@@ -430,21 +430,21 @@ class TelephonyDaemonDBus:
 
     def _handle_mutemic(self, parameters, invocation):
         """Handle MuteMic command."""
-        if self.app and self.app.audio_mgr:
-            self.app.audio_mgr.set_microphone_mute(True)
+        if self.ofono:
+            self.ofono.audio.mute(True)
         invocation.return_value(None)
 
     def _handle_unmutemic(self, parameters, invocation):
         """Handle UnmuteMic command."""
-        if self.app and self.app.audio_mgr:
-            self.app.audio_mgr.set_microphone_mute(False)
+        if self.ofono:
+            self.ofono.audio.mute(False)
         invocation.return_value(None)
 
     def _handle_setspeakerphone(self, parameters, invocation):
         """Handle SetSpeakerphone command."""
         enable = parameters.unpack()[0]
-        if self.app and self.app.audio_mgr:
-            self.app.audio_mgr.set_speakerphone(enable)
+        if self.ofono:
+            self.ofono.audio.set_audio_route("speaker" if enable else "earpiece")
         invocation.return_value(None)
 
     def _handle_senddtmf(self, parameters, invocation):
@@ -585,7 +585,7 @@ class TelephonyDaemonDBus:
                     uids_to_delete.append(uid)
 
             for uid in uids_to_delete:
-                self.eds.remove_contact(uid)
+                self.eds.delete_contact(uid)
             invocation.return_value(None)
             return
 
@@ -626,7 +626,7 @@ class TelephonyDaemonDBus:
                     uids_to_delete.append(uid)
 
             for uid in uids_to_delete:
-                self.eds.remove_contact(uid)
+                self.eds.delete_contact(uid)
         elif not is_protected and self.eds:
             self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
         try:
@@ -928,7 +928,7 @@ class TelephonyDaemonDBus:
         if self.eds:
             uid = str(uuid.uuid4())
             vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
-            self.eds.add_contact(vcard_data, "default")
+            self.eds.save_contact(vcard_data)
         invocation.return_value(None)
 
     def _handle_deletecontact(self, parameters, invocation):
@@ -946,7 +946,7 @@ class TelephonyDaemonDBus:
                     logger.warning(f"[DBus] Refusing to delete Andromeda Contact {uid} via CLI")
                     invocation.return_value(None)
                     return
-            self.eds.remove_contact(uid)
+            self.eds.delete_contact(uid)
         invocation.return_value(None)
 
     def _handle_modifycontact(self, parameters, invocation):
@@ -965,5 +965,5 @@ class TelephonyDaemonDBus:
                     invocation.return_value(None)
                     return
             vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
-            self.eds.modify_contact(uid, vcard_data)
+            self.eds.save_contact(vcard_data, uid=uid)
         invocation.return_value(None)

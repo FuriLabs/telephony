@@ -120,6 +120,8 @@ class LocationManager(GObject.Object):
 
         client = self.simple_client.get_client()
         if not client:
+            logger.warning("[Location] Geoclue returned no client, finishing without a fix.")
+            self._schedule_finish(None, None, None)
             return
 
         logger.debug(f"[Location] Client Active: {client.props.active}")

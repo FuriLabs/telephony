@@ -27,6 +27,7 @@ from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango
 from loguru import logger
 
 from ..backend.utils.phone_utils import normalize_number, get_own_number
+from ..backend.utils.system_utils import get_phosh_emergency_calls
 from ..backend.utils import region_utils as utils
 from .views.history_view import HistoryView
 from .views.contacts_view import ContactsView
@@ -67,7 +68,6 @@ class MainWindow(Adw.Window):
         self.gsettings_mgr = gsettings_mgr
         self.scheduler = self.app.scheduler
 
-        self.refresh_timer = None
 
         self.overlay = Gtk.Overlay()
         self.set_content(self.overlay)
@@ -145,15 +145,16 @@ class MainWindow(Adw.Window):
         self.notif_revealer.set_child(self.notif_box)
         self.overlay.add_overlay(self.notif_revealer)
 
+        self.signal_ids = []
         if self.ofono:
-            self.ofono.connect('connection-status', self.on_ofono_status)
-            self.ofono.connect('action-error', lambda obj, msg: self.notify_error(msg))
-            self.ofono.connect('ussd-notification', lambda obj, msg: self.show_ussd_dialog(msg))
+            self.signal_ids.append((self.ofono, self.ofono.connect('connection-status', self.on_ofono_status)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('action-error', lambda obj, msg: self.notify_error(msg))))
+            self.signal_ids.append((self.ofono, self.ofono.connect('ussd-notification', lambda obj, msg: self.show_ussd_dialog(msg))))
 
-        self.eds.connect('contacts-loaded', self.on_contacts_loaded)
+        self.signal_ids.append((self.eds, self.eds.connect('contacts-loaded', self.on_contacts_loaded)))
 
         if self.msgs_page:
-            self.db.connect('messages-updated', lambda *args: self.update_unread_badge())
+            self.signal_ids.append((self.db, self.db.connect('messages-updated', lambda *args: self.update_unread_badge())))
 
         if self.eds.is_ready:
             self.update_unread_badge()
@@ -170,7 +171,7 @@ class MainWindow(Adw.Window):
         self.connect("map", self._on_window_map)
         self._initial_check_done = False
 
-        self.gsettings_mgr.gsettings.connect("changed::duplicate-resolver-enabled", self.on_duplicate_resolver_setting_changed)
+        self.signal_ids.append((self.gsettings_mgr.gsettings, self.gsettings_mgr.gsettings.connect("changed::duplicate-resolver-enabled", self.on_duplicate_resolver_setting_changed)))
 
         self.popup_queue = []
         self.is_popup_active = False
@@ -218,15 +219,23 @@ class MainWindow(Adw.Window):
 
     def cleanup(self):
         """Cleanup resources and widgets before destruction."""
-        if self.refresh_timer:
-            GLib.source_remove(self.refresh_timer)
-            self.refresh_timer = None
+        if self._unread_timer:
+            GLib.source_remove(self._unread_timer)
+            self._unread_timer = None
+
+        for obj, sig_id in self.signal_ids:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.signal_ids.clear()
 
         if self.history_view:
             self.history_view.cleanup()
 
         if self.messages_view:
             self.messages_view.cleanup()
+
+        if self.contacts_view:
+            self.contacts_view.cleanup()
 
         self.switcher = None
         self.stack = None
@@ -263,8 +272,7 @@ class MainWindow(Adw.Window):
     def check_emergency_setup(self):
         """Check if emergency numbers are configured."""
         try:
-            settings = Gio.Settings(schema_id="sm.puri.phosh.emergency-calls")
-            if not settings.get_boolean("enabled"):
+            if not get_phosh_emergency_calls():
                 return
 
             if self.gsettings_mgr.get_emergency_numbers():

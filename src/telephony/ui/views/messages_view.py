@@ -56,10 +56,11 @@ class MessagesView(Adw.Bin):
         self.selected_recipients = set()
         self._is_programmatic_update = False
 
-        self.db.connect('messages-updated', self._on_messages_updated)
-        self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
+        self.signal_ids = []
+        self.signal_ids.append((self.db, self.db.connect('messages-updated', self._on_messages_updated)))
+        self.signal_ids.append((self.db, self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
         if self.app_window.eds:
-            self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))
+            self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
 
         self.main_page = Adw.NavigationPage(tag="main_list")
         self.main_page.set_title(_("Messages"))
@@ -88,9 +89,16 @@ class MessagesView(Adw.Bin):
     def cleanup(self):
         """Cleanup resources before destruction."""
         self.load_token += 1
-        if self.search_timer:
-            GLib.source_remove(self.search_timer)
-            self.search_timer = None
+        for timer_attr in ("search_timer", "_refresh_timer"):
+            timer_id = getattr(self, timer_attr)
+            if timer_id:
+                GLib.source_remove(timer_id)
+                setattr(self, timer_attr, None)
+
+        for obj, sig_id in self.signal_ids:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.signal_ids.clear()
 
         if self.model:
             self.model.remove_all()

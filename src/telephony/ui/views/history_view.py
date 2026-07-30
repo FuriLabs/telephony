@@ -50,10 +50,11 @@ class HistoryView(Adw.Bin):
 
         self.row_factory = HistoryRowFactory(app_window)
 
-        self.db.connect('history-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
-        self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
+        self.signal_ids = []
+        self.signal_ids.append((self.db, self.db.connect('history-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))))
+        self.signal_ids.append((self.db, self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))))
         if self.app_window.eds:
-            self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_data()))
+            self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_data()))))
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
@@ -459,9 +460,16 @@ class HistoryView(Adw.Bin):
     def cleanup(self):
         """Cleanup resources before destruction."""
         self.load_token += 1
-        if (self.search_timer is not None) and self.search_timer:
-            GLib.source_remove(self.search_timer)
-            self.search_timer = None
+        for timer_attr in ("search_timer", "_refresh_timer"):
+            timer_id = getattr(self, timer_attr)
+            if timer_id:
+                GLib.source_remove(timer_id)
+                setattr(self, timer_attr, None)
+
+        for obj, sig_id in self.signal_ids:
+            if obj.handler_is_connected(sig_id):
+                obj.disconnect(sig_id)
+        self.signal_ids.clear()
 
         if self.model:
             self.model.remove_all()
