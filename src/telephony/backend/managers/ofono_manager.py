@@ -68,7 +68,6 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         self.ussd_handler_id = None
 
         self.active_calls = {}
-        self._last_call_end = 0.0
         self.active_chat_number = None
         self.focus_provider = None
 
@@ -305,7 +304,6 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         """Handle call removal."""
         if path in self.active_calls:
             data = self.active_calls.pop(path)
-            self._last_call_end = time.time()
             self._log_call(data)
             self.emit('call-removed', path)
 

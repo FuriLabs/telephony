@@ -13,17 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import threading
-import time
-
 from gi.repository import GLib, Gio
 from loguru import logger
 
 from gettext import gettext as _
 from ..utils.phone_utils import normalize_number
-from ..utils.thread_utils import run_in_background
-
-DIAL_COOLDOWN_SECONDS = 2.0
 
 
 class OfonoCallsManager:
@@ -39,29 +33,11 @@ class OfonoCallsManager:
         except Exception as e:
             logger.error(f"Sync calls error: {e}")
 
-    def _dial_cooldown_remaining(self):
-        """Return the seconds left before the modem accepts a new dial."""
-        remaining = DIAL_COOLDOWN_SECONDS - (time.time() - self._last_call_end)
-        return remaining if remaining > 0 else 0
-
-    def _deferred_dial(self, number, hide_id):
-        """Retry a dial in the background once the modem cooldown has passed."""
-        run_in_background(self.dial, number, hide_id=hide_id)
-        return False
-
     def dial(self, number, hide_id=False):
         """Initiate an outgoing call."""
         if not self.voice_proxy:
             self.emit('action-error', _("Modem not ready"))
             return False
-
-        remaining = self._dial_cooldown_remaining()
-        if remaining > 0:
-            logger.info(f"[OfonoManager] Waiting {remaining:.1f}s after the previous call before dialing")
-            if threading.current_thread() is threading.main_thread():
-                GLib.timeout_add(int(remaining * 1000) + 100, self._deferred_dial, number, hide_id)
-                return True
-            time.sleep(remaining)
 
         if len(self.active_calls) > 0:
             try:
