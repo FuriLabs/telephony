@@ -68,6 +68,27 @@ def input_route_label(route_id):
     return labels.get(route_id, route_id)
 
 
+def route_icon(route_id):
+    """Return the icon name for an audio output route."""
+    icons = {
+        "earpiece": "phone-symbolic",
+        "speaker": "audio-speakers-symbolic",
+        "wired": "audio-headset-symbolic",
+        "bluetooth": "bluetooth-active-symbolic",
+    }
+    return icons.get(route_id, "phone-symbolic")
+
+
+def input_route_icon(route_id):
+    """Return the icon name for an audio input route."""
+    icons = {
+        "mic": "audio-input-microphone-symbolic",
+        "wired": "audio-headset-symbolic",
+        "bluetooth": "bluetooth-active-symbolic",
+    }
+    return icons.get(route_id, "audio-input-microphone-symbolic")
+
+
 class InCallWindow(Gtk.Window):
     """Main call window handling active calls, incoming calls, and call controls."""
 
@@ -203,8 +224,8 @@ class InCallWindow(Gtk.Window):
         act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, valign=Gtk.Align.END, margin_bottom=20)
 
         self.route_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_start=40, margin_end=40)
-        self.btn_output, self.lbl_output_route = self._mk_selector_btn("audio-headphones-symbolic", route_label("earpiece"), self.on_output_routing_click)
-        self.btn_input, self.lbl_input_route = self._mk_selector_btn("audio-input-microphone-symbolic", input_route_label("mic"), self.on_input_routing_click)
+        self.btn_output, self.lbl_output_route, self.img_output_route = self._mk_selector_btn(route_icon("earpiece"), route_label("earpiece"), self.on_output_routing_click)
+        self.btn_input, self.lbl_input_route, self.img_input_route = self._mk_selector_btn(input_route_icon("mic"), input_route_label("mic"), self.on_input_routing_click)
         self.route_box.append(self.btn_output)
         self.route_box.append(self.btn_input)
         act_box.append(self.route_box)
@@ -267,7 +288,9 @@ class InCallWindow(Gtk.Window):
         """Create a full-width route selector button showing the current choice."""
         btn = Gtk.Button(css_classes=["pill"])
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        row.append(Gtk.Image.new_from_icon_name(icon))
+
+        img = Gtk.Image.new_from_icon_name(icon)
+        row.append(img)
 
         lbl = Gtk.Label(label=text, hexpand=True, xalign=0)
         lbl.set_ellipsize(Pango.EllipsizeMode.END)
@@ -279,7 +302,17 @@ class InCallWindow(Gtk.Window):
 
         btn.set_child(row)
         btn.connect("clicked", lambda b: GLib.idle_add(lambda: cb(b) or False))
-        return btn, lbl
+        return btn, lbl, img
+
+    def _show_output_route(self, route_id):
+        """Reflect the active output route on its selector button."""
+        self.lbl_output_route.set_text(route_label(route_id))
+        self.img_output_route.set_from_icon_name(route_icon(route_id))
+
+    def _show_input_route(self, route_id):
+        """Reflect the active input route on its selector button."""
+        self.lbl_input_route.set_text(input_route_label(route_id))
+        self.img_input_route.set_from_icon_name(input_route_icon(route_id))
 
     def _setup_audio_routing_popover(self):
         """Setup the audio routing popover menu."""
@@ -472,7 +505,7 @@ class InCallWindow(Gtk.Window):
             self._apply_call_volume()
             self.audio.mute(self.is_muted)
             self.controls_stack.set_visible_child_name("active")
-            self.lbl_output_route.set_text(route_label(self.current_route))
+            self._show_output_route(self.current_route)
             self._toggle_blue(self.btn_mute, self.is_muted)
 
             can_hold = p_data['state'] in ['active', 'held']
@@ -520,8 +553,8 @@ class InCallWindow(Gtk.Window):
         self.fader.set_active(False)
 
         self.current_input_route = "mic"
-        self.lbl_output_route.set_text(route_label("earpiece"))
-        self.lbl_input_route.set_text(input_route_label("mic"))
+        self._show_output_route("earpiece")
+        self._show_input_route("mic")
         self._toggle_blue(self.btn_mute, False)
         self._toggle_blue(self.btn_pad, False)
         self.pad_revealer.set_reveal_child(False)
@@ -802,7 +835,7 @@ class InCallWindow(Gtk.Window):
                     self.on_mute_toggle(None)
                 self.audio.set_input_route(r_id)
                 self.current_input_route = r_id
-                self.lbl_input_route.set_text(input_route_label(r_id))
+                self._show_input_route(r_id)
             if row.get_sensitive():
                 row.connect("activated", _cb_in)
             self.input_group.add(row)
@@ -815,7 +848,7 @@ class InCallWindow(Gtk.Window):
 
         self.current_route = self.audio.initial_call_route()
         self.is_speaker = self.current_route == "speaker"
-        self.lbl_output_route.set_text(route_label(self.current_route))
+        self._show_output_route(self.current_route)
 
         self.audio.set_audio_route(self.current_route)
         self.audio.ensure_sink_unmuted()
@@ -844,7 +877,7 @@ class InCallWindow(Gtk.Window):
             self._push_route_volume()
 
         self.is_speaker = route_id == "speaker"
-        self.lbl_output_route.set_text(route_label(route_id))
+        self._show_output_route(route_id)
 
         self._proximity_tick()
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
@@ -903,7 +936,7 @@ class InCallWindow(Gtk.Window):
         logger.info(f"[InCall] Output route moved externally to {route}")
         self.current_route = route
         self.is_speaker = route == "speaker"
-        self.lbl_output_route.set_text(route_label(route))
+        self._show_output_route(route)
         self.audio.ensure_sink_unmuted()
         self._push_route_volume()
 

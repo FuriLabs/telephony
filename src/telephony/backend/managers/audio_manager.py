@@ -394,9 +394,9 @@ class TelephonyAudioManager:
             logger.warning(f"[Audio] Failed to probe output routes: {e}")
 
         return [
-            {"id": "earpiece", "name": "Earpiece", "icon": "audio-headphones-symbolic", "available": True},
+            {"id": "earpiece", "name": "Earpiece", "icon": "phone-symbolic", "available": True},
             {"id": "speaker", "name": "Speaker", "icon": "audio-speakers-symbolic", "available": True},
-            {"id": "wired", "name": "Wired Headset", "icon": "audio-headphones-symbolic", "available": has_wired},
+            {"id": "wired", "name": "Wired Headset", "icon": "audio-headset-symbolic", "available": has_wired},
             {"id": "bluetooth", "name": "Bluetooth", "icon": "bluetooth-active-symbolic", "available": has_bt},
         ]
 
@@ -421,7 +421,7 @@ class TelephonyAudioManager:
 
         return [
             {"id": "mic", "name": "Microphone", "icon": "audio-input-microphone-symbolic", "available": True},
-            {"id": "wired", "name": "Wired Mic", "icon": "audio-input-microphone-symbolic", "available": has_wired},
+            {"id": "wired", "name": "Wired Mic", "icon": "audio-headset-symbolic", "available": has_wired},
             {"id": "bluetooth", "name": "Bluetooth Mic", "icon": "bluetooth-active-symbolic", "available": has_bt},
         ]
 
