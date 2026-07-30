@@ -156,7 +156,7 @@ class ContactEditor(Adw.Window):
 
         grp_phones = Adw.PreferencesGroup(title=_("Phone Numbers"))
         if self.mode == "EDIT":
-            self.phone_rows_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            self.phone_rows_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
             self.phone_entries = []
 
             if current_phones:
@@ -183,7 +183,7 @@ class ContactEditor(Adw.Window):
 
         grp_emails = Adw.PreferencesGroup(title=_("Email Addresses"))
         if self.mode == "EDIT":
-            self.email_rows_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            self.email_rows_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
             self.email_entries = []
 
             emails = current_emails if current_emails else [("", "Home")]
@@ -412,10 +412,9 @@ class ContactEditor(Adw.Window):
     def _add_field_row(self, rows_box, entries_list, label_keys, display_labels, label, text, purpose):
         """Add a two-line field card: label selector and remove button on
         top, full-width value entry below."""
-        row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6, css_classes=["card"])
+        row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 
-        top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
-                      margin_top=6, margin_start=10, margin_end=6)
+        top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         dropdown = Gtk.DropDown.new_from_strings(display_labels)
         if label in label_keys:
             dropdown.set_selected(label_keys.index(label))
@@ -432,9 +431,6 @@ class ContactEditor(Adw.Window):
         entry = Gtk.Entry(text=text)
         entry.set_input_purpose(purpose)
         entry.set_hexpand(True)
-        entry.set_margin_start(10)
-        entry.set_margin_end(10)
-        entry.set_margin_bottom(10)
         row.append(entry)
 
         rows_box.append(row)

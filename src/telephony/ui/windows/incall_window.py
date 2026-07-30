@@ -182,7 +182,7 @@ class InCallWindow(Gtk.Window):
         self.main_box.append(self.bg_scrolled)
 
         self.info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6, vexpand=True, valign=Gtk.Align.CENTER, margin_start=20, margin_end=20)
-        self.lbl_name = create_truncated_label(_("Unknown"), ["title-1"], max_chars=18)
+        self.lbl_name = create_truncated_label(_("Unknown"), ["title-2"], max_chars=24)
         self.lbl_number = create_truncated_label("", ["title-2", "dim-label"], max_chars=24)
         self.lbl_status = Gtk.Label(css_classes=["body", "accent"])
         for lbl in [self.lbl_name, self.lbl_number, self.lbl_status]:
