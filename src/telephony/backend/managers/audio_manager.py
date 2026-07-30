@@ -66,6 +66,8 @@ class TelephonyAudioManager:
 
         self.last_knock_time = 0
         self.knock_pipeline = None
+        self.knock_bus = None
+        self.knock_bus_handlers = []
 
         self._pre_max_fb_profile = None
         self._pre_max_mute = None
@@ -111,6 +113,22 @@ class TelephonyAudioManager:
         except Exception as e:
             logger.debug(f"[Audio] Pulse close error (ignorable): {e}")
         self._pulse_conn = None
+
+    def _lookup_sink(self, pulse, name):
+        """Return the named sink or None when it is absent."""
+        try:
+            return pulse.get_sink_by_name(name)
+        except pulsectl.PulseIndexError:
+            logger.debug(f"[Audio] Sink {name} not present")
+            return None
+
+    def _lookup_source(self, pulse, name):
+        """Return the named source or None when it is absent."""
+        try:
+            return pulse.get_source_by_name(name)
+        except pulsectl.PulseIndexError:
+            logger.debug(f"[Audio] Source {name} not present")
+            return None
 
     def _init_sensor_proxy(self):
         """Initialize the DBus proxy for the sensor daemon."""
@@ -229,29 +247,48 @@ class TelephonyAudioManager:
             self.last_knock_time = now
             try:
                 if self.knock_pipeline:
-                    self.knock_pipeline.set_state(Gst.State.NULL)
+                    self._teardown_knock_pipeline()
 
                 uri = "file:///usr/share/sounds/freedesktop/stereo/device-added.oga"
                 self.knock_pipeline = Gst.ElementFactory.make("playbin", "knock_player")
                 self.knock_pipeline.set_property("uri", uri)
                 self.knock_pipeline.set_state(Gst.State.PLAYING)
 
-                bus = self.knock_pipeline.get_bus()
-                bus.add_signal_watch()
-                bus.connect("message::eos", self._on_knock_eos)
-                bus.connect("message::error", self._on_knock_error)
+                self.knock_bus = self.knock_pipeline.get_bus()
+                self.knock_bus.add_signal_watch()
+                self.knock_bus_handlers = [
+                    self.knock_bus.connect("message::eos", self._on_knock_eos),
+                    self.knock_bus.connect("message::error", self._on_knock_error),
+                ]
 
             except Exception as e:
                 logger.error(f"[Audio] Knock failed: {e}")
         except Exception as e:
             logger.error(f"[Audio] Play knock error: {e}")
 
+    def _teardown_knock_pipeline(self):
+        """Release the knock pipeline and its bus watch."""
+        if self.knock_bus:
+            for handler_id in self.knock_bus_handlers:
+                try:
+                    self.knock_bus.disconnect(handler_id)
+                except Exception as e:
+                    logger.debug(f"[Audio] Knock bus disconnect error (ignorable): {e}")
+            self.knock_bus_handlers = []
+            try:
+                self.knock_bus.remove_signal_watch()
+            except Exception as e:
+                logger.debug(f"[Audio] Knock bus watch removal error (ignorable): {e}")
+            self.knock_bus = None
+
+        if self.knock_pipeline:
+            self.knock_pipeline.set_state(Gst.State.NULL)
+            self.knock_pipeline = None
+
     def _on_knock_eos(self, bus, msg):
         """Handle End-Of-Stream for knock player."""
         try:
-            if self.knock_pipeline:
-                self.knock_pipeline.set_state(Gst.State.NULL)
-                self.knock_pipeline = None
+            self._teardown_knock_pipeline()
         except Exception as e:
             logger.error(f"[Audio] Knock EOS error: {e}")
 
@@ -260,9 +297,7 @@ class TelephonyAudioManager:
         try:
             err, debug = msg.parse_error()
             logger.error(f"[Audio] Knock pipeline error: {err} - {debug}")
-            if self.knock_pipeline:
-                self.knock_pipeline.set_state(Gst.State.NULL)
-                self.knock_pipeline = None
+            self._teardown_knock_pipeline()
         except Exception as e:
             logger.error(f"[Audio] Knock error handler failed: {e}")
 
@@ -307,7 +342,7 @@ class TelephonyAudioManager:
         """
         try:
             with self._pulse() as pulse:
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if not sink:
                     logger.warning("[Audio] sink.primary_output not found")
                     return
@@ -330,7 +365,7 @@ class TelephonyAudioManager:
         """Return the route a new call should start on."""
         try:
             with self._pulse() as pulse:
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if sink and self._pick_route_port(sink, "wired"):
                     return "wired"
         except Exception as e:
@@ -342,7 +377,7 @@ class TelephonyAudioManager:
         name = None
         try:
             with self._pulse() as pulse:
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if sink and sink.port_active:
                     name = sink.port_active.name
         except Exception as e:
@@ -365,7 +400,7 @@ class TelephonyAudioManager:
         level = max(0.0, min(1.0, level))
         try:
             with self._pulse() as pulse:
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if not sink:
                     logger.warning("[Audio] sink.primary_output not found for call volume")
                     return
@@ -379,7 +414,7 @@ class TelephonyAudioManager:
         """Clear any mute that module-device-restore re-applied on a port change."""
         try:
             with self._pulse() as pulse:
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if sink and sink.mute:
                     pulse.sink_mute(sink.index, False)
                     logger.info("[Audio] Cleared restored sink mute")
@@ -396,7 +431,7 @@ class TelephonyAudioManager:
                     if "bluez" in c.name:
                         has_bt = True
                         break
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if sink:
                     for p in sink.port_list:
                         if "wired_headphone" in p.name or "headset" in p.name:
@@ -423,7 +458,7 @@ class TelephonyAudioManager:
                     if "bluez" in c.name:
                         has_bt = True
                         break
-                sink = pulse.get_sink_by_name("sink.primary_output")
+                sink = self._lookup_sink(pulse, "sink.primary_output")
                 if sink:
                     for p in sink.port_list:
                         if "headset" in p.name and getattr(p, 'available', None) != 'no':
@@ -443,17 +478,12 @@ class TelephonyAudioManager:
         for name in (preferred_name, "sink.primary_output"):
             if not name:
                 continue
-            try:
-                return pulse.get_sink_by_name(name)
-            except Exception as e:
-                logger.debug(f"[Audio] Sink {name} not found: {e}")
+            sink = self._lookup_sink(pulse, name)
+            if sink:
+                return sink
 
         info = pulse.server_info()
-        try:
-            return pulse.get_sink_by_name(info.default_sink_name)
-        except Exception as e:
-            logger.debug(f"[Audio] Default sink lookup failed: {e}")
-            return None
+        return self._lookup_sink(pulse, info.default_sink_name)
 
     def save_media_state(self):
         """Snapshot the media volume and active port once before a call."""
@@ -512,14 +542,13 @@ class TelephonyAudioManager:
 
                     pulse.volume_set_all_chans(sink, self._pre_call_vol)
                     logger.info(f"[Audio] Restored media audio on {sink.name} port {target_port}")
+                    self._pre_call_vol = None
+                    self._pre_call_sink_name = None
+                    self._pre_call_port = None
                 else:
                     logger.warning("[Audio] Could not find sink to restore call volume")
         except Exception as e:
             logger.error(f"[Audio] Restore call volume failed: {e}")
-        finally:
-            self._pre_call_vol = None
-            self._pre_call_sink_name = None
-            self._pre_call_port = None
 
     def mute(self, muted=True):
         """Mute or unmute the default source."""
@@ -531,7 +560,7 @@ class TelephonyAudioManager:
                 info = pulse.server_info()
                 default_source_name = info.default_source_name
 
-                source = pulse.get_source_by_name(default_source_name)
+                source = self._lookup_source(pulse, default_source_name)
                 if source:
                     pulse.source_mute(source.index, muted)
                     self._last_mute_state = muted
@@ -559,13 +588,13 @@ class TelephonyAudioManager:
                     sink = None
                     if target_sink_name:
                         try:
-                            sink = pulse.get_sink_by_name(target_sink_name)
+                            sink = self._lookup_sink(pulse, target_sink_name)
                         except Exception:
                             logger.warning(f"[Audio] Saved sink {target_sink_name} not found, trying default.")
 
                     if not sink:
                         info = pulse.server_info()
-                        sink = pulse.get_sink_by_name(info.default_sink_name)
+                        sink = self._lookup_sink(pulse, info.default_sink_name)
 
                     if sink:
                         if self._pre_max_mute is not None:
@@ -596,7 +625,7 @@ class TelephonyAudioManager:
         try:
             with self._pulse() as pulse:
                 info = pulse.server_info()
-                sink = pulse.get_sink_by_name(info.default_sink_name)
+                sink = self._lookup_sink(pulse, info.default_sink_name)
 
                 if sink:
                     if self._pre_max_sink_name is None:

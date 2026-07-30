@@ -252,12 +252,10 @@ class LockScreenManager:
         if path not in self.active_notifications:
             return
         nid = self.active_notifications[path]
-        if nid == 0:
-            return
-
-        self.self_closed_ids.add(nid)
-        self.monitor.call_close(nid)
         del self.active_notifications[path]
+        if nid:
+            self.self_closed_ids.add(nid)
+            self.monitor.call_close(nid)
 
         if not self.active_notifications:
             self._restore_screen_wakeup()

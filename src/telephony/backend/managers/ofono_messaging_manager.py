@@ -21,6 +21,8 @@ from ..utils.phone_utils import normalize_number
 from ..utils.thread_utils import run_in_background
 import time
 
+EMERGENCY_FEEDBACK_RESTORE_SECONDS = 5
+
 
 class OfonoMessagingManager:
     def send_sms(self, number, text):
@@ -163,15 +165,8 @@ class OfonoMessagingManager:
             if signal == "ImmediateMessage":
                 logger.info(f"[ImmediateMessage] Forcing full feedback profile for emergency message from {msg_sender}")
                 self.audio.force_max_feedback()
-
-                def _play_emergency_tone(count=0):
-                    if count >= 5:
-                        self.audio.force_max_feedback(restore=True)
-                        return False
-
-                    return False
-
-                GLib.idle_add(_play_emergency_tone)
+                GLib.timeout_add_seconds(EMERGENCY_FEEDBACK_RESTORE_SECONDS,
+                                         lambda: self.audio.force_max_feedback(restore=True) or False)
             else:
                 self._check_priority_contact(msg_sender)
 

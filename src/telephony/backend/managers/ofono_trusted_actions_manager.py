@@ -26,9 +26,6 @@ OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 class OfonoTrustedActionsManager:
     def _check_rate_limit(self, sender_clean, prefix):
         now = time.time()
-        if not hasattr(self, 'trusted_trigger_history'):
-            self.trusted_trigger_history = {}
-
         history = self.trusted_trigger_history.get(sender_clean, {'last_success': 0, 'last_warning': 0, 'last_attempt': 0})
 
         if (now - history['last_success']) < 60.0:
@@ -38,8 +35,8 @@ class OfonoTrustedActionsManager:
                 if self.send_sms(sender_clean, msg):
                     try:
                         self.db.add_message(sender_clean, "outgoing", msg, "sent", sender="Me")
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(f"[{prefix}] Failed to record rate-limit reply: {e}")
                 history['last_warning'] = now
 
             self.trusted_trigger_history[sender_clean] = history
@@ -145,8 +142,6 @@ class OfonoTrustedActionsManager:
         body_clean = body.strip()
 
         now = time.time()
-        if not hasattr(self, 'trusted_trigger_history'):
-            self.trusted_trigger_history = {}
         history = self.trusted_trigger_history.get(sender_clean, {'last_success': 0, 'last_warning': 0, 'last_attempt': 0})
 
         entries = self._trusted_action_entries()
@@ -190,22 +185,24 @@ class OfonoTrustedActionsManager:
         entry's list getter is called to fetch the contact list.
         """
         prefix = entry["prefix"]
-        seed = entry["seed_getter"]()
-        if not seed:
-            logger.warning(f"[{prefix}] TOTP seed not configured. Dropping message.")
-            return False
-
         if trusted is None:
             trusted = entry["list_getter"]()
 
         expected_parts = entry["expected_parts"]
         maxsplit = expected_parts - 1 if expected_parts > 1 else -1
+        seed = None
         try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
                 t_msg = t.get("secret", "").strip()
                 if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
                     continue
+
+                if seed is None:
+                    seed = entry["seed_getter"]()
+                if not seed:
+                    logger.warning(f"[{prefix}] TOTP seed not configured. Dropping message.")
+                    return False
 
                 parts = body_clean[len(t_msg):].strip().split(" ", maxsplit)
                 if len(parts) != expected_parts or not self._verify_totp(seed, parts[0]):

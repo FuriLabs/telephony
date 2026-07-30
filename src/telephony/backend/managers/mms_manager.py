@@ -24,6 +24,7 @@ from loguru import logger
 from gi.repository import Gio, GLib, GObject
 
 from ..utils.phone_utils import get_own_number, normalize_number
+from ..utils.thread_utils import run_in_background
 
 
 NOTIFY_DBUS_NAME = "org.freedesktop.Notifications"
@@ -196,8 +197,12 @@ class MmsManager(GObject.Object):
                 self.processed_paths.add(msg_path)
 
                 logger.debug("[MMS-LOG] MSG-PROCESS | Starting parse and store sequence")
-                self._parse_and_store(msg_path, props)
-                self._delete_message_from_daemon(msg_path)
+
+                def process():
+                    self._parse_and_store(msg_path, props)
+                    self._delete_message_from_daemon(msg_path)
+
+                run_in_background(process)
 
             elif status == 'draft':
                 logger.debug("[MMS-LOG] MSG-WAIT | Notification only. Waiting for auto-download.")
@@ -465,7 +470,7 @@ class MmsManager(GObject.Object):
                     sender=sender
                 )
 
-            self.emit('message-received', sender, recipients, str(date), body_text, final_atts, sender_name)
+            GLib.idle_add(self.emit, 'message-received', sender, recipients, str(date), body_text, final_atts, sender_name)
 
         except Exception as e:
             logger.error(f"[MMS] Parse error: {e}")

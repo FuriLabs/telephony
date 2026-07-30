@@ -24,6 +24,9 @@ NOTIFY_DBUS_PATH = "/org/freedesktop/Notifications"
 NOTIFY_INTERFACE = "org.freedesktop.Notifications"
 EMERGENCY_APP_ID = "io.furios.Telephony.emergency"
 
+SELECTION_REVERT_MS = 15000
+CONFIRM_REVERT_MS = 10000
+
 
 class EmergencyManager:
     """
@@ -46,6 +49,7 @@ class EmergencyManager:
         self.calls_active = False
 
         self.respawn_id = None
+        self._revert_timer_id = None
 
         self.monitor = EmergencyService()
         self.monitor.connect('lock-state-changed', self._on_lock_state_changed)
@@ -149,7 +153,7 @@ class EmergencyManager:
                 "io.furios.Telephony.Emergency", [action_id, f"🟢 {name}"]
             )
 
-        GLib.timeout_add(15000, self._timeout_revert, "SELECTION")
+        self._arm_revert_timer(SELECTION_REVERT_MS, "SELECTION")
 
     def _show_confirmation(self, number, name):
         """Show confirmation dialog before dialing."""
@@ -164,7 +168,19 @@ class EmergencyManager:
             [f"app.emergency_confirm::{number}", _("🟢 Yes, Call"), "app.emergency_cancel::", _("🔴 No, Return")]
         )
 
-        GLib.timeout_add(10000, self._timeout_revert, "CONFIRM")
+        self._arm_revert_timer(CONFIRM_REVERT_MS, "CONFIRM")
+
+    def _arm_revert_timer(self, interval_ms, state):
+        """Arm the revert timer, replacing any pending one."""
+        if self._revert_timer_id:
+            GLib.source_remove(self._revert_timer_id)
+        self._revert_timer_id = GLib.timeout_add(interval_ms, self._run_revert, state)
+
+    def _run_revert(self, originating_state):
+        """Run the revert timer callback once."""
+        self._revert_timer_id = None
+        self._timeout_revert(originating_state)
+        return False
 
     def _timeout_revert(self, originating_state):
         """Revert to guardian state on timeout."""
@@ -250,11 +266,6 @@ class EmergencyManager:
 
     def _on_notification_closed_signal(self, monitor, nid, reason):
         """Handle notification closed signal."""
-        try:
-            nid = int(nid)
-        except ValueError:
-            pass
-
         keys_to_remove = [k for k, v in self.active_notifications.items() if v == nid]
         for k in keys_to_remove:
             del self.active_notifications[k]

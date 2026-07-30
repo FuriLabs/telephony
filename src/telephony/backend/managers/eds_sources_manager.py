@@ -156,6 +156,7 @@ class EdsSourcesManager:
                 if item['enabled']:
                     self._init_source(item)
 
+            self._rebuild_lookup_map()
             self.is_ready = True
             GLib.idle_add(self.emit, 'contacts-loaded')
 

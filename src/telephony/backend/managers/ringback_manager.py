@@ -14,9 +14,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import threading
+
 import pulsectl
 from loguru import logger
 from gi.repository import GObject, GLib, Gio, Gst
+
+from ..utils.thread_utils import run_in_background
 
 DEFAULT_TONE = "/usr/share/sounds/freedesktop/stereo/phone-outgoing-calling.oga"
 LOOP_DELAY_MS = 1500
@@ -34,14 +38,19 @@ class RingbackManager(GObject.Object):
         self.gsettings_mgr = gsettings_mgr
 
         self.pipeline = None
+        self.bus = None
+        self.bus_handler_ids = []
         self.current_call_path = None
         self.active_sound_file = None
         self.loop_timer_id = None
+        self.starting = False
+        self.ringback_wanted = False
 
         self.pulse_client = None
         self.sink_module_id = None
         self.loopback_module_id = None
         self.modules_loaded = False
+        self._modules_lock = threading.Lock()
 
         try:
             if not Gst.is_initialized():
@@ -104,31 +113,37 @@ class RingbackManager(GObject.Object):
             self._stop_ringback()
 
     def _ensure_pulse_modules_loaded(self):
-        """Load PulseAudio modules if not already loaded."""
-        try:
-            if self.modules_loaded and self.pulse_client:
+        """Load PulseAudio modules if not already loaded; runs on a worker thread."""
+        with self._modules_lock:
+            try:
+                if self.modules_loaded and self.pulse_client:
+                    return True
+
+                logger.info("[RingbackManager] Loading PulseAudio modules...")
+                self.pulse_client = pulsectl.Pulse('telephony-ringback')
+
+                mod1 = self.pulse_client.module_load("module-null-sink", "sink_name=call_injector")
+                self.sink_module_id = int(mod1)
+                logger.info(f"[RingbackManager] Loaded null-sink: {self.sink_module_id}")
+
+                mod2 = self.pulse_client.module_load("module-loopback", "source=call_injector.monitor sink=sink.primary_output")
+                self.loopback_module_id = int(mod2)
+                logger.info(f"[RingbackManager] Loaded loopback: {self.loopback_module_id}")
+
+                self.modules_loaded = True
                 return True
-
-            logger.info("[RingbackManager] Loading PulseAudio modules...")
-            self.pulse_client = pulsectl.Pulse('telephony-ringback')
-
-            mod1 = self.pulse_client.module_load("module-null-sink", "sink_name=call_injector")
-            self.sink_module_id = int(mod1)
-            logger.info(f"[RingbackManager] Loaded null-sink: {self.sink_module_id}")
-
-            mod2 = self.pulse_client.module_load("module-loopback", "source=call_injector.monitor sink=sink.primary_output")
-            self.loopback_module_id = int(mod2)
-            logger.info(f"[RingbackManager] Loaded loopback: {self.loopback_module_id}")
-
-            self.modules_loaded = True
-            return True
-        except Exception as e:
-            logger.error(f"[RingbackManager] Failed to load pulse modules: {e}")
-            self._ensure_pulse_modules_unloaded()
-            return False
+            except Exception as e:
+                logger.error(f"[RingbackManager] Failed to load pulse modules: {e}")
+                self._unload_modules_locked()
+                return False
 
     def _ensure_pulse_modules_unloaded(self):
-        """Unload PulseAudio modules if loaded."""
+        """Unload PulseAudio modules if loaded; runs on a worker thread."""
+        with self._modules_lock:
+            self._unload_modules_locked()
+
+    def _unload_modules_locked(self):
+        """Unload the modules and drop the client; caller holds the modules lock."""
         try:
             if self.pulse_client:
                 if self.loopback_module_id is not None:
@@ -137,7 +152,6 @@ class RingbackManager(GObject.Object):
                         logger.info(f"[RingbackManager] Unloaded loopback module: {self.loopback_module_id}")
                     except Exception as e:
                         logger.warning(f"[RingbackManager] Unload loopback failed: {e}")
-                    self.loopback_module_id = None
 
                 if self.sink_module_id is not None:
                     try:
@@ -145,31 +159,49 @@ class RingbackManager(GObject.Object):
                         logger.info(f"[RingbackManager] Unloaded sink module: {self.sink_module_id}")
                     except Exception as e:
                         logger.warning(f"[RingbackManager] Unload sink failed: {e}")
-                    self.sink_module_id = None
 
                 self.pulse_client.close()
-                self.pulse_client = None
-
-            self.modules_loaded = False
         except Exception as e:
             logger.error(f"[RingbackManager] Unload pulse modules error: {e}")
+        finally:
+            self.pulse_client = None
+            self.loopback_module_id = None
+            self.sink_module_id = None
+            self.modules_loaded = False
 
     def _start_ringback(self):
-        """Start the ringback tone playback using playbin."""
+        """Start the ringback tone, loading pulse modules off the main thread."""
+        if self.pipeline or self.starting:
+            return
+
         enabled_str = self.gsettings_mgr.get_setting("ringback_enabled")
         if enabled_str != "true":
             logger.info("[RingbackManager] Ringback disabled in settings.")
             return
 
-        if not self._ensure_pulse_modules_loaded():
-            logger.error("[RingbackManager] Cannot start ringback: Pulse modules failed.")
-            return
+        self.starting = True
+        self.ringback_wanted = True
 
-        if self.pipeline:
-            _, state, _ = self.pipeline.get_state(0)
-            if state in [Gst.State.PLAYING, Gst.State.PAUSED]:
+        def loaded(ok):
+            self.starting = False
+            if not self.ringback_wanted:
+                if ok:
+                    run_in_background(self._ensure_pulse_modules_unloaded)
                 return
+            if not ok:
+                logger.error("[RingbackManager] Cannot start ringback: Pulse modules failed.")
+                return
+            if not self.pipeline:
+                self._start_pipeline()
 
+        def failed(error):
+            self.starting = False
+            logger.error(f"[RingbackManager] Pulse module load failed: {error}")
+
+        run_in_background(self._ensure_pulse_modules_loaded, on_complete=loaded, on_error=failed)
+
+    def _start_pipeline(self):
+        """Build and start the playbin pipeline into the injector sink."""
         custom_file = self.gsettings_mgr.get_setting("ringback_custom_file")
 
         self.active_sound_file = DEFAULT_TONE
@@ -197,10 +229,12 @@ class RingbackManager(GObject.Object):
             uri = f"file://{self.active_sound_file}"
             self.pipeline.set_property("uri", uri)
 
-            bus = self.pipeline.get_bus()
-            bus.add_signal_watch()
-            bus.connect("message::eos", self._on_eos)
-            bus.connect("message::error", self._on_error)
+            self.bus = self.pipeline.get_bus()
+            self.bus.add_signal_watch()
+            self.bus_handler_ids = [
+                self.bus.connect("message::eos", self._on_eos),
+                self.bus.connect("message::error", self._on_error),
+            ]
 
             ret = self.pipeline.set_state(Gst.State.PLAYING)
             if ret == Gst.StateChangeReturn.FAILURE:
@@ -214,17 +248,32 @@ class RingbackManager(GObject.Object):
             self._stop_ringback()
 
     def _stop_ringback(self):
-        """Stop ringback playback and unload modules."""
+        """Stop ringback playback, release the bus watch and unload modules."""
+        self.ringback_wanted = False
         if self.loop_timer_id:
             GLib.source_remove(self.loop_timer_id)
             self.loop_timer_id = None
+
+        if self.bus:
+            for handler_id in self.bus_handler_ids:
+                try:
+                    self.bus.disconnect(handler_id)
+                except Exception as e:
+                    logger.debug(f"[RingbackManager] Bus disconnect error (ignorable): {e}")
+            self.bus_handler_ids = []
+            try:
+                self.bus.remove_signal_watch()
+            except Exception as e:
+                logger.debug(f"[RingbackManager] Bus watch removal error (ignorable): {e}")
+            self.bus = None
 
         if self.pipeline:
             logger.info("[RingbackManager] Stopping pipeline.")
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline = None
 
-        self._ensure_pulse_modules_unloaded()
+        if self.modules_loaded or self.pulse_client:
+            run_in_background(self._ensure_pulse_modules_unloaded)
 
     def _on_eos(self, bus, msg):
         """Handle End of Stream by pausing and scheduling a delayed restart."""
@@ -253,7 +302,11 @@ class RingbackManager(GObject.Object):
         self._stop_ringback()
 
     def _pause_mpris_players(self):
-        """Pause any active media players via DBus."""
+        """Pause media players off the main thread."""
+        run_in_background(self._pause_mpris_players_task)
+
+    def _pause_mpris_players_task(self):
+        """Pause any active media players via DBus; runs on a worker thread."""
         try:
             proxy = Gio.DBusProxy.new_sync(
                 self.session_bus, Gio.DBusProxyFlags.NONE, None,

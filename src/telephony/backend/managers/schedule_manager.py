@@ -16,6 +16,8 @@
 import json
 from datetime import datetime, timedelta
 from loguru import logger
+
+from ..utils.thread_utils import run_in_background
 from gi.repository import GLib
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -33,6 +35,8 @@ class ScheduleManager:
         self.ofono = ofono_manager
         self.mms = mms_manager
         self._timer_id = None
+        self._scan_running = False
+        self._rescan_queued = False
 
     def start(self):
         """Start the scheduler logic."""
@@ -40,16 +44,36 @@ class ScheduleManager:
         self.schedule_next_run()
 
     def schedule_next_run(self):
-        """
-        Determine the next action: process pending now, or wait for future event.
-        """
+        """Scan and send due messages off the main thread, then arm the timer."""
+        if self._scan_running:
+            self._rescan_queued = True
+            return
+
         if self._timer_id:
             GLib.source_remove(self._timer_id)
             self._timer_id = None
 
-        self._check_and_send_pending()
+        self._scan_running = True
 
-        next_ts_str = self.db.get_next_scheduled_timestamp()
+        def scan():
+            self._check_and_send_pending()
+            return self.db.get_next_scheduled_timestamp()
+
+        run_in_background(scan, on_complete=self._arm_next_timer, on_error=self._on_scan_error)
+
+    def _on_scan_error(self, error):
+        """Re-arm the scheduler after a failed scan."""
+        self._scan_running = False
+        logger.error(f"[ScheduleManager] Scheduled send scan failed, retrying in 60s: {error}")
+        self._timer_id = GLib.timeout_add_seconds(60, self._on_timeout_run)
+
+    def _arm_next_timer(self, next_ts_str):
+        """Arm the wakeup timer for the next scheduled message; main thread."""
+        self._scan_running = False
+        if self._rescan_queued:
+            self._rescan_queued = False
+            self.schedule_next_run()
+            return
 
         if not next_ts_str:
             logger.debug("[ScheduleManager] No future messages found. Scheduler idle.")

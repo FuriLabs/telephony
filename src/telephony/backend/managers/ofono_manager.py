@@ -25,6 +25,7 @@ from gi.repository import Gio, GLib, GObject
 
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.system_utils import restart_ril_modem
+from ...backend.utils.thread_utils import run_in_background
 from ..services.ofono_service import OfonoService
 from .location_manager import LocationManager
 from .audio_manager import TelephonyAudioManager
@@ -92,7 +93,6 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         self.audio = TelephonyAudioManager()
         self.tmate_manager = TmateManager(self)
         self.device_lock_manager = DeviceLockManager()
-        self.trusted_trigger_history = {}
         self.callback_manager = CallbackManager(self)
         self.relay_manager = RelayManager(self)
 
@@ -124,7 +124,7 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         if status == "offline" or status == "error":
             if len(self.active_calls) > 0:
                 logger.error("[OfonoManager] Modem lost during active call! Triggering RIL restart.")
-                restart_ril_modem()
+                run_in_background(restart_ril_modem)
 
             self._cleanup_state()
 

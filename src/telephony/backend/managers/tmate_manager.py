@@ -38,7 +38,8 @@ class TmateManager:
         try:
             with urllib.request.urlopen(CONNCHECK_URL, timeout=5) as res:
                 has_internet = res.read().decode().strip() == "OK"
-        except Exception:
+        except Exception as e:
+            logger.debug(f"[SMStmate] Connectivity check failed: {e}")
             has_internet = False
 
         if not has_internet:
@@ -82,8 +83,8 @@ class TmateManager:
                 if self.ofono_manager.send_sms(target_number, msg):
                     try:
                         self.ofono_manager.db.add_message(target_number, "outgoing", msg, "sent", sender="Me")
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(f"[SMStmate] Failed to record sent SMS: {e}")
             else:
                 self.ofono_manager.send_sms(target_number, "tmate failed to start or get SSH string.")
         except Exception as e:
