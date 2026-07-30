@@ -22,6 +22,7 @@ import sqlite3
 from loguru import logger
 
 from .importer_core_utils import _get_chatty_db_path, _get_value, _get_chatty_mms_path, _get_calls_db_path, _parse_generic_timestamp
+from .phone_utils import normalize_number
 
 
 def import_local_chatty(db_manager, db_path=None, mms_dir=None):
@@ -72,6 +73,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
                 if not phone:
                     continue
 
+                norm_number = normalize_number(str(phone), permissive=True)
                 uid = _get_value(row_dict, ['uid', 'id', 'message_id'])
                 text = _get_value(row_dict, ['text', 'body', 'message', 'msg', 'content'], "")
                 time_val = _get_value(row_dict, ['time', 'date', 'timestamp', 'created', 'created_at'])
@@ -80,7 +82,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
                 dir_str = "incoming" if direction in (1, "1", True, "incoming") else "outgoing"
                 time_str = _parse_generic_timestamp(time_val)
 
-                sig = (str(phone), str(text), time_str, dir_str)
+                sig = (norm_number, str(text), time_str, dir_str)
                 if sig in existing_messages:
                     continue
 
@@ -97,12 +99,12 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
 
                 att_json = json.dumps(attachments) if attachments else "[]"
                 msg_type = 'mms' if attachments else 'sms'
-                sender = "Me" if dir_str == "outgoing" else str(phone)
+                sender = "Me" if dir_str == "outgoing" else norm_number
 
-                if not phone or not dir_str or not time_str:
+                if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping local message: missing required details (timestamp missing)")
                     continue
-                to_insert.append((str(phone), dir_str, str(text), "read", time_str, msg_type, att_json, sender))
+                to_insert.append((norm_number, dir_str, str(text), "read", time_str, msg_type, att_json, sender))
             except Exception as e:
                 logger.warning(f"[Importer] Error processing Chatty message row: {e}")
                 continue
@@ -120,7 +122,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
                 db_manager.conn_messages.commit()
             count = len(to_insert)
 
-        return True, _(f"Imported {count} messages from Chatty.")
+        return True, _("Imported {count} messages from Chatty.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing Chatty: {e}")
         return False, str(e)
@@ -182,7 +184,7 @@ def import_local_calls(db_manager, db_path=None):
                     dir_str = "missed"
 
                 time_str = _parse_generic_timestamp(start_time)
-                norm_number = str(target)
+                norm_number = normalize_number(str(target))
 
                 sig = (norm_number, time_str, duration, dir_str)
                 if sig in existing_calls:
@@ -208,7 +210,7 @@ def import_local_calls(db_manager, db_path=None):
                 db_manager.conn_calls.commit()
             count = len(to_insert)
 
-        return True, _(f"Imported {count} calls.")
+        return True, _("Imported {count} calls.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing Calls: {e}")
         return False, str(e)

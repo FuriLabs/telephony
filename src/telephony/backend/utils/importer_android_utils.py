@@ -25,6 +25,7 @@ import xml.etree.ElementTree as ET
 from loguru import logger
 
 from .importer_core_utils import _get_xml_value, _parse_generic_timestamp
+from .phone_utils import normalize_number
 
 
 def import_android_sms(db_manager, file_path):
@@ -42,6 +43,9 @@ def import_android_sms(db_manager, file_path):
             db_c.execute("SELECT remote_number, body, timestamp, direction FROM messages")
             existing_messages = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
 
+        local_att_dir = os.path.join(db_manager.get_data_dir(), "attachments")
+        os.makedirs(local_att_dir, exist_ok=True)
+
         count = 0
         for msg in root.findall('sms') + root.findall('mms'):
             try:
@@ -49,11 +53,9 @@ def import_android_sms(db_manager, file_path):
                 if not phone:
                     continue
 
+                norm_number = normalize_number(str(phone), permissive=True)
                 msg_type = _get_xml_value(msg, ['type', 'msg_box', 'direction'])
                 dir_str = "incoming" if msg_type in ("1", "incoming", 1) else "outgoing"
-
-                local_att_dir = os.path.expanduser("~/.local/share/telephony/attachments")
-                os.makedirs(local_att_dir, exist_ok=True)
 
                 body = _get_xml_value(msg, ['body', 'text', 'content', 'message', 'msg'], '')
 
@@ -68,7 +70,7 @@ def import_android_sms(db_manager, file_path):
                 ts = _get_xml_value(msg, ['date', 'time', 'timestamp', 'created'])
                 time_str = _parse_generic_timestamp(ts)
 
-                sig = (str(phone), str(body), time_str, dir_str)
+                sig = (norm_number, str(body), time_str, dir_str)
                 if sig in existing_messages:
                     continue
 
@@ -95,7 +97,7 @@ def import_android_sms(db_manager, file_path):
                                     with open(dest_path, "wb") as f:
                                         f.write(decoded)
 
-                                    local_atts.append({"filepath": dest_path, "mime": ct})
+                                    local_atts.append(dest_path)
                                 except Exception as e:
                                     logger.warning(f"[Importer] Failed to decode MMS part: {e}")
 
@@ -103,11 +105,11 @@ def import_android_sms(db_manager, file_path):
                             attachments_json = json.dumps(local_atts)
                             db_msg_type = "mms"
 
-                sender = "Me" if dir_str == "outgoing" else str(phone)
-                if not phone or not dir_str or not time_str:
+                sender = "Me" if dir_str == "outgoing" else norm_number
+                if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping android message: missing required details (timestamp missing)")
                     continue
-                to_insert.append((str(phone), dir_str, str(body), "read", time_str, db_msg_type, attachments_json, sender))
+                to_insert.append((norm_number, dir_str, str(body), "read", time_str, db_msg_type, attachments_json, sender))
 
                 count += 1
             except Exception as e:
@@ -125,7 +127,7 @@ def import_android_sms(db_manager, file_path):
                 db_manager.conn_messages.commit()
             count = len(to_insert)
 
-        return True, _(f"Imported {count} messages from Android backup.")
+        return True, _("Imported {count} messages from Android backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing Android SMS: {e}")
         return False, str(e)
@@ -171,7 +173,7 @@ def import_android_calls(db_manager, file_path):
                 ts = _get_xml_value(call, ['date', 'time', 'timestamp', 'start'])
                 time_str = _parse_generic_timestamp(ts)
 
-                norm_number = str(phone)
+                norm_number = normalize_number(str(phone))
 
                 sig = (norm_number, time_str, duration, dir_str)
                 if sig in existing_calls:
@@ -198,7 +200,7 @@ def import_android_calls(db_manager, file_path):
                 db_manager.conn_calls.commit()
             count = len(to_insert)
 
-        return True, _(f"Imported {count} calls from Android backup.")
+        return True, _("Imported {count} calls from Android backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing Android Calls: {e}")
         return False, str(e)

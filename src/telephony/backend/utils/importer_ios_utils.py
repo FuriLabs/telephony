@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import mimetypes
 from gettext import gettext as _
 
 import json
@@ -26,6 +25,9 @@ from loguru import logger
 from .datetime_utils import format_timestamp
 
 from .importer_core_utils import _get_value
+from .phone_utils import normalize_number
+
+MAC_ABSOLUTE_EPOCH = 978307200
 
 
 def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
@@ -99,7 +101,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
             except Exception as e:
                 logger.warning(f"[Importer] Failed to read Manifest.db: {e}")
 
-        local_att_dir = os.path.expanduser("~/.local/share/telephony/attachments")
+        local_att_dir = os.path.join(db_manager.get_data_dir(), "attachments")
         os.makedirs(local_att_dir, exist_ok=True)
 
         to_insert = []
@@ -116,6 +118,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                 if not phone:
                     continue
 
+                norm_number = normalize_number(str(phone), permissive=True)
                 text = _get_value(row_dict, ['text', 'body', 'message'], "")
                 if text is None:
                     text = ""
@@ -124,23 +127,23 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
 
                 dir_str = "outgoing" if is_from_me in (1, "1", True) else "incoming"
 
-                mac_absolute_epoch = 978307200
                 try:
                     date_float = float(date)
                     if len(str(int(date_float))) > 10:
                         date_float = date_float / 1000000000
-                    unix_ts = date_float + mac_absolute_epoch
+                    unix_ts = date_float + MAC_ABSOLUTE_EPOCH
                     time_str = format_timestamp(datetime.fromtimestamp(unix_ts))
-                except Exception:
+                except Exception as e:
+                    logger.warning(f"[Importer] Error parsing iOS message date {date}: {e}")
                     time_str = format_timestamp()
 
-                sig = (str(phone), str(text), time_str, dir_str)
+                sig = (norm_number, str(text), time_str, dir_str)
                 if sig in existing_messages:
                     continue
 
                 existing_messages.add(sig)
 
-                sender = "Me" if dir_str == "outgoing" else str(phone)
+                sender = "Me" if dir_str == "outgoing" else norm_number
 
                 attachments_json = "[]"
                 msg_type = "sms"
@@ -162,8 +165,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                                     dest_path = os.path.join(local_att_dir, new_filename)
                                     try:
                                         shutil.copy2(backup_file_path, dest_path)
-                                        mime = att["mime_type"] or mimetypes.guess_type(dest_path)[0] or "application/octet-stream"
-                                        local_atts.append({"filepath": dest_path, "mime": mime})
+                                        local_atts.append(dest_path)
                                         msg_type = "mms"
                                     except Exception as e:
                                         logger.warning(f"[Importer] Failed to copy attachment {rel_path}: {e}")
@@ -171,10 +173,10 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                     if local_atts:
                         attachments_json = json.dumps(local_atts)
 
-                if not phone or not dir_str or not time_str:
+                if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping iOS message: missing required details (timestamp missing)")
                     continue
-                to_insert.append((str(phone), dir_str, str(text), "read", time_str, msg_type, attachments_json, sender))
+                to_insert.append((norm_number, dir_str, str(text), "read", time_str, msg_type, attachments_json, sender))
 
             except Exception as e:
                 logger.warning(f"[Importer] Error processing iOS SMS row: {e}")
@@ -192,7 +194,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
             count = len(to_insert)
 
         conn.close()
-        return True, _(f"Imported {count} messages from iOS backup.")
+        return True, _("Imported {count} messages from iOS backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing iOS SMS: {e}")
         return False, str(e)
@@ -260,14 +262,14 @@ def import_ios_calls(db_manager, file_path):
                 else:
                     dir_str = "incoming"
 
-                mac_absolute_epoch = 978307200
                 try:
-                    unix_ts = float(date) + mac_absolute_epoch
+                    unix_ts = float(date) + MAC_ABSOLUTE_EPOCH
                     time_str = format_timestamp(datetime.fromtimestamp(unix_ts))
-                except Exception:
+                except Exception as e:
+                    logger.warning(f"[Importer] Error parsing iOS call date {date}: {e}")
                     time_str = format_timestamp()
 
-                norm_number = str(phone)
+                norm_number = normalize_number(str(phone))
 
                 sig = (norm_number, time_str, duration, dir_str)
                 if sig in existing_calls:
@@ -298,7 +300,7 @@ def import_ios_calls(db_manager, file_path):
             count = len(to_insert)
 
         conn.close()
-        return True, _(f"Imported {count} calls from iOS backup.")
+        return True, _("Imported {count} calls from iOS backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing iOS Calls: {e}")
         return False, str(e)
