@@ -14,10 +14,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import dbus
 import pulsectl
 from loguru import logger
-from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GObject, GLib, Gio, Gst
 
 DEFAULT_TONE = "/usr/share/sounds/freedesktop/stereo/phone-outgoing-calling.oga"
@@ -29,11 +27,10 @@ class RingbackManager(GObject.Object):
     Manages ringback tone generation for outgoing calls using GStreamer playbin and PulseAudio.
     """
 
-    def __init__(self, ofono_manager, db_manager, gsettings_mgr=None):
-        """Initialize the Ringback Manager with DBus and GStreamer."""
+    def __init__(self, ofono_manager, gsettings_mgr=None):
+        """Initialize the Ringback Manager from the ofono manager's call signals."""
         super().__init__()
         self.ofono = ofono_manager
-        self.db = db_manager
         self.gsettings_mgr = gsettings_mgr
 
         self.pipeline = None
@@ -53,84 +50,50 @@ class RingbackManager(GObject.Object):
         except Exception as e:
             logger.warning(f"[RingbackManager] GStreamer init warning: {e}")
 
-        self.system_bus = None
         self.session_bus = None
-
         try:
-            DBusGMainLoop(set_as_default=True)
-            self.system_bus = dbus.SystemBus()
             self.session_bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-            logger.info("[RingbackManager] DBus connections established.")
         except Exception as e:
-            logger.error(f"[RingbackManager] DBus init failed: {e}")
+            logger.error(f"[RingbackManager] Session bus init failed: {e}")
 
-        if self.system_bus:
-            self.system_bus.add_signal_receiver(
-                self._on_call_added,
-                bus_name="org.ofono",
-                signal_name="CallAdded",
-                dbus_interface="org.ofono.VoiceCallManager"
-            )
-            self.system_bus.add_signal_receiver(
-                self._on_call_removed,
-                bus_name="org.ofono",
-                signal_name="CallRemoved",
-                dbus_interface="org.ofono.VoiceCallManager"
-            )
+        self.ofono.connect('call-added', self._on_call_added)
+        self.ofono.connect('call-changed', self._on_call_changed)
+        self.ofono.connect('call-removed', self._on_call_removed)
+        self.ofono.connect('connection-status', self._on_connection_status)
 
-            self.system_bus.add_signal_receiver(
-                self._on_name_owner_changed,
-                bus_name="org.freedesktop.DBus",
-                signal_name="NameOwnerChanged",
-                dbus_interface="org.freedesktop.DBus",
-                arg0="org.ofono"
-            )
-
-        self.monitored_calls = {}
         logger.info("[RingbackManager] Initialized successfully.")
 
-    def _on_name_owner_changed(self, name, _old_owner, new_owner):
-        """Handle Ofono service disappearance to cleanup resources."""
-        if name == "org.ofono" and not new_owner:
-            logger.warning("[RingbackManager] Ofono service disappeared! Cleaning up.")
+    def _on_connection_status(self, _manager, status, _msg):
+        """Stop ringback when the modem disappears."""
+        if status in ("offline", "error"):
             self._stop_ringback()
             self.current_call_path = None
-            self.monitored_calls.clear()
 
-    def _on_call_added(self, path, properties):
+    def _on_call_added(self, _manager, path, data):
         """Handle new call creation and check if ringback is needed."""
         self._pause_mpris_players()
-        direction = properties.get("Direction", "")
-        state = properties.get("State", "")
-        is_outgoing = (direction == "outgoing") or (state in ["dialing", "alerting"])
+        state = data.get('state', '')
+        if data.get('direction') != 'outgoing' or state not in ("dialing", "alerting"):
+            return
 
-        if is_outgoing:
-            logger.info(f"[RingbackManager] Outgoing call detected: {path} (State: {state})")
-            self.current_call_path = path
-            self.system_bus.add_signal_receiver(
-                self._on_call_properties_changed,
-                bus_name="org.ofono",
-                signal_name="PropertyChanged",
-                path=path,
-                dbus_interface="org.ofono.VoiceCall"
-            )
-            self.monitored_calls[path] = True
-            self._check_call_state(state)
+        logger.info(f"[RingbackManager] Outgoing call detected: {path} (State: {state})")
+        self.current_call_path = path
+        self._check_call_state(state)
 
-    def _on_call_removed(self, path):
-        """Handle call removal and stop ringback if active."""
-        if path == self.current_call_path:
-            logger.info(f"[RingbackManager] Call removed: {path}. Stopping ringback.")
-            self._stop_ringback()
-            self.current_call_path = None
-        if path in self.monitored_calls:
-            del self.monitored_calls[path]
-
-    def _on_call_properties_changed(self, name, value):
+    def _on_call_changed(self, _manager, path, state):
         """Monitor call state changes to trigger or stop ringback."""
-        if name == "State":
-            logger.debug(f"[RingbackManager] Call state changed: {value}")
-            self._check_call_state(value)
+        if path != self.current_call_path:
+            return
+        logger.debug(f"[RingbackManager] Call state changed: {state}")
+        self._check_call_state(state)
+
+    def _on_call_removed(self, _manager, path):
+        """Handle call removal and stop ringback if active."""
+        if path != self.current_call_path:
+            return
+        logger.info(f"[RingbackManager] Call removed: {path}. Stopping ringback.")
+        self._stop_ringback()
+        self.current_call_path = None
 
     def _check_call_state(self, state):
         """Evaluate call state to manage ringback lifecycle."""

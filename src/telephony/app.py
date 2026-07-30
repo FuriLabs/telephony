@@ -142,7 +142,7 @@ class App(Adw.Application):
         self.ofono = OfonoManager(self.db, self.gsettings_mgr)
 
         self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
-        self.ringback = RingbackManager(self.ofono, self.db, self.gsettings_mgr)
+        self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
 
         self.incall = None
 
