@@ -568,37 +568,64 @@ class TelephonyDaemonDBus:
             self.db.clear_blocklist()
         invocation.return_value(None)
 
+    def _is_protected_source(self, source_uid, log_template):
+        """Return True when the source must not be modified via CLI.
+
+        log_template must contain a {name} placeholder which is filled with
+        the protected source name for the refusal warning.
+        """
+        if source_uid == "system-address-book":
+            logger.warning(log_template.format(name="system-address-book"))
+            return True
+        if not self.eds:
+            return False
+        sources = self.eds.get_sources_info()
+        for s in sources:
+            if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
+                logger.warning(log_template.format(name="Andromeda Contacts"))
+                return True
+        return False
+
+    def _is_protected_contact_source(self, source_uid):
+        """Return True when a contact's source is protected, without logging."""
+        if source_uid == "system-address-book":
+            return True
+        if not (self.eds.sources and source_uid in self.eds.sources):
+            return False
+        return self.eds.sources[source_uid].get('name') == "Andromeda Contacts"
+
+    def _is_protected_contact(self, contact, uid, verb):
+        """Return True when the contact lives in a protected source.
+
+        Logs the exact per-verb refusal warning used by the CLI handlers.
+        """
+        s_uid = contact.get('source_uid')
+        if s_uid == "system-address-book":
+            logger.warning(f"[DBus] Refusing to {verb} system-address-book Contact {uid} via CLI")
+            return True
+        if self._is_protected_contact_source(s_uid):
+            logger.warning(f"[DBus] Refusing to {verb} Andromeda Contact {uid} via CLI")
+            return True
+        return False
+
+    def _delete_unprotected_contacts(self):
+        """Delete every cached contact that is not in a protected source."""
+        uids_to_delete = []
+        for uid, contact in list(self.eds.cache.items()):
+            if not self._is_protected_contact_source(contact.get('source_uid')):
+                uids_to_delete.append(uid)
+
+        for uid in uids_to_delete:
+            self.eds.delete_contact(uid)
+
     def _handle_clearcontacts(self, parameters, invocation):
         """Handle ClearContacts command."""
         source_uid = parameters.unpack()[0]
 
-        is_protected = False
-        if source_uid == "system-address-book":
-            is_protected = True
-            logger.warning("[DBus] Refusing to clear system-address-book via CLI")
-        elif self.eds:
-            sources = self.eds.get_sources_info()
-            for s in sources:
-                if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
-                    is_protected = True
-                    logger.warning("[DBus] Refusing to clear Andromeda Contacts via CLI")
-                    break
+        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
 
         if not source_uid and self.eds:
-            uids_to_delete = []
-            for uid, contact in list(self.eds.cache.items()):
-                c_source_uid = contact.get('source_uid')
-                protected = False
-                if c_source_uid == "system-address-book":
-                    protected = True
-                elif self.eds.sources and c_source_uid in self.eds.sources and self.eds.sources[c_source_uid].get('name') == "Andromeda Contacts":
-                    protected = True
-
-                if not protected:
-                    uids_to_delete.append(uid)
-
-            for uid in uids_to_delete:
-                self.eds.delete_contact(uid)
+            self._delete_unprotected_contacts()
             invocation.return_value(None)
             return
 
@@ -613,33 +640,10 @@ class TelephonyDaemonDBus:
         if self.db:
             self.db.clear_everything()
 
-        is_protected = False
-        if source_uid == "system-address-book":
-            is_protected = True
-            logger.warning("[DBus] Refusing to clear system-address-book via CLI")
-        elif self.eds:
-            sources = self.eds.get_sources_info()
-            for s in sources:
-                if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
-                    is_protected = True
-                    logger.warning("[DBus] Refusing to clear Andromeda Contacts via CLI")
-                    break
+        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
 
         if not source_uid and self.eds:
-            uids_to_delete = []
-            for uid, contact in list(self.eds.cache.items()):
-                c_source_uid = contact.get('source_uid')
-                protected = False
-                if c_source_uid == "system-address-book":
-                    protected = True
-                elif self.eds.sources and c_source_uid in self.eds.sources and self.eds.sources[c_source_uid].get('name') == "Andromeda Contacts":
-                    protected = True
-
-                if not protected:
-                    uids_to_delete.append(uid)
-
-            for uid in uids_to_delete:
-                self.eds.delete_contact(uid)
+            self._delete_unprotected_contacts()
         elif not is_protected and self.eds:
             self.eds.delete_all_contacts(source_uid=source_uid if source_uid else None)
         try:
@@ -655,17 +659,7 @@ class TelephonyDaemonDBus:
         source_uid = parameters.unpack()[0]
         success = False
 
-        is_protected = False
-        if source_uid == "system-address-book":
-            is_protected = True
-            logger.warning("[DBus] Refusing to delete system-address-book")
-        elif self.eds:
-            sources = self.eds.get_sources_info()
-            for s in sources:
-                if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
-                    is_protected = True
-                    logger.warning("[DBus] Refusing to delete Andromeda Contacts")
-                    break
+        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to delete {name}")
 
         if not is_protected and self.eds:
             success = self.eds.delete_addressbook(source_uid)
@@ -902,17 +896,7 @@ class TelephonyDaemonDBus:
         vcard_data, source_uid = parameters.unpack()
         count = 0
 
-        is_protected = False
-        if source_uid == "system-address-book":
-            is_protected = True
-            logger.warning("[DBus] Refusing to import to system-address-book via CLI")
-        elif self.eds:
-            sources = self.eds.get_sources_info()
-            for s in sources:
-                if s.get('uid') == source_uid and s.get('name') == "Andromeda Contacts":
-                    is_protected = True
-                    logger.warning("[DBus] Refusing to import to Andromeda Contacts via CLI")
-                    break
+        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to import to {name} via CLI")
 
         if not is_protected and self.eds:
             vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
@@ -952,16 +936,9 @@ class TelephonyDaemonDBus:
         uid = parameters.unpack()[0]
         if self.eds:
             contact = self.eds.cache.get(uid)
-            if contact:
-                s_uid = contact.get('source_uid')
-                if s_uid == "system-address-book":
-                    logger.warning(f"[DBus] Refusing to delete system-address-book Contact {uid} via CLI")
-                    invocation.return_value(None)
-                    return
-                if self.eds.sources and s_uid and s_uid in self.eds.sources and self.eds.sources[s_uid].get('name') == "Andromeda Contacts":
-                    logger.warning(f"[DBus] Refusing to delete Andromeda Contact {uid} via CLI")
-                    invocation.return_value(None)
-                    return
+            if contact and self._is_protected_contact(contact, uid, "delete"):
+                invocation.return_value(None)
+                return
             self.eds.delete_contact(uid)
         invocation.return_value(None)
 
@@ -970,16 +947,9 @@ class TelephonyDaemonDBus:
         uid, name, number = parameters.unpack()
         if self.eds:
             contact = self.eds.cache.get(uid)
-            if contact:
-                s_uid = contact.get('source_uid')
-                if s_uid == "system-address-book":
-                    logger.warning(f"[DBus] Refusing to modify system-address-book Contact {uid} via CLI")
-                    invocation.return_value(None)
-                    return
-                if self.eds.sources and s_uid and s_uid in self.eds.sources and self.eds.sources[s_uid].get('name') == "Andromeda Contacts":
-                    logger.warning(f"[DBus] Refusing to modify Andromeda Contact {uid} via CLI")
-                    invocation.return_value(None)
-                    return
+            if contact and self._is_protected_contact(contact, uid, "modify"):
+                invocation.return_value(None)
+                return
             vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
             self.eds.save_contact(vcard_data, uid=uid)
         invocation.return_value(None)

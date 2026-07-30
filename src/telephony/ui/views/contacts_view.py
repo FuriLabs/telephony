@@ -21,7 +21,7 @@ from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
-from ..widgets.common_widget import DataLoader
+from ..widgets.common_widget import DataLoader, translate_phone_label
 from ...backend.utils.model_utils import ContactItem
 
 
@@ -113,18 +113,6 @@ class ContactsView(Adw.Bin):
             sources = self.app_window.eds.get_sources_info()
             for s in sources:
                 self.source_map[s['uid']] = s['name']
-
-    def _translate_label(self, label):
-        """Translate label key to localized string."""
-        LABELS = {
-            "Mobile": _("Mobile"),
-            "Work": _("Work"),
-            "Home": _("Home"),
-            "Fax": _("Fax"),
-            "Other": _("Other"),
-            "Main": _("Main")
-        }
-        return LABELS.get(label, label)
 
     def on_map(self, *args):
         """Handle view being shown."""
@@ -436,7 +424,7 @@ class ContactsView(Adw.Bin):
         menu.append(Gtk.Label(label=_("Call Anonymous"), css_classes=["heading"]))
 
         for p_num, p_lbl in phones:
-            b = Gtk.Button(label=f"{self._translate_label(p_lbl)}: {p_num}")
+            b = Gtk.Button(label=f"{translate_phone_label(p_lbl)}: {p_num}")
             b.add_css_class("flat")
 
             def _handle_call_click(n=p_num):
@@ -469,7 +457,7 @@ class ContactsView(Adw.Bin):
         box.set_margin_end(6)
         for p_tuple in phones:
             number, label = p_tuple
-            row = Gtk.Button(label=f"{self._translate_label(label)}: {number}")
+            row = Gtk.Button(label=f"{translate_phone_label(label)}: {number}")
             row.add_css_class("pill")
             row.connect("clicked", lambda b, n=number: GLib.idle_add(lambda: [self.search.set_text(""), callback(normalize_number(n)), pop.popdown()] and False))
             box.append(row)

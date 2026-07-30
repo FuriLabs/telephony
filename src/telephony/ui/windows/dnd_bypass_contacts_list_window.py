@@ -19,6 +19,7 @@ from gettext import gettext as _
 
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.phone_utils import normalize_number
+from ..widgets.common_widget import populate_contact_search_results
 
 
 class DndBypassContactsListWindow(Adw.Window):
@@ -198,66 +199,23 @@ class DndBypassContactsListWindow(Adw.Window):
         run_in_background(_bg_task)
         return False
 
+    def _is_result_added(self, normalized_number):
+        """Return True when the normalized number is already in the local list."""
+        for existing in self.local_contacts:
+            if normalize_number(existing.get("number", "")) == normalized_number:
+                return True
+        return False
+
     def _build_search_results(self, contacts, query):
         """Build search results UI."""
-        while child := self.search_results_list.get_first_child():
-            self.search_results_list.remove(child)
-
-        has_results = False
-
-        source_map = {}
-        if self.eds:
-            sources = self.eds.get_sources_info()
-            for s in sources:
-                source_map[s['uid']] = s['name']
-
-        if contacts:
-            for c in contacts:
-                first = c[1]
-                last = c[2]
-                phones = c[3]
-                source_uid = c[6] if len(c) > 6 else None
-
-                first_name = first or ""
-                last_name = last or ""
-                full_name = f"{first_name} {last_name}".strip() or "Unknown"
-
-                for ph_num, ph_label in phones:
-                    subtitle_text = f"{ph_num} ({ph_label})"
-
-                    if source_uid and source_uid in source_map:
-                        s_name = source_map[source_uid]
-                        subtitle_text += f"\n{s_name}"
-
-                    row = Adw.ActionRow(title=full_name, subtitle=subtitle_text)
-                    row.set_subtitle_lines(2)
-                    row.contact_data = {"name": full_name, "number": ph_num}
-
-                    norm_ph = normalize_number(ph_num)
-                    is_added = False
-                    for existing in self.local_contacts:
-                        if normalize_number(existing.get("number", "")) == norm_ph:
-                            is_added = True
-                            break
-
-                    if is_added:
-                        row.set_sensitive(False)
-                        row.add_suffix(Gtk.Image(icon_name="object-select-symbolic"))
-                    else:
-                        btn_add = Gtk.Button(icon_name="list-add-symbolic")
-                        btn_add.add_css_class("flat")
-                        btn_add.add_css_class("circular")
-                        btn_add.connect("clicked", lambda b, r=row: self._on_result_activated(None, r))
-                        row.add_suffix(btn_add)
-
-                    self.search_results_list.append(row)
-                    has_results = True
-
-        if not has_results:
-            lbl = Gtk.Label(label=_("No contacts found"))
-            lbl.add_css_class("dim-label")
-            lbl.set_margin_top(20)
-            self.search_results_list.append(lbl)
+        populate_contact_search_results(
+            self.search_results_list,
+            contacts,
+            self.eds,
+            is_added=self._is_result_added,
+            on_add=lambda row: self._on_result_activated(None, row),
+            unknown_name="Unknown"
+        )
 
     def _on_result_activated(self, listbox, row):
         """Handle activation of a search result."""

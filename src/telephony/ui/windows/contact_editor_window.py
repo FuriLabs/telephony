@@ -22,6 +22,7 @@ from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.vcard_utils import extract_e164_number, unfold_vcard
 from .date_time_picker_window import DateTimePicker
 from .duplicate_resolution_window import DuplicateResolutionWindow
+from ..widgets.common_widget import translate_phone_label
 
 
 class ContactEditor(Adw.Window):
@@ -64,18 +65,6 @@ class ContactEditor(Adw.Window):
         self.selected_date = None
 
         self.refresh_ui()
-
-    def _translate_label(self, label):
-        """Translate label key to localized string."""
-        LABELS = {
-            "Mobile": _("Mobile"),
-            "Work": _("Work"),
-            "Home": _("Home"),
-            "Fax": _("Fax"),
-            "Other": _("Other"),
-            "Main": _("Main")
-        }
-        return LABELS.get(label, label)
 
     def _clean_vcard_str(self, text):
         """Clean up vCard text field (unescape)."""
@@ -187,7 +176,7 @@ class ContactEditor(Adw.Window):
         else:
             if current_phones:
                 for num, lbl in current_phones:
-                    grp_phones.add(self._create_view_row(self._translate_label(lbl), num))
+                    grp_phones.add(self._create_view_row(translate_phone_label(lbl), num))
             else:
                 grp_phones.set_visible(False)
         page.add(grp_phones)
@@ -208,7 +197,7 @@ class ContactEditor(Adw.Window):
         else:
             if current_emails:
                 for addr, lbl in current_emails:
-                    grp_emails.add(self._create_view_row(self._translate_label(lbl), addr))
+                    grp_emails.add(self._create_view_row(translate_phone_label(lbl), addr))
             else:
                 grp_emails.set_visible(False)
         page.add(grp_emails)

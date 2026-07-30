@@ -61,6 +61,84 @@ class OfonoTrustedActionsManager:
             logger.error(f"[TrustedActions] TOTP verify error: {e}")
             return False
 
+    def _trusted_action_entries(self):
+        """Build the table describing every trusted SMS action.
+
+        Each entry holds the log prefix, the TOTP seed getter, the trusted
+        contact list getter, the expected number of tokens after the secret
+        phrase, and the action callable invoked on a verified match.
+        """
+        return [
+            {
+                "prefix": "FindMyTelephony",
+                "seed_getter": self.gsettings_mgr.get_trusted_sms_location_request_totp_seed,
+                "list_getter": self.gsettings_mgr.get_trusted_sms_location_request,
+                "expected_parts": 1,
+                "action": self._run_location_request_action,
+            },
+            {
+                "prefix": "TrustedCallback",
+                "seed_getter": self.gsettings_mgr.get_trusted_sms_silent_callback_totp_seed,
+                "list_getter": self.gsettings_mgr.get_trusted_sms_silent_callback,
+                "expected_parts": 1,
+                "action": self._run_silent_callback_action,
+            },
+            {
+                "prefix": "SMSRelay",
+                "seed_getter": self.gsettings_mgr.get_trusted_sms_relay_totp_seed,
+                "list_getter": self.gsettings_mgr.get_trusted_sms_relay,
+                "expected_parts": 3,
+                "action": self._run_relay_action,
+            },
+            {
+                "prefix": "SMStmate",
+                "seed_getter": self.gsettings_mgr.get_trusted_sms_ssh_access_totp_seed,
+                "list_getter": self.gsettings_mgr.get_trusted_sms_ssh_access,
+                "expected_parts": 1,
+                "action": self._run_ssh_access_action,
+            },
+            {
+                "prefix": "WipeDevice",
+                "seed_getter": self.gsettings_mgr.get_trusted_sms_remote_wipe_totp_seed,
+                "list_getter": self.gsettings_mgr.get_trusted_sms_remote_wipe,
+                "expected_parts": 4,
+                "action": self._run_remote_wipe_action,
+            },
+        ]
+
+    def _run_location_request_action(self, sender_clean, parts):
+        """Execute the location request action."""
+        logger.info(f"[FindMyTelephony] Trigger MATCH from {sender_clean}")
+
+        self.location_manager.get_current_location(
+            callback=lambda lat, lon, acc: self._send_location_response(sender_clean, lat, lon, acc),
+            progress_callback=lambda msg: self._send_progress_sms(sender_clean, msg)
+        )
+
+    def _run_silent_callback_action(self, sender_clean, parts):
+        """Execute the silent callback action."""
+        logger.info(f"[TrustedCallback] Trigger MATCH from {sender_clean}")
+        self.callback_manager.execute_callback(sender_clean)
+
+    def _run_relay_action(self, sender_clean, parts):
+        """Execute the SMS relay action."""
+        target_number = parts[1]
+        message = parts[2]
+        self.relay_manager.execute_relay(sender_clean, target_number, message)
+
+    def _run_ssh_access_action(self, sender_clean, parts):
+        """Execute the tmate SSH access action."""
+        logger.info(f"[SMStmate] Trigger MATCH from {sender_clean}")
+        self.tmate_manager.start_session(sender_clean)
+
+    def _run_remote_wipe_action(self, sender_clean, parts):
+        """Execute the remote wipe action."""
+        current_pin = parts[1]
+        new_pin = parts[2]
+        sudo_pw = parts[3]
+        logger.info(f"[WipeDevice] Trigger MATCH from {sender_clean}")
+        self.device_lock_manager.lock_device(current_pin, new_pin, sudo_pw)
+
     def _check_secret_actions(self, sender, body):
         """Check if message matches any secret action trigger."""
         sender_clean = normalize_number(sender)
@@ -71,14 +149,16 @@ class OfonoTrustedActionsManager:
             self.trusted_trigger_history = {}
         history = self.trusted_trigger_history.get(sender_clean, {'last_success': 0, 'last_warning': 0, 'last_attempt': 0})
 
+        entries = self._trusted_action_entries()
+        trusted_lists = {}
+
         is_trusted = False
         all_trusted = []
         try:
-            all_trusted.extend(self.gsettings_mgr.get_trusted_sms_location_request())
-            all_trusted.extend(self.gsettings_mgr.get_trusted_sms_silent_callback())
-            all_trusted.extend(self.gsettings_mgr.get_trusted_sms_relay())
-            all_trusted.extend(self.gsettings_mgr.get_trusted_sms_ssh_access())
-            all_trusted.extend(self.gsettings_mgr.get_trusted_sms_remote_wipe())
+            for entry in entries:
+                fetched = entry["list_getter"]()
+                trusted_lists[entry["prefix"]] = fetched
+                all_trusted.extend(fetched)
             for t in all_trusted:
                 if normalize_number(t.get("number", "")) == sender_clean:
                     is_trusted = True
@@ -95,26 +175,31 @@ class OfonoTrustedActionsManager:
                 logger.warning(f"[Security] Brute force rate limit hit for {sender_clean}")
                 return False
 
-        if self._check_trusted_sms_location_request(sender_clean, body_clean):
-            return True
-        if self._check_trusted_sms_silent_callback(sender_clean, body_clean):
-            return True
-        if self._check_trusted_sms_relay(sender_clean, body_clean):
-            return True
-        if self._check_trusted_sms_ssh_access(sender_clean, body_clean):
-            return True
-        if self._check_trusted_sms_remote_wipe(sender_clean, body_clean):
-            return True
+        for entry in entries:
+            if self._check_trusted_action(entry, sender_clean, body_clean, trusted=trusted_lists.get(entry["prefix"])):
+                return True
 
         return False
 
-    def _check_trusted_sms_location_request(self, sender_clean, body_clean):
-        seed = self.gsettings_mgr.get_trusted_sms_location_request_totp_seed()
+    def _check_trusted_action(self, entry, sender_clean, body_clean, trusted=None):
+        """Run one trusted SMS action check from the entry table.
+
+        Verifies the sender, secret phrase, token count, TOTP code and rate
+        limits, then invokes the entry's action callable. Returns True when
+        the message was consumed by this action. When trusted is None the
+        entry's list getter is called to fetch the contact list.
+        """
+        prefix = entry["prefix"]
+        seed = entry["seed_getter"]()
         if not seed:
-            logger.warning("[FindMyTelephony] TOTP seed not configured. Dropping message.")
+            logger.warning(f"[{prefix}] TOTP seed not configured. Dropping message.")
             return False
 
-        trusted = self.gsettings_mgr.get_trusted_sms_location_request()
+        if trusted is None:
+            trusted = entry["list_getter"]()
+
+        expected_parts = entry["expected_parts"]
+        maxsplit = expected_parts - 1 if expected_parts > 1 else -1
         try:
             for t in trusted:
                 t_num = normalize_number(t.get("number", ""))
@@ -122,148 +207,19 @@ class OfonoTrustedActionsManager:
                 if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
                     continue
 
-                parts = body_clean[len(t_msg):].strip().split(" ")
-                if len(parts) != 1 or not self._verify_totp(seed, parts[0]):
+                parts = body_clean[len(t_msg):].strip().split(" ", maxsplit)
+                if len(parts) != expected_parts or not self._verify_totp(seed, parts[0]):
                     continue
 
-                limited, history = self._check_rate_limit(sender_clean, "FindMyTelephony")
+                limited, history = self._check_rate_limit(sender_clean, prefix)
                 if limited:
                     return True
 
                 self._mark_success(sender_clean, history)
-                logger.info(f"[FindMyTelephony] Trigger MATCH from {sender_clean}")
-
-                self.location_manager.get_current_location(
-                    callback=lambda lat, lon, acc: self._send_location_response(sender_clean, lat, lon, acc),
-                    progress_callback=lambda msg: self._send_progress_sms(sender_clean, msg)
-                )
+                entry["action"](sender_clean, parts)
                 return True
         except Exception as e:
-            logger.error(f"[FindMyTelephony] Check error: {e}")
-        return False
-
-    def _check_trusted_sms_silent_callback(self, sender_clean, body_clean):
-        seed = self.gsettings_mgr.get_trusted_sms_silent_callback_totp_seed()
-        if not seed:
-            logger.warning("[TrustedCallback] TOTP seed not configured. Dropping message.")
-            return False
-
-        trusted = self.gsettings_mgr.get_trusted_sms_silent_callback()
-        try:
-            for t in trusted:
-                t_num = normalize_number(t.get("number", ""))
-                t_msg = t.get("secret", "").strip()
-                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
-                    continue
-
-                parts = body_clean[len(t_msg):].strip().split(" ")
-                if len(parts) != 1 or not self._verify_totp(seed, parts[0]):
-                    continue
-
-                limited, history = self._check_rate_limit(sender_clean, "TrustedCallback")
-                if limited:
-                    return True
-
-                self._mark_success(sender_clean, history)
-                logger.info(f"[TrustedCallback] Trigger MATCH from {sender_clean}")
-                self.callback_manager.execute_callback(sender_clean)
-                return True
-        except Exception as e:
-            logger.error(f"[TrustedCallback] Check error: {e}")
-        return False
-
-    def _check_trusted_sms_relay(self, sender_clean, body_clean):
-        seed = self.gsettings_mgr.get_trusted_sms_relay_totp_seed()
-        if not seed:
-            logger.warning("[SMSRelay] TOTP seed not configured. Dropping message.")
-            return False
-
-        trusted = self.gsettings_mgr.get_trusted_sms_relay()
-        try:
-            for t in trusted:
-                t_num = normalize_number(t.get("number", ""))
-                t_msg = t.get("secret", "").strip()
-                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
-                    continue
-
-                parts = body_clean[len(t_msg):].strip().split(" ", 2)
-                if len(parts) != 3 or not self._verify_totp(seed, parts[0]):
-                    continue
-
-                limited, history = self._check_rate_limit(sender_clean, "SMSRelay")
-                if limited:
-                    return True
-
-                self._mark_success(sender_clean, history)
-                target_number = parts[1]
-                message = parts[2]
-                self.relay_manager.execute_relay(sender_clean, target_number, message)
-                return True
-        except Exception as e:
-            logger.error(f"[SMSRelay] Check error: {e}")
-        return False
-
-    def _check_trusted_sms_ssh_access(self, sender_clean, body_clean):
-        seed = self.gsettings_mgr.get_trusted_sms_ssh_access_totp_seed()
-        if not seed:
-            logger.warning("[SMStmate] TOTP seed not configured. Dropping message.")
-            return False
-
-        trusted = self.gsettings_mgr.get_trusted_sms_ssh_access()
-        try:
-            for t in trusted:
-                t_num = normalize_number(t.get("number", ""))
-                t_msg = t.get("secret", "").strip()
-                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
-                    continue
-
-                parts = body_clean[len(t_msg):].strip().split(" ")
-                if len(parts) != 1 or not self._verify_totp(seed, parts[0]):
-                    continue
-
-                limited, history = self._check_rate_limit(sender_clean, "SMStmate")
-                if limited:
-                    return True
-
-                self._mark_success(sender_clean, history)
-                logger.info(f"[SMStmate] Trigger MATCH from {sender_clean}")
-                self.tmate_manager.start_session(sender_clean)
-                return True
-        except Exception as e:
-            logger.error(f"[SMStmate] Check error: {e}")
-        return False
-
-    def _check_trusted_sms_remote_wipe(self, sender_clean, body_clean):
-        seed = self.gsettings_mgr.get_trusted_sms_remote_wipe_totp_seed()
-        if not seed:
-            logger.warning("[WipeDevice] TOTP seed not configured. Dropping message.")
-            return False
-
-        trusted = self.gsettings_mgr.get_trusted_sms_remote_wipe()
-        try:
-            for t in trusted:
-                t_num = normalize_number(t.get("number", ""))
-                t_msg = t.get("secret", "").strip()
-                if not t_num or not t_msg or sender_clean != t_num or not body_clean.startswith(t_msg + " "):
-                    continue
-
-                parts = body_clean[len(t_msg):].strip().split(" ", 3)
-                if len(parts) != 4 or not self._verify_totp(seed, parts[0]):
-                    continue
-
-                limited, history = self._check_rate_limit(sender_clean, "WipeDevice")
-                if limited:
-                    return True
-
-                self._mark_success(sender_clean, history)
-                current_pin = parts[1]
-                new_pin = parts[2]
-                sudo_pw = parts[3]
-                logger.info(f"[WipeDevice] Trigger MATCH from {sender_clean}")
-                self.device_lock_manager.lock_device(current_pin, new_pin, sudo_pw)
-                return True
-        except Exception as e:
-            logger.error(f"[WipeDevice] Check error: {e}")
+            logger.error(f"[{prefix}] Check error: {e}")
         return False
 
     def _send_progress_sms(self, number, message):
