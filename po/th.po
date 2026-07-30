@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 01:58+0300\n"
+"POT-Creation-Date: 2026-07-30 03:18+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -16,7 +16,7 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:398
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:369
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
@@ -48,11 +48,11 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:164
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:374
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:387
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:410
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:543
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:407
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:576
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
@@ -191,7 +191,7 @@ msgid "Waiting for satellite fix..."
 msgstr "กำลังรอการแก้ไขดาวเทียม..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:252
 msgid "Modem Stuck"
 msgstr "โมเด็มค้าง"
 
@@ -204,28 +204,30 @@ msgid "Telephony Emergency"
 msgstr "โทรศัพท์ฉุกเฉิน"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:233
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:738
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
 msgid "🔴 Reboot Modem"
 msgstr "🔴 รีบูทโมเด็ม"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:198
 msgid "Telephony - Incoming"
 msgstr "โทรศัพท์ - สายเรียกเข้า"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
 #, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 ขาเข้า: {name}"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
 msgid "Incoming Call..."
 msgstr "สายเรียกเข้า..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
 msgid "🔁 Swap"
 msgstr "🔁 สลับ"
 
@@ -234,79 +236,49 @@ msgid "🟢 Answer"
 msgstr "🟢 ตอบ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:219
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔴 Hangup"
 msgstr "🔴 แฮงเอาท์"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:196
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
-msgid "🔴 SMS&End"
-msgstr "🔴 SMS&สิ้นสุด"
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr "สายเรียกซ้อน..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
 msgid "Telephony - On Hold"
 msgstr "ระบบโทรศัพท์ - พักสาย"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
-#, python-brace-format
-msgid "🟠 {name} put as on hold"
-msgstr "🟠 {name} ถูกพักสายไว้"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:217
-msgid "Call On Hold..."
-msgstr "พักสาย..."
-
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
-msgid "🔴 Decline"
-msgstr "🔴 ปฎิเสธ"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
-msgid "UnmuteMic"
-msgstr "เปิดเสียงไมค์"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
-msgid "MuteMic"
-msgstr "ปิดเสียงไมค์"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 #, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (รอสาย)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "พักสาย..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
 msgid "🔁 Resume"
 msgstr "🔁 เรซูเม่"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:222
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
 msgid "Telephony - Active Call"
 msgstr "โทรศัพท์ - การโทรที่ใช้งานอยู่"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:212
 #, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 ใช้งาน: {name}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:213
 msgid "Active Call"
 msgstr "การโทรที่ใช้งานอยู่"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 msgid "🔴 HangupAll"
 msgstr "🔴 วางสายทั้งหมด"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
-msgid "SpeakerOff"
-msgstr "ปิดลำโพง"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
-msgid "SpeakerOn"
-msgstr "เปิดลำโพง"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
@@ -565,7 +537,7 @@ msgstr "ผลลัพธ์ของ USSD"
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:448
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:460
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:813
 msgid "OK"
 msgstr "ตกลง"
 
@@ -596,7 +568,7 @@ msgstr "กำลังซิงค์รายชื่อติดต่อ...
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:383
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:434
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:572
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:851
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:856
 msgid "Close"
 msgstr "ปิด"
 
@@ -672,7 +644,7 @@ msgid "Add to Existing Contact"
 msgstr "เพิ่มไปยังผู้ติดต่อที่มีอยู่"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:206
 msgid "Search Number"
 msgstr "ค้นหาหมายเลข"
 
@@ -2178,10 +2150,6 @@ msgstr "กำลังโทรออก..."
 msgid "Alerting..."
 msgstr "กำลังเรียกสาย..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
-msgid "Waiting..."
-msgstr "สายเรียกซ้อน..."
-
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
 msgid "Disconnected"
 msgstr "วางสายแล้ว"
@@ -2219,92 +2187,92 @@ msgstr "ไมค์แบบมีสาย"
 msgid "Bluetooth Mic"
 msgstr "ไมค์ Bluetooth"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:190
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:211
 msgid "Hangup and Send SMS"
 msgstr "วางสายและส่ง SMS"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:193
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:564
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:214
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:597
 msgid "Silence"
 msgstr "ปิดเสียง"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
 msgid "Decline"
 msgstr "ปฏิเสธ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
 msgid "Accept"
 msgstr "รับสาย"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:236
 msgid "Mute"
 msgstr "ปิดไมค์"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:237
 msgid "Keypad"
 msgstr "แป้นกด"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:217
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:238
 msgid "Hold"
 msgstr "พักสาย"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:253
 msgid "The call failed to disconnect."
 msgstr "การโทรล้มเหลวในการตัดการเชื่อมต่อ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:298
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:773
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:331
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:806
 msgid "Output"
 msgstr "เอาท์พุต"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:313
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:792
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:346
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:825
 msgid "Input"
 msgstr "ป้อนข้อมูล"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
 msgid "Silenced Incoming Call"
 msgstr "ปิดเสียงสายเรียกเข้า"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:556
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
 msgid "Swap"
 msgstr "สลับสาย"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:560
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:593
 msgid "Answer"
 msgstr "รับสาย"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:568
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:601
 msgid "Message"
 msgstr "ข้อความ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:574
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:607
 msgid "Answering holds the current call"
 msgstr "การรับสายจะพักสายปัจจุบัน"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:591
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:624
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "ฉันไม่สามารถพูดได้ในขณะนี้"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:714
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:747
 msgid "Restarting RIL..."
 msgstr "กำลังรีสตาร์ท RIL..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:723
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
 msgid "Restored!"
 msgstr "ฟื้นแล้ว!"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:729
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:762
 msgid "Failed. Reboot Device."
 msgstr "ล้มเหลว. รีบูตอุปกรณ์"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:731
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:764
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "กำลังยืนยัน... {attempt}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:758
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
 msgid "Not connected"
 msgstr "ไม่ได้เชื่อมต่อ"
 
@@ -2438,7 +2406,7 @@ msgid "Add Decline Message"
 msgstr "เพิ่มข้อความปฏิเสธสาย"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:805
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:810
 msgid "Call Volume"
 msgstr "ระดับเสียงสนทนา"
 
@@ -2620,7 +2588,7 @@ msgstr "โทร"
 msgid "Name (e.g. Mom)"
 msgstr "ชื่อ (เช่น แม่)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:806
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:811
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2634,35 +2602,35 @@ msgstr ""
 "และลำโพงแนบหูจะไม่เงียบสนิทเลย ระดับของ Bluetooth "
 "จะถูกบันทึกไว้สำหรับการรองรับการกำหนดเส้นทางเสียงที่กำลังจะมาถึง"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:815
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:820
 msgid "Decline Message"
 msgstr "ปฏิเสธข้อความ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:886
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:891
 msgid "System Default (Always Enabled)"
 msgstr "ค่าเริ่มต้นของระบบ (เปิดใช้งานเสมอ)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:897
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:902
 msgid "Personal Address Book"
 msgstr "สมุดที่อยู่ส่วนบุคคล"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:898
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:903
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
 msgstr "นี่คือสมุดที่อยู่ที่จะซิงค์กับ Andromeda หากคุณเลือกที่จะทำเช่นนั้นในการตั้งค่าระบบ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:906
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:911
 msgid "Andromeda Contacts"
 msgstr "ที่อยู่ติดต่อของแอนโดรเมดา"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:907
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:912
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
 msgstr "นี่คือสมุดที่อยู่ที่จะซิงค์จาก Andromeda หากคุณเลือกที่จะทำเช่นนั้นในการตั้งค่าระบบ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1032
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1037
 msgid "Settings Saved"
 msgstr "บันทึกการตั้งค่าแล้ว"
 
@@ -2840,6 +2808,28 @@ msgid ""
 "This will invalidate the current code in your contact's authenticator app. "
 "Are you sure?"
 msgstr "สิ่งนี้จะทำให้รหัสปัจจุบันในแอปตัวรับรองความถูกต้องของผู้ติดต่อของคุณใช้ไม่ได้ คุณแน่ใจหรือไม่"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS&สิ้นสุด"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} ถูกพักสายไว้"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 ปฎิเสธ"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "เปิดเสียงไมค์"
+
+#~ msgid "MuteMic"
+#~ msgstr "ปิดเสียงไมค์"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "ปิดลำโพง"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "เปิดลำโพง"
 
 #~ msgid "Allow Amplification"
 #~ msgstr "อนุญาตการขยายเสียง"

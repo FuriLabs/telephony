@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 01:58+0300\n"
+"POT-Creation-Date: 2026-07-30 03:18+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -17,7 +17,7 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:398
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:369
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
@@ -49,11 +49,11 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:164
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:374
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:387
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:410
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:543
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:407
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:576
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
@@ -192,7 +192,7 @@ msgid "Waiting for satellite fix..."
 msgstr "ಉಪಗ್ರಹ ಪರಿಹಾರಕ್ಕಾಗಿ ನಿರೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:252
 msgid "Modem Stuck"
 msgstr "ಮೋಡೆಮ್ ಅಂಟಿಕೊಂಡಿದೆ"
 
@@ -205,28 +205,30 @@ msgid "Telephony Emergency"
 msgstr "ದೂರವಾಣಿ ತುರ್ತು"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:233
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:738
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
 msgid "🔴 Reboot Modem"
 msgstr "🔴 ರೀಬೂಟ್ ಮೋಡೆಮ್"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:198
 msgid "Telephony - Incoming"
 msgstr "ಟೆಲಿಫೋನಿ - ಒಳಬರುವ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
 #, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 ಒಳಬರುವ: {name}"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
 msgid "Incoming Call..."
 msgstr "ಒಳಬರುವ ಕರೆ..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
 msgid "🔁 Swap"
 msgstr "🔁 ವಿನಿಮಯ"
 
@@ -235,79 +237,49 @@ msgid "🟢 Answer"
 msgstr "🟢 ಉತ್ತರ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:219
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔴 Hangup"
 msgstr "🔴 ಹ್ಯಾಂಗ್‌ಅಪ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:196
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
-msgid "🔴 SMS&End"
-msgstr "🔴 SMS&ಅಂತ್ಯ"
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr "ಕಾಯುತ್ತಿದೆ..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
 msgid "Telephony - On Hold"
 msgstr "ಟೆಲಿಫೋನಿ - ತಡೆಹಿಡಿಯಲಾಗಿದೆ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
-#, python-brace-format
-msgid "🟠 {name} put as on hold"
-msgstr "🟠 {name} ಅನ್ನು ಹೋಲ್ಡ್‌ನಲ್ಲಿ ಇರಿಸಲಾಗಿದೆ"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:217
-msgid "Call On Hold..."
-msgstr "ಕರೆ ಹೋಲ್ಡ್..."
-
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
-msgid "🔴 Decline"
-msgstr "🔴 ಕುಸಿತ"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
-msgid "UnmuteMic"
-msgstr "ಅನ್‌ಮ್ಯೂಟ್‌ಮಿಕ್"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
-msgid "MuteMic"
-msgstr "ಮ್ಯೂಟ್‌ಮಿಕ್"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 #, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (ಹೋಲ್ಡ್‌ನಲ್ಲಿದೆ)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "ಕರೆ ಹೋಲ್ಡ್..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
 msgid "🔁 Resume"
 msgstr "🔁 ಪುನರಾರಂಭಿಸಿ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:222
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
 msgid "Telephony - Active Call"
 msgstr "ಟೆಲಿಫೋನಿ - ಸಕ್ರಿಯ ಕರೆ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:212
 #, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 ಸಕ್ರಿಯ: {name}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:213
 msgid "Active Call"
 msgstr "ಸಕ್ರಿಯ ಕರೆ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 msgid "🔴 HangupAll"
 msgstr "🔴 ಹ್ಯಾಂಗಪ್ ಆಲ್"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
-msgid "SpeakerOff"
-msgstr "ಸ್ಪೀಕರ್ ಆಫ್"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
-msgid "SpeakerOn"
-msgstr "ಸ್ಪೀಕರ್ಆನ್"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
@@ -567,7 +539,7 @@ msgstr "USSD ಫಲಿತಾಂಶ"
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:448
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:460
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:813
 msgid "OK"
 msgstr "ಸರಿ"
 
@@ -598,7 +570,7 @@ msgstr "ಸಂಪರ್ಕಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಲಾಗ�
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:383
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:434
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:572
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:851
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:856
 msgid "Close"
 msgstr "ಮುಚ್ಚಿ"
 
@@ -674,7 +646,7 @@ msgid "Add to Existing Contact"
 msgstr "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಸಂಪರ್ಕಕ್ಕೆ ಸೇರಿಸಿ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:206
 msgid "Search Number"
 msgstr "ಹುಡುಕಾಟ ಸಂಖ್ಯೆ"
 
@@ -2186,10 +2158,6 @@ msgstr "ಡಯಲ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
 msgid "Alerting..."
 msgstr "ರಿಂಗ್ ಆಗುತ್ತಿದೆ..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
-msgid "Waiting..."
-msgstr "ಕಾಯುತ್ತಿದೆ..."
-
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
 msgid "Disconnected"
 msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡಿದೆ"
@@ -2227,92 +2195,92 @@ msgstr "ವೈರ್ಡ್ ಮೈಕ್"
 msgid "Bluetooth Mic"
 msgstr "Bluetooth ಮೈಕ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:190
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:211
 msgid "Hangup and Send SMS"
 msgstr "ಹ್ಯಾಂಗ್ಅಪ್ ಮಾಡಿ ಮತ್ತು SMS ಕಳುಹಿಸಿ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:193
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:564
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:214
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:597
 msgid "Silence"
 msgstr "ನಿಶ್ಶಬ್ದ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
 msgid "Decline"
 msgstr "ನಿರಾಕರಿಸಿ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
 msgid "Accept"
 msgstr "ಸ್ವೀಕರಿಸಿ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:236
 msgid "Mute"
 msgstr "ಮ್ಯೂಟ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:237
 msgid "Keypad"
 msgstr "ಕೀಪ್ಯಾಡ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:217
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:238
 msgid "Hold"
 msgstr "ಹೋಲ್ಡ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:253
 msgid "The call failed to disconnect."
 msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸಲು ಕರೆ ವಿಫಲವಾಗಿದೆ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:298
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:773
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:331
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:806
 msgid "Output"
 msgstr "ಔಟ್ಪುಟ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:313
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:792
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:346
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:825
 msgid "Input"
 msgstr "ಇನ್ಪುಟ್"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
 msgid "Silenced Incoming Call"
 msgstr "ನಿಶ್ಯಬ್ದ ಒಳಬರುವ ಕರೆ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:556
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
 msgid "Swap"
 msgstr "ಬದಲಿಸಿ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:560
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:593
 msgid "Answer"
 msgstr "ಉತ್ತರಿಸಿ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:568
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:601
 msgid "Message"
 msgstr "ಸಂದೇಶ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:574
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:607
 msgid "Answering holds the current call"
 msgstr "ಉತ್ತರಿಸುವುದರಿಂದ ಪ್ರಸ್ತುತ ಕರೆ ಹೋಲ್ಡ್‌ನಲ್ಲಿರುತ್ತದೆ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:591
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:624
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "ನಾನು ಈಗ ಮಾತನಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:714
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:747
 msgid "Restarting RIL..."
 msgstr "RIL ಅನ್ನು ಮರುಪ್ರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:723
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
 msgid "Restored!"
 msgstr "ಮರುಸ್ಥಾಪಿಸಲಾಗಿದೆ!"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:729
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:762
 msgid "Failed. Reboot Device."
 msgstr "ವಿಫಲವಾಗಿದೆ. ಸಾಧನವನ್ನು ರೀಬೂಟ್ ಮಾಡಿ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:731
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:764
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ... {attempt}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:758
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
 msgid "Not connected"
 msgstr "ಸಂಪರ್ಕಗೊಂಡಿಲ್ಲ"
 
@@ -2447,7 +2415,7 @@ msgid "Add Decline Message"
 msgstr "ನಿರಾಕರಣೆ ಸಂದೇಶವನ್ನು ಸೇರಿಸಿ"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:805
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:810
 msgid "Call Volume"
 msgstr "ಕರೆ ವಾಲ್ಯೂಮ್"
 
@@ -2636,7 +2604,7 @@ msgstr "ಕರೆಗಳು"
 msgid "Name (e.g. Mom)"
 msgstr "ಹೆಸರು (ಉದಾ. ತಾಯಿ)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:806
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:811
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2644,25 +2612,25 @@ msgid ""
 "and the earpiece never goes fully silent. The Bluetooth level is stored for "
 "upcoming routing support."
 msgstr ""
-"ಇದು ಪ್ರತಿ ಔಟ್‌ಪುಟ್‌ಗೆ ಕರೆ ವಾಲ್ಯೂಮ್ ಆಗಿದೆ. ಕರೆ ಸಂಪರ್ಕಗೊಂಡಾಗ ಮತ್ತು ಕರೆಯ "
-"ಸಮಯದಲ್ಲಿ ಔಟ್‌ಪುಟ್ ಬದಲಾದಾಗಲೆಲ್ಲಾ ಈ ಮಟ್ಟ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅನ್ವಯವಾಗುತ್ತದೆ, ಮತ್ತು "
-"ಸ್ಲೈಡರ್ ಬದಲಾವಣೆಗಳು ತಕ್ಷಣವೇ ಕೇಳಿಸುತ್ತವೆ. ಹಾರ್ಡ್‌ವೇರ್ ಮಟ್ಟಗಳನ್ನು ದೊಡ್ಡ "
-"ಹಂತಗಳಲ್ಲಿ ಅನ್ವಯಿಸುತ್ತದೆ, ಮತ್ತು ಇಯರ್‌ಪೀಸ್ ಎಂದಿಗೂ ಸಂಪೂರ್ಣ ಮೌನವಾಗುವುದಿಲ್ಲ. "
-"Bluetooth ಮಟ್ಟವನ್ನು ಮುಂಬರುವ ರೂಟಿಂಗ್ ಬೆಂಬಲಕ್ಕಾಗಿ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ."
+"ಇದು ಪ್ರತಿ ಔಟ್‌ಪುಟ್‌ಗೆ ಕರೆ ವಾಲ್ಯೂಮ್ ಆಗಿದೆ. ಕರೆ ಸಂಪರ್ಕಗೊಂಡಾಗ ಮತ್ತು ಕರೆಯ ಸಮಯದಲ್ಲಿ ಔಟ್‌ಪುಟ್ "
+"ಬದಲಾದಾಗಲೆಲ್ಲಾ ಈ ಮಟ್ಟ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅನ್ವಯವಾಗುತ್ತದೆ, ಮತ್ತು ಸ್ಲೈಡರ್ ಬದಲಾವಣೆಗಳು ತಕ್ಷಣವೇ "
+"ಕೇಳಿಸುತ್ತವೆ. ಹಾರ್ಡ್‌ವೇರ್ ಮಟ್ಟಗಳನ್ನು ದೊಡ್ಡ ಹಂತಗಳಲ್ಲಿ ಅನ್ವಯಿಸುತ್ತದೆ, ಮತ್ತು ಇಯರ್‌ಪೀಸ್ ಎಂದಿಗೂ "
+"ಸಂಪೂರ್ಣ ಮೌನವಾಗುವುದಿಲ್ಲ. Bluetooth ಮಟ್ಟವನ್ನು ಮುಂಬರುವ ರೂಟಿಂಗ್ ಬೆಂಬಲಕ್ಕಾಗಿ "
+"ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:815
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:820
 msgid "Decline Message"
 msgstr "ಸಂದೇಶವನ್ನು ನಿರಾಕರಿಸು"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:886
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:891
 msgid "System Default (Always Enabled)"
 msgstr "ಸಿಸ್ಟಮ್ ಡೀಫಾಲ್ಟ್ (ಯಾವಾಗಲೂ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:897
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:902
 msgid "Personal Address Book"
 msgstr "ವೈಯಕ್ತಿಕ ವಿಳಾಸ ಪುಸ್ತಕ"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:898
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:903
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2670,11 +2638,11 @@ msgstr ""
 "ಸಿಸ್ಟಂ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಇದನ್ನು ಮಾಡಲು ನೀವು ಆರಿಸಿದರೆ ಆಂಡ್ರೊಮಿಡಾಗೆ ಸಿಂಕ್ ಮಾಡಲಾಗುವ ವಿಳಾಸ "
 "ಪುಸ್ತಕ ಇದಾಗಿದೆ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:906
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:911
 msgid "Andromeda Contacts"
 msgstr "ಆಂಡ್ರೊಮಿಡಾ ಸಂಪರ್ಕಗಳು"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:907
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:912
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2682,7 +2650,7 @@ msgstr ""
 "ಸಿಸ್ಟಂ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಇದನ್ನು ಮಾಡಲು ನೀವು ಆರಿಸಿದರೆ ಆಂಡ್ರೊಮಿಡಾದಿಂದ ಸಿಂಕ್ ಮಾಡಲಾಗುವ "
 "ವಿಳಾಸ ಪುಸ್ತಕ ಇದಾಗಿದೆ."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1032
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1037
 msgid "Settings Saved"
 msgstr "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ"
 
@@ -2869,6 +2837,28 @@ msgid ""
 msgstr ""
 "ಇದು ನಿಮ್ಮ ಸಂಪರ್ಕದ ದೃಢೀಕರಣ ಅಪ್ಲಿಕೇಶನ್‌ನಲ್ಲಿರುವ ಪ್ರಸ್ತುತ ಕೋಡ್ ಅನ್ನು ಅಮಾನ್ಯಗೊಳಿಸುತ್ತದೆ. "
 "ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ?"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS&ಅಂತ್ಯ"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} ಅನ್ನು ಹೋಲ್ಡ್‌ನಲ್ಲಿ ಇರಿಸಲಾಗಿದೆ"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 ಕುಸಿತ"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "ಅನ್‌ಮ್ಯೂಟ್‌ಮಿಕ್"
+
+#~ msgid "MuteMic"
+#~ msgstr "ಮ್ಯೂಟ್‌ಮಿಕ್"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "ಸ್ಪೀಕರ್ ಆಫ್"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "ಸ್ಪೀಕರ್ಆನ್"
 
 #~ msgid "Allow Amplification"
 #~ msgstr "ವರ್ಧನೆಗೆ ಅನುಮತಿಸಿ"

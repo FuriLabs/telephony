@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 01:58+0300\n"
+"POT-Creation-Date: 2026-07-30 03:18+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -17,7 +17,7 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:398
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:369
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
@@ -49,11 +49,11 @@ msgstr ""
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:164
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:374
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:387
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:410
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:543
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:407
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:576
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
 msgid "Unknown"
@@ -192,7 +192,7 @@ msgid "Waiting for satellite fix..."
 msgstr "Czekam na poprawkę satelitarną..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:252
 msgid "Modem Stuck"
 msgstr "Modem utknął"
 
@@ -205,28 +205,30 @@ msgid "Telephony Emergency"
 msgstr "Telephony Awaryjne"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:233
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:738
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
 msgid "🔴 Reboot Modem"
 msgstr "🔴 Uruchom ponownie modem"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:198
 msgid "Telephony - Incoming"
 msgstr "Telephony – Przychodzące"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
 #, python-brace-format
 msgid "🟢 Incoming: {name}"
 msgstr "🟢 Przychodzące: {name}"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
 msgid "Incoming Call..."
 msgstr "Połączenie przychodzące..."
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
 msgid "🔁 Swap"
 msgstr "🔁 Zamień"
 
@@ -235,79 +237,49 @@ msgid "🟢 Answer"
 msgstr "🟢 Odpowiedz"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:219
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
 msgid "🔴 Hangup"
 msgstr "🔴 Rozłącz się"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:196
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
-msgid "🔴 SMS&End"
-msgstr "🔴 SMS&Koniec"
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr "Oczekiwanie..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
 msgid "Telephony - On Hold"
 msgstr "Telephony — wstrzymane"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
-#, python-brace-format
-msgid "🟠 {name} put as on hold"
-msgstr "🟠 {name} zawieszone"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:217
-msgid "Call On Hold..."
-msgstr "Zawieszenie połączenia..."
-
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
-msgid "🔴 Decline"
-msgstr "🔴 Odmów"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
-msgid "UnmuteMic"
-msgstr "Wyłącz wyciszenie mikrofonu"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:233
-msgid "MuteMic"
-msgstr "Wyciszenie mikrofonu"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 #, python-brace-format
 msgid "⏸️ {name} (On Hold)"
 msgstr "⏸️ {name} (wstrzymane)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "Zawieszenie połączenia..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
 msgid "🔁 Resume"
 msgstr "🔁 Wznów"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:222
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
 msgid "Telephony - Active Call"
 msgstr "Telephony – aktywne połączenie"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:223
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:212
 #, python-brace-format
 msgid "🟢 Active: {name}"
 msgstr "🟢 Aktywny: {name}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:224
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:213
 msgid "Active Call"
 msgstr "Aktywne połączenie"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:227
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
 msgid "🔴 HangupAll"
 msgstr "🔴 Rozłącz wszystko"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
-msgid "SpeakerOff"
-msgstr "Głośnik wyłączony"
-
-#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:237
-msgid "SpeakerOn"
-msgstr "Głośnik włączony"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
 #: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
@@ -566,7 +538,7 @@ msgstr "Wynik USSD"
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:448
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:460
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:808
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:813
 msgid "OK"
 msgstr "OK"
 
@@ -597,7 +569,7 @@ msgstr "Synchronizowanie kontaktów..."
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:383
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:434
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:572
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:851
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:856
 msgid "Close"
 msgstr "Zamknąć"
 
@@ -673,7 +645,7 @@ msgid "Add to Existing Contact"
 msgstr "Dodaj do istniejącego kontaktu"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:206
 msgid "Search Number"
 msgstr "Szukaj numeru"
 
@@ -2186,10 +2158,6 @@ msgstr "Wybieranie numeru..."
 msgid "Alerting..."
 msgstr "Dzwonienie..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
-msgid "Waiting..."
-msgstr "Oczekiwanie..."
-
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
 msgid "Disconnected"
 msgstr "Rozłączono"
@@ -2227,92 +2195,92 @@ msgstr "Mikrofon przewodowy"
 msgid "Bluetooth Mic"
 msgstr "Mikrofon Bluetooth"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:190
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:211
 msgid "Hangup and Send SMS"
 msgstr "Rozłącz się i wyślij SMS"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:193
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:564
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:214
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:597
 msgid "Silence"
 msgstr "Wycisz"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:194
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
 msgid "Decline"
 msgstr "Odrzuć"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
 msgid "Accept"
 msgstr "Odbierz"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:236
 msgid "Mute"
 msgstr "Wycisz"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:237
 msgid "Keypad"
 msgstr "Klawiatura"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:217
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:238
 msgid "Hold"
 msgstr "Wstrzymaj"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:253
 msgid "The call failed to disconnect."
 msgstr "Nie udało się rozłączyć połączenia."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:298
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:773
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:331
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:806
 msgid "Output"
 msgstr "Wyjście"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:313
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:792
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:346
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:825
 msgid "Input"
 msgstr "Wejście"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:465
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
 msgid "Silenced Incoming Call"
 msgstr "Wyciszone połączenie przychodzące"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:556
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
 msgid "Swap"
 msgstr "Przełącz"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:560
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:593
 msgid "Answer"
 msgstr "Odbierz"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:568
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:601
 msgid "Message"
 msgstr "Wiadomość"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:574
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:607
 msgid "Answering holds the current call"
 msgstr "Odebranie wstrzyma bieżące połączenie"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:591
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:624
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
 msgid "I can't talk right now."
 msgstr "Nie mogę teraz rozmawiać."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:714
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:747
 msgid "Restarting RIL..."
 msgstr "Ponowne uruchamianie RIL..."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:723
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
 msgid "Restored!"
 msgstr "Przywrócony!"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:729
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:762
 msgid "Failed. Reboot Device."
 msgstr "Przegrany. Uruchom ponownie urządzenie."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:731
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:764
 #, python-brace-format
 msgid "Verifying... {attempt}"
 msgstr "Weryfikacja... {attempt}"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:758
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
 msgid "Not connected"
 msgstr "Nie połączono"
 
@@ -2448,7 +2416,7 @@ msgid "Add Decline Message"
 msgstr "Dodaj wiadomość odmowną"
 
 #: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:805
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:810
 msgid "Call Volume"
 msgstr "Głośność połączenia"
 
@@ -2642,7 +2610,7 @@ msgstr "Połączenia"
 msgid "Name (e.g. Mom)"
 msgstr "Imię (np. mama)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:806
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:811
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2657,19 +2625,19 @@ msgstr ""
 "bezgłośna. Poziom Bluetooth jest zapisywany na potrzeby przyszłej obsługi "
 "przekierowywania dźwięku."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:815
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:820
 msgid "Decline Message"
 msgstr "Odrzuć wiadomość"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:886
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:891
 msgid "System Default (Always Enabled)"
 msgstr "Domyślne ustawienia systemu (zawsze włączone)"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:897
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:902
 msgid "Personal Address Book"
 msgstr "Osobista książka adresowa"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:898
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:903
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2677,11 +2645,11 @@ msgstr ""
 "To jest książka adresowa, która zostanie zsynchronizowana z Andromedą, jeśli "
 "zdecydujesz się to zrobić w Ustawieniach systemu."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:906
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:911
 msgid "Andromeda Contacts"
 msgstr "Kontakty Andromedy"
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:907
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:912
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2689,7 +2657,7 @@ msgstr ""
 "To jest książka adresowa, która zostanie zsynchronizowana z Andromedą, jeśli "
 "zdecydujesz się to zrobić w Ustawieniach systemu."
 
-#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1032
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1037
 msgid "Settings Saved"
 msgstr "Ustawienia zapisane"
 
@@ -2875,6 +2843,28 @@ msgid ""
 msgstr ""
 "Spowoduje to unieważnienie aktualnego kodu w aplikacji uwierzytelniającej "
 "kontaktu. Jesteś pewien?"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS&Koniec"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} zawieszone"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 Odmów"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "Wyłącz wyciszenie mikrofonu"
+
+#~ msgid "MuteMic"
+#~ msgstr "Wyciszenie mikrofonu"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "Głośnik wyłączony"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "Głośnik włączony"
 
 #~ msgid "Allow Amplification"
 #~ msgstr "Zezwól na wzmocnienie"
