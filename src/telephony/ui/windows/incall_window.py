@@ -27,6 +27,7 @@ from ..windows.fader_window import ProximityFader
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.system_utils import restart_ril_modem
+from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.phone_utils import normalize_number
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
@@ -744,7 +745,7 @@ class InCallWindow(Gtk.Window):
         """Force restart the RIL."""
         self.btn_restart.set_sensitive(False)
         self.btn_restart.set_label(_("Restarting RIL..."))
-        restart_ril_modem()
+        run_in_background(restart_ril_modem)
         self.restart_attempts = 0
         GLib.timeout_add(2000, self._check_restart_success)
 

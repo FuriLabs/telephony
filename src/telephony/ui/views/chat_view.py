@@ -1251,6 +1251,26 @@ class ChatPage(Gtk.Box):
             on_confirm=_on_picked
         )
 
+    def _copy_attachments(self, sources):
+        """Copy composer attachments into the app's attachment store."""
+        final_attachments = []
+        att_dir = os.path.join(self.db.get_data_dir(), "attachments")
+        for src in sources:
+            try:
+                fname = os.path.basename(src)
+                dest = os.path.join(att_dir, f"{int(datetime.now().timestamp())}_{fname}")
+                shutil.copy2(src, dest)
+                final_attachments.append(dest)
+                if "/tmp/" in src:
+                    try:
+                        os.remove(src)
+                    except Exception as e:
+                        logger.warning(f"[Chat] Temp file cleanup failed: {e}")
+            except Exception as e:
+                logger.warning(f"[Chat] Attachment copy failed: {e}")
+                final_attachments.append(src)
+        return final_attachments
+
     def on_send(self, *args, scheduled_timestamp=None):
         """Handle send button click or scheduled send."""
         buffer = self.msg_view.get_buffer()
@@ -1261,60 +1281,49 @@ class ChatPage(Gtk.Box):
             return
 
         self.btn_send.set_sensitive(False)
-        final_attachments = []
-        if has_att:
-            att_dir = os.path.join(self.db.get_data_dir(), "attachments")
-            for src in self.attachments:
-                try:
-                    fname = os.path.basename(src)
-                    dest = os.path.join(att_dir, f"{int(datetime.now().timestamp())}_{fname}")
-                    shutil.copy2(src, dest)
-                    final_attachments.append(dest)
-                    if "/tmp/" in src:
-                        try:
-                            os.remove(src)
-                        except Exception as e:
-                            logger.warning(f"[Chat] Temp file cleanup failed: {e}")
-                except Exception as e:
-                    logger.warning(f"[Chat] Attachment copy failed: {e}")
-                    final_attachments.append(src)
-
-        if scheduled_timestamp:
-            self._draft_saved = True
-            self.db.delete_drafts(self.number)
-            row_id = self.db.add_message(self.number, 'outgoing', text, status='scheduled', subject=None, attachments=final_attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
-            if (self.app_window and self.app_window.scheduler is not None):
-                self.app_window.scheduler.add_cron(row_id, scheduled_timestamp)
-            self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
-
-            now = format_timestamp()
-            msg = MessageItem(row_id, "outgoing", text or _("[Attachment]"), now, "scheduled", attachments=final_attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
-            self.store.insert(0, msg)
-            self.scroll_to_bottom()
-
-            buffer.set_text("")
-            self.attachments = []
-            self.refresh_attachment_ui()
-            self.btn_send.set_sensitive(True)
-            return
-
         self._draft_saved = True
-        self.db.delete_drafts(self.number)
-
-        now = format_timestamp()
-        row_id = self.db.add_message(self.number, 'outgoing', text, status='sending', subject=None, attachments=final_attachments, sender="Me")
+        pending_attachments = list(self.attachments)
         buffer.set_text("")
         self.attachments = []
         self.refresh_attachment_ui()
-        msg = MessageItem(row_id, "outgoing", text or _("[Attachment]"), now, "sending", attachments=final_attachments, sender="Me")
-        self.store.insert(0, msg)
-        self.scroll_to_bottom()
-        self.btn_send.set_sensitive(True)
 
-        if self.is_group or has_att:
-            run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), text, final_attachments, row_id)
-        else:
-            run_in_background(self.app_window.ofono.send_sms_tracked, self.number, text, row_id)
+        def prepare():
+            final_attachments = self._copy_attachments(pending_attachments)
+            self.db.delete_drafts(self.number)
+            status = "scheduled" if scheduled_timestamp else "sending"
+            row_id = self.db.add_message(self.number, 'outgoing', text, status=status, subject=None,
+                                         attachments=final_attachments, sender="Me",
+                                         scheduled_timestamp=scheduled_timestamp)
+            return row_id, final_attachments
+
+        def done(result):
+            self.btn_send.set_sensitive(True)
+            if not result or result[0] is None:
+                return
+            row_id, final_attachments = result
+            now = format_timestamp()
+
+            if scheduled_timestamp:
+                if (self.app_window and self.app_window.scheduler is not None):
+                    self.app_window.scheduler.add_cron(row_id, scheduled_timestamp)
+                self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
+                msg = MessageItem(row_id, "outgoing", text or _("[Attachment]"), now, "scheduled",
+                                  attachments=final_attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
+                self.store.insert(0, msg)
+                self.scroll_to_bottom()
+                return
+
+            msg = MessageItem(row_id, "outgoing", text or _("[Attachment]"), now, "sending",
+                              attachments=final_attachments, sender="Me")
+            self.store.insert(0, msg)
+            self.scroll_to_bottom()
+
+            if self.is_group or has_att:
+                run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), text, final_attachments, row_id)
+            else:
+                run_in_background(self.app_window.ofono.send_sms_tracked, self.number, text, row_id)
+
+        run_in_background(prepare, on_complete=done)
 
     def on_scroll_changed(self, adj):
         """Handle scroll position change to mark read or fetch older."""
@@ -1344,7 +1353,7 @@ class ChatPage(Gtk.Box):
 
     def _do_mark_read(self):
         """Perform mark read logic."""
-        self.db.mark_conversation_read(self.db_number)
+        run_in_background(self.db.mark_conversation_read, self.db_number)
         self.messages_view.check_and_clear_notification(self.db_number)
 
         self.has_active_divider = False
@@ -1462,16 +1471,19 @@ class ChatPage(Gtk.Box):
         buffer = self.msg_view.get_buffer()
         start, end = buffer.get_bounds()
         text = buffer.get_text(start, end, True).strip()
+        draft_attachments = list(self.attachments)
 
-        has_att = len(self.attachments) > 0
+        def persist():
+            self.db.delete_drafts(self.number)
+            if not text and not draft_attachments:
+                return False
+            self.db.add_message(self.number, 'outgoing', text, status='draft', subject=None, attachments=draft_attachments, sender="Me")
+            return True
 
-        self.db.delete_drafts(self.number)
+        def done(saved):
+            if saved:
+                logger.info("[ChatPage] Draft saved")
+            if self.messages_view:
+                self.messages_view.refresh_list()
 
-        if not text and not has_att:
-            return
-
-        self.db.add_message(self.number, 'outgoing', text, status='draft', subject=None, attachments=self.attachments, sender="Me")
-        logger.info("[ChatPage] Draft saved")
-
-        if self.messages_view:
-            GLib.idle_add(self.messages_view.refresh_list)
+        run_in_background(persist, on_complete=done)

@@ -20,6 +20,7 @@ from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.thread_utils import run_in_background
 
 
 class CustomToneListWindow(Adw.Window):
@@ -74,6 +75,7 @@ class CustomToneListWindow(Adw.Window):
             search_box.append(self.search_entry)
 
             self.search_timer = None
+            self.search_token = 0
 
             main_box.append(search_box)
 
@@ -219,8 +221,15 @@ class CustomToneListWindow(Adw.Window):
 
         self.stack.set_visible_child_name("search")
 
-        contacts = self.eds.search_contacts(query)
-        self._build_search_results(contacts, query)
+        self.search_token += 1
+        current_token = self.search_token
+
+        def done(contacts):
+            if self.search_token != current_token:
+                return
+            self._build_search_results(contacts or [], query)
+
+        run_in_background(self.eds.search_contacts, query, on_complete=done)
         return False
 
     def _translate_label(self, label):

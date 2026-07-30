@@ -202,7 +202,11 @@ class ImportExportDialog:
         d.present()
 
     def _start_ios_usb_import(self):
-        connected, trusted, _detail = IOSBackupExtractor.check_connection()
+        run_in_background(IOSBackupExtractor.check_connection, on_complete=self._on_ios_connection_checked)
+
+    def _on_ios_connection_checked(self, result):
+        """Continue the USB import once the device probe finishes."""
+        connected, trusted, _detail = result if result else (False, False, "")
         if not connected:
             self.app_window.notify_error(_("No iOS device detected. Please connect your iPhone via USB."))
             return
@@ -228,11 +232,11 @@ class ImportExportDialog:
 
                 if sms_path and os.path.exists(sms_path):
                     GLib.idle_add(lambda: self.app_window.notify_loading(_("Importing iPhone SMS...")))
-                    _, messages_msg = import_ios_sms(self.db, sms_path, manifest_path, tmp_dir)
+                    _ok, messages_msg = import_ios_sms(self.db, sms_path, manifest_path, tmp_dir)
 
                 if calls_path and os.path.exists(calls_path):
                     GLib.idle_add(lambda: self.app_window.notify_loading(_("Importing iPhone Calls...")))
-                    _, calls_msg = import_ios_calls(self.db, calls_path)
+                    _ok, calls_msg = import_ios_calls(self.db, calls_path)
 
                 GLib.idle_add(self.app_window.hide_loading)
                 GLib.idle_add(lambda msg=f"{messages_msg}\n{calls_msg}": self.app_window.notify_success(msg))

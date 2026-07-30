@@ -214,9 +214,8 @@ class DataManagementDialog:
 
     def _do_clear_history(self):
         """Clear history action."""
-        self.db.clear_history()
-
-        self.app_window.notify_success(_("Call History Deleted"))
+        run_in_background(self.db.clear_history,
+                          on_complete=lambda _r: self.app_window.notify_success(_("Call History Deleted")))
 
     def _do_clear_messages(self):
         """Clear messages action."""
@@ -231,15 +230,13 @@ class DataManagementDialog:
 
     def _do_clear_groups(self):
         """Clear groups action."""
-        self.db.clear_group_names()
-
-        self.app_window.notify_success(_("Group Names Reset"))
+        run_in_background(self.db.clear_group_names,
+                          on_complete=lambda _r: self.app_window.notify_success(_("Group Names Reset")))
 
     def _do_clear_blocklist(self):
         """Clear blocklist action."""
-        self.db.clear_blocklist()
-
-        self.app_window.notify_success(_("Blocklist Cleared"))
+        run_in_background(self.db.clear_blocklist,
+                          on_complete=lambda _r: self.app_window.notify_success(_("Blocklist Cleared")))
 
     def _do_clear_contacts(self, source_uid=None):
         """Clear contacts action."""
