@@ -331,10 +331,12 @@ class ChatPage(Gtk.Box):
 
     def on_mark_unread(self, message_id):
         """Mark conversation as unread from specific message ID upwards."""
-        self.db.mark_conversation_unread_from_message(self.db_number, message_id)
+        def done(_result):
+            if (self.messages_view is not None):
+                self.messages_view.close_active_chat()
 
-        if (self.messages_view is not None):
-            self.messages_view.close_active_chat()
+        run_in_background(self.db.mark_conversation_unread_from_message,
+                          self.db_number, message_id, on_complete=done)
 
     def on_reschedule_message(self, item):
         """Reschedule a scheduled message or retry a failed one."""
@@ -357,11 +359,15 @@ class ChatPage(Gtk.Box):
                 return
 
             ts_str = dt.format("%Y-%m-%d %H:%M:%S")
-            self.db.update_message_schedule(item.id, status="scheduled", timestamp=ts_str)
-            if (self.app_window and self.app_window.scheduler is not None):
-                self.app_window.scheduler.add_cron(item.id, ts_str)
-            self._reload_chat()
-            self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
+
+            def done(_result):
+                if (self.app_window and self.app_window.scheduler is not None):
+                    self.app_window.scheduler.add_cron(item.id, ts_str)
+                self._reload_chat()
+                self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
+
+            run_in_background(self.db.update_message_schedule, item.id,
+                              on_complete=done, status="scheduled", timestamp=ts_str)
 
         DateTimePicker(
             parent=self.app_window,
@@ -693,6 +699,8 @@ class ChatPage(Gtk.Box):
 
         list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
 
+        block_buttons = {}
+
         for rec in self.recipients:
             hbox = Gtk.Box(spacing=12, css_classes=["card"])
             hbox.set_margin_start(8)
@@ -748,37 +756,51 @@ class ChatPage(Gtk.Box):
             if can_call:
                 b_call.connect("clicked", lambda b, n=rec: GLib.idle_add(lambda: self.app_window.start_call(n) or False))
 
-            is_blocked = self.db.is_blocked(rec)
-            icon_blk = "action-unavailable-symbolic" if not is_blocked else "changes-allow-symbolic"
-            b_blk = Gtk.Button(icon_name=icon_blk, css_classes=["circular", "destructive-action"])
+            b_blk = Gtk.Button(icon_name="action-unavailable-symbolic", css_classes=["circular", "destructive-action"])
             b_blk.set_valign(Gtk.Align.CENTER)
-
-            if not self.app_window.eds.is_ready:
-                b_blk.set_sensitive(False)
+            b_blk.set_sensitive(False)
 
             actions_box.append(b_blk)
+            block_buttons[rec] = b_blk
 
             def _toggle_block(btn, number):
                 self.btn_menu.set_active(False)
 
                 def _do_toggle():
-                    if self.db.is_blocked(number):
-                        blocked = self.db.get_blocked_numbers()
-                        norm_rec = normalize_number(number)
-                        for bid, bnum, _ignored in blocked:
-                            if normalize_number(bnum) == norm_rec:
-                                self.db.unblock_number(bid, number)
-                                break
+                    if not self.db.is_blocked(number):
+                        return False
+                    blocked = self.db.get_blocked_numbers()
+                    norm_rec = normalize_number(number)
+                    for bid, bnum, _ignored in blocked:
+                        if normalize_number(bnum) == norm_rec:
+                            self.db.unblock_number(bid, number)
+                            break
+                    return True
+
+                def _after_toggle(did_unblock, target_btn=btn):
+                    if did_unblock:
+                        target_btn.set_icon_name("action-unavailable-symbolic")
                         self.app_window.notify_success(_("Unblocked"))
-                    else:
-                        self.app_window.present_blocklist_editor(number_preset=number)
-                    return False
-                GLib.timeout_add(50, _do_toggle)
+                        return
+                    self.app_window.present_blocklist_editor(number_preset=number)
+
+                run_in_background(_do_toggle, on_complete=_after_toggle)
 
             b_blk.connect("clicked", lambda b, n=rec: _toggle_block(b, n))
 
             hbox.append(actions_box)
             list_box.append(hbox)
+
+        def _fetch_block_states():
+            return {num: self.db.is_blocked(num) for num in block_buttons}
+
+        def _apply_block_states(states):
+            for num, btn in block_buttons.items():
+                blocked_state = (states or {}).get(num, False)
+                btn.set_icon_name("changes-allow-symbolic" if blocked_state else "action-unavailable-symbolic")
+                btn.set_sensitive(self.app_window.eds.is_ready)
+
+        run_in_background(_fetch_block_states, on_complete=_apply_block_states)
 
         scrolled.set_child(list_box)
         box.append(scrolled)
@@ -947,11 +969,13 @@ class ChatPage(Gtk.Box):
 
     def on_retry_message(self, item):
         """Resend a failed message."""
-        self.db.update_message_status(item.id, "sending")
-        if self.is_group or item.attachments:
-            run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), item.body, list(item.attachments or []), item.id)
-        else:
-            run_in_background(self.app_window.ofono.send_sms_tracked, self.number, item.body, item.id)
+        def dispatch(_result):
+            if self.is_group or item.attachments:
+                run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), item.body, list(item.attachments or []), item.id)
+            else:
+                run_in_background(self.app_window.ofono.send_sms_tracked, self.number, item.body, item.id)
+
+        run_in_background(self.db.update_message_status, item.id, "sending", on_complete=dispatch)
 
     def _reload_chat(self):
         """Reload the chat conversation."""
@@ -984,11 +1008,15 @@ class ChatPage(Gtk.Box):
     def on_group_rename(self, entry):
         """Handle group renaming."""
         new_name = entry.get_text().strip()
-        if new_name:
-            self.db.set_group_name(self.recipients, new_name)
+        if not new_name:
+            return
+
+        def done(_result):
             self.contact_name = new_name
             self.title_widget.set_title(new_name)
             self.app_window.notify_success(_("Group renamed"))
+
+        run_in_background(self.db.set_group_name, self.recipients, new_name, on_complete=done)
 
     def _remaining_attachment_budget(self):
         """Return how many bytes of MMS attachment budget are still available."""

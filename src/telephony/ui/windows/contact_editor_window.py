@@ -34,17 +34,20 @@ class ContactEditor(Adw.Window):
         self.source_toggles = None
         self.switch_fav = None
         self._saving_in_progress = False
+        self._destroyed = False
         super().__init__(title=_("Contact Details"))
+        self.connect("close-request", self._on_close_request)
         self.eds = eds_manager
         self.main_window = main_window
         self.uid = contact_data['uid'] if contact_data else None
 
         self.vcard_cache = ""
+        needs_vcard_fetch = False
         if contact_data:
             if 'vcard' in contact_data and contact_data['vcard']:
                 self.vcard_cache = contact_data['vcard']
             elif self.uid:
-                self.vcard_cache = self.eds.get_contact_vcard(self.uid)
+                needs_vcard_fetch = True
 
         self.contact_name = contact_data['name'] if contact_data else ""
 
@@ -64,6 +67,23 @@ class ContactEditor(Adw.Window):
 
         self.selected_date = None
 
+        self.refresh_ui()
+
+        if needs_vcard_fetch:
+            run_in_background(self.eds.get_contact_vcard, self.uid, on_complete=self._on_vcard_loaded)
+
+    def _on_close_request(self, _window):
+        """Remember that the window is closing so async callbacks bail out."""
+        self._destroyed = True
+        return False
+
+    def _on_vcard_loaded(self, vcard):
+        """Apply the asynchronously fetched vCard and rebuild the UI."""
+        if self._destroyed:
+            return
+        if not vcard:
+            return
+        self.vcard_cache = vcard
         self.refresh_ui()
 
     def _clean_vcard_str(self, text):
@@ -652,8 +672,6 @@ class ContactEditor(Adw.Window):
                     norm_val = normalize_number(raw_val)
                     phones_to_save.append((norm_val, label_options_phone[dropdown.get_selected()]))
 
-            blocked_conflict = None
-
             selected_sources = []
             if (self.source_toggles is not None):
                 for uid, row in self.source_toggles.items():
@@ -666,46 +684,61 @@ class ContactEditor(Adw.Window):
                 if def_uid:
                     selected_sources.append(def_uid)
 
-            conflicts_by_num = {}
+            if force:
+                self._proceed_with_save(phones_to_save, selected_sources)
+                return
 
             resolver_enabled = self.main_window.gsettings_mgr.gsettings.get_boolean("duplicate-resolver-enabled")
 
-            if not force:
-                for norm_val, lbl in phones_to_save:
-                    if self.main_window.db.is_blocked(norm_val):
-                        blocked_conflict = norm_val
-                        break
+            run_in_background(
+                self._run_save_prechecks, phones_to_save, selected_sources, resolver_enabled,
+                on_complete=lambda result: self._on_prechecks_done(result, phones_to_save, selected_sources),
+                on_error=self._on_precheck_failed
+            )
+        except Exception as e:
+            self._saving_in_progress = False
+            if (self.btn_save is not None):
+                self.btn_save.set_sensitive(True)
+            logger.error(f"[ContactEditor] On save error: {e}")
 
-                    if resolver_enabled:
-                        with self.eds.cache_lock:
-                            candidates = self.eds.lookup_map.get(norm_val, [])
-                            for cand in candidates:
-                                _c1, _c2, c_source_uid, c_uid = cand
-                                if c_uid != self.uid and c_source_uid in selected_sources:
-                                    if norm_val not in conflicts_by_num:
-                                        conflicts_by_num[norm_val] = []
-                                    if c_uid not in conflicts_by_num[norm_val]:
-                                        conflicts_by_num[norm_val].append(c_uid)
+    def _run_save_prechecks(self, phones_to_save, selected_sources, resolver_enabled):
+        """Scan the blocklist and the contact cache for conflicts off the main thread."""
+        blocked_conflict = None
+        conflicts_by_num = {}
 
-                    if blocked_conflict:
-                        break
+        for norm_val, _lbl in phones_to_save:
+            if self.main_window.db.is_blocked(norm_val):
+                blocked_conflict = norm_val
+                break
+
+            if resolver_enabled:
+                with self.eds.cache_lock:
+                    candidates = self.eds.lookup_map.get(norm_val, [])
+                    for cand in candidates:
+                        _c1, _c2, c_source_uid, c_uid = cand
+                        if c_uid != self.uid and c_source_uid in selected_sources:
+                            if norm_val not in conflicts_by_num:
+                                conflicts_by_num[norm_val] = []
+                            if c_uid not in conflicts_by_num[norm_val]:
+                                conflicts_by_num[norm_val].append(c_uid)
+
+        return blocked_conflict, conflicts_by_num
+
+    def _on_prechecks_done(self, result, phones_to_save, selected_sources):
+        """Continue the save flow on the main thread after background checks."""
+        if self._destroyed:
+            self._saving_in_progress = False
+            return
+
+        try:
+            blocked_conflict, conflicts_by_num = result
 
             if blocked_conflict:
                 self._saving_in_progress = False
-
-                def _do_unblock_and_save():
-                    blocked_list = self.main_window.db.get_blocked_numbers()
-                    for bid, bnum, _ignored in blocked_list:
-                        if normalize_number(bnum) == blocked_conflict:
-                            self.main_window.db.remove_blocked_number(bid)
-                            break
-                    self.on_save(btn, force=True)
-
-                self._confirm_unblock_add(blocked_conflict, _do_unblock_and_save)
+                self._confirm_unblock_add(blocked_conflict, lambda: self._unblock_and_resave(blocked_conflict))
                 return
 
             if conflicts_by_num:
-                self._saving_in_progress = False
                 new_data = self._get_current_contact_data(phones_to_save)
 
                 conflicts = []
@@ -719,6 +752,8 @@ class ContactEditor(Adw.Window):
                         conflicts.append((num, conflict_list))
 
                 if conflicts:
+                    self._saving_in_progress = False
+
                     def on_wizard_done(force_save=False):
                         self.close()
                         if force_save:
@@ -728,6 +763,35 @@ class ContactEditor(Adw.Window):
                     win.present()
                     return
 
+            self._proceed_with_save(phones_to_save, selected_sources)
+        except Exception as e:
+            self._saving_in_progress = False
+            if (self.btn_save is not None):
+                self.btn_save.set_sensitive(True)
+            logger.error(f"[ContactEditor] On save error: {e}")
+
+    def _on_precheck_failed(self, error):
+        """Release the save guard after failed background pre-checks."""
+        self._saving_in_progress = False
+        logger.error(f"[ContactEditor] Save pre-check failed: {error}")
+        if self._destroyed:
+            return
+        self.main_window.notify_error(_("Failed to save contact"))
+
+    def _unblock_and_resave(self, blocked_conflict):
+        """Remove the conflicting blocklist entry, then retry the save."""
+        def task():
+            blocked_list = self.main_window.db.get_blocked_numbers()
+            for bid, bnum, _ignored in blocked_list:
+                if normalize_number(bnum) == blocked_conflict:
+                    self.main_window.db.remove_blocked_number(bid)
+                    break
+
+        run_in_background(task, on_complete=lambda _result: self.on_save(self.btn_save, force=True))
+
+    def _proceed_with_save(self, phones_to_save, selected_sources):
+        """Kick off the actual contact write after all pre-checks passed."""
+        try:
             self.main_window.notify_loading(_("Saving contact..."))
             self.btn_save.set_sensitive(False)
 
