@@ -26,11 +26,11 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
 from ...backend.utils.thread_utils import run_in_background
+from .media_window_base import MediaCaptureWindow, VIEWFINDER_START_DELAY_MS
 
 if not Gst.is_initialized():
     Gst.init(None)
 
-VIEWFINDER_START_DELAY_MS = 200
 CAPTURE_START_DELAY_MS = 500
 CAPTURE_RETRY_DELAY_MS = 1000
 MAX_CAPTURE_RETRIES = 3
@@ -39,7 +39,7 @@ MAX_IMAGE_DIMENSION = 800
 JPEG_QUALITY = 80
 
 
-class CameraPhoto(Adw.Window):
+class CameraPhoto(MediaCaptureWindow):
     """Camera window for taking photos."""
 
     def __init__(self, parent_window, on_attach_callback):
@@ -60,50 +60,10 @@ class CameraPhoto(Adw.Window):
         self.retry_count = 0
         self.max_retries = MAX_CAPTURE_RETRIES
 
-        self._closed = False
-        self._timeout_ids = set()
-
         self._setup_ui()
         self.connect("close-request", self._on_close_request)
 
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
-
-    def _schedule_timeout(self, interval_ms, callback):
-        """Schedule a tracked GLib timeout that is cancelled when the window closes."""
-        holder = {"id": 0}
-
-        def _wrapper():
-            """Run the callback unless the window is closed, untracking one-shot sources."""
-            if self._closed:
-                self._timeout_ids.discard(holder["id"])
-                return False
-            keep_going = bool(callback())
-            if not keep_going:
-                self._timeout_ids.discard(holder["id"])
-            return keep_going
-
-        holder["id"] = GLib.timeout_add(interval_ms, _wrapper)
-        self._timeout_ids.add(holder["id"])
-        return holder["id"]
-
-    def _cancel_timeout(self, source_id):
-        """Cancel a tracked GLib timeout if it is still pending."""
-        if source_id in self._timeout_ids:
-            GLib.source_remove(source_id)
-            self._timeout_ids.discard(source_id)
-
-    def _cancel_tracked_timeouts(self):
-        """Remove every pending GLib timeout owned by this window."""
-        for source_id in list(self._timeout_ids):
-            GLib.source_remove(source_id)
-        self._timeout_ids.clear()
-
-    def _watch_bus(self, element, handler):
-        """Attach a tracked signal watch to the element's bus."""
-        bus = element.get_bus()
-        bus.add_signal_watch()
-        handler_id = bus.connect("message", handler)
-        return bus, handler_id
 
     def _release_bus(self):
         """Detach the signal watch from the current pipeline bus."""
@@ -468,8 +428,3 @@ class CameraPhoto(Adw.Window):
         self._stop_pipeline()
         self._remove_file_quietly(self.temp_capture_path)
         return False
-
-    def _show_error(self, message):
-        """Show an error toast."""
-        toast = Adw.Toast.new(message)
-        self.toast_overlay.add_toast(toast)
