@@ -33,6 +33,10 @@ NOTIFY_INTERFACE = "org.freedesktop.Notifications"
 
 DEFAULT_MAX_ATTACHMENT_SIZE = 1100 * 1024
 
+MMS_RESOLVE_TIMEOUT_SECONDS = 180
+UNCLAIMED_STATE_LIMIT = 20
+SEEN_SIGNATURE_LIMIT = 50
+
 
 class MmsManager(GObject.Object):
     """
@@ -192,7 +196,7 @@ class MmsManager(GObject.Object):
                     return
 
                 self.seen_mms_signatures.append(signature)
-                if len(self.seen_mms_signatures) > 50:
+                if len(self.seen_mms_signatures) > SEEN_SIGNATURE_LIMIT:
                     self.seen_mms_signatures.pop(0)
                 self.processed_paths.add(msg_path)
 
@@ -308,7 +312,7 @@ class MmsManager(GObject.Object):
             self._resolve_mms(row_id, state)
             return
 
-        GLib.timeout_add_seconds(180, self._timeout_mms, row_id)
+        GLib.timeout_add_seconds(MMS_RESOLVE_TIMEOUT_SECONDS, self._timeout_mms, row_id)
 
     def _resolve_mms(self, row_id, state):
         """Write the final status for an in-flight MMS row."""
@@ -346,7 +350,7 @@ class MmsManager(GObject.Object):
                 self.inflight_mms.pop(row_id, None)
             else:
                 self.unclaimed_mms_states[path] = value
-                while len(self.unclaimed_mms_states) > 20:
+                while len(self.unclaimed_mms_states) > UNCLAIMED_STATE_LIMIT:
                     self.unclaimed_mms_states.pop(next(iter(self.unclaimed_mms_states)))
 
         if row_id is not None:

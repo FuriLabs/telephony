@@ -23,6 +23,9 @@ from ...backend.utils.system_utils import is_location_enabled, enable_location
 
 from gettext import gettext as _
 
+ACCURACY_THRESHOLD_METERS = 1000
+WARMUP_DELAY_SECONDS = 2
+
 
 class LocationManager(GObject.Object):
     """
@@ -39,8 +42,8 @@ class LocationManager(GObject.Object):
         self.location_signal_id = None
         self.is_fetching = False
         self.best_location = None
-        self.accuracy_threshold = 1000
-        self.WARMUP_DELAY = 2
+        self.accuracy_threshold = ACCURACY_THRESHOLD_METERS
+        self.WARMUP_DELAY = WARMUP_DELAY_SECONDS
 
     def get_current_location(self, callback, progress_callback=None, accuracy_threshold=1000, timeout=60):
         """

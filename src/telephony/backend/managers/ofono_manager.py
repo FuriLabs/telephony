@@ -34,6 +34,9 @@ from .device_lock_manager import DeviceLockManager
 from .callback_manager import CallbackManager
 from .relay_manager import RelayManager
 
+REPEATED_CALL_WINDOW_SECONDS = 300
+REPEATED_CALL_THRESHOLD = 3
+
 
 class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, OfonoTrustedActionsManager):
     """
@@ -393,11 +396,11 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
             if norm_num not in self.call_history_tracker:
                 self.call_history_tracker[norm_num] = []
 
-            valid_calls = [t for t in self.call_history_tracker[norm_num] if (now - t) < 300]
+            valid_calls = [t for t in self.call_history_tracker[norm_num] if (now - t) < REPEATED_CALL_WINDOW_SECONDS]
             valid_calls.append(now)
             self.call_history_tracker[norm_num] = valid_calls
 
-            if len(valid_calls) >= 3:
+            if len(valid_calls) >= REPEATED_CALL_THRESHOLD:
                 logger.info(f"[RepeatedCall] {number} called {len(valid_calls)} times in 5 mins - forcing MAX volume")
                 self.audio.force_max_feedback()
                 self.is_volume_boosted = True

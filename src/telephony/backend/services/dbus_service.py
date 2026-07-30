@@ -26,6 +26,8 @@ from telephony.backend.utils.importer_android_utils import import_android_sms, i
 from telephony.backend.utils.importer_ios_utils import import_ios_sms, import_ios_calls
 from telephony.backend.utils.thread_utils import run_in_background
 
+MISSED_MESSAGE_BUFFER_MINUTES = 14400
+
 DAEMON_INTERFACE_XML = """
 <node>
   <interface name="io.furios.Telephony.Daemon">
@@ -861,7 +863,7 @@ class TelephonyDaemonDBus:
         """Handle SendMissedMessage command."""
         msg_id = parameters.unpack()[0]
         if self.app and self.app.scheduler:
-            missed = self.app.scheduler.get_missed_messages(buffer_minutes=14400)
+            missed = self.app.scheduler.get_missed_messages(buffer_minutes=MISSED_MESSAGE_BUFFER_MINUTES)
             target = next((m for m in missed if m[0] == msg_id), None)
             if target:
                 self.app.scheduler._process_message(target)

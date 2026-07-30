@@ -21,6 +21,8 @@ from gi.repository import GLib
 
 from .phone_utils import normalize_number
 
+SQLITE_MAX_BATCH_VARIABLES = 900
+
 
 class DbContactsUtils:
     def get_contacts_lookup_map(self):
@@ -169,7 +171,7 @@ class DbContactsUtils:
                 to_delete = list(local_uids - active_set)
 
                 if to_delete:
-                    batch_size = 900
+                    batch_size = SQLITE_MAX_BATCH_VARIABLES
                     for i in range(0, len(to_delete), batch_size):
                         batch = to_delete[i:i + batch_size]
                         placeholders = ",".join("?" * len(batch))

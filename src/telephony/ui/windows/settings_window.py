@@ -16,6 +16,7 @@
 import os
 import subprocess
 from ...backend.utils.thread_utils import run_in_background
+from ...backend.managers.audio_manager import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
@@ -265,8 +266,8 @@ class SettingsWindow(Adw.Window):
         for route_id, title in route_titles:
             row = Adw.ActionRow(title=title)
             scale = Gtk.Scale.new_with_range(
-                Gtk.Orientation.HORIZONTAL, 10, 100, 10)
-            scale.set_value(saved_levels.get(route_id, 80))
+                Gtk.Orientation.HORIZONTAL, CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, 10)
+            scale.set_value(saved_levels.get(route_id, CALL_VOLUME_DEFAULT_PERCENT))
             scale.set_hexpand(True)
             scale.set_size_request(180, -1)
             scale.set_draw_value(True)
@@ -807,7 +808,7 @@ class SettingsWindow(Adw.Window):
     def _commit_volume_levels(self):
         """Write the current slider values to settings."""
         self._volume_commit_timer = None
-        volume_levels = {route: max(10, min(100, int(scale.get_value())))
+        volume_levels = {route: max(CALL_VOLUME_MIN_PERCENT, min(CALL_VOLUME_MAX_PERCENT, int(scale.get_value())))
                          for route, scale in self.volume_scales.items()}
         self.main_window.gsettings_mgr.set_call_volume_levels(volume_levels)
         return False

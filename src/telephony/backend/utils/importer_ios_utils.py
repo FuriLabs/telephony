@@ -28,6 +28,8 @@ from .importer_core_utils import _get_value
 from .phone_utils import normalize_number
 
 MAC_ABSOLUTE_EPOCH = 978307200
+NANOSECOND_DIGIT_THRESHOLD = 10
+NANOSECONDS_PER_SECOND = 1000000000
 
 
 def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
@@ -129,8 +131,8 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
 
                 try:
                     date_float = float(date)
-                    if len(str(int(date_float))) > 10:
-                        date_float = date_float / 1000000000
+                    if len(str(int(date_float))) > NANOSECOND_DIGIT_THRESHOLD:
+                        date_float = date_float / NANOSECONDS_PER_SECOND
                     unix_ts = date_float + MAC_ABSOLUTE_EPOCH
                     time_str = format_timestamp(datetime.fromtimestamp(unix_ts))
                 except Exception as e:

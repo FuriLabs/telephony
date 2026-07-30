@@ -19,6 +19,8 @@ from loguru import logger
 from gettext import gettext as _
 from ..utils.phone_utils import normalize_number
 
+ANSWER_SWAP_DELAY_MS = 500
+
 
 class OfonoCallsManager:
     def _sync_existing_calls(self):
@@ -81,7 +83,7 @@ class OfonoCallsManager:
 
         if other_dialing:
             self.hangup_call(other_dialing)
-            GLib.timeout_add(500, lambda: self._execute_answer(target_path))
+            GLib.timeout_add(ANSWER_SWAP_DELAY_MS, lambda: self._execute_answer(target_path))
             return
 
         if other_active:

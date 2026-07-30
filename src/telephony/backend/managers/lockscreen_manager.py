@@ -23,6 +23,8 @@ INCALL_DESKTOP_ID = "io.furios.Telephony.incall"
 EMERGENCY_DESKTOP_ID = "io.furios.Telephony.emergency"
 PHOSH_NOTIFY_SCHEMA = "sm.puri.phosh.notifications"
 
+RESPAWN_DELAY_MS = 1000
+
 
 class LockScreenManager:
     """
@@ -345,7 +347,7 @@ class LockScreenManager:
                 break
 
         if target_path and target_path not in self.respawn_timers:
-            self.respawn_timers[target_path] = GLib.timeout_add(1000, self._scheduled_respawn, target_path)
+            self.respawn_timers[target_path] = GLib.timeout_add(RESPAWN_DELAY_MS, self._scheduled_respawn, target_path)
 
     def _scheduled_respawn(self, path):
         """Respawn notification if still relevant."""

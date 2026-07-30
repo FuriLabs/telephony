@@ -28,6 +28,7 @@ from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncat
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.system_utils import restart_ril_modem
 from ...backend.utils.thread_utils import run_in_background
+from ...backend.managers.audio_manager import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...backend.utils.phone_utils import normalize_number
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
@@ -90,6 +91,8 @@ def input_route_icon(route_id):
 
 
 HANGUP_VERIFY_DELAY_MS = 3500
+RESTART_POLL_INTERVAL_MS = 2000
+RESTART_MAX_ATTEMPTS = 15
 KNOCK_REPEAT_SECONDS = 5
 
 
@@ -787,7 +790,7 @@ class InCallWindow(Gtk.Window):
         self.btn_restart.set_label(_("Restarting RIL..."))
         run_in_background(restart_ril_modem)
         self.restart_attempts = 0
-        GLib.timeout_add(2000, self._check_restart_success)
+        GLib.timeout_add(RESTART_POLL_INTERVAL_MS, self._check_restart_success)
 
     def _check_restart_success(self):
         """Poll for RIL restart success."""
@@ -798,7 +801,7 @@ class InCallWindow(Gtk.Window):
             GLib.timeout_add(1000, self._reset_from_error)
             return False
         self.restart_attempts += 1
-        if self.restart_attempts > 15:
+        if self.restart_attempts > RESTART_MAX_ATTEMPTS:
             self.btn_restart.set_label(_("Failed. Reboot Device."))
             return False
         self.btn_restart.set_label(_("Verifying... {attempt}").format(attempt=self.restart_attempts))
@@ -897,7 +900,7 @@ class InCallWindow(Gtk.Window):
     def _push_route_volume(self):
         """Apply the current route's configured level to the call sink."""
         levels = self.gsettings_mgr.get_call_volume_levels()
-        level = max(10, min(100, levels.get(self.current_route, 80))) / 100.0
+        level = max(CALL_VOLUME_MIN_PERCENT, min(CALL_VOLUME_MAX_PERCENT, levels.get(self.current_route, CALL_VOLUME_DEFAULT_PERCENT))) / 100.0
         self.audio.set_call_volume_level(level)
 
     def _on_volume_settings_changed(self, settings, key):

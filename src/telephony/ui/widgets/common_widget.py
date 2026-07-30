@@ -20,6 +20,8 @@ from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
 
+LIST_CHUNK_SIZE = 20
+
 
 def translate_phone_label(label):
     """Translate a phone label key to its localized string."""
@@ -127,7 +129,7 @@ class DataLoader:
                         GLib.idle_add(on_finish)
                     return
 
-                chunk_size = 20
+                chunk_size = LIST_CHUNK_SIZE
                 state = {'idx': 0, 'is_first_chunk': True}
 
                 def process_next_chunk():

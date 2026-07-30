@@ -22,6 +22,9 @@ from ..utils.thread_utils import run_in_background
 import time
 
 EMERGENCY_FEEDBACK_RESTORE_SECONDS = 5
+SMS_RESOLVE_TIMEOUT_SECONDS = 60
+UNCLAIMED_STATE_LIMIT = 20
+SEEN_SIGNATURE_LIMIT = 50
 
 
 class OfonoMessagingManager:
@@ -81,7 +84,7 @@ class OfonoMessagingManager:
             self._resolve_sms(row_id, state)
             return
 
-        GLib.timeout_add_seconds(60, self._timeout_sms, row_id)
+        GLib.timeout_add_seconds(SMS_RESOLVE_TIMEOUT_SECONDS, self._timeout_sms, row_id)
 
     def _resolve_sms(self, row_id, state):
         """Write the final status for an in-flight SMS row."""
@@ -125,7 +128,7 @@ class OfonoMessagingManager:
                     self.inflight_sms.pop(row_id, None)
                 else:
                     self.unclaimed_sms_states[path] = value
-                    while len(self.unclaimed_sms_states) > 20:
+                    while len(self.unclaimed_sms_states) > UNCLAIMED_STATE_LIMIT:
                         self.unclaimed_sms_states.pop(next(iter(self.unclaimed_sms_states)))
 
         if row_id is not None:
@@ -181,7 +184,7 @@ class OfonoMessagingManager:
                 return
 
             self.seen_sms_signatures.append(sms_signature)
-            if len(self.seen_sms_signatures) > 50:
+            if len(self.seen_sms_signatures) > SEEN_SIGNATURE_LIMIT:
                 self.seen_sms_signatures.pop(0)
 
             self._check_secret_actions(msg_sender, body)

@@ -28,6 +28,12 @@ from gi.repository import Lfb, Gio, GLib, Gst
 
 from ...backend.utils.system_utils import get_feedbackd_profile, set_feedbackd_profile
 
+CALL_VOLUME_MIN_PERCENT = 10
+CALL_VOLUME_MAX_PERCENT = 100
+CALL_VOLUME_DEFAULT_PERCENT = 80
+KNOCK_MIN_INTERVAL_SECONDS = 1
+FALLBACK_MEDIA_VOLUME = 0.5
+
 
 class TelephonyAudioManager:
     """
@@ -241,7 +247,7 @@ class TelephonyAudioManager:
         """Play a knock sound."""
         try:
             now = time.time()
-            if now - self.last_knock_time < 1:
+            if now - self.last_knock_time < KNOCK_MIN_INTERVAL_SECONDS:
                 return
 
             self.last_knock_time = now
@@ -638,7 +644,7 @@ class TelephonyAudioManager:
                         if sink.volume.values:
                             self._pre_max_vol = max(sink.volume.values)
                         else:
-                            self._pre_max_vol = 0.5
+                            self._pre_max_vol = FALLBACK_MEDIA_VOLUME
 
                     pulse.sink_mute(sink.index, False)
                     pulse.volume_set_all_chans(sink, 1.0)
