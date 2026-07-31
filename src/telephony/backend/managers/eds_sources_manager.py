@@ -217,11 +217,19 @@ class EdsSourcesManager:
             logger.error(f"[EDS] Client Connect Error for {uid}: {e}")
 
     def _load_from_local_db(self, source_uid, rank):
-        """Load contacts from local database cache for a specific source."""
+        """Load contacts from local database cache for a specific source once."""
+        with self.cache_lock:
+            if source_uid in self._cache_loaded_sources:
+                logger.debug(f"[EDS] Cache for {source_uid} already loaded, skipping")
+                return
+            self._cache_loaded_sources.add(source_uid)
+
         try:
             contacts = self.db_ref.get_cached_contacts(source_uid)
         except Exception as e:
             logger.error(f"[EDS] DB fetch error: {e}")
+            with self.cache_lock:
+                self._cache_loaded_sources.discard(source_uid)
             return
 
         count = 0
@@ -446,6 +454,7 @@ class EdsSourcesManager:
                 logger.debug(f"[EDS] View stop error (ignorable): {e}")
 
         with self.cache_lock:
+            self._cache_loaded_sources.discard(uid)
             to_remove = [k for k, v in self.cache.items() if v.get('source_uid') == uid]
             for k in to_remove:
                 del self.cache[k]

@@ -47,6 +47,7 @@ class EdsManager(GObject.Object, EdsSourcesManager, EdsCacheManager, EdsEventsMa
 
         self.cache = {}
         self.cache_lock = threading.Lock()
+        self._cache_loaded_sources = set()
 
         self.lookup_map = {}
 
