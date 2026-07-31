@@ -148,6 +148,8 @@ class InCallWindow(Gtk.Window):
         self._priority_timer_ids = []
         self._route_poll_running = False
         self._next_knock_time = 0
+        self._closing_paths = set()
+        self.defer_present = True
 
         self._setup_ui()
 
@@ -378,6 +380,10 @@ class InCallWindow(Gtk.Window):
         self.lock_manager.set_locked(self.is_locked)
 
         if self.in_error_mode:
+            if not self.ofono.active_calls:
+                logger.info("[InCall] Stuck call released on its own, recovering from error state")
+                self._reset_from_error()
+                return
             if self.is_locked:
                 self.lock_manager.show_stuck_notification()
             return
@@ -390,7 +396,11 @@ class InCallWindow(Gtk.Window):
             if not calls:
                 self.is_closing = False
                 self._clean_reset()
-            return
+                return
+            if self._closing_paths & set(calls):
+                return
+            logger.info("[InCall] New call arrived during hangup teardown, recovering")
+            self._recover_from_closing()
 
         if not calls:
             if self.active_path is not None or self.is_ringing or self.is_muted or self.is_speaker:
@@ -401,7 +411,8 @@ class InCallWindow(Gtk.Window):
 
         self._start_timers()
 
-        self.present()
+        if not self.defer_present:
+            self.present()
         if not self.is_locked:
             self.lock_manager.clear_all()
 
@@ -477,10 +488,8 @@ class InCallWindow(Gtk.Window):
                     logger.info(f"[Priority] Call from {p_data['number']} - forcing MAX volume")
                     self.call_history[self.active_path]['boosted'] = True
                     self.audio.force_max_feedback()
-                    self._priority_timer_ids = [
-                        GLib.timeout_add_seconds(1, lambda: self.audio.force_max_feedback() or False),
-                        GLib.timeout_add_seconds(5, lambda: self.audio.force_max_feedback(restore=True) or False),
-                    ]
+                    self._schedule_priority_boost(1, False)
+                    self._schedule_priority_boost(5, True)
 
                 if not self.is_ringing and not is_silenced:
                     custom_ring = self._get_custom_ringtone(p_data['number'])
@@ -524,6 +533,19 @@ class InCallWindow(Gtk.Window):
                 if path and os.path.exists(path):
                     return path
         return None
+
+    def _schedule_priority_boost(self, seconds, restore):
+        """Arm a tracked one-shot priority volume timer that prunes itself."""
+        holder = {}
+
+        def fire():
+            if holder["id"] in self._priority_timer_ids:
+                self._priority_timer_ids.remove(holder["id"])
+            self.audio.force_max_feedback(restore=restore)
+            return False
+
+        holder["id"] = GLib.timeout_add_seconds(seconds, fire)
+        self._priority_timer_ids.append(holder["id"])
 
     def _bg_call_is_silenced(self, path, c_data):
         """Return True when a background incoming call must stay silent."""
@@ -572,16 +594,17 @@ class InCallWindow(Gtk.Window):
         for timer_id in self._priority_timer_ids:
             GLib.source_remove(timer_id)
         self._priority_timer_ids = []
-        self.lock_manager.clear_all()
-        self.audio.stop_ringing()
-        self.is_ringing = False
+        self._closing_paths = set()
 
         self.call_volume_applied = False
         self.current_route = "earpiece"
-
         self.audio.set_voice_profile(False)
         self.audio.restore_call_volume()
         self.audio.mute(False)
+
+        self.lock_manager.clear_all()
+        self.audio.stop_ringing()
+        self.is_ringing = False
         self.audio.update_hardware_state(False)
 
         self.active_path = None
@@ -754,19 +777,30 @@ class InCallWindow(Gtk.Window):
     def _start_closing_sequence(self):
         """Start the call closing animation/logic."""
         self.is_closing = True
+        self._closing_paths = set(self.ofono.active_calls.keys())
         self.audio.stop_ringing()
         if self._hangup_verify_id:
             GLib.source_remove(self._hangup_verify_id)
         self._hangup_verify_id = GLib.timeout_add(HANGUP_VERIFY_DELAY_MS, self._verify_hangup_success)
 
+    def _recover_from_closing(self):
+        """Reset the closing state and re-process calls that arrived meanwhile."""
+        if self._hangup_verify_id:
+            GLib.source_remove(self._hangup_verify_id)
+            self._hangup_verify_id = None
+        self.is_closing = False
+        self._closing_paths = set()
+        self._clean_reset()
+        if self.ofono.active_calls:
+            self.update_state()
+
     def _verify_hangup_success(self):
-        """Verify calls are actually gone, otherwise trigger error state."""
+        """Verify the hung-up calls are gone, otherwise trigger error state."""
         self._hangup_verify_id = None
-        if not self.ofono.active_calls:
-            self.is_closing = False
-            self._clean_reset()
+        if self._closing_paths & set(self.ofono.active_calls):
+            self._enter_error_state()
             return False
-        self._enter_error_state()
+        self._recover_from_closing()
         return False
 
     def _enter_error_state(self):
@@ -817,7 +851,16 @@ class InCallWindow(Gtk.Window):
 
     def on_call_removed(self, m, p):
         """Handle call removed signal."""
-        if self.is_closing or self.in_error_mode:
+        if self.is_closing:
+            live_calls = self.ofono.active_calls
+            if live_calls and not (self._closing_paths & set(live_calls)):
+                logger.info("[InCall] Hung-up call gone with a new call waiting, recovering")
+                self._recover_from_closing()
+            return
+        if self.in_error_mode:
+            if not self.ofono.active_calls:
+                logger.info("[InCall] Stuck call released on its own, recovering from error state")
+                self._reset_from_error()
             return
         self.audio.play_hangup()
         self.fader.set_active(False)

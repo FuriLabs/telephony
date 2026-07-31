@@ -211,6 +211,7 @@ class App(Adw.Application):
     def _present_incall_window(self):
         """Present the in-call window after the on-screen keyboard has dismissed."""
         if self.incall:
+            self.incall.defer_present = False
             self.incall.present()
             self.incall.update_state()
         return False
@@ -218,6 +219,7 @@ class App(Adw.Application):
     def _on_global_call_added(self, _manager, path, _props):
         """Global handler for new calls to ensure InCallWindow is presented."""
         self._ensure_incall_window()
+        self.incall.defer_present = True
         self.release_keyboard_focus()
         GLib.timeout_add(OSK_DISMISS_DELAY_MS, self._present_incall_window)
 
