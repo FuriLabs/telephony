@@ -573,7 +573,7 @@ class App(Adw.Application):
         )
 
     def on_voicemail_changed(self, _ofono_obj, waiting, count, count_known, number):
-        """Announce waiting voicemail, and withdraw the notice once retrieved."""
+        """Announce waiting voicemail, and withdraw the notice when it clears."""
         if not waiting:
             if self._voicemail_notified:
                 self.notification_manager.close_notification("voicemail")

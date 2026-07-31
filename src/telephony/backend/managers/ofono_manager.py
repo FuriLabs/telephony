@@ -37,11 +37,11 @@ from .relay_manager import RelayManager
 REPEATED_CALL_WINDOW_SECONDS = 300
 REPEATED_CALL_THRESHOLD = 3
 
-# ofono publishes MessageWaiting before it has read the SIM's message-waiting
-# state, briefly reporting False and correcting itself a fraction of a second
-# later (~320ms measured at boot on an FLX1s). Reporting that first False looks
-# like the indication clearing, so let a negative first reading settle before
-# believing it. A positive one needs no wait; ofono does not invent those.
+# MessageWaiting can be readable while still reporting False, correcting itself
+# to True a fraction of a second later (~320ms measured at boot on an FLX1s).
+# Taking that first False at face value looks like the indication clearing, so
+# let a negative first reading settle before believing it. A positive one is
+# trusted immediately.
 VOICEMAIL_SETTLE_SECONDS = 3
 
 
