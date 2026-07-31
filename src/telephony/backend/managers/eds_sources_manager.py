@@ -73,10 +73,15 @@ class EdsSourcesManager:
 
         run_in_background(task)
 
+    def _enabled_registry_sources(self):
+        """Return registry address book sources that are effectively enabled."""
+        sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
+        return [s for s in sources if self.registry.check_enabled(s)]
+
     def _load_sources_config(self):
         """Load configuration and initialize sources."""
         try:
-            all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
+            all_sources = self._enabled_registry_sources()
 
             default_source = self.registry.ref_default_address_book()
             default_uid = default_source.get_uid() if default_source else None
@@ -331,7 +336,7 @@ class EdsSourcesManager:
             return [dict(item) for item in self._sources_info_cache]
 
         try:
-            all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
+            all_sources = self._enabled_registry_sources()
             default_source = self.registry.ref_default_address_book()
             default_uid = default_source.get_uid() if default_source else None
 
@@ -413,7 +418,7 @@ class EdsSourcesManager:
         if not self.registry:
             return False
         try:
-            registry_uids = {s.get_uid() for s in self.registry.list_sources(ADDRESS_BOOK_EXTENSION)}
+            registry_uids = {s.get_uid() for s in self._enabled_registry_sources()}
         except Exception as e:
             logger.error(f"[EDS] Registry listing failed: {e}")
             return False
@@ -501,7 +506,7 @@ class EdsSourcesManager:
 
     def _update_sources_task(self, new_config_list):
         """Intelligently update sources based on new configuration."""
-        all_sources = self.registry.list_sources(ADDRESS_BOOK_EXTENSION)
+        all_sources = self._enabled_registry_sources()
 
         to_enable = {}
         to_disable = []

@@ -929,7 +929,7 @@ class SettingsWindow(Adw.Window):
         status_labels = {
             "connected": _("Connected"),
             "connecting": _("Connecting..."),
-            "disconnected": _("Disconnected"),
+            "disconnected": _("Not connected"),
             "awaiting-credentials": _("Login required"),
             "ssl-failed": _("Connection failed (SSL)"),
         }
