@@ -42,12 +42,12 @@ class ContactEditor(Adw.Window):
         self.uid = contact_data['uid'] if contact_data else None
 
         self.vcard_cache = ""
-        needs_vcard_fetch = False
+        self._vcard_loading = False
         if contact_data:
             if 'vcard' in contact_data and contact_data['vcard']:
                 self.vcard_cache = contact_data['vcard']
             elif self.uid:
-                needs_vcard_fetch = True
+                self._vcard_loading = True
 
         self.contact_name = contact_data['name'] if contact_data else ""
 
@@ -69,8 +69,9 @@ class ContactEditor(Adw.Window):
 
         self.refresh_ui()
 
-        if needs_vcard_fetch:
-            run_in_background(self.eds.get_contact_vcard, self.uid, on_complete=self._on_vcard_loaded)
+        if self._vcard_loading:
+            run_in_background(self.eds.get_contact_vcard, self.uid,
+                              on_complete=self._on_vcard_loaded, on_error=self._on_vcard_load_failed)
 
     def _on_close_request(self, _window):
         """Remember that the window is closing so async callbacks bail out."""
@@ -78,13 +79,23 @@ class ContactEditor(Adw.Window):
         return False
 
     def _on_vcard_loaded(self, vcard):
-        """Apply the asynchronously fetched vCard and rebuild the UI."""
+        """Apply the asynchronously fetched vCard and rebuild the view."""
+        self._vcard_loading = False
         if self._destroyed:
             return
-        if not vcard:
+        if vcard:
+            self.vcard_cache = vcard
+        if self.mode == "VIEW":
+            self.refresh_ui()
+
+    def _on_vcard_load_failed(self, error):
+        """Re-enable the view controls after a failed vCard fetch."""
+        logger.error(f"[ContactEditor] vCard load failed: {error}")
+        self._vcard_loading = False
+        if self._destroyed:
             return
-        self.vcard_cache = vcard
-        self.refresh_ui()
+        if self.mode == "VIEW":
+            self.refresh_ui()
 
     def _clean_vcard_str(self, text):
         """Clean up vCard text field (unescape)."""
@@ -120,13 +131,14 @@ class ContactEditor(Adw.Window):
             if not is_andromeda:
                 header.pack_end(btn_edit)
 
-            if not self.eds.is_ready:
+            if not self.eds.is_ready or self._vcard_loading:
                 btn_edit.set_sensitive(False)
 
             if self.uid:
                 btn_export = Gtk.Button(icon_name="document-save-symbolic")
                 btn_export.add_css_class("circular")
                 btn_export.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_export_click(b) or False))
+                btn_export.set_sensitive(not self._vcard_loading)
                 header.pack_end(btn_export)
         else:
             btn_cancel = Gtk.Button(label=_("Cancel"))

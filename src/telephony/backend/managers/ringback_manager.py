@@ -16,8 +16,11 @@
 import os
 import threading
 
+import gi
 import pulsectl
 from loguru import logger
+
+gi.require_version('Gst', '1.0')
 from gi.repository import GObject, GLib, Gio, Gst
 
 from ..utils.thread_utils import run_in_background

@@ -22,8 +22,8 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
-from gi.repository import Gtk, Adw, Gst, GLib  # noqa: E402
-from loguru import logger  # noqa: E402
+from gi.repository import Gtk, Adw, Gst, GLib
+from loguru import logger
 
 from .media_window_base import (
     MediaCaptureWindow,

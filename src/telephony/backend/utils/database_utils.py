@@ -211,8 +211,8 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                     row = c.fetchone()
                     if row:
                         fts_count = row[0]
-                except sqlite3.OperationalError:
-                    pass
+                except sqlite3.OperationalError as e:
+                    logger.debug(f"[DB] FTS docsize table unavailable, assuming empty index: {e}")
 
                 c.execute("SELECT count(*) FROM messages")
                 msg_count = c.fetchone()[0]
