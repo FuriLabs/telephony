@@ -23,7 +23,6 @@ from .phone_utils import normalize_number
 
 import os
 import shutil
-import hashlib
 import sqlite3
 import threading
 
@@ -92,33 +91,6 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                           is_fav INTEGER DEFAULT 0,
                           vcard_hash TEXT)''')
             c.execute("CREATE INDEX IF NOT EXISTS idx_source_uid ON contacts(source_uid)")
-
-            schema_ver = self.gsettings_mgr.get_setting("contacts_schema_version") if self.gsettings_mgr else None
-            if not schema_ver or int(schema_ver) < 1:
-                logger.info("[DB] Migrating contacts cache to schema v1 (composite UIDs)...")
-                c.execute("DELETE FROM contacts")
-                if self.gsettings_mgr:
-                    self.gsettings_mgr.set_setting("contacts_schema_version", "1")
-                schema_ver = "1"
-
-            if int(schema_ver) < 2:
-                logger.info("[DB] Migrating contacts cache to schema v2 (is_fav and vcard_hash columns)...")
-                existing_cols = {r[1] for r in c.execute("PRAGMA table_info(contacts)").fetchall()}
-                if "is_fav" not in existing_cols:
-                    c.execute("ALTER TABLE contacts ADD COLUMN is_fav INTEGER DEFAULT 0")
-                if "vcard_hash" not in existing_cols:
-                    c.execute("ALTER TABLE contacts ADD COLUMN vcard_hash TEXT")
-                backfill = []
-                for uid, vcard in c.execute("SELECT uid, vcard FROM contacts WHERE vcard_hash IS NULL").fetchall():
-                    vcard = vcard or ""
-                    vcard_hash = hashlib.md5(vcard.encode('utf-8')).hexdigest() if vcard else None
-                    is_fav = 1 if ("X-FOLKS-FAVOURITE:true" in vcard or "X-FOLKS-FAVOURITE:TRUE" in vcard) else 0
-                    backfill.append((is_fav, vcard_hash, uid))
-                if backfill:
-                    c.executemany("UPDATE contacts SET is_fav=?, vcard_hash=? WHERE uid=?", backfill)
-                    logger.info(f"[DB] Backfilled {len(backfill)} contacts for schema v2")
-                if self.gsettings_mgr:
-                    self.gsettings_mgr.set_setting("contacts_schema_version", "2")
 
             self.conn_contacts.commit()
 

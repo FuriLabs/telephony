@@ -12,6 +12,18 @@ Telephony interacts directly with `ofono` and the Evolution Data Server to provi
 
 ---
 
+### Upgrading from experimental builds
+
+If you have been using the experimental Telephony builds, run this once to migrate your contact cache to the new stable database model:
+
+```bash
+rm -f ~/.local/share/telephony/contacts.db ~/.local/share/telephony/contacts.db-wal ~/.local/share/telephony/contacts.db-shm
+```
+
+This only removes the local contact *cache* - Telephony rebuilds it automatically from your address books on the next start. Your contacts, call history and messages are not touched. Fresh installs do not need this.
+
+---
+
 ### What can Telephony do?
 
 #### Advanced Calling
