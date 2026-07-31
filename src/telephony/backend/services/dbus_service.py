@@ -182,6 +182,17 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="json_data" direction="out"/>
     </method>
 
+    <!-- Voicemail. count is meaningless unless count_known is true: the
+         carrier's message-waiting indication usually carries no count, and a
+         zero count alongside a set flag means "something is waiting", not
+         "no messages". -->
+    <method name="GetVoicemailStatus">
+      <arg type="b" name="waiting" direction="out"/>
+      <arg type="u" name="count" direction="out"/>
+      <arg type="b" name="count_known" direction="out"/>
+      <arg type="s" name="mailbox_number" direction="out"/>
+    </method>
+
 
     <!-- Settings operations -->
     <method name="GetSetting">
@@ -257,6 +268,12 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="number"/>
       <arg type="s" name="text"/>
     </signal>
+    <signal name="VoicemailChanged">
+      <arg type="b" name="waiting"/>
+      <arg type="u" name="count"/>
+      <arg type="b" name="count_known"/>
+      <arg type="s" name="mailbox_number"/>
+    </signal>
   </interface>
 </node>
 """
@@ -293,6 +310,7 @@ class TelephonyDaemonDBus:
             self.ofono.connect('call-changed', self._on_call_changed)
             self.ofono.connect('call-removed', self._on_call_removed)
             self.ofono.connect('incoming-message', self._on_incoming_message)
+            self.ofono.connect('voicemail-changed', self._on_voicemail_changed)
 
     def _on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
@@ -306,6 +324,9 @@ class TelephonyDaemonDBus:
 
     def _on_incoming_message(self, manager, number, body):
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
+
+    def _on_voicemail_changed(self, manager, waiting, count, count_known, number):
+        self.emit_signal("VoicemailChanged", GLib.Variant("(bubs)", (waiting, count, count_known, number)))
 
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
@@ -355,6 +376,7 @@ class TelephonyDaemonDBus:
             "GetMessages": self._handle_getmessages,
             "GetContacts": self._handle_getcontacts,
             "GetActiveCalls": self._handle_getactivecalls,
+            "GetVoicemailStatus": self._handle_getvoicemailstatus,
             "SendMms": self._handle_sendmms,
             "GetSetting": self._handle_getsetting,
             "SetSetting": self._handle_setsetting,
@@ -765,6 +787,17 @@ class TelephonyDaemonDBus:
             for path, data in self.ofono.active_calls.items():
                 calls.append({"path": path, "number": data.get("number"), "state": data.get("state"), "direction": data.get("direction")})
         invocation.return_value(GLib.Variant("(s)", (json.dumps(calls, cls=DateTimeEncoder),)))
+
+    def _handle_getvoicemailstatus(self, parameters, invocation):
+        """Handle GetVoicemailStatus command."""
+        waiting, count, number = False, None, None
+        if self.ofono:
+            waiting = self.ofono.voicemail.get("waiting", False)
+            count = self.ofono.voicemail.get("count")
+            number = self.ofono.voicemail.get("number")
+        invocation.return_value(
+            GLib.Variant("(bubs)", (waiting, count or 0, count is not None, number or ""))
+        )
 
     def _handle_sendmms(self, parameters, invocation):
         """Handle SendMms command."""
