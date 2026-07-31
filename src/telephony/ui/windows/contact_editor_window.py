@@ -823,6 +823,8 @@ class ContactEditor(Adw.Window):
                 on_complete=lambda new_phones: self._on_save_finished(fn, new_phones),
                 on_error=self._on_save_failed
             )
+            self._saving_in_progress = False
+            self.close()
         except Exception as e:
             self._saving_in_progress = False
             self.btn_save.set_sensitive(True)
@@ -862,13 +864,10 @@ class ContactEditor(Adw.Window):
         except Exception as ex:
             logger.error(f"[ContactEditor] Special list update error: {ex}")
 
-        self._saving_in_progress = False
-        self.close()
+        self.main_window.notify_success(_("Contact saved"))
 
     def _on_save_failed(self, error):
-        """Re-enable saving after a failed background save."""
-        self._saving_in_progress = False
-        self.btn_save.set_sensitive(True)
+        """Report a failed background save; the editor is already closed."""
         self.main_window.notify_error(_("Failed to save contact"))
         logger.error(f"[ContactEditor] Save failed: {error}")
 
