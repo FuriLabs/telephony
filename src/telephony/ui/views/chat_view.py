@@ -915,7 +915,9 @@ class ChatPage(Gtk.Box):
             return self.db.get_chat_messages(self.number, limit=20, offset=0)
 
         def done(rows):
-            fresh = [m for m in (rows or []) if m[0] > newest_id and m[4] != 'draft']
+            existing_ids = {self.store.get_item(i).id for i in range(self.store.get_n_items())}
+            existing_ids.discard(0)
+            fresh = [m for m in (rows or []) if m[0] > newest_id and m[0] not in existing_ids and m[4] != 'draft']
             if not fresh:
                 return
 

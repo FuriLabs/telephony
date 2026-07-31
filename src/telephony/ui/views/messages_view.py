@@ -47,6 +47,7 @@ class MessagesView(Adw.Bin):
         self.search_mode = 'contacts'
         self.contact_search_token = 0
         self.message_search_token = 0
+        self._row_update_seq = {}
 
         self.page_limit = 50
         self.page_offset = 0
@@ -305,11 +306,15 @@ class MessagesView(Adw.Bin):
             self.refresh_list()
             return
 
+        seq = self._row_update_seq.get(chat_id, 0) + 1
+        self._row_update_seq[chat_id] = seq
         run_in_background(self.db.get_conversation_summary, chat_id,
-                          on_complete=lambda summary: self._apply_row_update(chat_id, summary, change))
+                          on_complete=lambda summary: self._apply_row_update(chat_id, summary, change, seq))
 
-    def _apply_row_update(self, chat_id, summary, change):
+    def _apply_row_update(self, chat_id, summary, change, seq):
         """Update a single conversation row in place from a fresh summary."""
+        if seq != self._row_update_seq.get(chat_id):
+            return
         if summary is None:
             self.refresh_list()
             return
