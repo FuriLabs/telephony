@@ -821,7 +821,7 @@ class ContactEditor(Adw.Window):
                 self._write_contact, final_vcard, phones_to_save,
                 selected_sources, original_source,
                 on_complete=lambda new_phones: self._on_save_finished(fn, new_phones),
-                on_error=self._on_save_failed
+                on_error=lambda error: self._on_save_failed(error, fn, final_vcard)
             )
             self._saving_in_progress = False
             self.close()
@@ -832,11 +832,20 @@ class ContactEditor(Adw.Window):
 
     def _write_contact(self, final_vcard, phones_to_save, selected_sources, original_source):
         """Write the contact to the selected address books off the main thread."""
+        if not selected_sources:
+            raise RuntimeError("No address book selected for the contact")
+
+        failures = 0
         for s_uid in selected_sources:
             if self.uid and s_uid == original_source:
-                self.eds.save_contact(final_vcard, self.uid)
+                ok = self.eds.save_contact(final_vcard, self.uid)
             else:
-                self.eds.save_contact(final_vcard, source_uid=s_uid)
+                ok = self.eds.save_contact(final_vcard, source_uid=s_uid)
+            if not ok:
+                failures += 1
+
+        if failures:
+            raise RuntimeError(f"{failures} of {len(selected_sources)} address book writes failed")
 
         new_phones = set()
         for p, _lbl in phones_to_save:
@@ -866,10 +875,17 @@ class ContactEditor(Adw.Window):
 
         self.main_window.notify_success(_("Contact saved"))
 
-    def _on_save_failed(self, error):
-        """Report a failed background save; the editor is already closed."""
-        self.main_window.notify_error(_("Failed to save contact"))
+    def _on_save_failed(self, error, fn, final_vcard):
+        """Reopen the editor with the attempted data after a failed save."""
         logger.error(f"[ContactEditor] Save failed: {error}")
+        self.main_window.notify_error(_("Failed to save contact"))
+        try:
+            editor = ContactEditor(self.eds, self.main_window,
+                                   contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard})
+            editor.set_transient_for(self.main_window)
+            editor.on_edit_mode_click(None)
+        except Exception as e:
+            logger.error(f"[ContactEditor] Could not reopen editor after failure: {e}")
 
     def _confirm_unblock_add(self, _number_str, on_confirm):
         """Show confirmation to unblock and add to contacts."""
