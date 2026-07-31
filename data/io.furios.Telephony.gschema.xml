@@ -146,5 +146,10 @@
       <summary>Wipe Device Enabled</summary>
       <description>Whether the feature Wipe Device is enabled. Note: It also requires a trusted contact, secret, and TOTP setup to work.</description>
     </key>
+    <key name="mms-size-limit" type="s">
+      <default>'automatic'</default>
+      <summary>MMS Size Limit</summary>
+      <description>Maximum total MMS attachment size in kilobytes, or 'automatic' to use the limit reported by the MMS service.</description>
+    </key>
   </schema>
 </schemalist>

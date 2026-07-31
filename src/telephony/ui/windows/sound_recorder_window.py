@@ -41,12 +41,21 @@ RECORD_TIMER_INTERVAL_MS = 1000
 MAX_MMS_AUDIO_BYTES = 600 * 1024
 
 
+def _format_size_limit(size_bytes):
+    """Format a byte limit as a short kB or MB label."""
+    if size_bytes >= 1024 * 1024:
+        mb = size_bytes / (1024 * 1024)
+        return f"{mb:g} MB"
+    return f"{size_bytes // 1024} kB"
+
+
 class SoundRecorder(MediaCaptureWindow):
     """A simple sound recorder dialog for capturing voice notes."""
 
-    def __init__(self, parent_window, on_attach_callback):
+    def __init__(self, parent_window, on_attach_callback, max_bytes=MAX_MMS_AUDIO_BYTES):
         super().__init__(transient_for=parent_window)
         self.on_attach_callback = on_attach_callback
+        self.max_bytes = max_bytes
         self._attached = False
         self.set_modal(True)
         self.set_default_size(360, 450)
@@ -293,11 +302,12 @@ class SoundRecorder(MediaCaptureWindow):
         if self.output_path and os.path.exists(self.output_path):
             size = os.path.getsize(self.output_path)
             logger.info(f"Recording finished. Size: {size} bytes")
-            if size > MAX_MMS_AUDIO_BYTES:
+            if size > self.max_bytes:
+                limit_text = _format_size_limit(self.max_bytes)
                 self._show_error(_(
-                    "Recording is too large for MMS (Max 600KB). "
-                    "Please Retake shorter."
-                ))
+                    "Recording is too large for MMS (Max {size}). "
+                    "Please retake shorter."
+                ).format(size=limit_text))
 
     def _on_play_toggle(self, btn):
         """Toggle playback state."""

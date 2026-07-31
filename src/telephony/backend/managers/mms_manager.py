@@ -32,6 +32,7 @@ NOTIFY_DBUS_PATH = "/org/freedesktop/Notifications"
 NOTIFY_INTERFACE = "org.freedesktop.Notifications"
 
 DEFAULT_MAX_ATTACHMENT_SIZE = 1100 * 1024
+MMS_SIZE_LIMIT_AUTOMATIC = "automatic"
 
 MMS_RESOLVE_TIMEOUT_SECONDS = 180
 UNCLAIMED_STATE_LIMIT = 20
@@ -225,8 +226,25 @@ class MmsManager(GObject.Object):
         except Exception as e:
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
 
+    def _user_size_limit(self):
+        """Return the user-configured size limit in bytes, or None for automatic."""
+        if not self.gsettings_mgr:
+            return None
+        try:
+            val = self.gsettings_mgr.get_setting("mms_size_limit")
+            if not val or val == MMS_SIZE_LIMIT_AUTOMATIC:
+                return None
+            return int(val) * 1024
+        except Exception as e:
+            logger.warning(f"[MMS] Invalid size limit setting, using automatic: {e}")
+            return None
+
     def get_max_attachment_size(self):
-        """Return the total attachment size budget reported by mmsd, cached after first read."""
+        """Return the attachment size budget: user override, else the value reported by mmsd."""
+        override = self._user_size_limit()
+        if override:
+            return override
+
         if self._max_attachment_size:
             return self._max_attachment_size
 

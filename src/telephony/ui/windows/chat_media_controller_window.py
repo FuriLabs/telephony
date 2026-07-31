@@ -90,7 +90,9 @@ class ChatMediaController:
     def _open_audio_recorder(self):
         """Open audio recorder modal."""
         try:
-            rec = SoundRecorder(self.window, lambda path: self._on_media_captured(None, path))
+            max_bytes = self.chat_page.app_window.mms.get_max_attachment_size()
+            rec = SoundRecorder(self.window, lambda path: self._on_media_captured(None, path),
+                                max_bytes=max_bytes)
             rec.present()
         except Exception as e:
             logger.error(f"Failed to open audio recorder: {e}")
