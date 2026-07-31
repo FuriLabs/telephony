@@ -586,10 +586,23 @@ class MainWindow(Adw.Window):
         win.present()
 
     def on_force_sync_click(self, btn):
-        """Force contact sync."""
+        """Force address book backends to sync, falling back to a local reload."""
         GLib.idle_add(lambda: self.actions_popover.popdown() or False)
-        self.notify_loading(_("Reloading Contacts..."))
-        self.eds.reload()
+        self.notify_loading(_("Syncing address books..."))
+
+        def done(count):
+            if count:
+                self.notify_success(_("Sync started for {count} address books").format(count=count))
+                return
+            self.notify_loading(_("Reloading Contacts..."))
+            self.eds.reload()
+
+        def failed(error):
+            logger.error(f"[MainWindow] Backend refresh failed: {error}")
+            self.notify_loading(_("Reloading Contacts..."))
+            self.eds.reload()
+
+        run_in_background(self.eds.refresh_backends, on_complete=done, on_error=failed)
 
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""

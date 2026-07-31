@@ -342,12 +342,15 @@ class EdsSourcesManager:
                 s = next((x for x in all_sources if x.get_uid() == uid), None)
                 if s:
                     is_def = (uid == default_uid)
+                    is_local, removable = self._source_backend_info(s)
                     result.append({
                         'uid': uid,
                         'name': s.get_display_name(),
                         'rank': current_rank,
                         'enabled': conf.get('enabled', True) or is_def,
-                        'is_system_default': is_def
+                        'is_system_default': is_def,
+                        'is_local': is_local,
+                        'removable': removable
                     })
                     uids_processed.add(uid)
                     current_rank += 1
@@ -356,12 +359,15 @@ class EdsSourcesManager:
                 uid = s.get_uid()
                 if uid not in uids_processed:
                     is_def = (uid == default_uid)
+                    is_local, removable = self._source_backend_info(s)
                     result.append({
                         'uid': uid,
                         'name': s.get_display_name(),
                         'rank': current_rank,
                         'enabled': True,
-                        'is_system_default': is_def
+                        'is_system_default': is_def,
+                        'is_local': is_local,
+                        'removable': removable
                     })
                     current_rank += 1
 
@@ -371,6 +377,52 @@ class EdsSourcesManager:
         except Exception as e:
             logger.error(f"[EDS] Get Sources Info Error: {e}")
             return []
+
+    def refresh_backends(self):
+        """Ask every backend supporting refresh to re-sync with its remote store."""
+        with self.sources_lock:
+            clients = [(uid, info.get('client')) for uid, info in self.sources.items()]
+
+        refreshed = 0
+        for uid, client in clients:
+            if not client:
+                continue
+            try:
+                if client.check_refresh_supported():
+                    client.refresh_sync(None)
+                    refreshed += 1
+                    logger.info(f"[EDS] Backend refresh started for {uid}")
+            except Exception as e:
+                logger.warning(f"[EDS] Backend refresh failed for {uid}: {e}")
+        return refreshed
+
+    def create_local_addressbook(self, name):
+        """Create a new local address book source and reload the sources."""
+        if not self.registry:
+            return False
+        try:
+            source = EDataServer.Source.new(None, None)
+            source.set_display_name(name)
+            source.set_parent("local-stable")
+            extension = source.get_extension(ADDRESS_BOOK_EXTENSION)
+            extension.set_backend_name("local")
+            self.registry.commit_source_sync(source, None)
+            self.invalidate_sources_info()
+            self.reload()
+            return True
+        except Exception as e:
+            logger.error(f"[EDS] Create addressbook error: {e}")
+            return False
+
+    def _source_backend_info(self, source):
+        """Return (is_local, removable) for a registry source."""
+        try:
+            extension = source.get_extension(ADDRESS_BOOK_EXTENSION)
+            is_local = extension.get_backend_name() in LOCAL_BACKEND_NAMES
+        except Exception as e:
+            logger.debug(f"[EDS] Backend info lookup failed: {e}")
+            is_local = False
+        return is_local, bool(source.get_removable())
 
     def set_default_addressbook(self, uid):
         """Set the default address book source."""
