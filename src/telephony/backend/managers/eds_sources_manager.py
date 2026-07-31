@@ -31,6 +31,8 @@ from ..utils.phone_utils import normalize_number
 
 ADDRESS_BOOK_EXTENSION = "Address Book"
 EBOOK_CONNECT_TIMEOUT_SECONDS = 5
+EBOOK_CONNECT_NO_WAIT = GLib.MAXUINT32
+LOCAL_BACKEND_NAMES = ("local",)
 
 
 class EdsSourcesManager:
@@ -186,6 +188,15 @@ class EdsSourcesManager:
         except Exception as e:
             logger.error(f"[EDS] Save Config Error: {e}")
 
+    def _is_local_backend(self, source_obj):
+        """Return True when the source uses a local backend with no connection."""
+        try:
+            extension = source_obj.get_extension(ADDRESS_BOOK_EXTENSION)
+            return extension.get_backend_name() in LOCAL_BACKEND_NAMES
+        except Exception as e:
+            logger.debug(f"[EDS] Backend name lookup failed, assuming remote: {e}")
+            return False
+
     def _has_cached_contacts(self, source_uid):
         """Return True when the in-memory cache holds contacts for the source."""
         with self.cache_lock:
@@ -207,17 +218,22 @@ class EdsSourcesManager:
         self._load_from_local_db(uid, source_info['rank'])
 
         try:
-            client = EBook.BookClient.connect_sync(source_obj, EBOOK_CONNECT_TIMEOUT_SECONDS, None)
+            is_local = self._is_local_backend(source_obj)
+            wait_seconds = EBOOK_CONNECT_NO_WAIT if is_local else EBOOK_CONNECT_TIMEOUT_SECONDS
+            client = EBook.BookClient.connect_sync(source_obj, wait_seconds, None)
             source_info['client'] = client
 
             try:
                 success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
-                if success:
+                connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
+                if success and (is_local or connected):
                     comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
                     if comp_uids or not self._has_cached_contacts(uid):
                         self.db_ref.sync_deleted_contacts(uid, comp_uids)
                     else:
                         logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
+                elif success:
+                    logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
             except Exception as ex:
                 logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
 
