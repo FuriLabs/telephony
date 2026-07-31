@@ -86,6 +86,7 @@ class TelephonyAudioManager:
 
         self._pulse_conn = None
         self._pulse_lock = threading.RLock()
+        self.voice_profile_active = False
 
         self.is_near = False
         self.proximity_claimed = False
@@ -309,6 +310,7 @@ class TelephonyAudioManager:
 
     def set_voice_profile(self, enable=True):
         """Set the PulseAudio card profile to voicecall or default."""
+        self.voice_profile_active = enable
         profile_name = "voicecall" if enable else "default"
         try:
             with self._pulse() as pulse:

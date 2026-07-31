@@ -55,6 +55,11 @@ class OfonoCallsManager:
             self.emit('action-error', _("Cannot dial while in another call"))
             return False
 
+        if self.audio.voice_profile_active:
+            logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
+            self.emit('action-error', _("Please wait, the previous call is still ending"))
+            return False
+
         try:
             clean_num = normalize_number(number)
 
