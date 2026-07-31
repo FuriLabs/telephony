@@ -852,9 +852,8 @@ class InCallWindow(Gtk.Window):
     def on_call_removed(self, m, p):
         """Handle call removed signal."""
         if self.is_closing:
-            live_calls = self.ofono.active_calls
-            if live_calls and not (self._closing_paths & set(live_calls)):
-                logger.info("[InCall] Hung-up call gone with a new call waiting, recovering")
+            if not (self._closing_paths & set(self.ofono.active_calls)):
+                logger.info("[InCall] Hangup confirmed by ofono, finishing teardown")
                 self._recover_from_closing()
             return
         if self.in_error_mode:
