@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 12:12+0300\n"
+"POT-Creation-Date: 2026-07-31 14:41+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:619 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -82,7 +82,7 @@ msgstr "Отворете"
 msgid "Call"
 msgstr "Обадете се"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/managers/eds_contacts_manager.py:29
 #: src/telephony/backend/utils/db_blocklist_utils.py:35
 #: src/telephony/ui/views/messages_view.py:372
 #: src/telephony/ui/views/messages_view.py:443
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "Стартиране на авариен процес"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:652
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -111,7 +111,7 @@ msgstr "Стартиране на авариен процес"
 #: src/telephony/ui/windows/camera_photo_window.py:91
 #: src/telephony/ui/windows/camera_video_window.py:103
 #: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:882
+#: src/telephony/ui/windows/contact_editor_window.py:881
 #: src/telephony/ui/windows/contact_picker_window.py:47
 #: src/telephony/ui/windows/custom_tone_list_window.py:58
 #: src/telephony/ui/windows/custom_tone_list_window.py:288
@@ -130,7 +130,9 @@ msgstr "Стартиране на авариен процес"
 #: src/telephony/ui/windows/import_export_window.py:501
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/settings_window.py:449
+#: src/telephony/ui/windows/settings_window.py:459
+#: src/telephony/ui/windows/settings_window.py:929
+#: src/telephony/ui/windows/settings_window.py:959
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -480,12 +482,12 @@ msgstr "История"
 
 #: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:67
-#: src/telephony/ui/windows/settings_window.py:648
+#: src/telephony/ui/windows/settings_window.py:658
 msgid "Messages"
 msgstr "Съобщения"
 
 #: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:649
+#: src/telephony/ui/windows/settings_window.py:659
 msgid "Contacts"
 msgstr "Контакти"
 
@@ -510,7 +512,7 @@ msgid "Resolve Duplicates"
 msgstr "Разрешаване на дубликати"
 
 #: src/telephony/ui/main_window.py:307
-#: src/telephony/ui/windows/settings_window.py:44
+#: src/telephony/ui/windows/settings_window.py:43
 msgid "Settings"
 msgstr "Настройки"
 
@@ -546,10 +548,10 @@ msgstr "USSD резултат"
 
 #: src/telephony/ui/main_window.py:475
 #: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:898
-#: src/telephony/ui/windows/settings_window.py:500
-#: src/telephony/ui/windows/settings_window.py:512
-#: src/telephony/ui/windows/settings_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:522
+#: src/telephony/ui/windows/settings_window.py:882
 msgid "OK"
 msgstr "добре"
 
@@ -565,58 +567,67 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "Намерен {count} дублиращ се контакт. Проверете менюто."
 msgstr[1] "Намерени {count} дублиращи се контакта. Проверете менюто."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:597
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
 msgid "Contacts syncing..."
 msgstr "Контактите се синхронизират..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:803
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
 #: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:382
-#: src/telephony/ui/windows/settings_window.py:416
-#: src/telephony/ui/windows/settings_window.py:435
-#: src/telephony/ui/windows/settings_window.py:486
-#: src/telephony/ui/windows/settings_window.py:624
-#: src/telephony/ui/windows/settings_window.py:915
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:426
+#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:496
+#: src/telephony/ui/windows/settings_window.py:634
+#: src/telephony/ui/windows/settings_window.py:992
 msgid "Close"
 msgstr "затвори"
 
 #: src/telephony/ui/main_window.py:591
+msgid "Syncing address books..."
+msgstr "Адресните книги се синхронизират..."
+
+#: src/telephony/ui/main_window.py:595
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "Започна синхронизиране на {count} адресни книги"
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
 msgid "Reloading Contacts..."
 msgstr "Контактите се презареждат..."
 
-#: src/telephony/ui/main_window.py:607
+#: src/telephony/ui/main_window.py:620
 msgid "Multiple Contacts Found"
 msgstr "Намерени са множество контакти"
 
-#: src/telephony/ui/main_window.py:608
+#: src/telephony/ui/main_window.py:621
 msgid "Which contact would you like to edit?"
 msgstr "Кой контакт искате да редактирате?"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:634
 msgid "Unknown Addressbook"
 msgstr "Неизвестен адресен указател"
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 msgid "Calling (Anonymous)..."
 msgstr "Обаждане (Анонимен)..."
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "Обаждане до {number}..."
 
-#: src/telephony/ui/main_window.py:684 src/telephony/ui/main_window.py:690
+#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
 msgid "Call Failed"
 msgstr "Неуспешно обаждане"
 
-#: src/telephony/ui/main_window.py:696
+#: src/telephony/ui/main_window.py:709
 msgid "Call Details"
 msgstr "Подробности за обаждането"
 
-#: src/telephony/ui/main_window.py:697
+#: src/telephony/ui/main_window.py:710
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -629,91 +640,92 @@ msgstr ""
 "Дата: {date}\n"
 "Продължителност: {duration}"
 
-#: src/telephony/ui/main_window.py:713
+#: src/telephony/ui/main_window.py:726
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "Деблокиране на номер"
 
-#: src/telephony/ui/main_window.py:719 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "Отблокиран"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "Редактиране на контакт"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "Добавяне към Контакти"
 
-#: src/telephony/ui/main_window.py:738
+#: src/telephony/ui/main_window.py:751
 msgid "Add to Existing Contact"
 msgstr "Добавяне към съществуващ контакт"
 
-#: src/telephony/ui/main_window.py:747
+#: src/telephony/ui/main_window.py:760
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "Номер за търсене"
 
-#: src/telephony/ui/main_window.py:771
+#: src/telephony/ui/main_window.py:784
 msgid "Send Message"
 msgstr "Изпратете съобщение"
 
-#: src/telephony/ui/main_window.py:776
+#: src/telephony/ui/main_window.py:789
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "Номер на копие"
 
-#: src/telephony/ui/main_window.py:781
+#: src/telephony/ui/main_window.py:794
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "Номер на блок"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:807
 msgid "Delete this call"
 msgstr "Изтрий това обаждане"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Delete Call"
 msgstr "Изтриване на повикване"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Remove this call?"
 msgstr "Премахване на това обаждане?"
 
-#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/main_window.py:826
 msgid "Number copied"
 msgstr "Номерът е копиран"
 
-#: src/telephony/ui/main_window.py:819
+#: src/telephony/ui/main_window.py:832
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "Контактът се запазва..."
 
-#: src/telephony/ui/main_window.py:823
+#: src/telephony/ui/main_window.py:836
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "Добавено към {name}"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:839
 msgid "Failed to add number"
 msgstr "Неуспешно добавяне на номер"
 
-#: src/telephony/ui/main_window.py:834
+#: src/telephony/ui/main_window.py:847
 #: src/telephony/ui/windows/contact_editor_window.py:205
-#: src/telephony/ui/windows/settings_window.py:218
+#: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "Добавяне на номер"
 
-#: src/telephony/ui/main_window.py:835
+#: src/telephony/ui/main_window.py:848
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
+#: src/telephony/ui/windows/settings_window.py:930
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1026,7 +1038,8 @@ msgstr "Маркирайте като непрочетени"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:821
+#: src/telephony/ui/windows/settings_window.py:831
+#: src/telephony/ui/windows/settings_window.py:960
 msgid "Delete"
 msgstr "Изтриване"
 
@@ -1119,7 +1132,7 @@ msgid "Draft: {message}"
 msgstr "Чернова: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:34
-#: src/telephony/ui/windows/settings_window.py:366
+#: src/telephony/ui/windows/settings_window.py:376
 msgid "Advanced Settings"
 msgstr "Разширени настройки"
 
@@ -1195,7 +1208,7 @@ msgid "Calls from this number will be automatically rejected."
 msgstr "Обажданията от този номер ще бъдат автоматично отхвърляни."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:817
+#: src/telephony/ui/windows/settings_window.py:827
 msgid "Number"
 msgstr "Номер"
 
@@ -1220,7 +1233,7 @@ msgid "Failed to save to blocklist."
 msgstr "Неуспешно запазване в списъка за блокиране."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:878
+#: src/telephony/ui/windows/contact_editor_window.py:877
 msgid "Conflict"
 msgstr "Конфликт"
 
@@ -1431,7 +1444,7 @@ msgstr "Изтриване на контакт"
 
 #: src/telephony/ui/windows/contact_editor_window.py:295
 #: src/telephony/ui/windows/settings_window.py:166
-#: src/telephony/ui/windows/settings_window.py:483
+#: src/telephony/ui/windows/settings_window.py:493
 msgid "Address Books"
 msgstr "Адресни книги"
 
@@ -1477,11 +1490,15 @@ msgid "Deleting contact..."
 msgstr "Контактът се изтрива..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:791
-#: src/telephony/ui/windows/contact_editor_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:871
 msgid "Failed to save contact"
 msgstr "Неуспешно запазване на контакта"
 
-#: src/telephony/ui/windows/contact_editor_window.py:879
+#: src/telephony/ui/windows/contact_editor_window.py:867
+msgid "Contact saved"
+msgstr "Контактът е запазен"
+
+#: src/telephony/ui/windows/contact_editor_window.py:878
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1491,7 +1508,7 @@ msgstr ""
 "\n"
 "Искате ли да продължите с деблокирането и да добавите номера към Контакти?"
 
-#: src/telephony/ui/windows/contact_editor_window.py:883
+#: src/telephony/ui/windows/contact_editor_window.py:882
 msgid "Yes, Add to Contacts"
 msgstr "Да, добавяне към контакти"
 
@@ -1508,12 +1525,12 @@ msgid "No number"
 msgstr "Без номер"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:337
+#: src/telephony/ui/windows/settings_window.py:347
 msgid "Individual SMS Notifications"
 msgstr "Индивидуални SMS известия"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:358
 msgid "Individual Ringtones"
 msgstr "Индивидуални мелодии"
 
@@ -1546,7 +1563,7 @@ msgid "Select Tone for {name}"
 msgstr "Изберете тон за {name}"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:287
-#: src/telephony/ui/windows/settings_window.py:448
+#: src/telephony/ui/windows/settings_window.py:458
 msgid "Select"
 msgstr "Изберете"
 
@@ -1601,6 +1618,7 @@ msgstr "Изтриване на всички контакти"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:957
 msgid "Delete Address Book"
 msgstr "Изтриване на адресната книга"
 
@@ -1647,6 +1665,7 @@ msgstr ""
 "Това ще го изтрие от системата."
 
 #: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:958
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr ""
@@ -1707,10 +1726,12 @@ msgid "Deleting address book..."
 msgstr "Адресната книга се изтрива..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:978
 msgid "Address Book Deleted"
 msgstr "Адресната книга е изтрита"
 
 #: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:976
 msgid "Failed to delete Address Book"
 msgstr "Неуспешно изтриване на адресната книга"
 
@@ -1739,8 +1760,8 @@ msgid "Minute"
 msgstr "минута"
 
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:32
-#: src/telephony/ui/windows/settings_window.py:319
-#: src/telephony/ui/windows/settings_window.py:509
+#: src/telephony/ui/windows/settings_window.py:329
+#: src/telephony/ui/windows/settings_window.py:519
 msgid "Notification Overrides"
 msgstr "Замени на известията"
 
@@ -2044,16 +2065,16 @@ msgstr "Коя адресна книга искате да експортира�
 msgid "Export All Address Books"
 msgstr "Експортиране на всички адресни книги"
 
-#: src/telephony/ui/windows/import_export_window.py:563
+#: src/telephony/ui/windows/import_export_window.py:558
 msgid "No contacts found to export"
 msgstr "Няма намерени контакти за експортиране"
 
-#: src/telephony/ui/windows/import_export_window.py:579
+#: src/telephony/ui/windows/import_export_window.py:570
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "Експортирани {count} контакта"
 
-#: src/telephony/ui/windows/import_export_window.py:582
+#: src/telephony/ui/windows/import_export_window.py:573
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "Грешка при експортиране: {e}"
@@ -2155,22 +2176,22 @@ msgid "Disconnected"
 msgstr "Прекъснато"
 
 #: src/telephony/ui/windows/incall_window.py:54
-#: src/telephony/ui/windows/settings_window.py:282
+#: src/telephony/ui/windows/settings_window.py:292
 msgid "Earpiece"
 msgstr "Слушалка"
 
 #: src/telephony/ui/windows/incall_window.py:55
-#: src/telephony/ui/windows/settings_window.py:283
+#: src/telephony/ui/windows/settings_window.py:293
 msgid "Speaker"
 msgstr "Високоговорител"
 
 #: src/telephony/ui/windows/incall_window.py:56
-#: src/telephony/ui/windows/settings_window.py:284
+#: src/telephony/ui/windows/settings_window.py:294
 msgid "Wired Headset"
 msgstr "Кабелни слушалки"
 
 #: src/telephony/ui/windows/incall_window.py:57
-#: src/telephony/ui/windows/settings_window.py:285
+#: src/telephony/ui/windows/settings_window.py:295
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
@@ -2250,7 +2271,7 @@ msgid "Answering holds the current call"
 msgstr "Отговарянето задържа текущото обаждане"
 
 #: src/telephony/ui/windows/incall_window.py:664
-#: src/telephony/ui/windows/settings_window.py:246
+#: src/telephony/ui/windows/settings_window.py:256
 msgid "I can't talk right now."
 msgstr "не мога да говоря в момента"
 
@@ -2332,7 +2353,7 @@ msgid "Sending message to {number}..."
 msgstr "Изпраща се съобщение до {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:92
-#: src/telephony/ui/windows/settings_window.py:432
+#: src/telephony/ui/windows/settings_window.py:442
 msgid "Ringback Tone"
 msgstr "Тон за обратно позвъняване"
 
@@ -2345,7 +2366,7 @@ msgid "Selected Tone"
 msgstr "Избран тон"
 
 #: src/telephony/ui/windows/settings_window.py:113
-#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:402
 msgid "System Default"
 msgstr "Системни настройки по подразбиране"
 
@@ -2363,7 +2384,7 @@ msgstr "Моят номер (международен формат)"
 
 #: src/telephony/ui/windows/settings_window.py:150
 #: src/telephony/ui/windows/settings_window.py:151
-#: src/telephony/ui/windows/settings_window.py:379
+#: src/telephony/ui/windows/settings_window.py:389
 msgid "Default Country Code"
 msgstr "Код на държавата по подразбиране"
 
@@ -2386,78 +2407,83 @@ msgstr ""
 "Сканирайте за дублиращи се номера и покажете банер за разделителна "
 "способност в изгледа с контакти."
 
-#: src/telephony/ui/windows/settings_window.py:207
+#: src/telephony/ui/windows/settings_window.py:203
+#: src/telephony/ui/windows/settings_window.py:926
+msgid "Add Local Address Book"
+msgstr "Добавяне на локална адресна книга"
+
+#: src/telephony/ui/windows/settings_window.py:217
 msgid "Lockscreen Emergency"
 msgstr "Спешен случай на заключен екран"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: src/telephony/ui/windows/settings_window.py:220
 msgid "Show Emergency Button"
 msgstr "Показване на бутона за спешни случаи"
 
-#: src/telephony/ui/windows/settings_window.py:215
+#: src/telephony/ui/windows/settings_window.py:225
 msgid "Emergency Numbers"
 msgstr "Спешни номера"
 
-#: src/telephony/ui/windows/settings_window.py:232
+#: src/telephony/ui/windows/settings_window.py:242
 msgid "Quick Response"
 msgstr "Бърза реакция"
 
-#: src/telephony/ui/windows/settings_window.py:235
+#: src/telephony/ui/windows/settings_window.py:245
 msgid "Add Decline Message"
 msgstr "Добавяне на съобщение при отказ"
 
-#: src/telephony/ui/windows/settings_window.py:250
+#: src/telephony/ui/windows/settings_window.py:260
 msgid "Messaging"
 msgstr "Съобщения"
 
-#: src/telephony/ui/windows/settings_window.py:260
+#: src/telephony/ui/windows/settings_window.py:270
 msgid "Automatic"
 msgstr "Автоматично"
 
-#: src/telephony/ui/windows/settings_window.py:262
-#: src/telephony/ui/windows/settings_window.py:413
+#: src/telephony/ui/windows/settings_window.py:272
+#: src/telephony/ui/windows/settings_window.py:423
 msgid "MMS Size Limit"
 msgstr "Ограничение за размер на MMS"
 
-#: src/telephony/ui/windows/settings_window.py:269
-#: src/telephony/ui/windows/settings_window.py:869
+#: src/telephony/ui/windows/settings_window.py:279
+#: src/telephony/ui/windows/settings_window.py:879
 msgid "Call Volume"
 msgstr "Сила на звука при обаждане"
 
-#: src/telephony/ui/windows/settings_window.py:300
+#: src/telephony/ui/windows/settings_window.py:310
 msgid "Notification Exceptions"
 msgstr "Изключения за уведомяване"
 
-#: src/telephony/ui/windows/settings_window.py:303
-#: src/telephony/ui/windows/settings_window.py:497
+#: src/telephony/ui/windows/settings_window.py:313
+#: src/telephony/ui/windows/settings_window.py:507
 msgid "Repeated Calls Bypass"
 msgstr "Байпас на повтарящи се повиквания"
 
-#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:315
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr ""
 "Ако един и същи номер се обади 3 пъти за 5 минути, принудително задайте "
 "максимален обем."
 
-#: src/telephony/ui/windows/settings_window.py:320
+#: src/telephony/ui/windows/settings_window.py:330
 msgid "Manage contacts that always play sound"
 msgstr "Управлявайте контакти, които винаги възпроизвеждат звук"
 
-#: src/telephony/ui/windows/settings_window.py:329
-#: src/telephony/ui/windows/settings_window.py:341
-#: src/telephony/ui/windows/settings_window.py:352
+#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:351
+#: src/telephony/ui/windows/settings_window.py:362
 msgid "Manage"
 msgstr "Управлявайте"
 
-#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:349
 msgid "Set custom notification sounds for specific contacts"
 msgstr "Задайте персонализирани звуци за известяване за конкретни контакти"
 
-#: src/telephony/ui/windows/settings_window.py:350
+#: src/telephony/ui/windows/settings_window.py:360
 msgid "Set custom ringtones for specific contacts"
 msgstr "Задайте персонализирани мелодии за конкретни контакти"
 
-#: src/telephony/ui/windows/settings_window.py:375
+#: src/telephony/ui/windows/settings_window.py:385
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2477,7 +2503,7 @@ msgstr ""
 "Можете ръчно да го замените тук, като въведете 2-буквен ISO регионален код "
 "(напр. US, FI, DE) или код за повикване (напр. +358, 358, +1, 1)."
 
-#: src/telephony/ui/windows/settings_window.py:403
+#: src/telephony/ui/windows/settings_window.py:413
 msgid ""
 "Carriers limit how large a multimedia message can be. Images and videos you "
 "attach are automatically compressed to fit under this limit before sending.\n"
@@ -2495,7 +2521,7 @@ msgstr ""
 "съобщенията ви не се изпращат, или по-голяма, ако знаете, че вашият оператор "
 "я позволява."
 
-#: src/telephony/ui/windows/settings_window.py:425
+#: src/telephony/ui/windows/settings_window.py:435
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2511,15 +2537,15 @@ msgstr ""
 "Можете да изберете свой собствен музикален файл или да го изчистите, за да "
 "използвате стандартния системен тон."
 
-#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:455
 msgid "Select Ringback Tone"
 msgstr "Изберете Ringback Tone"
 
-#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:463
 msgid "Audio Files"
 msgstr "Аудио файлове"
 
-#: src/telephony/ui/windows/settings_window.py:479
+#: src/telephony/ui/windows/settings_window.py:489
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2534,7 +2560,7 @@ msgstr ""
 "ви помогне да управлявате дубликати, но дори и да е деактивиран, "
 "препоръчваме да го активирате за по-добро изживяване."
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: src/telephony/ui/windows/settings_window.py:508
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2545,7 +2571,7 @@ msgstr ""
 "ще принудят телефона да звъни с максимална сила на звука, заобикаляйки "
 "режимите Безшумен или Не безпокойте."
 
-#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:520
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2553,50 +2579,50 @@ msgstr ""
 "Изберете контакти, които винаги ще възпроизвеждат известия с пълна сила на "
 "звука, дори когато телефонът е в безшумен режим или режим „Не безпокойте“."
 
-#: src/telephony/ui/windows/settings_window.py:531
+#: src/telephony/ui/windows/settings_window.py:541
 msgid "Unknown Callers"
 msgstr "Неизвестни обаждащи се"
 
-#: src/telephony/ui/windows/settings_window.py:536
+#: src/telephony/ui/windows/settings_window.py:546
 msgid "Unknown Callers Action"
 msgstr "Действие за неизвестни обаждащи се"
 
-#: src/telephony/ui/windows/settings_window.py:538
+#: src/telephony/ui/windows/settings_window.py:548
 msgid "Applies also to hidden numbers."
 msgstr "Отнася се и за скрити номера."
 
-#: src/telephony/ui/windows/settings_window.py:541
+#: src/telephony/ui/windows/settings_window.py:551
 msgid "Do Nothing"
 msgstr "Не правете нищо"
 
-#: src/telephony/ui/windows/settings_window.py:542
+#: src/telephony/ui/windows/settings_window.py:552
 msgid "Block Completely"
 msgstr "Блокирайте напълно"
 
-#: src/telephony/ui/windows/settings_window.py:543
+#: src/telephony/ui/windows/settings_window.py:553
 msgid "Silence and Hide UI"
 msgstr "Заглушаване и скриване на потребителския интерфейс"
 
-#: src/telephony/ui/windows/settings_window.py:544
+#: src/telephony/ui/windows/settings_window.py:554
 msgid "Silence Only"
 msgstr "Само мълчание"
 
-#: src/telephony/ui/windows/settings_window.py:552
+#: src/telephony/ui/windows/settings_window.py:562
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr ""
 "Добавете бутон за търсене към прозореца на InCall и хронологията на "
 "обажданията за неизвестни обаждащи се"
 
-#: src/telephony/ui/windows/settings_window.py:558
+#: src/telephony/ui/windows/settings_window.py:568
 msgid "Search Engine"
 msgstr "Търсачка"
 
-#: src/telephony/ui/windows/settings_window.py:562
-#: src/telephony/ui/windows/settings_window.py:567
+#: src/telephony/ui/windows/settings_window.py:572
+#: src/telephony/ui/windows/settings_window.py:577
 msgid "Custom URL"
 msgstr "Персонализиран URL адрес"
 
-#: src/telephony/ui/windows/settings_window.py:617
+#: src/telephony/ui/windows/settings_window.py:627
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2617,23 +2643,23 @@ msgstr ""
 "„{number}“ с действителния телефонен номер и ще го отворим в браузъра ви по "
 "подразбиране."
 
-#: src/telephony/ui/windows/settings_window.py:621
+#: src/telephony/ui/windows/settings_window.py:631
 msgid "Custom Search URL"
 msgstr "URL адрес за персонализирано търсене"
 
-#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:652
 msgid "Desktop Shortcuts"
 msgstr "Преки пътища на работния плот"
 
-#: src/telephony/ui/windows/settings_window.py:647
+#: src/telephony/ui/windows/settings_window.py:657
 msgid "Calls"
 msgstr "Обаждания"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: src/telephony/ui/windows/settings_window.py:823
 msgid "Name (e.g. Mom)"
 msgstr "Име (напр. майка)"
 
-#: src/telephony/ui/windows/settings_window.py:870
+#: src/telephony/ui/windows/settings_window.py:880
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2647,19 +2673,32 @@ msgstr ""
 "нивата на едри стъпки и слушалката никога не замлъква напълно. Нивото за "
 "Bluetooth се запазва за предстоящата поддръжка на маршрутизиране."
 
-#: src/telephony/ui/windows/settings_window.py:879
+#: src/telephony/ui/windows/settings_window.py:889
 msgid "Decline Message"
 msgstr "Отказ на съобщение"
 
+#: src/telephony/ui/windows/settings_window.py:927
+msgid "Address book name"
+msgstr "Име на адресната книга"
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Could not create address book"
+msgstr "Адресната книга не можа да бъде създадена"
+
 #: src/telephony/ui/windows/settings_window.py:950
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "Адресната книга '{name}' е създадена"
+
+#: src/telephony/ui/windows/settings_window.py:1027
 msgid "System Default (Always Enabled)"
 msgstr "Системно по подразбиране (винаги активирано)"
 
-#: src/telephony/ui/windows/settings_window.py:961
+#: src/telephony/ui/windows/settings_window.py:1038
 msgid "Personal Address Book"
 msgstr "Лична адресна книга"
 
-#: src/telephony/ui/windows/settings_window.py:962
+#: src/telephony/ui/windows/settings_window.py:1039
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2667,11 +2706,11 @@ msgstr ""
 "Това е адресната книга, която ще бъде синхронизирана с Andromeda, ако решите "
 "да го направите в системните настройки."
 
-#: src/telephony/ui/windows/settings_window.py:970
+#: src/telephony/ui/windows/settings_window.py:1047
 msgid "Andromeda Contacts"
 msgstr "Андромеда Контакти"
 
-#: src/telephony/ui/windows/settings_window.py:971
+#: src/telephony/ui/windows/settings_window.py:1048
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2679,7 +2718,7 @@ msgstr ""
 "Това е адресната книга, която ще се синхронизира от Andromeda, ако решите да "
 "го направите в системните настройки."
 
-#: src/telephony/ui/windows/settings_window.py:1096
+#: src/telephony/ui/windows/settings_window.py:1183
 msgid "Settings Saved"
 msgstr "Настройките са запазени"
 

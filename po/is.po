@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 12:12+0300\n"
+"POT-Creation-Date: 2026-07-31 14:41+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:619 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -82,7 +82,7 @@ msgstr "Opið"
 msgid "Call"
 msgstr "Hringdu"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/managers/eds_contacts_manager.py:29
 #: src/telephony/backend/utils/db_blocklist_utils.py:35
 #: src/telephony/ui/views/messages_view.py:372
 #: src/telephony/ui/views/messages_view.py:443
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "Byrjaðu neyðarferli"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:652
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -111,7 +111,7 @@ msgstr "Byrjaðu neyðarferli"
 #: src/telephony/ui/windows/camera_photo_window.py:91
 #: src/telephony/ui/windows/camera_video_window.py:103
 #: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:882
+#: src/telephony/ui/windows/contact_editor_window.py:881
 #: src/telephony/ui/windows/contact_picker_window.py:47
 #: src/telephony/ui/windows/custom_tone_list_window.py:58
 #: src/telephony/ui/windows/custom_tone_list_window.py:288
@@ -130,7 +130,9 @@ msgstr "Byrjaðu neyðarferli"
 #: src/telephony/ui/windows/import_export_window.py:501
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/settings_window.py:449
+#: src/telephony/ui/windows/settings_window.py:459
+#: src/telephony/ui/windows/settings_window.py:929
+#: src/telephony/ui/windows/settings_window.py:959
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -475,12 +477,12 @@ msgstr "Saga"
 
 #: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:67
-#: src/telephony/ui/windows/settings_window.py:648
+#: src/telephony/ui/windows/settings_window.py:658
 msgid "Messages"
 msgstr "Skilaboð"
 
 #: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:649
+#: src/telephony/ui/windows/settings_window.py:659
 msgid "Contacts"
 msgstr "Tengiliðir"
 
@@ -505,7 +507,7 @@ msgid "Resolve Duplicates"
 msgstr "Leysa afrit"
 
 #: src/telephony/ui/main_window.py:307
-#: src/telephony/ui/windows/settings_window.py:44
+#: src/telephony/ui/windows/settings_window.py:43
 msgid "Settings"
 msgstr "Stillingar"
 
@@ -541,10 +543,10 @@ msgstr "USSD niðurstaða"
 
 #: src/telephony/ui/main_window.py:475
 #: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:898
-#: src/telephony/ui/windows/settings_window.py:500
-#: src/telephony/ui/windows/settings_window.py:512
-#: src/telephony/ui/windows/settings_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:522
+#: src/telephony/ui/windows/settings_window.py:882
 msgid "OK"
 msgstr "Allt í lagi"
 
@@ -560,58 +562,67 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "Fann {count} tvítekinn tengilið. Athugaðu valmyndina."
 msgstr[1] "Fann {count} tvítekna tengiliði. Athugaðu valmyndina."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:597
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
 msgid "Contacts syncing..."
 msgstr "Tengiliðir samstilla..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:803
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
 #: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:382
-#: src/telephony/ui/windows/settings_window.py:416
-#: src/telephony/ui/windows/settings_window.py:435
-#: src/telephony/ui/windows/settings_window.py:486
-#: src/telephony/ui/windows/settings_window.py:624
-#: src/telephony/ui/windows/settings_window.py:915
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:426
+#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:496
+#: src/telephony/ui/windows/settings_window.py:634
+#: src/telephony/ui/windows/settings_window.py:992
 msgid "Close"
 msgstr "Loka"
 
 #: src/telephony/ui/main_window.py:591
+msgid "Syncing address books..."
+msgstr "Samstilli heimilisfangabækur..."
+
+#: src/telephony/ui/main_window.py:595
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "Samstilling hafin fyrir {count} heimilisfangabækur"
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
 msgid "Reloading Contacts..."
 msgstr "Endurhleður tengiliði..."
 
-#: src/telephony/ui/main_window.py:607
+#: src/telephony/ui/main_window.py:620
 msgid "Multiple Contacts Found"
 msgstr "Margir tengiliðir fundust"
 
-#: src/telephony/ui/main_window.py:608
+#: src/telephony/ui/main_window.py:621
 msgid "Which contact would you like to edit?"
 msgstr "Hvaða tengilið myndir þú vilja breyta?"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:634
 msgid "Unknown Addressbook"
 msgstr "Óþekkt heimilisfangabók"
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 msgid "Calling (Anonymous)..."
 msgstr "Hringir (nafnlaust)..."
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "Hringir í {number}..."
 
-#: src/telephony/ui/main_window.py:684 src/telephony/ui/main_window.py:690
+#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
 msgid "Call Failed"
 msgstr "Símtal mistókst"
 
-#: src/telephony/ui/main_window.py:696
+#: src/telephony/ui/main_window.py:709
 msgid "Call Details"
 msgstr "Upplýsingar um hringingu"
 
-#: src/telephony/ui/main_window.py:697
+#: src/telephony/ui/main_window.py:710
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -624,91 +635,92 @@ msgstr ""
 "Dagsetning: {date}\n"
 "Tímalengd: {duration}"
 
-#: src/telephony/ui/main_window.py:713
+#: src/telephony/ui/main_window.py:726
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "Opna fyrir númer"
 
-#: src/telephony/ui/main_window.py:719 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "Opnað fyrir"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "Breyta tengilið"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "Bæta við tengiliði"
 
-#: src/telephony/ui/main_window.py:738
+#: src/telephony/ui/main_window.py:751
 msgid "Add to Existing Contact"
 msgstr "Bæta við núverandi tengilið"
 
-#: src/telephony/ui/main_window.py:747
+#: src/telephony/ui/main_window.py:760
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "Leitarnúmer"
 
-#: src/telephony/ui/main_window.py:771
+#: src/telephony/ui/main_window.py:784
 msgid "Send Message"
 msgstr "Sendu skilaboð"
 
-#: src/telephony/ui/main_window.py:776
+#: src/telephony/ui/main_window.py:789
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "Afrita númer"
 
-#: src/telephony/ui/main_window.py:781
+#: src/telephony/ui/main_window.py:794
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "Blokknúmer"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:807
 msgid "Delete this call"
 msgstr "Eyða þessu símtali"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Delete Call"
 msgstr "Eyða símtali"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Remove this call?"
 msgstr "Fjarlægja þetta símtal?"
 
-#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/main_window.py:826
 msgid "Number copied"
 msgstr "Númer afritað"
 
-#: src/telephony/ui/main_window.py:819
+#: src/telephony/ui/main_window.py:832
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "Vistar tengilið..."
 
-#: src/telephony/ui/main_window.py:823
+#: src/telephony/ui/main_window.py:836
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "Bætt við {name}"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:839
 msgid "Failed to add number"
 msgstr "Mistókst að bæta við númeri"
 
-#: src/telephony/ui/main_window.py:834
+#: src/telephony/ui/main_window.py:847
 #: src/telephony/ui/windows/contact_editor_window.py:205
-#: src/telephony/ui/windows/settings_window.py:218
+#: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "Bæta við númeri"
 
-#: src/telephony/ui/main_window.py:835
+#: src/telephony/ui/main_window.py:848
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
+#: src/telephony/ui/windows/settings_window.py:930
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1020,7 +1032,8 @@ msgstr "Merkja sem ólesið"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:821
+#: src/telephony/ui/windows/settings_window.py:831
+#: src/telephony/ui/windows/settings_window.py:960
 msgid "Delete"
 msgstr "Eyða"
 
@@ -1113,7 +1126,7 @@ msgid "Draft: {message}"
 msgstr "Drög: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:34
-#: src/telephony/ui/windows/settings_window.py:366
+#: src/telephony/ui/windows/settings_window.py:376
 msgid "Advanced Settings"
 msgstr "Ítarlegar stillingar"
 
@@ -1189,7 +1202,7 @@ msgid "Calls from this number will be automatically rejected."
 msgstr "Símtölum úr þessu númeri verður sjálfkrafa hafnað."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:817
+#: src/telephony/ui/windows/settings_window.py:827
 msgid "Number"
 msgstr "Númer"
 
@@ -1214,7 +1227,7 @@ msgid "Failed to save to blocklist."
 msgstr "Mistókst að vista á bannlista."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:878
+#: src/telephony/ui/windows/contact_editor_window.py:877
 msgid "Conflict"
 msgstr "Átök"
 
@@ -1425,7 +1438,7 @@ msgstr "Eyða tengilið"
 
 #: src/telephony/ui/windows/contact_editor_window.py:295
 #: src/telephony/ui/windows/settings_window.py:166
-#: src/telephony/ui/windows/settings_window.py:483
+#: src/telephony/ui/windows/settings_window.py:493
 msgid "Address Books"
 msgstr "Heimilisfangabækur"
 
@@ -1471,11 +1484,15 @@ msgid "Deleting contact..."
 msgstr "Eyðir tengilið..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:791
-#: src/telephony/ui/windows/contact_editor_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:871
 msgid "Failed to save contact"
 msgstr "Mistókst að vista tengilið"
 
-#: src/telephony/ui/windows/contact_editor_window.py:879
+#: src/telephony/ui/windows/contact_editor_window.py:867
+msgid "Contact saved"
+msgstr "Tengiliður vistaður"
+
+#: src/telephony/ui/windows/contact_editor_window.py:878
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1485,7 +1502,7 @@ msgstr ""
 "\n"
 "Viltu halda áfram með Aflokun og bæta númerinu við Tengiliðir?"
 
-#: src/telephony/ui/windows/contact_editor_window.py:883
+#: src/telephony/ui/windows/contact_editor_window.py:882
 msgid "Yes, Add to Contacts"
 msgstr "Já, Bæta við tengiliði"
 
@@ -1502,12 +1519,12 @@ msgid "No number"
 msgstr "Ekkert númer"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:337
+#: src/telephony/ui/windows/settings_window.py:347
 msgid "Individual SMS Notifications"
 msgstr "Einstakar SMS tilkynningar"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:358
 msgid "Individual Ringtones"
 msgstr "Einstakir hringitónar"
 
@@ -1538,7 +1555,7 @@ msgid "Select Tone for {name}"
 msgstr "Veldu tón fyrir {name}"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:287
-#: src/telephony/ui/windows/settings_window.py:448
+#: src/telephony/ui/windows/settings_window.py:458
 msgid "Select"
 msgstr "Veldu"
 
@@ -1593,6 +1610,7 @@ msgstr "Eyða öllum tengiliðum"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:957
 msgid "Delete Address Book"
 msgstr "Eyða heimilisfangaskrá"
 
@@ -1639,6 +1657,7 @@ msgstr ""
 "Þetta mun þurrka það úr kerfinu."
 
 #: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:958
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Ertu viss um að þú viljir eyða '{name}' netfangaskránni varanlega?"
@@ -1697,10 +1716,12 @@ msgid "Deleting address book..."
 msgstr "Eyðir heimilisfangaskrá..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:978
 msgid "Address Book Deleted"
 msgstr "Heimilisfangaskrá eytt"
 
 #: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:976
 msgid "Failed to delete Address Book"
 msgstr "Mistókst að eyða heimilisfangaskrá"
 
@@ -1729,8 +1750,8 @@ msgid "Minute"
 msgstr "Mínúta"
 
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:32
-#: src/telephony/ui/windows/settings_window.py:319
-#: src/telephony/ui/windows/settings_window.py:509
+#: src/telephony/ui/windows/settings_window.py:329
+#: src/telephony/ui/windows/settings_window.py:519
 msgid "Notification Overrides"
 msgstr "Hnekki tilkynningar"
 
@@ -2031,16 +2052,16 @@ msgstr "Hvaða heimilisfangaskrá viltu flytja út?"
 msgid "Export All Address Books"
 msgstr "Flytja út allar heimilisfangabækur"
 
-#: src/telephony/ui/windows/import_export_window.py:563
+#: src/telephony/ui/windows/import_export_window.py:558
 msgid "No contacts found to export"
 msgstr "Engir tengiliðir fundust til að flytja út"
 
-#: src/telephony/ui/windows/import_export_window.py:579
+#: src/telephony/ui/windows/import_export_window.py:570
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "Flyttu út {count} tengiliði"
 
-#: src/telephony/ui/windows/import_export_window.py:582
+#: src/telephony/ui/windows/import_export_window.py:573
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "Útflutningsvilla: {e}"
@@ -2142,22 +2163,22 @@ msgid "Disconnected"
 msgstr "Aftengt"
 
 #: src/telephony/ui/windows/incall_window.py:54
-#: src/telephony/ui/windows/settings_window.py:282
+#: src/telephony/ui/windows/settings_window.py:292
 msgid "Earpiece"
 msgstr "Eyrnatól"
 
 #: src/telephony/ui/windows/incall_window.py:55
-#: src/telephony/ui/windows/settings_window.py:283
+#: src/telephony/ui/windows/settings_window.py:293
 msgid "Speaker"
 msgstr "Hátalari"
 
 #: src/telephony/ui/windows/incall_window.py:56
-#: src/telephony/ui/windows/settings_window.py:284
+#: src/telephony/ui/windows/settings_window.py:294
 msgid "Wired Headset"
 msgstr "Heyrnartól með snúru"
 
 #: src/telephony/ui/windows/incall_window.py:57
-#: src/telephony/ui/windows/settings_window.py:285
+#: src/telephony/ui/windows/settings_window.py:295
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
@@ -2237,7 +2258,7 @@ msgid "Answering holds the current call"
 msgstr "Að svara setur núverandi símtal í bið"
 
 #: src/telephony/ui/windows/incall_window.py:664
-#: src/telephony/ui/windows/settings_window.py:246
+#: src/telephony/ui/windows/settings_window.py:256
 msgid "I can't talk right now."
 msgstr "Ég get ekki talað núna."
 
@@ -2319,7 +2340,7 @@ msgid "Sending message to {number}..."
 msgstr "Sendi skilaboð til {number}..."
 
 #: src/telephony/ui/windows/settings_window.py:92
-#: src/telephony/ui/windows/settings_window.py:432
+#: src/telephony/ui/windows/settings_window.py:442
 msgid "Ringback Tone"
 msgstr "Hringitónn"
 
@@ -2332,7 +2353,7 @@ msgid "Selected Tone"
 msgstr "Valinn tónn"
 
 #: src/telephony/ui/windows/settings_window.py:113
-#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:402
 msgid "System Default"
 msgstr "Kerfi Sjálfgefið"
 
@@ -2350,7 +2371,7 @@ msgstr "Númerið mitt (alþjóðlegt snið)"
 
 #: src/telephony/ui/windows/settings_window.py:150
 #: src/telephony/ui/windows/settings_window.py:151
-#: src/telephony/ui/windows/settings_window.py:379
+#: src/telephony/ui/windows/settings_window.py:389
 msgid "Default Country Code"
 msgstr "Sjálfgefinn landskóði"
 
@@ -2372,78 +2393,83 @@ msgid ""
 msgstr ""
 "Leitaðu að tvíteknum númerum og sýndu upplausnarborða í tengiliðaskjánum."
 
-#: src/telephony/ui/windows/settings_window.py:207
+#: src/telephony/ui/windows/settings_window.py:203
+#: src/telephony/ui/windows/settings_window.py:926
+msgid "Add Local Address Book"
+msgstr "Bæta við staðbundinni heimilisfangabók"
+
+#: src/telephony/ui/windows/settings_window.py:217
 msgid "Lockscreen Emergency"
 msgstr "Neyðartilvik á lásskjá"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: src/telephony/ui/windows/settings_window.py:220
 msgid "Show Emergency Button"
 msgstr "Sýna neyðarhnapp"
 
-#: src/telephony/ui/windows/settings_window.py:215
+#: src/telephony/ui/windows/settings_window.py:225
 msgid "Emergency Numbers"
 msgstr "Neyðarnúmer"
 
-#: src/telephony/ui/windows/settings_window.py:232
+#: src/telephony/ui/windows/settings_window.py:242
 msgid "Quick Response"
 msgstr "Fljótt svar"
 
-#: src/telephony/ui/windows/settings_window.py:235
+#: src/telephony/ui/windows/settings_window.py:245
 msgid "Add Decline Message"
 msgstr "Bæta við höfnunarskilaboðum"
 
-#: src/telephony/ui/windows/settings_window.py:250
+#: src/telephony/ui/windows/settings_window.py:260
 msgid "Messaging"
 msgstr "Skilaboð"
 
-#: src/telephony/ui/windows/settings_window.py:260
+#: src/telephony/ui/windows/settings_window.py:270
 msgid "Automatic"
 msgstr "Sjálfvirkt"
 
-#: src/telephony/ui/windows/settings_window.py:262
-#: src/telephony/ui/windows/settings_window.py:413
+#: src/telephony/ui/windows/settings_window.py:272
+#: src/telephony/ui/windows/settings_window.py:423
 msgid "MMS Size Limit"
 msgstr "Stærðartakmark MMS"
 
-#: src/telephony/ui/windows/settings_window.py:269
-#: src/telephony/ui/windows/settings_window.py:869
+#: src/telephony/ui/windows/settings_window.py:279
+#: src/telephony/ui/windows/settings_window.py:879
 msgid "Call Volume"
 msgstr "Hljóðstyrkur símtals"
 
-#: src/telephony/ui/windows/settings_window.py:300
+#: src/telephony/ui/windows/settings_window.py:310
 msgid "Notification Exceptions"
 msgstr "Undantekningar tilkynninga"
 
-#: src/telephony/ui/windows/settings_window.py:303
-#: src/telephony/ui/windows/settings_window.py:497
+#: src/telephony/ui/windows/settings_window.py:313
+#: src/telephony/ui/windows/settings_window.py:507
 msgid "Repeated Calls Bypass"
 msgstr "Framhjá endurtekin símtöl"
 
-#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:315
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr ""
 "Ef sama númer hringir þrisvar sinnum á 5 mínútum skaltu þvinga hámarks "
 "hljóðstyrk."
 
-#: src/telephony/ui/windows/settings_window.py:320
+#: src/telephony/ui/windows/settings_window.py:330
 msgid "Manage contacts that always play sound"
 msgstr "Stjórnaðu tengiliðum sem spila alltaf hljóð"
 
-#: src/telephony/ui/windows/settings_window.py:329
-#: src/telephony/ui/windows/settings_window.py:341
-#: src/telephony/ui/windows/settings_window.py:352
+#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:351
+#: src/telephony/ui/windows/settings_window.py:362
 msgid "Manage"
 msgstr "Stjórna"
 
-#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:349
 msgid "Set custom notification sounds for specific contacts"
 msgstr "Stilltu sérsniðin tilkynningahljóð fyrir tiltekna tengiliði"
 
-#: src/telephony/ui/windows/settings_window.py:350
+#: src/telephony/ui/windows/settings_window.py:360
 msgid "Set custom ringtones for specific contacts"
 msgstr "Stilltu sérsniðna hringitóna fyrir tiltekna tengiliði"
 
-#: src/telephony/ui/windows/settings_window.py:375
+#: src/telephony/ui/windows/settings_window.py:385
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2463,7 +2489,7 @@ msgstr ""
 "Þú getur hnekkt því handvirkt hér með því að slá inn tveggja stafa ISO "
 "svæðiskóða (t.d. US, FI, DE) eða hringingarkóða (t.d. +358, 358, +1, 1)."
 
-#: src/telephony/ui/windows/settings_window.py:403
+#: src/telephony/ui/windows/settings_window.py:413
 msgid ""
 "Carriers limit how large a multimedia message can be. Images and videos you "
 "attach are automatically compressed to fit under this limit before sending.\n"
@@ -2480,7 +2506,7 @@ msgstr ""
 "flestum símafyrirtækjum. Veldu lægra gildi ef skilaboðin þín sendast ekki, "
 "eða hærra ef þú veist að símafyrirtækið þitt leyfir það."
 
-#: src/telephony/ui/windows/settings_window.py:425
+#: src/telephony/ui/windows/settings_window.py:435
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2496,15 +2522,15 @@ msgstr ""
 "Þú getur valið þína eigin tónlistarskrá eða hreinsað hana til að nota "
 "venjulegan kerfistón."
 
-#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:455
 msgid "Select Ringback Tone"
 msgstr "Veldu Hringitónn"
 
-#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:463
 msgid "Audio Files"
 msgstr "Hljóðskrár"
 
-#: src/telephony/ui/windows/settings_window.py:479
+#: src/telephony/ui/windows/settings_window.py:489
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2519,7 +2545,7 @@ msgstr ""
 "jafnvel þótt óvirkt sé, hvetjum við til að virkja hann til að fá betri "
 "upplifun."
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: src/telephony/ui/windows/settings_window.py:508
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2529,7 +2555,7 @@ msgstr ""
 "5 mínútna, mun þriðja símtalið (og síðari símtalið í glugganum) neyða símann "
 "til að hringja á hámarks hljóðstyrk, framhjá hljóði eða „Ónáðið ekki“."
 
-#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:520
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2537,49 +2563,49 @@ msgstr ""
 "Veldu tengiliði sem munu alltaf spila tilkynningar á fullum hljóðstyrk, "
 "jafnvel þegar síminn er í hljóðlausri stillingu eða „Ónáðið ekki“."
 
-#: src/telephony/ui/windows/settings_window.py:531
+#: src/telephony/ui/windows/settings_window.py:541
 msgid "Unknown Callers"
 msgstr "Óþekktir hringir"
 
-#: src/telephony/ui/windows/settings_window.py:536
+#: src/telephony/ui/windows/settings_window.py:546
 msgid "Unknown Callers Action"
 msgstr "Aðgerð óþekkt hringjendur"
 
-#: src/telephony/ui/windows/settings_window.py:538
+#: src/telephony/ui/windows/settings_window.py:548
 msgid "Applies also to hidden numbers."
 msgstr "Á einnig við um faldar tölur."
 
-#: src/telephony/ui/windows/settings_window.py:541
+#: src/telephony/ui/windows/settings_window.py:551
 msgid "Do Nothing"
 msgstr "Gerðu ekkert"
 
-#: src/telephony/ui/windows/settings_window.py:542
+#: src/telephony/ui/windows/settings_window.py:552
 msgid "Block Completely"
 msgstr "Lokaðu algjörlega"
 
-#: src/telephony/ui/windows/settings_window.py:543
+#: src/telephony/ui/windows/settings_window.py:553
 msgid "Silence and Hide UI"
 msgstr "Þagga og fela notendaviðmót"
 
-#: src/telephony/ui/windows/settings_window.py:544
+#: src/telephony/ui/windows/settings_window.py:554
 msgid "Silence Only"
 msgstr "Aðeins þögn"
 
-#: src/telephony/ui/windows/settings_window.py:552
+#: src/telephony/ui/windows/settings_window.py:562
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr ""
 "Bættu leitarhnappi við InCall glugga og símtalasögu fyrir óþekkta hringendur"
 
-#: src/telephony/ui/windows/settings_window.py:558
+#: src/telephony/ui/windows/settings_window.py:568
 msgid "Search Engine"
 msgstr "Leitarvél"
 
-#: src/telephony/ui/windows/settings_window.py:562
-#: src/telephony/ui/windows/settings_window.py:567
+#: src/telephony/ui/windows/settings_window.py:572
+#: src/telephony/ui/windows/settings_window.py:577
 msgid "Custom URL"
 msgstr "Sérsniðin vefslóð"
 
-#: src/telephony/ui/windows/settings_window.py:617
+#: src/telephony/ui/windows/settings_window.py:627
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2599,23 +2625,23 @@ msgstr ""
 "'{number}' út fyrir raunverulegt símanúmer og opna það í sjálfgefnum vafra "
 "þínum."
 
-#: src/telephony/ui/windows/settings_window.py:621
+#: src/telephony/ui/windows/settings_window.py:631
 msgid "Custom Search URL"
 msgstr "Slóð á sérsniðinni leit"
 
-#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:652
 msgid "Desktop Shortcuts"
 msgstr "Flýtileiðir á skjáborði"
 
-#: src/telephony/ui/windows/settings_window.py:647
+#: src/telephony/ui/windows/settings_window.py:657
 msgid "Calls"
 msgstr "Símtöl"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: src/telephony/ui/windows/settings_window.py:823
 msgid "Name (e.g. Mom)"
 msgstr "Nafn (t.d. mamma)"
 
-#: src/telephony/ui/windows/settings_window.py:870
+#: src/telephony/ui/windows/settings_window.py:880
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2629,19 +2655,32 @@ msgstr ""
 "í grófum þrepum og eyrnatólið verður aldrei alveg hljóðlaust. Bluetooth-"
 "stigið er geymt fyrir væntanlegan stuðning við beiningu."
 
-#: src/telephony/ui/windows/settings_window.py:879
+#: src/telephony/ui/windows/settings_window.py:889
 msgid "Decline Message"
 msgstr "Afþakka skilaboð"
 
+#: src/telephony/ui/windows/settings_window.py:927
+msgid "Address book name"
+msgstr "Nafn heimilisfangabókar"
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Could not create address book"
+msgstr "Mistókst að búa til heimilisfangabók"
+
 #: src/telephony/ui/windows/settings_window.py:950
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "Heimilisfangabókin '{name}' var búin til"
+
+#: src/telephony/ui/windows/settings_window.py:1027
 msgid "System Default (Always Enabled)"
 msgstr "Sjálfgefið kerfi (alltaf virkt)"
 
-#: src/telephony/ui/windows/settings_window.py:961
+#: src/telephony/ui/windows/settings_window.py:1038
 msgid "Personal Address Book"
 msgstr "Persónuleg heimilisfangabók"
 
-#: src/telephony/ui/windows/settings_window.py:962
+#: src/telephony/ui/windows/settings_window.py:1039
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2649,11 +2688,11 @@ msgstr ""
 "Þetta er heimilisfangaskráin sem verður samstillt við Andromeda ef þú velur "
 "að gera það í kerfisstillingum."
 
-#: src/telephony/ui/windows/settings_window.py:970
+#: src/telephony/ui/windows/settings_window.py:1047
 msgid "Andromeda Contacts"
 msgstr "Andromeda tengiliðir"
 
-#: src/telephony/ui/windows/settings_window.py:971
+#: src/telephony/ui/windows/settings_window.py:1048
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2661,7 +2700,7 @@ msgstr ""
 "Þetta er heimilisfangaskráin sem verður samstillt frá Andromeda ef þú velur "
 "að gera það í kerfisstillingum."
 
-#: src/telephony/ui/windows/settings_window.py:1096
+#: src/telephony/ui/windows/settings_window.py:1183
 msgid "Settings Saved"
 msgstr "Stillingar vistaðar"
 

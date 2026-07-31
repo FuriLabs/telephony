@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 12:12+0300\n"
+"POT-Creation-Date: 2026-07-31 14:41+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:619 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -82,7 +82,7 @@ msgstr "열려 있는"
 msgid "Call"
 msgstr "부르다"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/managers/eds_contacts_manager.py:29
 #: src/telephony/backend/utils/db_blocklist_utils.py:35
 #: src/telephony/ui/views/messages_view.py:372
 #: src/telephony/ui/views/messages_view.py:443
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "긴급 프로세스 시작"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:652
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -111,7 +111,7 @@ msgstr "긴급 프로세스 시작"
 #: src/telephony/ui/windows/camera_photo_window.py:91
 #: src/telephony/ui/windows/camera_video_window.py:103
 #: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:882
+#: src/telephony/ui/windows/contact_editor_window.py:881
 #: src/telephony/ui/windows/contact_picker_window.py:47
 #: src/telephony/ui/windows/custom_tone_list_window.py:58
 #: src/telephony/ui/windows/custom_tone_list_window.py:288
@@ -130,7 +130,9 @@ msgstr "긴급 프로세스 시작"
 #: src/telephony/ui/windows/import_export_window.py:501
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/settings_window.py:449
+#: src/telephony/ui/windows/settings_window.py:459
+#: src/telephony/ui/windows/settings_window.py:929
+#: src/telephony/ui/windows/settings_window.py:959
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -475,12 +477,12 @@ msgstr "역사"
 
 #: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:67
-#: src/telephony/ui/windows/settings_window.py:648
+#: src/telephony/ui/windows/settings_window.py:658
 msgid "Messages"
 msgstr "메시지"
 
 #: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:649
+#: src/telephony/ui/windows/settings_window.py:659
 msgid "Contacts"
 msgstr "콘택트 렌즈"
 
@@ -505,7 +507,7 @@ msgid "Resolve Duplicates"
 msgstr "중복 해결"
 
 #: src/telephony/ui/main_window.py:307
-#: src/telephony/ui/windows/settings_window.py:44
+#: src/telephony/ui/windows/settings_window.py:43
 msgid "Settings"
 msgstr "설정"
 
@@ -541,10 +543,10 @@ msgstr "USSD 결과"
 
 #: src/telephony/ui/main_window.py:475
 #: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:898
-#: src/telephony/ui/windows/settings_window.py:500
-#: src/telephony/ui/windows/settings_window.py:512
-#: src/telephony/ui/windows/settings_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:522
+#: src/telephony/ui/windows/settings_window.py:882
 msgid "OK"
 msgstr "좋아요"
 
@@ -560,58 +562,67 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "{count}개의 중복된 연락처를 찾았습니다. 메뉴를 확인하세요."
 msgstr[1] "{count}개의 중복된 연락처를 찾았습니다. 메뉴를 확인하세요."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:597
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
 msgid "Contacts syncing..."
 msgstr "연락처 동기화 중..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:803
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
 #: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:382
-#: src/telephony/ui/windows/settings_window.py:416
-#: src/telephony/ui/windows/settings_window.py:435
-#: src/telephony/ui/windows/settings_window.py:486
-#: src/telephony/ui/windows/settings_window.py:624
-#: src/telephony/ui/windows/settings_window.py:915
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:426
+#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:496
+#: src/telephony/ui/windows/settings_window.py:634
+#: src/telephony/ui/windows/settings_window.py:992
 msgid "Close"
 msgstr "닫다"
 
 #: src/telephony/ui/main_window.py:591
+msgid "Syncing address books..."
+msgstr "주소록 동기화 중..."
+
+#: src/telephony/ui/main_window.py:595
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "주소록 {count}개의 동기화가 시작되었습니다"
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
 msgid "Reloading Contacts..."
 msgstr "연락처를 다시 로드하는 중..."
 
-#: src/telephony/ui/main_window.py:607
+#: src/telephony/ui/main_window.py:620
 msgid "Multiple Contacts Found"
 msgstr "여러 연락처가 발견되었습니다."
 
-#: src/telephony/ui/main_window.py:608
+#: src/telephony/ui/main_window.py:621
 msgid "Which contact would you like to edit?"
 msgstr "어떤 연락처를 수정하시겠습니까?"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:634
 msgid "Unknown Addressbook"
 msgstr "알 수 없는 주소록"
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 msgid "Calling (Anonymous)..."
 msgstr "(익명) 전화 중..."
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "{number}(으)로 전화 거는 중..."
 
-#: src/telephony/ui/main_window.py:684 src/telephony/ui/main_window.py:690
+#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
 msgid "Call Failed"
 msgstr "통화 실패"
 
-#: src/telephony/ui/main_window.py:696
+#: src/telephony/ui/main_window.py:709
 msgid "Call Details"
 msgstr "통화 세부정보"
 
-#: src/telephony/ui/main_window.py:697
+#: src/telephony/ui/main_window.py:710
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -624,91 +635,92 @@ msgstr ""
 "날짜: {date}\n"
 "통화 시간: {duration}"
 
-#: src/telephony/ui/main_window.py:713
+#: src/telephony/ui/main_window.py:726
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "번호 차단 해제"
 
-#: src/telephony/ui/main_window.py:719 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "차단 해제됨"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "연락처 편집"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "연락처에 추가"
 
-#: src/telephony/ui/main_window.py:738
+#: src/telephony/ui/main_window.py:751
 msgid "Add to Existing Contact"
 msgstr "기존 연락처에 추가"
 
-#: src/telephony/ui/main_window.py:747
+#: src/telephony/ui/main_window.py:760
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "검색번호"
 
-#: src/telephony/ui/main_window.py:771
+#: src/telephony/ui/main_window.py:784
 msgid "Send Message"
 msgstr "메시지 보내기"
 
-#: src/telephony/ui/main_window.py:776
+#: src/telephony/ui/main_window.py:789
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "복사 번호"
 
-#: src/telephony/ui/main_window.py:781
+#: src/telephony/ui/main_window.py:794
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "블록 번호"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:807
 msgid "Delete this call"
 msgstr "이 통화 삭제"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Delete Call"
 msgstr "통화 삭제"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Remove this call?"
 msgstr "이 통화를 삭제하시겠습니까?"
 
-#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/main_window.py:826
 msgid "Number copied"
 msgstr "복사된 번호"
 
-#: src/telephony/ui/main_window.py:819
+#: src/telephony/ui/main_window.py:832
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "연락처 저장 중..."
 
-#: src/telephony/ui/main_window.py:823
+#: src/telephony/ui/main_window.py:836
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "{name}에 추가됨"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:839
 msgid "Failed to add number"
 msgstr "번호를 추가하지 못했습니다."
 
-#: src/telephony/ui/main_window.py:834
+#: src/telephony/ui/main_window.py:847
 #: src/telephony/ui/windows/contact_editor_window.py:205
-#: src/telephony/ui/windows/settings_window.py:218
+#: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "번호 추가"
 
-#: src/telephony/ui/main_window.py:835
+#: src/telephony/ui/main_window.py:848
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
+#: src/telephony/ui/windows/settings_window.py:930
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1019,7 +1031,8 @@ msgstr "읽지 않은 상태로 표시"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:821
+#: src/telephony/ui/windows/settings_window.py:831
+#: src/telephony/ui/windows/settings_window.py:960
 msgid "Delete"
 msgstr "삭제"
 
@@ -1112,7 +1125,7 @@ msgid "Draft: {message}"
 msgstr "임시 저장: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:34
-#: src/telephony/ui/windows/settings_window.py:366
+#: src/telephony/ui/windows/settings_window.py:376
 msgid "Advanced Settings"
 msgstr "고급 설정"
 
@@ -1188,7 +1201,7 @@ msgid "Calls from this number will be automatically rejected."
 msgstr "이 번호로 걸려오는 전화는 자동으로 거부됩니다."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:817
+#: src/telephony/ui/windows/settings_window.py:827
 msgid "Number"
 msgstr "숫자"
 
@@ -1213,7 +1226,7 @@ msgid "Failed to save to blocklist."
 msgstr "차단 목록에 저장하지 못했습니다."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:878
+#: src/telephony/ui/windows/contact_editor_window.py:877
 msgid "Conflict"
 msgstr "갈등"
 
@@ -1424,7 +1437,7 @@ msgstr "연락처 삭제"
 
 #: src/telephony/ui/windows/contact_editor_window.py:295
 #: src/telephony/ui/windows/settings_window.py:166
-#: src/telephony/ui/windows/settings_window.py:483
+#: src/telephony/ui/windows/settings_window.py:493
 msgid "Address Books"
 msgstr "주소록"
 
@@ -1470,11 +1483,15 @@ msgid "Deleting contact..."
 msgstr "연락처 삭제 중..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:791
-#: src/telephony/ui/windows/contact_editor_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:871
 msgid "Failed to save contact"
 msgstr "연락처를 저장하지 못했습니다"
 
-#: src/telephony/ui/windows/contact_editor_window.py:879
+#: src/telephony/ui/windows/contact_editor_window.py:867
+msgid "Contact saved"
+msgstr "연락처가 저장되었습니다"
+
+#: src/telephony/ui/windows/contact_editor_window.py:878
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1484,7 +1501,7 @@ msgstr ""
 "\n"
 "차단 해제를 진행하고 연락처에 번호를 추가하시겠습니까?"
 
-#: src/telephony/ui/windows/contact_editor_window.py:883
+#: src/telephony/ui/windows/contact_editor_window.py:882
 msgid "Yes, Add to Contacts"
 msgstr "예, 연락처에 추가합니다"
 
@@ -1501,12 +1518,12 @@ msgid "No number"
 msgstr "번호 없음"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:337
+#: src/telephony/ui/windows/settings_window.py:347
 msgid "Individual SMS Notifications"
 msgstr "개별 SMS 알림"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:358
 msgid "Individual Ringtones"
 msgstr "개별 벨소리"
 
@@ -1537,7 +1554,7 @@ msgid "Select Tone for {name}"
 msgstr "{name}의 말투를 선택하세요"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:287
-#: src/telephony/ui/windows/settings_window.py:448
+#: src/telephony/ui/windows/settings_window.py:458
 msgid "Select"
 msgstr "선택하다"
 
@@ -1592,6 +1609,7 @@ msgstr "모든 연락처 삭제"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:957
 msgid "Delete Address Book"
 msgstr "주소록 삭제"
 
@@ -1638,6 +1656,7 @@ msgstr ""
 "이렇게 하면 시스템에서 해당 내용이 지워집니다."
 
 #: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:958
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "정말로 '{name}' 주소록을 영구적으로 삭제하시겠습니까?"
@@ -1695,10 +1714,12 @@ msgid "Deleting address book..."
 msgstr "주소록 삭제 중..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:978
 msgid "Address Book Deleted"
 msgstr "주소록이 삭제되었습니다"
 
 #: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:976
 msgid "Failed to delete Address Book"
 msgstr "주소록 삭제 실패"
 
@@ -1727,8 +1748,8 @@ msgid "Minute"
 msgstr "분"
 
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:32
-#: src/telephony/ui/windows/settings_window.py:319
-#: src/telephony/ui/windows/settings_window.py:509
+#: src/telephony/ui/windows/settings_window.py:329
+#: src/telephony/ui/windows/settings_window.py:519
 msgid "Notification Overrides"
 msgstr "알림 무시"
 
@@ -2029,16 +2050,16 @@ msgstr "어떤 주소록을 내보내시겠습니까?"
 msgid "Export All Address Books"
 msgstr "모든 주소록 내보내기"
 
-#: src/telephony/ui/windows/import_export_window.py:563
+#: src/telephony/ui/windows/import_export_window.py:558
 msgid "No contacts found to export"
 msgstr "내보낼 연락처가 없습니다."
 
-#: src/telephony/ui/windows/import_export_window.py:579
+#: src/telephony/ui/windows/import_export_window.py:570
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "{count}개의 연락처를 내보냈습니다."
 
-#: src/telephony/ui/windows/import_export_window.py:582
+#: src/telephony/ui/windows/import_export_window.py:573
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "내보내기 오류: {e}"
@@ -2140,22 +2161,22 @@ msgid "Disconnected"
 msgstr "연결 끊김"
 
 #: src/telephony/ui/windows/incall_window.py:54
-#: src/telephony/ui/windows/settings_window.py:282
+#: src/telephony/ui/windows/settings_window.py:292
 msgid "Earpiece"
 msgstr "수화부"
 
 #: src/telephony/ui/windows/incall_window.py:55
-#: src/telephony/ui/windows/settings_window.py:283
+#: src/telephony/ui/windows/settings_window.py:293
 msgid "Speaker"
 msgstr "스피커"
 
 #: src/telephony/ui/windows/incall_window.py:56
-#: src/telephony/ui/windows/settings_window.py:284
+#: src/telephony/ui/windows/settings_window.py:294
 msgid "Wired Headset"
 msgstr "유선 헤드셋"
 
 #: src/telephony/ui/windows/incall_window.py:57
-#: src/telephony/ui/windows/settings_window.py:285
+#: src/telephony/ui/windows/settings_window.py:295
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
@@ -2235,7 +2256,7 @@ msgid "Answering holds the current call"
 msgstr "응답하면 현재 통화가 보류됩니다"
 
 #: src/telephony/ui/windows/incall_window.py:664
-#: src/telephony/ui/windows/settings_window.py:246
+#: src/telephony/ui/windows/settings_window.py:256
 msgid "I can't talk right now."
 msgstr "지금은 얘기할 수 없어요."
 
@@ -2317,7 +2338,7 @@ msgid "Sending message to {number}..."
 msgstr "{number}에게 메시지 전송 중..."
 
 #: src/telephony/ui/windows/settings_window.py:92
-#: src/telephony/ui/windows/settings_window.py:432
+#: src/telephony/ui/windows/settings_window.py:442
 msgid "Ringback Tone"
 msgstr "통화 연결음"
 
@@ -2330,7 +2351,7 @@ msgid "Selected Tone"
 msgstr "선택한 톤"
 
 #: src/telephony/ui/windows/settings_window.py:113
-#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:402
 msgid "System Default"
 msgstr "시스템 기본값"
 
@@ -2348,7 +2369,7 @@ msgstr "마이넘버(국제형식)"
 
 #: src/telephony/ui/windows/settings_window.py:150
 #: src/telephony/ui/windows/settings_window.py:151
-#: src/telephony/ui/windows/settings_window.py:379
+#: src/telephony/ui/windows/settings_window.py:389
 msgid "Default Country Code"
 msgstr "기본 국가 코드"
 
@@ -2369,76 +2390,81 @@ msgid ""
 "Scan for duplicate numbers and show a resolution banner in the Contacts view."
 msgstr "중복된 번호를 검색하고 연락처 보기에 해결 배너를 표시합니다."
 
-#: src/telephony/ui/windows/settings_window.py:207
+#: src/telephony/ui/windows/settings_window.py:203
+#: src/telephony/ui/windows/settings_window.py:926
+msgid "Add Local Address Book"
+msgstr "로컬 주소록 추가"
+
+#: src/telephony/ui/windows/settings_window.py:217
 msgid "Lockscreen Emergency"
 msgstr "잠금화면 긴급상황"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: src/telephony/ui/windows/settings_window.py:220
 msgid "Show Emergency Button"
 msgstr "긴급 버튼 표시"
 
-#: src/telephony/ui/windows/settings_window.py:215
+#: src/telephony/ui/windows/settings_window.py:225
 msgid "Emergency Numbers"
 msgstr "긴급 전화번호"
 
-#: src/telephony/ui/windows/settings_window.py:232
+#: src/telephony/ui/windows/settings_window.py:242
 msgid "Quick Response"
 msgstr "빠른 응답"
 
-#: src/telephony/ui/windows/settings_window.py:235
+#: src/telephony/ui/windows/settings_window.py:245
 msgid "Add Decline Message"
 msgstr "거절 메시지 추가"
 
-#: src/telephony/ui/windows/settings_window.py:250
+#: src/telephony/ui/windows/settings_window.py:260
 msgid "Messaging"
 msgstr "메시지"
 
-#: src/telephony/ui/windows/settings_window.py:260
+#: src/telephony/ui/windows/settings_window.py:270
 msgid "Automatic"
 msgstr "자동"
 
-#: src/telephony/ui/windows/settings_window.py:262
-#: src/telephony/ui/windows/settings_window.py:413
+#: src/telephony/ui/windows/settings_window.py:272
+#: src/telephony/ui/windows/settings_window.py:423
 msgid "MMS Size Limit"
 msgstr "MMS 크기 제한"
 
-#: src/telephony/ui/windows/settings_window.py:269
-#: src/telephony/ui/windows/settings_window.py:869
+#: src/telephony/ui/windows/settings_window.py:279
+#: src/telephony/ui/windows/settings_window.py:879
 msgid "Call Volume"
 msgstr "통화 음량"
 
-#: src/telephony/ui/windows/settings_window.py:300
+#: src/telephony/ui/windows/settings_window.py:310
 msgid "Notification Exceptions"
 msgstr "알림 예외"
 
-#: src/telephony/ui/windows/settings_window.py:303
-#: src/telephony/ui/windows/settings_window.py:497
+#: src/telephony/ui/windows/settings_window.py:313
+#: src/telephony/ui/windows/settings_window.py:507
 msgid "Repeated Calls Bypass"
 msgstr "반복 통화 우회"
 
-#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:315
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr "5분 안에 같은 번호로 3번 전화가 오면 볼륨을 최대로 강제 적용합니다."
 
-#: src/telephony/ui/windows/settings_window.py:320
+#: src/telephony/ui/windows/settings_window.py:330
 msgid "Manage contacts that always play sound"
 msgstr "항상 소리가 나는 연락처 관리"
 
-#: src/telephony/ui/windows/settings_window.py:329
-#: src/telephony/ui/windows/settings_window.py:341
-#: src/telephony/ui/windows/settings_window.py:352
+#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:351
+#: src/telephony/ui/windows/settings_window.py:362
 msgid "Manage"
 msgstr "관리하다"
 
-#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:349
 msgid "Set custom notification sounds for specific contacts"
 msgstr "특정 연락처에 대한 맞춤 알림 소리 설정"
 
-#: src/telephony/ui/windows/settings_window.py:350
+#: src/telephony/ui/windows/settings_window.py:360
 msgid "Set custom ringtones for specific contacts"
 msgstr "특정 연락처에 대한 맞춤 벨소리 설정"
 
-#: src/telephony/ui/windows/settings_window.py:375
+#: src/telephony/ui/windows/settings_window.py:385
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2458,7 +2484,7 @@ msgstr ""
 "여기에서 2자리 ISO 지역 코드(예: US, FI, DE) 또는 호출 코드(예: +358, 358, "
 "+1, 1)를 입력하여 수동으로 재정의할 수 있습니다."
 
-#: src/telephony/ui/windows/settings_window.py:403
+#: src/telephony/ui/windows/settings_window.py:413
 msgid ""
 "Carriers limit how large a multimedia message can be. Images and videos you "
 "attach are automatically compressed to fit under this limit before sending.\n"
@@ -2474,7 +2500,7 @@ msgstr ""
 "합합니다. 메시지 전송이 실패하면 더 작은 값을 선택하고, 통신사가 허용하는 것"
 "을 알고 있다면 더 큰 값을 선택하세요."
 
-#: src/telephony/ui/windows/settings_window.py:425
+#: src/telephony/ui/windows/settings_window.py:435
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2489,15 +2515,15 @@ msgstr ""
 "\n"
 "자신만의 음악 파일을 선택하거나, 지워서 표준 시스템 톤을 사용할 수 있습니다."
 
-#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:455
 msgid "Select Ringback Tone"
 msgstr "전화연결음 선택"
 
-#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:463
 msgid "Audio Files"
 msgstr "오디오 파일"
 
-#: src/telephony/ui/windows/settings_window.py:479
+#: src/telephony/ui/windows/settings_window.py:489
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2510,7 +2536,7 @@ msgstr ""
 "니다. 아래 Duplicate Resolver 토글을 사용하면 중복 항목을 관리하는 데 도움이 "
 "됩니다. 비활성화된 경우에도 더 나은 환경을 위해 활성화하는 것이 좋습니다."
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: src/telephony/ui/windows/settings_window.py:508
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2520,7 +2546,7 @@ msgstr ""
 "간 내의 후속 전화)에서는 무음 또는 방해 금지 모드를 우회하여 전화기가 최대 볼"
 "륨으로 강제로 울리도록 합니다."
 
-#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:520
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2528,48 +2554,48 @@ msgstr ""
 "전화기가 무음 모드 또는 방해 금지 모드일 때에도 항상 최대 볼륨으로 알림을 재"
 "생하는 연락처를 선택하세요."
 
-#: src/telephony/ui/windows/settings_window.py:531
+#: src/telephony/ui/windows/settings_window.py:541
 msgid "Unknown Callers"
 msgstr "알 수 없는 발신자"
 
-#: src/telephony/ui/windows/settings_window.py:536
+#: src/telephony/ui/windows/settings_window.py:546
 msgid "Unknown Callers Action"
 msgstr "알 수 없는 발신자 작업"
 
-#: src/telephony/ui/windows/settings_window.py:538
+#: src/telephony/ui/windows/settings_window.py:548
 msgid "Applies also to hidden numbers."
 msgstr "숨겨진 숫자에도 적용됩니다."
 
-#: src/telephony/ui/windows/settings_window.py:541
+#: src/telephony/ui/windows/settings_window.py:551
 msgid "Do Nothing"
 msgstr "아무것도 하지 않음"
 
-#: src/telephony/ui/windows/settings_window.py:542
+#: src/telephony/ui/windows/settings_window.py:552
 msgid "Block Completely"
 msgstr "완전 차단"
 
-#: src/telephony/ui/windows/settings_window.py:543
+#: src/telephony/ui/windows/settings_window.py:553
 msgid "Silence and Hide UI"
 msgstr "침묵 및 UI 숨기기"
 
-#: src/telephony/ui/windows/settings_window.py:544
+#: src/telephony/ui/windows/settings_window.py:554
 msgid "Silence Only"
 msgstr "침묵만"
 
-#: src/telephony/ui/windows/settings_window.py:552
+#: src/telephony/ui/windows/settings_window.py:562
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr "알 수 없는 발신자에 대한 InCall 창 및 통화 기록에 검색 버튼 추가"
 
-#: src/telephony/ui/windows/settings_window.py:558
+#: src/telephony/ui/windows/settings_window.py:568
 msgid "Search Engine"
 msgstr "검색 엔진"
 
-#: src/telephony/ui/windows/settings_window.py:562
-#: src/telephony/ui/windows/settings_window.py:567
+#: src/telephony/ui/windows/settings_window.py:572
+#: src/telephony/ui/windows/settings_window.py:577
 msgid "Custom URL"
 msgstr "맞춤 URL"
 
-#: src/telephony/ui/windows/settings_window.py:617
+#: src/telephony/ui/windows/settings_window.py:627
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2588,23 +2614,23 @@ msgstr ""
 "통화 중 검색 버튼을 누르면 '{number}'가 실제 전화번호로 바뀌어 기본 브라우저"
 "에서 열립니다."
 
-#: src/telephony/ui/windows/settings_window.py:621
+#: src/telephony/ui/windows/settings_window.py:631
 msgid "Custom Search URL"
 msgstr "맞춤 검색 URL"
 
-#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:652
 msgid "Desktop Shortcuts"
 msgstr "데스크탑 바로가기"
 
-#: src/telephony/ui/windows/settings_window.py:647
+#: src/telephony/ui/windows/settings_window.py:657
 msgid "Calls"
 msgstr "통화"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: src/telephony/ui/windows/settings_window.py:823
 msgid "Name (e.g. Mom)"
 msgstr "이름(예: 엄마)"
 
-#: src/telephony/ui/windows/settings_window.py:870
+#: src/telephony/ui/windows/settings_window.py:880
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2617,19 +2643,32 @@ msgstr ""
 "을 큰 단계로 적용하며, 수화부는 완전히 무음이 되지 않습니다. Bluetooth 수준"
 "은 향후 라우팅 지원을 위해 저장됩니다."
 
-#: src/telephony/ui/windows/settings_window.py:879
+#: src/telephony/ui/windows/settings_window.py:889
 msgid "Decline Message"
 msgstr "거절 메시지"
 
+#: src/telephony/ui/windows/settings_window.py:927
+msgid "Address book name"
+msgstr "주소록 이름"
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Could not create address book"
+msgstr "주소록을 만들 수 없습니다"
+
 #: src/telephony/ui/windows/settings_window.py:950
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "'{name}' 주소록이 생성되었습니다"
+
+#: src/telephony/ui/windows/settings_window.py:1027
 msgid "System Default (Always Enabled)"
 msgstr "시스템 기본값(항상 활성화)"
 
-#: src/telephony/ui/windows/settings_window.py:961
+#: src/telephony/ui/windows/settings_window.py:1038
 msgid "Personal Address Book"
 msgstr "개인 주소록"
 
-#: src/telephony/ui/windows/settings_window.py:962
+#: src/telephony/ui/windows/settings_window.py:1039
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2637,11 +2676,11 @@ msgstr ""
 "시스템 설정에서 동기화하도록 선택한 경우 안드로메다와 동기화되는 주소록입니"
 "다."
 
-#: src/telephony/ui/windows/settings_window.py:970
+#: src/telephony/ui/windows/settings_window.py:1047
 msgid "Andromeda Contacts"
 msgstr "안드로메다 연락처"
 
-#: src/telephony/ui/windows/settings_window.py:971
+#: src/telephony/ui/windows/settings_window.py:1048
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2649,7 +2688,7 @@ msgstr ""
 "시스템 설정에서 동기화하도록 선택한 경우 Andromeda에서 동기화되는 주소록입니"
 "다."
 
-#: src/telephony/ui/windows/settings_window.py:1096
+#: src/telephony/ui/windows/settings_window.py:1183
 msgid "Settings Saved"
 msgstr "설정이 저장되었습니다"
 

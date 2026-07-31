@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 12:12+0300\n"
+"POT-Creation-Date: 2026-07-31 14:41+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:619 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -82,7 +82,7 @@ msgstr "Բաց"
 msgid "Call"
 msgstr "Զանգահարեք"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/managers/eds_contacts_manager.py:29
 #: src/telephony/backend/utils/db_blocklist_utils.py:35
 #: src/telephony/ui/views/messages_view.py:372
 #: src/telephony/ui/views/messages_view.py:443
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "Սկսեք արտակարգ իրավիճակների գործընթացը"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:652
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -111,7 +111,7 @@ msgstr "Սկսեք արտակարգ իրավիճակների գործընթաց�
 #: src/telephony/ui/windows/camera_photo_window.py:91
 #: src/telephony/ui/windows/camera_video_window.py:103
 #: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:882
+#: src/telephony/ui/windows/contact_editor_window.py:881
 #: src/telephony/ui/windows/contact_picker_window.py:47
 #: src/telephony/ui/windows/custom_tone_list_window.py:58
 #: src/telephony/ui/windows/custom_tone_list_window.py:288
@@ -130,7 +130,9 @@ msgstr "Սկսեք արտակարգ իրավիճակների գործընթաց�
 #: src/telephony/ui/windows/import_export_window.py:501
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/settings_window.py:449
+#: src/telephony/ui/windows/settings_window.py:459
+#: src/telephony/ui/windows/settings_window.py:929
+#: src/telephony/ui/windows/settings_window.py:959
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -477,12 +479,12 @@ msgstr "Պատմություն"
 
 #: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:67
-#: src/telephony/ui/windows/settings_window.py:648
+#: src/telephony/ui/windows/settings_window.py:658
 msgid "Messages"
 msgstr "Հաղորդագրություններ"
 
 #: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:649
+#: src/telephony/ui/windows/settings_window.py:659
 msgid "Contacts"
 msgstr "Կոնտակտներ"
 
@@ -507,7 +509,7 @@ msgid "Resolve Duplicates"
 msgstr "Լուծել կրկնօրինակները"
 
 #: src/telephony/ui/main_window.py:307
-#: src/telephony/ui/windows/settings_window.py:44
+#: src/telephony/ui/windows/settings_window.py:43
 msgid "Settings"
 msgstr "Կարգավորումներ"
 
@@ -543,10 +545,10 @@ msgstr "USSD արդյունք"
 
 #: src/telephony/ui/main_window.py:475
 #: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:898
-#: src/telephony/ui/windows/settings_window.py:500
-#: src/telephony/ui/windows/settings_window.py:512
-#: src/telephony/ui/windows/settings_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:522
+#: src/telephony/ui/windows/settings_window.py:882
 msgid "OK"
 msgstr "Լավ"
 
@@ -562,58 +564,67 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "Գտնվել է {count} կրկնօրինակ կոնտակտ: Ստուգեք ընտրացանկը:"
 msgstr[1] "Գտնվել է {count} կրկնօրինակ կոնտակտ: Ստուգեք ընտրացանկը:"
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:597
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
 msgid "Contacts syncing..."
 msgstr "Կոնտակտների համաժամացում..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:803
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
 #: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:382
-#: src/telephony/ui/windows/settings_window.py:416
-#: src/telephony/ui/windows/settings_window.py:435
-#: src/telephony/ui/windows/settings_window.py:486
-#: src/telephony/ui/windows/settings_window.py:624
-#: src/telephony/ui/windows/settings_window.py:915
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:426
+#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:496
+#: src/telephony/ui/windows/settings_window.py:634
+#: src/telephony/ui/windows/settings_window.py:992
 msgid "Close"
 msgstr "Փակել"
 
 #: src/telephony/ui/main_window.py:591
+msgid "Syncing address books..."
+msgstr "Հասցեների գրքերի համաժամացում..."
+
+#: src/telephony/ui/main_window.py:595
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "Համաժամացումը սկսվել է {count} հասցեների գրքերի համար"
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
 msgid "Reloading Contacts..."
 msgstr "Կոնտակտների վերաբեռնում..."
 
-#: src/telephony/ui/main_window.py:607
+#: src/telephony/ui/main_window.py:620
 msgid "Multiple Contacts Found"
 msgstr "Գտնվել են բազմաթիվ կոնտակտներ"
 
-#: src/telephony/ui/main_window.py:608
+#: src/telephony/ui/main_window.py:621
 msgid "Which contact would you like to edit?"
 msgstr "Ո՞ր կոնտակտն եք ցանկանում խմբագրել:"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:634
 msgid "Unknown Addressbook"
 msgstr "Անհայտ հասցեագիրք"
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 msgid "Calling (Anonymous)..."
 msgstr "Զանգում (անանուն)..."
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "Զանգում է {number}-ին..."
 
-#: src/telephony/ui/main_window.py:684 src/telephony/ui/main_window.py:690
+#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
 msgid "Call Failed"
 msgstr "Զանգը ձախողվեց"
 
-#: src/telephony/ui/main_window.py:696
+#: src/telephony/ui/main_window.py:709
 msgid "Call Details"
 msgstr "Զանգի մանրամասները"
 
-#: src/telephony/ui/main_window.py:697
+#: src/telephony/ui/main_window.py:710
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -626,91 +637,92 @@ msgstr ""
 "Ամսաթիվ՝ {date}\n"
 "Տևողությունը՝ {duration}"
 
-#: src/telephony/ui/main_window.py:713
+#: src/telephony/ui/main_window.py:726
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "Արգելահանել համարը"
 
-#: src/telephony/ui/main_window.py:719 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "Արգելափակված է"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "Խմբագրել կոնտակտը"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "Ավելացնել կոնտակտներում"
 
-#: src/telephony/ui/main_window.py:738
+#: src/telephony/ui/main_window.py:751
 msgid "Add to Existing Contact"
 msgstr "Ավելացնել գոյություն ունեցող կոնտակտին"
 
-#: src/telephony/ui/main_window.py:747
+#: src/telephony/ui/main_window.py:760
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "Որոնման համար"
 
-#: src/telephony/ui/main_window.py:771
+#: src/telephony/ui/main_window.py:784
 msgid "Send Message"
 msgstr "Ուղարկել հաղորդագրություն"
 
-#: src/telephony/ui/main_window.py:776
+#: src/telephony/ui/main_window.py:789
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "Պատճենահանման համարը"
 
-#: src/telephony/ui/main_window.py:781
+#: src/telephony/ui/main_window.py:794
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "Բլոկի համարը"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:807
 msgid "Delete this call"
 msgstr "Ջնջել այս զանգը"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Delete Call"
 msgstr "Ջնջել զանգը"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Remove this call?"
 msgstr "Հեռացնե՞լ այս զանգը:"
 
-#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/main_window.py:826
 msgid "Number copied"
 msgstr "Համարը պատճենված է"
 
-#: src/telephony/ui/main_window.py:819
+#: src/telephony/ui/main_window.py:832
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "Կոնտակտի պահպանում..."
 
-#: src/telephony/ui/main_window.py:823
+#: src/telephony/ui/main_window.py:836
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "Ավելացվեց {name}-ում"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:839
 msgid "Failed to add number"
 msgstr "Չհաջողվեց ավելացնել համարը"
 
-#: src/telephony/ui/main_window.py:834
+#: src/telephony/ui/main_window.py:847
 #: src/telephony/ui/windows/contact_editor_window.py:205
-#: src/telephony/ui/windows/settings_window.py:218
+#: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "Ավելացնել Համար"
 
-#: src/telephony/ui/main_window.py:835
+#: src/telephony/ui/main_window.py:848
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
+#: src/telephony/ui/windows/settings_window.py:930
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1023,7 +1035,8 @@ msgstr "Նշել որպես չկարդացված"
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:821
+#: src/telephony/ui/windows/settings_window.py:831
+#: src/telephony/ui/windows/settings_window.py:960
 msgid "Delete"
 msgstr "Ջնջել"
 
@@ -1116,7 +1129,7 @@ msgid "Draft: {message}"
 msgstr "Սևագիր՝ {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:34
-#: src/telephony/ui/windows/settings_window.py:366
+#: src/telephony/ui/windows/settings_window.py:376
 msgid "Advanced Settings"
 msgstr "Ընդլայնված կարգավորումներ"
 
@@ -1192,7 +1205,7 @@ msgid "Calls from this number will be automatically rejected."
 msgstr "Այս համարից զանգերն ավտոմատ կերպով կմերժվեն:"
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:817
+#: src/telephony/ui/windows/settings_window.py:827
 msgid "Number"
 msgstr "Համար"
 
@@ -1217,7 +1230,7 @@ msgid "Failed to save to blocklist."
 msgstr "Չհաջողվեց պահել արգելափակման ցուցակում:"
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:878
+#: src/telephony/ui/windows/contact_editor_window.py:877
 msgid "Conflict"
 msgstr "Կոնֆլիկտ"
 
@@ -1428,7 +1441,7 @@ msgstr "Ջնջել կոնտակտը"
 
 #: src/telephony/ui/windows/contact_editor_window.py:295
 #: src/telephony/ui/windows/settings_window.py:166
-#: src/telephony/ui/windows/settings_window.py:483
+#: src/telephony/ui/windows/settings_window.py:493
 msgid "Address Books"
 msgstr "Հասցեների գրքեր"
 
@@ -1474,11 +1487,15 @@ msgid "Deleting contact..."
 msgstr "Կոնտակտը ջնջվում է..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:791
-#: src/telephony/ui/windows/contact_editor_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:871
 msgid "Failed to save contact"
 msgstr "Չհաջողվեց պահել կոնտակտը"
 
-#: src/telephony/ui/windows/contact_editor_window.py:879
+#: src/telephony/ui/windows/contact_editor_window.py:867
+msgid "Contact saved"
+msgstr "Կոնտակտը պահված է"
+
+#: src/telephony/ui/windows/contact_editor_window.py:878
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1488,7 +1505,7 @@ msgstr ""
 "\n"
 "Ցանկանու՞մ եք շարունակել Արգելահանումը և ավելացնել համարը Կոնտակտներում:"
 
-#: src/telephony/ui/windows/contact_editor_window.py:883
+#: src/telephony/ui/windows/contact_editor_window.py:882
 msgid "Yes, Add to Contacts"
 msgstr "Այո, Ավելացնել կոնտակտներին"
 
@@ -1505,12 +1522,12 @@ msgid "No number"
 msgstr "Ոչ մի համար"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:337
+#: src/telephony/ui/windows/settings_window.py:347
 msgid "Individual SMS Notifications"
 msgstr "Անհատական ​​SMS ծանուցումներ"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:358
 msgid "Individual Ringtones"
 msgstr "Անհատական ​​զանգեր"
 
@@ -1541,7 +1558,7 @@ msgid "Select Tone for {name}"
 msgstr "Ընտրեք Տոնը {name}-ի համար"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:287
-#: src/telephony/ui/windows/settings_window.py:448
+#: src/telephony/ui/windows/settings_window.py:458
 msgid "Select"
 msgstr "Ընտրել"
 
@@ -1596,6 +1613,7 @@ msgstr "Ջնջել բոլոր կոնտակտները"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:957
 msgid "Delete Address Book"
 msgstr "Ջնջել Հասցեների գիրքը"
 
@@ -1642,6 +1660,7 @@ msgstr ""
 "Սա կջնջի այն համակարգից:"
 
 #: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:958
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Իսկապե՞ս ուզում եք ընդմիշտ ջնջել «{name}» հասցեագիրքը:"
@@ -1701,10 +1720,12 @@ msgid "Deleting address book..."
 msgstr "Հասցեների գրքույկը ջնջվում է..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:978
 msgid "Address Book Deleted"
 msgstr "Հասցեների գիրքը ջնջված է"
 
 #: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:976
 msgid "Failed to delete Address Book"
 msgstr "Չհաջողվեց ջնջել Հասցեների գիրքը"
 
@@ -1733,8 +1754,8 @@ msgid "Minute"
 msgstr "Րոպե"
 
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:32
-#: src/telephony/ui/windows/settings_window.py:319
-#: src/telephony/ui/windows/settings_window.py:509
+#: src/telephony/ui/windows/settings_window.py:329
+#: src/telephony/ui/windows/settings_window.py:519
 msgid "Notification Overrides"
 msgstr "Ծանուցման վերացումներ"
 
@@ -2037,16 +2058,16 @@ msgstr "Ո՞ր հասցեագիրքն եք ցանկանում արտահանել
 msgid "Export All Address Books"
 msgstr "Արտահանել բոլոր հասցեագրքերը"
 
-#: src/telephony/ui/windows/import_export_window.py:563
+#: src/telephony/ui/windows/import_export_window.py:558
 msgid "No contacts found to export"
 msgstr "Արտահանման համար կոնտակտներ չեն գտնվել"
 
-#: src/telephony/ui/windows/import_export_window.py:579
+#: src/telephony/ui/windows/import_export_window.py:570
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "Արտահանվել է {count} կոնտակտ"
 
-#: src/telephony/ui/windows/import_export_window.py:582
+#: src/telephony/ui/windows/import_export_window.py:573
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "Արտահանման սխալ՝ {e}"
@@ -2148,22 +2169,22 @@ msgid "Disconnected"
 msgstr "Անջատված է"
 
 #: src/telephony/ui/windows/incall_window.py:54
-#: src/telephony/ui/windows/settings_window.py:282
+#: src/telephony/ui/windows/settings_window.py:292
 msgid "Earpiece"
 msgstr "Ականջախոս"
 
 #: src/telephony/ui/windows/incall_window.py:55
-#: src/telephony/ui/windows/settings_window.py:283
+#: src/telephony/ui/windows/settings_window.py:293
 msgid "Speaker"
 msgstr "Բարձրախոս"
 
 #: src/telephony/ui/windows/incall_window.py:56
-#: src/telephony/ui/windows/settings_window.py:284
+#: src/telephony/ui/windows/settings_window.py:294
 msgid "Wired Headset"
 msgstr "Լարով ականջակալ"
 
 #: src/telephony/ui/windows/incall_window.py:57
-#: src/telephony/ui/windows/settings_window.py:285
+#: src/telephony/ui/windows/settings_window.py:295
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
@@ -2243,7 +2264,7 @@ msgid "Answering holds the current call"
 msgstr "Պատասխանելը ընթացիկ զանգը դնում է սպասման մեջ"
 
 #: src/telephony/ui/windows/incall_window.py:664
-#: src/telephony/ui/windows/settings_window.py:246
+#: src/telephony/ui/windows/settings_window.py:256
 msgid "I can't talk right now."
 msgstr "Ես հիմա չեմ կարող խոսել:"
 
@@ -2326,7 +2347,7 @@ msgid "Sending message to {number}..."
 msgstr "Հաղորդագրություն է ուղարկվում {number}-ին..."
 
 #: src/telephony/ui/windows/settings_window.py:92
-#: src/telephony/ui/windows/settings_window.py:432
+#: src/telephony/ui/windows/settings_window.py:442
 msgid "Ringback Tone"
 msgstr "Զանգի հետադարձ ազդանշան"
 
@@ -2339,7 +2360,7 @@ msgid "Selected Tone"
 msgstr "Ընտրված տոն"
 
 #: src/telephony/ui/windows/settings_window.py:113
-#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:402
 msgid "System Default"
 msgstr "Համակարգի լռելյայն"
 
@@ -2357,7 +2378,7 @@ msgstr "Իմ համարը (միջազգային ձևաչափ)"
 
 #: src/telephony/ui/windows/settings_window.py:150
 #: src/telephony/ui/windows/settings_window.py:151
-#: src/telephony/ui/windows/settings_window.py:379
+#: src/telephony/ui/windows/settings_window.py:389
 msgid "Default Country Code"
 msgstr "Երկրի կանխադրված կոդը"
 
@@ -2380,76 +2401,81 @@ msgstr ""
 "Սկանավորեք կրկնօրինակ թվեր և Կոնտակտների տեսադաշտում ցուցադրեք լուծման "
 "դրոշակ:"
 
-#: src/telephony/ui/windows/settings_window.py:207
+#: src/telephony/ui/windows/settings_window.py:203
+#: src/telephony/ui/windows/settings_window.py:926
+msgid "Add Local Address Book"
+msgstr "Ավելացնել տեղական հասցեների գիրք"
+
+#: src/telephony/ui/windows/settings_window.py:217
 msgid "Lockscreen Emergency"
 msgstr "Lockscreen Արտակարգ իրավիճակ"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: src/telephony/ui/windows/settings_window.py:220
 msgid "Show Emergency Button"
 msgstr "Ցույց տալ արտակարգ իրավիճակների կոճակը"
 
-#: src/telephony/ui/windows/settings_window.py:215
+#: src/telephony/ui/windows/settings_window.py:225
 msgid "Emergency Numbers"
 msgstr "Շտապ օգնության համարներ"
 
-#: src/telephony/ui/windows/settings_window.py:232
+#: src/telephony/ui/windows/settings_window.py:242
 msgid "Quick Response"
 msgstr "Արագ արձագանք"
 
-#: src/telephony/ui/windows/settings_window.py:235
+#: src/telephony/ui/windows/settings_window.py:245
 msgid "Add Decline Message"
 msgstr "Ավելացնել մերժման հաղորդագրություն"
 
-#: src/telephony/ui/windows/settings_window.py:250
+#: src/telephony/ui/windows/settings_window.py:260
 msgid "Messaging"
 msgstr "Հաղորդագրություններ"
 
-#: src/telephony/ui/windows/settings_window.py:260
+#: src/telephony/ui/windows/settings_window.py:270
 msgid "Automatic"
 msgstr "Ավտոմատ"
 
-#: src/telephony/ui/windows/settings_window.py:262
-#: src/telephony/ui/windows/settings_window.py:413
+#: src/telephony/ui/windows/settings_window.py:272
+#: src/telephony/ui/windows/settings_window.py:423
 msgid "MMS Size Limit"
 msgstr "MMS-ի չափի սահմանաչափ"
 
-#: src/telephony/ui/windows/settings_window.py:269
-#: src/telephony/ui/windows/settings_window.py:869
+#: src/telephony/ui/windows/settings_window.py:279
+#: src/telephony/ui/windows/settings_window.py:879
 msgid "Call Volume"
 msgstr "Զանգի ձայնի բարձրություն"
 
-#: src/telephony/ui/windows/settings_window.py:300
+#: src/telephony/ui/windows/settings_window.py:310
 msgid "Notification Exceptions"
 msgstr "Ծանուցման բացառություններ"
 
-#: src/telephony/ui/windows/settings_window.py:303
-#: src/telephony/ui/windows/settings_window.py:497
+#: src/telephony/ui/windows/settings_window.py:313
+#: src/telephony/ui/windows/settings_window.py:507
 msgid "Repeated Calls Bypass"
 msgstr "Կրկնվող զանգերի շրջանցում"
 
-#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:315
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr "Եթե ​​5 րոպեում նույն համարը զանգում է 3 անգամ, ուժով մաքսիմալ ձայնը:"
 
-#: src/telephony/ui/windows/settings_window.py:320
+#: src/telephony/ui/windows/settings_window.py:330
 msgid "Manage contacts that always play sound"
 msgstr "Կառավարեք կոնտակտները, որոնք միշտ ձայն են նվագարկում"
 
-#: src/telephony/ui/windows/settings_window.py:329
-#: src/telephony/ui/windows/settings_window.py:341
-#: src/telephony/ui/windows/settings_window.py:352
+#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:351
+#: src/telephony/ui/windows/settings_window.py:362
 msgid "Manage"
 msgstr "Կառավարել"
 
-#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:349
 msgid "Set custom notification sounds for specific contacts"
 msgstr "Սահմանեք հատուկ ծանուցման հնչյուններ հատուկ կոնտակտների համար"
 
-#: src/telephony/ui/windows/settings_window.py:350
+#: src/telephony/ui/windows/settings_window.py:360
 msgid "Set custom ringtones for specific contacts"
 msgstr "Սահմանեք հատուկ զանգեր կոնկրետ կոնտակտների համար"
 
-#: src/telephony/ui/windows/settings_window.py:375
+#: src/telephony/ui/windows/settings_window.py:385
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2469,7 +2495,7 @@ msgstr ""
 "Այստեղ կարող եք ձեռքով չեղարկել այն՝ մուտքագրելով 2 տառանոց ISO տարածաշրջանի "
 "կոդը (օրինակ՝ ԱՄՆ, FI, DE) կամ զանգի կոդը (օրինակ՝ +358, 358, +1, 1):"
 
-#: src/telephony/ui/windows/settings_window.py:403
+#: src/telephony/ui/windows/settings_window.py:413
 msgid ""
 "Carriers limit how large a multimedia message can be. Images and videos you "
 "attach are automatically compressed to fit under this limit before sending.\n"
@@ -2482,12 +2508,12 @@ msgstr ""
 "հաղորդագրությունը: Ձեր կցած պատկերներն ու տեսանյութերը ուղարկելուց առաջ "
 "ավտոմատ սեղմվում են՝ այս սահմանաչափի տակ մնալու համար:\n"
 "\n"
-"Ավտոմատ տարբերակն օգտագործում է հեռախոսի MMS ծառայության հայտնած սահմանաչափը, "
-"որը ճիշտ է օպերատորների մեծ մասի համար: Ընտրեք ավելի փոքր արժեք, եթե ձեր "
-"հաղորդագրությունները չեն ուղարկվում, կամ ավելի մեծ, եթե գիտեք, որ ձեր "
-"օպերատորը դա թույլ է տալիս:"
+"Ավտոմատ տարբերակն օգտագործում է հեռախոսի MMS ծառայության հայտնած "
+"սահմանաչափը, որը ճիշտ է օպերատորների մեծ մասի համար: Ընտրեք ավելի փոքր "
+"արժեք, եթե ձեր հաղորդագրությունները չեն ուղարկվում, կամ ավելի մեծ, եթե "
+"գիտեք, որ ձեր օպերատորը դա թույլ է տալիս:"
 
-#: src/telephony/ui/windows/settings_window.py:425
+#: src/telephony/ui/windows/settings_window.py:435
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2503,15 +2529,15 @@ msgstr ""
 "Դուք կարող եք ընտրել ձեր սեփական երաժշտական ​​ֆայլը կամ ջնջել այն՝ "
 "օգտագործելու ստանդարտ համակարգի հնչերանգը:"
 
-#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:455
 msgid "Select Ringback Tone"
 msgstr "Ընտրեք Ringback Tone"
 
-#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:463
 msgid "Audio Files"
 msgstr "Աուդիո Ֆայլեր"
 
-#: src/telephony/ui/windows/settings_window.py:479
+#: src/telephony/ui/windows/settings_window.py:489
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2526,7 +2552,7 @@ msgstr ""
 "օգնելու կառավարել կրկնօրինակները, բայց նույնիսկ եթե անջատված է, մենք "
 "խրախուսում ենք այն միացնել ավելի լավ փորձի համար:"
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: src/telephony/ui/windows/settings_window.py:508
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2536,7 +2562,7 @@ msgstr ""
 "ձեզ, երրորդ զանգը (և հաջորդ զանգերը պատուհանի ներսում) կստիպի հեռախոսին "
 "զանգել առավելագույն ձայնով՝ շրջանցելով Լուռ կամ Չանհանգստացնել ռեժիմները:"
 
-#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:520
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2544,50 +2570,50 @@ msgstr ""
 "Ընտրեք կոնտակտներ, որոնք միշտ կցուցադրեն ծանուցումները ամբողջ ձայնով, "
 "նույնիսկ երբ հեռախոսը գտնվում է Լուռ կամ Չանհանգստացնել ռեժիմում:"
 
-#: src/telephony/ui/windows/settings_window.py:531
+#: src/telephony/ui/windows/settings_window.py:541
 msgid "Unknown Callers"
 msgstr "Անհայտ զանգահարողներ"
 
-#: src/telephony/ui/windows/settings_window.py:536
+#: src/telephony/ui/windows/settings_window.py:546
 msgid "Unknown Callers Action"
 msgstr "Անհայտ զանգահարողների գործողություն"
 
-#: src/telephony/ui/windows/settings_window.py:538
+#: src/telephony/ui/windows/settings_window.py:548
 msgid "Applies also to hidden numbers."
 msgstr "Կիրառվում է նաև թաքնված թվերի վրա։"
 
-#: src/telephony/ui/windows/settings_window.py:541
+#: src/telephony/ui/windows/settings_window.py:551
 msgid "Do Nothing"
 msgstr "Ոչինչ չանել"
 
-#: src/telephony/ui/windows/settings_window.py:542
+#: src/telephony/ui/windows/settings_window.py:552
 msgid "Block Completely"
 msgstr "Ամբողջովին արգելափակել"
 
-#: src/telephony/ui/windows/settings_window.py:543
+#: src/telephony/ui/windows/settings_window.py:553
 msgid "Silence and Hide UI"
 msgstr "Լռել և թաքցնել միջերեսը"
 
-#: src/telephony/ui/windows/settings_window.py:544
+#: src/telephony/ui/windows/settings_window.py:554
 msgid "Silence Only"
 msgstr "Միայն լռություն"
 
-#: src/telephony/ui/windows/settings_window.py:552
+#: src/telephony/ui/windows/settings_window.py:562
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr ""
 "Ավելացնել Որոնման կոճակը InCall պատուհանում և Զանգերի պատմություն անհայտ "
 "զանգողների համար"
 
-#: src/telephony/ui/windows/settings_window.py:558
+#: src/telephony/ui/windows/settings_window.py:568
 msgid "Search Engine"
 msgstr "Որոնման համակարգ"
 
-#: src/telephony/ui/windows/settings_window.py:562
-#: src/telephony/ui/windows/settings_window.py:567
+#: src/telephony/ui/windows/settings_window.py:572
+#: src/telephony/ui/windows/settings_window.py:577
 msgid "Custom URL"
 msgstr "Հատուկ URL"
 
-#: src/telephony/ui/windows/settings_window.py:617
+#: src/telephony/ui/windows/settings_window.py:627
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2606,23 +2632,23 @@ msgstr ""
 "Երբ զանգի ընթացքում հպեք որոնման կոճակին, մենք «{number}»-ը կփոխարինենք "
 "իրական հեռախոսահամարով և կբացենք այն ձեր կանխադրված դիտարկիչում:"
 
-#: src/telephony/ui/windows/settings_window.py:621
+#: src/telephony/ui/windows/settings_window.py:631
 msgid "Custom Search URL"
 msgstr "Հատուկ որոնման URL"
 
-#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:652
 msgid "Desktop Shortcuts"
 msgstr "Աշխատասեղանի դյուրանցումներ"
 
-#: src/telephony/ui/windows/settings_window.py:647
+#: src/telephony/ui/windows/settings_window.py:657
 msgid "Calls"
 msgstr "Զանգեր"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: src/telephony/ui/windows/settings_window.py:823
 msgid "Name (e.g. Mom)"
 msgstr "Անունը (օրինակ՝ մայրիկ)"
 
-#: src/telephony/ui/windows/settings_window.py:870
+#: src/telephony/ui/windows/settings_window.py:880
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2636,19 +2662,32 @@ msgstr ""
 "մակարդակները կիրառում է կոպիտ քայլերով, և ականջախոսը երբեք ամբողջովին չի "
 "լռում: Bluetooth-ի մակարդակը պահվում է գալիք երթուղավորման աջակցության համար:"
 
-#: src/telephony/ui/windows/settings_window.py:879
+#: src/telephony/ui/windows/settings_window.py:889
 msgid "Decline Message"
 msgstr "Մերժել հաղորդագրությունը"
 
+#: src/telephony/ui/windows/settings_window.py:927
+msgid "Address book name"
+msgstr "Հասցեների գրքի անունը"
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Could not create address book"
+msgstr "Չհաջողվեց ստեղծել հասցեների գիրքը"
+
 #: src/telephony/ui/windows/settings_window.py:950
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "'{name}' հասցեների գիրքը ստեղծված է"
+
+#: src/telephony/ui/windows/settings_window.py:1027
 msgid "System Default (Always Enabled)"
 msgstr "Համակարգի լռելյայն (միշտ միացված է)"
 
-#: src/telephony/ui/windows/settings_window.py:961
+#: src/telephony/ui/windows/settings_window.py:1038
 msgid "Personal Address Book"
 msgstr "Անձնական հասցեագիրք"
 
-#: src/telephony/ui/windows/settings_window.py:962
+#: src/telephony/ui/windows/settings_window.py:1039
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2656,11 +2695,11 @@ msgstr ""
 "Սա այն հասցեագիրքն է, որը կհամաժամացվի Andromeda-ի հետ, եթե դա ընտրեք "
 "Համակարգի կարգավորումներում:"
 
-#: src/telephony/ui/windows/settings_window.py:970
+#: src/telephony/ui/windows/settings_window.py:1047
 msgid "Andromeda Contacts"
 msgstr "Անդրոմեդայի կոնտակտներ"
 
-#: src/telephony/ui/windows/settings_window.py:971
+#: src/telephony/ui/windows/settings_window.py:1048
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2668,7 +2707,7 @@ msgstr ""
 "Սա այն հասցեագիրքն է, որը կհամաժամացվի Andromeda-ից, եթե դա ընտրեք Համակարգի "
 "կարգավորումներում:"
 
-#: src/telephony/ui/windows/settings_window.py:1096
+#: src/telephony/ui/windows/settings_window.py:1183
 msgid "Settings Saved"
 msgstr "Կարգավորումները պահված են"
 

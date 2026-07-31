@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 12:12+0300\n"
+"POT-Creation-Date: 2026-07-31 14:41+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:619 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -82,7 +82,7 @@ msgstr "ખોલો"
 msgid "Call"
 msgstr "કૉલ કરો"
 
-#: src/telephony/backend/managers/eds_contacts_manager.py:31
+#: src/telephony/backend/managers/eds_contacts_manager.py:29
 #: src/telephony/backend/utils/db_blocklist_utils.py:35
 #: src/telephony/ui/views/messages_view.py:372
 #: src/telephony/ui/views/messages_view.py:443
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "કટોકટીની પ્રક્રિયા શરૂ કરો"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:652
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -111,7 +111,7 @@ msgstr "કટોકટીની પ્રક્રિયા શરૂ કરો
 #: src/telephony/ui/windows/camera_photo_window.py:91
 #: src/telephony/ui/windows/camera_video_window.py:103
 #: src/telephony/ui/windows/contact_editor_window.py:144
-#: src/telephony/ui/windows/contact_editor_window.py:882
+#: src/telephony/ui/windows/contact_editor_window.py:881
 #: src/telephony/ui/windows/contact_picker_window.py:47
 #: src/telephony/ui/windows/custom_tone_list_window.py:58
 #: src/telephony/ui/windows/custom_tone_list_window.py:288
@@ -130,7 +130,9 @@ msgstr "કટોકટીની પ્રક્રિયા શરૂ કરો
 #: src/telephony/ui/windows/import_export_window.py:501
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
-#: src/telephony/ui/windows/settings_window.py:449
+#: src/telephony/ui/windows/settings_window.py:459
+#: src/telephony/ui/windows/settings_window.py:929
+#: src/telephony/ui/windows/settings_window.py:959
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -475,12 +477,12 @@ msgstr "ઈતિહાસ"
 
 #: src/telephony/ui/main_window.py:114
 #: src/telephony/ui/views/messages_view.py:67
-#: src/telephony/ui/windows/settings_window.py:648
+#: src/telephony/ui/windows/settings_window.py:658
 msgid "Messages"
 msgstr "સંદેશાઓ"
 
 #: src/telephony/ui/main_window.py:117
-#: src/telephony/ui/windows/settings_window.py:649
+#: src/telephony/ui/windows/settings_window.py:659
 msgid "Contacts"
 msgstr "સંપર્કો"
 
@@ -505,7 +507,7 @@ msgid "Resolve Duplicates"
 msgstr "ડુપ્લિકેટ્સ ઉકેલો"
 
 #: src/telephony/ui/main_window.py:307
-#: src/telephony/ui/windows/settings_window.py:44
+#: src/telephony/ui/windows/settings_window.py:43
 msgid "Settings"
 msgstr "સેટિંગ્સ"
 
@@ -541,10 +543,10 @@ msgstr "યુએસએસડી પરિણામ"
 
 #: src/telephony/ui/main_window.py:475
 #: src/telephony/ui/windows/blocklist_editor_window.py:127
-#: src/telephony/ui/windows/contact_editor_window.py:898
-#: src/telephony/ui/windows/settings_window.py:500
-#: src/telephony/ui/windows/settings_window.py:512
-#: src/telephony/ui/windows/settings_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:897
+#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:522
+#: src/telephony/ui/windows/settings_window.py:882
 msgid "OK"
 msgstr "ઓકે"
 
@@ -560,58 +562,67 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "{count} ડુપ્લિકેટ સંપર્ક મળ્યો. મેનુ તપાસો."
 msgstr[1] "{count} ડુપ્લિકેટ સંપર્કો મળ્યા. મેનુ તપાસો."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:597
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
 msgid "Contacts syncing..."
 msgstr "સંપર્કો સમન્વયિત કરી રહ્યાં છે..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:803
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
 #: src/telephony/ui/windows/info_window.py:40
-#: src/telephony/ui/windows/settings_window.py:382
-#: src/telephony/ui/windows/settings_window.py:416
-#: src/telephony/ui/windows/settings_window.py:435
-#: src/telephony/ui/windows/settings_window.py:486
-#: src/telephony/ui/windows/settings_window.py:624
-#: src/telephony/ui/windows/settings_window.py:915
+#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:426
+#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:496
+#: src/telephony/ui/windows/settings_window.py:634
+#: src/telephony/ui/windows/settings_window.py:992
 msgid "Close"
 msgstr "બંધ કરો"
 
 #: src/telephony/ui/main_window.py:591
+msgid "Syncing address books..."
+msgstr "એડ્રેસ બુક્સ સમન્વયિત કરી રહ્યાં છે..."
+
+#: src/telephony/ui/main_window.py:595
+#, python-brace-format
+msgid "Sync started for {count} address books"
+msgstr "{count} એડ્રેસ બુક્સ માટે સમન્વયન શરૂ થયું"
+
+#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
 msgid "Reloading Contacts..."
 msgstr "સંપર્કો ફરીથી લોડ કરી રહ્યાં છીએ..."
 
-#: src/telephony/ui/main_window.py:607
+#: src/telephony/ui/main_window.py:620
 msgid "Multiple Contacts Found"
 msgstr "બહુવિધ સંપર્કો મળ્યા"
 
-#: src/telephony/ui/main_window.py:608
+#: src/telephony/ui/main_window.py:621
 msgid "Which contact would you like to edit?"
 msgstr "તમે કયા સંપર્કને સંપાદિત કરવા માંગો છો?"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:634
 msgid "Unknown Addressbook"
 msgstr "અજ્ઞાત એડ્રેસબુક"
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 msgid "Calling (Anonymous)..."
 msgstr "કૉલ કરી રહ્યાં છે (અનામી)..."
 
-#: src/telephony/ui/main_window.py:680
+#: src/telephony/ui/main_window.py:693
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "કૉલ કરી રહ્યાં છીએ {number}..."
 
-#: src/telephony/ui/main_window.py:684 src/telephony/ui/main_window.py:690
+#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
 msgid "Call Failed"
 msgstr "કૉલ નિષ્ફળ થયો"
 
-#: src/telephony/ui/main_window.py:696
+#: src/telephony/ui/main_window.py:709
 msgid "Call Details"
 msgstr "કૉલ વિગતો"
 
-#: src/telephony/ui/main_window.py:697
+#: src/telephony/ui/main_window.py:710
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -624,91 +635,92 @@ msgstr ""
 "તારીખ: {date}\n"
 "અવધિ: {duration}"
 
-#: src/telephony/ui/main_window.py:713
+#: src/telephony/ui/main_window.py:726
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "અનબ્લોક નંબર"
 
-#: src/telephony/ui/main_window.py:719 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "અનાવરોધિત"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "સંપર્ક સંપાદિત કરો"
 
-#: src/telephony/ui/main_window.py:727
+#: src/telephony/ui/main_window.py:740
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "સંપર્કોમાં ઉમેરો"
 
-#: src/telephony/ui/main_window.py:738
+#: src/telephony/ui/main_window.py:751
 msgid "Add to Existing Contact"
 msgstr "હાલના સંપર્કમાં ઉમેરો"
 
-#: src/telephony/ui/main_window.py:747
+#: src/telephony/ui/main_window.py:760
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "નંબર શોધો"
 
-#: src/telephony/ui/main_window.py:771
+#: src/telephony/ui/main_window.py:784
 msgid "Send Message"
 msgstr "સંદેશ મોકલો"
 
-#: src/telephony/ui/main_window.py:776
+#: src/telephony/ui/main_window.py:789
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "નંબરની નકલ કરો"
 
-#: src/telephony/ui/main_window.py:781
+#: src/telephony/ui/main_window.py:794
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "બ્લોક નંબર"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:807
 msgid "Delete this call"
 msgstr "આ કૉલ કાઢી નાખો"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Delete Call"
 msgstr "કૉલ કાઢી નાખો"
 
-#: src/telephony/ui/main_window.py:799
+#: src/telephony/ui/main_window.py:812
 msgid "Remove this call?"
 msgstr "આ કૉલ દૂર કરીએ?"
 
-#: src/telephony/ui/main_window.py:813
+#: src/telephony/ui/main_window.py:826
 msgid "Number copied"
 msgstr "નંબર કોપી કર્યો"
 
-#: src/telephony/ui/main_window.py:819
+#: src/telephony/ui/main_window.py:832
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "સંપર્ક સાચવી રહ્યું છે..."
 
-#: src/telephony/ui/main_window.py:823
+#: src/telephony/ui/main_window.py:836
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "{name} માં ઉમેર્યું"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:839
 msgid "Failed to add number"
 msgstr "નંબર ઉમેરવામાં નિષ્ફળ"
 
-#: src/telephony/ui/main_window.py:834
+#: src/telephony/ui/main_window.py:847
 #: src/telephony/ui/windows/contact_editor_window.py:205
-#: src/telephony/ui/windows/settings_window.py:218
+#: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "નંબર ઉમેરો"
 
-#: src/telephony/ui/main_window.py:835
+#: src/telephony/ui/main_window.py:848
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
+#: src/telephony/ui/windows/settings_window.py:930
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1019,7 +1031,8 @@ msgstr "ન વાંચેલા તરીકે ચિહ્નિત કર�
 
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
-#: src/telephony/ui/windows/settings_window.py:821
+#: src/telephony/ui/windows/settings_window.py:831
+#: src/telephony/ui/windows/settings_window.py:960
 msgid "Delete"
 msgstr "કાઢી નાખો"
 
@@ -1112,7 +1125,7 @@ msgid "Draft: {message}"
 msgstr "ડ્રાફ્ટ: {message}"
 
 #: src/telephony/ui/windows/advanced_settings_window.py:34
-#: src/telephony/ui/windows/settings_window.py:366
+#: src/telephony/ui/windows/settings_window.py:376
 msgid "Advanced Settings"
 msgstr "અદ્યતન સેટિંગ્સ"
 
@@ -1188,7 +1201,7 @@ msgid "Calls from this number will be automatically rejected."
 msgstr "આ નંબર પરથી કૉલ્સ આપમેળે નકારવામાં આવશે."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:60
-#: src/telephony/ui/windows/settings_window.py:817
+#: src/telephony/ui/windows/settings_window.py:827
 msgid "Number"
 msgstr "નંબર"
 
@@ -1213,7 +1226,7 @@ msgid "Failed to save to blocklist."
 msgstr "બ્લોકલિસ્ટમાં સાચવવામાં નિષ્ફળ."
 
 #: src/telephony/ui/windows/blocklist_editor_window.py:107
-#: src/telephony/ui/windows/contact_editor_window.py:878
+#: src/telephony/ui/windows/contact_editor_window.py:877
 msgid "Conflict"
 msgstr "સંઘર્ષ"
 
@@ -1424,7 +1437,7 @@ msgstr "સંપર્ક કાઢી નાખો"
 
 #: src/telephony/ui/windows/contact_editor_window.py:295
 #: src/telephony/ui/windows/settings_window.py:166
-#: src/telephony/ui/windows/settings_window.py:483
+#: src/telephony/ui/windows/settings_window.py:493
 msgid "Address Books"
 msgstr "એડ્રેસ બુક્સ"
 
@@ -1470,11 +1483,15 @@ msgid "Deleting contact..."
 msgstr "સંપર્ક કાઢી રહ્યાં છીએ..."
 
 #: src/telephony/ui/windows/contact_editor_window.py:791
-#: src/telephony/ui/windows/contact_editor_window.py:872
+#: src/telephony/ui/windows/contact_editor_window.py:871
 msgid "Failed to save contact"
 msgstr "સંપર્ક સાચવવામાં નિષ્ફળ"
 
-#: src/telephony/ui/windows/contact_editor_window.py:879
+#: src/telephony/ui/windows/contact_editor_window.py:867
+msgid "Contact saved"
+msgstr "સંપર્ક સાચવ્યો"
+
+#: src/telephony/ui/windows/contact_editor_window.py:878
 msgid ""
 "Number can't be on both Blocklist and Contacts.\n"
 "\n"
@@ -1484,7 +1501,7 @@ msgstr ""
 "\n"
 "શું તમે અનબ્લોકિંગ સાથે આગળ વધવા માંગો છો અને સંપર્કોમાં નંબર ઉમેરવા માંગો છો?"
 
-#: src/telephony/ui/windows/contact_editor_window.py:883
+#: src/telephony/ui/windows/contact_editor_window.py:882
 msgid "Yes, Add to Contacts"
 msgstr "હા, સંપર્કોમાં ઉમેરો"
 
@@ -1501,12 +1518,12 @@ msgid "No number"
 msgstr "નંબર નથી"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:337
+#: src/telephony/ui/windows/settings_window.py:347
 msgid "Individual SMS Notifications"
 msgstr "વ્યક્તિગત SMS સૂચનાઓ"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:33
-#: src/telephony/ui/windows/settings_window.py:348
+#: src/telephony/ui/windows/settings_window.py:358
 msgid "Individual Ringtones"
 msgstr "વ્યક્તિગત રિંગટોન"
 
@@ -1537,7 +1554,7 @@ msgid "Select Tone for {name}"
 msgstr "{name} માટે ટોન પસંદ કરો"
 
 #: src/telephony/ui/windows/custom_tone_list_window.py:287
-#: src/telephony/ui/windows/settings_window.py:448
+#: src/telephony/ui/windows/settings_window.py:458
 msgid "Select"
 msgstr "પસંદ કરો"
 
@@ -1592,6 +1609,7 @@ msgstr "બધા સંપર્કો કાઢી નાખો"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
+#: src/telephony/ui/windows/settings_window.py:957
 msgid "Delete Address Book"
 msgstr "એડ્રેસ બુક કાઢી નાખો"
 
@@ -1638,6 +1656,7 @@ msgstr ""
 "આ તેને સિસ્ટમમાંથી સાફ કરશે."
 
 #: src/telephony/ui/windows/data_management_window.py:154
+#: src/telephony/ui/windows/settings_window.py:958
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "શું તમે ખરેખર '{name}' સરનામા પુસ્તિકાને કાયમ માટે કાઢી નાખવા માંગો છો?"
@@ -1695,10 +1714,12 @@ msgid "Deleting address book..."
 msgstr "સરનામાં પુસ્તિકા કાઢી રહ્યું છે..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
+#: src/telephony/ui/windows/settings_window.py:978
 msgid "Address Book Deleted"
 msgstr "એડ્રેસ બુક કાઢી નાખી"
 
 #: src/telephony/ui/windows/data_management_window.py:265
+#: src/telephony/ui/windows/settings_window.py:976
 msgid "Failed to delete Address Book"
 msgstr "એડ્રેસ બુક ડિલીટ કરવામાં નિષ્ફળ"
 
@@ -1727,8 +1748,8 @@ msgid "Minute"
 msgstr "મિનિટ"
 
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:32
-#: src/telephony/ui/windows/settings_window.py:319
-#: src/telephony/ui/windows/settings_window.py:509
+#: src/telephony/ui/windows/settings_window.py:329
+#: src/telephony/ui/windows/settings_window.py:519
 msgid "Notification Overrides"
 msgstr "સૂચના ઓવરરાઇડ કરે છે"
 
@@ -2030,16 +2051,16 @@ msgstr "તમે કઈ એડ્રેસ બુકની નિકાસ ક�
 msgid "Export All Address Books"
 msgstr "બધી એડ્રેસ બુક્સ નિકાસ કરો"
 
-#: src/telephony/ui/windows/import_export_window.py:563
+#: src/telephony/ui/windows/import_export_window.py:558
 msgid "No contacts found to export"
 msgstr "નિકાસ કરવા માટે કોઈ સંપર્કો મળ્યા નથી"
 
-#: src/telephony/ui/windows/import_export_window.py:579
+#: src/telephony/ui/windows/import_export_window.py:570
 #, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "નિકાસ કરેલ {count} સંપર્કો"
 
-#: src/telephony/ui/windows/import_export_window.py:582
+#: src/telephony/ui/windows/import_export_window.py:573
 #, python-brace-format
 msgid "Export error: {e}"
 msgstr "નિકાસ ભૂલ: {e}"
@@ -2141,22 +2162,22 @@ msgid "Disconnected"
 msgstr "ડિસ્કનેક્ટ થયો"
 
 #: src/telephony/ui/windows/incall_window.py:54
-#: src/telephony/ui/windows/settings_window.py:282
+#: src/telephony/ui/windows/settings_window.py:292
 msgid "Earpiece"
 msgstr "ઇયરપીસ"
 
 #: src/telephony/ui/windows/incall_window.py:55
-#: src/telephony/ui/windows/settings_window.py:283
+#: src/telephony/ui/windows/settings_window.py:293
 msgid "Speaker"
 msgstr "સ્પીકર"
 
 #: src/telephony/ui/windows/incall_window.py:56
-#: src/telephony/ui/windows/settings_window.py:284
+#: src/telephony/ui/windows/settings_window.py:294
 msgid "Wired Headset"
 msgstr "વાયરવાળું હેડસેટ"
 
 #: src/telephony/ui/windows/incall_window.py:57
-#: src/telephony/ui/windows/settings_window.py:285
+#: src/telephony/ui/windows/settings_window.py:295
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
@@ -2236,7 +2257,7 @@ msgid "Answering holds the current call"
 msgstr "જવાબ આપવાથી વર્તમાન કૉલ હોલ્ડ પર જશે"
 
 #: src/telephony/ui/windows/incall_window.py:664
-#: src/telephony/ui/windows/settings_window.py:246
+#: src/telephony/ui/windows/settings_window.py:256
 msgid "I can't talk right now."
 msgstr "હું અત્યારે વાત કરી શકતો નથી."
 
@@ -2317,7 +2338,7 @@ msgid "Sending message to {number}..."
 msgstr "{number} ને સંદેશ મોકલી રહ્યું છે..."
 
 #: src/telephony/ui/windows/settings_window.py:92
-#: src/telephony/ui/windows/settings_window.py:432
+#: src/telephony/ui/windows/settings_window.py:442
 msgid "Ringback Tone"
 msgstr "રિંગબેક ટોન"
 
@@ -2330,7 +2351,7 @@ msgid "Selected Tone"
 msgstr "પસંદ કરેલ ટોન"
 
 #: src/telephony/ui/windows/settings_window.py:113
-#: src/telephony/ui/windows/settings_window.py:392
+#: src/telephony/ui/windows/settings_window.py:402
 msgid "System Default"
 msgstr "સિસ્ટમ ડિફોલ્ટ"
 
@@ -2348,7 +2369,7 @@ msgstr "મારો નંબર (આંતરરાષ્ટ્રીય ફ�
 
 #: src/telephony/ui/windows/settings_window.py:150
 #: src/telephony/ui/windows/settings_window.py:151
-#: src/telephony/ui/windows/settings_window.py:379
+#: src/telephony/ui/windows/settings_window.py:389
 msgid "Default Country Code"
 msgstr "ડિફૉલ્ટ દેશ કોડ"
 
@@ -2369,76 +2390,81 @@ msgid ""
 "Scan for duplicate numbers and show a resolution banner in the Contacts view."
 msgstr "ડુપ્લિકેટ નંબરો માટે સ્કેન કરો અને કોન્ટેક્ટ્સ વ્યૂમાં રિઝોલ્યુશન બેનર બતાવો."
 
-#: src/telephony/ui/windows/settings_window.py:207
+#: src/telephony/ui/windows/settings_window.py:203
+#: src/telephony/ui/windows/settings_window.py:926
+msgid "Add Local Address Book"
+msgstr "સ્થાનિક એડ્રેસ બુક ઉમેરો"
+
+#: src/telephony/ui/windows/settings_window.py:217
 msgid "Lockscreen Emergency"
 msgstr "લોકસ્ક્રીન ઇમરજન્સી"
 
-#: src/telephony/ui/windows/settings_window.py:210
+#: src/telephony/ui/windows/settings_window.py:220
 msgid "Show Emergency Button"
 msgstr "ઇમરજન્સી બટન બતાવો"
 
-#: src/telephony/ui/windows/settings_window.py:215
+#: src/telephony/ui/windows/settings_window.py:225
 msgid "Emergency Numbers"
 msgstr "ઇમરજન્સી નંબર્સ"
 
-#: src/telephony/ui/windows/settings_window.py:232
+#: src/telephony/ui/windows/settings_window.py:242
 msgid "Quick Response"
 msgstr "ઝડપી પ્રતિભાવ"
 
-#: src/telephony/ui/windows/settings_window.py:235
+#: src/telephony/ui/windows/settings_window.py:245
 msgid "Add Decline Message"
 msgstr "અસ્વીકાર સંદેશ ઉમેરો"
 
-#: src/telephony/ui/windows/settings_window.py:250
+#: src/telephony/ui/windows/settings_window.py:260
 msgid "Messaging"
 msgstr "મેસેજિંગ"
 
-#: src/telephony/ui/windows/settings_window.py:260
+#: src/telephony/ui/windows/settings_window.py:270
 msgid "Automatic"
 msgstr "સ્વચાલિત"
 
-#: src/telephony/ui/windows/settings_window.py:262
-#: src/telephony/ui/windows/settings_window.py:413
+#: src/telephony/ui/windows/settings_window.py:272
+#: src/telephony/ui/windows/settings_window.py:423
 msgid "MMS Size Limit"
 msgstr "MMS કદ મર્યાદા"
 
-#: src/telephony/ui/windows/settings_window.py:269
-#: src/telephony/ui/windows/settings_window.py:869
+#: src/telephony/ui/windows/settings_window.py:279
+#: src/telephony/ui/windows/settings_window.py:879
 msgid "Call Volume"
 msgstr "કૉલ વોલ્યુમ"
 
-#: src/telephony/ui/windows/settings_window.py:300
+#: src/telephony/ui/windows/settings_window.py:310
 msgid "Notification Exceptions"
 msgstr "સૂચના અપવાદો"
 
-#: src/telephony/ui/windows/settings_window.py:303
-#: src/telephony/ui/windows/settings_window.py:497
+#: src/telephony/ui/windows/settings_window.py:313
+#: src/telephony/ui/windows/settings_window.py:507
 msgid "Repeated Calls Bypass"
 msgstr "પુનરાવર્તિત કૉલ્સ બાયપાસ"
 
-#: src/telephony/ui/windows/settings_window.py:305
+#: src/telephony/ui/windows/settings_window.py:315
 msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgstr "જો એક જ નંબર 5 મિનિટમાં 3 વખત કૉલ કરે છે, તો મહત્તમ વોલ્યુમ દબાણ કરો."
 
-#: src/telephony/ui/windows/settings_window.py:320
+#: src/telephony/ui/windows/settings_window.py:330
 msgid "Manage contacts that always play sound"
 msgstr "હંમેશા અવાજ વગાડતા સંપર્કોનું સંચાલન કરો"
 
-#: src/telephony/ui/windows/settings_window.py:329
-#: src/telephony/ui/windows/settings_window.py:341
-#: src/telephony/ui/windows/settings_window.py:352
+#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:351
+#: src/telephony/ui/windows/settings_window.py:362
 msgid "Manage"
 msgstr "મેનેજ કરો"
 
-#: src/telephony/ui/windows/settings_window.py:339
+#: src/telephony/ui/windows/settings_window.py:349
 msgid "Set custom notification sounds for specific contacts"
 msgstr "વિશિષ્ટ સંપર્કો માટે કસ્ટમ સૂચના અવાજો સેટ કરો"
 
-#: src/telephony/ui/windows/settings_window.py:350
+#: src/telephony/ui/windows/settings_window.py:360
 msgid "Set custom ringtones for specific contacts"
 msgstr "ચોક્કસ સંપર્કો માટે કસ્ટમ રિંગટોન સેટ કરો"
 
-#: src/telephony/ui/windows/settings_window.py:375
+#: src/telephony/ui/windows/settings_window.py:385
 msgid ""
 "The Default Country Code is used to format numbers that don't include an "
 "international prefix (e.g., +358).\n"
@@ -2458,7 +2484,7 @@ msgstr ""
 "તમે 2-અક્ષરના ISO પ્રદેશ કોડ (દા.ત. US, FI, DE) અથવા કૉલિંગ કોડ (દા.ત. +358, 358, "
 "+1, 1) દાખલ કરીને તેને મેન્યુઅલી અહીં ઓવરરાઇડ કરી શકો છો."
 
-#: src/telephony/ui/windows/settings_window.py:403
+#: src/telephony/ui/windows/settings_window.py:413
 msgid ""
 "Carriers limit how large a multimedia message can be. Images and videos you "
 "attach are automatically compressed to fit under this limit before sending.\n"
@@ -2467,15 +2493,14 @@ msgid ""
 "for most carriers. Pick a smaller value if your messages fail to send, or a "
 "larger one if you know your carrier allows it."
 msgstr ""
-"કૅરિયર્સ મલ્ટિમીડિયા સંદેશ કેટલો મોટો હોઈ શકે તેની મર્યાદા રાખે છે. તમે "
-"જોડેલી છબીઓ અને વિડિઓઝ મોકલતા પહેલાં આ મર્યાદાની અંદર બેસે તે માટે આપમેળે "
-"સંકુચિત થાય છે.\n"
+"કૅરિયર્સ મલ્ટિમીડિયા સંદેશ કેટલો મોટો હોઈ શકે તેની મર્યાદા રાખે છે. તમે જોડેલી છબીઓ અને "
+"વિડિઓઝ મોકલતા પહેલાં આ મર્યાદાની અંદર બેસે તે માટે આપમેળે સંકુચિત થાય છે.\n"
 "\n"
-"સ્વચાલિત ફોનની MMS સેવા દ્વારા જણાવેલી મર્યાદા વાપરે છે, જે મોટાભાગના "
-"કૅરિયર્સ માટે યોગ્ય છે. જો તમારા સંદેશા મોકલવામાં નિષ્ફળ જાય તો નાનું મૂલ્ય "
-"પસંદ કરો, અથવા તમારું કૅરિયર મંજૂરી આપે છે તેની ખાતરી હોય તો મોટું પસંદ કરો."
+"સ્વચાલિત ફોનની MMS સેવા દ્વારા જણાવેલી મર્યાદા વાપરે છે, જે મોટાભાગના કૅરિયર્સ માટે "
+"યોગ્ય છે. જો તમારા સંદેશા મોકલવામાં નિષ્ફળ જાય તો નાનું મૂલ્ય પસંદ કરો, અથવા તમારું કૅરિયર "
+"મંજૂરી આપે છે તેની ખાતરી હોય તો મોટું પસંદ કરો."
 
-#: src/telephony/ui/windows/settings_window.py:425
+#: src/telephony/ui/windows/settings_window.py:435
 msgid ""
 "The ringback tone is the sound played (toot-toot-toot) while waiting for an "
 "outgoing call to be answered. Some carriers don't generate it so we have "
@@ -2491,15 +2516,15 @@ msgstr ""
 "તમે તમારી પોતાની સંગીત ફાઇલ પસંદ કરી શકો છો અથવા માનક સિસ્ટમ ટોનનો ઉપયોગ કરવા "
 "માટે તેને સાફ કરી શકો છો."
 
-#: src/telephony/ui/windows/settings_window.py:445
+#: src/telephony/ui/windows/settings_window.py:455
 msgid "Select Ringback Tone"
 msgstr "રિંગબેક ટોન પસંદ કરો"
 
-#: src/telephony/ui/windows/settings_window.py:453
+#: src/telephony/ui/windows/settings_window.py:463
 msgid "Audio Files"
 msgstr "ઑડિઓ ફાઇલો"
 
-#: src/telephony/ui/windows/settings_window.py:479
+#: src/telephony/ui/windows/settings_window.py:489
 msgid ""
 "Select the address books to use with Telephony and arrange them in order of "
 "priority. The topmost address book has the highest priority and will be "
@@ -2513,7 +2538,7 @@ msgstr ""
 "કરવા માટે નીચે ડુપ્લિકેટ રિઝોલ્વર ટૉગલનો ઉપયોગ કરી શકો છો, પરંતુ જો અક્ષમ હોય તો પણ, "
 "અમે તેને વધુ સારા અનુભવ માટે સક્ષમ કરવા પ્રોત્સાહિત કરીએ છીએ."
 
-#: src/telephony/ui/windows/settings_window.py:498
+#: src/telephony/ui/windows/settings_window.py:508
 msgid ""
 "When enabled, if the same phone number calls you 3 times within 5 minutes, "
 "the third call (and subsequent ones within the window) will force the phone "
@@ -2523,7 +2548,7 @@ msgstr ""
 "કૉલ (અને પછીનો વિન્ડોની અંદરનો) ફોનને સાયલન્ટ અથવા ડુ નોટ ડિસ્ટર્બ મોડને બાયપાસ કરીને "
 "મહત્તમ વોલ્યુમ પર રિંગ કરવા માટે દબાણ કરશે."
 
-#: src/telephony/ui/windows/settings_window.py:510
+#: src/telephony/ui/windows/settings_window.py:520
 msgid ""
 "Choose contacts that will always play notifications at full volume, even "
 "when the phone is in Silent or Do Not Disturb mode."
@@ -2531,48 +2556,48 @@ msgstr ""
 "એવા સંપર્કો પસંદ કરો કે જે હંમેશા ફુલ વૉલ્યુમ પર નોટિફિકેશન વગાડશે, પછી ભલે ફોન સાયલન્ટ "
 "અથવા ડુ નોટ ડિસ્ટર્બ મોડમાં હોય."
 
-#: src/telephony/ui/windows/settings_window.py:531
+#: src/telephony/ui/windows/settings_window.py:541
 msgid "Unknown Callers"
 msgstr "અજાણ્યા કોલર્સ"
 
-#: src/telephony/ui/windows/settings_window.py:536
+#: src/telephony/ui/windows/settings_window.py:546
 msgid "Unknown Callers Action"
 msgstr "અજાણ્યા કૉલર ક્રિયા"
 
-#: src/telephony/ui/windows/settings_window.py:538
+#: src/telephony/ui/windows/settings_window.py:548
 msgid "Applies also to hidden numbers."
 msgstr "છુપાયેલા નંબરો પર પણ લાગુ પડે છે."
 
-#: src/telephony/ui/windows/settings_window.py:541
+#: src/telephony/ui/windows/settings_window.py:551
 msgid "Do Nothing"
 msgstr "ડુ નથિંગ"
 
-#: src/telephony/ui/windows/settings_window.py:542
+#: src/telephony/ui/windows/settings_window.py:552
 msgid "Block Completely"
 msgstr "સંપૂર્ણપણે અવરોધિત કરો"
 
-#: src/telephony/ui/windows/settings_window.py:543
+#: src/telephony/ui/windows/settings_window.py:553
 msgid "Silence and Hide UI"
 msgstr "મૌન અને છુપાવો UI"
 
-#: src/telephony/ui/windows/settings_window.py:544
+#: src/telephony/ui/windows/settings_window.py:554
 msgid "Silence Only"
 msgstr "માત્ર મૌન"
 
-#: src/telephony/ui/windows/settings_window.py:552
+#: src/telephony/ui/windows/settings_window.py:562
 msgid "Add Search button to InCall window and Call History for unknown callers"
 msgstr "InCall વિન્ડોમાં શોધ બટન ઉમેરો અને અજાણ્યા કૉલર માટે કૉલ ઇતિહાસ"
 
-#: src/telephony/ui/windows/settings_window.py:558
+#: src/telephony/ui/windows/settings_window.py:568
 msgid "Search Engine"
 msgstr "શોધ એંજીન"
 
-#: src/telephony/ui/windows/settings_window.py:562
-#: src/telephony/ui/windows/settings_window.py:567
+#: src/telephony/ui/windows/settings_window.py:572
+#: src/telephony/ui/windows/settings_window.py:577
 msgid "Custom URL"
 msgstr "કસ્ટમ URL"
 
-#: src/telephony/ui/windows/settings_window.py:617
+#: src/telephony/ui/windows/settings_window.py:627
 #, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
@@ -2591,23 +2616,23 @@ msgstr ""
 "જ્યારે તમે કૉલ દરમિયાન શોધ બટનને ટેપ કરશો, ત્યારે અમે '{number}' ને વાસ્તવિક ફોન નંબરથી "
 "બદલીશું અને તેને તમારા ડિફોલ્ટ બ્રાઉઝરમાં ખોલીશું."
 
-#: src/telephony/ui/windows/settings_window.py:621
+#: src/telephony/ui/windows/settings_window.py:631
 msgid "Custom Search URL"
 msgstr "કસ્ટમ શોધ URL"
 
-#: src/telephony/ui/windows/settings_window.py:642
+#: src/telephony/ui/windows/settings_window.py:652
 msgid "Desktop Shortcuts"
 msgstr "ડેસ્કટોપ શોર્ટકટ્સ"
 
-#: src/telephony/ui/windows/settings_window.py:647
+#: src/telephony/ui/windows/settings_window.py:657
 msgid "Calls"
 msgstr "કૉલ્સ"
 
-#: src/telephony/ui/windows/settings_window.py:813
+#: src/telephony/ui/windows/settings_window.py:823
 msgid "Name (e.g. Mom)"
 msgstr "નામ (દા.ત. મમ્મી)"
 
-#: src/telephony/ui/windows/settings_window.py:870
+#: src/telephony/ui/windows/settings_window.py:880
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
@@ -2620,19 +2645,32 @@ msgstr ""
 "પગલાંમાં લાગુ કરે છે, અને ઇયરપીસ ક્યારેય સંપૂર્ણ શાંત થતું નથી. Bluetooth સ્તર આગામી રૂટિંગ "
 "સપોર્ટ માટે સંગ્રહિત થાય છે."
 
-#: src/telephony/ui/windows/settings_window.py:879
+#: src/telephony/ui/windows/settings_window.py:889
 msgid "Decline Message"
 msgstr "સંદેશ નકારો"
 
+#: src/telephony/ui/windows/settings_window.py:927
+msgid "Address book name"
+msgstr "એડ્રેસ બુકનું નામ"
+
+#: src/telephony/ui/windows/settings_window.py:948
+msgid "Could not create address book"
+msgstr "એડ્રેસ બુક બનાવી શકાઈ નથી"
+
 #: src/telephony/ui/windows/settings_window.py:950
+#, python-brace-format
+msgid "Address book '{name}' created"
+msgstr "એડ્રેસ બુક '{name}' બનાવવામાં આવી"
+
+#: src/telephony/ui/windows/settings_window.py:1027
 msgid "System Default (Always Enabled)"
 msgstr "સિસ્ટમ ડિફોલ્ટ (હંમેશા સક્ષમ)"
 
-#: src/telephony/ui/windows/settings_window.py:961
+#: src/telephony/ui/windows/settings_window.py:1038
 msgid "Personal Address Book"
 msgstr "પર્સનલ એડ્રેસ બુક"
 
-#: src/telephony/ui/windows/settings_window.py:962
+#: src/telephony/ui/windows/settings_window.py:1039
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2640,11 +2678,11 @@ msgstr ""
 "આ એડ્રેસ બુક છે જે એન્ડ્રોમેડા સાથે સમન્વયિત થશે જો તમે સિસ્ટમ સેટિંગ્સમાં આવું કરવાનું પસંદ કરો "
 "છો."
 
-#: src/telephony/ui/windows/settings_window.py:970
+#: src/telephony/ui/windows/settings_window.py:1047
 msgid "Andromeda Contacts"
 msgstr "એન્ડ્રોમેડા સંપર્કો"
 
-#: src/telephony/ui/windows/settings_window.py:971
+#: src/telephony/ui/windows/settings_window.py:1048
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2652,7 +2690,7 @@ msgstr ""
 "આ એડ્રેસ બુક છે જે એન્ડ્રોમેડાથી સિંક કરવામાં આવશે જો તમે સિસ્ટમ સેટિંગ્સમાં આવું કરવાનું પસંદ કરો "
 "છો."
 
-#: src/telephony/ui/windows/settings_window.py:1096
+#: src/telephony/ui/windows/settings_window.py:1183
 msgid "Settings Saved"
 msgstr "સેટિંગ્સ સાચવી"
 
@@ -2671,9 +2709,7 @@ msgstr "વૉઇસ નોટ જોડો"
 #: src/telephony/ui/windows/sound_recorder_window.py:308
 #, python-brace-format
 msgid "Recording is too large for MMS (Max {size}). Please retake shorter."
-msgstr ""
-"MMS માટે રેકોર્ડિંગ ખૂબ મોટું છે (મહત્તમ {size}). મહેરબાની કરીને ફરી ટૂંકો "
-"લો."
+msgstr "MMS માટે રેકોર્ડિંગ ખૂબ મોટું છે (મહત્તમ {size}). મહેરબાની કરીને ફરી ટૂંકો લો."
 
 #: src/telephony/ui/windows/trusted_actions_list_window.py:142
 msgid "Enable Feature"
