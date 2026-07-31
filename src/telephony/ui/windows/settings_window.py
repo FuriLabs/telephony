@@ -919,6 +919,28 @@ class SettingsWindow(Adw.Window):
 
         self._build_sources_list(rebuild_dropdown=False)
 
+    def _source_row_subtitle(self, item):
+        """Build the subtitle for an address book row."""
+        if item['is_system_default']:
+            return _("System Default (Always Enabled)")
+        if item.get('name') == "Andromeda Contacts":
+            return _("Synced from Andromeda")
+
+        status_labels = {
+            "connected": _("Connected"),
+            "connecting": _("Connecting..."),
+            "disconnected": _("Disconnected"),
+            "awaiting-credentials": _("Login required"),
+            "ssl-failed": _("Connection failed (SSL)"),
+        }
+        bits = []
+        if item.get('account'):
+            bits.append(item['account'])
+        status_label = status_labels.get(item.get('status'))
+        if status_label:
+            bits.append(status_label)
+        return " · ".join(bits)
+
     def _on_add_addressbook(self, btn):
         """Prompt for a name and create a local address book."""
         dialog = Adw.MessageDialog(
@@ -1023,8 +1045,9 @@ class SettingsWindow(Adw.Window):
             item['rank'] = i
 
             row = Adw.ActionRow(title=item['name'])
-            if item['is_system_default']:
-                row.set_subtitle(_("System Default (Always Enabled)"))
+            subtitle = self._source_row_subtitle(item)
+            if subtitle:
+                row.set_subtitle(subtitle)
 
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
             box.set_valign(Gtk.Align.CENTER)
@@ -1047,6 +1070,11 @@ class SettingsWindow(Adw.Window):
                 btn_info_andro.connect("clicked", lambda b: GLib.idle_add(lambda: self._show_ab_info(_("Andromeda Contacts"), _(
                     "This is the address book that will be synced from Andromeda if you choose to do so in System Settings.")) or False))
                 box.append(btn_info_andro)
+
+            if item.get('status') in ("ssl-failed", "awaiting-credentials"):
+                warn = Gtk.Image(icon_name="dialog-warning-symbolic")
+                warn.set_valign(Gtk.Align.CENTER)
+                box.append(warn)
 
             is_protected = item.get('uid') == "system-address-book" or item.get('name') == "Andromeda Contacts"
             if item.get('is_local') and item.get('removable') and not is_protected:

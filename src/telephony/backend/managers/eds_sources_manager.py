@@ -30,9 +30,17 @@ from loguru import logger
 from ..utils.phone_utils import normalize_number
 
 ADDRESS_BOOK_EXTENSION = "Address Book"
+COLLECTION_EXTENSION = "Collection"
 EBOOK_CONNECT_TIMEOUT_SECONDS = 5
 EBOOK_CONNECT_NO_WAIT = GLib.MAXUINT32
 LOCAL_BACKEND_NAMES = ("local",)
+CONNECTION_STATUS_KEYS = {
+    EDataServer.SourceConnectionStatus.CONNECTED: "connected",
+    EDataServer.SourceConnectionStatus.CONNECTING: "connecting",
+    EDataServer.SourceConnectionStatus.DISCONNECTED: "disconnected",
+    EDataServer.SourceConnectionStatus.AWAITING_CREDENTIALS: "awaiting-credentials",
+    EDataServer.SourceConnectionStatus.SSL_FAILED: "ssl-failed",
+}
 
 
 class EdsSourcesManager:
@@ -342,7 +350,7 @@ class EdsSourcesManager:
                 s = next((x for x in all_sources if x.get_uid() == uid), None)
                 if s:
                     is_def = (uid == default_uid)
-                    is_local, removable = self._source_backend_info(s)
+                    is_local, removable, status_key, account = self._source_backend_info(s)
                     result.append({
                         'uid': uid,
                         'name': s.get_display_name(),
@@ -350,7 +358,9 @@ class EdsSourcesManager:
                         'enabled': conf.get('enabled', True) or is_def,
                         'is_system_default': is_def,
                         'is_local': is_local,
-                        'removable': removable
+                        'removable': removable,
+                        'status': status_key,
+                        'account': account
                     })
                     uids_processed.add(uid)
                     current_rank += 1
@@ -359,7 +369,7 @@ class EdsSourcesManager:
                 uid = s.get_uid()
                 if uid not in uids_processed:
                     is_def = (uid == default_uid)
-                    is_local, removable = self._source_backend_info(s)
+                    is_local, removable, status_key, account = self._source_backend_info(s)
                     result.append({
                         'uid': uid,
                         'name': s.get_display_name(),
@@ -367,7 +377,9 @@ class EdsSourcesManager:
                         'enabled': True,
                         'is_system_default': is_def,
                         'is_local': is_local,
-                        'removable': removable
+                        'removable': removable,
+                        'status': status_key,
+                        'account': account
                     })
                     current_rank += 1
 
@@ -441,14 +453,33 @@ class EdsSourcesManager:
             return False
 
     def _source_backend_info(self, source):
-        """Return (is_local, removable) for a registry source."""
+        """Return (is_local, removable, status_key, account) for a registry source."""
         try:
             extension = source.get_extension(ADDRESS_BOOK_EXTENSION)
             is_local = extension.get_backend_name() in LOCAL_BACKEND_NAMES
         except Exception as e:
             logger.debug(f"[EDS] Backend info lookup failed: {e}")
             is_local = False
-        return is_local, bool(source.get_removable())
+
+        status_key = None
+        if not is_local:
+            status_key = CONNECTION_STATUS_KEYS.get(source.get_connection_status())
+
+        return is_local, bool(source.get_removable()), status_key, self._source_account_name(source)
+
+    def _source_account_name(self, source):
+        """Return the display name of the account collection owning a source."""
+        parent_uid = source.get_parent()
+        if not parent_uid or not self.registry:
+            return ""
+        parent = self.registry.ref_source(parent_uid)
+        if not parent:
+            return ""
+        if parent.has_extension(COLLECTION_EXTENSION):
+            return parent.get_display_name() or ""
+        if parent_uid.endswith("-stable"):
+            return ""
+        return parent.get_display_name() or ""
 
     def set_default_addressbook(self, uid):
         """Set the default address book source."""
