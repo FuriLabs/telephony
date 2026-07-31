@@ -36,12 +36,12 @@ class SettingsWindow(Adw.Window):
     """Main settings window for the application."""
 
     def __init__(self, main_window, eds_manager, ofono_manager):
+        """Initialize Settings Window."""
         self._volume_commit_timer = None
-        self.connect("unmap", self._on_settings_unmap)
         self.source_rows = None
         self.sources_state = None
-        """Initialize Settings Window."""
         super().__init__(title=_("Settings"))
+        self.connect("unmap", self._on_settings_unmap)
 
         self.main_window = main_window
         self.eds = eds_manager
