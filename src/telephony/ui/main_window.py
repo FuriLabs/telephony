@@ -590,9 +590,18 @@ class MainWindow(Adw.Window):
         GLib.idle_add(lambda: self.actions_popover.popdown() or False)
         self.notify_loading(_("Syncing address books..."))
 
-        def done(count):
-            if count:
-                self.notify_success(_("Sync started for {count} address books").format(count=count))
+        def task():
+            refreshed = self.eds.refresh_backends()
+            discovered = self.eds.sync_available_sources()
+            return refreshed, discovered
+
+        def done(result):
+            refreshed, discovered = result
+            if discovered:
+                self.notify_loading(_("Reloading Contacts..."))
+                return
+            if refreshed:
+                self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
                 return
             self.notify_loading(_("Reloading Contacts..."))
             self.eds.reload()
@@ -602,7 +611,7 @@ class MainWindow(Adw.Window):
             self.notify_loading(_("Reloading Contacts..."))
             self.eds.reload()
 
-        run_in_background(self.eds.refresh_backends, on_complete=done, on_error=failed)
+        run_in_background(task, on_complete=done, on_error=failed)
 
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""

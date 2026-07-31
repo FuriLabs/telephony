@@ -396,6 +396,32 @@ class EdsSourcesManager:
                 logger.warning(f"[EDS] Backend refresh failed for {uid}: {e}")
         return refreshed
 
+    def sync_available_sources(self):
+        """Reload when the registry's address book list differs from the config."""
+        if not self.registry:
+            return False
+        try:
+            registry_uids = {s.get_uid() for s in self.registry.list_sources(ADDRESS_BOOK_EXTENSION)}
+        except Exception as e:
+            logger.error(f"[EDS] Registry listing failed: {e}")
+            return False
+
+        config_uids = set()
+        saved_config_json = self.gsettings_mgr.get_setting("address_book_sources")
+        if saved_config_json:
+            try:
+                config_uids = {item['uid'] for item in json.loads(saved_config_json)}
+            except Exception as e:
+                logger.warning(f"[EDS] Failed to parse saved config (sync check): {e}")
+
+        if registry_uids == config_uids:
+            return False
+
+        logger.info("[EDS] Address book list changed, reloading sources")
+        self.invalidate_sources_info()
+        self.reload()
+        return True
+
     def create_local_addressbook(self, name):
         """Create a new local address book source and reload the sources."""
         if not self.registry:
