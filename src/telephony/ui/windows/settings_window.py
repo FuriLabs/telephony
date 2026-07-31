@@ -1077,7 +1077,7 @@ class SettingsWindow(Adw.Window):
                 box.append(warn)
 
             is_protected = item.get('uid') == "system-address-book" or item.get('name') == "Andromeda Contacts"
-            if item.get('is_local') and item.get('removable') and not is_protected:
+            if item.get('removable') and not is_protected:
                 btn_del = Gtk.Button(icon_name="user-trash-symbolic")
                 btn_del.set_valign(Gtk.Align.CENTER)
                 btn_del.add_css_class("flat")
