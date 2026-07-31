@@ -17,6 +17,8 @@ import gi
 gi.require_version('EBook', '1.2')
 from gi.repository import EBook
 
+import threading
+
 from functools import partial
 
 from ..utils.thread_utils import run_in_background
@@ -28,6 +30,7 @@ from loguru import logger
 from ..utils.phone_utils import normalize_number
 
 ADDRESS_BOOK_EXTENSION = "Address Book"
+EBOOK_CONNECT_TIMEOUT_SECONDS = 5
 
 
 class EdsSourcesManager:
@@ -152,9 +155,15 @@ class EdsSourcesManager:
 
             with self.sources_lock:
                 self.sources = {}
+
+            threads = []
             for item in final_sources_list:
                 if item['enabled']:
-                    self._init_source(item)
+                    t = threading.Thread(target=self._init_source_safe, args=(item,), daemon=True)
+                    t.start()
+                    threads.append(t)
+            for t in threads:
+                t.join()
 
             self._rebuild_lookup_map()
             self.is_ready = True
@@ -177,6 +186,18 @@ class EdsSourcesManager:
         except Exception as e:
             logger.error(f"[EDS] Save Config Error: {e}")
 
+    def _has_cached_contacts(self, source_uid):
+        """Return True when the in-memory cache holds contacts for the source."""
+        with self.cache_lock:
+            return any(v.get('source_uid') == source_uid for v in self.cache.values())
+
+    def _init_source_safe(self, source_info):
+        """Thread entry for source init that can never propagate an exception."""
+        try:
+            self._init_source(source_info)
+        except Exception as e:
+            logger.error(f"[EDS] Source init failed for {source_info.get('uid')}: {e}")
+
     def _init_source(self, source_info):
         """Connect to a single source and start monitoring."""
         uid = source_info['uid']
@@ -186,14 +207,17 @@ class EdsSourcesManager:
         self._load_from_local_db(uid, source_info['rank'])
 
         try:
-            client = EBook.BookClient.connect_sync(source_obj, 30, None)
+            client = EBook.BookClient.connect_sync(source_obj, EBOOK_CONNECT_TIMEOUT_SECONDS, None)
             source_info['client'] = client
 
             try:
                 success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
                 if success:
                     comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
-                    self.db_ref.sync_deleted_contacts(uid, comp_uids)
+                    if comp_uids or not self._has_cached_contacts(uid):
+                        self.db_ref.sync_deleted_contacts(uid, comp_uids)
+                    else:
+                        logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
             except Exception as ex:
                 logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
 
