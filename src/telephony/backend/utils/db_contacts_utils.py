@@ -13,13 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import hashlib
 import json
 
 from loguru import logger
 from gi.repository import GLib
 
-from .phone_utils import normalize_number
+from .phone_utils import build_search_variants, normalize_number
 
 SQLITE_MAX_BATCH_VARIABLES = 900
 
@@ -43,33 +42,86 @@ class DbContactsUtils:
             return []
 
     def get_cached_contacts(self, source_uid):
-        """Retrieve cached contacts for a specific source."""
+        """Retrieve slim cached contacts for a specific source without vcard blobs."""
         try:
             with self.lock:
                 c = self.conn_contacts.cursor()
-                c.execute("SELECT uid, name, phones, emails, search_index_name, search_index_phones, vcard FROM contacts WHERE source_uid=?", (source_uid,))
+                c.execute("SELECT uid, name, phones, emails, vcard_hash, is_fav FROM contacts WHERE source_uid=?", (source_uid,))
                 rows = c.fetchall()
-                results = []
-                for r in rows:
-                    phones = json.loads(r[2]) if r[2] else []
-                    emails = json.loads(r[3]) if r[3] else []
-                    search_phones = json.loads(r[5]) if r[5] else []
-                    vcard = r[6] or ""
 
-                    data = {
-                        'uid': r[0],
-                        'name': r[1],
-                        'phones': phones,
-                        'emails': emails,
-                        'idx_name': r[4],
-                        'idx_phones': search_phones,
-                        'vcard_hash': hashlib.md5(vcard.encode('utf-8')).hexdigest() if vcard else None,
-                        'is_fav': "X-FOLKS-FAVOURITE:true" in vcard or "X-FOLKS-FAVOURITE:TRUE" in vcard
-                    }
-                    results.append(data)
-                return results
+            results = []
+            for r in rows:
+                results.append({
+                    'uid': r[0],
+                    'name': r[1],
+                    'phones': json.loads(r[2]) if r[2] else [],
+                    'emails': json.loads(r[3]) if r[3] else [],
+                    'vcard_hash': r[4],
+                    'is_fav': bool(r[5]),
+                })
+            return results
         except Exception as e:
             logger.error(f"[DB] Get Cached Contacts Error: {e}")
+            return []
+
+    def search_contacts_db(self, query="", limit=None, offset=0):
+        """Search the contacts table, mirroring the former in-memory semantics."""
+        try:
+            where = []
+            params = []
+            tokens = query.lower().split() if query else []
+            for token in tokens:
+                clause = ["instr(search_index_name, ?) > 0"]
+                params.append(token)
+                for variant in build_search_variants(token):
+                    clause.append("instr(search_index_phones, ?) > 0")
+                    params.append(variant)
+                where.append("(" + " OR ".join(clause) + ")")
+
+            sql = ("SELECT uid, name, phones, emails, is_fav, source_uid FROM contacts"
+                   + ((" WHERE " + " AND ".join(where)) if where else "")
+                   + " ORDER BY is_fav DESC,"
+                   + " CASE WHEN name IS NULL OR name = '' THEN 1 ELSE 0 END, LOWER(name)")
+            if limit is not None:
+                sql += " LIMIT ? OFFSET ?"
+                params.extend([limit, offset])
+            elif offset:
+                sql += " LIMIT -1 OFFSET ?"
+                params.append(offset)
+
+            with self.lock:
+                c = self.conn_contacts.cursor()
+                c.execute(sql, params)
+                rows = c.fetchall()
+
+            results = []
+            for uid, name, phones_json, emails_json, is_fav, source_uid in rows:
+                if not uid:
+                    continue
+                parts = (name or "").split(" ", 1)
+                first = parts[0]
+                last = parts[1] if len(parts) > 1 else ""
+                phones = json.loads(phones_json) if phones_json else []
+                emails = json.loads(emails_json) if emails_json else []
+                results.append((uid, first, last, phones, emails, bool(is_fav), source_uid))
+            return results
+        except Exception as e:
+            logger.error(f"[DB] Contact search error: {e}")
+            return []
+
+    def get_all_vcards(self, source_uid=None):
+        """Return every stored vcard, optionally filtered to one source."""
+        try:
+            with self.lock:
+                c = self.conn_contacts.cursor()
+                if source_uid:
+                    c.execute("SELECT vcard FROM contacts WHERE source_uid=?", (source_uid,))
+                else:
+                    c.execute("SELECT vcard FROM contacts")
+                rows = c.fetchall()
+            return [r[0] for r in rows if r[0]]
+        except Exception as e:
+            logger.error(f"[DB] Get vcards error: {e}")
             return []
 
     def get_contact_vcard(self, uid):
@@ -97,11 +149,13 @@ class DbContactsUtils:
                 vcard = data.get('vcard', '')
                 idx_name = data.get('idx_name', '')
                 idx_phones = json.dumps(data.get('idx_phones', []))
-                batch.append((uid, source_uid, name, phones, emails, vcard, idx_name, idx_phones))
+                is_fav = 1 if data.get('is_fav') else 0
+                vcard_hash = data.get('vcard_hash')
+                batch.append((uid, source_uid, name, phones, emails, vcard, idx_name, idx_phones, is_fav, vcard_hash))
             if batch:
                 with self.lock:
                     c = self.conn_contacts.cursor()
-                    c.executemany('INSERT OR REPLACE INTO contacts (uid, source_uid, name, phones, emails, vcard, search_index_name, search_index_phones) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', batch)
+                    c.executemany('INSERT OR REPLACE INTO contacts (uid, source_uid, name, phones, emails, vcard, search_index_name, search_index_phones, is_fav, vcard_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', batch)
                     self.conn_contacts.commit()
                 GLib.idle_add(self.emit, 'contacts-updated')
             return True

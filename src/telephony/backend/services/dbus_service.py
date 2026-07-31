@@ -913,19 +913,21 @@ class TelephonyDaemonDBus:
     def _handle_exportcontacts(self, parameters, invocation):
         """Handle ExportContacts command."""
         source_uid = parameters.unpack()[0]
-        full_content = ""
-        if self.eds:
-            contacts = []
-            with self.eds.cache_lock:
-                if source_uid:
-                    contacts = [c for c in self.eds.cache.values() if c.get('source_uid') == source_uid]
-                else:
-                    contacts = list(self.eds.cache.values())
-            for c in contacts:
-                v = c.get('vcard', '')
-                if v:
-                    full_content += v + "\n"
-        invocation.return_value(GLib.Variant("(s)", (full_content,)))
+
+        def fetch():
+            if not self.db:
+                return ""
+            vcards = self.db.get_all_vcards(source_uid if source_uid else None)
+            return "".join(v + "\n" for v in vcards)
+
+        def done(full_content):
+            invocation.return_value(GLib.Variant("(s)", (full_content,)))
+
+        def failed(error):
+            logger.error(f"[DBus] Export contacts failed: {error}")
+            invocation.return_value(GLib.Variant("(s)", ("",)))
+
+        run_in_background(fetch, on_complete=done, on_error=failed)
 
     def _handle_addcontact(self, parameters, invocation):
         """Handle AddContact command."""

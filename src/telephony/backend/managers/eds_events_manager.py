@@ -54,9 +54,15 @@ class EdsEventsManager:
                         if not self.lookup_map[norm]:
                             del self.lookup_map[norm]
 
-                cache_data = data.copy()
-                cache_data.pop('vcard', None)
-                self.cache[uid] = cache_data
+                self.cache[uid] = {
+                    'uid': uid,
+                    'source_uid': source_uid,
+                    'name': data.get('name'),
+                    'phones': data.get('phones', []),
+                    'emails': data.get('emails', []),
+                    'vcard_hash': data.get('vcard_hash'),
+                    'is_fav': bool(data.get('is_fav')),
+                }
 
                 for p_data in data['phones']:
                     norm = normalize_number(p_data[0])

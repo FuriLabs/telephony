@@ -552,22 +552,13 @@ class ImportExportDialog:
     def _export_all_task(self, path, source_uid=None):
         """Background export task."""
         try:
-            contacts = []
-            with self.app_window.eds.cache_lock:
-                if source_uid:
-                    contacts = [c for c in self.app_window.eds.cache.values() if c.get('source_uid') == source_uid]
-                else:
-                    contacts = list(self.app_window.eds.cache.values())
+            vcards = self.app_window.db.get_all_vcards(source_uid)
 
-            if not contacts:
+            if not vcards:
                 GLib.idle_add(lambda: self.app_window.notify_error(_("No contacts found to export")))
                 return
 
-            full_content = ""
-            for c in contacts:
-                v = c.get('vcard', '')
-                if v:
-                    full_content += v + "\n"
+            full_content = "".join(v + "\n" for v in vcards)
 
             temp_path = path + ".tmp"
             with open(temp_path, 'w', encoding='utf-8') as f:
@@ -576,7 +567,7 @@ class ImportExportDialog:
                 os.fsync(f.fileno())
             os.replace(temp_path, path)
 
-            GLib.idle_add(lambda: self.app_window.notify_success(_("Exported {count} contacts").format(count=len(contacts))))
+            GLib.idle_add(lambda: self.app_window.notify_success(_("Exported {count} contacts").format(count=len(vcards))))
         except Exception as e:
             logger.error(f"[MainWindow] Export error: {e}")
             GLib.idle_add(lambda e=e: self.app_window.notify_error(_("Export error: {e}").format(e=e)))

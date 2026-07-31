@@ -149,3 +149,30 @@ def get_own_number():
         logger.warning(f"[Utils] Own number detection failed: {e}")
 
     return None
+
+
+def build_search_variants(token):
+    """Return the phone search variants for a token, including region prefix swaps."""
+    variants = {token}
+    norm = normalize_number(token)
+    if norm:
+        variants.add(norm)
+
+    try:
+        country_code = phonenumbers.country_code_for_region(get_system_region())
+    except Exception as e:
+        logger.debug(f"[Utils] Region code lookup failed: {e}")
+        country_code = None
+
+    region_prefix = f"+{country_code}" if country_code else ""
+    if region_prefix and token.startswith("0"):
+        variant = region_prefix + token[1:]
+        variants.add(variant)
+        v_norm = normalize_number(variant)
+        if v_norm:
+            variants.add(v_norm)
+
+    if region_prefix and token.startswith(region_prefix):
+        variants.add("0" + token[len(region_prefix):])
+
+    return variants

@@ -13,14 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import phonenumbers
-
 import gi
 gi.require_version('EBookContacts', '1.2')
 from gi.repository import EBookContacts
 from loguru import logger
 from gettext import gettext as _
-from ..utils.phone_utils import normalize_number, get_system_region
+from ..utils.phone_utils import normalize_number
 from ..utils.vcard_utils import unfold_vcard
 
 
@@ -86,108 +84,10 @@ class EdsContactsManager:
         return self.db_ref.get_contact_vcard(uid)
 
     def search_contacts(self, query, limit=None, offset=0):
-        """Search for contacts by name or number."""
-        results = []
-        seen_uids = set()
-
-        def split_name(full):
-            parts = full.split(" ", 1)
-            return parts[0], (parts[1] if len(parts) > 1 else "")
-
-        with self.cache_lock:
-            if not query:
-                for uid, data in self.cache.items():
-                    if uid in seen_uids:
-                        continue
-                    if not uid:
-                        continue
-
-                    seen_uids.add(uid)
-                    first_name, last_name = split_name(data['name'])
-                    p_list = data['phones'] if data['phones'] else []
-                    e_list = data['emails'] if data['emails'] else []
-                    results.append((uid, first_name, last_name, p_list, e_list, data.get('is_fav', False), data.get('source_uid')))
-
-            else:
-                q = query.lower()
-                tokens = q.split()
-                if not tokens:
-                    return []
-
-                region_code = get_system_region()
-                country_code = phonenumbers.country_code_for_region(region_code)
-                region_prefix = f"+{country_code}" if country_code else ""
-                short_prefix = "0"
-
-                for uid, data in self.cache.items():
-                    if uid in seen_uids:
-                        continue
-                    if not uid:
-                        continue
-
-                    all_tokens_match = True
-
-                    searchable_phones = data['idx_phones']
-                    searchable_name = data['idx_name']
-
-                    for token in tokens:
-                        token_found = False
-
-                        if token in searchable_name:
-                            token_found = True
-                        else:
-                            variants = {token}
-
-                            norm = normalize_number(token)
-                            if norm:
-                                variants.add(norm)
-
-                            if region_prefix and token.startswith(short_prefix):
-                                variant = region_prefix + token[len(short_prefix):]
-                                variants.add(variant)
-                                v_norm = normalize_number(variant)
-                                if v_norm:
-                                    variants.add(v_norm)
-
-                            if region_prefix and token.startswith(region_prefix):
-                                variant = short_prefix + token[len(region_prefix):]
-                                variants.add(variant)
-
-                            for variant in variants:
-                                for p in searchable_phones:
-                                    if variant in p:
-                                        token_found = True
-                                        break
-                                if token_found:
-                                    break
-
-                        if not token_found:
-                            all_tokens_match = False
-                            break
-
-                    if all_tokens_match:
-                        seen_uids.add(uid)
-                        first_name, last_name = split_name(data['name'])
-                        p_list = data['phones'] if data['phones'] else []
-                        e_list = data['emails'] if data['emails'] else []
-                        results.append((uid, first_name, last_name, p_list, e_list, data.get('is_fav', False), data.get('source_uid')))
-
-            def sort_key(item):
-                is_fav = item[5]
-                first = item[1] or ""
-                last = item[2] or ""
-                full = f"{first} {last}".strip()
-
-                prefix = "0" if is_fav else "1"
-
-                if not full:
-                    return f"{prefix}_zz_unknown"
-                return f"{prefix}_{full.lower()}"
-
-            results.sort(key=sort_key)
-            if limit is not None:
-                return results[offset:offset + limit]
-            return results[offset:] if offset else results
+        """Search for contacts by name or number from the local contacts DB."""
+        if not self.db_ref:
+            return []
+        return self.db_ref.search_contacts_db(query, limit=limit, offset=offset)
 
     def _is_andromeda_source(self, source_uid):
         """Return True when the source is the read-only Andromeda Contacts book."""
