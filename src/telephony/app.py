@@ -51,6 +51,8 @@ from .backend.managers.schedule_manager import ScheduleManager
 
 from gettext import gettext as _, ngettext
 
+OSK_DISMISS_DELAY_MS = 200
+
 
 class App(Adw.Application):
     """
@@ -205,7 +207,7 @@ class App(Adw.Application):
         """Global handler for new calls to ensure InCallWindow is presented."""
         self._ensure_incall_window()
         self.release_keyboard_focus()
-        GLib.idle_add(self._present_incall_window)
+        GLib.timeout_add(OSK_DISMISS_DELAY_MS, self._present_incall_window)
 
     def _setup_icon_paths(self):
         """
@@ -295,9 +297,8 @@ class App(Adw.Application):
         if opts.incall:
             logger.info("Opening InCallWindow requested via command line.")
             self._ensure_incall_window()
-            if self.incall:
-                self.incall.present()
-                self.incall.update_state()
+            self.release_keyboard_focus()
+            GLib.timeout_add(OSK_DISMISS_DELAY_MS, self._present_incall_window)
             return 0
 
         focus_tab = None
