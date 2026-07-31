@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 14:41+0300\n"
+"POT-Creation-Date: 2026-07-31 14:59+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:641 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "Iniciar o proceso de emerxencia"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:674
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -131,8 +131,8 @@ msgstr "Iniciar o proceso de emerxencia"
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
 #: src/telephony/ui/windows/settings_window.py:459
-#: src/telephony/ui/windows/settings_window.py:929
-#: src/telephony/ui/windows/settings_window.py:959
+#: src/telephony/ui/windows/settings_window.py:951
+#: src/telephony/ui/windows/settings_window.py:981
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -566,11 +566,11 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "Atopouse {count} contacto duplicado. Comprobar menú."
 msgstr[1] "Atopáronse {count} contactos duplicados. Comprobar menú."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:619
 msgid "Contacts syncing..."
 msgstr "Sincronización de contactos..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:825
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
@@ -580,7 +580,7 @@ msgstr "Sincronización de contactos..."
 #: src/telephony/ui/windows/settings_window.py:445
 #: src/telephony/ui/windows/settings_window.py:496
 #: src/telephony/ui/windows/settings_window.py:634
-#: src/telephony/ui/windows/settings_window.py:992
+#: src/telephony/ui/windows/settings_window.py:1014
 msgid "Close"
 msgstr "Pechar"
 
@@ -588,45 +588,46 @@ msgstr "Pechar"
 msgid "Syncing address books..."
 msgstr "Sincronizando as axendas de enderezos..."
 
-#: src/telephony/ui/main_window.py:595
+#: src/telephony/ui/main_window.py:601 src/telephony/ui/main_window.py:606
+#: src/telephony/ui/main_window.py:611
+msgid "Reloading Contacts..."
+msgstr "Recargando contactos..."
+
+#: src/telephony/ui/main_window.py:604
 #, python-brace-format
 msgid "Sync started for {count} address books"
 msgstr "Sincronización iniciada para {count} axendas de enderezos"
 
-#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
-msgid "Reloading Contacts..."
-msgstr "Recargando contactos..."
-
-#: src/telephony/ui/main_window.py:620
+#: src/telephony/ui/main_window.py:629
 msgid "Multiple Contacts Found"
 msgstr "Atopáronse varios contactos"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:630
 msgid "Which contact would you like to edit?"
 msgstr "Que contacto che gustaría editar?"
 
-#: src/telephony/ui/main_window.py:634
+#: src/telephony/ui/main_window.py:643
 msgid "Unknown Addressbook"
 msgstr "Caderno de enderezos descoñecido"
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 msgid "Calling (Anonymous)..."
 msgstr "Chamando (anónimo)..."
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "Chamando {number}..."
 
-#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
+#: src/telephony/ui/main_window.py:706 src/telephony/ui/main_window.py:712
 msgid "Call Failed"
 msgstr "Fallou a chamada"
 
-#: src/telephony/ui/main_window.py:709
+#: src/telephony/ui/main_window.py:718
 msgid "Call Details"
 msgstr "Detalles da chamada"
 
-#: src/telephony/ui/main_window.py:710
+#: src/telephony/ui/main_window.py:719
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -639,92 +640,92 @@ msgstr ""
 "Data: {date}\n"
 "Duración: {duration}"
 
-#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/main_window.py:735
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "Número de desbloqueo"
 
-#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:741 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "Desbloqueado"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "Editar contacto"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "Engadir a Contactos"
 
-#: src/telephony/ui/main_window.py:751
+#: src/telephony/ui/main_window.py:760
 msgid "Add to Existing Contact"
 msgstr "Engadir ao contacto existente"
 
-#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/main_window.py:769
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "Número de busca"
 
-#: src/telephony/ui/main_window.py:784
+#: src/telephony/ui/main_window.py:793
 msgid "Send Message"
 msgstr "Enviar mensaxe"
 
-#: src/telephony/ui/main_window.py:789
+#: src/telephony/ui/main_window.py:798
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "Número de copia"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:803
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "Número de bloque"
 
-#: src/telephony/ui/main_window.py:807
+#: src/telephony/ui/main_window.py:816
 msgid "Delete this call"
 msgstr "Elimina esta chamada"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Delete Call"
 msgstr "Eliminar chamada"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Remove this call?"
 msgstr "Queres eliminar esta chamada?"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:835
 msgid "Number copied"
 msgstr "Copiouse o número"
 
-#: src/telephony/ui/main_window.py:832
+#: src/telephony/ui/main_window.py:841
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "Gardando contacto..."
 
-#: src/telephony/ui/main_window.py:836
+#: src/telephony/ui/main_window.py:845
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "Engadido a {name}"
 
-#: src/telephony/ui/main_window.py:839
+#: src/telephony/ui/main_window.py:848
 msgid "Failed to add number"
 msgstr "Produciuse un erro ao engadir o número"
 
-#: src/telephony/ui/main_window.py:847
+#: src/telephony/ui/main_window.py:856
 #: src/telephony/ui/windows/contact_editor_window.py:205
 #: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "Engadir número"
 
-#: src/telephony/ui/main_window.py:848
+#: src/telephony/ui/main_window.py:857
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
-#: src/telephony/ui/windows/settings_window.py:930
+#: src/telephony/ui/windows/settings_window.py:952
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1038,7 +1039,7 @@ msgstr "Marcar como non lido"
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
 #: src/telephony/ui/windows/settings_window.py:831
-#: src/telephony/ui/windows/settings_window.py:960
+#: src/telephony/ui/windows/settings_window.py:982
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -1615,7 +1616,7 @@ msgstr "Eliminar todos os contactos"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
-#: src/telephony/ui/windows/settings_window.py:957
+#: src/telephony/ui/windows/settings_window.py:979
 msgid "Delete Address Book"
 msgstr "Eliminar axenda de enderezos"
 
@@ -1662,7 +1663,7 @@ msgstr ""
 "Isto borrarao do sistema."
 
 #: src/telephony/ui/windows/data_management_window.py:154
-#: src/telephony/ui/windows/settings_window.py:958
+#: src/telephony/ui/windows/settings_window.py:980
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr ""
@@ -1724,12 +1725,12 @@ msgid "Deleting address book..."
 msgstr "Eliminando a axenda de enderezos..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
-#: src/telephony/ui/windows/settings_window.py:978
+#: src/telephony/ui/windows/settings_window.py:1000
 msgid "Address Book Deleted"
 msgstr "Axenda de enderezos eliminada"
 
 #: src/telephony/ui/windows/data_management_window.py:265
-#: src/telephony/ui/windows/settings_window.py:976
+#: src/telephony/ui/windows/settings_window.py:998
 msgid "Failed to delete Address Book"
 msgstr "Produciuse un erro ao eliminar a axenda de enderezos"
 
@@ -2172,6 +2173,7 @@ msgid "Alerting..."
 msgstr "Soando..."
 
 #: src/telephony/ui/windows/incall_window.py:46
+#: src/telephony/ui/windows/settings_window.py:932
 msgid "Disconnected"
 msgstr "Desconectada"
 
@@ -2408,7 +2410,7 @@ msgstr ""
 "Busca números duplicados e mostra un banner de resolución na vista Contactos."
 
 #: src/telephony/ui/windows/settings_window.py:203
-#: src/telephony/ui/windows/settings_window.py:926
+#: src/telephony/ui/windows/settings_window.py:948
 msgid "Add Local Address Book"
 msgstr "Engadir axenda de enderezos local"
 
@@ -2676,28 +2678,48 @@ msgstr ""
 msgid "Decline Message"
 msgstr "Mensaxe de rexeitamento"
 
+#: src/telephony/ui/windows/settings_window.py:925
+msgid "System Default (Always Enabled)"
+msgstr "Sistema predeterminado (sempre activado)"
+
 #: src/telephony/ui/windows/settings_window.py:927
+msgid "Synced from Andromeda"
+msgstr "Sincronizada desde Andromeda"
+
+#: src/telephony/ui/windows/settings_window.py:930
+msgid "Connected"
+msgstr "Conectada"
+
+#: src/telephony/ui/windows/settings_window.py:931
+msgid "Connecting..."
+msgstr "Conectando..."
+
+#: src/telephony/ui/windows/settings_window.py:933
+msgid "Login required"
+msgstr "Requírese iniciar sesión"
+
+#: src/telephony/ui/windows/settings_window.py:934
+msgid "Connection failed (SSL)"
+msgstr "Fallou a conexión (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:949
 msgid "Address book name"
 msgstr "Nome da axenda de enderezos"
 
-#: src/telephony/ui/windows/settings_window.py:948
+#: src/telephony/ui/windows/settings_window.py:970
 msgid "Could not create address book"
 msgstr "Non se puido crear a axenda de enderezos"
 
-#: src/telephony/ui/windows/settings_window.py:950
+#: src/telephony/ui/windows/settings_window.py:972
 #, python-brace-format
 msgid "Address book '{name}' created"
 msgstr "Creouse a axenda de enderezos '{name}'"
 
-#: src/telephony/ui/windows/settings_window.py:1027
-msgid "System Default (Always Enabled)"
-msgstr "Sistema predeterminado (sempre activado)"
-
-#: src/telephony/ui/windows/settings_window.py:1038
+#: src/telephony/ui/windows/settings_window.py:1061
 msgid "Personal Address Book"
 msgstr "Caderno de enderezos persoal"
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: src/telephony/ui/windows/settings_window.py:1062
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2705,11 +2727,11 @@ msgstr ""
 "Esta é a axenda de enderezos que se sincronizará con Andrómeda se escolles "
 "facelo na configuración do sistema."
 
-#: src/telephony/ui/windows/settings_window.py:1047
+#: src/telephony/ui/windows/settings_window.py:1070
 msgid "Andromeda Contacts"
 msgstr "Contactos de Andrómeda"
 
-#: src/telephony/ui/windows/settings_window.py:1048
+#: src/telephony/ui/windows/settings_window.py:1071
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2717,7 +2739,7 @@ msgstr ""
 "Esta é a axenda de enderezos que se sincronizará desde Andromeda se escolles "
 "facelo na configuración do sistema."
 
-#: src/telephony/ui/windows/settings_window.py:1183
+#: src/telephony/ui/windows/settings_window.py:1211
 msgid "Settings Saved"
 msgstr "Configuración gardada"
 

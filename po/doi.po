@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 14:41+0300\n"
+"POT-Creation-Date: 2026-07-31 14:59+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:641 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "आपातकालीन प्रक्रिया शुरू करो"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:674
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -131,8 +131,8 @@ msgstr "आपातकालीन प्रक्रिया शुरू क
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
 #: src/telephony/ui/windows/settings_window.py:459
-#: src/telephony/ui/windows/settings_window.py:929
-#: src/telephony/ui/windows/settings_window.py:959
+#: src/telephony/ui/windows/settings_window.py:951
+#: src/telephony/ui/windows/settings_window.py:981
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -562,11 +562,11 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "{count} डुप्लिकेट संपर्क लब्भा। मेनू चेक करो।"
 msgstr[1] "{count} डुप्लिकेट संपर्क लब्भे। मेनू चेक करो।"
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:619
 msgid "Contacts syncing..."
 msgstr "संपर्क सिंक करदे होई..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:825
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
@@ -576,7 +576,7 @@ msgstr "संपर्क सिंक करदे होई..."
 #: src/telephony/ui/windows/settings_window.py:445
 #: src/telephony/ui/windows/settings_window.py:496
 #: src/telephony/ui/windows/settings_window.py:634
-#: src/telephony/ui/windows/settings_window.py:992
+#: src/telephony/ui/windows/settings_window.py:1014
 msgid "Close"
 msgstr "बंद"
 
@@ -584,45 +584,46 @@ msgstr "बंद"
 msgid "Syncing address books..."
 msgstr "पता पुस्तिकाएं सिंक करदे होई..."
 
-#: src/telephony/ui/main_window.py:595
+#: src/telephony/ui/main_window.py:601 src/telephony/ui/main_window.py:606
+#: src/telephony/ui/main_window.py:611
+msgid "Reloading Contacts..."
+msgstr "संपर्कें गी फिरी लोड करना..."
+
+#: src/telephony/ui/main_window.py:604
 #, python-brace-format
 msgid "Sync started for {count} address books"
 msgstr "{count} पता पुस्तिकाएं आस्तै सिंक शुरू होई गेआ"
 
-#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
-msgid "Reloading Contacts..."
-msgstr "संपर्कें गी फिरी लोड करना..."
-
-#: src/telephony/ui/main_window.py:620
+#: src/telephony/ui/main_window.py:629
 msgid "Multiple Contacts Found"
 msgstr "कई संपर्क मिले"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:630
 msgid "Which contact would you like to edit?"
 msgstr "तुस कुस संपर्क गी संपादत करना चांह् दे ओ ?"
 
-#: src/telephony/ui/main_window.py:634
+#: src/telephony/ui/main_window.py:643
 msgid "Unknown Addressbook"
 msgstr "अज्ञात पता पुस्तिका"
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 msgid "Calling (Anonymous)..."
 msgstr "फोन करना (गुमनाम)..."
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "{number} गी फोन करदे होई..."
 
-#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
+#: src/telephony/ui/main_window.py:706 src/telephony/ui/main_window.py:712
 msgid "Call Failed"
 msgstr "कॉल फेल हो गया"
 
-#: src/telephony/ui/main_window.py:709
+#: src/telephony/ui/main_window.py:718
 msgid "Call Details"
 msgstr "कॉल डिटेल"
 
-#: src/telephony/ui/main_window.py:710
+#: src/telephony/ui/main_window.py:719
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -635,92 +636,92 @@ msgstr ""
 "तारीख: {date} ऐ।\n"
 "अवधि: {duration} ऐ।"
 
-#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/main_window.py:735
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "नंबर अनब्लॉक करो"
 
-#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:741 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "अनब्लॉक कर दित्ता"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "संपर्क संपादत करो"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "संपर्कें च जोड़ो"
 
-#: src/telephony/ui/main_window.py:751
+#: src/telephony/ui/main_window.py:760
 msgid "Add to Existing Contact"
 msgstr "मौजूदा संपर्क च जोड़ो"
 
-#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/main_window.py:769
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "सर्च नंबर"
 
-#: src/telephony/ui/main_window.py:784
+#: src/telephony/ui/main_window.py:793
 msgid "Send Message"
 msgstr "मैसेज भेजें"
 
-#: src/telephony/ui/main_window.py:789
+#: src/telephony/ui/main_window.py:798
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "नंबर कॉपी करो"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:803
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "ब्लॉक नंबर"
 
-#: src/telephony/ui/main_window.py:807
+#: src/telephony/ui/main_window.py:816
 msgid "Delete this call"
 msgstr "इस कॉल गी डिलीट करो"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Delete Call"
 msgstr "कॉल डिलीट करो"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Remove this call?"
 msgstr "इस कॉल गी हटाओ?"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:835
 msgid "Number copied"
 msgstr "नंबर नकल कीता"
 
-#: src/telephony/ui/main_window.py:832
+#: src/telephony/ui/main_window.py:841
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "संपर्क बचाने दा..."
 
-#: src/telephony/ui/main_window.py:836
+#: src/telephony/ui/main_window.py:845
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "{name} च जोड़ेआ गेआ।"
 
-#: src/telephony/ui/main_window.py:839
+#: src/telephony/ui/main_window.py:848
 msgid "Failed to add number"
 msgstr "नंबर जोड़ने च असफल रेहा"
 
-#: src/telephony/ui/main_window.py:847
+#: src/telephony/ui/main_window.py:856
 #: src/telephony/ui/windows/contact_editor_window.py:205
 #: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "नंबर जोड़ो"
 
-#: src/telephony/ui/main_window.py:848
+#: src/telephony/ui/main_window.py:857
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
-#: src/telephony/ui/windows/settings_window.py:930
+#: src/telephony/ui/windows/settings_window.py:952
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1032,7 +1033,7 @@ msgstr "अनपढ़ दे रूप च निशान लगाओ"
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
 #: src/telephony/ui/windows/settings_window.py:831
-#: src/telephony/ui/windows/settings_window.py:960
+#: src/telephony/ui/windows/settings_window.py:982
 msgid "Delete"
 msgstr "म्हेसना"
 
@@ -1609,7 +1610,7 @@ msgstr "सारे संपर्क हटाओ"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
-#: src/telephony/ui/windows/settings_window.py:957
+#: src/telephony/ui/windows/settings_window.py:979
 msgid "Delete Address Book"
 msgstr "पता पुस्तिका हटाओ"
 
@@ -1656,7 +1657,7 @@ msgstr ""
 "इस कन्नै इसगी सिस्टम थमां पोंछी दित्ता जाग।"
 
 #: src/telephony/ui/windows/data_management_window.py:154
-#: src/telephony/ui/windows/settings_window.py:958
+#: src/telephony/ui/windows/settings_window.py:980
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr ""
@@ -1715,12 +1716,12 @@ msgid "Deleting address book..."
 msgstr "पता पुस्तिका हटाना..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
-#: src/telephony/ui/windows/settings_window.py:978
+#: src/telephony/ui/windows/settings_window.py:1000
 msgid "Address Book Deleted"
 msgstr "पता पुस्तिका हटा दी गई"
 
 #: src/telephony/ui/windows/data_management_window.py:265
-#: src/telephony/ui/windows/settings_window.py:976
+#: src/telephony/ui/windows/settings_window.py:998
 msgid "Failed to delete Address Book"
 msgstr "पता पुस्तिका हटाने च असफल"
 
@@ -2161,6 +2162,7 @@ msgid "Alerting..."
 msgstr "घंटी बज्जा करदी ऐ..."
 
 #: src/telephony/ui/windows/incall_window.py:46
+#: src/telephony/ui/windows/settings_window.py:932
 msgid "Disconnected"
 msgstr "डिस्कनेक्ट होई गेआ"
 
@@ -2394,7 +2396,7 @@ msgid ""
 msgstr "डुप्लिकेट नंबरें लेई स्कैन करो ते संपर्क दृश्य च इक रिजोल्यूशन बैनर दस्सो।"
 
 #: src/telephony/ui/windows/settings_window.py:203
-#: src/telephony/ui/windows/settings_window.py:926
+#: src/telephony/ui/windows/settings_window.py:948
 msgid "Add Local Address Book"
 msgstr "लोकल पता पुस्तिका जोड़ो"
 
@@ -2652,28 +2654,48 @@ msgstr ""
 msgid "Decline Message"
 msgstr "अस्वीकार संदेश"
 
+#: src/telephony/ui/windows/settings_window.py:925
+msgid "System Default (Always Enabled)"
+msgstr "सिस्टम डिफ़ॉल्ट (हमेशा सक्षम)"
+
 #: src/telephony/ui/windows/settings_window.py:927
+msgid "Synced from Andromeda"
+msgstr "Andromeda थमां सिंक कीता गेदा"
+
+#: src/telephony/ui/windows/settings_window.py:930
+msgid "Connected"
+msgstr "कनेक्ट होई गेआ"
+
+#: src/telephony/ui/windows/settings_window.py:931
+msgid "Connecting..."
+msgstr "कनेक्ट करदे होई..."
+
+#: src/telephony/ui/windows/settings_window.py:933
+msgid "Login required"
+msgstr "लॉगिन दी लोड़ ऐ"
+
+#: src/telephony/ui/windows/settings_window.py:934
+msgid "Connection failed (SSL)"
+msgstr "कनेक्शन फेल होई गेआ (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:949
 msgid "Address book name"
 msgstr "पता पुस्तिका दा नां"
 
-#: src/telephony/ui/windows/settings_window.py:948
+#: src/telephony/ui/windows/settings_window.py:970
 msgid "Could not create address book"
 msgstr "पता पुस्तिका नेईं बनाई सकेआ"
 
-#: src/telephony/ui/windows/settings_window.py:950
+#: src/telephony/ui/windows/settings_window.py:972
 #, python-brace-format
 msgid "Address book '{name}' created"
 msgstr "पता पुस्तिका '{name}' बनाई गेई"
 
-#: src/telephony/ui/windows/settings_window.py:1027
-msgid "System Default (Always Enabled)"
-msgstr "सिस्टम डिफ़ॉल्ट (हमेशा सक्षम)"
-
-#: src/telephony/ui/windows/settings_window.py:1038
+#: src/telephony/ui/windows/settings_window.py:1061
 msgid "Personal Address Book"
 msgstr "निजी पता पुस्तिका"
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: src/telephony/ui/windows/settings_window.py:1062
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2681,11 +2703,11 @@ msgstr ""
 "एह् पता पुस्तिका ऐ जेह् ड़ी एंड्रोमेडा कन्नै सिंक कीती जाग जेकर तुस सिस्टम सेटिंग्स च एह् करना "
 "चुनदे ओ."
 
-#: src/telephony/ui/windows/settings_window.py:1047
+#: src/telephony/ui/windows/settings_window.py:1070
 msgid "Andromeda Contacts"
 msgstr "एंड्रोमेडा संपर्क"
 
-#: src/telephony/ui/windows/settings_window.py:1048
+#: src/telephony/ui/windows/settings_window.py:1071
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2693,7 +2715,7 @@ msgstr ""
 "एह् पता पुस्तिका ऐ जेह् ड़ी एंड्रोमेडा थमां सिंक कीती जाग जेकर तुस सिस्टम सेटिंग्स च एह् करना "
 "चुनदे ओ."
 
-#: src/telephony/ui/windows/settings_window.py:1183
+#: src/telephony/ui/windows/settings_window.py:1211
 msgid "Settings Saved"
 msgstr "सेटिंग्स सेव कीती गेई"
 

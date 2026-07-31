@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 14:41+0300\n"
+"POT-Creation-Date: 2026-07-31 14:59+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:641 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "ចាប់ផ្តើមដំណើរការសង្គ្រោះបន្ទាន់"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:674
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -131,8 +131,8 @@ msgstr "ចាប់ផ្តើមដំណើរការសង្គ្រោ
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
 #: src/telephony/ui/windows/settings_window.py:459
-#: src/telephony/ui/windows/settings_window.py:929
-#: src/telephony/ui/windows/settings_window.py:959
+#: src/telephony/ui/windows/settings_window.py:951
+#: src/telephony/ui/windows/settings_window.py:981
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -562,11 +562,11 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "បានរកឃើញទំនាក់ទំនងស្ទួន {count} ។ ពិនិត្យម៉ឺនុយ។"
 msgstr[1] "បានរកឃើញទំនាក់ទំនងស្ទួន {count} ។ ពិនិត្យម៉ឺនុយ។"
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:619
 msgid "Contacts syncing..."
 msgstr "កំពុង​ធ្វើ​សមកាលកម្ម​ទំនាក់ទំនង..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:825
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
@@ -576,7 +576,7 @@ msgstr "កំពុង​ធ្វើ​សមកាលកម្ម​ទំន
 #: src/telephony/ui/windows/settings_window.py:445
 #: src/telephony/ui/windows/settings_window.py:496
 #: src/telephony/ui/windows/settings_window.py:634
-#: src/telephony/ui/windows/settings_window.py:992
+#: src/telephony/ui/windows/settings_window.py:1014
 msgid "Close"
 msgstr "បិទ"
 
@@ -584,45 +584,46 @@ msgstr "បិទ"
 msgid "Syncing address books..."
 msgstr "កំពុងធ្វើសមកាលកម្មសៀវភៅអាសយដ្ឋាន..."
 
-#: src/telephony/ui/main_window.py:595
+#: src/telephony/ui/main_window.py:601 src/telephony/ui/main_window.py:606
+#: src/telephony/ui/main_window.py:611
+msgid "Reloading Contacts..."
+msgstr "កំពុងផ្ទុកទំនាក់ទំនងឡើងវិញ..."
+
+#: src/telephony/ui/main_window.py:604
 #, python-brace-format
 msgid "Sync started for {count} address books"
 msgstr "បានចាប់ផ្តើមសមកាលកម្មសម្រាប់សៀវភៅអាសយដ្ឋាន {count}"
 
-#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
-msgid "Reloading Contacts..."
-msgstr "កំពុងផ្ទុកទំនាក់ទំនងឡើងវិញ..."
-
-#: src/telephony/ui/main_window.py:620
+#: src/telephony/ui/main_window.py:629
 msgid "Multiple Contacts Found"
 msgstr "ទំនាក់ទំនង​ច្រើន​ត្រូវ​បាន​រក​ឃើញ"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:630
 msgid "Which contact would you like to edit?"
 msgstr "តើទំនាក់ទំនងមួយណាដែលអ្នកចង់កែសម្រួល?"
 
-#: src/telephony/ui/main_window.py:634
+#: src/telephony/ui/main_window.py:643
 msgid "Unknown Addressbook"
 msgstr "សៀវភៅអាសយដ្ឋានមិនស្គាល់"
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 msgid "Calling (Anonymous)..."
 msgstr "ហៅ (អនាមិក)..."
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "កំពុងហៅទៅ {number}..."
 
-#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
+#: src/telephony/ui/main_window.py:706 src/telephony/ui/main_window.py:712
 msgid "Call Failed"
 msgstr "ការហៅទូរសព្ទបរាជ័យ"
 
-#: src/telephony/ui/main_window.py:709
+#: src/telephony/ui/main_window.py:718
 msgid "Call Details"
 msgstr "ព័ត៌មានលម្អិតអំពីការហៅទូរសព្ទ"
 
-#: src/telephony/ui/main_window.py:710
+#: src/telephony/ui/main_window.py:719
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -635,92 +636,92 @@ msgstr ""
 "កាលបរិច្ឆេទ៖ {date}\n"
 "រយៈពេល៖ {duration}"
 
-#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/main_window.py:735
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "ដោះ​សោ​លេខ"
 
-#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:741 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "មិនបានទប់ស្កាត់"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "កែសម្រួលទំនាក់ទំនង"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "បន្ថែមទៅទំនាក់ទំនង"
 
-#: src/telephony/ui/main_window.py:751
+#: src/telephony/ui/main_window.py:760
 msgid "Add to Existing Contact"
 msgstr "បន្ថែមទៅទំនាក់ទំនងដែលមានស្រាប់"
 
-#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/main_window.py:769
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "លេខស្វែងរក"
 
-#: src/telephony/ui/main_window.py:784
+#: src/telephony/ui/main_window.py:793
 msgid "Send Message"
 msgstr "ផ្ញើសារ"
 
-#: src/telephony/ui/main_window.py:789
+#: src/telephony/ui/main_window.py:798
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "ចម្លងលេខ"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:803
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "លេខប្លុក"
 
-#: src/telephony/ui/main_window.py:807
+#: src/telephony/ui/main_window.py:816
 msgid "Delete this call"
 msgstr "លុបការហៅទូរសព្ទនេះ។"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Delete Call"
 msgstr "លុបការហៅទូរសព្ទ"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Remove this call?"
 msgstr "លុបការហៅទូរសព្ទនេះចេញ?"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:835
 msgid "Number copied"
 msgstr "លេខត្រូវបានចម្លង"
 
-#: src/telephony/ui/main_window.py:832
+#: src/telephony/ui/main_window.py:841
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "កំពុងរក្សាទុកទំនាក់ទំនង..."
 
-#: src/telephony/ui/main_window.py:836
+#: src/telephony/ui/main_window.py:845
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "បានបន្ថែមទៅ {name}"
 
-#: src/telephony/ui/main_window.py:839
+#: src/telephony/ui/main_window.py:848
 msgid "Failed to add number"
 msgstr "បរាជ័យក្នុងការបន្ថែមលេខ"
 
-#: src/telephony/ui/main_window.py:847
+#: src/telephony/ui/main_window.py:856
 #: src/telephony/ui/windows/contact_editor_window.py:205
 #: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "បន្ថែមលេខ"
 
-#: src/telephony/ui/main_window.py:848
+#: src/telephony/ui/main_window.py:857
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
-#: src/telephony/ui/windows/settings_window.py:930
+#: src/telephony/ui/windows/settings_window.py:952
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1032,7 +1033,7 @@ msgstr "សម្គាល់ថាមិនទាន់អាន"
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
 #: src/telephony/ui/windows/settings_window.py:831
-#: src/telephony/ui/windows/settings_window.py:960
+#: src/telephony/ui/windows/settings_window.py:982
 msgid "Delete"
 msgstr "លុប"
 
@@ -1609,7 +1610,7 @@ msgstr "លុបទំនាក់ទំនងទាំងអស់។"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
-#: src/telephony/ui/windows/settings_window.py:957
+#: src/telephony/ui/windows/settings_window.py:979
 msgid "Delete Address Book"
 msgstr "លុបសៀវភៅអាសយដ្ឋាន"
 
@@ -1656,7 +1657,7 @@ msgstr ""
 "វានឹងលុបវាចេញពីប្រព័ន្ធ។"
 
 #: src/telephony/ui/windows/data_management_window.py:154
-#: src/telephony/ui/windows/settings_window.py:958
+#: src/telephony/ui/windows/settings_window.py:980
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "តើអ្នកប្រាកដថាចង់លុបសៀវភៅអាសយដ្ឋាន '{name}' ជាអចិន្ត្រៃយ៍ទេ?"
@@ -1714,12 +1715,12 @@ msgid "Deleting address book..."
 msgstr "កំពុងលុបសៀវភៅអាសយដ្ឋាន..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
-#: src/telephony/ui/windows/settings_window.py:978
+#: src/telephony/ui/windows/settings_window.py:1000
 msgid "Address Book Deleted"
 msgstr "សៀវភៅអាសយដ្ឋានត្រូវបានលុប"
 
 #: src/telephony/ui/windows/data_management_window.py:265
-#: src/telephony/ui/windows/settings_window.py:976
+#: src/telephony/ui/windows/settings_window.py:998
 msgid "Failed to delete Address Book"
 msgstr "បរាជ័យក្នុងការលុបសៀវភៅអាសយដ្ឋាន"
 
@@ -2157,6 +2158,7 @@ msgid "Alerting..."
 msgstr "កំពុងរោទ៍..."
 
 #: src/telephony/ui/windows/incall_window.py:46
+#: src/telephony/ui/windows/settings_window.py:932
 msgid "Disconnected"
 msgstr "បានផ្តាច់"
 
@@ -2390,7 +2392,7 @@ msgid ""
 msgstr "ស្កេនរកលេខស្ទួន និងបង្ហាញផ្ទាំងបដាដំណោះស្រាយក្នុងទិដ្ឋភាពទំនាក់ទំនង។"
 
 #: src/telephony/ui/windows/settings_window.py:203
-#: src/telephony/ui/windows/settings_window.py:926
+#: src/telephony/ui/windows/settings_window.py:948
 msgid "Add Local Address Book"
 msgstr "បន្ថែមសៀវភៅអាសយដ្ឋានមូលដ្ឋាន"
 
@@ -2646,28 +2648,48 @@ msgstr ""
 msgid "Decline Message"
 msgstr "បដិសេធសារ"
 
+#: src/telephony/ui/windows/settings_window.py:925
+msgid "System Default (Always Enabled)"
+msgstr "លំនាំដើមនៃប្រព័ន្ធ (បើកដំណើរការជានិច្ច)"
+
 #: src/telephony/ui/windows/settings_window.py:927
+msgid "Synced from Andromeda"
+msgstr "បានធ្វើសមកាលកម្មពី Andromeda"
+
+#: src/telephony/ui/windows/settings_window.py:930
+msgid "Connected"
+msgstr "បានតភ្ជាប់"
+
+#: src/telephony/ui/windows/settings_window.py:931
+msgid "Connecting..."
+msgstr "កំពុងតភ្ជាប់..."
+
+#: src/telephony/ui/windows/settings_window.py:933
+msgid "Login required"
+msgstr "ត្រូវការចូលគណនី"
+
+#: src/telephony/ui/windows/settings_window.py:934
+msgid "Connection failed (SSL)"
+msgstr "ការតភ្ជាប់បរាជ័យ (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:949
 msgid "Address book name"
 msgstr "ឈ្មោះសៀវភៅអាសយដ្ឋាន"
 
-#: src/telephony/ui/windows/settings_window.py:948
+#: src/telephony/ui/windows/settings_window.py:970
 msgid "Could not create address book"
 msgstr "មិនអាចបង្កើតសៀវភៅអាសយដ្ឋានបានទេ"
 
-#: src/telephony/ui/windows/settings_window.py:950
+#: src/telephony/ui/windows/settings_window.py:972
 #, python-brace-format
 msgid "Address book '{name}' created"
 msgstr "បានបង្កើតសៀវភៅអាសយដ្ឋាន '{name}'"
 
-#: src/telephony/ui/windows/settings_window.py:1027
-msgid "System Default (Always Enabled)"
-msgstr "លំនាំដើមនៃប្រព័ន្ធ (បើកដំណើរការជានិច្ច)"
-
-#: src/telephony/ui/windows/settings_window.py:1038
+#: src/telephony/ui/windows/settings_window.py:1061
 msgid "Personal Address Book"
 msgstr "សៀវភៅអាសយដ្ឋានផ្ទាល់ខ្លួន"
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: src/telephony/ui/windows/settings_window.py:1062
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2675,11 +2697,11 @@ msgstr ""
 "នេះគឺជាសៀវភៅអាសយដ្ឋានដែលនឹងត្រូវបានធ្វើសមកាលកម្មទៅ Andromeda "
 "ប្រសិនបើអ្នកជ្រើសរើសធ្វើដូច្នេះនៅក្នុងការកំណត់ប្រព័ន្ធ។"
 
-#: src/telephony/ui/windows/settings_window.py:1047
+#: src/telephony/ui/windows/settings_window.py:1070
 msgid "Andromeda Contacts"
 msgstr "ទំនាក់ទំនង Andromeda"
 
-#: src/telephony/ui/windows/settings_window.py:1048
+#: src/telephony/ui/windows/settings_window.py:1071
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2687,7 +2709,7 @@ msgstr ""
 "នេះគឺជាសៀវភៅអាសយដ្ឋានដែលនឹងត្រូវបានធ្វើសមកាលកម្មពី Andromeda "
 "ប្រសិនបើអ្នកជ្រើសរើសធ្វើដូច្នេះនៅក្នុងការកំណត់ប្រព័ន្ធ។"
 
-#: src/telephony/ui/windows/settings_window.py:1183
+#: src/telephony/ui/windows/settings_window.py:1211
 msgid "Settings Saved"
 msgstr "បានរក្សាទុកការកំណត់"
 

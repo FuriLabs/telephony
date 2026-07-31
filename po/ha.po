@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 14:41+0300\n"
+"POT-Creation-Date: 2026-07-31 14:59+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:641 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "Fara Tsarin Gaggawa"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:674
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -131,8 +131,8 @@ msgstr "Fara Tsarin Gaggawa"
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
 #: src/telephony/ui/windows/settings_window.py:459
-#: src/telephony/ui/windows/settings_window.py:929
-#: src/telephony/ui/windows/settings_window.py:959
+#: src/telephony/ui/windows/settings_window.py:951
+#: src/telephony/ui/windows/settings_window.py:981
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -562,11 +562,11 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "An sami lambar kwafin {count}. Duba menu."
 msgstr[1] "An sami lambar kwafin {count}. Duba menu."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:619
 msgid "Contacts syncing..."
 msgstr "Ana daidaita lambobin sadarwa..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:825
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
@@ -576,7 +576,7 @@ msgstr "Ana daidaita lambobin sadarwa..."
 #: src/telephony/ui/windows/settings_window.py:445
 #: src/telephony/ui/windows/settings_window.py:496
 #: src/telephony/ui/windows/settings_window.py:634
-#: src/telephony/ui/windows/settings_window.py:992
+#: src/telephony/ui/windows/settings_window.py:1014
 msgid "Close"
 msgstr "Kusa"
 
@@ -584,45 +584,46 @@ msgstr "Kusa"
 msgid "Syncing address books..."
 msgstr "Ana daidaita littattafan adireshi..."
 
-#: src/telephony/ui/main_window.py:595
+#: src/telephony/ui/main_window.py:601 src/telephony/ui/main_window.py:606
+#: src/telephony/ui/main_window.py:611
+msgid "Reloading Contacts..."
+msgstr "Ana sake lodin Lambobin..."
+
+#: src/telephony/ui/main_window.py:604
 #, python-brace-format
 msgid "Sync started for {count} address books"
 msgstr "An fara daidaitawa don littattafan adireshi {count}"
 
-#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
-msgid "Reloading Contacts..."
-msgstr "Ana sake lodin Lambobin..."
-
-#: src/telephony/ui/main_window.py:620
+#: src/telephony/ui/main_window.py:629
 msgid "Multiple Contacts Found"
 msgstr "An Samu Lambobi da yawa"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:630
 msgid "Which contact would you like to edit?"
 msgstr "Wace lamba kuke son gyarawa?"
 
-#: src/telephony/ui/main_window.py:634
+#: src/telephony/ui/main_window.py:643
 msgid "Unknown Addressbook"
 msgstr "Littafin adireshi wanda ba a sani ba"
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 msgid "Calling (Anonymous)..."
 msgstr "Kira (Anonymous)..."
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "Ana kira {number}..."
 
-#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
+#: src/telephony/ui/main_window.py:706 src/telephony/ui/main_window.py:712
 msgid "Call Failed"
 msgstr "Kiran ya gaza"
 
-#: src/telephony/ui/main_window.py:709
+#: src/telephony/ui/main_window.py:718
 msgid "Call Details"
 msgstr "Cikakken Bayani"
 
-#: src/telephony/ui/main_window.py:710
+#: src/telephony/ui/main_window.py:719
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -635,92 +636,92 @@ msgstr ""
 "Kwanan wata: {date}\n"
 "Tsawon lokaci: {duration}"
 
-#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/main_window.py:735
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "Cire Lambar"
 
-#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:741 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "An cire katanga"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "Gyara Tuntuɓi"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "Ƙara zuwa Lambobin sadarwa"
 
-#: src/telephony/ui/main_window.py:751
+#: src/telephony/ui/main_window.py:760
 msgid "Add to Existing Contact"
 msgstr "Ƙara zuwa Lambobin sadarwa na yanzu"
 
-#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/main_window.py:769
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "Lambar Nema"
 
-#: src/telephony/ui/main_window.py:784
+#: src/telephony/ui/main_window.py:793
 msgid "Send Message"
 msgstr "Aika Saƙo"
 
-#: src/telephony/ui/main_window.py:789
+#: src/telephony/ui/main_window.py:798
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "Kwafi Lambar"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:803
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "Toshe Number"
 
-#: src/telephony/ui/main_window.py:807
+#: src/telephony/ui/main_window.py:816
 msgid "Delete this call"
 msgstr "Share wannan kiran"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Delete Call"
 msgstr "Share Kira"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Remove this call?"
 msgstr "Cire wannan kiran?"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:835
 msgid "Number copied"
 msgstr "An kwafi lamba"
 
-#: src/telephony/ui/main_window.py:832
+#: src/telephony/ui/main_window.py:841
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "Ana ajiye lamba..."
 
-#: src/telephony/ui/main_window.py:836
+#: src/telephony/ui/main_window.py:845
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "Ƙara zuwa {name}"
 
-#: src/telephony/ui/main_window.py:839
+#: src/telephony/ui/main_window.py:848
 msgid "Failed to add number"
 msgstr "An kasa ƙara lamba"
 
-#: src/telephony/ui/main_window.py:847
+#: src/telephony/ui/main_window.py:856
 #: src/telephony/ui/windows/contact_editor_window.py:205
 #: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "Ƙara Lamba"
 
-#: src/telephony/ui/main_window.py:848
+#: src/telephony/ui/main_window.py:857
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
-#: src/telephony/ui/windows/settings_window.py:930
+#: src/telephony/ui/windows/settings_window.py:952
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1034,7 +1035,7 @@ msgstr "Alama a matsayin Ba a karanta ba"
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
 #: src/telephony/ui/windows/settings_window.py:831
-#: src/telephony/ui/windows/settings_window.py:960
+#: src/telephony/ui/windows/settings_window.py:982
 msgid "Delete"
 msgstr "Share"
 
@@ -1611,7 +1612,7 @@ msgstr "Share Duk Lambobin sadarwa"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
-#: src/telephony/ui/windows/settings_window.py:957
+#: src/telephony/ui/windows/settings_window.py:979
 msgid "Delete Address Book"
 msgstr "Share Littafin adireshi"
 
@@ -1658,7 +1659,7 @@ msgstr ""
 "Wannan zai shafe shi daga tsarin."
 
 #: src/telephony/ui/windows/data_management_window.py:154
-#: src/telephony/ui/windows/settings_window.py:958
+#: src/telephony/ui/windows/settings_window.py:980
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Shin kun tabbata kuna son share littafin adireshi '{name}' dindindin?"
@@ -1717,12 +1718,12 @@ msgid "Deleting address book..."
 msgstr "Ana share littafin adireshi..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
-#: src/telephony/ui/windows/settings_window.py:978
+#: src/telephony/ui/windows/settings_window.py:1000
 msgid "Address Book Deleted"
 msgstr "An goge littafin adireshi"
 
 #: src/telephony/ui/windows/data_management_window.py:265
-#: src/telephony/ui/windows/settings_window.py:976
+#: src/telephony/ui/windows/settings_window.py:998
 msgid "Failed to delete Address Book"
 msgstr "An kasa share littafin adireshi"
 
@@ -2162,6 +2163,7 @@ msgid "Alerting..."
 msgstr "Yana ƙara..."
 
 #: src/telephony/ui/windows/incall_window.py:46
+#: src/telephony/ui/windows/settings_window.py:932
 msgid "Disconnected"
 msgstr "An yanke"
 
@@ -2398,7 +2400,7 @@ msgstr ""
 "Bincika don kwafin lambobin kuma nuna banner ƙuduri a cikin duba Lambobi."
 
 #: src/telephony/ui/windows/settings_window.py:203
-#: src/telephony/ui/windows/settings_window.py:926
+#: src/telephony/ui/windows/settings_window.py:948
 msgid "Add Local Address Book"
 msgstr "Ƙara Littafin Adireshi na Gida"
 
@@ -2662,28 +2664,48 @@ msgstr ""
 msgid "Decline Message"
 msgstr "Karɓi Saƙo"
 
+#: src/telephony/ui/windows/settings_window.py:925
+msgid "System Default (Always Enabled)"
+msgstr "Tsoffin Tsarin (Ana Kunna Koyaushe)"
+
 #: src/telephony/ui/windows/settings_window.py:927
+msgid "Synced from Andromeda"
+msgstr "An daidaita daga Andromeda"
+
+#: src/telephony/ui/windows/settings_window.py:930
+msgid "Connected"
+msgstr "An haɗa"
+
+#: src/telephony/ui/windows/settings_window.py:931
+msgid "Connecting..."
+msgstr "Ana haɗawa..."
+
+#: src/telephony/ui/windows/settings_window.py:933
+msgid "Login required"
+msgstr "Ana buƙatar shiga"
+
+#: src/telephony/ui/windows/settings_window.py:934
+msgid "Connection failed (SSL)"
+msgstr "Haɗin ya kasa (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:949
 msgid "Address book name"
 msgstr "Sunan littafin adireshi"
 
-#: src/telephony/ui/windows/settings_window.py:948
+#: src/telephony/ui/windows/settings_window.py:970
 msgid "Could not create address book"
 msgstr "An kasa ƙirƙirar littafin adireshi"
 
-#: src/telephony/ui/windows/settings_window.py:950
+#: src/telephony/ui/windows/settings_window.py:972
 #, python-brace-format
 msgid "Address book '{name}' created"
 msgstr "An ƙirƙiri littafin adireshi '{name}'"
 
-#: src/telephony/ui/windows/settings_window.py:1027
-msgid "System Default (Always Enabled)"
-msgstr "Tsoffin Tsarin (Ana Kunna Koyaushe)"
-
-#: src/telephony/ui/windows/settings_window.py:1038
+#: src/telephony/ui/windows/settings_window.py:1061
 msgid "Personal Address Book"
 msgstr "Littafin adireshi na sirri"
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: src/telephony/ui/windows/settings_window.py:1062
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2691,11 +2713,11 @@ msgstr ""
 "Wannan shine littafin adireshi wanda za'a daidaita shi zuwa Andromeda idan "
 "kun zaɓi yin haka a cikin Saitunan Tsari."
 
-#: src/telephony/ui/windows/settings_window.py:1047
+#: src/telephony/ui/windows/settings_window.py:1070
 msgid "Andromeda Contacts"
 msgstr "Andromeda Lambobin sadarwa"
 
-#: src/telephony/ui/windows/settings_window.py:1048
+#: src/telephony/ui/windows/settings_window.py:1071
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2703,7 +2725,7 @@ msgstr ""
 "Wannan shine littafin adireshi wanda za'a daidaita shi daga Andromeda idan "
 "kun zaɓi yin haka a cikin Saitunan Tsari."
 
-#: src/telephony/ui/windows/settings_window.py:1183
+#: src/telephony/ui/windows/settings_window.py:1211
 msgid "Settings Saved"
 msgstr "An Ajiye Saituna"
 

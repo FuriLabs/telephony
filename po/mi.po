@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: furios-app-telephony 1.00\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 14:41+0300\n"
+"POT-Creation-Date: 2026-07-31 14:59+0300\n"
 "PO-Revision-Date: 2026-01-27 12:00+0000\n"
 "Last-Translator: Telephony\n"
 "Language-Team: Telephony\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: src/telephony/backend/managers/lockscreen_manager.py:144
 #: src/telephony/backend/managers/lockscreen_manager.py:370
 #: src/telephony/backend/utils/db_blocklist_utils.py:52
-#: src/telephony/ui/main_window.py:632 src/telephony/ui/views/chat_view.py:89
+#: src/telephony/ui/main_window.py:641 src/telephony/ui/views/chat_view.py:89
 #: src/telephony/ui/views/chat_view.py:94
 #: src/telephony/ui/views/chat_view.py:147
 #: src/telephony/ui/views/chat_view.py:157
@@ -102,7 +102,7 @@ msgid "Start Emergency Process"
 msgstr "Tīmatahia te Tukanga Ohotata"
 
 #: src/telephony/backend/managers/emergency_manager.py:136
-#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:665
+#: src/telephony/ui/main_window.py:483 src/telephony/ui/main_window.py:674
 #: src/telephony/ui/views/history_view.py:82
 #: src/telephony/ui/views/messages_view.py:125
 #: src/telephony/ui/windows/advanced_settings_window.py:50
@@ -131,8 +131,8 @@ msgstr "Tīmatahia te Tukanga Ohotata"
 #: src/telephony/ui/windows/import_wizard_window.py:48
 #: src/telephony/ui/windows/settings_window.py:69
 #: src/telephony/ui/windows/settings_window.py:459
-#: src/telephony/ui/windows/settings_window.py:929
-#: src/telephony/ui/windows/settings_window.py:959
+#: src/telephony/ui/windows/settings_window.py:951
+#: src/telephony/ui/windows/settings_window.py:981
 #: src/telephony/ui/windows/sound_recorder_window.py:99
 #: src/telephony/ui/windows/trusted_actions_list_window.py:124
 #: src/telephony/ui/windows/trusted_actions_list_window.py:535
@@ -562,11 +562,11 @@ msgid_plural "Found {count} duplicate contacts. Check menu."
 msgstr[0] "I kitea te {count} te whakapiri takirua. Takina tahua."
 msgstr[1] "I kitea te {count} te whakapiri takirua. Takina tahua."
 
-#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:610
+#: src/telephony/ui/main_window.py:545 src/telephony/ui/main_window.py:619
 msgid "Contacts syncing..."
 msgstr "Hoapā tukutahi..."
 
-#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:816
+#: src/telephony/ui/main_window.py:565 src/telephony/ui/main_window.py:825
 #: src/telephony/ui/windows/chat_media_controller_window.py:150
 #: src/telephony/ui/windows/contact_editor_window.py:123
 #: src/telephony/ui/windows/data_management_window.py:65
@@ -576,7 +576,7 @@ msgstr "Hoapā tukutahi..."
 #: src/telephony/ui/windows/settings_window.py:445
 #: src/telephony/ui/windows/settings_window.py:496
 #: src/telephony/ui/windows/settings_window.py:634
-#: src/telephony/ui/windows/settings_window.py:992
+#: src/telephony/ui/windows/settings_window.py:1014
 msgid "Close"
 msgstr "Katia"
 
@@ -584,45 +584,46 @@ msgstr "Katia"
 msgid "Syncing address books..."
 msgstr "Tukutahi ana i ngā pukapuka wāhitau..."
 
-#: src/telephony/ui/main_window.py:595
+#: src/telephony/ui/main_window.py:601 src/telephony/ui/main_window.py:606
+#: src/telephony/ui/main_window.py:611
+msgid "Reloading Contacts..."
+msgstr "Kei te Uta Anō Hoapā..."
+
+#: src/telephony/ui/main_window.py:604
 #, python-brace-format
 msgid "Sync started for {count} address books"
 msgstr "Kua tīmata te tukutahi mō ngā pukapuka wāhitau {count}"
 
-#: src/telephony/ui/main_window.py:597 src/telephony/ui/main_window.py:602
-msgid "Reloading Contacts..."
-msgstr "Kei te Uta Anō Hoapā..."
-
-#: src/telephony/ui/main_window.py:620
+#: src/telephony/ui/main_window.py:629
 msgid "Multiple Contacts Found"
 msgstr "He maha nga hoapā i kitea"
 
-#: src/telephony/ui/main_window.py:621
+#: src/telephony/ui/main_window.py:630
 msgid "Which contact would you like to edit?"
 msgstr "Ko tēhea hoapā ka hiahia koe ki te whakatika?"
 
-#: src/telephony/ui/main_window.py:634
+#: src/telephony/ui/main_window.py:643
 msgid "Unknown Addressbook"
 msgstr "Puka Wāhitau Tē Mōhiotia"
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 msgid "Calling (Anonymous)..."
 msgstr "Waea ana (Kore ingoa)..."
 
-#: src/telephony/ui/main_window.py:693
+#: src/telephony/ui/main_window.py:702
 #, python-brace-format
 msgid "Calling {number}..."
 msgstr "Waea ana {number}..."
 
-#: src/telephony/ui/main_window.py:697 src/telephony/ui/main_window.py:703
+#: src/telephony/ui/main_window.py:706 src/telephony/ui/main_window.py:712
 msgid "Call Failed"
 msgstr "I Rahua te Waea"
 
-#: src/telephony/ui/main_window.py:709
+#: src/telephony/ui/main_window.py:718
 msgid "Call Details"
 msgstr "Nga Taipitopito Waea"
 
-#: src/telephony/ui/main_window.py:710
+#: src/telephony/ui/main_window.py:719
 #, python-brace-format
 msgid ""
 "Number: {number}\n"
@@ -635,92 +636,92 @@ msgstr ""
 "Rā: {date}\n"
 "Roa: {duration}"
 
-#: src/telephony/ui/main_window.py:726
+#: src/telephony/ui/main_window.py:735
 #: src/telephony/ui/windows/blocklist_window.py:161
 msgid "Unblock Number"
 msgstr "Wewete Tau"
 
-#: src/telephony/ui/main_window.py:732 src/telephony/ui/views/chat_view.py:783
+#: src/telephony/ui/main_window.py:741 src/telephony/ui/views/chat_view.py:783
 msgid "Unblocked"
 msgstr "Kua wetekina"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/windows/contact_editor_window.py:416
 msgid "Edit Contact"
 msgstr "Whakatika Hoapā"
 
-#: src/telephony/ui/main_window.py:740
+#: src/telephony/ui/main_window.py:749
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:147
 msgid "Add to Contacts"
 msgstr "Tāpiri ki Hoapā"
 
-#: src/telephony/ui/main_window.py:751
+#: src/telephony/ui/main_window.py:760
 msgid "Add to Existing Contact"
 msgstr "Tāpiri ki te Hoapā Tīariari"
 
-#: src/telephony/ui/main_window.py:760
+#: src/telephony/ui/main_window.py:769
 #: src/telephony/ui/windows/incall_window.py:217
 msgid "Search Number"
 msgstr "Tau Rapu"
 
-#: src/telephony/ui/main_window.py:784
+#: src/telephony/ui/main_window.py:793
 msgid "Send Message"
 msgstr "Tuku Karere"
 
-#: src/telephony/ui/main_window.py:789
+#: src/telephony/ui/main_window.py:798
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:146
 msgid "Copy Number"
 msgstr "Tau Tārua"
 
-#: src/telephony/ui/main_window.py:794
+#: src/telephony/ui/main_window.py:803
 #: src/telephony/ui/windows/blocklist_editor_window.py:29
 msgid "Block Number"
 msgstr "Tau Poraka"
 
-#: src/telephony/ui/main_window.py:807
+#: src/telephony/ui/main_window.py:816
 msgid "Delete this call"
 msgstr "Mukua tenei waea"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Delete Call"
 msgstr "Muku Waea"
 
-#: src/telephony/ui/main_window.py:812
+#: src/telephony/ui/main_window.py:821
 msgid "Remove this call?"
 msgstr "Tangohia tenei waea?"
 
-#: src/telephony/ui/main_window.py:826
+#: src/telephony/ui/main_window.py:835
 msgid "Number copied"
 msgstr "Kua kapehia te nama"
 
-#: src/telephony/ui/main_window.py:832
+#: src/telephony/ui/main_window.py:841
 #: src/telephony/ui/windows/contact_editor_window.py:807
 msgid "Saving contact..."
 msgstr "Tiaki hoapā..."
 
-#: src/telephony/ui/main_window.py:836
+#: src/telephony/ui/main_window.py:845
 #, python-brace-format
 msgid "Added to {name}"
 msgstr "Kua taapirihia ki {name}"
 
-#: src/telephony/ui/main_window.py:839
+#: src/telephony/ui/main_window.py:848
 msgid "Failed to add number"
 msgstr "I rahua te taapiri tau"
 
-#: src/telephony/ui/main_window.py:847
+#: src/telephony/ui/main_window.py:856
 #: src/telephony/ui/windows/contact_editor_window.py:205
 #: src/telephony/ui/windows/settings_window.py:228
 msgid "Add Number"
 msgstr "Tāpiri Tau"
 
-#: src/telephony/ui/main_window.py:848
+#: src/telephony/ui/main_window.py:857
 #: src/telephony/ui/windows/advanced_settings_window.py:54
 #: src/telephony/ui/windows/blocklist_editor_window.py:46
 #: src/telephony/ui/windows/contact_editor_window.py:148
 #: src/telephony/ui/windows/custom_tone_list_window.py:62
 #: src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:58
 #: src/telephony/ui/windows/settings_window.py:74
-#: src/telephony/ui/windows/settings_window.py:930
+#: src/telephony/ui/windows/settings_window.py:952
 #: src/telephony/ui/windows/trusted_actions_list_window.py:129
 #: src/telephony/ui/windows/trusted_actions_list_window.py:539
 msgid "Save"
@@ -1032,7 +1033,7 @@ msgstr "Tohua kaore ano kia panuitia"
 #: src/telephony/ui/widgets/chat_bubbles_widget.py:151
 #: src/telephony/ui/windows/data_management_window.py:77
 #: src/telephony/ui/windows/settings_window.py:831
-#: src/telephony/ui/windows/settings_window.py:960
+#: src/telephony/ui/windows/settings_window.py:982
 msgid "Delete"
 msgstr "Mukua"
 
@@ -1610,7 +1611,7 @@ msgstr "Muku Hoapā Katoa"
 #: src/telephony/ui/windows/data_management_window.py:52
 #: src/telephony/ui/windows/data_management_window.py:130
 #: src/telephony/ui/windows/data_management_window.py:153
-#: src/telephony/ui/windows/settings_window.py:957
+#: src/telephony/ui/windows/settings_window.py:979
 msgid "Delete Address Book"
 msgstr "Muku Puka Wāhitau"
 
@@ -1657,7 +1658,7 @@ msgstr ""
 "Ma tenei ka muru i te punaha."
 
 #: src/telephony/ui/windows/data_management_window.py:154
-#: src/telephony/ui/windows/settings_window.py:958
+#: src/telephony/ui/windows/settings_window.py:980
 #, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Me muku tonu te pukapuka wāhitau '{name}'?"
@@ -1717,12 +1718,12 @@ msgid "Deleting address book..."
 msgstr "Muku pukapuka wāhitau..."
 
 #: src/telephony/ui/windows/data_management_window.py:263
-#: src/telephony/ui/windows/settings_window.py:978
+#: src/telephony/ui/windows/settings_window.py:1000
 msgid "Address Book Deleted"
 msgstr "Puka Wāhitau Kua Mukua"
 
 #: src/telephony/ui/windows/data_management_window.py:265
-#: src/telephony/ui/windows/settings_window.py:976
+#: src/telephony/ui/windows/settings_window.py:998
 msgid "Failed to delete Address Book"
 msgstr "I rahua te muku i te Puka Wāhitau"
 
@@ -2162,6 +2163,7 @@ msgid "Alerting..."
 msgstr "E Tangi Ana..."
 
 #: src/telephony/ui/windows/incall_window.py:46
+#: src/telephony/ui/windows/settings_window.py:932
 msgid "Disconnected"
 msgstr "Kua Motu"
 
@@ -2397,7 +2399,7 @@ msgstr ""
 "tirohanga Hoapā."
 
 #: src/telephony/ui/windows/settings_window.py:203
-#: src/telephony/ui/windows/settings_window.py:926
+#: src/telephony/ui/windows/settings_window.py:948
 msgid "Add Local Address Book"
 msgstr "Tāpiri Pukapuka Wāhitau ā-Rohe"
 
@@ -2667,28 +2669,48 @@ msgstr ""
 msgid "Decline Message"
 msgstr "Whakakorea te Karere"
 
+#: src/telephony/ui/windows/settings_window.py:925
+msgid "System Default (Always Enabled)"
+msgstr "Pūnaha Taunoa (Whakahohenga Tonu)"
+
 #: src/telephony/ui/windows/settings_window.py:927
+msgid "Synced from Andromeda"
+msgstr "Kua tukutahitia mai i a Andromeda"
+
+#: src/telephony/ui/windows/settings_window.py:930
+msgid "Connected"
+msgstr "Kua Hono"
+
+#: src/telephony/ui/windows/settings_window.py:931
+msgid "Connecting..."
+msgstr "E hono ana..."
+
+#: src/telephony/ui/windows/settings_window.py:933
+msgid "Login required"
+msgstr "Me takiuru"
+
+#: src/telephony/ui/windows/settings_window.py:934
+msgid "Connection failed (SSL)"
+msgstr "I rahua te hononga (SSL)"
+
+#: src/telephony/ui/windows/settings_window.py:949
 msgid "Address book name"
 msgstr "Ingoa pukapuka wāhitau"
 
-#: src/telephony/ui/windows/settings_window.py:948
+#: src/telephony/ui/windows/settings_window.py:970
 msgid "Could not create address book"
 msgstr "Kāore i taea te waihanga pukapuka wāhitau"
 
-#: src/telephony/ui/windows/settings_window.py:950
+#: src/telephony/ui/windows/settings_window.py:972
 #, python-brace-format
 msgid "Address book '{name}' created"
 msgstr "Kua waihangatia te pukapuka wāhitau '{name}'"
 
-#: src/telephony/ui/windows/settings_window.py:1027
-msgid "System Default (Always Enabled)"
-msgstr "Pūnaha Taunoa (Whakahohenga Tonu)"
-
-#: src/telephony/ui/windows/settings_window.py:1038
+#: src/telephony/ui/windows/settings_window.py:1061
 msgid "Personal Address Book"
 msgstr "Puka Wāhitau Whaiaro"
 
-#: src/telephony/ui/windows/settings_window.py:1039
+#: src/telephony/ui/windows/settings_window.py:1062
 msgid ""
 "This is the address book that will be synced to Andromeda if you choose to "
 "do so in System Settings."
@@ -2696,11 +2718,11 @@ msgstr ""
 "Koinei te pukapuka wahitau ka tukutahia ki a Andromeda mena ka whiriwhiri "
 "koe ki te mahi i roto i nga Tautuhinga Pūnaha."
 
-#: src/telephony/ui/windows/settings_window.py:1047
+#: src/telephony/ui/windows/settings_window.py:1070
 msgid "Andromeda Contacts"
 msgstr "Hoapā Andromeda"
 
-#: src/telephony/ui/windows/settings_window.py:1048
+#: src/telephony/ui/windows/settings_window.py:1071
 msgid ""
 "This is the address book that will be synced from Andromeda if you choose to "
 "do so in System Settings."
@@ -2708,7 +2730,7 @@ msgstr ""
 "Ko te pukapuka wahitau tenei ka tukutahia mai i Andromeda ki te whiriwhiri "
 "koe ki te mahi i roto i nga Tautuhinga Pūnaha."
 
-#: src/telephony/ui/windows/settings_window.py:1183
+#: src/telephony/ui/windows/settings_window.py:1211
 msgid "Settings Saved"
 msgstr "Tautuhinga Kua Tiaki"
 
