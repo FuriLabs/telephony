@@ -136,6 +136,8 @@ class App(Adw.Application):
 
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
+        self._voicemail_notified = False
+        self._voicemail_body = None
         self.gsettings_mgr = GSettingsManager()
         self.eds = EdsManager()
         self.db = DatabaseManager(self.eds, self.gsettings_mgr)
@@ -160,6 +162,7 @@ class App(Adw.Application):
         self.ofono.connect('incoming-message', self.on_incoming_message)
         self.ofono.connect('call-missed', self.on_call_missed)
         self.ofono.connect('notification-cleared', self.on_notification_cleared)
+        self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
 
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
         self.scheduler.start()
@@ -568,6 +571,43 @@ class App(Adw.Application):
             actions=actions,
             priority=2
         )
+
+    def on_voicemail_changed(self, _ofono_obj, waiting, count, count_known, number):
+        """Announce waiting voicemail, and withdraw the notice once retrieved."""
+        if not waiting:
+            if self._voicemail_notified:
+                self.notification_manager.close_notification("voicemail")
+                self._voicemail_notified = False
+                self._voicemail_body = None
+            return
+
+        # The count is usually unknown: the indication commonly carries none at
+        # all, so say that something is waiting rather than invent a number.
+        if count_known and count > 0:
+            body = ngettext("{count} new message", "{count} new messages", count).format(count=count)
+        else:
+            body = _("You have new voicemail")
+
+        # ofono delivers the mailbox number a moment after the flag itself, so
+        # re-posting on every property change would alert twice for one message.
+        if self._voicemail_notified and body == self._voicemail_body:
+            return
+
+        actions = {}
+        if number:
+            actions["default"] = f"app.dial-number('{number}')"
+            actions[f"app.dial-number('{number}')"] = _("Call Voicemail")
+
+        self.notification_manager.send_notification(
+            id_key="voicemail",
+            title=_("Voicemail"),
+            body=body,
+            app_id_hint="io.furios.Telephony.Calls",
+            actions=actions,
+            priority=1
+        )
+        self._voicemail_notified = True
+        self._voicemail_body = body
 
     def broadcast_notification(self, number, body, lookup_number=None):
         """Broadcast a message notification."""

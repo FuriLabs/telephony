@@ -37,10 +37,17 @@ from .relay_manager import RelayManager
 REPEATED_CALL_WINDOW_SECONDS = 300
 REPEATED_CALL_THRESHOLD = 3
 
+# ofono publishes MessageWaiting before it has read the SIM's message-waiting
+# state, briefly reporting False and correcting itself a fraction of a second
+# later (~320ms measured at boot on an FLX1s). Reporting that first False looks
+# like the indication clearing, so let a negative first reading settle before
+# believing it. A positive one needs no wait; ofono does not invent those.
+VOICEMAIL_SETTLE_SECONDS = 3
+
 
 class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, OfonoTrustedActionsManager):
     """
-    Manages voice calls, SMS, and USSD via ofono.
+    Manages voice calls, SMS, USSD, and voicemail indication via ofono.
     """
     __gsignals__ = {
         'incoming-message': (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
@@ -52,6 +59,7 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         'call-missed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'notification-cleared': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'voicemail-changed': (GObject.SignalFlags.RUN_FIRST, None, (bool, int, bool, str)),
     }
 
     def __init__(self, db_manager, gsettings_mgr=None):
@@ -64,12 +72,16 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
         self.msg_proxy = None
         self.ussd_proxy = None
         self.vol_proxy = None
+        self.mwi_proxy = None
         self.modem_path = None
         self.bus = None
 
         self.voice_handler_id = None
         self.msg_handler_id = None
         self.ussd_handler_id = None
+        self.mwi_handler_id = None
+
+        self.voicemail = {"waiting": False, "count": None, "number": None}
 
         self.active_calls = {}
         self.active_chat_number = None
@@ -155,10 +167,16 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
                 self.ussd_proxy.disconnect(self.ussd_handler_id)
             except Exception as e:
                 logger.warning(f"[OfonoManager] USSD disconnect warning: {e}")
+        if self.mwi_proxy and self.mwi_handler_id:
+            try:
+                self.mwi_proxy.disconnect(self.mwi_handler_id)
+            except Exception as e:
+                logger.warning(f"[OfonoManager] Voicemail disconnect warning: {e}")
 
         self.voice_handler_id = None
         self.msg_handler_id = None
         self.ussd_handler_id = None
+        self.mwi_handler_id = None
 
         if self.voice_proxy:
             self.voice_proxy.run_dispose()
@@ -168,11 +186,19 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
             self.ussd_proxy.run_dispose()
         if self.vol_proxy:
             self.vol_proxy.run_dispose()
+        if self.mwi_proxy:
+            self.mwi_proxy.run_dispose()
 
         self.voice_proxy = None
         self.msg_proxy = None
         self.ussd_proxy = None
         self.vol_proxy = None
+        self.mwi_proxy = None
+
+        # Note: self.voicemail is deliberately left as-is. Losing the modem
+        # means we can no longer see the indication, which is not the same as
+        # the indication having cleared -- resetting it here would look like
+        # the voicemail went away and, on reconnect, like a new one arrived.
 
     def _on_modem_ready(self, monitor, path):
         """Handle modem ready event."""
@@ -195,6 +221,14 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
 
         self.vol_proxy = self._get_proxy("org.ofono.CallVolume")
+
+        # MessageWaiting only joins Modem.Interfaces once the SIM is ready, so
+        # it can legitimately be absent here; the modem-ready cycle brings it
+        # back when the SIM appears.
+        self.mwi_proxy = self._get_proxy("org.ofono.MessageWaiting")
+        if self.mwi_proxy:
+            self.mwi_handler_id = self.mwi_proxy.connect("g-signal", self.on_voicemail_signal)
+            self.sync_voicemail()
 
         if self._sms_state_sub is None and self.bus:
             self._sms_state_sub = self.bus.signal_subscribe(
@@ -344,6 +378,95 @@ class OfonoManager(GObject.Object, OfonoCallsManager, OfonoMessagingManager, Ofo
 
         if status == "missed":
             self.emit('call-missed', num)
+
+    def sync_voicemail(self):
+        """Read the message-waiting state once the proxy is up.
+
+        Reading at startup rather than waiting for a signal is what makes an
+        indication that predates the app visible at all: voicemail that arrived
+        while it was closed, or before a reboot, produces nothing to catch.
+        """
+        props = self._read_voicemail_props()
+        if props is None:
+            return
+
+        if not props.get("VoicemailWaiting", False):
+            GLib.timeout_add_seconds(VOICEMAIL_SETTLE_SECONDS, self._settle_voicemail)
+            return
+
+        self._apply_voicemail(props)
+
+    def _settle_voicemail(self):
+        """Re-read after a negative first reading, then trust the result."""
+        props = self._read_voicemail_props()
+        if props is not None:
+            self._apply_voicemail(props)
+        return False
+
+    def _read_voicemail_props(self):
+        """Fetch MessageWaiting properties, or None when unavailable."""
+        if not self.mwi_proxy:
+            return None
+        try:
+            ret = self.mwi_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
+            return ret.unpack()[0]
+        except Exception as e:
+            logger.error(f"[OfonoManager] Voicemail read failed: {e}")
+            return None
+
+    def on_voicemail_signal(self, proxy, sender, signal, params):
+        """Handle PropertyChanged from org.ofono.MessageWaiting."""
+        if signal != "PropertyChanged":
+            return
+
+        try:
+            name, value = params.unpack()
+        except Exception as e:
+            logger.debug(f"[OfonoManager] Voicemail unpack failed: {e}")
+            return
+
+        if name == "VoicemailWaiting":
+            self.voicemail["waiting"] = bool(value)
+        elif name == "VoicemailMessageCount":
+            self.voicemail["count"] = self._voicemail_count(value)
+        elif name == "VoicemailMailboxNumber":
+            self.voicemail["number"] = value or None
+        else:
+            return
+
+        self._emit_voicemail()
+
+    def _apply_voicemail(self, props):
+        """Fold a full property read into the cached state and publish it."""
+        self.voicemail = {
+            "waiting": bool(props.get("VoicemailWaiting", False)),
+            "count": self._voicemail_count(props.get("VoicemailMessageCount", 0)),
+            "number": props.get("VoicemailMailboxNumber") or None,
+        }
+        self._emit_voicemail()
+
+    def _voicemail_count(self, value):
+        """Normalise the message count, treating zero as unknown.
+
+        A zero count alongside a set indication means "something is waiting",
+        not "no messages" -- the indication commonly carries no count at all.
+        Collapsing it to None keeps the UI from claiming zero new messages
+        while messages are in fact waiting.
+        """
+        try:
+            count = int(value)
+        except (TypeError, ValueError):
+            return None
+        return count if count > 0 else None
+
+    def _emit_voicemail(self):
+        """Announce the current message-waiting state."""
+        waiting = self.voicemail["waiting"]
+        count = self.voicemail["count"]
+        number = self.voicemail["number"]
+
+        logger.info(f"[OfonoManager] Voicemail waiting={waiting} count={count}")
+        self.emit('voicemail-changed', waiting, count or 0, count is not None, number or "")
 
     def on_ussd_signal(self, proxy, sender, signal, params):
         """Handle USSD signals."""
