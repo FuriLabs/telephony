@@ -18,9 +18,12 @@ import json
 from loguru import logger
 from gi.repository import GLib
 
+import re
+
 from .phone_utils import build_search_variants, normalize_number
 
 SQLITE_MAX_BATCH_VARIABLES = 900
+PHONE_VARIANT_PATTERN = re.compile(r"[0-9+*#]+")
 
 
 class DbContactsUtils:
@@ -67,21 +70,31 @@ class DbContactsUtils:
     def search_contacts_db(self, query="", limit=None, offset=0):
         """Search the contacts table, mirroring the former in-memory semantics."""
         try:
-            where = []
-            params = []
             tokens = query.lower().split() if query else []
+            if query and not tokens:
+                return []
+
+            allowed_sources = self.eds.loaded_source_uids() if self.eds else set()
+            if not allowed_sources:
+                return []
+
+            where = ["source_uid IN ({})".format(",".join("?" for _ in allowed_sources))]
+            params = sorted(allowed_sources)
             for token in tokens:
                 clause = ["instr(search_index_name, ?) > 0"]
                 params.append(token)
                 for variant in build_search_variants(token):
+                    if not PHONE_VARIANT_PATTERN.fullmatch(variant):
+                        continue
                     clause.append("instr(search_index_phones, ?) > 0")
                     params.append(variant)
                 where.append("(" + " OR ".join(clause) + ")")
 
             sql = ("SELECT uid, name, phones, emails, is_fav, source_uid FROM contacts"
-                   + ((" WHERE " + " AND ".join(where)) if where else "")
+                   + " WHERE " + " AND ".join(where)
                    + " ORDER BY is_fav DESC,"
-                   + " CASE WHEN name IS NULL OR name = '' THEN 1 ELSE 0 END, LOWER(name)")
+                   + " CASE WHEN search_index_name IS NULL OR search_index_name = ''"
+                   + " THEN 'zz_unknown' ELSE search_index_name END")
             if limit is not None:
                 sql += " LIMIT ? OFFSET ?"
                 params.extend([limit, offset])

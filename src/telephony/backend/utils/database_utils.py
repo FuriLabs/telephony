@@ -88,7 +88,9 @@ class DatabaseManager(GObject.Object, DbCallsUtils, DbMessagesUtils, DbBlocklist
                           emails TEXT,
                           vcard TEXT,
                           search_index_name TEXT,
-                          search_index_phones TEXT)''')
+                          search_index_phones TEXT,
+                          is_fav INTEGER DEFAULT 0,
+                          vcard_hash TEXT)''')
             c.execute("CREATE INDEX IF NOT EXISTS idx_source_uid ON contacts(source_uid)")
 
             schema_ver = self.gsettings_mgr.get_setting("contacts_schema_version") if self.gsettings_mgr else None

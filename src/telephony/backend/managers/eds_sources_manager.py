@@ -216,6 +216,11 @@ class EdsSourcesManager:
         except Exception as e:
             logger.error(f"[EDS] Client Connect Error for {uid}: {e}")
 
+    def loaded_source_uids(self):
+        """Return a snapshot of the source uids whose contacts are loaded."""
+        with self.cache_lock:
+            return set(self._cache_loaded_sources)
+
     def _load_from_local_db(self, source_uid, rank):
         """Load contacts from local database cache for a specific source once."""
         with self.cache_lock:
