@@ -96,10 +96,14 @@ class EdsContactsManager:
         return bool(info) and info.get('name') == "Andromeda Contacts"
 
     def _get_writable_client(self, source_uid=None):
-        """Get a writable client, preferably source_uid, otherwise highest rank."""
+        """Get the client for source_uid, or the highest ranked when unspecified."""
         with self.sources_lock:
-            if source_uid and source_uid in self.sources:
-                return self.sources[source_uid].get('client')
+            if source_uid:
+                info = self.sources.get(source_uid)
+                if info is None:
+                    logger.warning(f"[EDS] No connected client for requested source {source_uid}")
+                    return None
+                return info.get('client')
 
             sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
             if sorted_sources:

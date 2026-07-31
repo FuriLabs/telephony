@@ -44,6 +44,7 @@ class EdsManager(GObject.Object, EdsSourcesManager, EdsCacheManager, EdsEventsMa
         super().__init__()
         self.sources = {}
         self.sources_lock = threading.Lock()
+        self.reload_lock = threading.Lock()
 
         self.cache = {}
         self.cache_lock = threading.Lock()

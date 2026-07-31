@@ -64,12 +64,13 @@ class EdsSourcesManager:
     def reload(self):
         """Tear down all source connections and reload configuration and contacts."""
         def task():
-            with self.sources_lock:
-                uids = list(self.sources.keys())
-            for uid in uids:
-                self._remove_source(uid)
-            self.invalidate_sources_info()
-            self._load_sources_config()
+            with self.reload_lock:
+                with self.sources_lock:
+                    uids = list(self.sources.keys())
+                for uid in uids:
+                    self._remove_source(uid)
+                self.invalidate_sources_info()
+                self._load_sources_config_locked()
 
         run_in_background(task)
 
@@ -79,7 +80,12 @@ class EdsSourcesManager:
         return [s for s in sources if self.registry.check_enabled(s)]
 
     def _load_sources_config(self):
-        """Load configuration and initialize sources."""
+        """Load configuration and initialize sources, serialized against reloads."""
+        with self.reload_lock:
+            self._load_sources_config_locked()
+
+    def _load_sources_config_locked(self):
+        """Load configuration and initialize sources; caller holds reload_lock."""
         try:
             all_sources = self._enabled_registry_sources()
 
@@ -179,6 +185,11 @@ class EdsSourcesManager:
                     threads.append(t)
             for t in threads:
                 t.join()
+
+            enabled_uids = {item['uid'] for item in final_sources_list if item['enabled']}
+            for uid in self.loaded_source_uids() - enabled_uids:
+                logger.info(f"[EDS] Dropping cached contacts of unavailable source {uid}")
+                self._remove_source(uid)
 
             self._rebuild_lookup_map()
             self.is_ready = True
@@ -333,7 +344,14 @@ class EdsSourcesManager:
     def get_sources_info(self):
         """Return list of all sources with their status/rank for Settings UI."""
         if self._sources_info_cache is not None:
-            return [dict(item) for item in self._sources_info_cache]
+            result = [dict(item) for item in self._sources_info_cache]
+            for item in result:
+                if item.get('is_local') or not self.registry:
+                    continue
+                source = self.registry.ref_source(item['uid'])
+                if source:
+                    item['status'] = CONNECTION_STATUS_KEYS.get(source.get_connection_status())
+            return result
 
         try:
             all_sources = self._enabled_registry_sources()
@@ -506,6 +524,11 @@ class EdsSourcesManager:
 
     def _update_sources_task(self, new_config_list):
         """Intelligently update sources based on new configuration."""
+        with self.reload_lock:
+            self._update_sources_task_locked(new_config_list)
+
+    def _update_sources_task_locked(self, new_config_list):
+        """Apply a configuration update; caller holds reload_lock."""
         all_sources = self._enabled_registry_sources()
 
         to_enable = {}

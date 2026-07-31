@@ -40,6 +40,7 @@ class SettingsWindow(Adw.Window):
         self._volume_commit_timer = None
         self.source_rows = None
         self.sources_state = None
+        self._rebuilding_ab_dropdown = False
         super().__init__(title=_("Settings"))
         self.connect("unmap", self._on_settings_unmap)
 
@@ -904,8 +905,15 @@ class SettingsWindow(Adw.Window):
         self.grp_reject_list.remove(row)
         self.reject_rows = [r for r in self.reject_rows if r != row]
 
+    def _finish_ab_dropdown_rebuild(self):
+        """Re-enable the default book handler after a programmatic rebuild."""
+        self._rebuilding_ab_dropdown = False
+        return False
+
     def _on_default_ab_changed(self, row, param):
         """Handle default address book selection change."""
+        if self._rebuilding_ab_dropdown:
+            return
         idx = row.get_selected()
         if idx < 0 or idx >= len(self.sources_state):
             return
@@ -1021,7 +1029,7 @@ class SettingsWindow(Adw.Window):
     def _build_sources_list(self, rebuild_dropdown=True):
         """Rebuild the address books list UI."""
         if rebuild_dropdown:
-            self.row_default_ab.freeze_notify()
+            self._rebuilding_ab_dropdown = True
             n = self.model_default_ab.get_n_items()
             if n > 0:
                 self.model_default_ab.splice(0, n, [])
@@ -1033,7 +1041,7 @@ class SettingsWindow(Adw.Window):
                 if item['is_system_default']:
                     self.row_default_ab.set_selected(i)
                     break
-            self.row_default_ab.thaw_notify()
+            GLib.idle_add(self._finish_ab_dropdown_rebuild)
 
         if (self.source_rows is not None):
             for r in self.source_rows:
@@ -1200,7 +1208,7 @@ class SettingsWindow(Adw.Window):
         self.main_window.gsettings_mgr.set_setting(
             "unknown_callers_custom_url", self.entry_uc_custom.get_text())
 
-        if (self.sources_state is not None):
+        if self.sources_state:
             self.eds.update_sources_config(self.sources_state)
 
             for item in self.sources_state:
