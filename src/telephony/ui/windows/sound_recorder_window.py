@@ -45,7 +45,8 @@ def _format_size_limit(size_bytes):
     """Format a byte limit as a short kB or MB label."""
     if size_bytes >= 1024 * 1024:
         mb = size_bytes / (1024 * 1024)
-        return f"{mb:g} MB"
+        text = f"{mb:.1f}".rstrip("0").rstrip(".")
+        return f"{text} MB"
     return f"{size_bytes // 1024} kB"
 
 

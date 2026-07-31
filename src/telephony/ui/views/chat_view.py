@@ -46,6 +46,7 @@ if not Gst.is_initialized():
 
 LOAD_MORE_BATCH = 50
 MAX_MESSAGES_IN_MEMORY = 200
+RECENT_DUPLICATE_SCAN_ITEMS = 8
 
 
 class ChatPage(Gtk.Box):
@@ -563,6 +564,12 @@ class ChatPage(Gtk.Box):
         """Inject a new incoming message into the view."""
         if sender is None:
             sender = "Unknown"
+
+        for i in range(min(RECENT_DUPLICATE_SCAN_ITEMS, self.store.get_n_items())):
+            item = self.store.get_item(i)
+            if item.id and item.direction == "incoming" and item.body == body:
+                logger.debug("[Chat] Skipping inject: message already delivered via DB signal")
+                return
 
         now_str = format_timestamp()
         dummy_tuple = (0, self.number, body, now_str, "unread", None, attachments, sender)

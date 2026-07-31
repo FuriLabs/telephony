@@ -123,14 +123,19 @@ class DbContactsUtils:
             return []
 
     def get_all_vcards(self, source_uid=None):
-        """Return every stored vcard, optionally filtered to one source."""
+        """Return stored vcards for one source or for every loaded source."""
         try:
             with self.lock:
                 c = self.conn_contacts.cursor()
                 if source_uid:
                     c.execute("SELECT vcard FROM contacts WHERE source_uid=?", (source_uid,))
                 else:
-                    c.execute("SELECT vcard FROM contacts")
+                    allowed = self.eds.loaded_source_uids() if self.eds else set()
+                    if not allowed:
+                        return []
+                    placeholders = ",".join("?" for _ in allowed)
+                    c.execute(f"SELECT vcard FROM contacts WHERE source_uid IN ({placeholders})",
+                              sorted(allowed))
                 rows = c.fetchall()
             return [r[0] for r in rows if r[0]]
         except Exception as e:
