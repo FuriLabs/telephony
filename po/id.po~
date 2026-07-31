@@ -1,0 +1,2926 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 03:18+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:536
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:369
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:704
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:708
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:804
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:810
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:974
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:976
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:368
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:439
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:533
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:870
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/history_rows_widget.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:407
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:576
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
+msgid "Unknown"
+msgstr "Tidak dikenal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:540
+msgid "Missed Call"
+msgstr "Panggilan Tak Terjawab"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:547
+msgid "Call Back"
+msgstr "Menelepon kembali"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:577
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} pesan baru"
+msgstr[1] "{count} pesan baru"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:581
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Membuka"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:585
+msgid "Call"
+msgstr "Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/eds_contacts_manager.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:35
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:430
+msgid "Blocked Number"
+msgstr "Nomor yang Diblokir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency Mode"
+msgstr "Modus Darurat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency calls only."
+msgstr "Hanya panggilan darurat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:119
+msgid "Start Emergency Process"
+msgstr "Mulai Proses Darurat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:462
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:631
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:69
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:320
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:197
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:497
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:397
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:685
+msgid "Cancel"
+msgstr "Membatalkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+msgid "Return to Lockscreen"
+msgstr "Kembali ke Layar Kunci"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:133
+msgid "Back"
+msgstr "Kembali"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
+msgid "No Numbers Configured"
+msgstr "Tidak Ada Nomor yang Dikonfigurasi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
+msgid "Set numbers in Settings."
+msgstr "Tetapkan nomor di Pengaturan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
+msgid "Call {number}"
+msgstr "Call {number}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
+msgid "Confirm Emergency Call"
+msgstr "Konfirmasi Panggilan Darurat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "Call {name}?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
+msgid "🟢 Yes, Call"
+msgstr "🟢 Ya, Telepon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
+msgid "🔴 No, Return"
+msgstr "🔴 Tidak, Kembali"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Menginisialisasi layanan lokasi..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Menunggu layanan lokasi..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Menunggu perbaikan satelit..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:252
+msgid "Modem Stuck"
+msgstr "Modem Terjebak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:81
+msgid "Call failed to disconnect."
+msgstr "Panggilan gagal diputuskan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Telephony Emergency"
+msgstr "Darurat Teleponi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
+msgid "🔴 Reboot Modem"
+msgstr "🔴 Nyalakan ulang Modem"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "Telepon - Masuk"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "🟢 Masuk: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
+msgid "Incoming Call..."
+msgstr "Panggilan Masuk..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁 Tukar"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 Jawab"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 Tutup telepon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr "Menunggu..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "Telepon - Ditahan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (On Hold)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "Panggilan Ditahan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁 Lanjutkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "Telepon - Panggilan Aktif"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "🟢 Active: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "Panggilan Aktif"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴 Tutup Semua"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:447
+msgid "Modem not ready"
+msgstr "Modemnya belum siap"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:53
+msgid "Cannot dial while in another call"
+msgstr "Tidak dapat melakukan panggilan saat sedang melakukan panggilan lain"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "Kesalahan Panggilan: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "Gagal mengirim: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:144
+msgid "Not supported"
+msgstr "Tidak didukung"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "Kesalahan: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "Harap tunggu 60 detik sebelum memicu {prefix} lagi."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Akurasi: {acc}m)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Saya di sini: {link}{acc_str}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
+msgstr "Gagal mendapatkan lokasi setelah mencoba semua metode."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "Berhasil mengekspor pesan {count} ke XML."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "Berhasil mengekspor {count} panggilan ke XML."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "Mengekspor pesan {count} ke database Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "Mengekspor {count} panggilan ke database Panggilan Gnome."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Basis data sumber tidak ditemukan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Database Teleponi berhasil diekspor."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:34
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Berkas tidak ditemukan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Pesan {count} diimpor dari cadangan Android."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Impor {count} panggilan dari cadangan Android."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "Tidak dapat menemukan tabel pesan di database iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "Gagal membaca struktur database SMS iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Pesan {count} diimpor dari cadangan iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "Tidak dapat menemukan tabel riwayat panggilan di database iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "Gagal membaca struktur database Panggilan iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Impor {count} panggilan dari cadangan iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Basis data cerewet tidak ditemukan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Tidak dapat menemukan tabel pesan di database Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Gagal membaca struktur database Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Mengimpor {count} pesan dari Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Basis data panggilan tidak ditemukan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr "Tidak dapat menemukan tabel riwayat panggilan di database Panggilan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Gagal membaca struktur database Panggilan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "Panggilan {count} yang diimpor."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0 detik"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}dtk"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s} s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telepon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Dialpad"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Sejarah"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:596
+msgid "Messages"
+msgstr "Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:597
+msgid "Contacts"
+msgstr "Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Menyinkronkan Kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Tetapkan nomor Anda di Pengaturan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Silakan atur Kode Negara Default di Pengaturan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Atur Nomor Darurat di Pengaturan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Selesaikan Duplikat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:295
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:41
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "Muat Ulang Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Impor / Ekspor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Blocklist"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Modem Terhubung"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:391
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Kesalahan Modem: {message}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "Mengirim USSD..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "Hasil USSD"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:448
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:460
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:813
+msgid "OK"
+msgstr "OKE"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:463
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "Mengonfirmasi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "Ditemukan {count} duplikat kontak. Periksa menunya."
+msgstr[1] "Ditemukan {count} duplikat kontak. Periksa menunya."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Sinkronisasi kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:544
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:782
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:383
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:434
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:572
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:856
+msgid "Close"
+msgstr "Menutup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Memuat Ulang Kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "Beberapa Kontak Ditemukan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Kontak mana yang ingin Anda edit?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Buku Alamat Tidak Diketahui"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "Memanggil (Anonim)..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Calling {number}..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Panggilan Gagal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Detail Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:676
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "Buka Blokir Nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:698
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:770
+msgid "Unblocked"
+msgstr "Tidak diblokir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "Sunting Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "Tambahkan ke Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Tambahkan ke Kontak yang Ada"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:206
+msgid "Search Number"
+msgstr "Nomor Pencarian"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Kirim Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:755
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "Salin Nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:760
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Nomor Blok"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Hapus panggilan ini"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Hapus Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Hapus panggilan ini?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Nomor disalin"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:798
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:747
+msgid "Saving contact..."
+msgstr "Menyimpan kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Added to {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Gagal menambahkan nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:184
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:214
+msgid "Add Number"
+msgstr "Tambahkan Nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:814
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:575
+msgid "Save"
+msgstr "Menyimpan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:137
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Draf ke {count} penerima"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:164
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} Peserta"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:310
+msgid "Replies not supported for this sender"
+msgstr "Balasan tidak didukung untuk pengirim ini"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:354
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1239
+msgid "Scheduled time must be in the future"
+msgstr "Waktu yang dijadwalkan harus di masa depan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:362
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Dijadwalkan ulang untuk {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:366
+msgid "Re-Schedule Message"
+msgstr "Jadwalkan Ulang Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:566
+msgid "— New Messages —"
+msgstr "— Pesan Baru —"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:604
+msgid "No results found in this conversation"
+msgstr "Tidak ada hasil yang ditemukan dalam percakapan ini"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:676
+msgid "Group Name"
+msgstr "Nama Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:677
+msgid "Set group name..."
+msgstr "Tetapkan nama grup..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:685
+msgid "Participants"
+msgstr "Peserta"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:785
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
+msgid "Delete Conversation"
+msgstr "Hapus Percakapan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "Aku"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Forwarded from {sender}:\n"
+"{body}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Forwarded from {sender}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:821
+msgid "Forward To"
+msgstr "Teruskan Ke"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "Maju"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
+msgid "Delete Message"
+msgstr "Hapus Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
+msgid "Are you sure you want to delete this message?"
+msgstr "Apakah Anda yakin ingin menghapus pesan ini?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:989
+msgid "Group renamed"
+msgstr "Grup diganti namanya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1017
+msgid "Compressing image..."
+msgstr "Mengompresi gambar..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1019
+msgid "Image is too large to send"
+msgstr "Gambar terlalu besar untuk dikirim"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1021
+msgid "Compressing video..."
+msgstr "Mengompresi video..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1023
+msgid "Video compression failed"
+msgstr "Kompresi video gagal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1025
+msgid "File is too large to send via MMS"
+msgstr "File terlalu besar untuk dikirim melalui MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1233
+msgid "Nothing to schedule"
+msgstr "Tidak ada yang perlu dijadwalkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1247
+msgid "Schedule Message"
+msgstr "Pesan Jadwal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1286
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Pesan dijadwalkan untuk {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1307
+msgid "[Attachment]"
+msgstr "[Lampiran]"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
+msgid "Delete Group"
+msgstr "Hapus Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1397
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Ini akan menghapus riwayat percakapan dan semua file media yang disimpan "
+"secara permanen."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Cari kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:435
+msgid "Mobile"
+msgstr "Seluler"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:436
+msgid "Work"
+msgstr "Bekerja"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:437
+msgid "Home"
+msgstr "Rumah"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:438
+msgid "Fax"
+msgstr "Fax"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:439
+msgid "Other"
+msgstr "Lainnya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:440
+msgid "Main"
+msgstr "Utama"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Hubungi Anonim"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Masukkan nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Dialpad Cerdas Teleponi siap melayani Anda"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Nomor tidak valid di papan klip"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Nomor tidak valid"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "Semua"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "Durasi berapa pun"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Tidak terjawab"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 menit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 menit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 menit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "Tanggal berapa pun"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Hari ini"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "3 hari terakhir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "14 hari terakhir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "30 hari terakhir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "60 hari terakhir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:577
+msgid "Search Contacts..."
+msgstr "Cari Kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:226
+msgid "All Messages"
+msgstr "Semua Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:227
+msgid "Unread Messages"
+msgstr "Pesan yang Belum Dibaca"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:228
+msgid "Unknown Numbers"
+msgstr "Nomor Tidak Dikenal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:229
+msgid "Saved Contacts"
+msgstr "Kontak Tersimpan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:230
+msgid "Group Messages"
+msgstr "Pesan Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:231
+msgid "Individual Messages"
+msgstr "Pesan Individu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:232
+msgid "Alphabetical Senders"
+msgstr "Pengirim Abjad"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:446
+msgid "[Multimedia Message]"
+msgstr "[Pesan Multimedia]"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:581
+msgid "Search Messages..."
+msgstr "Telusuri Pesan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:623
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Start ({count})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:630
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "Buka ({count})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:702
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Tambahkan Nomor: {number}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:735
+msgid "Group chat"
+msgstr "Obrolan grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:743
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:297
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:506
+msgid "No contacts found"
+msgstr "Tidak ada kontak yang ditemukan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:858
+msgid "No results found"
+msgstr "Tidak ada hasil yang ditemukan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "Salin Teks"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "Menjadwalkan ulang"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "Tandai sebagai Belum Dibaca"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:769
+msgid "Delete"
+msgstr "Menghapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "Coba Kirim Lagi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Dijadwalkan: {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "Gagal mengirim"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "Mengirim..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "Buka dengan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "Menyalin"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "Simpan sebagai"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "Buka Dengan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "Simpan File Sebagai"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "Tutup Semua Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "Tutup Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Group"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Draft: {message}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:343
+msgid "Advanced Settings"
+msgstr "Pengaturan Lanjutan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "Memuat..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:103
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Kesalahan saat memuat pengaturan: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:111
+msgid "Secret SMS Triggers"
+msgstr "Pemicu SMS Rahasia"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:91
+msgid "Set \"Find my Telephony\""
+msgstr "Setel \"Temukan Telepon Saya\""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:93
+msgid "Set \"Trusted Callback\""
+msgstr "Setel \"Panggilan Balik Tepercaya\""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:95
+msgid "Set \"SMS -Relay\""
+msgstr "Setel \"SMS -Relai\""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:97
+msgid "Set \"SMS -tmate\""
+msgstr "Setel \"SMS -tmate\""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:99
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "Setel \"Saklar SMS Hapus Perangkat\""
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:146
+msgid "Restart Modem"
+msgstr "Mulai ulang Modemnya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:154
+msgid "Data Management"
+msgstr "Manajemen Data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Otentikasi dibatalkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:175
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Kesalahan autentikasi: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:182
+msgid "Advanced Settings Applied"
+msgstr "Pengaturan Lanjutan Diterapkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:187
+msgid "Restarting Modem..."
+msgstr "Memulai ulang Modem..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Detail Nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Panggilan dari nomor ini akan ditolak secara otomatis."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:765
+msgid "Number"
+msgstr "Nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Catatan (Opsional)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Duplikat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Nomor ini sudah diblokir."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Kesalahan Basis Data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Gagal menyimpan ke daftar blokir."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:818
+msgid "Conflict"
+msgstr "Konflik"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Nomor tidak boleh ada di Daftar Blokir dan Kontak.\n"
+"\n"
+"Apakah Anda ingin melanjutkan dengan Memblokir dan menghapus nomor dari "
+"Kontak?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Ya, Blokir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Nomor yang Diblokir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "Tidak ada catatan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Apakah Anda yakin ingin membuka blokir nomor ini?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Nomor yang tidak diblokir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Ambil Gambar"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Merebut kembali"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Lampirkan Foto"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Rekam Video"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Lampirkan Video"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Gagal merekam video: {error_msg}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Perekaman gagal (File kosong)."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Video besar ({size}KB). Akan dikompres saat dikirim."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Tidak dapat memutar file kosong."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "Ambil Foto"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "Rekam Audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "Pilih File"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "Jadwal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "Kesalahan Kamera"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "Tidak dapat memulai kamera."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "Tidak dapat memulai perekaman video."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Audio Error"
+msgstr "Kesalahan Audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Could not start audio recorder."
+msgstr "Tidak dapat memulai perekam audio."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:101
+msgid "Select Attachment"
+msgstr "Pilih Lampiran"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Attachment Error"
+msgstr "Kesalahan Lampiran"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Failed to prepare attachment."
+msgstr "Gagal menyiapkan lampiran."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Detail Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "Sunting"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Identitas"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "Favorit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Nama Lengkap"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Nama"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:665
+msgid "Yes"
+msgstr "Ya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Nomor Telepon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "Alamat Email"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "Tambahkan Surel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Detail Tambahan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Organisasi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Judul Pekerjaan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Catatan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Situs web"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Hari ulang tahun"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:247
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "Peringatan tahunan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:263
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
+msgid "Delete Contact"
+msgstr "Hapus Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:274
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:431
+msgid "Address Books"
+msgstr "Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Sumber Tidak Diketahui"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:356
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Pilih Tanggal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "Hapus Tanggal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Select {title}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Copy {title}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:390
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:639
+msgid "Copied to clipboard"
+msgstr "Disalin ke papan klip"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:525
+msgid "Export Contact"
+msgstr "Ekspor Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
+msgid "Are you sure you want to delete this contact?"
+msgstr "Apakah Anda yakin ingin menghapus kontak ini?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:557
+msgid "Deleting contact..."
+msgstr "Menghapus kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:812
+msgid "Failed to save contact"
+msgstr "Gagal menyimpan kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:819
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Nomor tidak boleh ada di Daftar Blokir dan Kontak.\n"
+"\n"
+"Apakah Anda ingin melanjutkan dengan Membuka Blokir dan menambahkan nomor ke "
+"Kontak?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:823
+msgid "Yes, Add to Contacts"
+msgstr "Ya, Tambahkan ke Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Pilih Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "Nama atau Nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "Tidak ada nomor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:314
+msgid "Individual SMS Notifications"
+msgstr "Notifikasi SMS Individu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:325
+msgid "Individual Ringtones"
+msgstr "Nada Dering Individu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "Temukan kontak untuk ditambahkan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Pilih kontak dan pilih file suara khusus (.ogg atau .oga). File akan disalin "
+"ke penyimpanan lokal Anda."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Menghapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "Nada khusus dihapus (Klik Simpan untuk melakukan)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:316
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Pilih Nada untuk {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:319
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:396
+msgid "Select"
+msgstr "Memilih"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:324
+msgid "Supported Audio (OGG)"
+msgstr "Audio yang Didukung (OGG)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:352
+msgid "Only .ogg or .oga files are supported"
+msgstr "Hanya file .ogg atau .oga yang didukung"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:363
+msgid "Failed to copy audio file"
+msgstr "Gagal menyalin file audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:383
+msgid "Custom tone added"
+msgstr "Nada khusus ditambahkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Manajemen Basis Data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Pilih data yang akan dihapus secara permanen."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Hapus Riwayat Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Hapus Semua Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Hapus Semua Nama Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:50
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Hapus Daftar Blokir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:51
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Hapus Semua Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:130
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Hapus Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "HAPUS SEMUANYA"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "Apa kamu yakin? Hal ini tidak dapat dibatalkan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Ini akan menghapus semua SMS/MMS dan lampirannya."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Hapus Nama Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Setel ulang semua nama obrolan grup khusus?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Buka blokir semua nomor?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Tidak ada buku alamat yang dapat dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Tidak ada buku alamat khusus yang dapat dihapus."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Buku alamat mana yang ingin Anda hapus secara permanen?\n"
+"\n"
+"Ini akan menghapusnya dari sistem."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr ""
+"Apakah Anda yakin ingin menghapus buku alamat '{name}' secara permanen?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Hapus SEMUANYA"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"Hapus database, file konfigurasi, dan kontak? Aplikasi akan diatur ulang."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Benar-benar menghapus semua orang dari buku alamat Anda?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Pilih buku alamat mana yang akan dihapus:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Semua Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Riwayat Panggilan Dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "Menghapus pesan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Pesan & Lampiran Dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "Reset Nama Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Daftar Blokir Dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Menghapus kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:252
+msgid "Contacts Deleted"
+msgstr "Kontak Dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:260
+msgid "Deleting address book..."
+msgstr "Menghapus buku alamat..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:266
+msgid "Address Book Deleted"
+msgstr "Buku Alamat Dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:268
+msgid "Failed to delete Address Book"
+msgstr "Gagal menghapus Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:273
+msgid "Wiping Database..."
+msgstr "Menghapus Basis Data..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:286
+msgid "App Reset Complete"
+msgstr "Penyetelan Ulang Aplikasi Selesai"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "Tahun"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Bulan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Jam"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Menit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:296
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:457
+msgid "Notification Overrides"
+msgstr "Penggantian Pemberitahuan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:161
+msgid "Find and add contacts..."
+msgstr "Temukan dan tambahkan kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Kontak dalam daftar ini akan selalu memutar notifikasi dengan volume penuh, "
+"meskipun ponsel dalam mode Senyap atau Jangan Ganggu."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Kontak Duplikat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Gabungkan semua"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Menggabungkan Kontak..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Konflik yang tersisa: {count}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} disimpan ke kontak:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Buku Alamat: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Simpan ini, Hapus duplikat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Simpan ini, Gabungkan duplikat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Merging {current}/{total}..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"Ekstrak, transformasi, muat (ETL).\n"
+"Pilih sumber data atau tujuan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "Impor Kontak dari vCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "Ekspor Kontak ke vCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "Impor Kontak dari kartu SIM"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "Impor Dari Chatty lokal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "Impor Dari Panggilan lokal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "Impor Dari Android"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:68
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "Impor Dari iOS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "Ekspor Panggilan atau Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "Mengimpor kontak dari SIM..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "Tidak ditemukan modem untuk impor SIM"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "Tidak ada kontak yang ditemukan di kartu SIM."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "Mengimpor {count} kontak dari SIM."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "Impor SIM gagal: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Mengimpor cerewet..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "Mengimpor Panggilan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "Pilih salah satu opsi:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "Pilih berkas SMS/MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "Pilih File riwayat panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "Impor USB Langsung (Disarankan)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:207
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr ""
+"Tidak ada perangkat iOS yang terdeteksi. Silakan sambungkan iPhone Anda "
+"melalui USB."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:210
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr ""
+"Perangkat tidak dipercaya. Silakan buka kunci iPhone Anda dan ketuk "
+"'Percaya'."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:213
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "Mengekstrak cadangan dari iPhone... Ini mungkin memakan waktu lama!"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "Pencadangan USB gagal: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:226
+msgid "No SMS database found in backup."
+msgstr "Tidak ada database SMS yang ditemukan di cadangan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:227
+msgid "No Call History database found in backup."
+msgstr "Tidak ada database Riwayat Panggilan yang ditemukan di cadangan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:230
+msgid "Importing iPhone SMS..."
+msgstr "Mengimpor SMS iPhone..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone Calls..."
+msgstr "Mengimpor Panggilan iPhone..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "Kesalahan selama impor iOS: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Pilih File"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:254
+msgid "XML Files"
+msgstr "File XML"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:459
+msgid "Importing..."
+msgstr "Pengimporan..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
+msgid "Export Data"
+msgstr "Ekspor Data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
+msgid "Select destination format:"
+msgstr "Pilih format tujuan:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:302
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - Cerewet/Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:303
+msgid "Linux - Telephony"
+msgstr "Linux - Teleponi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:304
+msgid "Android"
+msgstr "Android"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:305
+msgid "iOS"
+msgstr "iOS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "Ekspor ke {fmt}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
+msgid "What do you want to export?"
+msgstr "Apa yang ingin Anda ekspor?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"Catatan: Ekspor ini menggunakan format Android. Saat mengimpor file ini ke "
+"perangkat iOS, harap gunakan opsi \"Import From Android\"."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:333
+msgid "Messages (SMS/MMS)"
+msgstr "Pesan (SMS/MMS)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:334
+msgid "Call History"
+msgstr "Riwayat Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:344
+msgid "Export File"
+msgstr "Ekspor Berkas"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:370
+msgid "Exporting..."
+msgstr "Mengekspor..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:404
+msgid "Import VCard"
+msgstr "Impor VCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:406
+msgid "VCard Files"
+msgstr "File Kartu VC"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:425
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:489
+msgid "No enabled address books found"
+msgstr "Tidak ditemukan buku alamat yang diaktifkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:433
+msgid "Select Address Book"
+msgstr "Pilih Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:434
+msgid "Where do you want to import contacts?"
+msgstr "Di mana Anda ingin mengimpor kontak?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "Kontak {count} yang diimpor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "Impor gagal: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:531
+msgid "Export Contacts"
+msgstr "Ekspor Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:494
+msgid "Which address book do you want to export?"
+msgstr "Buku alamat mana yang ingin Anda ekspor?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:505
+msgid "Export All Address Books"
+msgstr "Ekspor Semua Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:559
+msgid "No contacts found to export"
+msgstr "Tidak ada kontak yang ditemukan untuk diekspor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "Mengekspor {count} kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "Kesalahan ekspor: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Impor Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Impor Riwayat Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Menunggu seleksi..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "Dari mana Anda ingin mengimpor?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Basis Data Sistem"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Impor dari instalasi Chatty lokal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Impor dari instalasi Panggilan lokal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Impor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Pencadangan Basis Data Khusus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Pilih file DB SQLite yang diekspor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Pilih File Basis Data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "Lampiran MMS (Opsional)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "Pencadangan Folder MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Pilih direktori yang berisi gambar/video"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Pilih Folder"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Lewati Lampiran"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Impor SMS dan SMS saja"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Melewati"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Pilih Folder MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:38
+msgid "Active"
+msgstr "Aktif"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:39
+msgid "On Hold"
+msgstr "Ditahan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:40
+msgid "Dialing..."
+msgstr "Memanggil..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:41
+msgid "Alerting..."
+msgstr "Berdering..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
+msgid "Disconnected"
+msgstr "Terputus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:259
+msgid "Earpiece"
+msgstr "Earpiece"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:260
+msgid "Speaker"
+msgstr "Speaker"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:54
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:261
+msgid "Wired Headset"
+msgstr "Headset Berkabel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:55
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:262
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:64
+msgid "Microphone"
+msgstr "Mikrofon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:65
+msgid "Wired Mic"
+msgstr "Mikrofon Berkabel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:66
+msgid "Bluetooth Mic"
+msgstr "Mikrofon Bluetooth"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:211
+msgid "Hangup and Send SMS"
+msgstr "Tutup dan Kirim SMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:214
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:597
+msgid "Silence"
+msgstr "Senyapkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+msgid "Decline"
+msgstr "Tolak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+msgid "Accept"
+msgstr "Terima"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:236
+msgid "Mute"
+msgstr "Bisukan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:237
+msgid "Keypad"
+msgstr "Papan Tombol"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:238
+msgid "Hold"
+msgstr "Tahan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:253
+msgid "The call failed to disconnect."
+msgstr "Panggilan gagal diputuskan."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:331
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:806
+msgid "Output"
+msgstr "Keluaran"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:346
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:825
+msgid "Input"
+msgstr "Masukan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
+msgid "Silenced Incoming Call"
+msgstr "Panggilan Masuk Tanpa Suara"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
+msgid "Swap"
+msgstr "Tukar"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:593
+msgid "Answer"
+msgstr "Jawab"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:601
+msgid "Message"
+msgstr "Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:607
+msgid "Answering holds the current call"
+msgstr "Menjawab akan menahan panggilan saat ini"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:624
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
+msgid "I can't talk right now."
+msgstr "Saya tidak bisa bicara sekarang."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:747
+msgid "Restarting RIL..."
+msgstr "Memulai ulang RIL..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
+msgid "Restored!"
+msgstr "Pulih!"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:762
+msgid "Failed. Reboot Device."
+msgstr "Gagal. Nyalakan Ulang Perangkat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:764
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "Verifying... {attempt}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
+msgid "Not connected"
+msgstr "Tidak terhubung"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Tentang Teleponi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr ""
+"Dialer telepon cepat dan klien perpesanan yang dirancang untuk FLX1 dan "
+"FLX1s."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Versi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Pengembang"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Lisensi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Tautan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Pelacak Masalah"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Laporkan bug atau minta fitur"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Scheduled ({current}/{total})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "To: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Kirim Sekarang"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Pesan dihapus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Mengirim pesan ke {number}..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:380
+msgid "Ringback Tone"
+msgstr "Nada Dering Balik"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:92
+msgid "Enable Local Ringback"
+msgstr "Aktifkan Ringback Lokal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:107
+msgid "Selected Tone"
+msgstr "Nada yang Dipilih"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:369
+msgid "System Default"
+msgstr "Bawaan Sistem"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:137
+msgid "SIM Settings"
+msgstr "Pengaturan SIM"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:140
+msgid "My Number"
+msgstr "Nomor Saya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:141
+msgid "My Number (International Format)"
+msgstr "Nomor Saya (Format Internasional)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:356
+msgid "Default Country Code"
+msgstr "Kode Negara Default"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:174
+msgid "Address Book Info"
+msgstr "Info Buku Alamat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:182
+msgid "Default Address Book"
+msgstr "Buku Alamat Default"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:188
+msgid "Duplicate Resolver"
+msgstr "Penyelesai Duplikat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:190
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr ""
+"Pindai nomor duplikat dan tampilkan spanduk resolusi di tampilan Kontak."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:203
+msgid "Lockscreen Emergency"
+msgstr "Darurat Layar Kunci"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:206
+msgid "Show Emergency Button"
+msgstr "Tampilkan Tombol Darurat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:211
+msgid "Emergency Numbers"
+msgstr "Nomor Darurat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:228
+msgid "Quick Response"
+msgstr "Respon Cepat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:231
+msgid "Add Decline Message"
+msgstr "Tambahkan Pesan Penolakan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:810
+msgid "Call Volume"
+msgstr "Volume Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:277
+msgid "Notification Exceptions"
+msgstr "Pengecualian Pemberitahuan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:280
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:445
+msgid "Repeated Calls Bypass"
+msgstr "Lewati Panggilan Berulang"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:282
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr ""
+"Jika nomor yang sama menelepon 3 kali dalam 5 menit, paksakan volume "
+"maksimal."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:297
+msgid "Manage contacts that always play sound"
+msgstr "Kelola kontak yang selalu memutar suara"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:329
+msgid "Manage"
+msgstr "Mengelola"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:316
+msgid "Set custom notification sounds for specific contacts"
+msgstr "Atur suara notifikasi khusus untuk kontak tertentu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:327
+msgid "Set custom ringtones for specific contacts"
+msgstr "Atur nada dering khusus untuk kontak tertentu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:352
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Kode Negara Default digunakan untuk memformat angka yang tidak menyertakan "
+"awalan internasional (misalnya, +358).\n"
+"\n"
+"Jika dibiarkan kosong, sistem akan mencoba mendeteksinya secara otomatis "
+"dari kartu SIM atau jaringan Anda.\n"
+"\n"
+"Anda dapat menggantinya secara manual di sini dengan memasukkan kode wilayah "
+"ISO 2 huruf (misalnya US, FI, DE) atau kode panggilan (misalnya +358, 358, "
+"+1, 1)."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:373
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Nada dering balik adalah bunyi yang diputar (toot-toot-toot) sambil menunggu "
+"panggilan keluar dijawab. Beberapa operator tidak membuatnya jadi kami "
+"memiliki opsi untuk membuatnya secara manual di sini. \n"
+"\n"
+"Anda dapat memilih file musik Anda sendiri, atau menghapusnya untuk "
+"menggunakan nada sistem standar."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:393
+msgid "Select Ringback Tone"
+msgstr "Pilih Nada Dering Balik"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:401
+msgid "Audio Files"
+msgstr "File Audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:427
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Pilih buku alamat yang akan digunakan dengan Teleponi dan atur berdasarkan "
+"prioritas. Buku alamat paling atas memiliki prioritas tertinggi dan akan "
+"diutamakan jika nomor ditemukan di beberapa buku alamat. Anda dapat "
+"menggunakan tombol Penyelesai Duplikat di bawah untuk membantu mengelola "
+"duplikat, namun meskipun dinonaktifkan, sebaiknya aktifkan untuk pengalaman "
+"yang lebih baik."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:446
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Jika diaktifkan, jika nomor telepon yang sama memanggil Anda 3 kali dalam 5 "
+"menit, panggilan ketiga (dan panggilan berikutnya dalam jendela) akan "
+"memaksa telepon berdering dengan volume maksimum, melewati mode Senyap atau "
+"Jangan Ganggu."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:458
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Pilih kontak yang akan selalu memutar notifikasi dengan volume penuh, "
+"meskipun ponsel dalam mode Senyap atau Jangan Ganggu."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:479
+msgid "Unknown Callers"
+msgstr "Penelepon Tidak Dikenal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:484
+msgid "Unknown Callers Action"
+msgstr "Tindakan Penelepon Tidak Dikenal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:486
+msgid "Applies also to hidden numbers."
+msgstr "Berlaku juga untuk nomor tersembunyi."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:489
+msgid "Do Nothing"
+msgstr "Jangan lakukan apa pun"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:490
+msgid "Block Completely"
+msgstr "Blokir Sepenuhnya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:491
+msgid "Silence and Hide UI"
+msgstr "Diam dan Sembunyikan UI"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:492
+msgid "Silence Only"
+msgstr "Hanya Diam"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:500
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr ""
+"Tambahkan tombol Pencarian ke jendela InCall dan Riwayat Panggilan untuk "
+"penelepon tak dikenal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:506
+msgid "Search Engine"
+msgstr "Mesin Pencari"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:510
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:515
+msgid "Custom URL"
+msgstr "URL khusus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:565
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Masukkan URL yang ingin Anda gunakan untuk mencari nomor tak dikenal. "
+"Sertakan '{number}' di URL tujuan nomor telepon penelepon.\n"
+"\n"
+"Misalnya: https://mysearch.com/?q={number}\n"
+"\n"
+"Saat Anda mengetuk tombol cari saat panggilan berlangsung, kami akan "
+"mengganti '{number}' dengan nomor telepon sebenarnya dan membukanya di "
+"browser default Anda."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:569
+msgid "Custom Search URL"
+msgstr "URL Penelusuran Khusus"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:590
+msgid "Desktop Shortcuts"
+msgstr "Pintasan Desktop"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:595
+msgid "Calls"
+msgstr "Panggilan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:761
+msgid "Name (e.g. Mom)"
+msgstr "Nama (misalnya Ibu)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:811
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"Ini adalah volume panggilan untuk setiap output. Level diterapkan secara "
+"otomatis saat panggilan tersambung dan setiap kali output berubah selama "
+"panggilan, dan perubahan slider langsung terdengar. Perangkat keras "
+"menerapkan level dalam langkah-langkah kasar, dan earpiece tidak pernah "
+"benar-benar hening. Level Bluetooth disimpan untuk dukungan routing "
+"mendatang."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:820
+msgid "Decline Message"
+msgstr "Tolak Pesan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:891
+msgid "System Default (Always Enabled)"
+msgstr "Default Sistem (Selalu Diaktifkan)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:902
+msgid "Personal Address Book"
+msgstr "Buku Alamat Pribadi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:903
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ini adalah buku alamat yang akan disinkronkan ke Andromeda jika Anda memilih "
+"untuk melakukannya di Pengaturan Sistem."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:911
+msgid "Andromeda Contacts"
+msgstr "Kontak Andromeda"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:912
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Ini adalah buku alamat yang akan disinkronkan dari Andromeda jika Anda "
+"memilih untuk melakukannya di Pengaturan Sistem."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1037
+msgid "Settings Saved"
+msgstr "Pengaturan Disimpan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:40
+msgid "Voice Message"
+msgstr "Pesan Suara"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:91
+msgid "Tap to Record"
+msgstr "Ketuk untuk Merekam"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:137
+msgid "Attach Voice Note"
+msgstr "Lampirkan Catatan Suara"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:224
+msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+msgstr ""
+"Rekaman terlalu besar untuk MMS (Maks 600KB). Silakan Ambil Ulang lebih "
+"pendek."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:141
+msgid "Enable Feature"
+msgstr "Aktifkan Fitur"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:170
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"Kontak dapat memicu suatu tindakan dengan mengirimkan pesan SMS rahasia. "
+"Tambahkan kontak di bawah dan atur frasa pemicu rahasianya."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:173
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"Kontak tepercaya dapat meminta lokasi Anda dengan mengirimkan pesan SMS "
+"rahasia. TOTP wajib digunakan agar fitur ini berfungsi. Tambahkan kontak di "
+"bawah dan atur frasa pemicu rahasianya. Contoh templat: 'SECRET TOTP' Contoh "
+"nyata: 'Gorilla 123456'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:176
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"Kontak tepercaya dapat memicu panggilan balik secara diam-diam dengan "
+"mengirimkan pesan SMS rahasia. TOTP wajib digunakan agar fitur ini "
+"berfungsi. Tambahkan kontak di bawah dan atur frasa pemicu rahasianya. "
+"Contoh templat: 'SECRET TOTP' Contoh nyata: 'Gorilla 123456'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:179
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"Kontak tepercaya dapat mengirim SMS relai. TOTP wajib digunakan agar fitur "
+"ini berfungsi. Tambahkan kontak di bawah dan atur frasa pemicu rahasianya. "
+"Contoh templat: 'SECRET TOTP +1234567890 MESSAGE' Contoh nyata: 'Gorilla "
+"123456 +1234567890 Hello'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:182
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"Kontak tepercaya dapat memulai sesi SSH tmate dan menerima string akses SSH "
+"dengan mengirimkan pesan SMS rahasia. TOTP wajib digunakan agar fitur ini "
+"berfungsi. Tambahkan kontak di bawah dan atur frasa pemicu rahasianya. "
+"Contoh templat: 'SECRET TOTP' Contoh nyata: 'Gorilla 123456'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:185
+msgid ""
+"Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"Kontak tepercaya dapat menghapus perangkat Anda. TOTP wajib digunakan agar "
+"fitur ini berfungsi. Tambahkan kontak di bawah dan atur frasa pemicu "
+"rahasianya. Contoh templat: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN "
+"SUDO_PASSWORD' Contoh nyata: 'Gorilla 123456 0000 1234 "
+"SupportYourLocalFootball'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:284
+msgid "View or edit TOTP"
+msgstr "Lihat atau edit TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:286
+msgid "Setup TOTP"
+msgstr "Siapkan TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:356
+msgid "Secret message"
+msgstr "Pesan rahasia"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:368
+msgid "Remove Contact"
+msgstr "Hapus Kontak"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Contact removed (Click Save to commit)"
+msgstr "Kontak dihapus (Klik Simpan untuk melakukan)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:526
+msgid "Contact already in trusted list"
+msgstr "Kontak sudah ada dalam daftar tepercaya"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:540
+msgid "Contact added"
+msgstr "Kontak ditambahkan"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:558
+msgid "TOTP Setup"
+msgstr "Pengaturan TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:604
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"Bagikan kode ini dengan kontak tepercaya Anda. Mereka harus menambahkannya "
+"ke aplikasi autentikator seperti Gnome Authenticator.\n"
+"\n"
+"Jika memasukkan secara manual, pastikan pengaturan berikut:\n"
+"• Algoritma: SHA1\n"
+"• Digit: 6\n"
+"• Interval: 60 detik\n"
+"\n"
+"Setiap tindakan memiliki kodenya sendiri. Saat memicu tindakan melalui SMS, "
+"mereka harus menambahkan kode 6 digit saat ini dari autentikator mereka "
+"setelah kata kunci."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:633
+msgid "Copy TOTP key"
+msgstr "Salin kunci TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:644
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:686
+msgid "Regenerate"
+msgstr "Buat Ulang"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:651
+msgid "Remove current TOTP"
+msgstr "Hapus TOTP saat ini"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:660
+msgid "Remove TOTP Key?"
+msgstr "Hapus Kunci TOTP?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:661
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr ""
+"Apakah Anda yakin ingin menghapus kunci TOTP? Tindakan ini akan "
+"menonaktifkan verifikasi TOTP untuk fitur ini."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:681
+msgid "Regenerate Code?"
+msgstr "Buat Ulang Kode?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:682
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr ""
+"Ini akan membatalkan kode saat ini di aplikasi autentikator kontak Anda. "
+"Apakah Anda yakin?"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS&Akhir"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} ditunda"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 Penurunan"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "Suarakan mikrofon"
+
+#~ msgid "MuteMic"
+#~ msgstr "BisuMic"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "Pembicara Mati"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "Pembicara Aktif"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "Izinkan Amplifikasi"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr ""
+#~ "Biarkan slider melebihi 100%. Audio yang diperkuat dapat terdistorsi."
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "Ini adalah volume perangkat keras dasar yang diterapkan pada output yang "
+#~ "dipilih saat panggilan tersambung. Tombol volume selama panggilan hanya "
+#~ "menyesuaikan penyetelan halus di atas level dasar ini, jadi jika dasarnya "
+#~ "0% panggilan akan tetap hening apa pun yang terjadi. Nilai di atas 100% "
+#~ "menggunakan amplifikasi perangkat lunak dan dapat mendistorsi audio. "
+#~ "Level Headset Berkabel dan Bluetooth disimpan untuk dukungan perutean "
+#~ "yang akan datang."
+
+#~ msgid "Mute Microphone"
+#~ msgstr "Bisukan Mikrofon"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Gagal mengirim ke {number}"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Hapus Pengaturan Kustom"
+
+#~ msgid "Delete Settings"
+#~ msgstr "Hapus Pengaturan"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "Hapus semua pengaturan khusus? Nomor darurat akan hilang."
+
+#~ msgid "Settings cleared"
+#~ msgstr "Pengaturan dihapus"
+
+#~ msgid "Error saving settings"
+#~ msgstr "Terjadi kesalahan saat menyimpan setelan"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Tampilkan Pengaturan TOTP"
+
+#~ msgid "Failed to send message"
+#~ msgstr "Gagal mengirim pesan"
+
+#~ msgid "Switching address book..."
+#~ msgstr "Beralih buku alamat..."

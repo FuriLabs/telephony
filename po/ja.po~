@@ -1,0 +1,2910 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 03:18+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:536
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:369
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:704
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:708
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:804
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:810
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:974
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:976
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:368
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:439
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:533
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:870
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/history_rows_widget.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:407
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:576
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
+msgid "Unknown"
+msgstr "未知"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:540
+msgid "Missed Call"
+msgstr "不在着信"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:547
+msgid "Call Back"
+msgstr "折り返し電話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:577
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} 件の新しいメッセージ"
+msgstr[1] "{count} 件の新しいメッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:581
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "開ける"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:585
+msgid "Call"
+msgstr "電話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/eds_contacts_manager.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:35
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:430
+msgid "Blocked Number"
+msgstr "ブロックされた番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency Mode"
+msgstr "緊急モード"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency calls only."
+msgstr "緊急通報のみ。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:119
+msgid "Start Emergency Process"
+msgstr "緊急プロセスの開始"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:462
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:631
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:69
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:320
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:197
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:497
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:397
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:685
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+msgid "Return to Lockscreen"
+msgstr "ロック画面に戻る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:133
+msgid "Back"
+msgstr "戻る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
+msgid "No Numbers Configured"
+msgstr "番号が設定されていません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
+msgid "Set numbers in Settings."
+msgstr "「設定」で数値を設定します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
+msgid "Call {number}"
+msgstr "{number} に電話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
+msgid "Confirm Emergency Call"
+msgstr "緊急通報の確認"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "{name} に電話しますか？"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
+msgid "🟢 Yes, Call"
+msgstr "🟢 はい、電話してください"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
+msgid "🔴 No, Return"
+msgstr "🔴いいえ、戻ります"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "位置情報サービスを初期化しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "位置情報サービスを待っています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "衛星の修正を待っています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:252
+msgid "Modem Stuck"
+msgstr "モデムがスタックしている"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:81
+msgid "Call failed to disconnect."
+msgstr "通話を切断できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Telephony Emergency"
+msgstr "電話による緊急事態"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
+msgid "🔴 Reboot Modem"
+msgstr "🔴 モデムを再起動します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "電話 - 着信"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "🟢 着信: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
+msgid "Incoming Call..."
+msgstr "着信中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁交換"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 答え"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 電話を切る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr "待機中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "電話 - 保留中"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (保留中)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "通話保留中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁再開"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "電話 - アクティブ コール"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "🟢 通話中: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "アクティブな通話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴すべてを切る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:447
+msgid "Modem not ready"
+msgstr "モデムの準備ができていません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:53
+msgid "Cannot dial while in another call"
+msgstr "別の通話中にダイヤルできない"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "ダイヤルエラー: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "送信に失敗しました: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:144
+msgid "Not supported"
+msgstr "サポートされていません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "エラー: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr "{prefix} を再度トリガーするまで 60 秒待ってください。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(精度: {acc}m)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "私はここにいます: {link}{acc_str}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
+msgstr "すべての方法を試しても位置情報を取得できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "{count} 個のメッセージを XML に正常にエクスポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "{count} 件の呼び出しを XML に正常にエクスポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "{count} 個のメッセージを Chatty データベースにエクスポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr ""
+"{count} 件の呼び出しを Gnome Calls データベースにエクスポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "ソースデータベースが見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "テレフォニー データベースが正常にエクスポートされました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:34
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "ファイルが見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "Android バックアップから {count} 個のメッセージをインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Android バックアップから {count} 件の呼び出しをインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "iOS データベースにメッセージ テーブルが見つかりませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "iOS SMS データベース構造の読み取りに失敗しました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "iOS バックアップから {count} 個のメッセージをインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "iOS データベースに通話履歴テーブルが見つかりませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "iOS 通話データベース構造の読み取りに失敗しました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "iOS バックアップから {count} 件の呼び出しをインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Chatty データベースが見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Chatty データベースにメッセージ テーブルが見つかりませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Chatty データベース構造の読み取りに失敗しました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "Chatty から {count} 個のメッセージをインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "呼び出しデータベースが見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr "通話データベースに通話履歴テーブルが見つかりませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "通話データベース構造の読み取りに失敗しました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "{count} 件の呼び出しをインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0秒"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m}m"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}分 {s}秒"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "電話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "ダイヤルパッド"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "歴史"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:596
+msgid "Messages"
+msgstr "メッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:597
+msgid "Contacts"
+msgstr "連絡先"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "連絡先を同期中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "設定で番号を設定してください"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "設定でデフォルトの国コードを設定してください"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "設定で緊急電話​​番号を設定する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "重複を解決する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:295
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:41
+msgid "Settings"
+msgstr "設定"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "連絡先をリロードする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "インポート/エクスポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "ブロックリスト"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "モデムが接続されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:391
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "モデムエラー: {message}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "USSDを送信中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "USSDの結果"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:448
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:460
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:813
+msgid "OK"
+msgstr "わかりました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:463
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "確認する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "{count} 個の重複した連絡先が見つかりました。メニューをチェック。"
+msgstr[1] "{count} 個の重複した連絡先が見つかりました。メニューをチェック。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "連絡先を同期中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:544
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:782
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:383
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:434
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:572
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:856
+msgid "Close"
+msgstr "近い"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "連絡先を再読み込み中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "複数の連絡先が見つかりました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "どの連絡先を編集しますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "不明なアドレス帳"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "電話中（匿名）..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "{number} に発信しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "通話に失敗しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "通話の詳細"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:676
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"番号: {number}\n"
+"名前: {name}\n"
+"日付: {date}\n"
+"通話時間: {duration}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "番号のブロックを解除する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:698
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:770
+msgid "Unblocked"
+msgstr "ブロック解除されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "連絡先の編集"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "連絡先に追加"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "既存の連絡先に追加"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:206
+msgid "Search Number"
+msgstr "検索番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "メッセージを送信する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:755
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "コピー番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:760
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "ブロック番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "この通話を削除する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "通話の削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "この通話を削除しますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "コピーされた番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:798
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:747
+msgid "Saving contact..."
+msgstr "連絡先を保存しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "{name} に追加しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "番号の追加に失敗しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:184
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:214
+msgid "Add Number"
+msgstr "番号を追加"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:814
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:575
+msgid "Save"
+msgstr "保存"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:137
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "{count} 人の受信者に下書きする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:164
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} 人の参加者"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:310
+msgid "Replies not supported for this sender"
+msgstr "この送信者に対する返信はサポートされていません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:354
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1239
+msgid "Scheduled time must be in the future"
+msgstr "予定時刻は将来のものである必要があります"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:362
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "{time}に再スケジュールされました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:366
+msgid "Re-Schedule Message"
+msgstr "メッセージの再スケジュール"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:566
+msgid "— New Messages —"
+msgstr "— 新しいメッセージ —"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:604
+msgid "No results found in this conversation"
+msgstr "この会話では結果が見つかりませんでした"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:676
+msgid "Group Name"
+msgstr "グループ名"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:677
+msgid "Set group name..."
+msgstr "グループ名を設定..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:685
+msgid "Participants"
+msgstr "参加者"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:785
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
+msgid "Delete Conversation"
+msgstr "会話の削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "自分"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"{sender} から転送:\n"
+"{body}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "{sender} から転送"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:821
+msgid "Forward To"
+msgstr "転送先"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "フォワード"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
+msgid "Delete Message"
+msgstr "メッセージの削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
+msgid "Are you sure you want to delete this message?"
+msgstr "このメッセージを削除してもよろしいですか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:989
+msgid "Group renamed"
+msgstr "グループ名が変更されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1017
+msgid "Compressing image..."
+msgstr "画像を圧縮しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1019
+msgid "Image is too large to send"
+msgstr "画像が大きすぎるため送信できません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1021
+msgid "Compressing video..."
+msgstr "ビデオを圧縮しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1023
+msgid "Video compression failed"
+msgstr "ビデオ圧縮に失敗しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1025
+msgid "File is too large to send via MMS"
+msgstr "ファイルが大きすぎるためMMSで送信できません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1233
+msgid "Nothing to schedule"
+msgstr "予定するものは何もありません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1247
+msgid "Schedule Message"
+msgstr "スケジュールメッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1286
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "メッセージは {time} にスケジュールされています"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1307
+msgid "[Attachment]"
+msgstr "【付属品】"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
+msgid "Delete Group"
+msgstr "グループの削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1397
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"これにより、会話履歴と保存されているすべてのメディア ファイルが完全に削除され"
+"ます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "連絡先の検索"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:435
+msgid "Mobile"
+msgstr "携帯"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:436
+msgid "Work"
+msgstr "仕事"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:437
+msgid "Home"
+msgstr "家"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:438
+msgid "Fax"
+msgstr "ファックス"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:439
+msgid "Other"
+msgstr "他の"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:440
+msgid "Main"
+msgstr "主要"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "匿名で電話する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "番号を入力してください"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "テレフォニー スマート ダイヤルパッドをいつでもご利用いただけます"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "クリップボード内の数値が無効です"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "無効な番号です"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "全て"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "任意の期間"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "未回答"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1秒～60秒"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1～3分"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3～10分"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "15分以上"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "任意の日付"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "今日"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "過去 3 日間"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "過去 14 日間"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "過去 30 日間"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "過去60日間"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:577
+msgid "Search Contacts..."
+msgstr "連絡先を検索..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:226
+msgid "All Messages"
+msgstr "すべてのメッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:227
+msgid "Unread Messages"
+msgstr "未読メッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:228
+msgid "Unknown Numbers"
+msgstr "未知の番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:229
+msgid "Saved Contacts"
+msgstr "保存された連絡先"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:230
+msgid "Group Messages"
+msgstr "グループメッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:231
+msgid "Individual Messages"
+msgstr "個別メッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:232
+msgid "Alphabetical Senders"
+msgstr "アルファベット順の送信者"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:446
+msgid "[Multimedia Message]"
+msgstr "［マルチメディアメッセージ］"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:581
+msgid "Search Messages..."
+msgstr "メッセージを検索..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:623
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "開始 ({count})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:630
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "開く ({count})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:702
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "番号を追加: {number}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:735
+msgid "Group chat"
+msgstr "グループチャット"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:743
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:297
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:506
+msgid "No contacts found"
+msgstr "連絡先が見つかりませんでした"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:858
+msgid "No results found"
+msgstr "結果が見つかりませんでした"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "テキストをコピーする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "再スケジュール"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "未読としてマークする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:769
+msgid "Delete"
+msgstr "消去"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "再送信"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "予約: {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "送信に失敗しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "送信中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "で開く"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "コピー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "名前を付けて保存"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "開く..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "ファイルに名前を付けて保存"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "すべての通話を切る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "通話を切る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • グループ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "下書き: {message}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:343
+msgid "Advanced Settings"
+msgstr "詳細設定"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "読み込み中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:103
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "設定の読み込みエラー: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:111
+msgid "Secret SMS Triggers"
+msgstr "秘密のSMSトリガー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:91
+msgid "Set \"Find my Telephony\""
+msgstr "「電話を探す」を設定します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:93
+msgid "Set \"Trusted Callback\""
+msgstr "「信頼できるコールバック」を設定する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:95
+msgid "Set \"SMS -Relay\""
+msgstr "「SMSリレー」を設定する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:97
+msgid "Set \"SMS -tmate\""
+msgstr "「SMS -tmate」を設定します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:99
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "「SMS切り替えワイプデバイス」を設定する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:146
+msgid "Restart Modem"
+msgstr "モデムを再起動します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:154
+msgid "Data Management"
+msgstr "データ管理"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "認証がキャンセルされました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:175
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "認証エラー: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:182
+msgid "Advanced Settings Applied"
+msgstr "詳細設定が適用されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:187
+msgid "Restarting Modem..."
+msgstr "モデムを再起動しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "番号の詳細"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "この番号からの電話は自動的に拒否されます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:765
+msgid "Number"
+msgstr "番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "注記 (オプション)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "重複"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "この番号はすでにブロックされています。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "データベースエラー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "ブロックリストに保存できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:818
+msgid "Conflict"
+msgstr "対立"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"番号をブロックリストと連絡先の両方に含めることはできません。\n"
+"\n"
+"ブロックを続行して連絡先から番号を削除しますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "はい、ブロックします"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "ブロックされた番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "メモはありません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "この番号のブロックを解除してもよろしいですか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "ブロックされていない番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "写真を撮る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "リテイク"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "写真を添付"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "ビデオを録画する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "ビデオを添付する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "ビデオの録画に失敗しました: {error_msg}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "記録に失敗しました (ファイルが空です)。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "大きなビデオ ({size} KB)。送信時に圧縮されます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "空のファイルは再生できません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "写真を撮る"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "音声を録音する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "ファイルを選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "スケジュール"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "カメラエラー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "カメラを起動できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "ビデオ録画を開始できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Audio Error"
+msgstr "音声エラー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Could not start audio recorder."
+msgstr "オーディオレコーダーを開始できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:101
+msgid "Select Attachment"
+msgstr "添付ファイルの選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Attachment Error"
+msgstr "添付ファイルエラー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Failed to prepare attachment."
+msgstr "添付ファイルの準備に失敗しました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "連絡先の詳細"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "編集"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "身元"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "お気に入り"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "フルネーム"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "名前"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:665
+msgid "Yes"
+msgstr "はい"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "電話番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "メールアドレス"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "メールを追加"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "追加の詳細"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "組織"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "役職"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "住所"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "注意事項"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Webサイト"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "誕生日"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:247
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "周年"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:263
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
+msgid "Delete Contact"
+msgstr "連絡先の削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:274
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:431
+msgid "Address Books"
+msgstr "アドレス帳"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "不明なソース"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:356
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "日付を選択してください"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "クリア日付"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "{title} を選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "{title} をコピー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:390
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:639
+msgid "Copied to clipboard"
+msgstr "クリップボードにコピーされました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:525
+msgid "Export Contact"
+msgstr "輸出連絡先"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
+msgid "Are you sure you want to delete this contact?"
+msgstr "この連絡先を削除してもよろしいですか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:557
+msgid "Deleting contact..."
+msgstr "連絡先を削除しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:812
+msgid "Failed to save contact"
+msgstr "連絡先を保存できませんでした"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:819
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"番号をブロックリストと連絡先の両方に含めることはできません。\n"
+"\n"
+"ブロックの解除に進み、その番号を連絡先に追加しますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:823
+msgid "Yes, Add to Contacts"
+msgstr "はい、連絡先に追加します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "連絡先を選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "名前または番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "番号なし"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:314
+msgid "Individual SMS Notifications"
+msgstr "個別のSMS通知"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:325
+msgid "Individual Ringtones"
+msgstr "個別の着信音"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "追加する連絡先を検索..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"連絡先を選択し、カスタム サウンド ファイル (.ogg または .oga) を選択します。"
+"ファイルはローカル ストレージにコピーされます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "取り除く"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr "カスタム トーンが削除されました ([保存] をクリックしてコミットします)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:316
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "{name} のトーンを選択してください"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:319
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:396
+msgid "Select"
+msgstr "選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:324
+msgid "Supported Audio (OGG)"
+msgstr "サポートされているオーディオ (OGG)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:352
+msgid "Only .ogg or .oga files are supported"
+msgstr ".ogg または .oga ファイルのみがサポートされています"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:363
+msgid "Failed to copy audio file"
+msgstr "音声ファイルのコピーに失敗しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:383
+msgid "Custom tone added"
+msgstr "カスタムトーンを追加しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "データベース管理"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "完全に削除するデータを選択します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "通話履歴を削除する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "すべてのメッセージを削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "すべてのグループ名を削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:50
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "ブロックリストの削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:51
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "すべての連絡先を削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:130
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "アドレス帳の削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "すべて削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "本気ですか？これを元に戻すことはできません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "これにより、すべての SMS/MMS と添付ファイルが削除されます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "グループ名の削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "すべてのカスタム グループ チャット名をリセットしますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "すべての番号のブロックを解除しますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "削除可能なアドレス帳はありません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "削除できるカスタム アドレス帳はありません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"どのアドレス帳を完全に削除しますか?\n"
+"\n"
+"これにより、システムから削除されます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "「{name}」アドレス帳を完全に削除してもよろしいですか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "すべて削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"データベース、設定ファイル、連絡先を消去しますか?アプリがリセットされます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "本当にアドレス帳から全員を削除しますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "クリアするアドレス帳を選択します:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "すべてのアドレス帳"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "通話履歴が削除されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "メッセージを削除しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "メッセージと添付ファイルが削除されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "グループ名のリセット"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "ブロックリストがクリアされました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "連絡先を削除しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:252
+msgid "Contacts Deleted"
+msgstr "連絡先が削除されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:260
+msgid "Deleting address book..."
+msgstr "アドレス帳を削除しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:266
+msgid "Address Book Deleted"
+msgstr "アドレス帳が削除されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:268
+msgid "Failed to delete Address Book"
+msgstr "アドレス帳の削除に​​失敗しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:273
+msgid "Wiping Database..."
+msgstr "データベースを消去中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:286
+msgid "App Reset Complete"
+msgstr "アプリのリセットが完了しました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "年"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "月"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "時間"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "分"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:296
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:457
+msgid "Notification Overrides"
+msgstr "通知の上書き"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:161
+msgid "Find and add contacts..."
+msgstr "連絡先を検索して追加..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"このリスト内の連絡先は、電話機がサイレント モードまたはサイレント モードで"
+"あっても、常に最大音量で通知を再生します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "重複した連絡先"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "すべてを結合"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "連絡先を結合しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "残りの競合: {count}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} は連絡先に保存されています:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "アドレス帳: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "これを保持し、重複を削除します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "これを保持し、重複をマージします"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "{current}/{total} を結合しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"抽出、変換、ロード (ETL)。\n"
+"データソースまたは宛先を選択します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "vCard から連絡先をインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "連絡先を vCard にエクスポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "SIM カードから連絡先をインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "ローカルChattyからインポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "ローカル通話からインポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "Androidからインポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:68
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "iOSからインポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "通話またはメッセージをエクスポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "SIM から連絡先をインポートしています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "SIM インポート用のモデムが見つかりません"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "SIM カードに連絡先が見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "SIM から {count} 件の連絡先をインポートしました。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "SIM インポートに失敗しました: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Chatty をインポートしています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "通話をインポートしています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "オプションを選択してください:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "SMS/MMSファイルを選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "通話履歴ファイルを選択します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "USB 直接インポート (推奨)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:207
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr ""
+"iOS デバイスが検出されませんでした。 iPhoneをUSB経由で接続してください。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:210
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr ""
+"デバイスが信頼されていません。 iPhoneのロックを解除して「信頼」をタップしてく"
+"ださい。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:213
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr ""
+"iPhone からバックアップを抽出しています...これには時間がかかる場合がありま"
+"す。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "USB バックアップに失敗しました: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:226
+msgid "No SMS database found in backup."
+msgstr "バックアップに SMS データベースが見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:227
+msgid "No Call History database found in backup."
+msgstr "バックアップに通話履歴データベースが見つかりません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:230
+msgid "Importing iPhone SMS..."
+msgstr "iPhone SMS をインポートしています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone Calls..."
+msgstr "iPhone 通話をインポートしています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "iOS インポート中のエラー: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "ファイルの選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:254
+msgid "XML Files"
+msgstr "XMLファイル"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:459
+msgid "Importing..."
+msgstr "インポート中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
+msgid "Export Data"
+msgstr "データのエクスポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
+msgid "Select destination format:"
+msgstr "宛先フォーマットを選択します:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:302
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - おしゃべり/通話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:303
+msgid "Linux - Telephony"
+msgstr "Linux - テレフォニー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:304
+msgid "Android"
+msgstr "アンドロイド"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:305
+msgid "iOS"
+msgstr "iOS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "{fmt} にエクスポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
+msgid "What do you want to export?"
+msgstr "何を輸出したいのですか？"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"注意: このエクスポートはAndroid形式を使用しています。このファイルをiOSデバイ"
+"スにインポートする場合は、「Androidからインポート」オプションを使用してくださ"
+"い。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:333
+msgid "Messages (SMS/MMS)"
+msgstr "メッセージ（SMS/MMS）"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:334
+msgid "Call History"
+msgstr "通話履歴"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:344
+msgid "Export File"
+msgstr "エクスポートファイル"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:370
+msgid "Exporting..."
+msgstr "エクスポート中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:404
+msgid "Import VCard"
+msgstr "VCardをインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:406
+msgid "VCard Files"
+msgstr "VCardファイル"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:425
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:489
+msgid "No enabled address books found"
+msgstr "有効なアドレス帳が見つかりませんでした"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:433
+msgid "Select Address Book"
+msgstr "アドレス帳を選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:434
+msgid "Where do you want to import contacts?"
+msgstr "連絡先をどこにインポートしますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "{count} 件の連絡先をインポートしました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "インポートに失敗しました: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:531
+msgid "Export Contacts"
+msgstr "連絡先のエクスポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:494
+msgid "Which address book do you want to export?"
+msgstr "どのアドレス帳をエクスポートしますか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:505
+msgid "Export All Address Books"
+msgstr "すべてのアドレス帳をエクスポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:559
+msgid "No contacts found to export"
+msgstr "エクスポートする連絡先が見つかりませんでした"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "{count} 件の連絡先をエクスポートしました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "エクスポート エラー: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "メッセージのインポート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "通話履歴をインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "選択を待っています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "どこから輸入したいですか?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "システムデータベース"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "ローカルの Chatty インストールからインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "ローカルの Calls インストールからインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "輸入"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "カスタムデータベースバックアップ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "エクスポートされた SQLite DB ファイルを選択します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "データベースファイルの選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "MMS 添付ファイル (オプション)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "MMS フォルダーのバックアップ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "画像/ビデオを含むディレクトリを選択します"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "フォルダーの選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "添付ファイルをスキップする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "SMS とテキストのみをインポートする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "スキップ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "MMSフォルダーを選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:38
+msgid "Active"
+msgstr "通話中"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:39
+msgid "On Hold"
+msgstr "保留中"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:40
+msgid "Dialing..."
+msgstr "発信中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:41
+msgid "Alerting..."
+msgstr "呼び出し中..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
+msgid "Disconnected"
+msgstr "切断されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:259
+msgid "Earpiece"
+msgstr "受話口"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:260
+msgid "Speaker"
+msgstr "スピーカー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:54
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:261
+msgid "Wired Headset"
+msgstr "有線ヘッドセット"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:55
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:262
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:64
+msgid "Microphone"
+msgstr "マイク"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:65
+msgid "Wired Mic"
+msgstr "有線マイク"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:66
+msgid "Bluetooth Mic"
+msgstr "Bluetoothマイク"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:211
+msgid "Hangup and Send SMS"
+msgstr "電話を切ってSMSを送信する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:214
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:597
+msgid "Silence"
+msgstr "消音"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+msgid "Decline"
+msgstr "拒否"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+msgid "Accept"
+msgstr "応答"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:236
+msgid "Mute"
+msgstr "ミュート"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:237
+msgid "Keypad"
+msgstr "キーパッド"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:238
+msgid "Hold"
+msgstr "保留"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:253
+msgid "The call failed to disconnect."
+msgstr "通話を切断できませんでした。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:331
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:806
+msgid "Output"
+msgstr "出力"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:346
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:825
+msgid "Input"
+msgstr "入力"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
+msgid "Silenced Incoming Call"
+msgstr "無音の着信"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
+msgid "Swap"
+msgstr "切替"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:593
+msgid "Answer"
+msgstr "応答"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:601
+msgid "Message"
+msgstr "メッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:607
+msgid "Answering holds the current call"
+msgstr "応答すると現在の通話は保留されます"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:624
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
+msgid "I can't talk right now."
+msgstr "今は話すことができません。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:747
+msgid "Restarting RIL..."
+msgstr "RIL を再起動しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
+msgid "Restored!"
+msgstr "復元されました！"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:762
+msgid "Failed. Reboot Device."
+msgstr "失敗した。デバイスを再起動します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:764
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "確認中... {attempt}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
+msgid "Not connected"
+msgstr "未接続"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "電話について"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr ""
+"FLX1 および FLX1 用に設計された高速電話ダイヤラーおよびメッセージング クライ"
+"アント。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "バージョン"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "開発者"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "ライセンス"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "リンク"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "問題追跡ツール"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "バグの報告または機能のリクエスト"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "予約済み ({current}/{total})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "宛先: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "今すぐ送信"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "メッセージが削除されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "{number} にメッセージを送信しています..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:380
+msgid "Ringback Tone"
+msgstr "リングバックトーン"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:92
+msgid "Enable Local Ringback"
+msgstr "ローカルリングバックを有効にする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:107
+msgid "Selected Tone"
+msgstr "選択されたトーン"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:369
+msgid "System Default"
+msgstr "システムのデフォルト"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:137
+msgid "SIM Settings"
+msgstr "SIM設定"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:140
+msgid "My Number"
+msgstr "マイナンバー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:141
+msgid "My Number (International Format)"
+msgstr "マイナンバー（国際形式）"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:356
+msgid "Default Country Code"
+msgstr "デフォルトの国コード"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:174
+msgid "Address Book Info"
+msgstr "アドレス帳情報"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:182
+msgid "Default Address Book"
+msgstr "デフォルトのアドレス帳"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:188
+msgid "Duplicate Resolver"
+msgstr "重複リゾルバー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:190
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr "重複する番号をスキャンし、連絡先ビューに解決バナーを表示します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:203
+msgid "Lockscreen Emergency"
+msgstr "ロック画面の緊急事態"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:206
+msgid "Show Emergency Button"
+msgstr "緊急ボタンを表示"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:211
+msgid "Emergency Numbers"
+msgstr "緊急電話番号"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:228
+msgid "Quick Response"
+msgstr "素早い対応"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:231
+msgid "Add Decline Message"
+msgstr "拒否メッセージを追加"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:810
+msgid "Call Volume"
+msgstr "通話音量"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:277
+msgid "Notification Exceptions"
+msgstr "通知の例外"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:280
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:445
+msgid "Repeated Calls Bypass"
+msgstr "繰り返しの通話をバイパスする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:282
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr ""
+"同じ番号から 5 分間に 3 回電話がかかってきた場合は、最大音量を強制します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:297
+msgid "Manage contacts that always play sound"
+msgstr "常にサウンドを再生する連絡先を管理する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:329
+msgid "Manage"
+msgstr "管理"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:316
+msgid "Set custom notification sounds for specific contacts"
+msgstr "特定の連絡先にカスタム通知音を設定する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:327
+msgid "Set custom ringtones for specific contacts"
+msgstr "特定の連絡先にカスタム着信音を設定する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:352
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"デフォルトの国コードは、国際接頭辞 (+358 など) を含まない番号をフォーマットす"
+"るために使用されます。\n"
+"\n"
+"空のままにすると、システムは SIM カードまたはネットワークから自動的に検出しよ"
+"うとします。\n"
+"\n"
+"ここで 2 文字の ISO 地域コード (US、FI、DE など) または発信コード (+358、"
+"358、+1、1 など) を入力することで手動で上書きできます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:373
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"リングバック トーンは、発信通話の応答を待っている間に再生される音 (トゥーツー"
+"トゥート) です。一部の通信事業者はそれを生成しないため、ここでは手動で生成す"
+"るオプションがあります。 \n"
+"\n"
+"独自の音楽ファイルを選択することも、ファイルをクリアして標準のシステム トーン"
+"を使用することもできます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:393
+msgid "Select Ringback Tone"
+msgstr "リングバックトーンの選択"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:401
+msgid "Audio Files"
+msgstr "音声ファイル"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:427
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"テレフォニーで使用するアドレス帳を選択し、優先順位に従って並べます。最上位の"
+"アドレス帳の優先順位が最も高く、複数のアドレス帳で番号が見つかった場合は優先"
+"されます。以下の重複リゾルバー トグルを使用して重複を管理できますが、無効に"
+"なっている場合でも、エクスペリエンスを向上させるために有効にすることをお勧め"
+"します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:446
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"有効にすると、同じ電話番号から 5 分以内に 3 回電話がかかってきた場合、3 回目"
+"の電話 (およびウィンドウ内のそれ以降の電話) では、サイレント モードまたはサイ"
+"レント モードをバイパスして、電話が最大音量で強制的に鳴らされます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:458
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"電話機がサイレントモードまたはサイレントモードの場合でも、常に最大音量で通知"
+"を再生する連絡先を選択してください。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:479
+msgid "Unknown Callers"
+msgstr "不明な発信​​者"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:484
+msgid "Unknown Callers Action"
+msgstr "不明な発信​​者のアクション"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:486
+msgid "Applies also to hidden numbers."
+msgstr "隠れた数字にも適用されます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:489
+msgid "Do Nothing"
+msgstr "何もしない"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:490
+msgid "Block Completely"
+msgstr "完全にブロックする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:491
+msgid "Silence and Hide UI"
+msgstr "UI を沈黙させて非表示にする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:492
+msgid "Silence Only"
+msgstr "沈黙のみ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:500
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr "InCall ウィンドウと不明な発信​​者の通話履歴に検索ボタンを追加"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:506
+msgid "Search Engine"
+msgstr "検索エンジン"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:510
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:515
+msgid "Custom URL"
+msgstr "カスタムURL"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:565
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"不明な番号の検索に使用する URL を入力します。発信者の電話番号が表示される "
+"URL に「{number}」を含めます。\n"
+"\n"
+"例: https://mysearch.com/?q={number}\n"
+"\n"
+"通話中に検索ボタンをタップすると、「{number}」が実際の電話番号に置き換えら"
+"れ、デフォルトのブラウザで開きます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:569
+msgid "Custom Search URL"
+msgstr "カスタム検索 URL"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:590
+msgid "Desktop Shortcuts"
+msgstr "デスクトップのショートカット"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:595
+msgid "Calls"
+msgstr "電話"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:761
+msgid "Name (e.g. Mom)"
+msgstr "名前（例：お母さん）"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:811
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"これは各出力の通話音量です。通話接続時と通話中に出力が切り替わるたびにこのレ"
+"ベルが自動的に適用され、スライダーの変更はすぐに音声に反映されます。ハード"
+"ウェアは音量を粗い段階で適用し、受話口が完全に無音になることはありません。"
+"Bluetoothのレベルは、今後のルーティング対応のために保存されます。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:820
+msgid "Decline Message"
+msgstr "拒否メッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:891
+msgid "System Default (Always Enabled)"
+msgstr "システムのデフォルト (常に有効)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:902
+msgid "Personal Address Book"
+msgstr "個人アドレス帳"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:903
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"これは、システム設定で同期することを選択した場合に Andromeda に同期されるアド"
+"レス帳です。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:911
+msgid "Andromeda Contacts"
+msgstr "アンドロメダの連絡先"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:912
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"これは、システム設定で同期することを選択した場合に Andromeda から同期されるア"
+"ドレス帳です。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1037
+msgid "Settings Saved"
+msgstr "設定が保存されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:40
+msgid "Voice Message"
+msgstr "ボイスメッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:91
+msgid "Tap to Record"
+msgstr "タップして録音"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:137
+msgid "Attach Voice Note"
+msgstr "ボイスメモを添付する"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:224
+msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+msgstr "録音が MMS には大きすぎます (最大 600KB)。短くして再撮影してください。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:141
+msgid "Enable Feature"
+msgstr "機能を有効にする"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:170
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"連絡先は秘密の SMS メッセージを送信することでアクションをトリガーできます。以"
+"下に連絡先を追加し、秘密のトリガー フレーズを設定します。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:173
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"信頼できる連絡先は、秘密の SMS メッセージを送信してあなたの位置情報を要求でき"
+"ます。この機能が動作するにはTOTPが必須です。以下に連絡先を追加し、秘密のトリ"
+"ガー フレーズを設定します。例: 'SECRET TOTP' 実際の例: 'Gorilla 123456'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:176
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"信頼できる連絡先は、秘密の SMS メッセージを送信することで、サイレントにコール"
+"バックをトリガーできます。この機能が動作するにはTOTPが必須です。以下に連絡先"
+"を追加し、秘密のトリガー フレーズを設定します。例: 'SECRET TOTP' 実際の例: "
+"'Gorilla 123456'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:179
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"信頼できる連絡先はSMSリレーを送信できます。この機能を動作させるにはTOTPが必須"
+"です。以下に連絡先を追加し、秘密のトリガーフレーズを設定してください。 例: "
+"'SECRET TOTP +1234567890 MESSAGE' 実際の例: 'Gorilla 123456 +1234567890 "
+"Hello'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:182
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"信頼できる連絡先は、tmate SSH セッションを開始し、秘密の SMS メッセージを送信"
+"することで SSH アクセス文字列を受信できます。この機能を動作させるにはTOTPが必"
+"須です。以下に連絡先を追加し、秘密のトリガー フレーズを設定します。例: "
+"'SECRET TOTP' 実際の例: 'Gorilla 123456'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:185
+msgid ""
+"Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"信頼できる連絡先はデバイスのデータを消去できます。この機能を動作させるには"
+"TOTPが必須です。以下に連絡先を追加し、秘密のトリガーフレーズを設定してくださ"
+"い。 例: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' 実際の例: "
+"'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:284
+msgid "View or edit TOTP"
+msgstr "TOTPを表示・編集"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:286
+msgid "Setup TOTP"
+msgstr "TOTPを設定"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:356
+msgid "Secret message"
+msgstr "秘密のメッセージ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:368
+msgid "Remove Contact"
+msgstr "連絡先を削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Contact removed (Click Save to commit)"
+msgstr "連絡先が削除されました ([保存] をクリックしてコミットします)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:526
+msgid "Contact already in trusted list"
+msgstr "連絡先はすでに信頼できるリストに登録されています"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:540
+msgid "Contact added"
+msgstr "連絡先が追加されました"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:558
+msgid "TOTP Setup"
+msgstr "TOTPセットアップ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:604
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"このコードを信頼できる連絡先と共有してください。Gnome Authenticatorなどの認証"
+"アプリに追加する必要があります。\n"
+"\n"
+"手動で入力する場合は、以下の設定を確認してください：\n"
+"• アルゴリズム: SHA1\n"
+"• 桁数: 6\n"
+"• 間隔: 60秒\n"
+"\n"
+"各アクションには独自のコードがあります。SMSでアクションをトリガーする場合、"
+"キーワードの後に認証アプリからの現在の6桁のコードを追加する必要があります。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:633
+msgid "Copy TOTP key"
+msgstr "TOTPキーをコピー"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:644
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:686
+msgid "Regenerate"
+msgstr "再生成"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:651
+msgid "Remove current TOTP"
+msgstr "現在のTOTPを削除"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:660
+msgid "Remove TOTP Key?"
+msgstr "TOTPキーを削除しますか？"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:661
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr ""
+"TOTPキーを削除してもよろしいですか？この操作により、この機能のTOTP検証が無効"
+"になります。"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:681
+msgid "Regenerate Code?"
+msgstr "コードを再生成しますか？"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:682
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr ""
+"これにより、連絡先の認証アプリ内の現在のコードが無効になります。よろしいです"
+"か？"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS&終了"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} を保留にします"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 拒否"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "マイクのミュートを解除する"
+
+#~ msgid "MuteMic"
+#~ msgstr "ミュートマイク"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "スピーカーオフ"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "スピーカーオン"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "増幅を許可"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr ""
+#~ "スライダーを100%以上に設定できるようにします。増幅された音声は歪む場合があ"
+#~ "ります。"
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "これは通話接続時に選択した出力に適用される基本ハードウェア音量です。通話中"
+#~ "の音量ボタンはこの基本レベルの上での微調整のみを行うため、基本が0%の場合は"
+#~ "何をしても通話は無音のままです。100%を超える値はソフトウェア増幅を使用し、"
+#~ "音声が歪む場合があります。有線ヘッドセットとBluetoothのレベルは、今後の"
+#~ "ルーティング対応のために保存されます。"
+
+#~ msgid "Mute Microphone"
+#~ msgstr "マイクをミュートする"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "{番号} に送信できませんでした"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "カスタム設定の削除"
+
+#~ msgid "Delete Settings"
+#~ msgstr "設定の削除"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr "カスタム設定をすべてクリアしますか?緊急電話番号は失われます。"
+
+#~ msgid "Settings cleared"
+#~ msgstr "設定がクリアされました"
+
+#~ msgid "Error saving settings"
+#~ msgstr "設定の保存中にエラーが発生しました"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "TOTPセットアップを表示"
+
+#~ msgid "Failed to send message"
+#~ msgstr "メッセージの送信に失敗しました"
+
+#~ msgid "Switching address book..."
+#~ msgstr "アドレス帳を切り替えています..."

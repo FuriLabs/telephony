@@ -1,0 +1,2934 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: furios-app-telephony 1.00\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-30 03:18+0300\n"
+"PO-Revision-Date: 2026-01-27 12:00+0000\n"
+"Last-Translator: Telephony\n"
+"Language-Team: Telephony\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:536
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:570
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:142
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:369
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:598
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:88
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:93
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:146
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:156
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:160
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:704
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:708
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:804
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:810
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:974
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:976
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:158
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:365
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:368
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:439
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:533
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:870
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:325
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:330
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:342
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/history_rows_widget.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:97
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:166
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:260
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:145
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:185
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:407
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:420
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:443
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:576
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:328
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:466
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:540
+msgid "Missed Call"
+msgstr "Apel pierdut"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:547
+msgid "Call Back"
+msgstr "Sună din nou"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:577
+#, python-brace-format
+msgid "{count} new message"
+msgid_plural "{count} new messages"
+msgstr[0] "{count} mesaj nou"
+msgstr[1] "{count} mesaje noi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:581
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:31
+msgid "Open"
+msgstr "Deschide"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/app.py:585
+msgid "Call"
+msgstr "Apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/eds_contacts_manager.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/db_blocklist_utils.py:35
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:430
+msgid "Blocked Number"
+msgstr "Număr blocat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency Mode"
+msgstr "Modul de urgență"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:118
+msgid "Emergency calls only."
+msgstr "Numai apeluri de urgență."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:119
+msgid "Start Emergency Process"
+msgstr "Începeți procesul de urgență"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:462
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:631
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:81
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:116
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:49
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:111
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:69
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:320
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:134
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:181
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:61
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:197
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:307
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:336
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:437
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:497
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:66
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:397
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:571
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:664
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:685
+msgid "Cancel"
+msgstr "Anula"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:132
+msgid "Return to Lockscreen"
+msgstr "Reveniți la ecranul de blocare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:133
+msgid "Back"
+msgstr "Spate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
+msgid "No Numbers Configured"
+msgstr "Nu s-au configurat numere"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:137
+msgid "Set numbers in Settings."
+msgstr "Setați numere în Setări."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:148
+#, python-brace-format
+msgid "Call {number}"
+msgstr "Apelați {number}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
+msgid "Confirm Emergency Call"
+msgstr "Confirmați apelul de urgență"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:162
+#, python-brace-format
+msgid "Call {name}?"
+msgstr "Apelați {name}?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
+msgid "🟢 Yes, Call"
+msgstr "🟢 Da, sunați"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/emergency_manager.py:164
+msgid "🔴 No, Return"
+msgstr "🔴 Nu, întoarce-te"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:63
+msgid "Initializing location services..."
+msgstr "Se inițializează serviciile de localizare..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:128
+msgid "Waiting for location service..."
+msgstr "Se așteaptă serviciul de localizare..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/location_manager.py:145
+msgid "Waiting for satellite fix..."
+msgstr "Se așteaptă remedierea satelitului..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:80
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:252
+msgid "Modem Stuck"
+msgstr "Modem blocat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:81
+msgid "Call failed to disconnect."
+msgstr "Apelul nu s-a deconectat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:83
+msgid "Telephony Emergency"
+msgstr "Urgenta de telefonie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:85
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:254
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:771
+msgid "🔴 Reboot Modem"
+msgstr "🔴 Reporniți modemul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:187
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:198
+msgid "Telephony - Incoming"
+msgstr "Telefonie - Sosire"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:188
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:199
+#, python-brace-format
+msgid "🟢 Incoming: {name}"
+msgstr "🟢 Sosire: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:189
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:42
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
+msgid "Incoming Call..."
+msgstr "Apel primit..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:192
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:201
+msgid "🔁 Swap"
+msgstr "🔁 Schimbați"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:194
+msgid "🟢 Answer"
+msgstr "🟢 Răspunde"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:208
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:218
+msgid "🔴 Hangup"
+msgstr "🔴 Închide"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:200
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:43
+msgid "Waiting..."
+msgstr "Se așteaptă..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:204
+msgid "Telephony - On Hold"
+msgstr "Telefonie - În așteptare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:205
+#, python-brace-format
+msgid "⏸️ {name} (On Hold)"
+msgstr "⏸️ {name} (În așteptare)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:206
+msgid "Call On Hold..."
+msgstr "Apel în așteptare..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:207
+msgid "🔁 Resume"
+msgstr "🔁 Reluați"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:211
+msgid "Telephony - Active Call"
+msgstr "Telefonie - Apel activ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:212
+#, python-brace-format
+msgid "🟢 Active: {name}"
+msgstr "🟢 Activ: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:213
+msgid "Active Call"
+msgstr "Apel activ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/lockscreen_manager.py:216
+msgid "🔴 HangupAll"
+msgstr "🔴 HangupAll"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/mms_manager.py:245
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:39
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:29
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:447
+msgid "Modem not ready"
+msgstr "Modemul nu este gata"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:53
+msgid "Cannot dial while in another call"
+msgstr "Nu se poate forma în timpul unui alt apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_calls_manager.py:65
+#, python-brace-format
+msgid "Dial Error: {e}"
+msgstr "Eroare de apelare: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:47
+#, python-brace-format
+msgid "Failed to send: {e}"
+msgstr "Trimiterea eșuată: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:144
+msgid "Not supported"
+msgstr "Nu este acceptat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_messaging_manager.py:149
+#, python-brace-format
+msgid "Error: {e}"
+msgstr "Eroare: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:37
+#, python-brace-format
+msgid "Please wait 60 seconds before triggering {prefix} again."
+msgstr ""
+"Vă rugăm să așteptați 60 de secunde înainte de a declanșa din nou {prefix}."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:281
+#, python-brace-format
+msgid " (Accuracy: {acc}m)"
+msgstr "(Precizie: {acc}m)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:283
+#, python-brace-format
+msgid "I am here: {link}{acc_str}"
+msgstr "Sunt aici: {link}{acc_str}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/managers/ofono_trusted_actions_manager.py:291
+msgid "Failed to obtain location after trying all methods."
+msgstr "Nu s-a putut obține locația după ce am încercat toate metodele."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:139
+#, python-brace-format
+msgid "Successfully exported {count} messages to XML."
+msgstr "{count} mesaje au fost exportate în XML."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_android_utils.py:205
+#, python-brace-format
+msgid "Successfully exported {count} calls to XML."
+msgstr "{count} apeluri au fost exportate în XML."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:91
+#, python-brace-format
+msgid "Exported {count} messages to Chatty database."
+msgstr "S-au exportat {count} mesaje în baza de date Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:147
+#, python-brace-format
+msgid "Exported {count} calls to Gnome Calls database."
+msgstr "S-au exportat {count} apeluri în baza de date Gnome Calls."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:164
+msgid "Source database not found."
+msgstr "Baza de date sursă nu a fost găsită."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/exporter_local_utils.py:167
+msgid "Exported Telephony database successfully."
+msgstr "Baza de date de telefonie a fost exportată cu succes."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:34
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:205
+msgid "File not found."
+msgstr "Fișierul nu a fost găsit."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:129
+#, python-brace-format
+msgid "Imported {count} messages from Android backup."
+msgstr "S-au importat {count} mesaje din backup Android."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_android_utils.py:203
+#, python-brace-format
+msgid "Imported {count} calls from Android backup."
+msgstr "Apeluri {count} importate din backup Android."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:63
+msgid "Could not find messages table in iOS database."
+msgstr "Nu s-a putut găsi tabelul de mesaje în baza de date iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:70
+msgid "Failed to read iOS SMS database structure."
+msgstr "Nu s-a putut citi structura bazei de date SMS iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:196
+#, python-brace-format
+msgid "Imported {count} messages from iOS backup."
+msgstr "Mesaje {count} importate din backup iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:230
+msgid "Could not find call history table in iOS database."
+msgstr "Nu s-a putut găsi tabelul cu istoricul apelurilor în baza de date iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:237
+msgid "Failed to read iOS Calls database structure."
+msgstr "Nu s-a putut citi structura bazei de date Apeluri iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_ios_utils.py:303
+#, python-brace-format
+msgid "Imported {count} calls from iOS backup."
+msgstr "Apeluri {count} importate din backup iOS."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:31
+msgid "Chatty database not found."
+msgstr "Baza de date Chatty nu a fost găsită."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:53
+msgid "Could not find messages table in Chatty database."
+msgstr "Nu s-a putut găsi tabelul de mesaje în baza de date Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:60
+msgid "Failed to read Chatty database structure."
+msgstr "Nu s-a putut citi structura bazei de date Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:124
+#, python-brace-format
+msgid "Imported {count} messages from Chatty."
+msgstr "S-au importat {count} mesaje din Chatty."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:134
+msgid "Calls database not found."
+msgstr "Baza de date de apeluri nu a fost găsită."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:154
+msgid "Could not find call history table in Calls database."
+msgstr ""
+"Nu s-a putut găsi tabelul cu istoricul apelurilor în baza de date de apeluri."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:161
+msgid "Failed to read Calls database structure."
+msgstr "Nu s-a putut citi structura bazei de date Apeluri."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/importer_local_utils.py:213
+#, python-brace-format
+msgid "Imported {count} calls."
+msgstr "S-au importat {count} apeluri."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:56
+msgid "0s"
+msgstr "0s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:61
+#, python-brace-format
+msgid "{h}h {m}m"
+msgstr "{h}h {m} min"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:63
+#, python-brace-format
+msgid "{m}m {s}s"
+msgstr "{m}m {s}s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/backend/utils/model_utils.py:64
+#, python-brace-format
+msgid "{s}s"
+msgstr "{s}s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:79
+msgid "Telephony"
+msgstr "Telefonie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:110
+msgid "Dialpad"
+msgstr "Tastatură"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:111
+msgid "History"
+msgstr "Istorie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:596
+msgid "Messages"
+msgstr "Mesaje"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:117
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:597
+msgid "Contacts"
+msgstr "Contacte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:162
+msgid "Syncing Contacts..."
+msgstr "Se sincronizează contactele..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:245
+msgid "Set your number in Settings"
+msgstr "Setează-ți numărul în Setări"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:260
+msgid "Please set Default Country Code in Settings"
+msgstr "Setați codul de țară implicit în Setări"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:273
+msgid "Setup Emergency Numbers in Settings"
+msgstr "Configurați numere de urgență în Setări"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:289
+msgid "Resolve Duplicates"
+msgstr "Rezolvați duplicatele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:295
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:41
+msgid "Settings"
+msgstr "Setări"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:300
+msgid "Reload Contacts"
+msgstr "Reîncărcați contacte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:305
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
+msgid "Import / Export"
+msgstr "Import/Export"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:315
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:527
+msgid "Blocklist"
+msgstr "Lista blocată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:389
+msgid "Modem Connected"
+msgstr "Modem conectat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:391
+#, python-brace-format
+msgid "Modem Error: {message}"
+msgstr "Eroare modem: {message}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:437
+msgid "Sending USSD..."
+msgstr "Se trimite USSD..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:452
+msgid "USSD Result"
+msgstr "Rezultatul USSD"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:454
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:838
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:448
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:460
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:813
+msgid "OK"
+msgstr "Bine"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:463
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:41
+msgid "Confirm"
+msgstr "Confirma"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:499
+#, python-brace-format
+msgid "Found {count} duplicate contact. Check menu."
+msgid_plural "Found {count} duplicate contacts. Check menu."
+msgstr[0] "S-a găsit {count} contact duplicat. Verificați meniul."
+msgstr[1] "S-au găsit {count} contacte duplicate. Verificați meniul."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:524
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:576
+msgid "Contacts syncing..."
+msgstr "Persoane de contact se sincronizează..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:544
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:782
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:103
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:65
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:40
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:359
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:383
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:434
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:572
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:856
+msgid "Close"
+msgstr "Aproape"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:570
+msgid "Reloading Contacts..."
+msgstr "Se reîncarcă contactele..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:586
+msgid "Multiple Contacts Found"
+msgstr "S-au găsit mai multe persoane de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:587
+msgid "Which contact would you like to edit?"
+msgstr "Ce contact ați dori să editați?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:600
+msgid "Unknown Addressbook"
+msgstr "Agendă necunoscută"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
+msgid "Calling (Anonymous)..."
+msgstr "Apel (Anonim)..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:659
+#, python-brace-format
+msgid "Calling {number}..."
+msgstr "Se apelează {number}..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:663
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:669
+msgid "Call Failed"
+msgstr "Apel eșuat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:675
+msgid "Call Details"
+msgstr "Detalii apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:676
+#, python-brace-format
+msgid ""
+"Number: {number}\n"
+"Name: {name}\n"
+"Date: {date}\n"
+"Duration: {duration}"
+msgstr ""
+"Număr: {number}\n"
+"Nume: {name}\n"
+"Data: {date}\n"
+"Durată: {duration}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:692
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
+msgid "Unblock Number"
+msgstr "Deblocați numărul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:698
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:770
+msgid "Unblocked"
+msgstr "Deblocat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:395
+msgid "Edit Contact"
+msgstr "Editați contactul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:706
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:147
+msgid "Add to Contacts"
+msgstr "Adăugați la Contacte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:717
+msgid "Add to Existing Contact"
+msgstr "Adăugați la contactul existent"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:726
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:206
+msgid "Search Number"
+msgstr "Numărul de căutare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:750
+msgid "Send Message"
+msgstr "Trimite mesaj"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:755
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:146
+msgid "Copy Number"
+msgstr "Număr de copiere"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:760
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:29
+msgid "Block Number"
+msgstr "Numărul blocului"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:773
+msgid "Delete this call"
+msgstr "Ștergeți acest apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
+msgid "Delete Call"
+msgstr "Șterge apelul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:778
+msgid "Remove this call?"
+msgstr "Eliminați acest apel?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:792
+msgid "Number copied"
+msgstr "Număr copiat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:798
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:747
+msgid "Saving contact..."
+msgstr "Se salvează persoana de contact..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:802
+#, python-brace-format
+msgid "Added to {name}"
+msgstr "Adăugat la {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:805
+msgid "Failed to add number"
+msgstr "Nu s-a putut adăuga numărul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:813
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:184
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:214
+msgid "Add Number"
+msgstr "Adăugați numărul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/main_window.py:814
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:46
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:127
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:57
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:128
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:575
+msgid "Save"
+msgstr "Salva"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:137
+#, python-brace-format
+msgid "Draft to {count} recipients"
+msgstr "Schiță către {count} destinatari"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:164
+#, python-brace-format
+msgid "{count} Participants"
+msgstr "{count} participanți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:310
+msgid "Replies not supported for this sender"
+msgstr "Răspunsurile nu sunt acceptate pentru acest expeditor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:354
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1239
+msgid "Scheduled time must be in the future"
+msgstr "Ora programată trebuie să fie în viitor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:362
+#, python-brace-format
+msgid "Rescheduled for {time}"
+msgstr "Reprogramat pentru {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:366
+msgid "Re-Schedule Message"
+msgstr "Reprogramați mesajul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:501
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:566
+msgid "— New Messages —"
+msgstr "— Mesaje noi —"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:604
+msgid "No results found in this conversation"
+msgstr "Nu s-au găsit rezultate în această conversație"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:676
+msgid "Group Name"
+msgstr "Numele grupului"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:677
+msgid "Set group name..."
+msgstr "Setați numele grupului..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:685
+msgid "Participants"
+msgstr "Participanții"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:785
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
+msgid "Delete Conversation"
+msgstr "Șterge conversația"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:802
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1171
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:340
+msgid "Me"
+msgstr "eu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
+#, python-brace-format
+msgid ""
+"Forwarded from {sender}:\n"
+"{body}"
+msgstr ""
+"Redirecționat de la {sender}:\n"
+"{body}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:812
+#, python-brace-format
+msgid "Forwarded from {sender}"
+msgstr "Redirecționat de la {sender}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:821
+msgid "Forward To"
+msgstr "Redirecționați către"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:822
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:149
+msgid "Forward"
+msgstr "Redirecţiona"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
+msgid "Delete Message"
+msgstr "Ștergeți mesajul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:847
+msgid "Are you sure you want to delete this message?"
+msgstr "Sigur doriți să ștergeți acest mesaj?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:989
+msgid "Group renamed"
+msgstr "Grup redenumit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1017
+msgid "Compressing image..."
+msgstr "Se comprimă imaginea..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1019
+msgid "Image is too large to send"
+msgstr "Imaginea este prea mare pentru a fi trimisă"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1021
+msgid "Compressing video..."
+msgstr "Se comprimă videoclipul..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1023
+msgid "Video compression failed"
+msgstr "Compresia video nu a reușit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1025
+msgid "File is too large to send via MMS"
+msgstr "Fișierul este prea mare pentru a fi trimis prin MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1233
+msgid "Nothing to schedule"
+msgstr "Nimic de programat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1247
+msgid "Schedule Message"
+msgstr "Programează mesajul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1286
+#, python-brace-format
+msgid "Message scheduled for {time}"
+msgstr "Mesaj programat pentru {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1289
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1307
+msgid "[Attachment]"
+msgstr "[Atașament]"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1396
+msgid "Delete Group"
+msgstr "Șterge grupul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/chat_view.py:1397
+msgid ""
+"This will permanently delete the conversation history and all saved media "
+"files."
+msgstr ""
+"Aceasta va șterge definitiv istoricul conversațiilor și toate fișierele "
+"media salvate."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:60
+msgid "Search contacts"
+msgstr "Căutați contacte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:119
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:71
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:229
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:435
+msgid "Mobile"
+msgstr "Mobil"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:72
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:230
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:436
+msgid "Work"
+msgstr "Lucru"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:121
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:73
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:231
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:437
+msgid "Home"
+msgstr "Acasă"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:122
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:74
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:232
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:438
+msgid "Fax"
+msgstr "Fax"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:123
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:75
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:411
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:435
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:233
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:439
+msgid "Other"
+msgstr "Alte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:124
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:76
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:234
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:440
+msgid "Main"
+msgstr "Principal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/contacts_view.py:424
+msgid "Call Anonymous"
+msgstr "Suna pe Anonim"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:41
+msgid "Enter number"
+msgstr "Introduceți numărul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:149
+msgid "Telephony Smart Dialpad at your service"
+msgstr "Telefonie Smart Dialpad la dispoziția dumneavoastră"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:246
+msgid "Invalid number in clipboard"
+msgstr "Număr nevalid în clipboard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/dialpad_view.py:248
+msgid "Invalid number"
+msgstr "Număr nevalid"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:125
+msgid "All"
+msgstr "Toate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "Any duration"
+msgstr "Orice durata"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "Unanswered"
+msgstr "Fără răspuns"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "1s - 60s"
+msgstr "1s - 60s"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "1-3 mins"
+msgstr "1-3 minute"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "3-10 mins"
+msgstr "3-10 minute"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:182
+msgid "> 15 mins"
+msgstr "> 15 minute"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Any date"
+msgstr "Orice dată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Today"
+msgstr "Astăzi"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 3 days"
+msgstr "Ultimele 3 zile"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 14 days"
+msgstr "Ultimele 14 zile"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 30 days"
+msgstr "Ultimele 30 de zile"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/history_view.py:202
+msgid "Last 60 days"
+msgstr "Ultimele 60 de zile"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:108
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:577
+msgid "Search Contacts..."
+msgstr "Căutați în Contacte..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:226
+msgid "All Messages"
+msgstr "Toate Mesajele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:227
+msgid "Unread Messages"
+msgstr "Mesaje necitite"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:228
+msgid "Unknown Numbers"
+msgstr "Numere necunoscute"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:229
+msgid "Saved Contacts"
+msgstr "Contacte salvate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:230
+msgid "Group Messages"
+msgstr "Mesaje de grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:231
+msgid "Individual Messages"
+msgstr "Mesaje individuale"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:232
+msgid "Alphabetical Senders"
+msgstr "Expeditori alfabetici"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:324
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:446
+msgid "[Multimedia Message]"
+msgstr "[Mesaj multimedia]"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:581
+msgid "Search Messages..."
+msgstr "Căutați mesaje..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:623
+#, python-brace-format
+msgid "Start ({count})"
+msgstr "Începe ({count})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:630
+#, python-brace-format
+msgid "Open ({count})"
+msgstr "Deschide ({count})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:702
+#, python-brace-format
+msgid "Add Number: {number}"
+msgstr "Adăugați numărul: {number}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:735
+msgid "Group chat"
+msgstr "Conversație de grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:743
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:297
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:257
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:506
+msgid "No contacts found"
+msgstr "Nu s-au găsit persoane de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/views/messages_view.py:858
+msgid "No results found"
+msgstr "Nu s-au găsit rezultate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:145
+msgid "Copy Text"
+msgstr "Copiați textul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:201
+msgid "Re-Schedule"
+msgstr "Reprogramați"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:150
+msgid "Mark as Unread"
+msgstr "Marcați ca necitit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:151
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:77
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:769
+msgid "Delete"
+msgstr "Şterge"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:198
+msgid "Retry Send"
+msgstr "Reîncercați trimiterea"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:363
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:146
+#, python-brace-format
+msgid "Scheduled: {time}"
+msgstr "Programat: {time}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:370
+msgid "Failed to send"
+msgstr "Trimiterea a eșuat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:374
+msgid "Sending..."
+msgstr "Se trimite..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:631
+msgid "Open with"
+msgstr "Deschide cu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:632
+msgid "Copy"
+msgstr "Copie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:633
+msgid "Save as"
+msgstr "Salvați ca"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:677
+msgid "Open With..."
+msgstr "Deschide cu..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/chat_bubbles_widget.py:698
+msgid "Save File As"
+msgstr "Salvați fișierul ca"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hangup All Calls"
+msgstr "Închideți toate apelurile"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/incall_elements_widget.py:43
+msgid "Hang Up"
+msgstr "Închideți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:103
+#, python-brace-format
+msgid "{time} • Group"
+msgstr "{time} • Grup"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/widgets/messages_rows_widget.py:109
+#, python-brace-format
+msgid "Draft: {message}"
+msgstr "Schiță: {message}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:33
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:343
+msgid "Advanced Settings"
+msgstr "Setări avansate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:66
+msgid "Loading..."
+msgstr "Încărcare..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:103
+#, python-brace-format
+msgid "Error loading settings: {e}"
+msgstr "Eroare la încărcarea setărilor: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:111
+msgid "Secret SMS Triggers"
+msgstr "Declanșatoare SMS secrete"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:114
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:91
+msgid "Set \"Find my Telephony\""
+msgstr "Setați „Găsiți telefonul meu”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:120
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:93
+msgid "Set \"Trusted Callback\""
+msgstr "Setați „Apel invers de încredere”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:126
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:95
+msgid "Set \"SMS -Relay\""
+msgstr "Setați „SMS -Releu”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:132
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:97
+msgid "Set \"SMS -tmate\""
+msgstr "Setați „SMS -tmate”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:138
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:99
+msgid "Set \"SMS Switch Wipe Device\""
+msgstr "Setați „SMS Switch Wipe Device”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:146
+msgid "Restart Modem"
+msgstr "Reporniți modemul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:154
+msgid "Data Management"
+msgstr "Managementul datelor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:169
+msgid "Authentication cancelled"
+msgstr "Autentificarea anulată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:175
+#, python-brace-format
+msgid "Auth error: {e}"
+msgstr "Eroare de autentificare: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:182
+msgid "Advanced Settings Applied"
+msgstr "Setări avansate aplicate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/advanced_settings_window.py:187
+msgid "Restarting Modem..."
+msgstr "Se repornește modemul..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:55
+msgid "Number Details"
+msgstr "Detalii număr"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:56
+msgid "Calls from this number will be automatically rejected."
+msgstr "Apelurile de la acest număr vor fi respinse automat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:60
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:765
+msgid "Number"
+msgstr "Număr"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:67
+msgid "Note (Optional)"
+msgstr "Notă (Opțional)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "Duplicate"
+msgstr "Duplicat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:85
+msgid "This number is already blocked."
+msgstr "Acest număr este deja blocat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Database Error"
+msgstr "Eroare baza de date"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:94
+msgid "Failed to save to blocklist."
+msgstr "Nu s-a putut salva în lista blocată."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:818
+msgid "Conflict"
+msgstr "Conflict"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:108
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Blocking and remove the number from Contacts?"
+msgstr ""
+"Numărul nu poate fi atât în ​​Lista de blocare, cât și în Agendă.\n"
+"\n"
+"Doriți să continuați cu Blocarea și să eliminați numărul din Contacte?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_editor_window.py:112
+msgid "Yes, Block"
+msgstr "Da, Block"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:38
+msgid "Blocked Numbers"
+msgstr "Numere blocate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:128
+msgid "No notes"
+msgstr "Fără note"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:142
+msgid "Are you sure you want to unblock this number?"
+msgstr "Sigur doriți să deblocați acest număr?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/blocklist_window.py:155
+msgid "Unblocked number"
+msgstr "Număr deblocat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:40
+msgid "Take Picture"
+msgstr "Faceți poză"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:140
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:172
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:144
+msgid "Retake"
+msgstr "Relua"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_photo_window.py:145
+msgid "Attach Photo"
+msgstr "Atașați o fotografie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:61
+msgid "Record Video"
+msgstr "Înregistrați video"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:177
+msgid "Attach Video"
+msgstr "Atașați videoclipul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:314
+#, python-brace-format
+msgid "Failed to record video: {error_msg}"
+msgstr "Nu s-a putut înregistra videoclipul: {error_msg}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:384
+msgid "Recording failed (File empty)."
+msgstr "Înregistrarea a eșuat (Fișier gol)."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:388
+#, python-brace-format
+msgid "Large video ({size}KB). Will be compressed on send."
+msgstr "Videoclip mare ({size}KB). Va fi comprimat la trimitere."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/camera_video_window.py:405
+msgid "Cannot play empty file."
+msgstr "Nu se poate reda fișierul gol."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:60
+msgid "Take Photo"
+msgstr "Faceți o fotografie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:62
+msgid "Record Audio"
+msgstr "Înregistrare audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:63
+msgid "Choose File"
+msgstr "Alegeți Fișier"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:64
+msgid "Schedule"
+msgstr "Programa"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Camera Error"
+msgstr "Eroare camera"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:79
+msgid "Could not start the camera."
+msgstr "Camera nu a putut porni."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:88
+msgid "Could not start video recording."
+msgstr "Nu s-a putut începe înregistrarea video."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Audio Error"
+msgstr "Eroare audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:97
+msgid "Could not start audio recorder."
+msgstr "Nu s-a putut porni înregistrarea audio."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:101
+msgid "Select Attachment"
+msgstr "Selectați Atașament"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Attachment Error"
+msgstr "Eroare de atașament"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/chat_media_controller_window.py:142
+msgid "Failed to prepare attachment."
+msgstr "Atașamentul nu a fost pregătit."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:36
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:402
+msgid "Contact Details"
+msgstr "Detalii de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:107
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:179
+msgid "Edit"
+msgstr "Edita"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:141
+msgid "Identity"
+msgstr "Identitate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:144
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+msgid "Favorite"
+msgstr "Favorit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:152
+msgid "Full Name"
+msgstr "Numele complet"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:158
+msgid "Name"
+msgstr "Nume"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:162
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:665
+msgid "Yes"
+msgstr "Da"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:168
+msgid "Phone Numbers"
+msgstr "Numere de telefon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:195
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:160
+msgid "Email Addresses"
+msgstr "Adrese de e-mail"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:205
+msgid "Add Email"
+msgstr "Adăugați e-mail"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:216
+msgid "Additional Details"
+msgstr "Detalii suplimentare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Organization"
+msgstr "Organizare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:219
+msgid "Job Title"
+msgstr "Denumirea funcției"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Address"
+msgstr "Adresa"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:220
+msgid "Notes"
+msgstr "Note"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:221
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:101
+msgid "Website"
+msgstr "Site-ul web"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:251
+msgid "Birthday"
+msgstr "Ziua de naștere"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:247
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:254
+msgid "Anniversary"
+msgstr "Aniversare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:263
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
+msgid "Delete Contact"
+msgstr "Ștergeți contactul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:274
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:163
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:431
+msgid "Address Books"
+msgstr "Agende cu adrese"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:294
+msgid "Unknown Source"
+msgstr "Sursă necunoscută"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:356
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:29
+msgid "Select Date"
+msgstr "Selectați Data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:329
+msgid "Clear Date"
+msgstr "Șterge data"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:371
+#, python-brace-format
+msgid "Select {title}"
+msgstr "Selectați {title}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:381
+#, python-brace-format
+msgid "Copy {title}"
+msgstr "Copiați {title}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:390
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:639
+msgid "Copied to clipboard"
+msgstr "Copiat în clipboard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:525
+msgid "Export Contact"
+msgstr "Export de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:544
+msgid "Are you sure you want to delete this contact?"
+msgstr "Sigur doriți să ștergeți această persoană de contact?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:557
+msgid "Deleting contact..."
+msgstr "Se șterge contactul..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:812
+msgid "Failed to save contact"
+msgstr "Salvarea contactului a eșuat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:819
+msgid ""
+"Number can't be on both Blocklist and Contacts.\n"
+"\n"
+"Do you want to proceed with Unblocking and add the number to Contacts?"
+msgstr ""
+"Numărul nu poate fi atât în ​​Lista de blocare, cât și în Agendă.\n"
+"\n"
+"Doriți să continuați cu Deblocare și să adăugați numărul la Agendă?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_editor_window.py:823
+msgid "Yes, Add to Contacts"
+msgstr "Da, Adăugați la Contacte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:30
+msgid "Pick Contact"
+msgstr "Alegeți Contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:62
+msgid "Name or Number"
+msgstr "Nume sau Număr"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/contact_picker_window.py:192
+msgid "No number"
+msgstr "Nici un număr"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:314
+msgid "Individual SMS Notifications"
+msgstr "Notificări SMS individuale"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:325
+msgid "Individual Ringtones"
+msgstr "Tonuri de apel individuale"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:73
+msgid "Find contact to add..."
+msgstr "Găsiți contact pentru a adăuga..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:80
+msgid ""
+"Select a contact and choose a custom sound file (.ogg or .oga). The file "
+"will be copied to your local storage."
+msgstr ""
+"Selectați un contact și alegeți un fișier de sunet personalizat (.ogg sau ."
+"oga). Fișierul va fi copiat în spațiul de stocare local."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:186
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:167
+msgid "Remove"
+msgstr "Elimina"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:202
+msgid "Custom tone removed (Click Save to commit)"
+msgstr ""
+"Tonul personalizat a fost eliminat (Faceți clic pe Salvare pentru a se "
+"angaja)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:316
+#, python-brace-format
+msgid "Select Tone for {name}"
+msgstr "Selectați Ton pentru {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:319
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:396
+msgid "Select"
+msgstr "Selecta"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:324
+msgid "Supported Audio (OGG)"
+msgstr "Audio acceptat (OGG)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:352
+msgid "Only .ogg or .oga files are supported"
+msgstr "Sunt acceptate numai fișierele .ogg sau .oga"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:363
+msgid "Failed to copy audio file"
+msgstr "Nu s-a putut copia fișierul audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/custom_tone_list_window.py:383
+msgid "Custom tone added"
+msgstr "A fost adăugat un ton personalizat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
+msgid "Database Management"
+msgstr "Managementul bazei de date"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:32
+msgid "Select data to permanently delete."
+msgstr "Selectați datele pentru a le șterge definitiv."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:47
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
+msgid "Delete Call History"
+msgstr "Ștergeți istoricul apelurilor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:48
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
+msgid "Delete All Messages"
+msgstr "Ștergeți toate mesajele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:49
+msgid "Delete All Group Names"
+msgstr "Ștergeți toate numele grupurilor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:50
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
+msgid "Delete Blocklist"
+msgstr "Ștergeți lista blocată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:51
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete All Contacts"
+msgstr "Ștergeți toate contactele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:130
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:153
+msgid "Delete Address Book"
+msgstr "Ștergeți agenda de adrese"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:60
+msgid "DELETE EVERYTHING"
+msgstr "ȘTERGE TOTUL"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:90
+msgid "Are you sure? This cannot be undone."
+msgstr "esti sigur? Acest lucru nu poate fi anulat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:94
+msgid "This will delete all SMS/MMS and attachments."
+msgstr "Aceasta va șterge toate SMS-urile/MMS-urile și atașamentele."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
+msgid "Delete Group Names"
+msgstr "Ștergeți numele grupurilor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:98
+msgid "Reset all custom group chat names?"
+msgstr "Resetați toate numele personalizate de chat de grup?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:102
+msgid "Unblock all numbers?"
+msgstr "Deblocați toate numerele?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
+msgid "No deletable address books"
+msgstr "Nu există agende de adrese care pot fi șterse"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:126
+msgid "There are no custom address books that can be deleted."
+msgstr "Nu există agende personalizate care să poată fi șterse."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:131
+msgid ""
+"Which address book do you want to delete permanently?\n"
+"\n"
+"This will wipe it from the system."
+msgstr ""
+"Ce agendă de adrese doriți să ștergeți definitiv?\n"
+"\n"
+"Acest lucru îl va șterge din sistem."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:154
+#, python-brace-format
+msgid "Are you sure you want to permanently delete the '{name}' address book?"
+msgstr "Sigur doriți să ștergeți definitiv agenda „{name}”?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:169
+msgid "Delete EVERYTHING"
+msgstr "Șterge TOTUL"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
+msgid "Wipe database, config files and contacts? App will reset."
+msgstr ""
+"Ștergeți baza de date, fișierele de configurare și contactele? Aplicația se "
+"va reseta."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:170
+msgid "Really delete everyone from your address book?"
+msgstr "Ștergeți cu adevărat pe toată lumea din agenda dvs.?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:178
+msgid "Select which address book to clear:"
+msgstr "Selectați agenda de adrese pe care doriți să o ștergeți:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:189
+msgid "All Address Books"
+msgstr "Toate agendele de adrese"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:219
+msgid "Call History Deleted"
+msgstr "Istoricul apelurilor a fost șters"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:223
+msgid "Deleting messages..."
+msgstr "Se șterg mesajele..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:229
+msgid "Messages & Attachments Deleted"
+msgstr "Mesaje și atașamente șterse"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:236
+msgid "Group Names Reset"
+msgstr "Resetarea numelor grupurilor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:242
+msgid "Blocklist Cleared"
+msgstr "Lista blocată a fost ștearsă"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:246
+msgid "Deleting contacts..."
+msgstr "Se șterg contactele..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:252
+msgid "Contacts Deleted"
+msgstr "Contacte șterse"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:260
+msgid "Deleting address book..."
+msgstr "Se șterge agenda..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:266
+msgid "Address Book Deleted"
+msgstr "Agendă ștearsă"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:268
+msgid "Failed to delete Address Book"
+msgstr "Nu s-a șters agenda de adrese"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:273
+msgid "Wiping Database..."
+msgstr "Se șterge baza de date..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/data_management_window.py:286
+msgid "App Reset Complete"
+msgstr "Resetarea aplicației finalizată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:62
+msgid "Year"
+msgstr "An"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:81
+msgid "Month"
+msgstr "Lună"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:116
+msgid "Hour"
+msgstr "Oră"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/date_time_picker_window.py:135
+msgid "Minute"
+msgstr "Minut"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:31
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:296
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:457
+msgid "Notification Overrides"
+msgstr "Anulări de notificare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:70
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:161
+msgid "Find and add contacts..."
+msgstr "Găsiți și adăugați contacte..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/dnd_bypass_contacts_list_window.py:77
+msgid ""
+"Contacts in this list will always play notifications at full volume, even if "
+"the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Persoanele de contact din această listă vor reda întotdeauna notificări la "
+"volum maxim, chiar dacă telefonul este în modul Silențios sau Nu deranja."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:36
+msgid "Duplicate Contact"
+msgstr "Contact duplicat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:65
+msgid "Merge all"
+msgstr "Îmbină toate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:89
+msgid "Merging Contacts..."
+msgstr "Se îmbină contactele..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:108
+#, python-brace-format
+msgid "Remaining conflicts: {count}"
+msgstr "Conflicte rămase: {count}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:126
+#, python-brace-format
+msgid "{number} is saved to contacts:"
+msgstr "{number} este salvat în persoane de contact:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:142
+#, python-brace-format
+msgid "Address Book: {name}"
+msgstr "Agendă de adrese: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:163
+msgid "Keep this, Remove duplicates"
+msgstr "Păstrați asta, eliminați duplicatele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:169
+msgid "Keep this, Merge duplicates"
+msgstr "Păstrați asta, îmbinați duplicatele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/duplicate_resolution_window.py:332
+#, python-brace-format
+msgid "Merging {current}/{total}..."
+msgstr "Se îmbină {current}/{total}..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:43
+msgid ""
+"Extract, transform, load (ETL).\n"
+"Select data source or destination."
+msgstr ""
+"Extragere, transformare, încărcare (ETL).\n"
+"Selectați sursa de date sau destinația."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:59
+msgid "Import Contacts from vCard"
+msgstr "Importați contacte de pe vCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:60
+msgid "Export Contacts to vCard"
+msgstr "Exportați contactele pe vCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:61
+msgid "Import Contacts from SIM card"
+msgstr "Importați contacte de pe cartela SIM"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:65
+msgid "Import From local Chatty"
+msgstr "Import din local Chatty"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:66
+msgid "Import From local Calls"
+msgstr "Import din apeluri locale"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:67
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+msgid "Import From Android"
+msgstr "Import de pe Android"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:68
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
+msgid "Import From iOS"
+msgstr "Import din iOS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:72
+msgid "Export Calls or Messages"
+msgstr "Exportați apeluri sau mesaje"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:83
+msgid "Importing contacts from SIM..."
+msgstr "Se importă contacte de pe SIM..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:92
+msgid "No modem found for SIM import"
+msgstr "Nu a fost găsit niciun modem pentru importul SIM"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:101
+msgid "No contacts found on SIM card."
+msgstr "Nu s-au găsit persoane de contact pe cartela SIM."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:111
+#, python-brace-format
+msgid "Imported {count} contacts from SIM."
+msgstr "S-au importat {count} persoane de contact de pe SIM."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:116
+#, python-brace-format
+msgid "SIM Import failed: {e}"
+msgstr "Importul SIM a eșuat: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:124
+msgid "Importing Chatty..."
+msgstr "Se importă Chatty..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:143
+msgid "Importing Calls..."
+msgstr "Se importă apeluri..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:159
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:179
+msgid "Select an option:"
+msgstr "Selectați o opțiune:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:169
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:194
+msgid "Select SMS/MMS file"
+msgstr "Selectați fișierul SMS/MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:170
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:195
+msgid "Select Call history file"
+msgstr "Selectați fișierul istoric apeluri"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:191
+msgid "Direct USB Import (Recommended)"
+msgstr "Import direct USB (recomandat)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:207
+msgid "No iOS device detected. Please connect your iPhone via USB."
+msgstr ""
+"Nu a fost detectat niciun dispozitiv iOS. Vă rugăm să vă conectați iPhone-ul "
+"prin USB."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:210
+msgid "Device not trusted. Please unlock your iPhone and tap 'Trust'."
+msgstr ""
+"Dispozitivul nu este de încredere. Deblocați iPhone-ul și atingeți "
+"„Încredere”."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:213
+msgid "Extracting backup from iPhone... This may take a long time!"
+msgstr "Se extrage backup de pe iPhone... Acest lucru poate dura mult timp!"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:221
+#, python-brace-format
+msgid "USB Backup failed: {e}"
+msgstr "Backup USB eșuat: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:226
+msgid "No SMS database found in backup."
+msgstr "Nu s-a găsit nicio bază de date SMS în backup."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:227
+msgid "No Call History database found in backup."
+msgstr "Nu s-a găsit nicio bază de date din Istoricul apelurilor în backup."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:230
+msgid "Importing iPhone SMS..."
+msgstr "Se importă SMS-uri iPhone..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:234
+msgid "Importing iPhone Calls..."
+msgstr "Se importă apeluri iPhone..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:243
+#, python-brace-format
+msgid "Error during iOS import: {e}"
+msgstr "Eroare la importul iOS: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:251
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:117
+msgid "Select File"
+msgstr "Selectați Fișier"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:254
+msgid "XML Files"
+msgstr "Fișiere XML"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:268
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:459
+msgid "Importing..."
+msgstr "Se importă..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
+msgid "Export Data"
+msgstr "Exportați date"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:292
+msgid "Select destination format:"
+msgstr "Selectați formatul destinației:"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:302
+msgid "Linux - Chatty/Calls"
+msgstr "Linux - Chatty/Apeluri"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:303
+msgid "Linux - Telephony"
+msgstr "Linux - Telefonie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:304
+msgid "Android"
+msgstr "Android"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:305
+msgid "iOS"
+msgstr "iOS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
+#, python-brace-format
+msgid "Export to {fmt}"
+msgstr "Exportați în {fmt}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:315
+msgid "What do you want to export?"
+msgstr "Ce vrei să exporti?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:322
+msgid ""
+"Note: This export uses the Android format. When importing this file onto an "
+"iOS device, please use the \"Import From Android\" option."
+msgstr ""
+"Notă: acest export folosește formatul Android. La importarea acestui fișier "
+"pe un dispozitiv iOS, vă rugăm să folosiți opțiunea \"Importă din Android\"."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:333
+msgid "Messages (SMS/MMS)"
+msgstr "Mesaje (SMS/MMS)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:334
+msgid "Call History"
+msgstr "Istoricul apelurilor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:344
+msgid "Export File"
+msgstr "Exportați fișierul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:370
+msgid "Exporting..."
+msgstr "Exportator..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:404
+msgid "Import VCard"
+msgstr "Import VCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:406
+msgid "VCard Files"
+msgstr "Fișiere VCard"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:425
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:489
+msgid "No enabled address books found"
+msgstr "Nu s-au găsit agende de adrese activate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:433
+msgid "Select Address Book"
+msgstr "Selectați Agendă de adrese"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:434
+msgid "Where do you want to import contacts?"
+msgstr "Unde doriți să importați contacte?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:473
+#, python-brace-format
+msgid "Imported {count} contacts"
+msgstr "S-au importat {count} persoane de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:477
+#, python-brace-format
+msgid "Import failed: {e}"
+msgstr "Importarea nu a reușit: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:493
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:531
+msgid "Export Contacts"
+msgstr "Exportați contacte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:494
+msgid "Which address book do you want to export?"
+msgstr "Ce agendă de adrese doriți să exportați?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:505
+msgid "Export All Address Books"
+msgstr "Exportați toate agendele de adrese"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:559
+msgid "No contacts found to export"
+msgstr "Nu s-au găsit persoane de contact de exportat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:575
+#, python-brace-format
+msgid "Exported {count} contacts"
+msgstr "S-au exportat {count} persoane de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_export_window.py:578
+#, python-brace-format
+msgid "Export error: {e}"
+msgstr "Eroare de export: {e}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Messages"
+msgstr "Import mesaje"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:31
+msgid "Import Call History"
+msgstr "Importați istoricul apelurilor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:70
+msgid "Waiting for selection..."
+msgstr "Se asteapta selectia..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:93
+msgid "Where do you want to import from?"
+msgstr "De unde doriți să importați?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:101
+msgid "System Database"
+msgstr "Baza de date de sistem"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:103
+msgid "Import from local Chatty installation"
+msgstr "Importă din instalarea locală Chatty"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:105
+msgid "Import from local Calls installation"
+msgstr "Importați din instalarea Apelurilor locale"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:107
+msgid "Import"
+msgstr "Import"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:114
+msgid "Custom Database Backup"
+msgstr "Backup personalizat pentru baze de date"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:115
+msgid "Select an exported SQLite DB file"
+msgstr "Selectați un fișier SQLite DB exportat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:142
+msgid "Select Database File"
+msgstr "Selectați Fișierul bazei de date"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:160
+msgid "MMS Attachments (Optional)"
+msgstr "Atașamente MMS (opțional)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:168
+msgid "MMS Folder Backup"
+msgstr "Backup folder MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:169
+msgid "Select the directory containing images/videos"
+msgstr "Selectați directorul care conține imagini/videoclipuri"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:171
+msgid "Select Folder"
+msgstr "Selectați Folder"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:178
+msgid "Skip Attachments"
+msgstr "Omiteți atașamentele"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:179
+msgid "Import SMS and texts only"
+msgstr "Importați numai SMS-uri și texte"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:185
+msgid "Skip"
+msgstr "Sari peste"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/import_wizard_window.py:195
+msgid "Select MMS Folder"
+msgstr "Selectați folderul MMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:38
+msgid "Active"
+msgstr "Activ"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:39
+msgid "On Hold"
+msgstr "În așteptare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:40
+msgid "Dialing..."
+msgstr "Se apelează..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:41
+msgid "Alerting..."
+msgstr "Sună..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:44
+msgid "Disconnected"
+msgstr "Deconectat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:52
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:259
+msgid "Earpiece"
+msgstr "Casca telefonului"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:53
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:260
+msgid "Speaker"
+msgstr "Difuzor"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:54
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:261
+msgid "Wired Headset"
+msgstr "Căști cu fir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:55
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:262
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:56
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:64
+msgid "Microphone"
+msgstr "Microfon"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:65
+msgid "Wired Mic"
+msgstr "Microfon cu fir"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:66
+msgid "Bluetooth Mic"
+msgstr "Microfon Bluetooth"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:211
+msgid "Hangup and Send SMS"
+msgstr "Închideți și trimiteți SMS"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:214
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:597
+msgid "Silence"
+msgstr "Silențios"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:215
+msgid "Decline"
+msgstr "Respingeți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:216
+msgid "Accept"
+msgstr "Acceptați"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:236
+msgid "Mute"
+msgstr "Mut"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:237
+msgid "Keypad"
+msgstr "Tastatură"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:238
+msgid "Hold"
+msgstr "Așteptare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:253
+msgid "The call failed to disconnect."
+msgstr "Apelul nu s-a deconectat."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:331
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:806
+msgid "Output"
+msgstr "Ieșire"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:346
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:825
+msgid "Input"
+msgstr "Intrare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:498
+msgid "Silenced Incoming Call"
+msgstr "Apel primit silențios"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:589
+msgid "Swap"
+msgstr "Comutați"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:593
+msgid "Answer"
+msgstr "Răspundeți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:601
+msgid "Message"
+msgstr "Mesaj"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:607
+msgid "Answering holds the current call"
+msgstr "Răspunsul pune apelul curent în așteptare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:624
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:242
+msgid "I can't talk right now."
+msgstr "Nu pot vorbi acum."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:747
+msgid "Restarting RIL..."
+msgstr "Se repornește RIL..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:756
+msgid "Restored!"
+msgstr "Restaurat!"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:762
+msgid "Failed. Reboot Device."
+msgstr "A eșuat. Reporniți dispozitivul."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:764
+#, python-brace-format
+msgid "Verifying... {attempt}"
+msgstr "Se verifică... {attempt}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/incall_window.py:791
+msgid "Not connected"
+msgstr "Neconectat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:28
+msgid "About Telephony"
+msgstr "Despre telefonie"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:53
+msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
+msgstr ""
+"Apelare rapidă a telefonului și client de mesagerie concepute pentru FLX1 și "
+"FLX1."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:71
+msgid "Version"
+msgstr "Versiune"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:72
+msgid "Developer"
+msgstr "Dezvoltator"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:73
+msgid "License"
+msgstr "Licenţă"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:77
+msgid "Links"
+msgstr "Legături"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:109
+msgid "Issue Tracker"
+msgstr "Tracker probleme"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/info_window.py:110
+msgid "Report bugs or request features"
+msgstr "Raportați erori sau solicitați funcții"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:83
+#, python-brace-format
+msgid "Scheduled ({current}/{total})"
+msgstr "Programat ({current}/{total})"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:92
+#, python-brace-format
+msgid "To: {name}"
+msgstr "Către: {name}"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:156
+msgid "Send Now"
+msgstr "Trimite acum"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:174
+msgid "Message removed"
+msgstr "Mesaj eliminat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/missed_scheduled_messages_window.py:219
+#, python-brace-format
+msgid "Sending message to {number}..."
+msgstr "Se trimite mesajul către {number}..."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:89
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:380
+msgid "Ringback Tone"
+msgstr "Ton de apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:92
+msgid "Enable Local Ringback"
+msgstr "Activați apelarea locală"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:107
+msgid "Selected Tone"
+msgstr "Tonul selectat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:110
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:369
+msgid "System Default"
+msgstr "Implicit sistem"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:137
+msgid "SIM Settings"
+msgstr "Setări SIM"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:140
+msgid "My Number"
+msgstr "Numărul meu"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:141
+msgid "My Number (International Format)"
+msgstr "Numărul meu (format internațional)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:147
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:148
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:356
+msgid "Default Country Code"
+msgstr "Codul de țară implicit"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:174
+msgid "Address Book Info"
+msgstr "Informații din agendă"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:182
+msgid "Default Address Book"
+msgstr "Agendă de adrese implicită"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:188
+msgid "Duplicate Resolver"
+msgstr "Rezolvare duplicat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:190
+msgid ""
+"Scan for duplicate numbers and show a resolution banner in the Contacts view."
+msgstr ""
+"Scanați pentru numere duplicate și afișați un banner cu rezoluție în "
+"vizualizarea Contacte."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:203
+msgid "Lockscreen Emergency"
+msgstr "Blocare ecran de urgență"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:206
+msgid "Show Emergency Button"
+msgstr "Afișați butonul de urgență"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:211
+msgid "Emergency Numbers"
+msgstr "Numere de urgență"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:228
+msgid "Quick Response"
+msgstr "Răspuns rapid"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:231
+msgid "Add Decline Message"
+msgstr "Adăugați mesaj de refuz"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:246
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:810
+msgid "Call Volume"
+msgstr "Volum apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:277
+msgid "Notification Exceptions"
+msgstr "Excepții de notificare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:280
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:445
+msgid "Repeated Calls Bypass"
+msgstr "Apeluri repetate Bypass"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:282
+msgid "If the same number calls 3 times in 5 minutes, force max volume."
+msgstr "Dacă același număr sună de 3 ori în 5 minute, forțați volumul maxim."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:297
+msgid "Manage contacts that always play sound"
+msgstr "Gestionați contactele care redă întotdeauna sunet"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:306
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:318
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:329
+msgid "Manage"
+msgstr "Gestionează"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:316
+msgid "Set custom notification sounds for specific contacts"
+msgstr ""
+"Setați sunete de notificare personalizate pentru anumite persoane de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:327
+msgid "Set custom ringtones for specific contacts"
+msgstr "Setați tonuri de apel personalizate pentru anumite persoane de contact"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:352
+msgid ""
+"The Default Country Code is used to format numbers that don't include an "
+"international prefix (e.g., +358).\n"
+"\n"
+"If left empty, the system tries to detect it automatically from your SIM "
+"card or network.\n"
+"\n"
+"You can manually override it here by entering a 2-letter ISO region code (e."
+"g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1)."
+msgstr ""
+"Codul de țară implicit este folosit pentru a formata numerele care nu includ "
+"un prefix internațional (de exemplu, +358).\n"
+"\n"
+"Dacă este lăsat gol, sistemul încearcă să îl detecteze automat de pe cartela "
+"SIM sau de pe rețea.\n"
+"\n"
+"Puteți să-l înlocuiți manual aici introducând un cod de regiune ISO din 2 "
+"litere (de exemplu, SUA, FI, DE) sau un cod de apelare (de exemplu, +358, "
+"358, +1, 1)."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:373
+msgid ""
+"The ringback tone is the sound played (toot-toot-toot) while waiting for an "
+"outgoing call to be answered. Some carriers don't generate it so we have "
+"option to generate it manually here. \n"
+"\n"
+"You can select your own music file, or clear it to use the standard system "
+"tone."
+msgstr ""
+"Tonul de apel invers este sunetul redat (toot-toot-toot) în timp ce se "
+"așteaptă ca un apel de ieșire să fie răspuns. Unii operatori nu îl "
+"generează, așa că avem opțiunea de a-l genera manual aici. \n"
+"\n"
+"Puteți selecta propriul fișier de muzică sau îl puteți șterge pentru a "
+"utiliza tonul de sistem standard."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:393
+msgid "Select Ringback Tone"
+msgstr "Selectați Ton de apel"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:401
+msgid "Audio Files"
+msgstr "Fișiere audio"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:427
+msgid ""
+"Select the address books to use with Telephony and arrange them in order of "
+"priority. The topmost address book has the highest priority and will be "
+"preferred if a number is found in multiple address books. You can use the "
+"Duplicate Resolver toggle below to help manage duplicates, but even if "
+"disabled, we encourage enabling it for a better experience."
+msgstr ""
+"Selectați agendele de adrese pe care să le utilizați cu Telefonie și "
+"aranjați-le în ordinea priorității. Agenda cea mai de sus are cea mai mare "
+"prioritate și va fi preferată dacă un număr este găsit în mai multe agende. "
+"Puteți folosi comutatorul de rezolvare a duplicatelor de mai jos pentru a vă "
+"ajuta să gestionați duplicatele, dar chiar dacă este dezactivat, vă "
+"recomandăm să îl activați pentru o experiență mai bună."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:446
+msgid ""
+"When enabled, if the same phone number calls you 3 times within 5 minutes, "
+"the third call (and subsequent ones within the window) will force the phone "
+"to ring at maximum volume, bypassing Silent or Do Not Disturb modes."
+msgstr ""
+"Când este activat, dacă același număr de telefon te sună de 3 ori în 5 "
+"minute, al treilea apel (și următoarele din fereastră) va forța telefonul să "
+"sune la volum maxim, ocolind modurile Silențios sau Nu deranja."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:458
+msgid ""
+"Choose contacts that will always play notifications at full volume, even "
+"when the phone is in Silent or Do Not Disturb mode."
+msgstr ""
+"Alegeți contacte care vor reda întotdeauna notificări la volum maxim, chiar "
+"și atunci când telefonul este în modul Silențios sau Nu deranja."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:479
+msgid "Unknown Callers"
+msgstr "Apelanți necunoscuți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:484
+msgid "Unknown Callers Action"
+msgstr "Acțiunea apelanților necunoscuți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:486
+msgid "Applies also to hidden numbers."
+msgstr "Se aplică și numerelor ascunse."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:489
+msgid "Do Nothing"
+msgstr "Nu face nimic"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:490
+msgid "Block Completely"
+msgstr "Blocați complet"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:491
+msgid "Silence and Hide UI"
+msgstr "Silence și Ascunde UI"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:492
+msgid "Silence Only"
+msgstr "Numai Tăcere"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:500
+msgid "Add Search button to InCall window and Call History for unknown callers"
+msgstr ""
+"Adăugați butonul Căutare în fereastra InCall și Istoricul apelurilor pentru "
+"apelanții necunoscuți"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:506
+msgid "Search Engine"
+msgstr "Motor de căutare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:510
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:515
+msgid "Custom URL"
+msgstr "Adresă URL personalizată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:565
+#, python-brace-format
+msgid ""
+"Enter the URL you want to use for searching unknown numbers. Include "
+"'{number}' in the URL where the caller's phone number should go.\n"
+"\n"
+"For example: https://mysearch.com/?q={number}\n"
+"\n"
+"When you tap the search button during a call, we will replace '{number}' "
+"with the actual phone number and open it in your default browser."
+msgstr ""
+"Introduceți adresa URL pe care doriți să o utilizați pentru a căuta numere "
+"necunoscute. Includeți „{number}” în adresa URL la care ar trebui să apară "
+"numărul de telefon al apelantului.\n"
+"\n"
+"De exemplu: https://mysearch.com/?q={number}\n"
+"\n"
+"Când atingeți butonul de căutare în timpul unui apel, vom înlocui „{number}” "
+"cu numărul de telefon real și îl vom deschide în browserul dvs. implicit."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:569
+msgid "Custom Search URL"
+msgstr "Adresa URL de căutare personalizată"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:590
+msgid "Desktop Shortcuts"
+msgstr "Comenzi rapide de pe desktop"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:595
+msgid "Calls"
+msgstr "Apeluri"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:761
+msgid "Name (e.g. Mom)"
+msgstr "Nume (de exemplu, mama)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:811
+msgid ""
+"This is the call volume for each output. The level applies automatically "
+"when a call connects and whenever the output changes during a call, and "
+"slider changes are heard live. The hardware applies levels in coarse steps, "
+"and the earpiece never goes fully silent. The Bluetooth level is stored for "
+"upcoming routing support."
+msgstr ""
+"Acesta este volumul apelului pentru fiecare ieșire. Nivelul se aplică "
+"automat când un apel este conectat și ori de câte ori ieșirea se schimbă în "
+"timpul apelului, iar modificările glisorului se aud imediat. Hardware-ul "
+"aplică nivelurile în pași mari, iar casca telefonului nu devine niciodată "
+"complet silențioasă. Nivelul Bluetooth este stocat pentru viitorul suport de "
+"rutare."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:820
+msgid "Decline Message"
+msgstr "Refuzați mesajul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:891
+msgid "System Default (Always Enabled)"
+msgstr "Implicit de sistem (Activat întotdeauna)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:902
+msgid "Personal Address Book"
+msgstr "Agendă personală"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:903
+msgid ""
+"This is the address book that will be synced to Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Aceasta este agenda de adrese care va fi sincronizată cu Andromeda dacă "
+"alegeți să faceți acest lucru în Setările de sistem."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:911
+msgid "Andromeda Contacts"
+msgstr "Contacte Andromeda"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:912
+msgid ""
+"This is the address book that will be synced from Andromeda if you choose to "
+"do so in System Settings."
+msgstr ""
+"Aceasta este agenda de adrese care va fi sincronizată din Andromeda dacă "
+"alegeți să faceți acest lucru în Setările de sistem."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/settings_window.py:1037
+msgid "Settings Saved"
+msgstr "Setări salvate"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:40
+msgid "Voice Message"
+msgstr "Mesaj vocal"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:91
+msgid "Tap to Record"
+msgstr "Atingeți pentru a înregistra"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:137
+msgid "Attach Voice Note"
+msgstr "Atașați notă vocală"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/sound_recorder_window.py:224
+msgid "Recording is too large for MMS (Max 600KB). Please Retake shorter."
+msgstr ""
+"Înregistrarea este prea mare pentru MMS (Max 600KB). Vă rugăm să luați din "
+"nou mai scurt."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:141
+msgid "Enable Feature"
+msgstr "Activați funcția"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:170
+msgid ""
+"Contacts can trigger an action by sending a secret SMS message. Add contacts "
+"below and set their secret trigger phrase."
+msgstr ""
+"Persoanele de contact pot declanșa o acțiune prin trimiterea unui mesaj SMS "
+"secret. Adăugați persoane de contact mai jos și setați-le expresia secretă "
+"de declanșare."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:173
+msgid ""
+"Trusted contacts can request your location by sending a secret SMS message. "
+"TOTP is mandatory for this feature to work. Add contacts below and set their "
+"secret trigger phrase. Example template: 'SECRET TOTP' Real life example: "
+"'Gorilla 123456'"
+msgstr ""
+"Persoanele de contact de încredere pot solicita locația dvs. trimițând un "
+"mesaj SMS secret. TOTP este obligatoriu pentru ca această funcție să "
+"funcționeze. Adăugați persoane de contact mai jos și setați-le expresia "
+"secretă de declanșare. Șablon exemplu: „SECRET TOTP” Exemplu din viața "
+"reală: „Gorilla 123456”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:176
+msgid ""
+"Trusted contacts can silently trigger a callback by sending a secret SMS "
+"message. TOTP is mandatory for this feature to work. Add contacts below and "
+"set their secret trigger phrase. Example template: 'SECRET TOTP' Real life "
+"example: 'Gorilla 123456'"
+msgstr ""
+"Contactele de încredere pot declanșa în tăcere un apel invers prin "
+"trimiterea unui mesaj SMS secret. TOTP este obligatoriu pentru ca această "
+"funcție să funcționeze. Adăugați persoane de contact mai jos și setați-le "
+"expresia secretă de declanșare. Șablon exemplu: „SECRET TOTP” Exemplu din "
+"viața reală: „Gorilla 123456”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:179
+msgid ""
+"Trusted contacts can send an SMS relay. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP +1234567890 MESSAGE' Real life example: 'Gorilla "
+"123456 +1234567890 Hello'"
+msgstr ""
+"Contactele de încredere pot trimite un SMS releu. TOTP este obligatoriu "
+"pentru ca această funcție să funcționeze. Adăugați persoane de contact mai "
+"jos și setați-le expresia secretă de declanșare. Șablon exemplu: „SECRET "
+"TOTP +1234567890 MESAJ” Exemplu din viața reală: „Gorilla 123456 +1234567890 "
+"Salut”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:182
+msgid ""
+"Trusted contacts can start a tmate SSH session and receive the SSH access "
+"string by sending a secret SMS message. TOTP is mandatory for this feature "
+"to work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP' Real life example: 'Gorilla 123456'"
+msgstr ""
+"Persoanele de contact de încredere pot începe o sesiune SSH tmate și pot "
+"primi șirul de acces SSH trimițând un mesaj SMS secret. TOTP este "
+"obligatoriu pentru ca această funcție să funcționeze. Adăugați persoane de "
+"contact mai jos și setați-le expresia secretă de declanșare. Șablon exemplu: "
+"„SECRET TOTP” Exemplu din viața reală: „Gorilla 123456”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:185
+msgid ""
+"Trusted contacts can wipe your device. TOTP is mandatory for this feature to "
+"work. Add contacts below and set their secret trigger phrase. Example "
+"template: 'SECRET TOTP SIM_CURRENT_PIN SIM_NEW_PIN SUDO_PASSWORD' Real life "
+"example: 'Gorilla 123456 0000 1234 SupportYourLocalFootball'"
+msgstr ""
+"Contactele de încredere vă pot șterge dispozitivul. TOTP este obligatoriu "
+"pentru ca această funcție să funcționeze. Adăugați persoane de contact mai "
+"jos și setați-le expresia secretă de declanșare. Șablon exemplu: „SECRET "
+"TOTP SIM_PIN_CURENT SIM_PIN_NOU PAROLA_SUDO” Exemplu din viața reală: "
+"„Gorilla 123456 0000 1234 SusțineEchipaLocală”"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:284
+msgid "View or edit TOTP"
+msgstr "Vizualizați sau editați TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:286
+msgid "Setup TOTP"
+msgstr "Configurați TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:356
+msgid "Secret message"
+msgstr "Mesaj secret"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:368
+msgid "Remove Contact"
+msgstr "Eliminați contactul"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:392
+msgid "Contact removed (Click Save to commit)"
+msgstr "Contact eliminat (Faceți clic pe Salvare pentru a se angaja)"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:526
+msgid "Contact already in trusted list"
+msgstr "Contact deja în lista de încredere"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:540
+msgid "Contact added"
+msgstr "Contact a fost adăugat"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:558
+msgid "TOTP Setup"
+msgstr "Configurare TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:604
+msgid ""
+"Share this code with your trusted contact. They should add it to an "
+"authenticator app such as Gnome Authenticator.\n"
+"\n"
+"If entering manually, ensure the following settings:\n"
+"• Algorithm: SHA1\n"
+"• Digits: 6\n"
+"• Interval: 60 seconds\n"
+"\n"
+"Each action has its own code. When triggering an action by SMS, they must "
+"append the current 6-digit code from their authenticator after the keyword."
+msgstr ""
+"Partajați acest cod cu contactul dumneavoastră de încredere. Acesta ar "
+"trebui să-l adauge la o aplicație de autentificare, cum ar fi Gnome "
+"Authenticator.\n"
+"\n"
+"Dacă introduceți manual, asigurați-vă de următoarele setări:\n"
+"• Algoritm: SHA1\n"
+"• Cifre: 6\n"
+"• Interval: 60 secunde\n"
+"\n"
+"Fiecare acțiune are propriul cod. Când se declanșează o acțiune prin SMS, "
+"trebuie să adauge codul actual din 6 cifre de la autentificator după "
+"cuvântul cheie."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:633
+msgid "Copy TOTP key"
+msgstr "Copiați cheia TOTP"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:644
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:686
+msgid "Regenerate"
+msgstr "Regenerare"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:651
+msgid "Remove current TOTP"
+msgstr "Eliminați TOTP curent"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:660
+msgid "Remove TOTP Key?"
+msgstr "Eliminați cheia TOTP?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:661
+msgid ""
+"Are you sure you want to remove the TOTP key? This action will disable TOTP "
+"verification for this feature."
+msgstr ""
+"Sigur doriți să eliminați cheia TOTP? Această acțiune va dezactiva "
+"verificarea TOTP pentru această funcție."
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:681
+msgid "Regenerate Code?"
+msgstr "Regenerați codul?"
+
+#: /home/alaraajavamma/claude/telephony/src/telephony/ui/windows/trusted_actions_list_window.py:682
+msgid ""
+"This will invalidate the current code in your contact's authenticator app. "
+"Are you sure?"
+msgstr ""
+"Aceasta va invalida codul curent din aplicația de autentificare a "
+"contactului. Sunteți sigur?"
+
+#~ msgid "🔴 SMS&End"
+#~ msgstr "🔴 SMS și sfârșit"
+
+#, python-brace-format
+#~ msgid "🟠 {name} put as on hold"
+#~ msgstr "🟠 {name} pus ca în așteptare"
+
+#~ msgid "🔴 Decline"
+#~ msgstr "🔴 Declin"
+
+#~ msgid "UnmuteMic"
+#~ msgstr "Activați Mic"
+
+#~ msgid "MuteMic"
+#~ msgstr "MuteMic"
+
+#~ msgid "SpeakerOff"
+#~ msgstr "Difuzor oprit"
+
+#~ msgid "SpeakerOn"
+#~ msgstr "SpeakerOn"
+
+#~ msgid "Allow Amplification"
+#~ msgstr "Permite amplificarea"
+
+#~ msgid "Let sliders go above 100%. Amplified audio may distort."
+#~ msgstr ""
+#~ "Permite glisoarelor să depășească 100%. Sunetul amplificat poate fi "
+#~ "distorsionat."
+
+#~ msgid ""
+#~ "This is the base hardware volume applied to the selected output when a "
+#~ "call connects. The volume buttons during a call only adjust fine-tuning "
+#~ "on top of this base level, so if the base is 0% the call stays silent no "
+#~ "matter what. Values above 100% use software amplification and may distort "
+#~ "audio. Wired Headset and Bluetooth levels are stored for upcoming routing "
+#~ "support."
+#~ msgstr ""
+#~ "Acesta este volumul hardware de bază aplicat ieșirii selectate când un "
+#~ "apel este conectat. Butoanele de volum din timpul apelului ajustează doar "
+#~ "reglajul fin peste acest nivel de bază, deci dacă baza este 0%, apelul "
+#~ "rămâne silențios indiferent de situație. Valorile peste 100% folosesc "
+#~ "amplificare software și pot distorsiona sunetul. Nivelurile pentru Căști "
+#~ "cu fir și Bluetooth sunt stocate pentru viitorul suport de rutare."
+
+#~ msgid "Mute Microphone"
+#~ msgstr "Dezactivați microfonul"
+
+#~ msgid "Failed to send to {number}"
+#~ msgstr "Trimiterea către {number} a eșuat"
+
+#~ msgid "Delete Custom Settings"
+#~ msgstr "Ștergeți setările personalizate"
+
+#~ msgid "Delete Settings"
+#~ msgstr "Ștergeți setările"
+
+#~ msgid "Clear all custom settings? Emergency numbers will be lost."
+#~ msgstr ""
+#~ "Ștergeți toate setările personalizate? Numerele de urgență se vor pierde."
+
+#~ msgid "Settings cleared"
+#~ msgstr "Setările au fost șterse"
+
+#~ msgid "Error saving settings"
+#~ msgstr "Eroare la salvarea setărilor"
+
+#~ msgid "Show TOTP Setup"
+#~ msgstr "Afișați configurarea TOTP"
+
+#~ msgid "Failed to send message"
+#~ msgstr "Trimiterea mesajului a eșuat"
+
+#~ msgid "Switching address book..."
+#~ msgstr "Se schimbă agenda..."
