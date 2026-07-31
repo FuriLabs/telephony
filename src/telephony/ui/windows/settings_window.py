@@ -200,6 +200,16 @@ class SettingsWindow(Adw.Window):
             "duplicate-resolver-enabled", w.get_active()))
         self.grp_contacts.add(self.sw_duplicate_resolver)
 
+        self.row_add_ab = Adw.ActionRow(title=_("Add Local Address Book"))
+        btn_add_ab = Gtk.Button(icon_name="list-add-symbolic")
+        btn_add_ab.set_valign(Gtk.Align.CENTER)
+        btn_add_ab.add_css_class("flat")
+        btn_add_ab.add_css_class("circular")
+        btn_add_ab.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self._on_add_addressbook(b) or False))
+        self.row_add_ab.add_suffix(btn_add_ab)
+        self.grp_contacts.add(self.row_add_ab)
+
         self.sources_state = self.eds.get_sources_info()
         self._build_sources_list(rebuild_dropdown=True)
 
@@ -909,6 +919,73 @@ class SettingsWindow(Adw.Window):
 
         self._build_sources_list(rebuild_dropdown=False)
 
+    def _on_add_addressbook(self, btn):
+        """Prompt for a name and create a local address book."""
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Add Local Address Book"))
+        entry = Gtk.Entry(placeholder_text=_("Address book name"), margin_top=8)
+        dialog.set_extra_child(entry)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("create", _("Save"))
+        dialog.set_response_appearance("create", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("create")
+
+        def on_resp(d, resp):
+            name = entry.get_text().strip()
+            GLib.idle_add(lambda: d.close() or False)
+            if resp != "create" or not name:
+                return
+            run_in_background(self.eds.create_local_addressbook, name,
+                              on_complete=lambda ok: self._on_addressbook_created(ok, name))
+
+        dialog.connect("response", on_resp)
+        dialog.present()
+
+    def _on_addressbook_created(self, success, name):
+        """Refresh the sources list after creating an address book."""
+        if not success:
+            self.main_window.notify_error(_("Could not create address book"))
+            return
+        self.main_window.notify_success(_("Address book '{name}' created").format(name=name))
+        self._reload_sources_ui()
+
+    def _confirm_delete_addressbook(self, uid, name):
+        """Confirm and delete a local address book."""
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Delete Address Book"),
+            body=_("Are you sure you want to permanently delete the '{name}' address book?").format(name=name))
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("delete", _("Delete"))
+        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+
+        def on_resp(d, resp):
+            GLib.idle_add(lambda: d.close() or False)
+            if resp != "delete":
+                return
+            run_in_background(self.eds.delete_addressbook, uid,
+                              on_complete=self._on_addressbook_deleted)
+
+        dialog.connect("response", on_resp)
+        dialog.present()
+
+    def _on_addressbook_deleted(self, success):
+        """Refresh the sources list after an address book removal."""
+        if not success:
+            self.main_window.notify_error(_("Failed to delete Address Book"))
+            return
+        self.main_window.notify_success(_("Address Book Deleted"))
+        self._reload_sources_ui()
+
+    def _reload_sources_ui(self):
+        """Re-fetch the sources info off the main thread and rebuild the list."""
+        def done(info):
+            self.sources_state = info
+            self._build_sources_list(rebuild_dropdown=True)
+
+        run_in_background(self.eds.get_sources_info, on_complete=done)
+
     def _show_ab_info(self, title, msg):
         dialog = Adw.MessageDialog(heading=title, body=msg)
         dialog.set_transient_for(self)
@@ -970,6 +1047,16 @@ class SettingsWindow(Adw.Window):
                 btn_info_andro.connect("clicked", lambda b: GLib.idle_add(lambda: self._show_ab_info(_("Andromeda Contacts"), _(
                     "This is the address book that will be synced from Andromeda if you choose to do so in System Settings.")) or False))
                 box.append(btn_info_andro)
+
+            is_protected = item.get('uid') == "system-address-book" or item.get('name') == "Andromeda Contacts"
+            if item.get('is_local') and item.get('removable') and not is_protected:
+                btn_del = Gtk.Button(icon_name="user-trash-symbolic")
+                btn_del.set_valign(Gtk.Align.CENTER)
+                btn_del.add_css_class("flat")
+                btn_del.add_css_class("circular")
+                btn_del.connect("clicked", lambda b, uid=item['uid'], name=item['name']: GLib.idle_add(
+                    lambda: self._confirm_delete_addressbook(uid, name) or False))
+                box.append(btn_del)
 
             btn_up = Gtk.Button(icon_name="go-up-symbolic")
             btn_up.add_css_class("flat")
