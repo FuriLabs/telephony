@@ -192,9 +192,21 @@ class App(Adw.Application):
         return any(win.is_active() for win in self.get_windows())
 
     def release_keyboard_focus(self):
-        """Drop entry focus in all windows so the on-screen keyboard dismisses."""
+        """Drop entry focus in all windows and order the on-screen keyboard away."""
         for win in self.get_windows():
             win.set_focus(None)
+        self._hide_osk()
+
+    def _hide_osk(self):
+        """Hide the Phosh on-screen keyboard via its D-Bus interface."""
+        try:
+            bus = self.get_dbus_connection() or Gio.bus_get_sync(Gio.BusType.SESSION, None)
+            bus.call(
+                "sm.puri.OSK0", "/sm/puri/OSK0", "sm.puri.OSK0", "SetVisible",
+                GLib.Variant("(b)", (False,)),
+                None, Gio.DBusCallFlags.NONE, -1, None, None)
+        except Exception as e:
+            logger.debug(f"OSK hide request failed: {e}")
 
     def _present_incall_window(self):
         """Present the in-call window after the on-screen keyboard has dismissed."""
