@@ -14,10 +14,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from ..backend.utils.thread_utils import run_in_background
-import subprocess
 import urllib.parse
 from .windows.import_export_window import ImportExportDialog
-import sys
 from gettext import gettext as _, ngettext
 
 import gi
@@ -719,8 +717,8 @@ class MainWindow(Adw.Window):
     def present_chat(self, number):
         """Open chat for a number."""
         if not self.show_messages_mode:
-            logger.info("Messages mode not active. Launching Messages mode for chat.")
-            subprocess.Popen([sys.executable, "-m", "telephony.main", "--messages", "--open-chat", number])
+            logger.info("Messages mode not active. Opening the messages window for chat.")
+            self.get_application().open_messages_chat(number)
             return
 
         self.stack.set_visible_child_name("messages")
