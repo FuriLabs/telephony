@@ -20,8 +20,11 @@ import os
 import shutil
 import sqlite3
 
+from datetime import datetime
+
 from loguru import logger
 
+from .datetime_utils import format_timestamp
 from .importer_core_utils import _get_chatty_db_path, _get_value, _get_chatty_mms_path, _get_calls_db_path, _parse_generic_timestamp
 from .phone_utils import normalize_number
 
@@ -255,6 +258,24 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
         return False, str(e)
 
 
+def _parse_gom_datetime(value):
+    """Parse a GOM-serialized datetime (ISO 8601 UTC text) to local naive datetime.
+
+    gnome-calls stores start/answered/end through gom, which writes
+    g_time_val_to_iso8601() strings like '2026-08-01T10:00:00Z'.
+    """
+    if not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if dt.tzinfo is not None:
+            dt = dt.astimezone().replace(tzinfo=None)
+        return dt
+    except Exception as e:
+        logger.warning(f"[Importer] Unparseable gom datetime {value!r}: {e}")
+        return None
+
+
 def import_local_calls(db_manager, db_path=None):
     """Import call history from a Calls database."""
     db_path = db_path if db_path is not None else _get_calls_db_path()
@@ -281,6 +302,10 @@ def import_local_calls(db_manager, db_path=None):
                 conn.close()
                 return False, _("Could not find call history table in Calls database.")
 
+            c.execute(f"PRAGMA table_info({target_table})")
+            columns = {row['name'] for row in c.fetchall()}
+            is_gnome_calls = 'answered' in columns and 'end' in columns
+
             c.execute(f"SELECT * FROM {target_table}")
             rows = c.fetchall()
         except sqlite3.OperationalError as e:
@@ -301,16 +326,33 @@ def import_local_calls(db_manager, db_path=None):
                 if not target:
                     continue
 
-                duration = _get_value(row_dict, ['duration', 'length'], 0)
-                inbound = _get_value(row_dict, ['inbound', 'direction', 'type', 'is_incoming'])
-                start_time = _get_value(row_dict, ['time', 'start', 'date', 'timestamp', 'created', 'started_at'])
+                if is_gnome_calls:
+                    start_dt = _parse_gom_datetime(row_dict.get('start'))
+                    answered_dt = _parse_gom_datetime(row_dict.get('answered'))
+                    end_dt = _parse_gom_datetime(row_dict.get('end'))
+                    inbound = row_dict.get('inbound') in (1, "1", True)
 
-                dir_str = "incoming" if inbound in (1, "1", True, "incoming") else "outgoing"
+                    duration = 0
+                    if answered_dt and end_dt:
+                        duration = max(0, int((end_dt - answered_dt).total_seconds()))
 
-                if dir_str == "incoming" and duration in (0, "0"):
-                    dir_str = "missed"
+                    if inbound:
+                        dir_str = "incoming" if answered_dt else "missed"
+                    else:
+                        dir_str = "outgoing"
 
-                time_str = _parse_generic_timestamp(start_time)
+                    time_str = format_timestamp(start_dt) if start_dt else format_timestamp()
+                else:
+                    duration = _get_value(row_dict, ['duration', 'length'], 0)
+                    inbound = _get_value(row_dict, ['inbound', 'direction', 'type', 'is_incoming'])
+                    start_time = _get_value(row_dict, ['time', 'start', 'date', 'timestamp', 'created', 'started_at'])
+
+                    dir_str = "incoming" if inbound in (1, "1", True, "incoming") else "outgoing"
+
+                    if dir_str == "incoming" and duration in (0, "0"):
+                        dir_str = "missed"
+
+                    time_str = _parse_generic_timestamp(start_time)
                 norm_number = normalize_number(str(target))
                 if not norm_number or not time_str:
                     logger.warning("[Importer] Skipping local call: missing required details")

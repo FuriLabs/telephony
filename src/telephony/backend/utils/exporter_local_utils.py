@@ -16,6 +16,7 @@
 import sqlite3
 import os
 import shutil
+from datetime import timedelta, timezone
 from gettext import gettext as _
 from loguru import logger
 from .datetime_utils import parse_timestamp
@@ -209,14 +210,18 @@ def export_linux_chatty(db_manager, dest_db_path):
         return False, str(e)
 
 
-def export_linux_calls(db_manager, dest_db_path):
-    """
-    Export calls to Gnome Calls format SQLite DB.
+def _to_gom_iso(dt):
+    """Serialize a local naive datetime the way gom does: ISO 8601 in UTC."""
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    This function implements a strict ETL pipeline:
-    Extract: Queries the history table.
-    Transform: Computes Gnome Calls 'inbound' boolean representation and parses time variables.
-    Load: Populates a newly instantiated records table on the target database.
+
+def export_linux_calls(db_manager, dest_db_path):
+    """Export call history to a gnome-calls records.db.
+
+    gnome-calls reads its records through gom, so the file must carry the
+    _gom_version bookkeeping table and a 'calls' table where start/answered/end
+    are ISO 8601 UTC strings; duration is derived, not stored. An inbound call
+    without an answered time is what gnome-calls shows as missed.
     """
     try:
         if os.path.exists(dest_db_path):
@@ -225,12 +230,17 @@ def export_linux_calls(db_manager, dest_db_path):
         conn = sqlite3.connect(dest_db_path)
         c = conn.cursor()
 
-        c.execute('''CREATE TABLE records (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            target TEXT,
-            inbound INTEGER,
-            duration INTEGER,
-            time INTEGER
+        c.execute("CREATE TABLE IF NOT EXISTS '_gom_version' ('version' INTEGER)")
+        c.execute("INSERT INTO _gom_version (version) VALUES (1)")
+        c.execute("INSERT INTO _gom_version (version) VALUES (2)")
+        c.execute('''CREATE TABLE IF NOT EXISTS 'calls' (
+            'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+            'target' TEXT,
+            'inbound' INTEGER,
+            'start' BLOB,
+            'answered' BLOB,
+            'end' BLOB,
+            'protocol' TEXT
         )''')
 
         count = 0
@@ -240,22 +250,29 @@ def export_linux_calls(db_manager, dest_db_path):
             rows = src_c.fetchall()
             col_names = [desc[0] for desc in src_c.description]
 
-            for row in rows:
-                row_dict = dict(zip(col_names, row))
-                number = row_dict.get('number', '')
-                if not number:
-                    continue
+        for row in rows:
+            row_dict = dict(zip(col_names, row))
+            number = row_dict.get('number', '')
+            if not number:
+                continue
 
-                direction = row_dict.get('direction', 'incoming')
-                duration = row_dict.get('duration', 0)
-                timestamp_str = row_dict.get('timestamp', '')
+            direction = row_dict.get('direction', 'incoming')
+            try:
+                duration = max(0, int(row_dict.get('duration') or 0))
+            except (TypeError, ValueError):
+                duration = 0
+            start_dt = parse_timestamp(row_dict.get('timestamp', ''))
 
-                unix_ts = _dt_to_unix(timestamp_str)
-                inbound = 1 if direction in ("incoming", "missed") else 0
+            inbound = 1 if direction in ("incoming", "missed") else 0
+            answered = None
+            if direction == "incoming" or (direction == "outgoing" and duration > 0):
+                answered = _to_gom_iso(start_dt)
+            end = _to_gom_iso(start_dt + timedelta(seconds=duration))
 
-                c.execute("INSERT INTO records (target, inbound, duration, time) VALUES (?, ?, ?, ?)",
-                          (number, inbound, duration, unix_ts))
-                count += 1
+            c.execute('''INSERT INTO calls (target, inbound, start, answered, 'end', protocol)
+                         VALUES (?, ?, ?, ?, ?, ?)''',
+                      (number, inbound, _to_gom_iso(start_dt), answered, end, "tel"))
+            count += 1
 
         conn.commit()
         conn.close()
