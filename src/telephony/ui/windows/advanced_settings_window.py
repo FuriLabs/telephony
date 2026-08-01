@@ -211,13 +211,11 @@ class AdvancedSettingsWindow(Adw.Window):
 
     def _show_auto_recovery_info(self, btn):
         """Explain what automatic modem recovery does."""
-        body = _("When the modem stops responding, the phone quietly runs the "
-                 "recovery steps by itself: phone service restart, radio "
-                 "restart, modem power cycle, firmware restart and re-enabling "
-                 "a disabled radio. The phone is never rebooted automatically. "
-                 "If nothing helps you are asked to reboot. When this is off, "
-                 "the Modem Recovery window opens instead so you can run the "
-                 "steps yourself.")
+        body = _("When the modem stops responding, the phone quietly restarts "
+                 "the modem stack by itself and you only hear about it if that "
+                 "fails. The phone is never rebooted automatically. When this "
+                 "is off, the Modem Recovery screen appears instead so you can "
+                 "run the restart yourself.")
         dialog = Adw.MessageDialog(transient_for=self, heading=_("Automatic Modem Recovery"), body=body)
         dialog.add_response("close", _("Close"))
         dialog.set_response_appearance("close", Adw.ResponseAppearance.SUGGESTED)
@@ -225,7 +223,11 @@ class AdvancedSettingsWindow(Adw.Window):
         dialog.present()
 
     def _on_modem_recovery(self, btn):
-        """Open the guided modem recovery window."""
-        from .modem_recovery_window import ModemRecoveryWindow
-        win = ModemRecoveryWindow(self, self.parent_win.main_window.ofono)
-        win.present()
+        """Show the modem recovery screen, unless the modem is fine."""
+        main_window = self.parent_win.main_window
+        if main_window.ofono and main_window.ofono.dialing_available():
+            self._show_toast(_("The modem is working normally."))
+            return
+        app = main_window.get_application()
+        if app:
+            app.open_modem_recovery()

@@ -16,7 +16,6 @@
 import datetime
 import os
 import subprocess
-import time
 from loguru import logger
 from gi.repository import Gio, GLib
 
@@ -197,44 +196,11 @@ def restart_ofono_service():
 
 
 def restart_ril_modem():
-    """Restarts the RIL modem stack. Currently supports MTK chipsets."""
+    """Restart the vendor RIL daemon; blocking, call from a worker."""
     try:
-        subprocess.run(["setprop", "vendor.ril.mtk.restart", "1"], check=False)
+        subprocess.run(["setprop", "ctl.restart", "vendor.ril-daemon-mtk"], check=False)
     except Exception as e:
         logger.error(f"Failed to restart RIL modem: {e}")
-
-
-RADIO_GUARD_WAIT_SECONDS = 30
-RADIO_GUARD_POLL_SECONDS = 3
-
-
-def _getprop(name):
-    """Read an Android system property, empty string when unavailable."""
-    try:
-        out = subprocess.run(["getprop", name], capture_output=True, text=True, timeout=10)
-        return out.stdout.strip()
-    except Exception as e:
-        logger.warning(f"[SystemUtils] getprop {name} failed: {e}")
-        return ""
-
-
-def reenable_disabled_radio():
-    """Clear persist.vendor.radio.disabled left set by an unclean shutdown.
-
-    On FLX1s units ccci_mdinit sets the property while re-resetting the
-    modem after an unclean shutdown and nothing in this container ever
-    clears it, so the RIL daemon never starts against the healthy
-    baseband. Reasserting 0 once MD1 reports ready fires the existing
-    init trigger that starts it. Blocking, call from a worker.
-    """
-    for _ in range(RADIO_GUARD_WAIT_SECONDS // RADIO_GUARD_POLL_SECONDS):
-        if _getprop("persist.vendor.radio.disabled") != "1":
-            return
-        if _getprop("vendor.mtk.md1.status") == "ready":
-            logger.warning("[SystemUtils] MD1 ready but radio disabled, reasserting 0")
-            subprocess.run(["setprop", "persist.vendor.radio.disabled", "0"], check=False)
-            return
-        time.sleep(RADIO_GUARD_POLL_SECONDS)
 
 
 def save_modem_logs():

@@ -27,6 +27,7 @@ from ..windows.fader_window import ProximityFader
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.thread_utils import run_in_background
+from ...backend.utils.system_utils import save_modem_logs, press_power_button
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...backend.utils.phone_utils import normalize_number
 
@@ -141,6 +142,7 @@ class InCallWindow(Gtk.Window):
         self.is_ringing = False
         self.is_closing = False
         self.in_error_mode = False
+        self.in_recovery_mode = False
         self.manual_hangup = False
 
         self.is_locked = False
@@ -158,6 +160,8 @@ class InCallWindow(Gtk.Window):
         self._setup_ui()
 
         def _on_close_req(w):
+            if self.in_recovery_mode:
+                return True
             self.set_visible(False)
             return True
 
@@ -266,17 +270,29 @@ class InCallWindow(Gtk.Window):
 
         self.err_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, valign=Gtk.Align.CENTER, halign=Gtk.Align.CENTER)
         self.err_box.add_css_class("error-box")
-        lbl_err = Gtk.Label(label=_("Modem Stuck"), css_classes=["error-title"])
-        self.lbl_err_msg = Gtk.Label(label=_("The call failed to disconnect."), css_classes=["body", "error-text"])
+        lbl_err = Gtk.Label(label=_("Modem Recovery"), css_classes=["error-title"])
+        self.lbl_err_msg = Gtk.Label(label=_("The modem is not working correctly."), css_classes=["body", "error-text"])
         self.lbl_err_msg.set_wrap(True)
-        self.btn_restart = Gtk.Button(label=_("Modem Recovery"))
+        self.btn_restart = Gtk.Button(label=_("Recover Modem"))
         self.btn_restart.add_css_class("destructive-action")
         self.btn_restart.add_css_class("pill")
         self.btn_restart.set_size_request(240, 60)
         self.btn_restart.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_modem_recovery_click(b) or False))
+        self.btn_save_logs = Gtk.Button(label=_("Save Modem Logs"))
+        self.btn_save_logs.add_css_class("pill")
+        self.btn_save_logs.set_size_request(240, 60)
+        self.btn_save_logs.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save_logs_click(b) or False))
+        self.btn_reboot = Gtk.Button(label=_("Reboot phone"))
+        self.btn_reboot.add_css_class("destructive-action")
+        self.btn_reboot.add_css_class("pill")
+        self.btn_reboot.set_size_request(240, 60)
+        self.btn_reboot.set_visible(False)
+        self.btn_reboot.connect("clicked", lambda b: GLib.idle_add(lambda: press_power_button() or False))
         self.err_box.append(lbl_err)
         self.err_box.append(self.lbl_err_msg)
         self.err_box.append(self.btn_restart)
+        self.err_box.append(self.btn_save_logs)
+        self.err_box.append(self.btn_reboot)
         self.controls_stack.add_named(self.err_box, "error")
 
     def _mk_btn(self, icon, cb, cls=None):
@@ -383,6 +399,12 @@ class InCallWindow(Gtk.Window):
     def update_state(self):
         """Refresh call state and UI."""
         self.lock_manager.set_locked(self.is_locked)
+
+        if self.in_recovery_mode:
+            if not self.ofono.active_calls:
+                return
+            logger.info("[InCall] Call appeared while on the recovery page, showing call UI")
+            self.in_recovery_mode = False
 
         if self.in_error_mode:
             if not self.ofono.active_calls:
@@ -834,7 +856,7 @@ class InCallWindow(Gtk.Window):
         return False
 
     def _enter_error_state(self):
-        """Show error UI when hangup fails."""
+        """Show the recovery page when a call fails to disconnect."""
         self.audio.play_error_alert()
         self.present()
         self.in_error_mode = True
@@ -847,35 +869,85 @@ class InCallWindow(Gtk.Window):
         self.audio.restore_call_volume()
         self.is_speaker = False
         self.lbl_err_msg.set_text(_("The call failed to disconnect."))
-        self.btn_restart.set_label(_("Modem Recovery"))
+        self.btn_restart.set_label(_("Recover Modem"))
         self.btn_restart.set_sensitive(True)
+        self.btn_reboot.set_visible(False)
         self.controls_stack.set_visible_child_name("error")
 
         app = Gio.Application.get_default()
         auto = self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
-        if auto and app and app.request_auto_recovery(self._on_auto_recovery_done):
+        if auto and app and app.request_auto_recovery(self._on_recovery_done):
             self.btn_restart.set_sensitive(False)
             self.btn_restart.set_label(_("Recovering modem..."))
         else:
             self.lock_manager.show_stuck_notification()
 
-    def _on_auto_recovery_done(self, success):
-        """React to the background ladder result on the stuck screen."""
-        if not self.in_error_mode:
-            return
-        if success:
-            self._reset_from_error()
-            return
-        self.lbl_err_msg.set_text(_("Could not restore the modem. Please reboot the phone."))
-        self.btn_restart.set_label(_("Modem Recovery"))
+    def enter_recovery_mode(self, reason, failed=False):
+        """Show the modem recovery page; it stays until the modem works again."""
+        if not self.in_recovery_mode and not self.in_error_mode:
+            self.audio.play_error_alert()
+            self.lbl_name.set_text("")
+            self.lbl_number.set_text("")
+            self.lbl_status.set_text("")
+        self.in_recovery_mode = True
+        self.in_error_mode = False
+        self.is_closing = False
+        self.fader.set_active(False)
+        self.audio.update_hardware_state(False)
+        if failed:
+            self.lbl_err_msg.set_text(_("Could not restore the modem. Please reboot the phone."))
+        else:
+            self.lbl_err_msg.set_text(reason)
+        self.btn_restart.set_label(_("Recover Modem"))
         self.btn_restart.set_sensitive(True)
-        self.lock_manager.show_stuck_notification()
+        self.btn_reboot.set_visible(failed)
+        self.controls_stack.set_visible_child_name("error")
+
+    def exit_recovery_mode(self):
+        """Leave the recovery page once the modem works again."""
+        if not self.in_recovery_mode:
+            return
+        self.in_recovery_mode = False
+        self.btn_reboot.set_visible(False)
+        if self.ofono.active_calls:
+            self.update_state()
+            return
+        self._clean_reset()
+
+    def _on_recovery_done(self, success):
+        """React to the recovery verdict while the page is showing."""
+        if not self.in_error_mode and not self.in_recovery_mode:
+            return
+        self.btn_restart.set_label(_("Recover Modem"))
+        self.btn_restart.set_sensitive(True)
+        if success:
+            if self.in_error_mode:
+                self._reset_from_error()
+            return
+        if self.in_error_mode and self.is_locked:
+            self.lock_manager.show_stuck_notification()
 
     def on_modem_recovery_click(self, btn):
-        """Open the guided modem recovery window over the stuck screen."""
-        from .modem_recovery_window import ModemRecoveryWindow
-        win = ModemRecoveryWindow(self, self.ofono)
-        win.present()
+        """Restart the modem stack from the recovery page."""
+        app = Gio.Application.get_default()
+        if not app:
+            return
+        if app.request_auto_recovery(self._on_recovery_done):
+            self.btn_restart.set_sensitive(False)
+            self.btn_restart.set_label(_("Recovering modem..."))
+
+    def on_save_logs_click(self, btn):
+        """Capture modem evidence for a bug report."""
+        btn.set_sensitive(False)
+
+        def done(path):
+            btn.set_sensitive(True)
+            if path:
+                self.lbl_err_msg.set_text(_("Logs saved to {path}").format(path=path))
+            else:
+                self.lbl_err_msg.set_text(_("Saving logs failed"))
+
+        run_in_background(save_modem_logs, on_complete=done)
 
     def _reset_from_error(self, *args):
         """Reset UI after error recovery."""
