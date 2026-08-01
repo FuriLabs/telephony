@@ -19,10 +19,11 @@ import sys
 import signal
 import time
 
-package_dir = os.path.dirname(os.path.abspath(__file__))
-package_parent = os.path.dirname(package_dir)
+script_path = os.path.realpath(__file__)
+telephony_dir = os.path.dirname(script_path)
+install_dir = os.path.dirname(telephony_dir)
 
-sys.path.insert(0, package_parent)
+sys.path.insert(0, install_dir)
 
 __package__ = "telephony"
 

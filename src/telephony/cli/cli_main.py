@@ -18,12 +18,12 @@ import os
 import sys
 import argparse
 
-package_dir = os.path.dirname(os.path.abspath(__file__))
-package_parent = os.path.dirname(os.path.dirname(package_dir))
+script_path = os.path.realpath(__file__)
+cli_dir = os.path.dirname(script_path)
+telephony_dir = os.path.dirname(cli_dir)
+install_dir = os.path.dirname(telephony_dir)
 
-sys.path.insert(0, package_parent)
-
-__package__ = "telephony.cli"
+sys.path.insert(0, install_dir)
 
 from telephony.cli.commands import call_command as call
 from telephony.cli.commands import message_command as message
