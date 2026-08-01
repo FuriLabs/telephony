@@ -50,6 +50,7 @@ class MainWindow(Adw.Window):
         self._unread_timer = None
         self.btn_set = None
         self.in_error_mode = False
+        self._manual_sync_active = False
         """Initialize the main window."""
         super().__init__(application=application)
         self.app = application
@@ -414,7 +415,11 @@ class MainWindow(Adw.Window):
     def on_contacts_loaded(self, *args):
         """Handle contacts loaded event."""
         if self.eds.is_ready:
-            self.hide_loading()
+            if self._manual_sync_active:
+                self._manual_sync_active = False
+                self.notify_success(_("Contacts refreshed"))
+            else:
+                self.hide_loading()
             self._update_sensitive_actions(True)
 
     def update_unread_badge(self):
@@ -630,16 +635,19 @@ class MainWindow(Adw.Window):
         def done(result):
             refreshed, discovered = result
             if discovered:
+                self._manual_sync_active = True
                 self.notify_loading(_("Reloading Contacts..."))
                 return
             if refreshed:
                 self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
                 return
+            self._manual_sync_active = True
             self.notify_loading(_("Reloading Contacts..."))
             self.eds.reload()
 
         def failed(error):
             logger.error(f"[MainWindow] Backend refresh failed: {error}")
+            self._manual_sync_active = True
             self.notify_loading(_("Reloading Contacts..."))
             self.eds.reload()
 
