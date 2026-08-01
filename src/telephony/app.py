@@ -34,7 +34,7 @@ from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst
 from loguru import logger
 from .backend.services.dbus_service import TelephonyDaemonDBus
 from .backend.services.system_state_service import SystemStateService
-from .backend.managers.modem_recovery_manager import run_automatic_recovery
+from .backend.managers.modem_recovery_manager import execute_modem_recovery, watch_recovery_result
 from .constants import APP_ID
 from .backend.managers.database_manager import DatabaseManager
 from .backend.managers.gsettings_manager import GSettingsManager
@@ -53,6 +53,7 @@ from .backend.managers.schedule_manager import ScheduleManager
 from gettext import gettext as _, ngettext
 
 MODEM_UNAVAILABLE_DELAY_SECONDS = 60
+BOOT_UNAVAILABLE_DELAY_SECONDS = 5
 STARTUP_MODEM_CHECK_SECONDS = 15
 NETWORK_NUDGE_DELAY_SECONDS = 300
 DENIED_NOTIFY_DELAY_SECONDS = 120
@@ -167,7 +168,10 @@ class App(Adw.Application):
         self._modem_watch_timer = None
         self._modem_notified = False
         self._auto_recovery_running = False
+        self._modem_was_healthy = False
+        self._recovery_pending_unlock = False
         self.sys_state = SystemStateService()
+        self.sys_state.connect('lock-state-changed', self._on_lock_state_changed)
         self._net_nudge_timer = None
         self._denied_timer = None
         self._sim_pin_notified = False
@@ -562,45 +566,87 @@ class App(Adw.Application):
         return None
 
     def _watch_modem_health(self, *args):
-        """Arm or clear the modem-unavailable watchdog from modem state."""
+        """Arm or clear the modem-unavailable watchdog from modem state.
+
+        A modem that was healthy earlier gets a grace period since firmware
+        asserts usually recover on their own; a modem that never appeared
+        after boot gets none, there is nothing transient about it.
+        """
         missing = self.ofono.modem_health_degraded()
 
         if missing:
             if self._modem_watch_timer is None and not self._modem_notified:
+                delay = MODEM_UNAVAILABLE_DELAY_SECONDS if self._modem_was_healthy else BOOT_UNAVAILABLE_DELAY_SECONDS
                 self._modem_watch_timer = GLib.timeout_add_seconds(
-                    MODEM_UNAVAILABLE_DELAY_SECONDS, self._on_modem_unavailable)
+                    delay, self._on_modem_unavailable)
             return
 
+        self._modem_was_healthy = True
         if self._modem_watch_timer is not None:
             GLib.source_remove(self._modem_watch_timer)
             self._modem_watch_timer = None
         if self._modem_notified:
             self._modem_notified = False
             self.notification_manager.close_notification("modem_unavailable")
+            self._dismiss_recovery_surface()
 
     def _on_modem_unavailable(self):
-        """Surface the dead modem: silent recovery, notification or window."""
+        """Act on the dead modem: silent recovery first, the screen otherwise."""
         self._modem_watch_timer = None
         if not self.ofono.modem_health_degraded():
             return False
 
         if self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true":
             self.request_auto_recovery()
-            return False
+        else:
+            self._surface_modem_recovery()
+        return False
 
+    def _describe_modem_problem(self):
+        """One plain sentence about what exactly is broken."""
+        if not self.ofono.monitor.connected:
+            return _("The modem is not responding.")
+        if self.ofono.voice_interface_missing():
+            return _("The modem lost its calling service.")
+        return _("The modem is not working correctly.")
+
+    def _surface_modem_recovery(self, failed=False):
+        """Show the recovery screen, or just a bare notification while locked."""
         self._modem_notified = True
+        self._ensure_incall_window()
+        self.incall.enter_recovery_mode(self._describe_modem_problem(), failed=failed)
+
         if self.sys_state.is_locked:
+            self._recovery_pending_unlock = True
             self.notification_manager.send_notification(
                 id_key="modem_unavailable",
-                title=_("Modem unavailable"),
-                body=_("Calls are not possible until the modem recovers."),
+                title=_("Modem Recovery"),
+                body=_("Please unlock to see details."),
                 app_id_hint="io.furios.Telephony.Calls",
-                actions={"default": "app.modem-recovery", "app.modem-recovery": _("Modem Recovery")},
+                actions={"default": "app.modem-recovery", "app.modem-recovery": _("Open")},
                 priority=2
             )
         else:
-            self.open_modem_recovery()
-        return False
+            self._present_recovery_surface()
+
+    def _present_recovery_surface(self):
+        """Bring up the in-call window on its recovery page."""
+        self._recovery_pending_unlock = False
+        self.release_keyboard_focus()
+        GLib.idle_add(self._present_incall_window)
+
+    def _dismiss_recovery_surface(self):
+        """Take the recovery page down once the modem works again."""
+        self._recovery_pending_unlock = False
+        if self.incall:
+            self.incall.exit_recovery_mode()
+
+    def _on_lock_state_changed(self, _service, is_locked):
+        """Show the pending recovery screen once the user unlocks."""
+        if is_locked or not self._recovery_pending_unlock:
+            return
+        self.notification_manager.close_notification("modem_unavailable")
+        self._present_recovery_surface()
 
     def _nudges_enabled(self):
         """Service nudges follow the automatic recovery preference."""
@@ -674,48 +720,37 @@ class App(Adw.Application):
         )
 
     def request_auto_recovery(self, on_done=None):
-        """Run the silent recovery ladder once; False when already running."""
+        """Restart the modem stack once, silently; False when already running."""
         if self._auto_recovery_running:
             return False
         self._auto_recovery_running = True
 
-        def finished(success):
+        def verdict(success):
             self._auto_recovery_running = False
             if success:
-                logger.info("[App] Automatic modem recovery succeeded")
-                self.notification_manager.close_notification("modem_unavailable")
+                logger.info("[App] Modem recovery succeeded")
                 self._modem_notified = False
+                self.notification_manager.close_notification("modem_unavailable")
+                self._dismiss_recovery_surface()
             else:
-                logger.error("[App] Automatic modem recovery failed")
-                self._modem_notified = True
-                self.notification_manager.send_notification(
-                    id_key="modem_unavailable",
-                    title=_("Modem unavailable"),
-                    body=_("Could not restore the modem. Please reboot the phone."),
-                    app_id_hint="io.furios.Telephony.Calls",
-                    actions={"default": "app.modem-recovery", "app.modem-recovery": _("Modem Recovery")},
-                    priority=2
-                )
+                logger.error("[App] Modem recovery failed")
+                self._surface_modem_recovery(failed=True)
             if on_done:
                 on_done(success)
 
-        def failed(error):
-            logger.error(f"[App] Automatic modem recovery error: {error}")
-            finished(False)
+        def fired(_result):
+            watch_recovery_result(self.ofono, verdict)
 
-        run_in_background(run_automatic_recovery, self.ofono, on_complete=finished, on_error=failed)
+        def failed(error):
+            logger.warning(f"[App] Modem recovery commands errored: {error}")
+            watch_recovery_result(self.ofono, verdict)
+
+        run_in_background(execute_modem_recovery, on_complete=fired, on_error=failed)
         return True
 
     def open_modem_recovery(self):
-        """Open the guided modem recovery window."""
-        from .ui.windows.modem_recovery_window import ModemRecoveryWindow
-        parent = None
-        for win in self.get_windows():
-            if win.get_visible():
-                parent = win
-                break
-        recovery = ModemRecoveryWindow(parent, self.ofono)
-        recovery.present()
+        """Show the modem recovery screen with the current status."""
+        self._surface_modem_recovery()
 
     def ensure_voicemail_contact(self):
         """Create a Voicemail contact for the mailbox number when missing.

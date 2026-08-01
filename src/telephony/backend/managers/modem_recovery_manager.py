@@ -13,55 +13,60 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import time
+from gi.repository import GLib
 
 from loguru import logger
 
-from ..utils.system_utils import restart_ril_modem, reenable_disabled_radio, restart_ofono_service
+from ..utils.system_utils import restart_ril_modem, restart_ofono_service
 
-AUTO_RECOVERY_STEP_IDS = ("ofono", "radio", "power", "ril", "radio_flag")
-VERIFY_POLL_SECONDS = 3
-VERIFY_MAX_TICKS = 15
-PROPERTY_SETTLE_SECONDS = 3
+RECOVERY_TIMEOUT_SECONDS = 30
 
 
-def execute_recovery_step(ofono, step_id):
-    """Perform one recovery action; blocking, call from a worker thread."""
-    if step_id == "ofono":
-        restart_ofono_service()
-    elif step_id == "radio":
-        ofono.set_modem_online(False)
-        time.sleep(PROPERTY_SETTLE_SECONDS)
-        ofono.set_modem_online(True)
-    elif step_id == "power":
-        ofono.set_modem_powered(False)
-        time.sleep(PROPERTY_SETTLE_SECONDS)
-        ofono.set_modem_powered(True)
-    elif step_id == "ril":
-        restart_ril_modem()
-    elif step_id == "radio_flag":
-        reenable_disabled_radio()
+def execute_modem_recovery():
+    """Restart the whole modem stack; blocking, call from a worker thread.
 
-
-def run_automatic_recovery(ofono):
-    """Run the whole ladder silently, verifying after each step.
-
-    Walks every step except the reboot, from gentlest to strongest, and
-    stops as soon as a new call could be placed again. Blocking for up
-    to several minutes; call from a worker thread. Returns True when the
-    modem recovered.
+    Restarting the RIL daemon and then ofono restores every known failure
+    the stack can recover from without a reboot, so there is no ladder of
+    gentler steps anymore.
     """
-    for step_id in AUTO_RECOVERY_STEP_IDS:
-        logger.warning(f"[ModemRecovery] Automatic step: {step_id}")
-        try:
-            execute_recovery_step(ofono, step_id)
-        except Exception as e:
-            logger.warning(f"[ModemRecovery] Automatic step {step_id} error: {e}")
+    logger.warning("[ModemRecovery] Restarting RIL daemon and ofono")
+    restart_ril_modem()
+    restart_ofono_service()
 
-        for _ in range(VERIFY_MAX_TICKS):
-            if ofono.dialing_available():
-                logger.info(f"[ModemRecovery] Modem recovered after step: {step_id}")
-                return True
-            time.sleep(VERIFY_POLL_SECONDS)
 
-    return ofono.dialing_available()
+def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECONDS):
+    """Report recovery success or failure to on_done(bool); call on the main loop.
+
+    The verdict comes from the modem itself: the dial-availability signal
+    the ofono manager emits once the restarted stack republishes its voice
+    interface, with a timeout as the failure path. No polling.
+    """
+    state = {"handler": None, "timer": None, "done": False}
+
+    def finish(success):
+        if state["done"]:
+            return
+        state["done"] = True
+        if state["handler"] is not None:
+            ofono.disconnect(state["handler"])
+            state["handler"] = None
+        if state["timer"] is not None:
+            GLib.source_remove(state["timer"])
+            state["timer"] = None
+        logger.info(f"[ModemRecovery] Recovery {'succeeded' if success else 'failed'}")
+        on_done(success)
+
+    def on_availability(_ofono, available):
+        if available:
+            finish(True)
+
+    def on_timeout():
+        state["timer"] = None
+        finish(False)
+        return False
+
+    state["handler"] = ofono.connect('dial-availability-changed', on_availability)
+    state["timer"] = GLib.timeout_add_seconds(timeout_seconds, on_timeout)
+
+    if ofono.dialing_available():
+        finish(True)
