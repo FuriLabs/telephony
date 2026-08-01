@@ -17,12 +17,169 @@ from gettext import gettext as _
 
 import json
 import os
+import shutil
 import sqlite3
 
 from loguru import logger
 
 from .importer_core_utils import _get_chatty_db_path, _get_value, _get_chatty_mms_path, _get_calls_db_path, _parse_generic_timestamp
 from .phone_utils import normalize_number
+
+CHATTY_MM_SELF_USER = "invalid-0000000000000000"
+CHATTY_SMS_PROTOCOLS = (1, 2)
+CHATTY_DIRECTION_SYSTEM = 0
+CHATTY_STATUS_DRAFT = 1
+CHATTY_THREAD_GROUP = 1
+
+
+def _copy_attachments(db_manager, source_paths, prefix):
+    """Copy attachment files into our own data dir so they survive Chatty removal."""
+    copied = []
+    att_dir = os.path.join(db_manager.get_data_dir(), "attachments")
+    for src in source_paths:
+        try:
+            if not os.path.isfile(src):
+                logger.warning(f"[Importer] Attachment missing, skipping: {src}")
+                continue
+            os.makedirs(att_dir, exist_ok=True)
+            dest = os.path.join(att_dir, f"{prefix}_{os.path.basename(src)}")
+            if not os.path.exists(dest):
+                shutil.copy2(src, dest)
+            copied.append(dest)
+        except Exception as e:
+            logger.warning(f"[Importer] Failed to copy attachment {src}: {e}")
+    return copied
+
+
+def _read_chatty_history(c, tables, chatty_data_dir):
+    """Read messages from a modern Chatty (>= 0.4) history database.
+
+    The number never lives in the messages table: 1:1 threads carry it in
+    threads.name and group members hang off thread_members/users.
+    """
+    members = {}
+    if 'thread_members' in tables and 'users' in tables:
+        c.execute('''SELECT tm.thread_id, u.username FROM thread_members tm
+                     JOIN users u ON u.id = tm.user_id''')
+        for row in c.fetchall():
+            username = row['username']
+            if not username or username == CHATTY_MM_SELF_USER:
+                continue
+            members.setdefault(row['thread_id'], []).append(username)
+
+    attachments = {}
+    if 'message_files' in tables and 'files' in tables:
+        c.execute('''SELECT mf.message_id, f.path, mt.name AS mime
+                     FROM message_files mf
+                     JOIN files f ON f.id = mf.file_id
+                     LEFT JOIN mime_type mt ON mt.id = f.mime_type_id''')
+        for row in c.fetchall():
+            path = row['path']
+            if not path or row['mime'] in ("application/smil", "text/plain"):
+                continue
+            if not os.path.isabs(path):
+                path = os.path.join(chatty_data_dir, path)
+            attachments.setdefault(row['message_id'], []).append(path)
+
+    protocols = ",".join(str(p) for p in CHATTY_SMS_PROTOCOLS)
+    c.execute(f'''SELECT m.id, m.body, m.direction, m.time,
+                         t.id AS tid, t.name AS thread_name, t.type AS thread_type,
+                         s.username AS sender_number
+                  FROM messages m
+                  JOIN threads t ON t.id = m.thread_id
+                  JOIN accounts a ON a.id = t.account_id
+                  LEFT JOIN users s ON s.id = m.sender_id
+                  WHERE a.protocol IN ({protocols})
+                    AND m.direction != {CHATTY_DIRECTION_SYSTEM}
+                    AND IFNULL(m.status, 0) != {CHATTY_STATUS_DRAFT}''')
+
+    messages = []
+    for row in c.fetchall():
+        try:
+            is_group = row['thread_type'] == CHATTY_THREAD_GROUP
+            if is_group:
+                nums = sorted({normalize_number(n, permissive=True) for n in members.get(row['tid'], [])} - {None, ""})
+                number = ",".join(nums) if nums else normalize_number(str(row['thread_name']), permissive=True)
+            else:
+                number = normalize_number(str(row['thread_name']), permissive=True)
+            if not number:
+                continue
+
+            dir_str = "incoming" if row['direction'] == 1 else "outgoing"
+            if dir_str == "outgoing":
+                sender = "Me"
+            elif is_group and row['sender_number'] and row['sender_number'] != CHATTY_MM_SELF_USER:
+                sender = normalize_number(str(row['sender_number']), permissive=True) or number
+            else:
+                sender = number
+
+            messages.append({
+                'number': number,
+                'direction': dir_str,
+                'body': row['body'] or "",
+                'time_str': _parse_generic_timestamp(row['time']),
+                'attachments': attachments.get(row['id'], []),
+                'sender': sender,
+                'is_group': is_group,
+                'prefix': f"chatty_{row['id']}",
+            })
+        except Exception as e:
+            logger.warning(f"[Importer] Error processing Chatty message row: {e}")
+    return messages
+
+
+def _read_chatty_flat(c, tables, mms_dir):
+    """Fallback reader for old flat single-table message databases."""
+    target_table = None
+    for t in ['messages', 'chat', 'chatty_messages', 'sms']:
+        if t in tables:
+            target_table = t
+            break
+
+    if not target_table:
+        return None
+
+    c.execute(f"SELECT * FROM {target_table}")
+    messages = []
+    for row in c.fetchall():
+        try:
+            row_dict = dict(row)
+            phone = _get_value(row_dict, ['phone', 'number', 'address', 'target', 'remote_number', 'contact', 'who'])
+            if not phone:
+                continue
+
+            norm_number = normalize_number(str(phone), permissive=True)
+            if not norm_number:
+                continue
+
+            uid = _get_value(row_dict, ['uid', 'id', 'message_id'])
+            text = _get_value(row_dict, ['text', 'body', 'message', 'msg', 'content'], "")
+            time_val = _get_value(row_dict, ['time', 'date', 'timestamp', 'created', 'created_at'])
+            direction = _get_value(row_dict, ['direction', 'type', 'is_from_me', 'inbound'])
+            dir_str = "incoming" if direction in (1, "1", True, "incoming") else "outgoing"
+
+            attachments = []
+            if uid and os.path.isdir(mms_dir):
+                for folder in os.listdir(mms_dir):
+                    if folder.endswith(str(uid)):
+                        folder_path = os.path.join(mms_dir, folder)
+                        if os.path.isdir(folder_path):
+                            for file in os.listdir(folder_path):
+                                attachments.append(os.path.join(folder_path, file))
+
+            messages.append({
+                'number': norm_number,
+                'direction': dir_str,
+                'body': str(text),
+                'time_str': _parse_generic_timestamp(time_val),
+                'attachments': attachments,
+                'sender': "Me" if dir_str == "outgoing" else norm_number,
+                'is_group': False,
+                'prefix': f"chatty_{uid}",
+            })
+        except Exception as e:
+            logger.warning(f"[Importer] Error processing Chatty message row: {e}")
+    return messages
 
 
 def import_local_chatty(db_manager, db_path=None, mms_dir=None):
@@ -32,6 +189,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
         return False, _("Chatty database not found.")
 
     mms_dir = mms_dir if mms_dir is not None else _get_chatty_mms_path()
+    chatty_data_dir = os.path.dirname(os.path.normpath(mms_dir))
     count = 0
 
     try:
@@ -41,24 +199,22 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
 
         try:
             c.execute("SELECT name FROM sqlite_master WHERE type='table'")
-            tables = [row['name'] for row in c.fetchall()]
+            tables = {row['name'] for row in c.fetchall()}
 
-            target_table = None
-            for t in ['messages', 'chat', 'chatty_messages', 'sms']:
-                if t in tables:
-                    target_table = t
-                    break
+            if 'threads' in tables and 'messages' in tables:
+                messages = _read_chatty_history(c, tables, chatty_data_dir)
+            else:
+                messages = _read_chatty_flat(c, tables, mms_dir)
 
-            if not target_table:
+            if messages is None:
                 conn.close()
                 return False, _("Could not find messages table in Chatty database.")
-
-            c.execute(f"SELECT * FROM {target_table}")
-            rows = c.fetchall()
         except sqlite3.OperationalError as e:
             logger.error(f"[Importer] Chatty query failed: {e}")
             conn.close()
             return False, _("Failed to read Chatty database structure.")
+
+        conn.close()
 
         to_insert = []
         with db_manager.lock:
@@ -66,50 +222,21 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
             db_c.execute("SELECT remote_number, body, timestamp, direction FROM messages")
             existing_messages = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
 
-        for row in rows:
-            try:
-                row_dict = dict(row)
-                phone = _get_value(row_dict, ['phone', 'number', 'address', 'target', 'remote_number', 'contact'])
-                if not phone:
-                    continue
-
-                norm_number = normalize_number(str(phone), permissive=True)
-                uid = _get_value(row_dict, ['uid', 'id', 'message_id'])
-                text = _get_value(row_dict, ['text', 'body', 'message', 'msg', 'content'], "")
-                time_val = _get_value(row_dict, ['time', 'date', 'timestamp', 'created', 'created_at'])
-                direction = _get_value(row_dict, ['direction', 'type', 'is_from_me', 'inbound'])
-
-                dir_str = "incoming" if direction in (1, "1", True, "incoming") else "outgoing"
-                time_str = _parse_generic_timestamp(time_val)
-
-                sig = (norm_number, str(text), time_str, dir_str)
-                if sig in existing_messages:
-                    continue
-
-                existing_messages.add(sig)
-
-                attachments = []
-                if os.path.exists(mms_dir) and uid:
-                    for folder in os.listdir(mms_dir):
-                        if folder.endswith(str(uid)):
-                            folder_path = os.path.join(mms_dir, folder)
-                            if os.path.isdir(folder_path):
-                                for file in os.listdir(folder_path):
-                                    attachments.append(os.path.join(folder_path, file))
-
-                att_json = json.dumps(attachments) if attachments else "[]"
-                msg_type = 'mms' if attachments else 'sms'
-                sender = "Me" if dir_str == "outgoing" else norm_number
-
-                if not norm_number or not dir_str or not time_str:
-                    logger.warning("[Importer] Skipping local message: missing required details")
-                    continue
-                to_insert.append((norm_number, dir_str, str(text), "read", time_str, msg_type, att_json, sender))
-            except Exception as e:
-                logger.warning(f"[Importer] Error processing Chatty message row: {e}")
+        for msg in messages:
+            sig = (msg['number'], msg['body'], msg['time_str'], msg['direction'])
+            if sig in existing_messages:
                 continue
 
-        conn.close()
+            existing_messages.add(sig)
+
+            attachments = _copy_attachments(db_manager, msg['attachments'], msg['prefix'])
+            if not msg['body'] and not attachments:
+                continue
+
+            att_json = json.dumps(attachments) if attachments else "[]"
+            msg_type = 'mms' if attachments or msg['is_group'] else 'sms'
+            to_insert.append((msg['number'], msg['direction'], msg['body'], "read",
+                              msg['time_str'], msg_type, att_json, msg['sender']))
 
         if to_insert:
             to_insert.sort(key=lambda x: x[4])
