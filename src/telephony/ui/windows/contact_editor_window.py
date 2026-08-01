@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Adw, Gdk, GLib
+from gi.repository import Gtk, Adw, Gdk, Gio, GLib
 from loguru import logger
 from gettext import gettext as _
 
@@ -175,20 +175,22 @@ class ContactEditor(Adw.Window):
 
             grp_id.add(self.entry_fn)
         else:
+            is_fav_val = self._extract_field("X-FOLKS-FAVOURITE")
+            is_fav = bool(is_fav_val and is_fav_val.lower() == "true")
             if self.contact_name:
-                grp_id.add(self._create_view_row(_("Name"), self.contact_name))
-
-            is_fav = self._extract_field("X-FOLKS-FAVOURITE")
-            if is_fav and is_fav.lower() == "true":
+                row_name = self._create_view_row(_("Name"), self.contact_name)
+                if is_fav:
+                    row_name.add_suffix(Gtk.Image.new_from_icon_name("starred-symbolic"))
+                grp_id.add(row_name)
+            elif is_fav:
                 grp_id.add(self._create_view_row(_("Favorite"), _("Yes")))
 
         page.add(grp_id)
 
         self._add_address_books_group(page)
 
-        grp_phones = Adw.PreferencesGroup(title=_("Phone Numbers"))
+        self.grp_phones = Adw.PreferencesGroup(title=_("Phone Numbers"))
         if self.mode == "EDIT":
-            self.phone_rows_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
             self.phone_entries = []
 
             if current_phones:
@@ -201,40 +203,35 @@ class ContactEditor(Adw.Window):
             for p_num, p_label in phones:
                 self._add_phone_row(p_num, p_label)
 
-            grp_phones.add(self.phone_rows_box)
-            btn_add_phone = Gtk.Button(label=_("Add Number"), margin_top=6)
-            btn_add_phone.connect("clicked", lambda b: GLib.idle_add(lambda: self._add_phone_row("", "Mobile") or False))
-            grp_phones.add(btn_add_phone)
+            self.grp_phones.set_header_suffix(self._group_add_button(_("Add Number"), lambda: self._add_phone_row("", "Mobile")))
         else:
             if current_phones:
                 for num, lbl in current_phones:
-                    grp_phones.add(self._create_view_row(translate_phone_label(lbl), num))
+                    self.grp_phones.add(self._phone_view_row(num, lbl))
             else:
-                grp_phones.set_visible(False)
-        page.add(grp_phones)
+                self.grp_phones.set_visible(False)
+        page.add(self.grp_phones)
 
-        grp_emails = Adw.PreferencesGroup(title=_("Email Addresses"))
+        self.grp_emails = Adw.PreferencesGroup(title=_("Email Addresses"))
         if self.mode == "EDIT":
-            self.email_rows_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
             self.email_entries = []
 
             emails = current_emails if current_emails else [("", "Home")]
             for e_addr, e_label in emails:
                 self._add_email_row(e_addr, e_label)
 
-            grp_emails.add(self.email_rows_box)
-            btn_add_email = Gtk.Button(label=_("Add Email"), margin_top=6)
-            btn_add_email.connect("clicked", lambda b: GLib.idle_add(lambda: self._add_email_row("", "Home") or False))
-            grp_emails.add(btn_add_email)
+            self.grp_emails.set_header_suffix(self._group_add_button(_("Add Email"), lambda: self._add_email_row("", "Home")))
         else:
             if current_emails:
                 for addr, lbl in current_emails:
-                    grp_emails.add(self._create_view_row(translate_phone_label(lbl), addr))
+                    self.grp_emails.add(self._email_view_row(addr, lbl))
             else:
-                grp_emails.set_visible(False)
-        page.add(grp_emails)
+                self.grp_emails.set_visible(False)
+        page.add(self.grp_emails)
 
-        grp_adv = Adw.PreferencesGroup(title=_("Additional Details"))
+        grp_adv = Adw.PreferencesGroup()
+        exp_adv = Adw.ExpanderRow(title=_("Additional Details"))
+        grp_adv.add(exp_adv)
 
         text_fields = [
             ("ORG", _("Organization")), ("TITLE", _("Job Title")),
@@ -251,42 +248,46 @@ class ContactEditor(Adw.Window):
                 row = Adw.EntryRow(title=lbl)
                 if val:
                     row.set_text(val)
+                    has_adv_data = True
 
-                grp_adv.add(row)
+                exp_adv.add_row(row)
                 self.adv_entries[key] = row
-                has_adv_data = True
             else:
                 if val:
-                    grp_adv.add(self._create_view_row(lbl, val))
+                    exp_adv.add_row(self._create_view_row(lbl, val))
                     has_adv_data = True
 
         bday_val = self._extract_field("BDAY")
         anniv_val = self._extract_field("ANNIVERSARY")
 
         if self.mode == "EDIT":
-            self.bday_row = self._create_date_editor(grp_adv, _("Birthday"), bday_val)
-            self.anniv_row = self._create_date_editor(grp_adv, _("Anniversary"), anniv_val)
-            has_adv_data = True
+            self.bday_row = self._create_date_editor(_("Birthday"), bday_val)
+            self.anniv_row = self._create_date_editor(_("Anniversary"), anniv_val)
+            exp_adv.add_row(self.bday_row)
+            exp_adv.add_row(self.anniv_row)
+            if bday_val or anniv_val:
+                has_adv_data = True
         else:
             if bday_val:
-                grp_adv.add(self._create_view_row(_("Birthday"), bday_val))
+                exp_adv.add_row(self._create_view_row(_("Birthday"), bday_val))
                 has_adv_data = True
             if anniv_val:
-                grp_adv.add(self._create_view_row(_("Anniversary"), anniv_val))
+                exp_adv.add_row(self._create_view_row(_("Anniversary"), anniv_val))
                 has_adv_data = True
 
+        exp_adv.set_expanded(has_adv_data and self.mode == "EDIT")
         if not has_adv_data and self.mode == "VIEW":
             grp_adv.set_visible(False)
         page.add(grp_adv)
 
         if self.uid and not is_andromeda:
             grp_danger = Adw.PreferencesGroup()
-            btn_del = Gtk.Button(label=_("Delete Contact"))
-            btn_del.add_css_class("destructive-action")
-            btn_del.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_delete(b) or False))
+            row_del = Adw.ActionRow(title=_("Delete Contact"), activatable=True)
+            row_del.add_css_class("error")
+            row_del.connect("activated", lambda r: GLib.idle_add(lambda: self.on_delete(None) or False))
             if not self.eds.is_ready:
-                btn_del.set_sensitive(False)
-            grp_danger.add(btn_del)
+                row_del.set_sensitive(False)
+            grp_danger.add(row_del)
             page.add(grp_danger)
 
         self.toast_overlay.set_child(view)
@@ -332,8 +333,8 @@ class ContactEditor(Adw.Window):
                 grp.add(row)
                 self.source_toggles[s['uid']] = row
 
-    def _create_date_editor(self, group, title, current_val):
-        """Create a date editor row."""
+    def _create_date_editor(self, title, current_val):
+        """Create a date editor row; the caller adds it to its container."""
         row = Adw.ActionRow(title=title)
 
         lbl_date = Gtk.Label(label=_("Select Date"), css_classes=["dim-label"])
@@ -349,8 +350,6 @@ class ContactEditor(Adw.Window):
         btn_clear.add_css_class("circular")
         btn_clear.set_tooltip_text(_("Clear Date"))
         row.add_suffix(btn_clear)
-
-        group.add(row)
 
         row._selected_date = None
 
@@ -429,44 +428,91 @@ class ContactEditor(Adw.Window):
         """Add a phone number entry row."""
         label_keys = ["Mobile", "Work", "Home", "Fax", "Other"]
         display_labels = [_("Mobile"), _("Work"), _("Home"), _("Fax"), _("Other")]
-        self._add_field_row(self.phone_rows_box, self.phone_entries,
+        self._add_field_row(self.grp_phones, self.phone_entries,
                             label_keys, display_labels, label, text,
-                            Gtk.InputPurpose.PHONE)
+                            _("Phone"), Gtk.InputPurpose.PHONE)
 
     def _add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
         label_keys = ["Home", "Work", "Other"]
         display_labels = [_("Home"), _("Work"), _("Other")]
-        self._add_field_row(self.email_rows_box, self.email_entries,
+        self._add_field_row(self.grp_emails, self.email_entries,
                             label_keys, display_labels, label, text,
-                            Gtk.InputPurpose.EMAIL)
+                            _("Email"), Gtk.InputPurpose.EMAIL)
 
-    def _add_field_row(self, rows_box, entries_list, label_keys, display_labels, label, text, purpose):
-        """Add a two-line field card: label selector and remove button on
-        top, full-width value entry below."""
-        row = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    def _add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose):
+        """Add an entry row with an inline type selector and remove button."""
+        row = Adw.EntryRow(title=title)
+        row.set_text(text)
+        row.set_input_purpose(purpose)
 
-        top = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         dropdown = Gtk.DropDown.new_from_strings(display_labels)
         if label in label_keys:
             dropdown.set_selected(label_keys.index(label))
         dropdown.set_valign(Gtk.Align.CENTER)
         dropdown.add_css_class("flat")
-        top.append(dropdown)
-        top.append(Gtk.Box(hexpand=True))
 
         btn_remove = Gtk.Button(icon_name="user-trash-symbolic", css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
-        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: [rows_box.remove(row), entries_list.remove((entry, dropdown))] and False))
-        top.append(btn_remove)
-        row.append(top)
+        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: [group.remove(row), entries_list.remove((row, dropdown))] and False))
 
-        entry = Gtk.Entry(text=text)
-        entry.set_input_purpose(purpose)
-        entry.set_hexpand(True)
-        row.append(entry)
+        row.add_suffix(dropdown)
+        row.add_suffix(btn_remove)
+        group.add(row)
+        entries_list.append((row, dropdown))
 
-        rows_box.append(row)
-        entries_list.append((entry, dropdown))
+    def _group_add_button(self, tooltip, callback):
+        """Build the header add button for a preferences group."""
+        btn = Gtk.Button(icon_name="list-add-symbolic", css_classes=["flat"], valign=Gtk.Align.CENTER)
+        btn.set_tooltip_text(tooltip)
+        btn.connect("clicked", lambda b: GLib.idle_add(lambda: callback() or False))
+        return btn
+
+    def _phone_view_row(self, number, label):
+        """Read-only phone row with message and call shortcuts."""
+        row = self._create_view_row(translate_phone_label(label), number)
+
+        btn_msg = Gtk.Button(icon_name="mail-message-new-symbolic", valign=Gtk.Align.CENTER)
+        btn_msg.add_css_class("circular")
+        btn_msg.add_css_class("secondary-btn")
+        btn_msg.set_size_request(34, 34)
+        btn_msg.connect("clicked", lambda b: GLib.idle_add(lambda: self._message_number(number) or False))
+
+        btn_call = Gtk.Button(icon_name="call-start-symbolic", valign=Gtk.Align.CENTER)
+        btn_call.add_css_class("circular")
+        btn_call.add_css_class("call-btn-small")
+        btn_call.set_size_request(34, 34)
+        btn_call.set_sensitive(bool(self.main_window.ofono and self.main_window.ofono.dialing_available()))
+        btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self._call_number(number) or False))
+
+        row.add_suffix(btn_msg)
+        row.add_suffix(btn_call)
+        return row
+
+    def _email_view_row(self, address, label):
+        """Read-only email row with a mail client shortcut."""
+        row = self._create_view_row(translate_phone_label(label), address)
+        btn_mail = Gtk.Button(icon_name="mail-send-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat", "circular"])
+        btn_mail.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_mailto(address) or False))
+        row.add_suffix(btn_mail)
+        return row
+
+    def _message_number(self, number):
+        """Open a chat for the number, leaving the modal editor first."""
+        self.close()
+        self.main_window.present_chat(normalize_number(number))
+
+    def _call_number(self, number):
+        """Start a call to the number, leaving the modal editor first."""
+        self.close()
+        self.main_window.start_call(number)
+
+    def _open_mailto(self, address):
+        """Open the default mail client for the address."""
+        try:
+            Gio.AppInfo.launch_default_for_uri(f"mailto:{address}", None)
+        except Exception as e:
+            logger.warning(f"[ContactEditor] Could not open mail client: {e}")
+            self.toast_overlay.add_toast(Adw.Toast.new(_("No email app available")))
 
     def _extract_phones_with_labels(self):
         """Parse phone numbers from vCard data."""
