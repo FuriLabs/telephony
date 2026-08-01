@@ -39,6 +39,7 @@ EMERGENCY_FEEDBACK_RESTORE_SECONDS = 5
 SMS_RESOLVE_TIMEOUT_SECONDS = 60
 UNCLAIMED_STATE_LIMIT = 20
 SEEN_SIGNATURE_LIMIT = 50
+VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 
 
@@ -134,19 +135,28 @@ class OfonoManager(GObject.Object):
         return custom or self.voicemail_mailbox
 
     def _apply_voicemail_props(self, props):
-        """Apply MessageWaiting properties and announce changes."""
-        changed = False
-        if 'VoicemailWaiting' in props and bool(props['VoicemailWaiting']) != self.voicemail_waiting:
-            self.voicemail_waiting = bool(props['VoicemailWaiting'])
-            changed = True
-        if 'VoicemailMessageCount' in props and int(props['VoicemailMessageCount']) != self.voicemail_count:
-            self.voicemail_count = int(props['VoicemailMessageCount'])
-            changed = True
+        """Apply MessageWaiting properties and announce changes.
+
+        A message count of 255 is the carrier standard for a mailbox
+        that is not configured, so it is stored as no voicemail at all.
+        """
+        waiting = self.voicemail_waiting
+        count = self.voicemail_count
+        if 'VoicemailWaiting' in props:
+            waiting = bool(props['VoicemailWaiting'])
+        if 'VoicemailMessageCount' in props:
+            count = int(props['VoicemailMessageCount'])
+        if count == VOICEMAIL_UNCONFIGURED_COUNT:
+            logger.debug("[OfonoManager] Voicemail mailbox not configured, hiding voicemail")
+            waiting = False
+            count = 0
+        if waiting != self.voicemail_waiting or count != self.voicemail_count:
+            self.voicemail_waiting = waiting
+            self.voicemail_count = count
+            GLib.idle_add(self.emit, 'voicemail-changed', self.voicemail_waiting, self.voicemail_count)
         if 'VoicemailMailboxNumber' in props and str(props['VoicemailMailboxNumber']) != self.voicemail_mailbox:
             self.voicemail_mailbox = str(props['VoicemailMailboxNumber'])
             GLib.idle_add(self.emit, 'voicemail-mailbox-changed', self.voicemail_mailbox)
-        if changed:
-            GLib.idle_add(self.emit, 'voicemail-changed', self.voicemail_waiting, self.voicemail_count)
 
     def on_message_waiting_signal(self, proxy, sender, signal, params):
         """Handle MessageWaiting property changes."""
