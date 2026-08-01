@@ -10,7 +10,11 @@ Standards-Version: 4.7.2
 
 Package: furios-app-telephony
 Architecture: all
-Conflicts: gnome-calls, ofono-toned, callaudiod
+Conflicts: gnome-calls,
+           gnome-contacts,
+           chatty,
+           ofono-toned,
+           callaudiod,
 Depends: ${python3:Depends}, ${misc:Depends},
          python3-gi,
          python3-phonenumbers,
