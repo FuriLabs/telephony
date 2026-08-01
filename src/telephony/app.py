@@ -882,7 +882,7 @@ class App(Adw.Application):
             return
 
         logger.info("No suitable window for chat, launching new instance.")
-        subprocess.Popen([sys.executable, "-m", "telephony.main", "--open-chat", number])
+        subprocess.Popen([sys.executable, "-m", "telephony.main", "--messages", "--open-chat", number])
 
     def on_action_dial(self, _action, parameter):
         """Handle dial-number action."""

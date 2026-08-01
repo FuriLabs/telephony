@@ -720,7 +720,7 @@ class MainWindow(Adw.Window):
         """Open chat for a number."""
         if not self.show_messages_mode:
             logger.info("Messages mode not active. Launching Messages mode for chat.")
-            subprocess.Popen([sys.executable, "-m", "telephony.main", "--open-chat", number])
+            subprocess.Popen([sys.executable, "-m", "telephony.main", "--messages", "--open-chat", number])
             return
 
         self.stack.set_visible_child_name("messages")
