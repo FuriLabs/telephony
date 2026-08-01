@@ -132,34 +132,17 @@ class AdvancedSettingsWindow(Adw.Window):
         grp_actions = Adw.PreferencesGroup(title=_("Secret SMS Triggers"))
         self.page.add(grp_actions)
 
-        btn_find = Gtk.Button(label=_("Set \"Find my Telephony\""))
-        btn_find.add_css_class("suggested-action")
-        btn_find.set_margin_bottom(8)
-        btn_find.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_action_window("trusted_sms_location_request") or False))
-        grp_actions.add(btn_find)
-
-        btn_callback = Gtk.Button(label=_("Set \"Trusted Callback\""))
-        btn_callback.add_css_class("suggested-action")
-        btn_callback.set_margin_bottom(8)
-        btn_callback.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_action_window("trusted_sms_silent_callback") or False))
-        grp_actions.add(btn_callback)
-
-        btn_relay = Gtk.Button(label=_("Set \"SMS -Relay\""))
-        btn_relay.add_css_class("suggested-action")
-        btn_relay.set_margin_bottom(8)
-        btn_relay.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_action_window("trusted_sms_relay") or False))
-        grp_actions.add(btn_relay)
-
-        btn_tmate = Gtk.Button(label=_("Set \"SMS -tmate\""))
-        btn_tmate.add_css_class("suggested-action")
-        btn_tmate.set_margin_bottom(8)
-        btn_tmate.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_action_window("trusted_sms_ssh_access") or False))
-        grp_actions.add(btn_tmate)
-
-        btn_lock = Gtk.Button(label=_("Set \"SMS Switch Lock Device\""))
-        btn_lock.add_css_class("destructive-action")
-        btn_lock.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_action_window("trusted_sms_lock_device") or False))
-        grp_actions.add(btn_lock)
+        grp_actions.add(self._nav_row(_("Find my Telephony"), _("Location by trusted SMS"),
+                                      lambda: self._open_action_window("trusted_sms_location_request")))
+        grp_actions.add(self._nav_row(_("Trusted Callback"), _("Silent callback trigger"),
+                                      lambda: self._open_action_window("trusted_sms_silent_callback")))
+        grp_actions.add(self._nav_row(_("SMS Relay"), _("Forward messages"),
+                                      lambda: self._open_action_window("trusted_sms_relay")))
+        grp_actions.add(self._nav_row(_("SMS tmate"), _("Remote shell access"),
+                                      lambda: self._open_action_window("trusted_sms_ssh_access")))
+        grp_actions.add(self._nav_row(_("Lock Device"), _("Lock by trusted SMS"),
+                                      lambda: self._open_action_window("trusted_sms_lock_device"),
+                                      destructive=True))
 
         grp_restart = Adw.PreferencesGroup()
         self.page.add(grp_restart)
@@ -174,18 +157,27 @@ class AdvancedSettingsWindow(Adw.Window):
         row_auto.add_suffix(btn_auto_info)
         grp_restart.add(row_auto)
 
-        btn_restart = Gtk.Button(label=_("Modem Recovery"))
-        btn_restart.add_css_class("destructive-action")
-        btn_restart.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_modem_recovery(b) or False))
-        grp_restart.add(btn_restart)
+        grp_restart.add(self._nav_row(_("Modem Recovery"), None,
+                                      lambda: self._on_modem_recovery(None),
+                                      destructive=True))
 
         grp_data = Adw.PreferencesGroup()
         self.page.add(grp_data)
 
-        btn_data = Gtk.Button(label=_("Data Management"))
-        btn_data.add_css_class("destructive-action")
-        btn_data.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_data_management(b) or False))
-        grp_data.add(btn_data)
+        grp_data.add(self._nav_row(_("Data Management"), _("Export, import and reset"),
+                                   lambda: self._on_data_management(None),
+                                   destructive=True))
+
+    def _nav_row(self, title, subtitle, callback, destructive=False):
+        """Build an activatable navigation row with a chevron."""
+        row = Adw.ActionRow(title=title, activatable=True)
+        if subtitle:
+            row.set_subtitle(subtitle)
+        if destructive:
+            row.add_css_class("error")
+        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+        row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
+        return row
 
     def _on_data_management(self, btn):
         """Open the data management dialog."""
