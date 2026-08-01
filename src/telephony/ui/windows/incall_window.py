@@ -31,6 +31,7 @@ from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_
 from ...backend.utils.phone_utils import normalize_number
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
+PAD_MORPH_DURATION_MS = 250
 
 SEARCH_ENGINE_URLS = {
     "startpage": "https://www.startpage.com/do/dsearch?query={query}",
@@ -206,15 +207,6 @@ class InCallWindow(Gtk.Window):
             self.info_box.append(lbl)
         self.main_box.append(self.info_box)
 
-        self.pad_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_UP)
-        pad_grid = Gtk.Grid(row_spacing=8, column_spacing=15, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=14)
-        for i, c in enumerate(KEYPAD_LAYOUT):
-            b = Gtk.Button(label=c, css_classes=["pill", "dialpad-btn"], width_request=60, height_request=46)
-            b.connect("clicked", lambda x, ch=c: GLib.idle_add(lambda: self.ofono.send_dtmf(ch) or False))
-            pad_grid.attach(b, i % 3, i // 3, 1, 1)
-        self.pad_revealer.set_child(pad_grid)
-        self.main_box.append(self.pad_revealer)
-
         self.controls_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         self.main_box.append(self.controls_stack)
 
@@ -245,7 +237,19 @@ class InCallWindow(Gtk.Window):
         self.btn_input, self.lbl_input_route, self.img_input_route = self._mk_selector_btn(input_route_icon("mic"), input_route_label("mic"), self.on_input_routing_click)
         self.route_box.append(self.btn_output)
         self.route_box.append(self.btn_input)
-        act_box.append(self.route_box)
+
+        pad_grid = Gtk.Grid(row_spacing=8, column_spacing=15, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=14)
+        for i, c in enumerate(KEYPAD_LAYOUT):
+            b = Gtk.Button(label=c, css_classes=["pill", "dialpad-btn"], width_request=60, height_request=46)
+            b.connect("clicked", lambda x, ch=c: GLib.idle_add(lambda: self.ofono.send_dtmf(ch) or False))
+            pad_grid.attach(b, i % 3, i // 3, 1, 1)
+
+        self.pad_route_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE,
+                                         vhomogeneous=False, interpolate_size=True,
+                                         transition_duration=PAD_MORPH_DURATION_MS)
+        self.pad_route_stack.add_named(self.route_box, "routes")
+        self.pad_route_stack.add_named(pad_grid, "pad")
+        act_box.append(self.pad_route_stack)
 
         self._setup_audio_routing_popover()
 
@@ -628,8 +632,9 @@ class InCallWindow(Gtk.Window):
         self._show_input_route("mic")
         self._toggle_blue(self.btn_mute, False)
         self._toggle_blue(self.btn_pad, False)
-        self.pad_revealer.set_reveal_child(False)
-        self.route_box.set_visible(True)
+        self.pad_route_stack.set_transition_duration(0)
+        self.pad_route_stack.set_visible_child_name("routes")
+        self.pad_route_stack.set_transition_duration(PAD_MORPH_DURATION_MS)
 
         self.call_history.clear()
         if self.is_visible():
@@ -1020,10 +1025,9 @@ class InCallWindow(Gtk.Window):
         self.ofono.swap_calls()
 
     def on_pad_toggle(self, btn):
-        """Toggle dialpad visibility, giving the pad the selector rows' space."""
+        """Toggle the DTMF pad, morphing it over the audio selector rows."""
         self.dtmf_visible = not self.dtmf_visible
-        self.pad_revealer.set_reveal_child(self.dtmf_visible)
-        self.route_box.set_visible(not self.dtmf_visible)
+        self.pad_route_stack.set_visible_child_name("pad" if self.dtmf_visible else "routes")
         self._toggle_blue(btn, self.dtmf_visible)
 
     def on_reject_with_msg(self, btn):
