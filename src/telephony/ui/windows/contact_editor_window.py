@@ -25,8 +25,12 @@ from .duplicate_resolution_window import DuplicateResolutionWindow
 from ..widgets.common_widget import translate_phone_label
 
 
-class ContactEditor(Adw.Window):
-    """Window for editing or viewing contact details."""
+class ContactEditor(Adw.Dialog):
+    """Dialog for editing or viewing contact details.
+
+    Presents as a bottom sheet on phone-sized windows and as a floating
+    dialog on wide ones, which Adw.Dialog decides by itself.
+    """
 
     def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None):
         """Initialize the Contact Editor."""
@@ -36,7 +40,7 @@ class ContactEditor(Adw.Window):
         self._saving_in_progress = False
         self._destroyed = False
         super().__init__(title=_("Contact Details"))
-        self.connect("close-request", self._on_close_request)
+        self.connect("closed", self._on_closed)
         self.eds = eds_manager
         self.main_window = main_window
         self.uid = contact_data['uid'] if contact_data else None
@@ -55,11 +59,11 @@ class ContactEditor(Adw.Window):
 
         self.mode = "VIEW" if self.uid else "EDIT"
 
-        self.set_modal(True)
-        self.set_default_size(380, 650)
+        self.set_content_width(380)
+        self.set_content_height(650)
 
         self.toast_overlay = Adw.ToastOverlay()
-        self.set_content(self.toast_overlay)
+        self.set_child(self.toast_overlay)
 
         self.phone_entries = []
         self.email_entries = []
@@ -73,10 +77,9 @@ class ContactEditor(Adw.Window):
             run_in_background(self.eds.get_contact_vcard, self.uid,
                               on_complete=self._on_vcard_loaded, on_error=self._on_vcard_load_failed)
 
-    def _on_close_request(self, _window):
-        """Remember that the window is closing so async callbacks bail out."""
+    def _on_closed(self, _dialog):
+        """Remember that the dialog is closing so async callbacks bail out."""
         self._destroyed = True
-        return False
 
     def _on_vcard_loaded(self, vcard):
         """Apply the asynchronously fetched vCard and rebuild the view."""
@@ -387,16 +390,21 @@ class ContactEditor(Adw.Window):
                 self.btn_save.set_sensitive(True)
 
         DateTimePicker(
-            parent=self,
+            parent=self.get_root(),
             title=_("Select {title}").format(title=title),
             initial_date=row._selected_date,
             include_time=False,
             on_confirm=_on_picked
         )
 
-    def _create_view_row(self, title, value):
-        """Create a read-only row for viewing data."""
+    def _create_view_row(self, title, value, copy_text=None):
+        """Create a read-only row for viewing data.
+
+        Copies the value by default; copy_text overrides it for rows
+        where the copyable text sits in the title instead.
+        """
         row = Adw.ActionRow(title=title, subtitle=value)
+        value = copy_text if copy_text is not None else value
         btn_copy = Gtk.Button(icon_name="edit-copy-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat", "circular"])
         btn_copy.set_tooltip_text(_("Copy {title}").format(title=title))
         btn_copy.connect("clicked", lambda b: GLib.idle_add(lambda: self._copy_to_clipboard(value) or False))
@@ -441,24 +449,45 @@ class ContactEditor(Adw.Window):
                             _("Email"), Gtk.InputPurpose.EMAIL)
 
     def _add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose):
-        """Add an entry row with an inline type selector and remove button."""
+        """Add a full width entry row and its type expander for one value.
+
+        The entry keeps the whole row for typing; the type lives in an
+        expander row beneath it that lists the few options inline with a
+        check on the current one.
+        """
         row = Adw.EntryRow(title=title)
         row.set_text(text)
         row.set_input_purpose(purpose)
 
-        dropdown = Gtk.DropDown.new_from_strings(display_labels)
-        if label in label_keys:
-            dropdown.set_selected(label_keys.index(label))
-        dropdown.set_valign(Gtk.Align.CENTER)
-        dropdown.add_css_class("flat")
+        type_row = Adw.ExpanderRow(title=_("Type"))
+        type_row._selected_index = label_keys.index(label) if label in label_keys else 0
+        type_row._option_checks = []
+        type_row.set_subtitle(display_labels[type_row._selected_index])
+
+        def pick_type(index):
+            type_row._selected_index = index
+            type_row.set_subtitle(display_labels[index])
+            for i, check in enumerate(type_row._option_checks):
+                check.set_visible(i == index)
+            type_row.set_expanded(False)
+
+        for i, name in enumerate(display_labels):
+            option = Adw.ActionRow(title=name, activatable=True)
+            check = Gtk.Image.new_from_icon_name("object-select-symbolic")
+            check.set_visible(i == type_row._selected_index)
+            option.add_suffix(check)
+            option.connect("activated", lambda r, i=i: GLib.idle_add(lambda: pick_type(i) or False))
+            type_row.add_row(option)
+            type_row._option_checks.append(check)
 
         btn_remove = Gtk.Button(icon_name="user-trash-symbolic", css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
-        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: [group.remove(row), entries_list.remove((row, dropdown))] and False))
+        btn_remove.connect("clicked", lambda b: GLib.idle_add(
+            lambda: [group.remove(row), group.remove(type_row), entries_list.remove((row, type_row))] and False))
 
-        row.add_suffix(dropdown)
         row.add_suffix(btn_remove)
         group.add(row)
-        entries_list.append((row, dropdown))
+        group.add(type_row)
+        entries_list.append((row, type_row))
 
     def _group_add_button(self, tooltip, callback):
         """Build the header add button for a preferences group."""
@@ -469,7 +498,7 @@ class ContactEditor(Adw.Window):
 
     def _phone_view_row(self, number, label):
         """Read-only phone row with message and call shortcuts."""
-        row = self._create_view_row(translate_phone_label(label), number)
+        row = self._create_view_row(number, translate_phone_label(label), copy_text=number)
 
         btn_msg = Gtk.Button(icon_name="mail-message-new-symbolic", valign=Gtk.Align.CENTER)
         btn_msg.add_css_class("circular")
@@ -490,7 +519,7 @@ class ContactEditor(Adw.Window):
 
     def _email_view_row(self, address, label):
         """Read-only email row with a mail client shortcut."""
-        row = self._create_view_row(translate_phone_label(label), address)
+        row = self._create_view_row(address, translate_phone_label(label), copy_text=address)
         btn_mail = Gtk.Button(icon_name="mail-send-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat", "circular"])
         btn_mail.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_mailto(address) or False))
         row.add_suffix(btn_mail)
@@ -584,7 +613,7 @@ class ContactEditor(Adw.Window):
 
     def on_export_click(self, btn):
         """Handle contact export."""
-        dialog = Gtk.FileChooserNative(title=_("Export Contact"), transient_for=self, action=Gtk.FileChooserAction.SAVE)
+        dialog = Gtk.FileChooserNative(title=_("Export Contact"), transient_for=self.get_root(), action=Gtk.FileChooserAction.SAVE)
         safe_name = "".join(x for x in self.contact_name if x.isalnum()) or "contact"
         dialog.set_current_name(f"{safe_name}.vcf")
         dialog.connect("response", self.on_export_response)
@@ -668,10 +697,10 @@ class ContactEditor(Adw.Window):
             lines.append(f"TEL;TYPE={v_type}:{p_val}")
 
         label_options_email = ["Home", "Work", "Other"]
-        for entry, dropdown in self.email_entries:
+        for entry, type_row in self.email_entries:
             e_val = entry.get_text().strip()
             if e_val:
-                lbl = label_options_email[dropdown.get_selected()]
+                lbl = label_options_email[type_row._selected_index]
                 v_type = {"Home": "HOME", "Work": "WORK", "Other": "OTHER"}.get(lbl, "HOME")
                 lines.append(f"EMAIL;TYPE={v_type}:{e_val}")
 
@@ -698,10 +727,10 @@ class ContactEditor(Adw.Window):
 
         emails = []
         label_options_email = ["Home", "Work", "Other"]
-        for entry, dropdown in self.email_entries:
+        for entry, type_row in self.email_entries:
             e_val = entry.get_text().strip()
             if e_val:
-                lbl = label_options_email[dropdown.get_selected()]
+                lbl = label_options_email[type_row._selected_index]
                 emails.append((e_val, lbl))
 
         return {
@@ -724,11 +753,11 @@ class ContactEditor(Adw.Window):
             phones_to_save = []
             label_options_phone = ["Mobile", "Work", "Home", "Fax", "Other"]
 
-            for entry, dropdown in self.phone_entries:
+            for entry, type_row in self.phone_entries:
                 raw_val = entry.get_text().strip()
                 if raw_val:
                     norm_val = normalize_number(raw_val)
-                    phones_to_save.append((norm_val, label_options_phone[dropdown.get_selected()]))
+                    phones_to_save.append((norm_val, label_options_phone[type_row._selected_index]))
 
             selected_sources = []
             if (self.source_toggles is not None):
@@ -817,7 +846,7 @@ class ContactEditor(Adw.Window):
                         if force_save:
                             self.on_save(self.btn_save, force=True)
 
-                    win = DuplicateResolutionWindow(self, conflicts, self.eds, on_wizard_done)
+                    win = DuplicateResolutionWindow(self.get_root(), conflicts, self.eds, on_wizard_done)
                     win.present()
                     return
 
@@ -928,34 +957,30 @@ class ContactEditor(Adw.Window):
         try:
             editor = ContactEditor(self.eds, self.main_window,
                                    contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard})
-            editor.set_transient_for(self.main_window)
             editor.on_edit_mode_click(None)
+            editor.present(self.main_window)
         except Exception as e:
             logger.error(f"[ContactEditor] Could not reopen editor after failure: {e}")
 
     def _confirm_unblock_add(self, _number_str, on_confirm):
         """Show confirmation to unblock and add to contacts."""
-        d = Adw.MessageDialog(
+        d = Adw.AlertDialog(
             heading=_("Conflict"),
             body=_("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Unblocking and add the number to Contacts?")
         )
-        d.set_transient_for(self)
         d.add_response("cancel", _("Cancel"))
         d.add_response("yes", _("Yes, Add to Contacts"))
         d.set_response_appearance("yes", Adw.ResponseAppearance.SUGGESTED)
 
         def _cb(dialog, resp):
-            GLib.idle_add(lambda: dialog.close() or False)
             if resp == "yes":
                 on_confirm()
 
         d.connect("response", _cb)
-        d.present()
+        d.present(self)
 
     def _show_error(self, title, msg):
         """Show error dialog."""
-        d = Adw.MessageDialog(heading=title, body=msg)
-        d.set_transient_for(self)
+        d = Adw.AlertDialog(heading=title, body=msg)
         d.add_response("ok", _("OK"))
-        d.connect("response", lambda d, r: GLib.idle_add(lambda: d.close() or False))
-        d.present()
+        d.present(self)

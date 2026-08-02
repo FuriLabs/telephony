@@ -702,9 +702,7 @@ class MainWindow(Adw.Window):
                 return
 
         win = ContactEditor(self.eds, self, contact_data, number_preset=number_preset)
-        win.set_transient_for(self)
-        win.set_modal(False)
-        win.present()
+        win.present(self)
 
     def present_chat(self, number):
         """Open chat for a number."""
