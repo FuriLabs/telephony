@@ -853,7 +853,7 @@ class ContactEditor(Adw.Dialog):
                             self.on_save(self.btn_save, force=True)
 
                     win = DuplicateResolutionWindow(self.get_root(), conflicts, self.eds, on_wizard_done)
-                    win.present()
+                    win.present(self)
                     return
 
             self._proceed_with_save(phones_to_save, selected_sources)
