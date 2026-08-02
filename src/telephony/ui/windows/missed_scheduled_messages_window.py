@@ -78,8 +78,7 @@ class MissedScheduledMessagesDialog:
         display_name = contact_name if len(contact_name) < 30 else contact_name[:27] + "..."
         display_body = body if len(body) < 150 else body[:147] + "..."
 
-        d = Adw.MessageDialog(
-            transient_for=self.app_window,
+        d = Adw.AlertDialog(
             heading=_("Scheduled ({current}/{total})").format(current=current_count, total=total_count)
         )
 
@@ -180,7 +179,7 @@ class MissedScheduledMessagesDialog:
 
         main_box.append(btn_box)
         d.set_extra_child(main_box)
-        d.present()
+        d.present(self.app_window)
 
     def _send_missed_message_bg(self, msg):
         """Send message in background thread."""

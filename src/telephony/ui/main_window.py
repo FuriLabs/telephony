@@ -39,6 +39,7 @@ from .windows.blocklist_editor_window import BlocklistEditor
 from .windows.info_window import InfoPage
 from .windows.contact_picker_window import ContactPicker
 from .windows.duplicate_resolution_window import DuplicateResolutionWindow
+from .widgets.common_widget import present_choice_sheet, add_choice_row, build_info_sheet
 
 
 class MainWindow(Adw.Window):
@@ -50,6 +51,8 @@ class MainWindow(Adw.Window):
         self._resolve_section = None
         self.in_error_mode = False
         self._manual_sync_active = False
+        self._active_alert = None
+        self._ussd_in_flight = False
         """Initialize the main window."""
         super().__init__(application=application)
         self.app = application
@@ -476,43 +479,60 @@ class MainWindow(Adw.Window):
             self.dialpad_view.entry.set_text(number)
             self.dialpad_view.entry.set_position(-1)
 
+    def present_alert(self, dialog):
+        """Present an alert, dismissing any alert already showing."""
+        if self._active_alert is not None:
+            self._active_alert.close()
+        self._active_alert = dialog
+        dialog.connect("closed", self._on_alert_closed)
+        dialog.present(self)
+
+    def _on_alert_closed(self, dialog):
+        """Forget the tracked alert once it goes away."""
+        if self._active_alert is dialog:
+            self._active_alert = None
+
     def handle_ussd(self, code):
-        """Initiate a USSD request."""
+        """Initiate a USSD request, one at a time."""
+        if self._ussd_in_flight:
+            self.notify_error(_("A USSD request is already in progress"))
+            return
+        if not self.ofono:
+            self.notify_error(_("Modem not ready"))
+            return
+
+        self._ussd_in_flight = True
         self.notify_loading(_("Sending USSD..."))
 
-        def _task():
-            if self.ofono:
-                res = self.ofono.send_ussd(code)
-                GLib.idle_add(self.hide_loading)
-                if res:
-                    GLib.idle_add(lambda: self.show_ussd_dialog(res))
-            else:
-                GLib.idle_add(self.hide_loading)
-                GLib.idle_add(lambda: self.notify_error(_("Modem not ready")))
-        run_in_background(_task)
+        def done(res):
+            self._ussd_in_flight = False
+            self.hide_loading()
+            if res:
+                self.show_ussd_dialog(res)
+
+        def failed(error):
+            self._ussd_in_flight = False
+            self.hide_loading()
+            logger.error(f"[MainWindow] USSD request failed: {error}")
+
+        run_in_background(self.ofono.send_ussd, code, on_complete=done, on_error=failed)
 
     def show_ussd_dialog(self, text):
-        """Show USSD response dialog."""
-        d = Adw.MessageDialog(heading=_("USSD Result"), body=text)
-        d.set_transient_for(self)
-        d.add_response("ok", _("OK"))
-        d.connect("response", lambda d, r: GLib.idle_add(lambda: d.close() or False))
-        d.present()
+        """Show the USSD response sheet, replacing any shown before it."""
+        self.present_alert(build_info_sheet(_("USSD Result"), text, selectable=True))
 
     def confirm_action(self, title, body, on_confirm):
         """Show a confirmation dialog."""
-        d = Adw.MessageDialog(heading=title, body=body)
-        d.set_transient_for(self)
+        d = Adw.AlertDialog(heading=title, body=body)
         d.add_response("cancel", _("Cancel"))
         d.add_response("yes", _("Confirm"))
         d.set_response_appearance("yes", Adw.ResponseAppearance.DESTRUCTIVE)
 
         def _cb(dialog, resp):
-            GLib.idle_add(lambda: dialog.close() or False)
             if resp == "yes":
                 on_confirm()
         d.connect("response", _cb)
-        d.present()
+        self.present_alert(d)
 
     def on_settings_click(self, btn):
         """Open the settings sheet."""
@@ -638,57 +658,24 @@ class MainWindow(Adw.Window):
             elif len(results) == 1:
                 contact_data = self.eds.cache.get(results[0][0])
             else:
-                d = Adw.MessageDialog(transient_for=self, heading=_("Multiple Contacts Found"))
-                d.set_body(_("Which contact would you like to edit?"))
+                def build(group, sheet):
+                    for res in results:
+                        c_data = self.eds.cache.get(res[0])
+                        if not c_data:
+                            continue
 
-                btn_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-                btn_box.set_margin_top(15)
+                        name = c_data.get('name', _("Unknown"))
+                        source_uid = c_data.get('source_uid')
+                        source_name = _("Unknown Addressbook")
+                        if source_uid and source_uid in self.eds.sources:
+                            source_name = self.eds.sources[source_uid].get('name', source_name)
 
-                for res in results:
-                    uid = res[0]
-                    c_data = self.eds.cache.get(uid)
-                    if not c_data:
-                        continue
+                        add_choice_row(group, sheet, name,
+                                       lambda data=c_data: self.present_edit_contact(contact_data=data),
+                                       subtitle=source_name)
 
-                    name = c_data.get('name', _("Unknown"))
-                    source_uid = c_data.get('source_uid')
-                    source_name = _("Unknown Addressbook")
-                    if source_uid and source_uid in self.eds.sources:
-                        source_name = self.eds.sources[source_uid].get('name', source_name)
-
-                    if len(name) > 25:
-                        name = name[:22] + "..."
-                    if len(source_name) > 30:
-                        source_name = source_name[:27] + "..."
-
-                    contact_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-                    lbl_name = Gtk.Label(label=name)
-                    lbl_name.set_halign(Gtk.Align.CENTER)
-                    lbl_source = Gtk.Label(label=source_name)
-                    lbl_source.set_halign(Gtk.Align.CENTER)
-                    lbl_source.add_css_class("caption")
-                    lbl_source.add_css_class("dim-label")
-
-                    contact_box.append(lbl_name)
-                    contact_box.append(lbl_source)
-
-                    btn_select = Gtk.Button()
-                    btn_select.set_child(contact_box)
-                    btn_select.add_css_class("suggested-action")
-
-                    def _select_cb(b, data=c_data):
-                        GLib.idle_add(lambda: d.close() or False)
-                        self.present_edit_contact(contact_data=data)
-
-                    btn_select.connect("clicked", lambda b, data=c_data: GLib.idle_add(lambda: _select_cb(b, data=data) or False))
-                    btn_box.append(btn_select)
-
-                btn_cancel = Gtk.Button(label=_("Cancel"))
-                btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-                btn_box.append(btn_cancel)
-
-                d.set_extra_child(btn_box)
-                d.present()
+                present_choice_sheet(self, _("Multiple Contacts Found"), build,
+                                     description=_("Which contact would you like to edit?"))
                 return
 
         win = ContactEditor(self.eds, self, contact_data, number_preset=number_preset)
@@ -733,14 +720,34 @@ class MainWindow(Adw.Window):
         run_in_background(self.ofono.dial, number, on_complete=done, hide_id=hide_id)
 
     def show_call_details(self, item):
-        """Show details dialog for a history item."""
-        d = Adw.MessageDialog(transient_for=self, heading=_("Call Details"))
-        body = (_("Number: {number}\nName: {name}\nDate: {date}\nDuration: {duration}")
-                .format(number=item.number, name=item.name, date=item.full_ts, duration=item.duration_str))
-        d.set_body(body)
+        """Show the call details sheet for a history item."""
+        sheet = Adw.Dialog(title=_("Call Details"))
+        sheet.set_content_width(360)
 
-        btn_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        btn_box.set_margin_top(15)
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        page = Adw.PreferencesPage()
+        toolbar.set_content(page)
+        sheet.set_child(toolbar)
+
+        grp_info = Adw.PreferencesGroup()
+        page.add(grp_info)
+        for title, value in ((_("Number"), item.number), (_("Name"), item.name),
+                             (_("Date"), item.full_ts), (_("Duration"), item.duration_str)):
+            grp_info.add(Adw.ActionRow(title=title, subtitle=str(value)))
+
+        grp_actions = Adw.PreferencesGroup()
+        page.add(grp_actions)
+
+        def add_action(label, callback, destructive=False, needs_eds=False):
+            row = Adw.ActionRow(title=label, activatable=True)
+            if destructive:
+                row.add_css_class("error")
+            if needs_eds and not self.eds.is_ready:
+                row.set_sensitive(False)
+            row.connect("activated", lambda r: GLib.idle_add(
+                lambda: [sheet.close(), callback()] and False))
+            grp_actions.add(row)
 
         blocked_list = self.db.get_blocked_numbers()
         is_blocked_id = None
@@ -751,102 +758,50 @@ class MainWindow(Adw.Window):
                 break
 
         if is_blocked_id:
-            btn_unblock = Gtk.Button(label=_("Unblock Number"))
-            btn_unblock.add_css_class("suggested-action")
-
-            def _unblock_cb(b):
-                GLib.idle_add(lambda: d.close() or False)
+            def _unblock():
                 self.db.unblock_number(is_blocked_id, item.number)
                 self.notify_success(_("Unblocked"))
-            btn_unblock.connect("clicked", lambda b: GLib.idle_add(lambda: _unblock_cb(b) or False))
-
-            if not self.eds.is_ready:
-                btn_unblock.set_sensitive(False)
-
-            btn_box.append(btn_unblock)
+            add_action(_("Unblock Number"), _unblock, needs_eds=True)
         else:
             lbl = _("Edit Contact") if item.is_saved else _("Add to Contacts")
-            btn_contact = Gtk.Button(label=lbl)
-            btn_contact.add_css_class("suggested-action")
-            btn_contact.connect("clicked", lambda b: GLib.idle_add(lambda: [self.present_edit_contact(number_preset=item.number), d.close()] and False))
-
-            if not self.eds.is_ready:
-                btn_contact.set_sensitive(False)
-
-            btn_box.append(btn_contact)
+            add_action(lbl, lambda: self.present_edit_contact(number_preset=item.number), needs_eds=True)
 
             if not item.is_saved:
-                btn_add_existing = Gtk.Button(label=_("Add to Existing Contact"))
-                btn_add_existing.add_css_class("suggested-action")
-                btn_add_existing.connect("clicked", lambda b: GLib.idle_add(lambda: [self.on_add_to_existing(item), d.close()] and False))
+                add_action(_("Add to Existing Contact"), lambda: self.on_add_to_existing(item), needs_eds=True)
+                add_action(_("Search Number"), lambda: self._search_number_online(item.number))
 
-                if not self.eds.is_ready:
-                    btn_add_existing.set_sensitive(False)
-
-                btn_box.append(btn_add_existing)
-
-                btn_search = Gtk.Button(label=_("Search Number"))
-                btn_search.add_css_class("suggested-action")
-
-                def _search_cb(b):
-                    clean_num = item.number.replace("+", "")
-                    engine = self.gsettings_mgr.get_setting("unknown_callers_engine") or "duckduckgo"
-                    custom_url = self.gsettings_mgr.get_setting("unknown_callers_custom_url") or ""
-
-                    search_url = ""
-                    encoded_num = urllib.parse.quote(clean_num)
-
-                    if engine == "startpage":
-                        search_url = f"https://www.startpage.com/do/dsearch?query={encoded_num}"
-                    elif engine == "duckduckgo":
-                        search_url = f"https://duckduckgo.com/?q={encoded_num}"
-                    elif engine == "custom" and custom_url:
-                        search_url = custom_url.replace("{number}", encoded_num)
-
-                    if search_url:
-                        Gio.AppInfo.launch_default_for_uri(search_url, None)
-                    d.close()
-                btn_search.connect("clicked", lambda b: GLib.idle_add(lambda: _search_cb(b) or False))
-                btn_box.append(btn_search)
-
-        btn_sms = Gtk.Button(label=_("Send Message"))
-        btn_sms.add_css_class("suggested-action")
-        btn_sms.connect("clicked", lambda b: GLib.idle_add(lambda: [self.present_chat(item.number), d.close()] and False))
-        btn_box.append(btn_sms)
-
-        btn_copy = Gtk.Button(label=_("Copy Number"))
-        btn_copy.connect("clicked", lambda b: GLib.idle_add(lambda: [self.copy_to_clipboard(item.number), d.close()] and False))
-        btn_box.append(btn_copy)
+        add_action(_("Send Message"), lambda: self.present_chat(item.number))
+        add_action(_("Copy Number"), lambda: self.copy_to_clipboard(item.number))
 
         if not is_blocked_id:
-            btn_block = Gtk.Button(label=_("Block Number"))
-            btn_block.add_css_class("destructive-action")
+            add_action(_("Block Number"), lambda: self.present_blocklist_editor(number_preset=item.number),
+                       destructive=True, needs_eds=True)
 
-            def _block_cb(b):
-                GLib.idle_add(lambda: d.close() or False)
-                self.present_blocklist_editor(number_preset=item.number)
-            btn_block.connect("clicked", lambda b: GLib.idle_add(lambda: _block_cb(b) or False))
+        add_action(_("Delete this call"),
+                   lambda: self.confirm_action(_("Delete Call"), _("Remove this call?"),
+                                               lambda: [self.db.delete_call_by_id(item.id)]),
+                   destructive=True)
 
-            if not self.eds.is_ready:
-                btn_block.set_sensitive(False)
+        sheet.present(self)
 
-            btn_box.append(btn_block)
+    def _search_number_online(self, number):
+        """Open the configured search engine for a phone number."""
+        clean_num = number.replace("+", "")
+        engine = self.gsettings_mgr.get_setting("unknown_callers_engine") or "duckduckgo"
+        custom_url = self.gsettings_mgr.get_setting("unknown_callers_custom_url") or ""
 
-        btn_del = Gtk.Button(label=_("Delete this call"))
-        btn_del.add_css_class("destructive-action")
+        search_url = ""
+        encoded_num = urllib.parse.quote(clean_num)
 
-        def _del_cb(b):
-            GLib.idle_add(lambda: d.close() or False)
-            self.confirm_action(_("Delete Call"), _("Remove this call?"), lambda: [self.db.delete_call_by_id(item.id)])
-        btn_del.connect("clicked", lambda b: GLib.idle_add(lambda: _del_cb(b) or False))
-        btn_box.append(btn_del)
+        if engine == "startpage":
+            search_url = f"https://www.startpage.com/do/dsearch?query={encoded_num}"
+        elif engine == "duckduckgo":
+            search_url = f"https://duckduckgo.com/?q={encoded_num}"
+        elif engine == "custom" and custom_url:
+            search_url = custom_url.replace("{number}", encoded_num)
 
-        btn_close = Gtk.Button(label=_("Close"))
-        btn_close.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        btn_box.append(btn_close)
-
-        d.set_extra_child(btn_box)
-        d.present()
+        if search_url:
+            Gio.AppInfo.launch_default_for_uri(search_url, None)
 
     def copy_to_clipboard(self, text):
         """Copy text to clipboard."""
@@ -877,4 +832,4 @@ class MainWindow(Adw.Window):
             allow_custom_number=False,
             return_contact_uid=True
         )
-        picker.present()
+        picker.present(self)

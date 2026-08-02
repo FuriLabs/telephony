@@ -861,7 +861,7 @@ class ChatPage(Gtk.Box):
             allow_custom_number=True,
             return_contact_uid=False
         )
-        picker.present()
+        picker.present(self.app_window)
 
     def on_delete_message(self, item_id):
         """Handle individual message deletion."""

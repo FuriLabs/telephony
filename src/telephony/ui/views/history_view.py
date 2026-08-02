@@ -151,6 +151,9 @@ class HistoryView(Adw.Bin):
         self.btn_out.connect("clicked", lambda b, t="outgoing": GLib.idle_add(lambda: self.on_type_click(b, t) or False))
         self.filter_box.append(self.btn_out)
 
+        self._filter_group = Gio.SimpleActionGroup()
+        self.insert_action_group("hist", self._filter_group)
+
         self.btn_dur = Gtk.MenuButton(icon_name="preferences-system-time-symbolic")
         self.btn_dur.add_css_class("circular")
         self.btn_dur.add_css_class("gray-btn")
@@ -174,45 +177,34 @@ class HistoryView(Adw.Bin):
 
         self._update_visuals()
 
+    def _build_filter_menu(self, action_name, options):
+        """Build a menu of radio entries bound to a stateful action."""
+        menu = Gio.Menu()
+        for lbl, val in options:
+            item = Gio.MenuItem.new(lbl, None)
+            item.set_action_and_target_value(action_name, GLib.Variant("s", val))
+            menu.append_item(item)
+        return menu
+
     def setup_dur_popover(self):
-        """Setup duration filter popover."""
-        pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        pop_box.set_margin_top(12)
-        pop_box.set_margin_bottom(12)
-        pop_box.set_margin_start(12)
-        pop_box.set_margin_end(12)
-        pop_box.set_size_request(200, -1)
-        self.duration_buttons = {}
+        """Set up the duration filter menu with checkable entries."""
+        self._dur_action = Gio.SimpleAction.new_stateful(
+            "duration", GLib.VariantType.new("s"), GLib.Variant("s", self.active_bucket))
+        self._dur_action.connect("activate", self._on_dur_action)
+        self._filter_group.add_action(self._dur_action)
+
         buckets = [(_("Any duration"), "any"), (_("Unanswered"), "0"), (_("1s - 60s"), "60s"), (_("1-3 mins"), "3m"), (_("3-10 mins"), "10m"), (_("> 15 mins"), "15m+")]
-        for lbl, val in buckets:
-            b = Gtk.Button(label=lbl)
-            b.set_halign(Gtk.Align.FILL)
-            b.connect("clicked", lambda btn, v=val: GLib.idle_add(lambda: self.on_dur_click(btn, v) or False))
-            pop_box.append(b)
-            self.duration_buttons[val] = b
-        self.dur_popover = Gtk.Popover()
-        self.dur_popover.set_child(pop_box)
-        self.btn_dur.set_popover(self.dur_popover)
+        self.btn_dur.set_menu_model(self._build_filter_menu("hist.duration", buckets))
 
     def setup_date_popover(self):
-        """Setup date filter popover."""
-        pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        pop_box.set_margin_top(12)
-        pop_box.set_margin_bottom(12)
-        pop_box.set_margin_start(12)
-        pop_box.set_margin_end(12)
-        pop_box.set_size_request(200, -1)
-        self.date_buttons = {}
+        """Set up the date filter menu with checkable entries."""
+        self._date_action = Gio.SimpleAction.new_stateful(
+            "date", GLib.VariantType.new("s"), GLib.Variant("s", self.active_date_bucket))
+        self._date_action.connect("activate", self._on_date_action)
+        self._filter_group.add_action(self._date_action)
+
         opts = [(_("Any date"), "any"), (_("Today"), "today"), (_("Last 3 days"), "3days"), (_("Last 14 days"), "14days"), (_("Last 30 days"), "30days"), (_("Last 60 days"), "60days")]
-        for lbl, val in opts:
-            b = Gtk.Button(label=lbl)
-            b.set_halign(Gtk.Align.FILL)
-            b.connect("clicked", lambda btn, v=val: GLib.idle_add(lambda: self.on_date_click(btn, v) or False))
-            pop_box.append(b)
-            self.date_buttons[val] = b
-        self.date_popover = Gtk.Popover()
-        self.date_popover.set_child(pop_box)
-        self.btn_date.set_popover(self.date_popover)
+        self.btn_date.set_menu_model(self._build_filter_menu("hist.date", opts))
 
     def on_type_click(self, btn, val):
         """Handle call type filter change."""
@@ -220,17 +212,17 @@ class HistoryView(Adw.Bin):
         self._update_visuals()
         self.refresh_data()
 
-    def on_dur_click(self, btn, val):
-        """Handle duration filter change."""
-        self.active_bucket = val
-        GLib.idle_add(lambda: self.dur_popover.popdown() or False)
+    def _on_dur_action(self, action, value):
+        """Apply the picked duration filter."""
+        action.set_state(value)
+        self.active_bucket = value.get_string()
         self._update_visuals()
         self.refresh_data()
 
-    def on_date_click(self, btn, val):
-        """Handle date filter change."""
-        self.active_date_bucket = val
-        GLib.idle_add(lambda: self.date_popover.popdown() or False)
+    def _on_date_action(self, action, value):
+        """Apply the picked date filter."""
+        action.set_state(value)
+        self.active_date_bucket = value.get_string()
         self._update_visuals()
         self.refresh_data()
 
@@ -244,21 +236,11 @@ class HistoryView(Adw.Bin):
                 btn.remove_css_class("suggested-action")
                 btn.add_css_class("gray-btn")
 
-        def set_style_popover(btn, active):
-            if active:
-                btn.add_css_class("suggested-action")
-            else:
-                btn.remove_css_class("suggested-action")
-
         set_style_main(self.btn_all, self.active_type == "all")
         set_style_main(self.btn_in, self.active_type == "incoming")
         set_style_main(self.btn_out, self.active_type == "outgoing")
         set_style_main(self.btn_dur, self.active_bucket != "any")
         set_style_main(self.btn_date, self.active_date_bucket != "any")
-        for val, btn in self.duration_buttons.items():
-            set_style_popover(btn, self.active_bucket == val)
-        for val, btn in self.date_buttons.items():
-            set_style_popover(btn, self.active_date_bucket == val)
 
     def on_scroll_changed(self, adj):
         """Handle scroll position change."""

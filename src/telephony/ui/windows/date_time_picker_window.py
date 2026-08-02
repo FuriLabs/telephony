@@ -32,18 +32,26 @@ class DateTimePicker:
 
         self.selected_date = initial_date if initial_date else GLib.DateTime.new_now_local()
 
-        self.dialog = Adw.MessageDialog(
-            transient_for=self.parent,
-            heading=self.title
-        )
+        self.dialog = Adw.Dialog(title=self.title)
+        self.dialog.set_content_width(360)
 
-        self.dialog.add_response("cancel", _("Cancel"))
-        self.dialog.add_response("confirm", _("Confirm"))
-        self.dialog.set_response_appearance("confirm", Adw.ResponseAppearance.SUGGESTED)
-        self.dialog.connect("response", self._on_response)
+        self.toolbar = Adw.ToolbarView()
+        header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
+
+        btn_cancel = Gtk.Button(label=_("Cancel"))
+        btn_cancel.connect("clicked", lambda x: GLib.idle_add(lambda: self.dialog.close() or False))
+        header.pack_start(btn_cancel)
+
+        btn_confirm = Gtk.Button(label=_("Confirm"))
+        btn_confirm.add_css_class("suggested-action")
+        btn_confirm.connect("clicked", lambda x: GLib.idle_add(lambda: self._on_confirm() or False))
+        header.pack_end(btn_confirm)
+
+        self.toolbar.add_top_bar(header)
+        self.dialog.set_child(self.toolbar)
 
         self._build_ui()
-        self.dialog.present()
+        self.dialog.present(self.parent)
 
     def _build_ui(self):
         """Construct the picker UI."""
@@ -152,7 +160,7 @@ class DateTimePicker:
 
             main_box.append(time_row)
 
-        self.dialog.set_extra_child(main_box)
+        self.toolbar.set_content(main_box)
 
         self.spin_year.connect("value-changed", self._on_spinner_changed)
         self.spin_month.connect("value-changed", self._on_spinner_changed)
@@ -169,23 +177,21 @@ class DateTimePicker:
         new_d = GLib.DateTime.new_local(y, m, day, 0, 0, 0)
         self.calendar_widget.select_day(new_d)
 
-    def _on_response(self, dialog, response):
-        """Handle dialog response."""
-        if response == "confirm":
-            try:
-                date = self.calendar_widget.get_date()
-                y, m, d = date.get_year(), date.get_month(), date.get_day_of_month()
+    def _on_confirm(self):
+        """Apply the picked date and close the sheet."""
+        self.dialog.close()
+        try:
+            date = self.calendar_widget.get_date()
+            y, m, d = date.get_year(), date.get_month(), date.get_day_of_month()
 
-                h, mn = 0, 0
-                if self.include_time:
-                    h = self.spin_hour.get_value_as_int()
-                    mn = self.spin_min.get_value_as_int()
+            h, mn = 0, 0
+            if self.include_time:
+                h = self.spin_hour.get_value_as_int()
+                mn = self.spin_min.get_value_as_int()
 
-                final_dt = GLib.DateTime.new_local(y, m, d, h, mn, 0)
+            final_dt = GLib.DateTime.new_local(y, m, d, h, mn, 0)
 
-                if self.callback:
-                    self.callback(final_dt)
-            except Exception as e:
-                logger.error(f"DateTime selection error: {e}")
-
-        GLib.idle_add(lambda: dialog.close() or False)
+            if self.callback:
+                self.callback(final_dt)
+        except Exception as e:
+            logger.error(f"DateTime selection error: {e}")
