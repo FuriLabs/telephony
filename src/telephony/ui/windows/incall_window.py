@@ -255,7 +255,6 @@ class InCallWindow(Adw.Window):
         self.pad_route_stack.add_named(pad_grid, "pad")
         act_box.append(self.pad_route_stack)
 
-        self._setup_audio_routing_popover()
 
         btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, halign=Gtk.Align.CENTER)
         mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
