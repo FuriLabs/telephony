@@ -68,6 +68,15 @@ class MessagesView(Adw.Bin):
         self.setup_list_page()
         self.active_filter = "all"
         self.nav_view.add(self.main_page)
+        self.nav_view.connect("notify::visible-page", self._on_visible_page_changed)
+
+    def in_chat(self):
+        """Return True while a chat page is open on top of the list."""
+        return self.nav_view.get_visible_page() is not self.main_page
+
+    def _on_visible_page_changed(self, *args):
+        """Tell the window to drop its own header while a chat is open."""
+        self.app_window.sync_chat_chrome()
 
     def _resolve_contact_name(self, contact_map, number):
         """Resolve contact name from map, handling list/string types."""

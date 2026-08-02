@@ -75,20 +75,20 @@ class MainWindow(Adw.Window):
         main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.overlay.set_child(main_vbox)
 
-        header = Adw.HeaderBar()
+        self.header = Adw.HeaderBar()
         title_lbl = Gtk.Label(label=_("Telephony"), css_classes=["title"])
-        header.set_title_widget(title_lbl)
+        self.header.set_title_widget(title_lbl)
 
         info_btn = Gtk.Button(icon_name="dialog-information-symbolic")
         info_btn.add_css_class("flat")
         info_btn.add_css_class("circular")
         info_btn.connect("clicked", lambda b: GLib.idle_add(lambda: InfoPage.show(self) or False))
-        header.pack_start(info_btn)
+        self.header.pack_start(info_btn)
 
         self.actions_btn = Gtk.MenuButton(icon_name="open-menu-symbolic")
         self.setup_actions_menu()
-        header.pack_end(self.actions_btn)
-        main_vbox.append(header)
+        self.header.pack_end(self.actions_btn)
+        main_vbox.append(self.header)
 
         self.stack = Adw.ViewStack()
 
@@ -116,8 +116,7 @@ class MainWindow(Adw.Window):
         if self.show_contacts_mode:
             add_lazy_page("contacts", _("Contacts"), "system-users-symbolic")
 
-        self.stack.connect("notify::visible-child-name",
-                           lambda *a: self._ensure_view(self.stack.get_visible_child_name()))
+        self.stack.connect("notify::visible-child-name", self._on_stack_page_changed)
         self._ensure_view(self.stack.get_visible_child_name())
 
         self.stack.set_vexpand(True)
@@ -430,6 +429,22 @@ class MainWindow(Adw.Window):
             self.notify_success(_("Modem Connected"))
         elif status == 'error':
             self.notify_error(_("Modem Error: {message}").format(message=message))
+
+    def _on_stack_page_changed(self, *args):
+        """Build the newly selected view lazily and refresh the chrome."""
+        self._ensure_view(self.stack.get_visible_child_name())
+        self.sync_chat_chrome()
+
+    def sync_chat_chrome(self):
+        """Hide the window header while the messages tab shows an open chat.
+
+        The chat page carries its own header, so keeping the window one
+        stacked two navigation bars on top of each other.
+        """
+        in_chat = (self.stack.get_visible_child_name() == "messages"
+                   and self.messages_view is not None
+                   and self.messages_view.in_chat())
+        self.header.set_visible(not in_chat)
 
     def _ensure_view(self, name):
         """Construct the view for a stack page on first use."""
