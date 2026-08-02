@@ -22,6 +22,7 @@ from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
 
 from ...backend.utils.thread_utils import run_in_background
+from ..widgets.common_widget import present_info_sheet
 
 
 class AdvancedSettingsWindow(Adw.NavigationPage):
@@ -141,10 +142,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                  "fails. The phone is never rebooted automatically. When this "
                  "is off, the Modem Recovery screen appears instead so you can "
                  "run the restart yourself.")
-        dialog = Adw.AlertDialog(heading=_("Automatic Modem Recovery"), body=body)
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance("close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.present(self)
+        present_info_sheet(self, _("Automatic Modem Recovery"), body)
 
     def _on_modem_recovery(self, btn):
         """Show the modem recovery screen, unless the modem is fine."""

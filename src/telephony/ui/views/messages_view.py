@@ -205,12 +205,18 @@ class MessagesView(Adw.Bin):
         self.main_page.set_child(box)
         self.refresh_list()
 
-    def on_filter_click(self, btn, val):
-        """Handle filter selection."""
-        self.active_filter = val
-        GLib.idle_add(lambda: self.filter_popover.popdown() or False)
+    def _on_filter_action(self, action, value):
+        """Apply the picked conversation filter."""
+        action.set_state(value)
+        self.active_filter = value.get_string()
         self._update_filter_visuals()
         self.refresh_list()
+
+    def _reset_filter(self):
+        """Return the conversation filter to showing everything."""
+        self.active_filter = "all"
+        self._filter_action.set_state(GLib.Variant("s", "all"))
+        self._update_filter_visuals()
 
     def _update_filter_visuals(self):
         """Update the filter button icon and state based on active filter."""
@@ -232,13 +238,13 @@ class MessagesView(Adw.Bin):
             self.btn_filter.add_css_class("suggested-action")
 
     def setup_filter_popover(self):
-        """Setup the filter popover for messages."""
-        pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        pop_box.set_margin_top(12)
-        pop_box.set_margin_bottom(12)
-        pop_box.set_margin_start(12)
-        pop_box.set_margin_end(12)
-        pop_box.set_size_request(250, -1)
+        """Set up the conversation filter menu with checkable entries."""
+        group = Gio.SimpleActionGroup()
+        self._filter_action = Gio.SimpleAction.new_stateful(
+            "filter", GLib.VariantType.new("s"), GLib.Variant("s", "all"))
+        self._filter_action.connect("activate", self._on_filter_action)
+        group.add_action(self._filter_action)
+        self.insert_action_group("msgs", group)
 
         opts = [
             (_("All Messages"), "all"),
@@ -250,15 +256,12 @@ class MessagesView(Adw.Bin):
             (_("Alphabetical Senders"), "alphabetical")
         ]
 
+        menu = Gio.Menu()
         for lbl, val in opts:
-            b = Gtk.Button(label=lbl)
-            b.set_halign(Gtk.Align.FILL)
-            b.connect("clicked", lambda btn, v=val: GLib.idle_add(lambda: self.on_filter_click(btn, v) or False))
-            pop_box.append(b)
-
-        self.filter_popover = Gtk.Popover()
-        self.filter_popover.set_child(pop_box)
-        self.btn_filter.set_popover(self.filter_popover)
+            item = Gio.MenuItem.new(lbl, None)
+            item.set_action_and_target_value("msgs.filter", GLib.Variant("s", val))
+            menu.append_item(item)
+        self.btn_filter.set_menu_model(menu)
 
     def handle_incoming_ui(self, target_chat_id, body, attachments=[], msg_sender=None):
         """Handle incoming message updates for the UI."""
@@ -515,8 +518,7 @@ class MessagesView(Adw.Bin):
     def close_active_chat(self):
         """Close the currently active chat page."""
         self._reset_search_ui()
-        self.active_filter = "all"
-        self._update_filter_visuals()
+        self._reset_filter()
         GLib.idle_add(lambda: self.nav_view.pop() or False)
 
     def open_chat(self, number_or_list, name=None, target_msg_id=None, prefill_text=None, prefill_attachments=None):
@@ -581,8 +583,7 @@ class MessagesView(Adw.Bin):
                 self.active_chat_page = None
                 self.app_window.ofono.set_active_chat(None)
                 self._reset_search_ui()
-                self.active_filter = "all"
-                self._update_filter_visuals()
+                self._reset_filter()
                 self.refresh_list()
 
         page.connect("hidden", on_pop)

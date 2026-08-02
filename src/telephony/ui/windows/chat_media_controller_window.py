@@ -73,7 +73,7 @@ class ChatMediaController:
         """Open photo camera modal."""
         try:
             cam = CameraPhoto(self.window, lambda path: self._on_media_captured(None, path))
-            cam.present()
+            cam.present(self.window)
         except Exception as e:
             logger.error(f"Failed to open camera: {e}")
             self._show_error(_("Camera Error"), _("Could not start the camera."))
@@ -82,7 +82,7 @@ class ChatMediaController:
         """Open video camera modal."""
         try:
             cam = CameraVideo(self.window, lambda path: self._on_media_captured(None, path))
-            cam.present()
+            cam.present(self.window)
         except Exception as e:
             logger.error(f"Failed to open video camera: {e}")
             self._show_error(_("Camera Error"), _("Could not start video recording."))
@@ -93,7 +93,7 @@ class ChatMediaController:
             max_bytes = self.chat_page._remaining_attachment_budget()
             rec = SoundRecorder(self.window, lambda path: self._on_media_captured(None, path),
                                 max_bytes=max_bytes)
-            rec.present()
+            rec.present(self.window)
         except Exception as e:
             logger.error(f"Failed to open audio recorder: {e}")
             self._show_error(_("Audio Error"), _("Could not start audio recorder."))
@@ -145,8 +145,7 @@ class ChatMediaController:
 
     def _show_error(self, title, message):
         """Show error dialog."""
-        d = Adw.MessageDialog(heading=title, body=message)
-        d.set_transient_for(self.window)
+        d = Adw.AlertDialog(heading=title, body=message)
         d.add_response("close", _("Close"))
         d.connect("response", lambda d, r: GLib.idle_add(lambda: d.close() or False))
-        d.present()
+        d.present(self.window)

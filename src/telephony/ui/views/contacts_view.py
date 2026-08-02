@@ -21,7 +21,7 @@ from loguru import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
-from ..widgets.common_widget import DataLoader, translate_phone_label
+from ..widgets.common_widget import DataLoader, translate_phone_label, present_choice_sheet, add_choice_row
 from ...backend.utils.model_utils import ContactItem
 
 
@@ -429,27 +429,14 @@ class ContactsView(Adw.Bin):
             return
 
         self.search.set_text("")
-        pop = Gtk.Popover()
-        pop.set_parent(btn)
-        menu = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        menu.set_margin_top(6)
-        menu.set_margin_bottom(6)
-        menu.set_margin_start(6)
-        menu.set_margin_end(6)
-        menu.append(Gtk.Label(label=_("Call Anonymous"), css_classes=["heading"]))
 
-        for p_num, p_lbl in phones:
-            b = Gtk.Button(label=f"{translate_phone_label(p_lbl)}: {p_num}")
-            b.add_css_class("flat")
+        def build(group, sheet):
+            for p_num, p_lbl in phones:
+                add_choice_row(group, sheet, p_num,
+                               lambda n=p_num: self.app_window.start_call(normalize_number(n), hide_id=True),
+                               subtitle=translate_phone_label(p_lbl))
 
-            def _handle_call_click(n=p_num):
-                pop.popdown()
-                GLib.timeout_add(50, lambda: self.app_window.start_call(normalize_number(n), hide_id=True) or False)
-            b.connect("clicked", lambda x, n=p_num: _handle_call_click(n))
-            menu.append(b)
-
-        pop.set_child(menu)
-        pop.popup()
+        present_choice_sheet(self.app_window, _("Call Anonymous"), build)
 
     def on_msg_click(self, btn, phones):
         """Handle message button click."""
@@ -462,22 +449,14 @@ class ContactsView(Adw.Bin):
             self._show_picker(btn, phones, self.app_window.present_chat)
 
     def _show_picker(self, parent_btn, phones, callback):
-        """Show phone number picker popover."""
-        pop = Gtk.Popover()
-        pop.set_parent(parent_btn)
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        box.set_margin_top(6)
-        box.set_margin_bottom(6)
-        box.set_margin_start(6)
-        box.set_margin_end(6)
-        for p_tuple in phones:
-            number, label = p_tuple
-            row = Gtk.Button(label=f"{translate_phone_label(label)}: {number}")
-            row.add_css_class("pill")
-            row.connect("clicked", lambda b, n=number: GLib.idle_add(lambda: [self.search.set_text(""), callback(normalize_number(n)), pop.popdown()] and False))
-            box.append(row)
-        pop.set_child(box)
-        pop.popup()
+        """Show the phone number choice sheet."""
+        def build(group, sheet):
+            for number, label in phones:
+                add_choice_row(group, sheet, number,
+                               lambda n=number: [self.search.set_text(""), callback(normalize_number(n))],
+                               subtitle=translate_phone_label(label))
+
+        present_choice_sheet(self.app_window, _("Pick Contact"), build)
 
     def edit_contact(self, btn, item):
         """Open contact editor."""

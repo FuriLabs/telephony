@@ -25,6 +25,7 @@ from gettext import gettext as _
 from ...backend.managers.audio_manager import TelephonyAudioManager
 from ..windows.fader_window import ProximityFader
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
+from ..widgets.common_widget import present_choice_sheet
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.system_utils import save_modem_logs, press_power_button
@@ -353,20 +354,7 @@ class InCallWindow(Adw.Window):
 
     def _present_choice_sheet(self, title, build_rows):
         """Show a bottom sheet with a single group of choice rows."""
-        sheet = Adw.Dialog(title=title)
-        sheet.set_content_width(360)
-
-        toolbar = Adw.ToolbarView()
-        toolbar.add_top_bar(Adw.HeaderBar())
-
-        page = Adw.PreferencesPage()
-        group = Adw.PreferencesGroup()
-        page.add(group)
-        toolbar.set_content(page)
-        sheet.set_child(toolbar)
-
-        build_rows(group, sheet)
-        sheet.present(self)
+        present_choice_sheet(self, title, build_rows)
 
     def _start_timers(self):
         """Start timers only when call is active."""
