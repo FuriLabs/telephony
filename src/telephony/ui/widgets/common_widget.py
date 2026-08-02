@@ -21,6 +21,7 @@ from ...backend.utils.phone_utils import normalize_number
 from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
+from ...constants import SHEET_CONTENT_WIDTH
 
 LIST_CHUNK_SIZE = 20
 
@@ -47,7 +48,7 @@ def present_choice_sheet(parent, title, build_rows, description=None):
     themselves when picked.
     """
     sheet = Adw.Dialog(title=title)
-    sheet.set_content_width(360)
+    sheet.set_content_width(SHEET_CONTENT_WIDTH)
 
     toolbar = Adw.ToolbarView()
     toolbar.add_top_bar(Adw.HeaderBar())
@@ -83,7 +84,7 @@ def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=Fal
 def build_info_sheet(title, text, selectable=False):
     """Build a bottom sheet holding a titled block of explanatory text."""
     sheet = Adw.Dialog(title=title)
-    sheet.set_content_width(360)
+    sheet.set_content_width(SHEET_CONTENT_WIDTH)
 
     toolbar = Adw.ToolbarView()
     toolbar.add_top_bar(Adw.HeaderBar())
