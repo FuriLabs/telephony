@@ -43,6 +43,7 @@ class ContactEditor(Adw.Dialog):
         self.connect("closed", self._on_closed)
         self.eds = eds_manager
         self.main_window = main_window
+        self._closing = False
         self.uid = contact_data['uid'] if contact_data else None
 
         self.vcard_cache = ""
@@ -76,6 +77,13 @@ class ContactEditor(Adw.Dialog):
         if self._vcard_loading:
             run_in_background(self.eds.get_contact_vcard, self.uid,
                               on_complete=self._on_vcard_loaded, on_error=self._on_vcard_load_failed)
+
+    def _close_once(self):
+        """Close the sheet once, ignoring repeat activations."""
+        if self._closing:
+            return
+        self._closing = True
+        self.close()
 
     def _on_closed(self, _dialog):
         """Remember that the dialog is closing so async callbacks bail out."""
@@ -428,7 +436,7 @@ class ContactEditor(Adw.Dialog):
             self.set_title(_("Contact Details"))
             self.refresh_ui()
         else:
-            GLib.idle_add(lambda: self.close() or False)
+            GLib.idle_add(lambda: self._close_once() or False)
 
     def _add_phone_row(self, text="", label="Mobile"):
         """Add a phone number entry row."""
@@ -525,12 +533,12 @@ class ContactEditor(Adw.Dialog):
 
     def _message_number(self, number):
         """Open a chat for the number, leaving the modal editor first."""
-        self.close()
+        self._close_once()
         self.main_window.present_chat(normalize_number(number))
 
     def _call_number(self, number):
         """Start a call to the number, leaving the modal editor first."""
-        self.close()
+        self._close_once()
         self.main_window.start_call(number)
 
     def _open_mailto(self, address):
@@ -635,7 +643,7 @@ class ContactEditor(Adw.Dialog):
     def _do_delete(self):
         """Perform deletion."""
         if not self.uid:
-            GLib.idle_add(lambda: self.close() or False)
+            GLib.idle_add(lambda: self._close_once() or False)
             return
 
         contact = self.eds.cache.get(self.uid)
@@ -657,7 +665,7 @@ class ContactEditor(Adw.Dialog):
         def done(deleted_numbers):
             for num in deleted_numbers or []:
                 self.main_window.gsettings_mgr.reset_special_list_names(num)
-            self.close()
+            self._close_once()
 
         run_in_background(task, on_complete=done)
 
@@ -840,7 +848,7 @@ class ContactEditor(Adw.Dialog):
                     self._saving_in_progress = False
 
                     def on_wizard_done(force_save=False):
-                        self.close()
+                        self._close_once()
                         if force_save:
                             self.on_save(self.btn_save, force=True)
 
@@ -897,7 +905,7 @@ class ContactEditor(Adw.Dialog):
                 on_error=lambda error: self._on_save_failed(error, fn, final_vcard)
             )
             self._saving_in_progress = False
-            self.close()
+            self._close_once()
         except Exception as e:
             self._saving_in_progress = False
             self.btn_save.set_sensitive(True)
