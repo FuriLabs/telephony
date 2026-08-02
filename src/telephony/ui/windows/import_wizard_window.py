@@ -38,6 +38,7 @@ class ImportWizardWindow(Adw.Dialog):
         self.custom_db_path = None
         self.custom_mms_path = None
         self._is_finished = False
+        self.connect("closed", self._on_closed)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_child(self.main_box)
@@ -130,10 +131,10 @@ class ImportWizardWindow(Adw.Dialog):
         self.done_callback(None, None)
         self.close()
 
-    def do_close_request(self):
+    def _on_closed(self, _dialog):
+        """Report a cancelled wizard exactly once, on any close path."""
         if not self._is_finished:
             self.done_callback(False, False)
-        return False
 
     def on_cancel(self):
         self.close()
