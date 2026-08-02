@@ -123,9 +123,7 @@ class ContactEditor(Adw.Dialog):
                     break
 
         if self.mode == "VIEW":
-            btn_close = Gtk.Button(label=_("Close"))
-            btn_close.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
-            header.pack_start(btn_close)
+            header.set_show_end_title_buttons(True)
 
             btn_edit = Gtk.Button(label=_("Edit"))
             btn_edit.add_css_class("suggested-action")
