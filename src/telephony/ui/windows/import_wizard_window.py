@@ -15,6 +15,7 @@
 
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
+from ..widgets.common_widget import close_dialog
 
 
 class ImportWizardWindow(Adw.Dialog):
@@ -129,7 +130,7 @@ class ImportWizardWindow(Adw.Dialog):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
         self.done_callback(None, None)
-        self.close()
+        close_dialog(self)
 
     def _on_closed(self, _dialog):
         """Report a cancelled wizard exactly once, on any close path."""
@@ -137,7 +138,7 @@ class ImportWizardWindow(Adw.Dialog):
             self.done_callback(False, False)
 
     def on_cancel(self):
-        self.close()
+        close_dialog(self)
 
     def _step_custom_db(self):
         dialog = Gtk.FileChooserNative(
@@ -218,4 +219,4 @@ class ImportWizardWindow(Adw.Dialog):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
         self.done_callback(self.custom_db_path, self.custom_mms_path)
-        self.close()
+        close_dialog(self)

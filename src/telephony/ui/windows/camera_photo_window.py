@@ -28,6 +28,7 @@ from loguru import logger
 from ...backend.utils.thread_utils import run_in_background
 from ...constants import VIEWFINDER_START_DELAY_MS
 from .media_window_base import MediaCaptureWindow
+from ..widgets.common_widget import close_dialog
 
 CAPTURE_START_DELAY_MS = 500
 CAPTURE_RETRY_DELAY_MS = 1000
@@ -413,11 +414,11 @@ class CameraPhoto(MediaCaptureWindow):
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

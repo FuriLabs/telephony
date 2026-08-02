@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import weakref
+
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.phone_utils import normalize_number
 
@@ -21,6 +23,21 @@ from loguru import logger
 from gettext import gettext as _
 
 LIST_CHUNK_SIZE = 20
+
+_CLOSING_DIALOGS = weakref.WeakSet()
+
+
+def close_dialog(dialog):
+    """Close a dialog exactly once, ignoring repeats during the animation.
+
+    A double tap otherwise closes an already closed dialog, which
+    Adwaita reports as a critical.
+    """
+    if dialog in _CLOSING_DIALOGS:
+        return
+    _CLOSING_DIALOGS.add(dialog)
+    dialog.connect("closed", _CLOSING_DIALOGS.discard)
+    dialog.close()
 
 
 def present_choice_sheet(parent, title, build_rows, description=None):
@@ -56,7 +73,7 @@ def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=Fal
     if destructive:
         row.add_css_class("error")
     row.connect("activated", lambda r: GLib.idle_add(
-        lambda: [sheet.close(), callback()] and False))
+        lambda: [close_dialog(sheet), callback()] and False))
     group.add(row)
     return row
 

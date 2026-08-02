@@ -19,6 +19,7 @@ from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.thread_utils import run_in_background
+from ..widgets.common_widget import close_dialog
 
 
 class BlocklistEditor(Adw.Dialog):
@@ -39,7 +40,7 @@ class BlocklistEditor(Adw.Dialog):
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_dialog(self) or False))
         header.pack_start(btn_cancel)
 
         btn_save = Gtk.Button(label=_("Save"))
@@ -88,7 +89,7 @@ class BlocklistEditor(Adw.Dialog):
             def done(success):
                 if success:
                     logger.info(f"[Blocklist] Added number: {norm_num}")
-                    self.close()
+                    close_dialog(self)
                 else:
                     self._show_error(_("Database Error"), _("Failed to save to blocklist."))
 

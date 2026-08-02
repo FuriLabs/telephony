@@ -321,9 +321,9 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         self.db_signals.clear()
 
     def close(self):
-        """Pop this page off the settings navigation."""
+        """Pop this page once; repeat taps during the transition are ignored."""
         nav = self.get_ancestor(Adw.NavigationView)
-        if nav:
+        if nav and nav.get_visible_page() is self:
             nav.pop()
 
     def _on_save_clicked(self, btn):
@@ -612,7 +612,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
     def _pop_totp_page(self):
         """Pop the TOTP page off the settings navigation."""
         nav = self.get_ancestor(Adw.NavigationView)
-        if nav:
+        if nav and nav.get_visible_page() is self:
             nav.pop()
 
     def _confirm_remove(self):

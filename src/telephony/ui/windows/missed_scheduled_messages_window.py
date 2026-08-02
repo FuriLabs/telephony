@@ -22,6 +22,7 @@ from ...backend.utils.thread_utils import run_in_background
 import json
 import os
 import time
+from ..widgets.common_widget import close_dialog
 
 
 class MissedScheduledMessagesDialog:
@@ -156,7 +157,7 @@ class MissedScheduledMessagesDialog:
         btn_send.add_css_class("suggested-action")
 
         def _on_send_now(b):
-            GLib.idle_add(lambda: d.close() or False)
+            GLib.idle_add(lambda: close_dialog(d) or False)
             self._send_missed_message_bg(msg)
             GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
 
@@ -167,7 +168,7 @@ class MissedScheduledMessagesDialog:
         btn_remove.add_css_class("destructive-action")
 
         def _on_remove(b):
-            GLib.idle_add(lambda: d.close() or False)
+            GLib.idle_add(lambda: close_dialog(d) or False)
             self.db.delete_scheduled_messages([mid])
             self.scheduler.remove_cron(mid)
             self.app_window.notify_success(_("Message removed"))
