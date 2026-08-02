@@ -20,6 +20,7 @@ from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
 
+from ..widgets.common_widget import present_choice_sheet, add_choice_row
 from .camera_photo_window import CameraPhoto
 from .camera_video_window import CameraVideo
 from .sound_recorder_window import SoundRecorder
@@ -33,41 +34,20 @@ class ChatMediaController:
         self.window = window
 
     def on_attach_clicked(self, btn):
-        """Show attachment popover menu."""
-        pop = Gtk.Popover()
-        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        vbox.set_margin_start(12)
-        vbox.set_margin_end(12)
-        vbox.set_margin_top(12)
-        vbox.set_margin_bottom(12)
+        """Show the attachment chooser sheet."""
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Take Photo"), self._open_camera,
+                           icon="camera-photo-symbolic")
+            add_choice_row(group, sheet, _("Record Video"), self._open_video,
+                           icon="camera-video-symbolic")
+            add_choice_row(group, sheet, _("Record Audio"), self._open_audio_recorder,
+                           icon="audio-input-microphone-symbolic")
+            add_choice_row(group, sheet, _("Choose File"), self._open_file_chooser,
+                           icon="folder-open-symbolic")
+            add_choice_row(group, sheet, _("Schedule"), self.chat_page._open_schedule_picker,
+                           icon="alarm-symbolic")
 
-        def make_btn(icon, label, callback, suggested=False):
-            b = Gtk.Button()
-            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            box.set_halign(Gtk.Align.START)
-            box.append(Gtk.Image(icon_name=icon))
-            box.append(Gtk.Label(label=label))
-            b.set_child(box)
-            if suggested:
-                b.add_css_class("suggested-action")
-
-            def _handle_click():
-                pop.popdown()
-                GLib.timeout_add(50, lambda: callback() or False)
-            b.connect("clicked", lambda x: _handle_click())
-            return b
-
-        vbox.append(make_btn("camera-photo-symbolic", _("Take Photo"), self._open_camera, suggested=True))
-        vbox.append(make_btn("camera-video-symbolic", _("Record Video"), self._open_video, suggested=True))
-        vbox.append(make_btn("audio-input-microphone-symbolic", _("Record Audio"), self._open_audio_recorder, suggested=True))
-        vbox.append(make_btn("folder-open-symbolic", _("Choose File"), self._open_file_chooser, suggested=True))
-        schedule_btn = make_btn("alarm-symbolic", _("Schedule"), self.chat_page._open_schedule_picker)
-        schedule_btn.add_css_class("yellow-action")
-        vbox.append(schedule_btn)
-
-        pop.set_child(vbox)
-        pop.set_parent(btn)
-        pop.popup()
+        present_choice_sheet(self.window, _("Select Attachment"), build)
 
     def _open_camera(self):
         """Open photo camera modal."""
