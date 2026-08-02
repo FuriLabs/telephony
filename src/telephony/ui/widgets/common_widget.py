@@ -24,6 +24,7 @@ from gettext import gettext as _
 from ...constants import SHEET_CONTENT_WIDTH
 
 LIST_CHUNK_SIZE = 20
+INFO_SHEET_MAX_HEIGHT = 520
 
 _CLOSING_DIALOGS = weakref.WeakSet()
 
@@ -82,20 +83,27 @@ def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=Fal
 
 
 def build_info_sheet(title, text, selectable=False):
-    """Build a bottom sheet holding a titled block of explanatory text."""
+    """Build a bottom sheet holding a titled block of explanatory text.
+
+    The sheet presentation ignores the natural height of a wrapped
+    label, so the scroll area asks for the measured text height up to
+    a cap, otherwise long texts render as a short scrolling stub.
+    """
     sheet = Adw.Dialog(title=title)
     sheet.set_content_width(SHEET_CONTENT_WIDTH)
 
     toolbar = Adw.ToolbarView()
     toolbar.add_top_bar(Adw.HeaderBar())
 
-    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=520)
-    lbl = Gtk.Label(label=text, wrap=True, xalign=0, selectable=selectable)
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=INFO_SHEET_MAX_HEIGHT)
+    lbl = Gtk.Label(label=text, wrap=True, xalign=0, selectable=selectable, valign=Gtk.Align.START)
     lbl.set_margin_top(4)
-    lbl.set_margin_bottom(16)
+    lbl.set_margin_bottom(24)
     lbl.set_margin_start(16)
     lbl.set_margin_end(16)
     scroll.set_child(lbl)
+    natural_height = lbl.measure(Gtk.Orientation.VERTICAL, SHEET_CONTENT_WIDTH)[1]
+    scroll.set_min_content_height(min(natural_height, INFO_SHEET_MAX_HEIGHT))
     toolbar.set_content(scroll)
     sheet.set_child(toolbar)
     return sheet
