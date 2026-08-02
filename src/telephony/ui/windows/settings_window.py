@@ -335,45 +335,25 @@ class SettingsWindow(Adw.Window):
 
         grp_notif.add(self.sw_repeated)
 
-        row_prio = Adw.ActionRow(title=_("Notification Overrides"))
-        row_prio.set_subtitle(_("Manage contacts that always play sound"))
-
+        row_prio = self._nav_row(_("Notification Overrides"),
+                                 _("Manage contacts that always play sound"),
+                                 lambda: self._open_priority_window(None))
         btn_info_prio = Gtk.Button(icon_name="dialog-information-symbolic")
         btn_info_prio.set_valign(Gtk.Align.CENTER)
         btn_info_prio.add_css_class("flat")
         btn_info_prio.add_css_class("circular")
         btn_info_prio.connect("clicked", lambda b: GLib.idle_add(
             lambda: self._show_overrides_info(b) or False))
-
-        btn_prio = Gtk.Button(label=_("Manage"))
-        btn_prio.set_valign(Gtk.Align.CENTER)
-        btn_prio.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._open_priority_window(b) or False))
-        row_prio.add_suffix(btn_prio)
         row_prio.add_suffix(btn_info_prio)
         grp_notif.add(row_prio)
 
-        row_sms_tone = Adw.ActionRow(title=_("Individual SMS Notifications"))
-        row_sms_tone.set_subtitle(
-            _("Set custom notification sounds for specific contacts"))
+        grp_notif.add(self._nav_row(_("Individual SMS Notifications"),
+                                    _("Set custom notification sounds for specific contacts"),
+                                    lambda: self._open_custom_tone_window("sms")))
 
-        btn_sms_tone = Gtk.Button(label=_("Manage"))
-        btn_sms_tone.set_valign(Gtk.Align.CENTER)
-        btn_sms_tone.connect(
-            "clicked", lambda b: self._open_custom_tone_window("sms"))
-        row_sms_tone.add_suffix(btn_sms_tone)
-        grp_notif.add(row_sms_tone)
-
-        row_ring_tone = Adw.ActionRow(title=_("Individual Ringtones"))
-        row_ring_tone.set_subtitle(
-            _("Set custom ringtones for specific contacts"))
-
-        btn_ring_tone = Gtk.Button(label=_("Manage"))
-        btn_ring_tone.set_valign(Gtk.Align.CENTER)
-        btn_ring_tone.connect(
-            "clicked", lambda b: self._open_custom_tone_window("ringtone"))
-        row_ring_tone.add_suffix(btn_ring_tone)
-        grp_notif.add(row_ring_tone)
+        grp_notif.add(self._nav_row(_("Individual Ringtones"),
+                                    _("Set custom ringtones for specific contacts"),
+                                    lambda: self._open_custom_tone_window("ringtone")))
 
         self._init_desktop_toggles(page)
 
@@ -382,12 +362,17 @@ class SettingsWindow(Adw.Window):
         grp_adv = Adw.PreferencesGroup()
         page.add(grp_adv)
 
-        btn_adv = Gtk.Button(label=_("Advanced Settings"))
-        btn_adv.add_css_class("suggested-action")
-        btn_adv.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._open_modem_settings(b) or False))
+        grp_adv.add(self._nav_row(_("Advanced Settings"), None,
+                                  lambda: self._open_modem_settings(None)))
 
-        grp_adv.add(btn_adv)
+    def _nav_row(self, title, subtitle, callback):
+        """Build an activatable navigation row with a chevron."""
+        row = Adw.ActionRow(title=title, activatable=True)
+        if subtitle:
+            row.set_subtitle(subtitle)
+        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+        row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
+        return row
 
     def _show_country_code_info(self, btn):
         """Show information about country code setting."""
