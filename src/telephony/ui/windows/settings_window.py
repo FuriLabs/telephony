@@ -212,14 +212,17 @@ class SettingsWindow(Adw.Dialog):
             "duplicate-resolver-enabled", w.get_active()))
         self.grp_contacts.add(self.sw_duplicate_resolver)
 
-        self.row_add_ab = Adw.ActionRow(title=_("Add Local Address Book"))
-        btn_add_ab = Gtk.Button(icon_name="list-add-symbolic")
-        btn_add_ab.set_valign(Gtk.Align.CENTER)
+        self.row_add_ab = Adw.ExpanderRow(title=_("Add Local Address Book"))
+        self.entry_new_ab = Adw.EntryRow(title=_("Name"))
+        btn_add_ab = Gtk.Button(icon_name="list-add-symbolic", valign=Gtk.Align.CENTER)
         btn_add_ab.add_css_class("flat")
         btn_add_ab.add_css_class("circular")
         btn_add_ab.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._on_add_addressbook(b) or False))
-        self.row_add_ab.add_suffix(btn_add_ab)
+            lambda: self._on_add_addressbook() or False))
+        self.entry_new_ab.add_suffix(btn_add_ab)
+        self.entry_new_ab.connect("entry-activated", lambda r: GLib.idle_add(
+            lambda: self._on_add_addressbook() or False))
+        self.row_add_ab.add_row(self.entry_new_ab)
         self.grp_contacts.add(self.row_add_ab)
 
         self.sources_state = self.eds.get_sources_info()
@@ -841,26 +844,15 @@ class SettingsWindow(Adw.Dialog):
             bits.append(status_label)
         return " · ".join(bits)
 
-    def _on_add_addressbook(self, btn):
-        """Prompt for a name and create a local address book."""
-        dialog = Adw.AlertDialog(
-            heading=_("Add Local Address Book"))
-        entry = Gtk.Entry(placeholder_text=_("Address book name"), margin_top=8)
-        dialog.set_extra_child(entry)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("create", _("Save"))
-        dialog.set_response_appearance("create", Adw.ResponseAppearance.SUGGESTED)
-        dialog.set_default_response("create")
-
-        def on_resp(d, resp):
-            name = entry.get_text().strip()
-            if resp != "create" or not name:
-                return
-            run_in_background(self.eds.create_local_addressbook, name,
-                              on_complete=lambda ok: self._on_addressbook_created(ok, name))
-
-        dialog.connect("response", on_resp)
-        dialog.present(self)
+    def _on_add_addressbook(self):
+        """Create a local address book from the inline name entry."""
+        name = self.entry_new_ab.get_text().strip()
+        if not name:
+            return
+        self.entry_new_ab.set_text("")
+        self.row_add_ab.set_expanded(False)
+        run_in_background(self.eds.create_local_addressbook, name,
+                          on_complete=lambda ok: self._on_addressbook_created(ok, name))
 
     def _on_addressbook_created(self, success, name):
         """Refresh the sources list after creating an address book."""
