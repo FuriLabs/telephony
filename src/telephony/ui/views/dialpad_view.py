@@ -45,7 +45,7 @@ class DialpadView(Adw.Bin):
         self.entry.set_editable(True)
         self.entry.set_property("im-module", "none")
 
-        self.info_label = Gtk.Label(label=_("Telephony Smart Dialpad at your service"))
+        self.info_label = Gtk.Label(label="")
         self.info_label.add_css_class("caption")
         self.info_label.add_css_class("dim-label")
         self.info_label.set_ellipsize(Pango.EllipsizeMode.END)
@@ -159,7 +159,7 @@ class DialpadView(Adw.Bin):
         text = self.entry.get_text().strip()
 
         if len(text) < 3:
-            self.info_label.set_text(_("Telephony Smart Dialpad at your service"))
+            self.info_label.set_text("")
             self.info_label.add_css_class("dim-label")
             return False
 

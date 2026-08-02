@@ -35,6 +35,6 @@ class InfoPage:
             license_type=Gtk.License.GPL_3_0,
             website=WEBSITE_URL,
             issue_url=ISSUE_URL,
-            comments=_("Fast phone dialer and messaging client designed for FLX1 and FLX1s."),
+            comments=_("Fast phone dialer and messaging client designed for FuriOS."),
         )
         dialog.present(parent_window)
