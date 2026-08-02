@@ -17,7 +17,7 @@ import os
 import subprocess
 from ...backend.utils.thread_utils import run_in_background
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
-from ...constants import MMS_SIZE_LIMIT_DEFAULT_KB, SHEET_CONTENT_WIDTH
+from ...constants import SHEET_CONTENT_WIDTH
 from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
@@ -273,24 +273,7 @@ class SettingsWindow(Adw.Dialog):
             self._add_reject_row(msg)
 
         self.grp_messaging = Adw.PreferencesGroup(title=_("Messaging"))
-        btn_info_mms = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_mms.add_css_class("flat")
-        btn_info_mms.add_css_class("circular")
-        btn_info_mms.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_mms_size_info(b) or False))
-        self.grp_messaging.set_header_suffix(btn_info_mms)
         page.add(self.grp_messaging)
-
-        self.mms_limit_values = ["100", "300", "600", "900", "1024", "2048", "3072", "4096", "5120"]
-        mms_limit_labels = ["100 kB", "300 kB", "600 kB", "900 kB", "1 MB", "2 MB", "3 MB", "4 MB", "5 MB"]
-        self.row_mms_limit = build_selector_row(
-            _("MMS Size Limit"), self._on_mms_limit_selected)
-        saved_limit = self.main_window.gsettings_mgr.get_setting("mms_size_limit")
-        if saved_limit not in self.mms_limit_values:
-            saved_limit = MMS_SIZE_LIMIT_DEFAULT_KB
-        set_selector_options(self.row_mms_limit, mms_limit_labels,
-                                   self.mms_limit_values.index(saved_limit))
-        self.grp_messaging.add(self.row_mms_limit)
 
         self.grp_call_volume = Adw.PreferencesGroup(title=_("Call Volume"))
         btn_info_vol = Gtk.Button(icon_name="dialog-information-symbolic")
@@ -391,23 +374,6 @@ class SettingsWindow(Adw.Dialog):
         """Clear the custom ringback file to use default."""
         self.temp_ringback_file = ""
         self.lbl_rb_path.set_text(_("System Default"))
-
-    def _on_mms_limit_selected(self, idx):
-        """Persist the selected MMS size limit."""
-        if idx < 0 or idx >= len(self.mms_limit_values):
-            return
-        self.main_window.gsettings_mgr.set_setting("mms_size_limit", self.mms_limit_values[idx])
-
-    def _show_mms_size_info(self, btn):
-        """Show information about the MMS size limit."""
-        body_text = _("Carriers limit how large a multimedia message can be. "
-                      "Images and videos you attach are automatically compressed "
-                      "to fit under this limit before sending.\n\n"
-                      "600 kB is a safe default for most carriers. Pick a smaller "
-                      "value if your messages fail to send, or a larger one if you "
-                      "know your carrier allows it.")
-
-        present_info_sheet(self, _("MMS Size Limit"), body_text)
 
     def _show_ringback_info(self, btn):
         """Show information about ringback tones."""
