@@ -43,7 +43,6 @@ class CameraPhoto(MediaCaptureWindow):
     def __init__(self, parent_window, on_attach_callback):
         super().__init__()
         self.on_attach_callback = on_attach_callback
-        self.set_modal(True)
         self.set_content_width(360)
         self.set_content_height(600)
         self.set_title(_("Take Picture"))

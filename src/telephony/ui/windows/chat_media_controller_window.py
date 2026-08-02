@@ -147,5 +147,4 @@ class ChatMediaController:
         """Show error dialog."""
         d = Adw.AlertDialog(heading=title, body=message)
         d.add_response("close", _("Close"))
-        d.connect("response", lambda d, r: GLib.idle_add(lambda: d.close() or False))
         d.present(self.window)

@@ -56,7 +56,6 @@ class CameraVideo(MediaCaptureWindow):
 
         self.on_attach_callback = on_attach_callback
         self._attached = False
-        self.set_modal(True)
         self.set_content_width(360)
         self.set_content_height(600)
         self.set_title(_("Record Video"))
