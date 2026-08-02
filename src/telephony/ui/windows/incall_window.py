@@ -100,7 +100,7 @@ HANGUP_RETRY_DELAY_MS = 2000
 KNOCK_REPEAT_SECONDS = 5
 
 
-class InCallWindow(Gtk.Window):
+class InCallWindow(Adw.Window):
     """Main call window handling active calls, incoming calls, and call controls."""
 
     _instance = None
@@ -195,7 +195,7 @@ class InCallWindow(Gtk.Window):
         self.set_default_size(360, 600)
         self.add_css_class("incall-window")
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_child(self.main_box)
+        self.set_content(self.main_box)
 
         self.bg_scrolled = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=180)
         self.bg_calls_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_top=10, margin_bottom=10, margin_start=15, margin_end=15)
@@ -348,37 +348,22 @@ class InCallWindow(Gtk.Window):
         self.lbl_input_route.set_text(input_route_label(route_id))
         self.img_input_route.set_from_icon_name(input_route_icon(route_id))
 
-    def _setup_audio_routing_popover(self):
-        """Setup the audio routing popover menu."""
-        self.output_popover = Gtk.Popover()
-        self.output_popover.set_position(Gtk.PositionType.TOP)
-        self.output_popover.set_parent(self.btn_output)
+    def _present_choice_sheet(self, title, build_rows):
+        """Show a bottom sheet with a single group of choice rows."""
+        sheet = Adw.Dialog(title=title)
+        sheet.set_content_width(360)
 
-        self.out_pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.out_pop_box.set_margin_top(12)
-        self.out_pop_box.set_margin_bottom(12)
-        self.out_pop_box.set_margin_start(12)
-        self.out_pop_box.set_margin_end(12)
-        self.out_pop_box.set_size_request(280, -1)
-        self.output_popover.set_child(self.out_pop_box)
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
 
-        self.output_group = Adw.PreferencesGroup(title=_("Output"))
-        self.out_pop_box.append(self.output_group)
+        page = Adw.PreferencesPage()
+        group = Adw.PreferencesGroup()
+        page.add(group)
+        toolbar.set_content(page)
+        sheet.set_child(toolbar)
 
-        self.input_popover = Gtk.Popover()
-        self.input_popover.set_position(Gtk.PositionType.TOP)
-        self.input_popover.set_parent(self.btn_input)
-
-        self.in_pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.in_pop_box.set_margin_top(12)
-        self.in_pop_box.set_margin_bottom(12)
-        self.in_pop_box.set_margin_start(12)
-        self.in_pop_box.set_margin_end(12)
-        self.in_pop_box.set_size_request(280, -1)
-        self.input_popover.set_child(self.in_pop_box)
-
-        self.input_group = Adw.PreferencesGroup(title=_("Input"))
-        self.in_pop_box.append(self.input_group)
+        build_rows(group, sheet)
+        sheet.present(self)
 
     def _start_timers(self):
         """Start timers only when call is active."""
@@ -720,30 +705,18 @@ class InCallWindow(Gtk.Window):
             callback(messages[0])
             return
 
-        popover = Gtk.Popover()
-        popover.set_position(Gtk.PositionType.TOP)
-        popover.set_parent(anchor)
+        def build(group, sheet):
+            for msg in messages:
+                row = Adw.ActionRow(title=msg, activatable=True)
+                row.set_title_lines(2)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
-                      margin_top=8, margin_bottom=8, margin_start=8, margin_end=8)
+                def _cb(row_widget, m=msg):
+                    sheet.close()
+                    callback(m)
+                row.connect("activated", _cb)
+                group.add(row)
 
-        def on_pick(_btn, msg):
-            popover.popdown()
-            callback(msg)
-
-        for msg in messages:
-            btn = Gtk.Button(label=msg)
-            btn.add_css_class("flat")
-            child = btn.get_child()
-            if isinstance(child, Gtk.Label):
-                child.set_ellipsize(Pango.EllipsizeMode.END)
-                child.set_max_width_chars(32)
-            btn.connect("clicked", on_pick, msg)
-            box.append(btn)
-
-        popover.set_child(box)
-        popover.connect("closed", lambda p: GLib.idle_add(lambda: p.unparent() or False))
-        popover.popup()
+        self._present_choice_sheet(_("Hangup and Send SMS"), build)
 
     def on_ignore_with_sms(self, btn, path, number):
         """Ignore a call and send a quick response."""
@@ -990,46 +963,40 @@ class InCallWindow(Gtk.Window):
         return row
 
     def on_output_routing_click(self, btn):
-        """Populate and show the output routing popover."""
-        self.output_popover.popup()
+        """Show the output routing sheet."""
+        def build(group, sheet):
+            for r in self.audio.get_available_outputs():
+                route_id = r['id']
+                row = self._mk_route_row(r, route_label(route_id), route_id == self.current_route)
 
-        self.out_pop_box.remove(self.output_group)
-        self.output_group = Adw.PreferencesGroup(title=_("Output"))
-        self.out_pop_box.append(self.output_group)
+                def _cb_out(row_widget, r_id=route_id):
+                    sheet.close()
+                    self._handle_output_selection(r_id)
+                if row.get_sensitive():
+                    row.connect("activated", _cb_out)
+                group.add(row)
 
-        for r in self.audio.get_available_outputs():
-            route_id = r['id']
-            row = self._mk_route_row(r, route_label(route_id), route_id == self.current_route)
-
-            def _cb_out(row_widget, r_id=route_id):
-                GLib.idle_add(lambda: self.output_popover.popdown() or False)
-                self._handle_output_selection(r_id)
-            if row.get_sensitive():
-                row.connect("activated", _cb_out)
-            self.output_group.add(row)
+        self._present_choice_sheet(_("Output"), build)
 
     def on_input_routing_click(self, btn):
-        """Populate and show the input routing popover."""
-        self.input_popover.popup()
+        """Show the input routing sheet."""
+        def build(group, sheet):
+            for r in self.audio.get_available_inputs():
+                route_id = r['id']
+                row = self._mk_route_row(r, input_route_label(route_id), route_id == self.current_input_route)
 
-        self.in_pop_box.remove(self.input_group)
-        self.input_group = Adw.PreferencesGroup(title=_("Input"))
-        self.in_pop_box.append(self.input_group)
+                def _cb_in(row_widget, r_id=route_id):
+                    sheet.close()
+                    if self.is_muted:
+                        self.on_mute_toggle(None)
+                    self.audio.set_input_route(r_id)
+                    self.current_input_route = r_id
+                    self._show_input_route(r_id)
+                if row.get_sensitive():
+                    row.connect("activated", _cb_in)
+                group.add(row)
 
-        for r in self.audio.get_available_inputs():
-            route_id = r['id']
-            row = self._mk_route_row(r, input_route_label(route_id), route_id == self.current_input_route)
-
-            def _cb_in(row_widget, r_id=route_id):
-                GLib.idle_add(lambda: self.input_popover.popdown() or False)
-                if self.is_muted:
-                    self.on_mute_toggle(None)
-                self.audio.set_input_route(r_id)
-                self.current_input_route = r_id
-                self._show_input_route(r_id)
-            if row.get_sensitive():
-                row.connect("activated", _cb_in)
-            self.input_group.add(row)
+        self._present_choice_sheet(_("Input"), build)
 
     def _apply_call_volume(self):
         """Route the new call and apply its configured volume once."""

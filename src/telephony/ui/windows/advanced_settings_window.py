@@ -110,10 +110,10 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         return row
 
     def _on_data_management(self, btn):
-        """Open the data management dialog."""
+        """Push the data management page."""
         from .data_management_window import DataManagementDialog
         dm = DataManagementDialog(self.parent_win.main_window)
-        dm.present()
+        self.get_ancestor(Adw.NavigationView).push(dm.build_page())
 
     def _open_action_window(self, mode):
         """Open the trusted action window after polkit authentication."""

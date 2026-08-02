@@ -550,7 +550,7 @@ class MainWindow(Adw.Window):
         if not self.pending_conflicts:
             return
         win = DuplicateResolutionWindow(self, self.pending_conflicts, self.eds, self.on_resolution_done)
-        win.present()
+        win.present(self)
 
     def on_resolution_done(self):
         """Callback when duplicate resolution is done."""
@@ -563,30 +563,23 @@ class MainWindow(Adw.Window):
             self.notify_loading(_("Contacts syncing..."))
             return
 
-        win = Adw.Window(title=_("Blocklist"), transient_for=self)
-        win.set_default_size(360, 500)
-        win.set_modal(False)
+        sheet = Adw.Dialog(title=_("Blocklist"))
+        sheet.set_content_width(360)
+        sheet.set_content_height(500)
 
         view = BlocklistView(self.db, self)
         self.blocklist_view = view
 
         def _cleanup(*args):
             self.blocklist_view = None
-            return False
 
-        win.connect("close-request", _cleanup)
+        sheet.connect("closed", _cleanup)
 
-        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(False)
-        header.set_show_start_title_buttons(False)
-        btn_close = Gtk.Button(label=_("Close"))
-        btn_close.connect("clicked", lambda b: GLib.idle_add(lambda: win.close() or False))
-        header.pack_end(btn_close)
-        content.append(header)
-        content.append(view)
-        win.set_content(content)
-        win.present()
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        toolbar.set_content(view)
+        sheet.set_child(toolbar)
+        sheet.present(self)
 
     def present_blocklist_editor(self, number_preset=None):
         """Open blocklist editor dialog."""
@@ -599,9 +592,8 @@ class MainWindow(Adw.Window):
             contact_name = self.eds.get_contact_name(number_preset)
             if contact_name:
                 name_preset = contact_name
-        win = BlocklistEditor(self.db, self.eds, self, number_preset=number_preset, name_preset=name_preset)
-        win.set_modal(False)
-        win.present()
+        BlocklistEditor(self.db, self.eds, self, number_preset=number_preset,
+                        name_preset=name_preset).present(self)
 
     def on_force_sync_click(self, btn):
         """Force address book backends to sync, falling back to a local reload."""
