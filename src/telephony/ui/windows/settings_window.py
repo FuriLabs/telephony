@@ -17,7 +17,7 @@ import os
 import subprocess
 from ...backend.utils.thread_utils import run_in_background
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
-from ...constants import MMS_SIZE_LIMIT_DEFAULT_KB
+from ...constants import MMS_SIZE_LIMIT_DEFAULT_KB, SHEET_CONTENT_WIDTH
 from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
@@ -53,7 +53,7 @@ class SettingsWindow(Adw.Dialog):
         self.eds = eds_manager
         self._saved = False
 
-        self.set_content_width(400)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(750)
 
         self.emergency_rows = []

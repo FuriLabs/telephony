@@ -25,6 +25,7 @@ from gettext import gettext as _
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.vcard_utils import unfold_vcard
 from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 
 class DuplicateResolutionWindow(Adw.Dialog):
@@ -35,7 +36,7 @@ class DuplicateResolutionWindow(Adw.Dialog):
 
     def __init__(self, parent_window, conflicts, eds_manager, on_done_callback):
         super().__init__(title=_("Duplicate Contact"))
-        self.set_content_width(500)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(600)
 
         self.conflicts = conflicts

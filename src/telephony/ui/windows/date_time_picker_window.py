@@ -18,6 +18,7 @@ from loguru import logger
 from gettext import gettext as _
 
 from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 CONTENT_MARGIN = 16
 BOTTOM_MARGIN = 24
@@ -44,7 +45,7 @@ class DateTimePicker:
         self.selected_date = initial_date if initial_date else GLib.DateTime.new_now_local()
 
         self.dialog = Adw.Dialog(title=self.title)
-        self.dialog.set_content_width(360)
+        self.dialog.set_content_width(SHEET_CONTENT_WIDTH)
 
         self.toolbar = Adw.ToolbarView()
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)

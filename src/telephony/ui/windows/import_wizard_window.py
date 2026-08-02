@@ -16,6 +16,7 @@
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
 from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 
 class ImportWizardWindow(Adw.Dialog):
@@ -31,8 +32,7 @@ class ImportWizardWindow(Adw.Dialog):
         """
         title = _("Import Messages") if import_type == 'chatty' else _("Import Call History")
         super().__init__(title=title)
-        self.set_content_width(400)
-        self.set_content_height(500)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.import_type = import_type
         self.done_callback = done_callback
 

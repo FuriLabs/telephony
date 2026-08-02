@@ -26,6 +26,7 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
 from ...constants import (
+    SHEET_CONTENT_WIDTH,
     VIEWFINDER_START_DELAY_MS,
     PLAYBACK_PROGRESS_INTERVAL_MS,
     EOS_TIMEOUT_MS,
@@ -57,7 +58,7 @@ class CameraVideo(MediaCaptureWindow):
 
         self.on_attach_callback = on_attach_callback
         self._attached = False
-        self.set_content_width(360)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(600)
         self.set_title(_("Record Video"))
 

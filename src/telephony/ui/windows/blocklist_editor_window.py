@@ -20,6 +20,7 @@ from gettext import gettext as _
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.thread_utils import run_in_background
 from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 
 class BlocklistEditor(Adw.Dialog):
@@ -28,7 +29,7 @@ class BlocklistEditor(Adw.Dialog):
     def __init__(self, db_manager, eds_manager, parent_window, number_preset=None, name_preset=None):
         """Initialize the Blocklist Editor."""
         super().__init__(title=_("Block Number"))
-        self.set_content_width(350)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(400)
 
         self.db = db_manager
