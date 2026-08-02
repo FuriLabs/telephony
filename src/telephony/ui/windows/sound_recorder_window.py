@@ -54,7 +54,6 @@ class SoundRecorder(MediaCaptureWindow):
         self.on_attach_callback = on_attach_callback
         self.max_bytes = max_bytes
         self._attached = False
-        self.set_modal(True)
         self.set_content_width(360)
         self.set_content_height(450)
         self.set_title(_("Voice Message"))
