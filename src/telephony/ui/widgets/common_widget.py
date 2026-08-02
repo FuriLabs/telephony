@@ -65,11 +65,13 @@ def present_choice_sheet(parent, title, build_rows, description=None):
     return sheet
 
 
-def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=False):
+def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=False, icon=None):
     """Add one activatable row that closes the sheet and runs its callback."""
     row = Adw.ActionRow(title=label, activatable=True)
     if subtitle:
         row.set_subtitle(subtitle)
+    if icon:
+        row.add_prefix(Gtk.Image.new_from_icon_name(icon))
     if destructive:
         row.add_css_class("error")
     row.connect("activated", lambda r: GLib.idle_add(
