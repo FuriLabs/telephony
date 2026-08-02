@@ -88,6 +88,11 @@ class ChatMediaController:
                 file = d.open_finish(r)
                 if file:
                     self._on_media_captured(None, file.get_path())
+            except GLib.Error as e:
+                if e.matches(Gtk.DialogError.quark(), Gtk.DialogError.DISMISSED):
+                    logger.debug("[MediaController] File dialog dismissed by user")
+                else:
+                    logger.error(f"File dialog error: {e}")
             except Exception as e:
                 logger.error(f"File dialog error: {e}")
 
