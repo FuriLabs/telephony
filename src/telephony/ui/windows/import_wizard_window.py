@@ -17,7 +17,7 @@ from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
 
 
-class ImportWizardWindow(Adw.Window):
+class ImportWizardWindow(Adw.Dialog):
     """
     Wizard window to select source for importing Calls/Chatty databases.
     Matches DuplicateResolutionWindow styling.
@@ -29,8 +29,9 @@ class ImportWizardWindow(Adw.Window):
         done_callback(db_path, mms_dir) -> db_path and mms_dir can be None if system default is chosen
         """
         title = _("Import Messages") if import_type == 'chatty' else _("Import Call History")
-        super().__init__(title=title, modal=True, transient_for=parent_window)
-        self.set_default_size(400, 500)
+        super().__init__(title=title)
+        self.set_content_width(400)
+        self.set_content_height(500)
         self.import_type = import_type
         self.done_callback = done_callback
 
@@ -39,7 +40,7 @@ class ImportWizardWindow(Adw.Window):
         self._is_finished = False
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_content(self.main_box)
+        self.set_child(self.main_box)
 
         self.header = Adw.HeaderBar()
         self.header.set_show_end_title_buttons(False)
@@ -140,7 +141,7 @@ class ImportWizardWindow(Adw.Window):
     def _step_custom_db(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select Database File"),
-            transient_for=self,
+            transient_for=self.get_root(),
             action=Gtk.FileChooserAction.OPEN
         )
         dialog.connect("response", self._on_db_file_selected)
@@ -193,7 +194,7 @@ class ImportWizardWindow(Adw.Window):
     def _step_custom_mms(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select MMS Folder"),
-            transient_for=self,
+            transient_for=self.get_root(),
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
         dialog.connect("response", self._on_mms_folder_selected)

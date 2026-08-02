@@ -163,7 +163,7 @@ class ImportExportDialog:
             run_in_background(task)
 
         win = ImportWizardWindow(self.app_window, "chatty", on_wizard_done)
-        win.present()
+        win.present(self.app_window)
 
     def ask_import_local_calls(self):
         def on_wizard_done(db_path, mms_path):
@@ -182,7 +182,7 @@ class ImportExportDialog:
             run_in_background(task)
 
         win = ImportWizardWindow(self.app_window, "calls", on_wizard_done)
-        win.present()
+        win.present(self.app_window)
 
     def ask_import_android(self):
         """Show the Android import choices."""
