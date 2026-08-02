@@ -24,6 +24,7 @@ from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.vcard_utils import unfold_vcard
+from ..widgets.common_widget import close_dialog
 
 
 class DuplicateResolutionWindow(Adw.Dialog):
@@ -110,7 +111,7 @@ class DuplicateResolutionWindow(Adw.Dialog):
             child = next_child
 
         if self.current_index >= len(self.conflicts):
-            self.close()
+            close_dialog(self)
             return
 
         self.update_status()
@@ -327,4 +328,4 @@ class DuplicateResolutionWindow(Adw.Dialog):
 
     def _finish_merge(self):
         self.spinner.stop()
-        self.close()
+        close_dialog(self)

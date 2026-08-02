@@ -30,7 +30,7 @@ from .custom_tone_list_window import CustomToneListWindow
 
 
 from .advanced_settings_window import AdvancedSettingsWindow
-from ..widgets.common_widget import present_info_sheet
+from ..widgets.common_widget import present_info_sheet, close_dialog
 
 
 class SettingsWindow(Adw.Dialog):
@@ -51,6 +51,7 @@ class SettingsWindow(Adw.Dialog):
 
         self.main_window = main_window
         self.eds = eds_manager
+        self._saved = False
 
         self.set_content_width(400)
         self.set_content_height(750)
@@ -75,7 +76,7 @@ class SettingsWindow(Adw.Dialog):
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
         btn_cancel.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self.close() or False))
+            lambda: close_dialog(self) or False))
         header.pack_start(btn_cancel)
 
         btn_save = Gtk.Button(label=_("Save"))
@@ -884,7 +885,6 @@ class SettingsWindow(Adw.Dialog):
 
         def on_resp(d, resp):
             name = entry.get_text().strip()
-            GLib.idle_add(lambda: d.close() or False)
             if resp != "create" or not name:
                 return
             run_in_background(self.eds.create_local_addressbook, name,
@@ -911,7 +911,6 @@ class SettingsWindow(Adw.Dialog):
         dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
 
         def on_resp(d, resp):
-            GLib.idle_add(lambda: d.close() or False)
             if resp != "delete":
                 return
             run_in_background(self.eds.delete_addressbook, uid,
@@ -941,8 +940,6 @@ class SettingsWindow(Adw.Dialog):
         dialog.add_response("close", _("Close"))
         dialog.set_response_appearance(
             "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
         dialog.present(self)
 
     def _build_sources_list(self, rebuild_dropdown=True):
@@ -1062,7 +1059,10 @@ class SettingsWindow(Adw.Dialog):
                 break
 
     def on_save_clicked(self, btn):
-        """Save settings and close."""
+        """Save settings once and close."""
+        if self._saved:
+            return
+        self._saved = True
         raw_num = self.entry_own_num.get_text().strip()
         final_num = ""
         if raw_num:
@@ -1140,4 +1140,4 @@ class SettingsWindow(Adw.Dialog):
                     break
 
         self.overlay.add_toast(Adw.Toast.new(_("Settings Saved")))
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)

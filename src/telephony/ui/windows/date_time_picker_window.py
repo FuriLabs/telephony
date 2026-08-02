@@ -18,6 +18,7 @@ import calendar
 from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
+from ..widgets.common_widget import close_dialog
 
 
 class DateTimePicker:
@@ -39,7 +40,7 @@ class DateTimePicker:
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda x: GLib.idle_add(lambda: self.dialog.close() or False))
+        btn_cancel.connect("clicked", lambda x: GLib.idle_add(lambda: close_dialog(self.dialog) or False))
         header.pack_start(btn_cancel)
 
         btn_confirm = Gtk.Button(label=_("Confirm"))
@@ -179,7 +180,7 @@ class DateTimePicker:
 
     def _on_confirm(self):
         """Apply the picked date and close the sheet."""
-        self.dialog.close()
+        close_dialog(self.dialog)
         try:
             date = self.calendar_widget.get_date()
             y, m, d = date.get_year(), date.get_month(), date.get_day_of_month()

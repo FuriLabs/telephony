@@ -31,6 +31,7 @@ from ...constants import (
     PROGRESS_BAR_WIDTH,
 )
 from .media_window_base import MediaCaptureWindow, _format_duration
+from ..widgets.common_widget import close_dialog
 
 MAX_RECORD_SECONDS = 120
 RECORD_TIMER_INTERVAL_MS = 1000
@@ -384,11 +385,11 @@ class SoundRecorder(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

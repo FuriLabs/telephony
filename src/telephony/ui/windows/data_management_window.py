@@ -18,6 +18,7 @@ from loguru import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
 import os
+from ..widgets.common_widget import close_dialog
 
 
 class DataManagementDialog:
@@ -141,7 +142,7 @@ class DataManagementDialog:
             btn.add_css_class("destructive-action")
 
             def _cb_specific(b, uid=s['uid'], source_name=name):
-                GLib.idle_add(lambda: d.close() or False)
+                GLib.idle_add(lambda: close_dialog(d) or False)
                 self._confirm_destructive(
                     _("Delete Address Book"),
                     _("Are you sure you want to permanently delete the '{name}' address book?").format(name=source_name),
@@ -182,7 +183,7 @@ class DataManagementDialog:
         btn_all.add_css_class("destructive-action")
 
         def _cb_all(b):
-            GLib.idle_add(lambda: d.close() or False)
+            GLib.idle_add(lambda: close_dialog(d) or False)
             callback(None)
         btn_all.connect("clicked", lambda b: GLib.idle_add(lambda: _cb_all(b) or False))
         box.append(btn_all)
@@ -196,7 +197,7 @@ class DataManagementDialog:
             btn.add_css_class("destructive-action")
 
             def _cb_specific(b, uid=s['uid']):
-                GLib.idle_add(lambda: d.close() or False)
+                GLib.idle_add(lambda: close_dialog(d) or False)
                 callback(uid)
             btn.connect("clicked", lambda b, cb=_cb_specific: GLib.idle_add(lambda: cb(b) or False))
             box.append(btn)
