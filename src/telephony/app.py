@@ -17,7 +17,6 @@ import argparse
 import sys
 import os
 import datetime
-import subprocess
 from collections import defaultdict
 from urllib.parse import unquote
 
@@ -868,21 +867,30 @@ class App(Adw.Application):
     def on_action_open_chat(self, _action, parameter):
         """Handle open-chat action."""
         number = parameter.get_string()
+        self.open_messages_chat(number)
+        self.clear_notification(number)
 
-        target_win = None
+    def open_messages_chat(self, number):
+        """Open a chat in a messages window without spawning a new process.
+
+        Prefers the dedicated messages window, falls back to an open full
+        window and only creates a messages window when neither exists,
+        the same order do_command_line resolves --messages --open-chat.
+        """
+        target = None
         for win in self.get_windows():
             if isinstance(win, MainWindow) and win.show_messages_mode:
-                target_win = win
-                break
-
-        if target_win:
-            target_win.present()
-            target_win.open_chat_for_number(number)
-            self.clear_notification(number)
-            return
-
-        logger.info("No suitable window for chat, launching new instance.")
-        subprocess.Popen([sys.executable, "-m", "telephony.main", "--open-chat", number])
+                target = win
+                if not win.show_calls_mode:
+                    break
+        if target is None:
+            logger.info("No messages window for chat, creating one")
+            target = MainWindow(self, self.ofono, self.db, self.eds, self.mms,
+                                self.gsettings_mgr, show_calls=False,
+                                show_messages=True, show_contacts=False)
+        target.set_visible(True)
+        target.present()
+        target.open_chat_for_number(number)
 
     def on_action_dial(self, _action, parameter):
         """Handle dial-number action."""
