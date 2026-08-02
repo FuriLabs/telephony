@@ -27,27 +27,27 @@ transition: all 0.1s ease-in-out;
 .destructive-action:active { background-color: #a0131a; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
 
 /* Suggested action button styling: Blue buttons for primary user actions, such as sending a message or saving a contact. */
-.suggested-action { background-color: #3584e4; color: white; }
-.suggested-action:active { background-color: #1c71d8; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+.suggested-action { background-color: @accent_bg_color; color: @accent_fg_color; }
+.suggested-action:active { background-color: shade(@accent_bg_color, 0.9); transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
 
 /* Icons colors for call history indicators: Differentiates missed (red), incoming (green), outgoing (green), and cancelled (red) calls. */
 .call-icon-missed { color: #e01b24; }
 .call-icon-incoming { color: #2ec27e; }
 .call-icon-outgoing { color: #2ec27e; }
 .call-icon-cancelled { color: #e01b24; }
-.icon-blue { color: #3584e4; }
+.icon-blue { color: @accent_color; }
 .icon-red { color: #e01b24; }
 
 /* General utility classes for layouts: Compact buttons, dimming secondary text, tiny fonts for timestamps, blue accents, and pill-shaped borders. */
 .compact-btn { padding-top: 0px; padding-bottom: 0px; min-height: 20px; }
 .dim-label { opacity: 0.7; font-size: 0.9em; }
 .tiny-label { opacity: 0.6; font-size: 0.75em; }
-.accent { color: #3584e4; font-weight: bold; }
+.accent { color: @accent_color; font-weight: bold; }
 .pill { border-radius: 12px; }
 
 /* Chat bubbles styling: Defines incoming (gray, rounded top-left), outgoing (blue, rounded top-right), and scheduled (yellow) message bubbles. */
 .chat-bubble-in { background: #deddda; color: black; border-radius: 15px 15px 15px 0px; padding: 6px 10px; }
-.chat-bubble-out { background: #3584e4; color: white; border-radius: 15px 15px 0px 15px; padding: 6px 10px; }
+.chat-bubble-out { background: @accent_bg_color; color: @accent_fg_color; border-radius: 15px 15px 0px 15px; padding: 6px 10px; }
 .chat-bubble-scheduled { background: #f5c211; color: black; border-radius: 15px 15px 0px 15px; padding: 6px 10px; }
 .chat-bubble-failed { background: #c01c28; color: white; }
 
@@ -63,7 +63,7 @@ transition: all 0.1s ease-in-out;
 .app-notification { font-weight: bold; }
 .notif-error { background-color: #e01b24; color: white; padding: 8px 16px; border-radius: 99px; }
 .notif-success { background-color: #2ec27e; color: white; padding: 8px 16px; border-radius: 99px; }
-.notif-info { background-color: #3584e4; color: white; padding: 8px 16px; border-radius: 99px; }
+.notif-info { background-color: @accent_bg_color; color: @accent_fg_color; padding: 8px 16px; border-radius: 99px; }
 
 /* Round button styling: Creates circular buttons often used in action toolbars or floating actions, with specific color variants. */
 .round-btn {
@@ -74,7 +74,7 @@ transition: all 0.1s ease-in-out;
     margin: 0;
 }
 .success-btn { background-color: #2ec27e; color: white; }
-.suggested-btn { background-color: #3584e4; color: white; }
+.suggested-btn { background-color: @accent_bg_color; color: @accent_fg_color; }
 .destructive-btn { background-color: #e01b24; color: white; }
 
 /* Chat input field styling: Defines the appearance of the message composition area, including borders, rounding, and focus states. */
@@ -114,14 +114,14 @@ stack {
     min-height: 0px;
 }
 
-/* Action button blue variants: Provides distinct shades of blue for secondary actions without overlapping the primary theme accent. */
+/* Action button accent variants: Provides softer shades derived from the system accent for secondary actions. */
 .action-blue-mid {
-    background-color: #5e9ce0;
-    color: white;
+    background-color: mix(@accent_bg_color, @window_bg_color, 0.3);
+    color: @accent_fg_color;
 }
 .action-blue-light {
-    background-color: #99c1f1;
-    color: black;
+    background-color: mix(@accent_bg_color, @window_bg_color, 0.6);
+    color: @window_fg_color;
 }
 
 /* Mini chat bubble styling: Used for small inline previews of messages, typically inside dialogs or popovers. */
@@ -150,8 +150,8 @@ stack {
     margin-bottom: 8px;
 }
 
-/* Active blue state: Highlights selected items (e.g. in a list or grid) with a solid blue background and border. */
-.blue-active { background-color: #3584e4; color: white; border: 1px solid #78aeed; }
+/* Active accent state: Highlights selected items (e.g. in a list or grid) with a solid accent background and border. */
+.blue-active { background-color: @accent_bg_color; color: @accent_fg_color; border: 1px solid shade(@accent_bg_color, 1.3); }
 
 /* Specific green button styling: For buttons requiring a green color outside of call actions, with custom press animations. */
 .btn-green {
@@ -166,7 +166,7 @@ stack {
 .btn-green:active { background-color: #1a633f; transform: scale(0.94); }
 .destructive-action:active { background-color: #811d1d; transform: scale(0.94); }
 .circular:active { background-color: alpha(@theme_fg_color, 0.1); transform: translateY(2px); }
-.dialpad-btn:active { background-color: #3584e4; color: white; }
+.dialpad-btn:active { background-color: @accent_bg_color; color: @accent_fg_color; }
 
 /* Background call card action: Compact labeled pill buttons on held/waiting call cards. */
 .bg-action { padding: 6px 10px; font-size: 14px; }
