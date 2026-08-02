@@ -46,7 +46,8 @@ class MainWindow(Adw.Window):
 
     def __init__(self, application, ofono_manager, db_manager, eds_manager, mms_manager=None, gsettings_mgr=None, show_calls=False, show_messages=False, show_contacts=False):
         self._unread_timer = None
-        self.btn_set = None
+        self._menu_actions = {}
+        self._resolve_section = None
         self.in_error_mode = False
         self._manual_sync_active = False
         """Initialize the main window."""
@@ -306,63 +307,50 @@ class MainWindow(Adw.Window):
 
     def setup_actions_menu(self):
         """Initialize the primary actions menu."""
-        self.actions_popover = Gtk.Popover()
-        self.actions_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        group = Gio.SimpleActionGroup()
+        entries = (
+            ("resolve-duplicates", self.on_resolve_duplicates_clicked),
+            ("settings", self.on_settings_click),
+            ("reload-contacts", self.on_force_sync_click),
+            ("import-export", self.on_import_export_click),
+            ("blocklist", self.on_blocklist_menu_clicked),
+        )
+        for name, callback in entries:
+            action = Gio.SimpleAction.new(name, None)
+            action.connect("activate", lambda a, p, cb=callback: GLib.idle_add(lambda: cb(None) or False))
+            group.add_action(action)
+            self._menu_actions[name] = action
+        self.insert_action_group("menu", group)
 
-        self.actions_box.set_margin_top(10)
-        self.actions_box.set_margin_bottom(10)
-        self.actions_box.set_margin_start(10)
-        self.actions_box.set_margin_end(10)
+        self._resolve_section = Gio.Menu()
+        main_section = Gio.Menu()
+        main_section.append(_("Settings"), "menu.settings")
+        main_section.append(_("Reload Contacts"), "menu.reload-contacts")
+        main_section.append(_("Import / Export"), "menu.import-export")
+        block_section = Gio.Menu()
+        block_section.append(_("Blocklist"), "menu.blocklist")
 
-        self.actions_box.set_size_request(200, -1)
+        menu = Gio.Menu()
+        menu.append_section(None, self._resolve_section)
+        menu.append_section(None, main_section)
+        menu.append_section(None, block_section)
+        self.actions_btn.set_menu_model(menu)
 
-        self.btn_resolve = Gtk.Button(label=_("Resolve Duplicates"))
-        self.btn_resolve.add_css_class("suggested-action")
-        self.btn_resolve.set_hexpand(True)
-        self.btn_resolve.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_resolve_duplicates_clicked(b) or False))
-        self.btn_resolve.set_visible(False)
+    def _set_resolve_visible(self, visible):
+        """Show or hide the duplicate resolution menu entry."""
+        self._resolve_section.remove_all()
+        if visible:
+            self._resolve_section.append(_("Resolve Duplicates"), "menu.resolve-duplicates")
 
-        self.btn_set = Gtk.Button(label=_("Settings"))
-        self.btn_set.add_css_class("suggested-action")
-        self.btn_set.set_hexpand(True)
-        self.btn_set.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_settings_click(b) or False))
-
-        self.btn_sync = Gtk.Button(label=_("Reload Contacts"))
-        self.btn_sync.add_css_class("suggested-action")
-        self.btn_sync.set_hexpand(True)
-        self.btn_sync.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_force_sync_click(b) or False))
-
-        self.btn_imp_exp = Gtk.Button(label=_("Import / Export"))
-        self.btn_imp_exp.add_css_class("suggested-action")
-        self.btn_imp_exp.set_hexpand(True)
-
-        def _ie_cb():
-            GLib.idle_add(lambda: self.actions_popover.popdown() or False)
-            ie_dialog = ImportExportDialog(self)
-            ie_dialog.present()
-        self.btn_imp_exp.connect("clicked", lambda b: GLib.idle_add(lambda: _ie_cb() or False))
-
-        self.btn_blk = Gtk.Button(label=_("Blocklist"))
-        self.btn_blk.add_css_class("destructive-action")
-        self.btn_blk.set_hexpand(True)
-        self.btn_blk.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_blocklist_menu_clicked(b) or False))
-
-        self.actions_box.append(self.btn_resolve)
-        self.actions_box.append(self.btn_set)
-        self.actions_box.append(self.btn_sync)
-        self.actions_box.append(self.btn_imp_exp)
-        self.actions_box.append(self.btn_blk)
-
-        self.actions_popover.set_child(self.actions_box)
-        self.actions_btn.set_popover(self.actions_popover)
+    def on_import_export_click(self, btn):
+        """Open the import and export dialog."""
+        ImportExportDialog(self).present()
 
     def _update_sensitive_actions(self, sensitive):
         """Enable or disable actions based on readiness."""
-        if (self.btn_set is not None):
-            self.btn_set.set_sensitive(sensitive)
-            self.btn_sync.set_sensitive(sensitive)
-            self.btn_imp_exp.set_sensitive(sensitive)
-            self.btn_blk.set_sensitive(sensitive)
+        for name in ("settings", "reload-contacts", "import-export", "blocklist"):
+            if name in self._menu_actions:
+                self._menu_actions[name].set_enabled(sensitive)
 
     def _refresh_calling_controls(self, *args):
         """Grey out call-starting controls while no new call can be placed."""
@@ -528,7 +516,6 @@ class MainWindow(Adw.Window):
 
     def on_settings_click(self, btn):
         """Open settings window."""
-        GLib.idle_add(lambda: self.actions_popover.popdown() or False)
         win = SettingsWindow(self, self.eds, self.ofono)
         win.set_modal(False)
         win.present()
@@ -537,7 +524,7 @@ class MainWindow(Adw.Window):
         """Handle toggle of duplicate resolver setting."""
         enabled = settings.get_boolean(key)
         if not enabled:
-            self.btn_resolve.set_visible(False)
+            self._set_resolve_visible(False)
             self.pending_conflicts = []
         else:
             if self.contacts_view:
@@ -550,7 +537,7 @@ class MainWindow(Adw.Window):
         resolver_enabled = self.gsettings_mgr.gsettings.get_boolean("duplicate-resolver-enabled")
 
         if resolver_enabled and count > 0:
-            self.btn_resolve.set_visible(True)
+            self._set_resolve_visible(True)
             message = ngettext(
                 "Found {count} duplicate contact. Check menu.",
                 "Found {count} duplicate contacts. Check menu.",
@@ -558,11 +545,10 @@ class MainWindow(Adw.Window):
             ).format(count=count)
             self.show_top_notif(message, "notif-info", duration=5)
         else:
-            self.btn_resolve.set_visible(False)
+            self._set_resolve_visible(False)
 
     def on_resolve_duplicates_clicked(self, btn):
         """Handle resolve duplicates button click."""
-        GLib.idle_add(lambda: self.actions_popover.popdown() or False)
         if not self.pending_conflicts:
             return
         win = DuplicateResolutionWindow(self, self.pending_conflicts, self.eds, self.on_resolution_done)
@@ -575,7 +561,6 @@ class MainWindow(Adw.Window):
 
     def on_blocklist_menu_clicked(self, btn):
         """Open blocklist manager."""
-        GLib.idle_add(lambda: self.actions_popover.popdown() or False)
         if not self.eds.is_ready:
             self.notify_loading(_("Contacts syncing..."))
             return
@@ -622,7 +607,6 @@ class MainWindow(Adw.Window):
 
     def on_force_sync_click(self, btn):
         """Force address book backends to sync, falling back to a local reload."""
-        GLib.idle_add(lambda: self.actions_popover.popdown() or False)
         self.notify_loading(_("Syncing address books..."))
 
         def task():
