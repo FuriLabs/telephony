@@ -530,10 +530,8 @@ class MainWindow(Adw.Window):
         d.present()
 
     def on_settings_click(self, btn):
-        """Open settings window."""
-        win = SettingsWindow(self, self.eds, self.ofono)
-        win.set_modal(False)
-        win.present()
+        """Open the settings sheet."""
+        SettingsWindow(self, self.eds, self.ofono).present(self)
 
     def on_duplicate_resolver_setting_changed(self, settings, key):
         """Handle toggle of duplicate resolver setting."""

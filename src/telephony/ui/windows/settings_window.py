@@ -32,8 +32,12 @@ from .custom_tone_list_window import CustomToneListWindow
 from .advanced_settings_window import AdvancedSettingsWindow
 
 
-class SettingsWindow(Adw.Window):
-    """Main settings window for the application."""
+class SettingsWindow(Adw.Dialog):
+    """Settings dialog holding every settings page in one navigation view.
+
+    Presents as a bottom sheet on phone sized windows; subpages push onto
+    the navigation view instead of spawning their own windows.
+    """
 
     def __init__(self, main_window, eds_manager, ofono_manager):
         """Initialize Settings Window."""
@@ -47,9 +51,8 @@ class SettingsWindow(Adw.Window):
         self.main_window = main_window
         self.eds = eds_manager
 
-        self.set_transient_for(main_window)
-        self.set_modal(True)
-        self.set_default_size(400, 750)
+        self.set_content_width(400)
+        self.set_content_height(750)
 
         self.emergency_rows = []
         self.reject_rows = []
@@ -58,10 +61,12 @@ class SettingsWindow(Adw.Window):
             "ringback_custom_file")
 
         self.overlay = Adw.ToastOverlay()
-        self.set_content(self.overlay)
+        self.set_child(self.overlay)
 
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.overlay.set_child(main_box)
+        self.nav_view = Adw.NavigationView()
+        self.overlay.set_child(self.nav_view)
+
+        root_view = Adw.ToolbarView()
 
         header = Adw.HeaderBar()
         header.set_show_end_title_buttons(False)
@@ -78,11 +83,12 @@ class SettingsWindow(Adw.Window):
             lambda: self.on_save_clicked(b) or False))
         header.pack_end(btn_save)
 
-        main_box.append(header)
+        root_view.add_top_bar(header)
 
         scroll = Gtk.ScrolledWindow()
         scroll.set_vexpand(True)
-        main_box.append(scroll)
+        root_view.set_content(scroll)
+        self.nav_view.add(Adw.NavigationPage(title=_("Settings"), tag="settings-root", child=root_view))
 
         content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scroll.set_child(content_box)
@@ -378,8 +384,7 @@ class SettingsWindow(Adw.Window):
         """Show information about country code setting."""
         body_text = _("The Default Country Code is used to format numbers that don't include an international prefix (e.g., +358).\n\nIf left empty, the system tries to detect it automatically from your SIM card or network.\n\nYou can manually override it here by entering a 2-letter ISO region code (e.g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1).")
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Default Country Code"),
             body=body_text
         )
@@ -388,7 +393,7 @@ class SettingsWindow(Adw.Window):
             "close", Adw.ResponseAppearance.SUGGESTED)
         dialog.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _clear_ringback_file(self):
         """Clear the custom ringback file to use default."""
@@ -411,8 +416,7 @@ class SettingsWindow(Adw.Window):
                       "value if your messages fail to send, or a larger one if you "
                       "know your carrier allows it.")
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("MMS Size Limit"),
             body=body_text
         )
@@ -421,7 +425,7 @@ class SettingsWindow(Adw.Window):
             "close", Adw.ResponseAppearance.SUGGESTED)
         dialog.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _show_ringback_info(self, btn):
         """Show information about ringback tones."""
@@ -430,8 +434,7 @@ class SettingsWindow(Adw.Window):
                       "option to generate it manually here. \n\n"
                       "You can select your own music file, or clear it to use the standard system tone.")
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Ringback Tone"),
             body=body_text
         )
@@ -440,13 +443,13 @@ class SettingsWindow(Adw.Window):
             "close", Adw.ResponseAppearance.SUGGESTED)
         dialog.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _open_audio_picker(self, btn):
         """Open file picker for custom ringback tone."""
         dialog = Gtk.FileChooserNative(
             title=_("Select Ringback Tone"),
-            transient_for=self,
+            transient_for=self.get_root(),
             action=Gtk.FileChooserAction.OPEN,
             accept_label=_("Select"),
             cancel_label=_("Cancel")
@@ -473,16 +476,14 @@ class SettingsWindow(Adw.Window):
         GLib.idle_add(lambda: dialog.destroy() or False)
 
     def _open_modem_settings(self, btn):
-        """Open advanced modem settings."""
-        win = AdvancedSettingsWindow(self)
-        win.present()
+        """Push the advanced settings page."""
+        self.nav_view.push(AdvancedSettingsWindow(self))
 
     def _show_addressbook_info(self, btn):
         """Show information about address book priority."""
         body_text = _("Select the address books to use with Telephony and arrange them in order of priority. The topmost address book has the highest priority and will be preferred if a number is found in multiple address books. You can use the Duplicate Resolver toggle below to help manage duplicates, but even if disabled, we encourage enabling it for a better experience.")
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Address Books"),
             body=body_text
         )
@@ -491,43 +492,39 @@ class SettingsWindow(Adw.Window):
             "close", Adw.ResponseAppearance.SUGGESTED)
         dialog.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _show_repeated_info(self, btn):
         """Show info about repeated calls bypass."""
-        d = Adw.MessageDialog(
-            transient_for=self,
+        d = Adw.AlertDialog(
             heading=_("Repeated Calls Bypass"),
             body=_("When enabled, if the same phone number calls you 3 times within 5 minutes, the third call (and subsequent ones within the window) will force the phone to ring at maximum volume, bypassing Silent or Do Not Disturb modes.")
         )
         d.add_response("ok", _("OK"))
         d.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        d.present()
+        d.present(self)
 
     def _show_overrides_info(self, btn):
         """Show info about notification overrides."""
-        d = Adw.MessageDialog(
-            transient_for=self,
+        d = Adw.AlertDialog(
             heading=_("Notification Overrides"),
             body=_("Choose contacts that will always play notifications at full volume, even when the phone is in Silent or Do Not Disturb mode.")
         )
         d.add_response("ok", _("OK"))
         d.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        d.present()
+        d.present(self)
 
     def _open_priority_window(self, btn):
-        """Open the priority contacts management window."""
-        win = DndBypassContactsListWindow(
-            self, self.main_window.gsettings_mgr, self.eds)
-        win.present()
+        """Push the priority contacts management page."""
+        self.nav_view.push(DndBypassContactsListWindow(
+            self, self.main_window.gsettings_mgr, self.eds))
 
     def _open_custom_tone_window(self, mode):
-        """Open the custom tone management window."""
-        win = CustomToneListWindow(
-            self, self.main_window.gsettings_mgr, self.eds, mode=mode)
-        win.present()
+        """Push the custom tone management page."""
+        self.nav_view.push(CustomToneListWindow(
+            self, self.main_window.gsettings_mgr, self.eds, mode=mode))
 
     def _init_unknown_callers(self, page):
         """Initialize Unknown Callers options."""
@@ -619,8 +616,7 @@ class SettingsWindow(Adw.Window):
         body_text = _(
             "Enter the URL you want to use for searching unknown numbers. Include '{number}' in the URL where the caller's phone number should go.\n\nFor example: https://mysearch.com/?q={number}\n\nWhen you tap the search button during a call, we will replace '{number}' with the actual phone number and open it in your default browser.")
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Custom Search URL"),
             body=body_text
         )
@@ -629,7 +625,7 @@ class SettingsWindow(Adw.Window):
             "close", Adw.ResponseAppearance.SUGGESTED)
         dialog.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _update_uc_ui(self):
         search_active = self.sw_uc_search.get_active()
@@ -867,15 +863,14 @@ class SettingsWindow(Adw.Window):
 
     def _show_call_volume_info(self, btn):
         """Show info about base call volume levels."""
-        d = Adw.MessageDialog(
-            transient_for=self,
+        d = Adw.AlertDialog(
             heading=_("Call Volume"),
             body=_("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. The Bluetooth level is stored for upcoming routing support.")
         )
         d.add_response("ok", _("OK"))
         d.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        d.present()
+        d.present(self)
 
     def _add_reject_row(self, text):
         """Add an editable decline message row."""
@@ -943,8 +938,7 @@ class SettingsWindow(Adw.Window):
 
     def _on_add_addressbook(self, btn):
         """Prompt for a name and create a local address book."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Add Local Address Book"))
         entry = Gtk.Entry(placeholder_text=_("Address book name"), margin_top=8)
         dialog.set_extra_child(entry)
@@ -962,7 +956,7 @@ class SettingsWindow(Adw.Window):
                               on_complete=lambda ok: self._on_addressbook_created(ok, name))
 
         dialog.connect("response", on_resp)
-        dialog.present()
+        dialog.present(self)
 
     def _on_addressbook_created(self, success, name):
         """Refresh the sources list after creating an address book."""
@@ -974,8 +968,7 @@ class SettingsWindow(Adw.Window):
 
     def _confirm_delete_addressbook(self, uid, name):
         """Confirm and delete a local address book."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Delete Address Book"),
             body=_("Are you sure you want to permanently delete the '{name}' address book?").format(name=name))
         dialog.add_response("cancel", _("Cancel"))
@@ -990,7 +983,7 @@ class SettingsWindow(Adw.Window):
                               on_complete=self._on_addressbook_deleted)
 
         dialog.connect("response", on_resp)
-        dialog.present()
+        dialog.present(self)
 
     def _on_addressbook_deleted(self, success):
         """Refresh the sources list after an address book removal."""
@@ -1009,14 +1002,13 @@ class SettingsWindow(Adw.Window):
         run_in_background(self.eds.get_sources_info, on_complete=done)
 
     def _show_ab_info(self, title, msg):
-        dialog = Adw.MessageDialog(heading=title, body=msg)
-        dialog.set_transient_for(self)
+        dialog = Adw.AlertDialog(heading=title, body=msg)
         dialog.add_response("close", _("Close"))
         dialog.set_response_appearance(
             "close", Adw.ResponseAppearance.SUGGESTED)
         dialog.connect("response", lambda d, r: GLib.idle_add(
             lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _build_sources_list(self, rebuild_dropdown=True):
         """Rebuild the address books list UI."""
