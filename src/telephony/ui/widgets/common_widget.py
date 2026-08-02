@@ -114,6 +114,48 @@ def present_info_sheet(parent, title, text):
     build_info_sheet(title, text).present(parent)
 
 
+def build_selector_row(title, on_select=None):
+    """Build an expander row selector; options come from set_selector_options."""
+    row = Adw.ExpanderRow(title=title)
+    row._selected_index = 0
+    row._option_rows = []
+    row._option_checks = []
+    row._on_select = on_select
+    return row
+
+
+def set_selector_options(row, labels, selected_index):
+    """Replace the inline options of an expander selector."""
+    for option in row._option_rows:
+        row.remove(option)
+    row._option_rows = []
+    row._option_checks = []
+    for i, name in enumerate(labels):
+        option = Adw.ActionRow(title=name, activatable=True)
+        check = Gtk.Image.new_from_icon_name("object-select-symbolic")
+        check.set_visible(i == selected_index)
+        option.add_suffix(check)
+        option.connect("activated", lambda r, i=i: GLib.idle_add(
+            lambda: _pick_selector_option(row, i) or False))
+        row.add_row(option)
+        row._option_rows.append(option)
+        row._option_checks.append(check)
+    row._selected_index = selected_index
+    if labels:
+        row.set_subtitle(labels[selected_index])
+
+
+def _pick_selector_option(row, index):
+    """Apply a tapped selector option and collapse the row."""
+    row._selected_index = index
+    row.set_subtitle(row._option_rows[index].get_title())
+    for i, check in enumerate(row._option_checks):
+        check.set_visible(i == index)
+    row.set_expanded(False)
+    if row._on_select:
+        row._on_select(index)
+
+
 def translate_phone_label(label):
     """Translate a phone label key to its localized string."""
     LABELS = {
