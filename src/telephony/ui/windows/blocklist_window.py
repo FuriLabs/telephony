@@ -171,7 +171,7 @@ class BlocklistView(Adw.Bin):
 
         self.db.unblock_number(entry_id, number)
 
-        self.app_window.notify_success(_("Unblocked number"))
+        self.app_window.notify_success(_("Unblocked"))
 
 
 class BlockedItem(GObject.Object):

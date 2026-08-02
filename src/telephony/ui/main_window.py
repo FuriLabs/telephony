@@ -53,6 +53,8 @@ class MainWindow(Adw.Window):
         self._manual_sync_active = False
         self._active_alert = None
         self._ussd_in_flight = False
+        self._loading_toast = None
+        self._setup_hint_shown = False
         """Initialize the main window."""
         super().__init__(application=application)
         self.app = application
@@ -72,11 +74,11 @@ class MainWindow(Adw.Window):
         self.scheduler = self.app.scheduler
 
 
-        self.overlay = Gtk.Overlay()
-        self.set_content(self.overlay)
+        self.toast_overlay = Adw.ToastOverlay()
+        self.set_content(self.toast_overlay)
 
         main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.overlay.set_child(main_vbox)
+        self.toast_overlay.set_child(main_vbox)
 
         self.header = Adw.HeaderBar()
         title_lbl = Gtk.Label(label=_("Telephony"), css_classes=["title"])
@@ -128,25 +130,6 @@ class MainWindow(Adw.Window):
         self.switcher = Adw.ViewSwitcherBar(stack=self.stack, reveal=True)
         main_vbox.append(self.switcher)
 
-        self._notif_hide_id = None
-        self.notif_revealer = Gtk.Revealer(valign=Gtk.Align.END, halign=Gtk.Align.CENTER)
-        self.notif_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_UP)
-        self.notif_revealer.set_margin_bottom(60)
-
-        self.notif_box = Gtk.Box(spacing=10)
-        self.notif_box.add_css_class("app-notification")
-        self.notif_box.set_halign(Gtk.Align.CENTER)
-
-        self.notif_label = Gtk.Label(label="")
-        self.notif_label.set_halign(Gtk.Align.CENTER)
-        self.notif_label.set_wrap(True)
-        self.notif_label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
-        self.notif_label.set_max_width_chars(40)
-        self.notif_label.set_natural_wrap_mode(Gtk.NaturalWrapMode.INHERIT)
-        self.notif_box.append(self.notif_label)
-
-        self.notif_revealer.set_child(self.notif_box)
-        self.overlay.add_overlay(self.notif_revealer)
 
         self.signal_ids = []
         if self.ofono:
@@ -168,7 +151,6 @@ class MainWindow(Adw.Window):
             self.update_unread_badge()
             self._update_sensitive_actions(True)
         else:
-            self.notify_loading(_("Syncing Contacts..."), duration=0)
             self._update_sensitive_actions(False)
 
         self.check_own_number()
@@ -250,7 +232,7 @@ class MainWindow(Adw.Window):
 
         self.switcher = None
         self.stack = None
-        self.overlay = None
+        self.toast_overlay = None
 
         self.set_content(None)
 
@@ -262,7 +244,7 @@ class MainWindow(Adw.Window):
                 num = self.gsettings_mgr.get_setting("own_number")
 
             if not num:
-                GLib.idle_add(lambda: self.show_top_notif(_("Set your number in Settings"), "notif-error", duration=0))
+                GLib.idle_add(lambda: self._show_setup_hint(_("Set your number in Settings")) or False)
         run_in_background(_check)
 
     def _check_country_code(self):
@@ -276,15 +258,9 @@ class MainWindow(Adw.Window):
                 if region:
                     self.gsettings_mgr.set_setting("default_country_code", region)
                     utils.set_custom_region(region)
-                    GLib.idle_add(lambda: self._dismiss_country_code_notif() or False)
                 else:
-                    GLib.idle_add(lambda: self.show_top_notif(_("Please set Default Country Code in Settings"), "notif-error", duration=0))
+                    GLib.idle_add(lambda: self._show_setup_hint(_("Please set Default Country Code in Settings")) or False)
         run_in_background(_task)
-
-    def _dismiss_country_code_notif(self):
-        """Hide the country-code banner once detection has succeeded."""
-        if self.notif_label.get_text() == _("Please set Default Country Code in Settings"):
-            self._hide_top_notif()
 
     def _on_modem_interface_appeared(self, _ofono, interface):
         """Retry region detection once network registration becomes available."""
@@ -303,7 +279,7 @@ class MainWindow(Adw.Window):
             if self.gsettings_mgr.get_emergency_numbers():
                 return
 
-            GLib.idle_add(lambda: self.show_top_notif(_("Setup Emergency Numbers in Settings"), "notif-error", duration=8))
+            GLib.idle_add(lambda: self._show_setup_hint(_("Setup Emergency Numbers in Settings")) or False)
         except Exception as e:
             logger.warning(f"[MainWindow] Emergency setup check warning: {e}")
 
@@ -364,41 +340,44 @@ class MainWindow(Adw.Window):
         if self.contacts_view:
             self.contacts_view.set_calling_enabled(available)
 
-    def show_top_notif(self, message, style_class, duration=3):
-        """Show a temporary notification at the top of the window."""
-        self.notif_label.set_text(message)
-        self.notif_box.remove_css_class("notif-error")
-        self.notif_box.remove_css_class("notif-success")
-        self.notif_box.remove_css_class("notif-info")
-        self.notif_box.add_css_class(style_class)
-        self.notif_revealer.set_reveal_child(True)
-        if self._notif_hide_id:
-            GLib.source_remove(self._notif_hide_id)
-            self._notif_hide_id = None
-        if duration > 0:
-            self._notif_hide_id = GLib.timeout_add_seconds(duration, self._hide_top_notif)
-
-    def _hide_top_notif(self):
-        """Hide the top notification banner."""
-        self._notif_hide_id = None
-        self.notif_revealer.set_reveal_child(False)
-        return False
+    def _show_toast(self, message, timeout=5):
+        """Show a toast and return it."""
+        toast = Adw.Toast.new(message)
+        toast.set_timeout(timeout)
+        self.toast_overlay.add_toast(toast)
+        return toast
 
     def notify_error(self, message):
-        """Helper to show error notification."""
-        self.show_top_notif(f"{message}", "notif-error")
+        """Show a transient feedback toast, ending any loading toast."""
+        self.hide_loading()
+        self._show_toast(message)
 
     def notify_success(self, message):
-        """Helper to show success notification."""
-        self.show_top_notif(f"{message}", "notif-success")
+        """Show a transient feedback toast, ending any loading toast."""
+        self.hide_loading()
+        self._show_toast(message)
 
-    def notify_loading(self, message, duration=10):
-        """Helper to show loading notification."""
-        self.show_top_notif(message, "notif-info", duration=duration)
+    def notify_loading(self, message):
+        """Show a persistent toast for a long running operation."""
+        self.hide_loading()
+        self._loading_toast = self._show_toast(message, timeout=0)
 
     def hide_loading(self):
-        """Hide the notification area."""
-        self.notif_revealer.set_reveal_child(False)
+        """Dismiss the long running operation toast."""
+        if self._loading_toast is not None:
+            self._loading_toast.dismiss()
+            self._loading_toast = None
+
+    def _show_setup_hint(self, message):
+        """Show at most one settings hint per launch, with a shortcut."""
+        if self._setup_hint_shown:
+            return
+        self._setup_hint_shown = True
+        toast = Adw.Toast.new(message)
+        toast.set_timeout(10)
+        toast.set_button_label(_("Settings"))
+        toast.connect("button-clicked", lambda t: GLib.idle_add(lambda: self.on_settings_click(None) or False))
+        self.toast_overlay.add_toast(toast)
 
     def on_contacts_loaded(self, *args):
         """Handle contacts loaded event."""
@@ -427,11 +406,8 @@ class MainWindow(Adw.Window):
         return False
 
     def on_ofono_status(self, manager, status, message):
-        """Handle ofono status changes."""
-        if status == 'connected':
-            self.notify_success(_("Modem Connected"))
-        elif status == 'error':
-            self.notify_error(_("Modem Error: {message}").format(message=message))
+        """Log ofono status changes; the recovery flow owns the surfacing."""
+        logger.debug(f"[MainWindow] ofono status {status}: {message}")
 
     def _on_stack_page_changed(self, *args):
         """Build the newly selected view lazily and refresh the chrome."""
@@ -524,11 +500,14 @@ class MainWindow(Adw.Window):
             self.hide_loading()
             if res:
                 self.show_ussd_dialog(res)
+            else:
+                self.notify_error(_("USSD request failed"))
 
         def failed(error):
             self._ussd_in_flight = False
             self.hide_loading()
             logger.error(f"[MainWindow] USSD request failed: {error}")
+            self.notify_error(_("USSD request failed"))
 
         run_in_background(self.ofono.send_ussd, code, on_complete=done, on_error=failed)
 
@@ -572,11 +551,15 @@ class MainWindow(Adw.Window):
         if resolver_enabled and count > 0:
             self._set_resolve_visible(True)
             message = ngettext(
-                "Found {count} duplicate contact. Check menu.",
-                "Found {count} duplicate contacts. Check menu.",
+                "Found {count} duplicate contact.",
+                "Found {count} duplicate contacts.",
                 count
             ).format(count=count)
-            self.show_top_notif(message, "notif-info", duration=5)
+            toast = Adw.Toast.new(message)
+            toast.set_button_label(_("Resolve Duplicates"))
+            toast.connect("button-clicked", lambda t: GLib.idle_add(
+                lambda: self.on_resolve_duplicates_clicked(None) or False))
+            self.toast_overlay.add_toast(toast)
         else:
             self._set_resolve_visible(False)
 
@@ -595,7 +578,7 @@ class MainWindow(Adw.Window):
     def on_blocklist_menu_clicked(self, btn):
         """Open blocklist manager."""
         if not self.eds.is_ready:
-            self.notify_loading(_("Contacts syncing..."))
+            self.notify_error(_("Contacts syncing..."))
             return
 
         sheet = Adw.Dialog(title=_("Blocklist"))
@@ -619,7 +602,7 @@ class MainWindow(Adw.Window):
     def present_blocklist_editor(self, number_preset=None):
         """Open blocklist editor dialog."""
         if not self.eds.is_ready:
-            self.notify_loading("Contacts syncing...")
+            self.notify_error(_("Contacts syncing..."))
             return
 
         name_preset = ""
@@ -632,7 +615,6 @@ class MainWindow(Adw.Window):
 
     def on_force_sync_click(self, btn):
         """Force address book backends to sync, falling back to a local reload."""
-        self.notify_loading(_("Syncing address books..."))
 
         def task():
             refreshed = self.eds.refresh_backends()
@@ -643,19 +625,16 @@ class MainWindow(Adw.Window):
             refreshed, discovered = result
             if discovered:
                 self._manual_sync_active = True
-                self.notify_loading(_("Reloading Contacts..."))
                 return
             if refreshed:
                 self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
                 return
             self._manual_sync_active = True
-            self.notify_loading(_("Reloading Contacts..."))
             self.eds.reload()
 
         def failed(error):
             logger.error(f"[MainWindow] Backend refresh failed: {error}")
             self._manual_sync_active = True
-            self.notify_loading(_("Reloading Contacts..."))
             self.eds.reload()
 
         run_in_background(task, on_complete=done, on_error=failed)
@@ -663,7 +642,7 @@ class MainWindow(Adw.Window):
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""
         if not self.eds.is_ready:
-            self.notify_loading(_("Contacts syncing..."))
+            self.notify_error(_("Contacts syncing..."))
             return
 
         if contact_data is None and number_preset:
@@ -728,7 +707,6 @@ class MainWindow(Adw.Window):
         def done(success):
             if not success:
                 logger.error(f"[MainWindow] Call failed to {number}")
-                self.notify_error(_("Call Failed"))
 
         run_in_background(self.ofono.dial, number, on_complete=done, hide_id=hide_id)
 
@@ -825,7 +803,6 @@ class MainWindow(Adw.Window):
         """Handle adding number to an existing contact."""
         def _cb(result):
             uid, name = result
-            self.notify_loading(_("Saving contact..."))
 
             def done(success):
                 if success:
