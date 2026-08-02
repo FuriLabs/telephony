@@ -23,8 +23,8 @@ from ...backend.utils.phone_utils import normalize_number
 from ..widgets.common_widget import populate_contact_search_results, translate_phone_label
 
 
-class TrustedActionsListWindow(Adw.Window):
-    """Window to manage the list of trusted actions/contacts."""
+class TrustedActionsListWindow(Adw.NavigationPage):
+    """Settings subpage managing the list of trusted actions/contacts."""
 
     def __init__(self, parent, db, eds, mode="trusted_sms_location_request"):
         self.grp_list = None
@@ -99,8 +99,7 @@ class TrustedActionsListWindow(Adw.Window):
             elif mode == "trusted_sms_lock_device":
                 title = _("Set \"SMS Switch Lock Device\"")
 
-            super().__init__(title=title, transient_for=parent, modal=True)
-            self.set_default_size(400, 700)
+            super().__init__(title=title)
 
             self.local_contacts = []
             try:
@@ -112,19 +111,11 @@ class TrustedActionsListWindow(Adw.Window):
                 logger.error(
                     f"[TrustedActions] Failed to load initial contacts for mode {self.mode}: {e}")
 
-            self.overlay = Adw.ToastOverlay()
-            self.set_content(self.overlay)
-
-            main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            self.overlay.set_child(main_box)
+            view = Adw.ToolbarView()
+            self.set_child(view)
 
             header = Adw.HeaderBar(
                 show_end_title_buttons=False, show_start_title_buttons=False)
-
-            btn_cancel = Gtk.Button(label=_("Cancel"))
-            btn_cancel.connect("clicked", lambda b: GLib.idle_add(
-                lambda: self._on_cancel_clicked(b) or False))
-            header.pack_start(btn_cancel)
 
             btn_save = Gtk.Button(label=_("Save"))
             btn_save.add_css_class("suggested-action")
@@ -132,7 +123,13 @@ class TrustedActionsListWindow(Adw.Window):
                 lambda: self._on_save_clicked(b) or False))
             header.pack_end(btn_save)
 
-            main_box.append(header)
+            view.add_top_bar(header)
+
+            self.overlay = Adw.ToastOverlay()
+            view.set_content(self.overlay)
+
+            main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            self.overlay.set_child(main_box)
 
             self.enable_grp = Adw.PreferencesGroup()
             self.enable_grp.set_margin_start(12)
@@ -323,9 +320,11 @@ class TrustedActionsListWindow(Adw.Window):
                 obj.disconnect(sig_id)
         self.db_signals.clear()
 
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+    def close(self):
+        """Pop this page off the settings navigation."""
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav:
+            nav.pop()
 
     def _on_save_clicked(self, btn):
         """Handle save button click."""
@@ -519,7 +518,7 @@ class TrustedActionsListWindow(Adw.Window):
         action_name = self.mode.replace("trusted_sms_", "").replace("_", " ").title()
         uri = self.gsettings_mgr.get_totp_uri(seed, action_name)
 
-        dialog = Adw.Window(title=_("TOTP Setup"), transient_for=self, modal=True)
+        dialog = Adw.Window(title=_("TOTP Setup"), transient_for=self.get_root(), modal=True)
         dialog.set_default_size(350, 450)
 
         overlay = Adw.ToastOverlay()
