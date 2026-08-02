@@ -26,7 +26,7 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
 from ...backend.utils.thread_utils import run_in_background
-from ...constants import VIEWFINDER_START_DELAY_MS, SHEET_CONTENT_WIDTH
+from ...constants import VIEWFINDER_START_DELAY_MS, SHEET_CONTENT_WIDTH, CAPTURE_SHEET_HEIGHT
 from .media_window_base import MediaCaptureWindow
 from ..widgets.common_widget import close_dialog
 
@@ -45,7 +45,7 @@ class CameraPhoto(MediaCaptureWindow):
         super().__init__()
         self.on_attach_callback = on_attach_callback
         self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(600)
+        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Take Picture"))
 
         self.output_path = None

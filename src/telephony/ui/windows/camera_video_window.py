@@ -27,6 +27,7 @@ from loguru import logger
 
 from ...constants import (
     SHEET_CONTENT_WIDTH,
+    CAPTURE_SHEET_HEIGHT,
     VIEWFINDER_START_DELAY_MS,
     PLAYBACK_PROGRESS_INTERVAL_MS,
     EOS_TIMEOUT_MS,
@@ -59,7 +60,7 @@ class CameraVideo(MediaCaptureWindow):
         self.on_attach_callback = on_attach_callback
         self._attached = False
         self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(600)
+        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Record Video"))
 
         self.output_path = None

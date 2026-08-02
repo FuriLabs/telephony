@@ -27,6 +27,7 @@ from loguru import logger
 
 from ...constants import (
     SHEET_CONTENT_WIDTH,
+    CAPTURE_SHEET_HEIGHT,
     PLAYBACK_PROGRESS_INTERVAL_MS,
     EOS_TIMEOUT_MS,
     PROGRESS_BAR_WIDTH,
@@ -57,7 +58,7 @@ class SoundRecorder(MediaCaptureWindow):
         self.max_bytes = max_bytes
         self._attached = False
         self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(450)
+        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Voice Message"))
 
         self.output_path = None
