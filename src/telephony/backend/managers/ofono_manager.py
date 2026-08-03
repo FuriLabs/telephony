@@ -78,6 +78,7 @@ class OfonoManager(GObject.Object):
         self.voice_proxy = None
         self.msg_proxy = None
         self.ussd_proxy = None
+        self.network_emergency_numbers = set()
         self.cf_proxy = None
         self.cf_handler_id = None
         self.cb_proxy = None
@@ -568,6 +569,10 @@ class OfonoManager(GObject.Object):
         if self.cs_proxy:
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
 
+        if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
+            run_in_background(self.set_delivery_reports, True)
+        run_in_background(self._load_emergency_numbers)
+
         self.mw_proxy = self._get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
             self.mw_handler_id = self.mw_proxy.connect("g-signal", self.on_message_waiting_signal)
@@ -607,6 +612,10 @@ class OfonoManager(GObject.Object):
             elif signal == "CallRemoved":
                 path = params.unpack()[0]
                 self._remove_call(path)
+            elif signal == "PropertyChanged":
+                name, value = params.unpack()
+                if name == "EmergencyNumbers" and value:
+                    self.network_emergency_numbers = set(value)
         except Exception as e:
             logger.error(f"Voice signal error: {e}")
 
@@ -931,6 +940,49 @@ class OfonoManager(GObject.Object):
             self.voice_proxy.call_sync("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
             logger.error(f"SwapCalls failed: {e}")
+
+    def _load_emergency_numbers(self):
+        """Seed the network emergency number list; blocking, call from a worker.
+
+        The cached list deliberately survives modem loss, so a flaky
+        modem can only ever add numbers, never remove them.
+        """
+        if not self.voice_proxy:
+            return
+        try:
+            res = self.voice_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
+            numbers = res.unpack()[0].get("EmergencyNumbers", [])
+            if numbers:
+                self.network_emergency_numbers = set(numbers)
+        except Exception as e:
+            logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
+
+    def get_emergency_numbers(self):
+        """Return configured emergency entries merged with the network list."""
+        entries = []
+        if self.gsettings_mgr:
+            entries = list(self.gsettings_mgr.get_emergency_numbers())
+        known = {normalize_number(e.get("number", "")) for e in entries}
+        for number in sorted(self.network_emergency_numbers):
+            if normalize_number(number) not in known:
+                entries.append({"name": number, "number": number})
+        return entries
+
+    def set_delivery_reports(self, enabled):
+        """Ask the network for SMS delivery reports; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
+        if not self.msg_proxy:
+            return (False, "no proxy")
+        try:
+            self.msg_proxy.call_sync("SetProperty",
+                                     GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                                     Gio.DBusCallFlags.NONE, -1, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
+            return (False, str(e))
 
     def create_multiparty(self):
         """Join the active and held calls into a conference; blocking, call from a worker.

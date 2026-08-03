@@ -167,8 +167,21 @@ class MmsManager(GObject.Object):
             )
             if self.proxy:
                 self.connected = True
+                if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
+                    self.set_delivery_reports(True)
         except Exception as e:
             logger.debug(f"[MMS-LOG] PROXY-FAILED | {e}")
+
+    def set_delivery_reports(self, enabled):
+        """Ask mmsd for MMS delivery reports; blocking, call from a worker."""
+        if not self.proxy:
+            return
+        try:
+            self.proxy.call_sync("SetProperty",
+                                 GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                                 Gio.DBusCallFlags.NONE, -1, None)
+        except Exception as e:
+            logger.error(f"[MMS-LOG] DELIVERY-REPORTS | {e}")
 
     def load_existing_messages(self):
         """Load messages already present in the daemon."""

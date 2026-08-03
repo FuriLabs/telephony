@@ -276,7 +276,7 @@ class MainWindow(Adw.Window):
             if not get_phosh_emergency_calls():
                 return
 
-            if self.gsettings_mgr.get_emergency_numbers():
+            if self.ofono and self.ofono.get_emergency_numbers():
                 return
 
             GLib.idle_add(lambda: self._show_setup_hint(_("Setup Emergency Numbers in Settings")) or False)
