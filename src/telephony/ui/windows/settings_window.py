@@ -912,11 +912,8 @@ class SettingsWindow(Adw.Dialog):
         run_in_background(self.eds.get_sources_info, on_complete=done)
 
     def _show_ab_info(self, title, msg):
-        dialog = Adw.AlertDialog(heading=title, body=msg)
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.present(self)
+        """Explain one address book, in the same sheet every info button uses."""
+        present_info_sheet(self, title, msg)
 
     def _build_sources_list(self, rebuild_dropdown=True):
         """Rebuild the address books list UI."""

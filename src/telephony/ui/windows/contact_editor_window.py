@@ -975,7 +975,5 @@ class ContactEditor(Adw.Dialog):
         d.present(self)
 
     def _show_error(self, title, msg):
-        """Show error dialog."""
-        d = Adw.AlertDialog(heading=title, body=msg)
-        d.add_response("ok", _("OK"))
-        d.present(self)
+        """Report a failure the user can only acknowledge."""
+        self.main_window.notify_error(msg)
