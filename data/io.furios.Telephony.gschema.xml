@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="io.furios.Telephony" path="/io/furios/Telephony/">
+    <key name="delivery-reports" type="s">
+      <default>"false"</default>
+      <summary>Request delivery reports</summary>
+      <description>Ask the network to confirm when sent SMS and MMS messages reach the recipient.</description>
+    </key>
     <key name="own-number" type="s">
       <default>''</default>
       <summary>Own Number</summary>
