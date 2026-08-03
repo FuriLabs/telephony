@@ -685,7 +685,6 @@ class ChatPage(Gtk.Box):
         """Persist the mute preference for this conversation."""
         muted = row.get_active()
         self.app_window.gsettings_mgr.set_conversation_muted(self._conversation_id(), muted)
-        self.app_window.notify_error(_("Conversation muted") if muted else _("Conversation unmuted"))
         self.db.emit('messages-updated', "", "status")
 
     def _refresh_recipient_call_buttons(self):
@@ -1050,7 +1049,6 @@ class ChatPage(Gtk.Box):
         def done(_result):
             self.contact_name = new_name
             self.title_widget.set_title(new_name)
-            self.app_window.notify_success(_("Group renamed"))
 
         run_in_background(self.db.set_group_name, self.recipients, new_name, on_complete=done)
 

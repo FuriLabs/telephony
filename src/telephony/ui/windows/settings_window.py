@@ -838,7 +838,6 @@ class SettingsWindow(Adw.Dialog):
         if not success:
             self.main_window.notify_error(_("Could not create address book"))
             return
-        self.main_window.notify_success(_("Address book '{name}' created").format(name=name))
         self._reload_sources_ui()
 
     def _confirm_delete_addressbook(self, uid, name):
@@ -864,7 +863,6 @@ class SettingsWindow(Adw.Dialog):
         if not success:
             self.main_window.notify_error(_("Failed to delete Address Book"))
             return
-        self.main_window.notify_success(_("Address Book Deleted"))
         self._reload_sources_ui()
 
     def _reload_sources_ui(self):

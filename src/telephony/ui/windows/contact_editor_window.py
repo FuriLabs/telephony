@@ -943,7 +943,6 @@ class ContactEditor(Adw.Dialog):
         except Exception as ex:
             logger.error(f"[ContactEditor] Special list update error: {ex}")
 
-        self.main_window.notify_success(_("Contact saved"))
 
     def _on_save_failed(self, error, fn, final_vcard):
         """Reopen the editor with the attempted data after a failed save."""

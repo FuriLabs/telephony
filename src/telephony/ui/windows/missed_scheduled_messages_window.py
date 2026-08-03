@@ -171,7 +171,6 @@ class MissedScheduledMessagesDialog:
             GLib.idle_add(lambda: close_dialog(d) or False)
             self.db.delete_scheduled_messages([mid])
             self.scheduler.remove_cron(mid)
-            self.app_window.notify_success(_("Message removed"))
 
             GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
 

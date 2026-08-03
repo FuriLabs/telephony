@@ -52,6 +52,8 @@ class MainWindow(Adw.Window):
         self._active_alert = None
         self._ussd_in_flight = False
         self._loading_toast = None
+        self._current_toast = None
+        self._current_message = None
         self._setup_hint_shown = False
         """Initialize the main window."""
         super().__init__(application=application)
@@ -355,20 +357,48 @@ class MainWindow(Adw.Window):
             child = child.get_next_sibling()
         return None
 
-    def _show_toast(self, message, timeout=5):
-        """Show a toast on the topmost surface and return it."""
+    def _show_toast(self, message, timeout=5, priority=None):
+        """Show one toast on the topmost surface, replacing what it supersedes.
+
+        Adwaita shows a single toast at a time and queues the rest, so a
+        stale message would otherwise stand in front of a newer one. The
+        current toast is dismissed instead of queued, and repeating the
+        message that is already showing only restarts its timer.
+        """
+        if self._current_toast is not None and self._current_message == message:
+            return self._current_toast
+
+        if self._current_toast is not None:
+            self._current_toast.dismiss()
+
         toast = Adw.Toast.new(message)
         toast.set_timeout(timeout)
+        if priority is not None:
+            toast.set_priority(priority)
+        toast.connect("dismissed", self._on_toast_dismissed, message)
+        self._current_toast = toast
+        self._current_message = message
         self._toast_target().add_toast(toast)
         return toast
 
-    def notify_error(self, message):
-        """Show a transient feedback toast, ending any loading toast."""
+    def _on_toast_dismissed(self, toast, message):
+        """Forget the toast that just went away."""
+        if self._current_toast is toast:
+            self._current_toast = None
+            self._current_message = None
+
+    def notify_info(self, message):
+        """Report something the screen does not already show."""
         self.hide_loading()
         self._show_toast(message)
 
+    def notify_error(self, message):
+        """Report a refusal, ahead of anything already showing."""
+        self.hide_loading()
+        self._show_toast(message, priority=Adw.ToastPriority.HIGH)
+
     def notify_success(self, message):
-        """Show a transient feedback toast, ending any loading toast."""
+        """Report a finished action the screen does not already show."""
         self.hide_loading()
         self._show_toast(message)
 
@@ -382,6 +412,8 @@ class MainWindow(Adw.Window):
         if self._loading_toast is not None:
             self._loading_toast.dismiss()
             self._loading_toast = None
+            self._current_toast = None
+            self._current_message = None
 
     def _show_setup_hint(self, message):
         """Show at most one settings hint per launch, with a shortcut."""
