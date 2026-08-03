@@ -670,16 +670,12 @@ class InCallWindow(Adw.Window):
         held_conf = [p for p, d in calls.items() if d['state'] == 'held' and d.get('multiparty')]
         primary_free = bool(self.active_path) and p_data['state'] == 'active' and not p_data.get('multiparty')
 
-        conference_allowed = self.gsettings_mgr.get_setting("allow_conference_calls") == "true"
-        transfer_allowed = self.gsettings_mgr.get_setting("allow_call_transfer") == "true"
-
-        show_pair = bool(primary_free and held_normal and (conference_allowed or transfer_allowed))
-        show_join = bool(primary_free and held_conf and not held_normal and conference_allowed)
+        show_pair = bool(primary_free and held_normal)
+        show_join = bool(primary_free and held_conf and not held_normal)
 
         if show_pair:
             self.btn_merge.set_label(_("Merge Calls"))
-            self.btn_merge.set_visible(conference_allowed)
-            self.btn_transfer.set_visible(transfer_allowed)
+            self.btn_transfer.set_visible(True)
             a = self.call_history.get(self.active_path, {}).get('name', _("Unknown"))
             b = self.call_history.get(held_normal[0], {}).get('name', _("Unknown"))
             self.lbl_transfer_hint.set_text(
@@ -687,12 +683,9 @@ class InCallWindow(Adw.Window):
             self.lbl_transfer_hint.set_visible(True)
         elif show_join:
             self.btn_merge.set_label(_("Join Conference"))
-            self.btn_merge.set_visible(True)
             self.btn_transfer.set_visible(False)
             self.lbl_transfer_hint.set_visible(False)
         self.multiparty_box.set_visible(show_pair or show_join)
-
-        self.lbl_transfer_hint.set_visible(self.lbl_transfer_hint.get_visible() and transfer_allowed)
 
         lines = len([p for p, d in calls.items() if not d.get('multiparty')]) + (1 if conf_paths else 0)
         self.btn_add_call.set_sensitive(lines < 2 and p_data['state'] in ('active', 'held'))
