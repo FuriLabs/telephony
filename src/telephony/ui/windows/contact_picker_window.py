@@ -21,7 +21,7 @@ from ..widgets.common_widget import DataLoader
 from ...backend.utils.model_utils import ContactItem
 
 
-class ContactPicker(Adw.Window):
+class ContactPicker(Adw.Dialog):
     """Window for selecting a contact from the list."""
 
     def __init__(self, eds, parent_window, on_picked, title=None, action_label=None, allow_custom_number=True, return_contact_uid=False):
@@ -30,12 +30,13 @@ class ContactPicker(Adw.Window):
         display_title = title if title else _("Pick Contact")
         display_action = action_label if action_label else _("Open")
 
-        super().__init__(title=display_title, transient_for=parent_window, modal=True)
+        super().__init__(title=display_title)
         self.eds = eds
         self.on_picked = on_picked
         self.allow_custom_number = allow_custom_number
         self.return_contact_uid = return_contact_uid
-        self.set_default_size(360, 500)
+        self.set_content_width(360)
+        self.set_content_height(500)
         self.load_token = 0
         self.search_timer = None
         self.connect("unmap", self._on_unmap)
@@ -82,7 +83,7 @@ class ContactPicker(Adw.Window):
         scrolled.set_vexpand(True)
         content.append(scrolled)
 
-        self.set_content(content)
+        self.set_child(content)
         self.refresh()
 
     def on_manual_enter(self, entry):

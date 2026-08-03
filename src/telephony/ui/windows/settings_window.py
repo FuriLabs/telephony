@@ -30,6 +30,7 @@ from .custom_tone_list_window import CustomToneListWindow
 
 
 from .advanced_settings_window import AdvancedSettingsWindow
+from ..widgets.common_widget import present_info_sheet
 
 
 class SettingsWindow(Adw.Dialog):
@@ -384,16 +385,7 @@ class SettingsWindow(Adw.Dialog):
         """Show information about country code setting."""
         body_text = _("The Default Country Code is used to format numbers that don't include an international prefix (e.g., +358).\n\nIf left empty, the system tries to detect it automatically from your SIM card or network.\n\nYou can manually override it here by entering a 2-letter ISO region code (e.g. US, FI, DE) or a calling code (e.g. +358, 358, +1, 1).")
 
-        dialog = Adw.AlertDialog(
-            heading=_("Default Country Code"),
-            body=body_text
-        )
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        dialog.present(self)
+        present_info_sheet(self, _("Default Country Code"), body_text)
 
     def _clear_ringback_file(self):
         """Clear the custom ringback file to use default."""
@@ -416,16 +408,7 @@ class SettingsWindow(Adw.Dialog):
                       "value if your messages fail to send, or a larger one if you "
                       "know your carrier allows it.")
 
-        dialog = Adw.AlertDialog(
-            heading=_("MMS Size Limit"),
-            body=body_text
-        )
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        dialog.present(self)
+        present_info_sheet(self, _("MMS Size Limit"), body_text)
 
     def _show_ringback_info(self, btn):
         """Show information about ringback tones."""
@@ -434,16 +417,7 @@ class SettingsWindow(Adw.Dialog):
                       "option to generate it manually here. \n\n"
                       "You can select your own music file, or clear it to use the standard system tone.")
 
-        dialog = Adw.AlertDialog(
-            heading=_("Ringback Tone"),
-            body=body_text
-        )
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        dialog.present(self)
+        present_info_sheet(self, _("Ringback Tone"), body_text)
 
     def _open_audio_picker(self, btn):
         """Open file picker for custom ringback tone."""
@@ -483,38 +457,15 @@ class SettingsWindow(Adw.Dialog):
         """Show information about address book priority."""
         body_text = _("Select the address books to use with Telephony and arrange them in order of priority. The topmost address book has the highest priority and will be preferred if a number is found in multiple address books. You can use the Duplicate Resolver toggle below to help manage duplicates, but even if disabled, we encourage enabling it for a better experience.")
 
-        dialog = Adw.AlertDialog(
-            heading=_("Address Books"),
-            body=body_text
-        )
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        dialog.present(self)
+        present_info_sheet(self, _("Address Books"), body_text)
 
     def _show_repeated_info(self, btn):
         """Show info about repeated calls bypass."""
-        d = Adw.AlertDialog(
-            heading=_("Repeated Calls Bypass"),
-            body=_("When enabled, if the same phone number calls you 3 times within 5 minutes, the third call (and subsequent ones within the window) will force the phone to ring at maximum volume, bypassing Silent or Do Not Disturb modes.")
-        )
-        d.add_response("ok", _("OK"))
-        d.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        d.present(self)
+        present_info_sheet(self, _("Repeated Calls Bypass"), _("When enabled, if the same phone number calls you 3 times within 5 minutes, the third call (and subsequent ones within the window) will force the phone to ring at maximum volume, bypassing Silent or Do Not Disturb modes."))
 
     def _show_overrides_info(self, btn):
         """Show info about notification overrides."""
-        d = Adw.AlertDialog(
-            heading=_("Notification Overrides"),
-            body=_("Choose contacts that will always play notifications at full volume, even when the phone is in Silent or Do Not Disturb mode.")
-        )
-        d.add_response("ok", _("OK"))
-        d.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        d.present(self)
+        present_info_sheet(self, _("Notification Overrides"), _("Choose contacts that will always play notifications at full volume, even when the phone is in Silent or Do Not Disturb mode."))
 
     def _open_priority_window(self, btn):
         """Push the priority contacts management page."""
@@ -616,16 +567,7 @@ class SettingsWindow(Adw.Dialog):
         body_text = _(
             "Enter the URL you want to use for searching unknown numbers. Include '{number}' in the URL where the caller's phone number should go.\n\nFor example: https://mysearch.com/?q={number}\n\nWhen you tap the search button during a call, we will replace '{number}' with the actual phone number and open it in your default browser.")
 
-        dialog = Adw.AlertDialog(
-            heading=_("Custom Search URL"),
-            body=body_text
-        )
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        dialog.present(self)
+        present_info_sheet(self, _("Custom Search URL"), body_text)
 
     def _update_uc_ui(self):
         search_active = self.sw_uc_search.get_active()
@@ -863,14 +805,7 @@ class SettingsWindow(Adw.Dialog):
 
     def _show_call_volume_info(self, btn):
         """Show info about base call volume levels."""
-        d = Adw.AlertDialog(
-            heading=_("Call Volume"),
-            body=_("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. The Bluetooth level is stored for upcoming routing support.")
-        )
-        d.add_response("ok", _("OK"))
-        d.connect("response", lambda d, r: GLib.idle_add(
-            lambda: d.close() or False))
-        d.present(self)
+        present_info_sheet(self, _("Call Volume"), _("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. The Bluetooth level is stored for upcoming routing support."))
 
     def _add_reject_row(self, text):
         """Add an editable decline message row."""

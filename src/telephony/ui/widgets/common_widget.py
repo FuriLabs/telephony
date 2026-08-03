@@ -23,6 +23,69 @@ from gettext import gettext as _
 LIST_CHUNK_SIZE = 20
 
 
+def present_choice_sheet(parent, title, build_rows, description=None):
+    """Show a bottom sheet with a single group of choice rows.
+
+    build_rows(group, sheet) fills the group; rows close the sheet
+    themselves when picked.
+    """
+    sheet = Adw.Dialog(title=title)
+    sheet.set_content_width(360)
+
+    toolbar = Adw.ToolbarView()
+    toolbar.add_top_bar(Adw.HeaderBar())
+
+    page = Adw.PreferencesPage()
+    group = Adw.PreferencesGroup()
+    if description:
+        group.set_description(description)
+    page.add(group)
+    toolbar.set_content(page)
+    sheet.set_child(toolbar)
+
+    build_rows(group, sheet)
+    sheet.present(parent)
+    return sheet
+
+
+def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=False):
+    """Add one activatable row that closes the sheet and runs its callback."""
+    row = Adw.ActionRow(title=label, activatable=True)
+    if subtitle:
+        row.set_subtitle(subtitle)
+    if destructive:
+        row.add_css_class("error")
+    row.connect("activated", lambda r: GLib.idle_add(
+        lambda: [sheet.close(), callback()] and False))
+    group.add(row)
+    return row
+
+
+def build_info_sheet(title, text, selectable=False):
+    """Build a bottom sheet holding a titled block of explanatory text."""
+    sheet = Adw.Dialog(title=title)
+    sheet.set_content_width(360)
+
+    toolbar = Adw.ToolbarView()
+    toolbar.add_top_bar(Adw.HeaderBar())
+
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=520)
+    lbl = Gtk.Label(label=text, wrap=True, xalign=0, selectable=selectable)
+    lbl.set_margin_top(4)
+    lbl.set_margin_bottom(16)
+    lbl.set_margin_start(16)
+    lbl.set_margin_end(16)
+    scroll.set_child(lbl)
+    toolbar.set_content(scroll)
+    sheet.set_child(toolbar)
+    return sheet
+
+
+def present_info_sheet(parent, title, text):
+    """Show a bottom sheet with a titled block of explanatory text."""
+    build_info_sheet(title, text).present(parent)
+
+
 def translate_phone_label(label):
     """Translate a phone label key to its localized string."""
     LABELS = {

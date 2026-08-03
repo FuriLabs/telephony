@@ -46,7 +46,7 @@ class CameraVideo(MediaCaptureWindow):
     """Camera window for recording videos."""
 
     def __init__(self, parent_window, on_attach_callback):
-        super().__init__(transient_for=parent_window)
+        super().__init__()
 
         registry = Gst.Registry.get()
         droidvdec = registry.lookup_feature("droidvdec")
@@ -56,8 +56,8 @@ class CameraVideo(MediaCaptureWindow):
 
         self.on_attach_callback = on_attach_callback
         self._attached = False
-        self.set_modal(True)
-        self.set_default_size(360, 600)
+        self.set_content_width(360)
+        self.set_content_height(600)
         self.set_title(_("Record Video"))
 
         self.output_path = None
@@ -80,14 +80,14 @@ class CameraVideo(MediaCaptureWindow):
         self.max_retries = MAX_RECORD_RETRIES
 
         self._setup_ui()
-        self.connect("close-request", self._on_close_request)
+        self.connect("closed", self._on_closed)
 
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
 
     def _setup_ui(self):
         """Build the UI components."""
         self.toast_overlay = Adw.ToastOverlay()
-        self.set_content(self.toast_overlay)
+        self.set_child(self.toast_overlay)
 
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.toast_overlay.set_child(content)
@@ -525,14 +525,13 @@ class CameraVideo(MediaCaptureWindow):
         """Handle cancel button click."""
         GLib.idle_add(lambda: self.close() or False)
 
-    def _on_close_request(self, win):
-        """Handle window close request."""
+    def _on_closed(self, _dialog):
+        """Tear down capture state when the sheet closes."""
         self._closed = True
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
         self._stop_playback()
         self._discard_unattached_output()
-        return False
 
     def _discard_unattached_output(self):
         """Delete the recorded file when the window closes without attaching."""
