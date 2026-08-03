@@ -21,9 +21,11 @@ import urllib.parse
 from loguru import logger
 from ...backend.services.system_state_service import SystemStateService
 from gettext import gettext as _
+from gettext import ngettext
 
 from ...backend.managers.audio_manager import TelephonyAudioManager
 from ..windows.fader_window import ProximityFader
+from ..windows.contact_picker_window import ContactPicker
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
 from ..widgets.common_widget import present_choice_sheet
 from ...backend.managers.lockscreen_manager import LockScreenManager
@@ -197,7 +199,9 @@ class InCallWindow(Adw.Window):
         self.set_default_size(360, 600)
         self.add_css_class("incall-window")
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_content(self.main_box)
+        self.toast_overlay = Adw.ToastOverlay()
+        self.toast_overlay.set_child(self.main_box)
+        self.set_content(self.toast_overlay)
 
         self.bg_scrolled = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=180)
         self.bg_calls_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_top=10, margin_bottom=10, margin_start=15, margin_end=15)
@@ -257,13 +261,29 @@ class InCallWindow(Adw.Window):
         act_box.append(self.pad_route_stack)
 
 
-        btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, halign=Gtk.Align.CENTER)
+        self.multiparty_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        pills_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10, halign=Gtk.Align.CENTER)
+        self.btn_merge = Gtk.Button(css_classes=["pill", "suggested-action"])
+        self.btn_merge.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_merge_click(b) or False))
+        pills_row.append(self.btn_merge)
+        self.btn_transfer = Gtk.Button(label=_("Transfer"), css_classes=["pill", "destructive-action"])
+        self.btn_transfer.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_transfer_click(b) or False))
+        pills_row.append(self.btn_transfer)
+        self.multiparty_box.append(pills_row)
+        self.lbl_transfer_hint = Gtk.Label(css_classes=["caption", "dim-label"], justify=Gtk.Justification.CENTER, wrap=True)
+        self.multiparty_box.append(self.lbl_transfer_hint)
+        self.multiparty_box.set_visible(False)
+        act_box.append(self.multiparty_box)
+
+        btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
         mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
         pad_wrap, self.btn_pad = self._mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
         hold_wrap, self.btn_hold = self._mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
+        add_wrap, self.btn_add_call = self._mk_labeled_btn("contact-new-symbolic", _("Add Call"), self.on_add_call_click)
         btn_row.append(mute_wrap)
         btn_row.append(pad_wrap)
         btn_row.append(hold_wrap)
+        btn_row.append(add_wrap)
         act_box.append(btn_row)
 
         self.btn_hangup_act = DynamicHangupButton()
@@ -522,8 +542,18 @@ class InCallWindow(Adw.Window):
             self._toggle_blue(self.btn_hold, p_data['state'] == 'held')
             self.lbl_status.set_text(call_state_label(p_data['state']))
 
-        bg_list = [(x[1], x[2]) for x in sorted_c[1:]]
-        self._render_bg(bg_list)
+        conf_paths = [p for p, d in calls.items() if d.get('multiparty')]
+        primary_in_conf = self.active_path in conf_paths
+
+        if primary_in_conf:
+            self.lbl_name.set_text(_("Conference Call"))
+            self.lbl_number.set_text(ngettext("{count} participant", "{count} participants",
+                                              len(conf_paths)).format(count=len(conf_paths)))
+
+        self._update_multiparty_actions(calls, p_data, conf_paths)
+
+        bg_list = [(x[1], x[2]) for x in sorted_c[1:] if x[1] not in conf_paths]
+        self._render_bg(bg_list, conf_paths, primary_in_conf)
 
     def _get_custom_ringtone(self, number):
         """Check for a custom ringtone for the caller."""
@@ -634,10 +664,123 @@ class InCallWindow(Adw.Window):
         if self.is_visible():
             self.set_visible(False)
 
-    def _render_bg(self, bg_list):
-        """Render background/held calls list."""
+    def _update_multiparty_actions(self, calls, p_data, conf_paths):
+        """Show the merge, join and transfer actions matching the call mix."""
+        held_normal = [p for p, d in calls.items() if d['state'] == 'held' and not d.get('multiparty')]
+        held_conf = [p for p, d in calls.items() if d['state'] == 'held' and d.get('multiparty')]
+        primary_free = bool(self.active_path) and p_data['state'] == 'active' and not p_data.get('multiparty')
+
+        show_pair = bool(primary_free and held_normal)
+        show_join = bool(primary_free and held_conf and not held_normal)
+
+        if show_pair:
+            self.btn_merge.set_label(_("Merge Calls"))
+            self.btn_transfer.set_visible(True)
+            a = self.call_history.get(self.active_path, {}).get('name', _("Unknown"))
+            b = self.call_history.get(held_normal[0], {}).get('name', _("Unknown"))
+            self.lbl_transfer_hint.set_text(
+                _("Transfer connects {a} and {b} together and you leave the call").format(a=a, b=b))
+            self.lbl_transfer_hint.set_visible(True)
+        elif show_join:
+            self.btn_merge.set_label(_("Join Conference"))
+            self.btn_transfer.set_visible(False)
+            self.lbl_transfer_hint.set_visible(False)
+        self.multiparty_box.set_visible(show_pair or show_join)
+
+        lines = len([p for p, d in calls.items() if not d.get('multiparty')]) + (1 if conf_paths else 0)
+        self.btn_add_call.set_sensitive(lines < 2 and p_data['state'] in ('active', 'held'))
+
+    def _build_participants_card(self, conf_paths):
+        """Build the conference participants card with per leg actions."""
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, css_classes=["card"])
+        title = Gtk.Label(label=_("Participants"), css_classes=["caption-heading"], halign=Gtk.Align.START)
+        card.append(title)
+        for path in conf_paths:
+            data = self.ofono.active_calls.get(path)
+            if not data:
+                continue
+            name = self.eds.get_contact_name(data['number'])
+            if not name or name == "Unknown":
+                name = data['number'] or _("Unknown")
+            row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+            lbl = create_truncated_label(name, ["caption-heading"], max_chars=22)
+            lbl.set_halign(Gtk.Align.START)
+            lbl.set_hexpand(True)
+            row.append(lbl)
+            b_priv = Gtk.Button(icon_name="avatar-default-symbolic", css_classes=["circular", "flat"])
+            b_priv.set_tooltip_text(_("Private Chat"))
+            b_priv.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.on_private_chat_click(p) or False))
+            row.append(b_priv)
+            b_drop = Gtk.Button(icon_name="call-stop-symbolic", css_classes=["circular", "destructive-action"])
+            b_drop.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.ofono.hangup_call(p) or False))
+            row.append(b_drop)
+            card.append(row)
+        hint = Gtk.Label(label=_("Private moves the others to hold"), css_classes=["caption", "dim-label"], xalign=0)
+        card.append(hint)
+        return card
+
+    def _build_held_conference_card(self, count):
+        """Build the held conference summary card with swap."""
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, css_classes=["card"])
+        lbl_title = create_truncated_label(
+            _("Conference Call") + f" ({call_state_label('held')})", ["caption-heading"], max_chars=30)
+        lbl_title.set_halign(Gtk.Align.START)
+        card.append(lbl_title)
+        lbl_num = create_truncated_label(
+            ngettext("{count} participant", "{count} participants", count).format(count=count),
+            ["caption", "dim-label"], max_chars=30)
+        lbl_num.set_halign(Gtk.Align.START)
+        card.append(lbl_num)
+        btn_box = Gtk.Box(spacing=8, margin_top=4, homogeneous=True)
+        b_swap = Gtk.Button(label=_("Swap"), css_classes=["pill", "bg-action"])
+        b_swap.connect("clicked", lambda b: GLib.idle_add(lambda: self.ofono.swap_calls() or False))
+        btn_box.append(b_swap)
+        card.append(btn_box)
+        return card
+
+    def on_merge_click(self, btn):
+        """Join the active and held calls into one conference."""
+        btn.set_sensitive(False)
+        run_in_background(self.ofono.create_multiparty,
+                          on_complete=lambda result: self._on_multiparty_done(result, btn))
+
+    def on_transfer_click(self, btn):
+        """Connect the two calls to each other and leave."""
+        btn.set_sensitive(False)
+        run_in_background(self.ofono.transfer_call,
+                          on_complete=lambda result: self._on_multiparty_done(result, btn))
+
+    def on_private_chat_click(self, path):
+        """Split one participant out of the conference."""
+        run_in_background(self.ofono.private_chat, path,
+                          on_complete=lambda result: self._on_multiparty_done(result, None))
+
+    def _on_multiparty_done(self, result, btn):
+        """Re-enable the action and report a refused network request."""
+        if btn is not None:
+            btn.set_sensitive(True)
+        if not (result and result[0]):
+            self.toast_overlay.add_toast(Adw.Toast.new(_("The network refused the request")))
+
+    def on_add_call_click(self, btn):
+        """Pick a contact or number and dial it as a second call."""
+        picker = ContactPicker(self.eds, self, self._on_add_call_picked,
+                               title=_("Add Call"), action_label=_("Call"))
+        picker.present(self)
+
+    def _on_add_call_picked(self, number):
+        """Dial the picked number; ofono holds the current call itself."""
+        if number:
+            self.ofono.dial(number)
+
+    def _render_bg(self, bg_list, conf_paths, primary_in_conf):
+        """Render background calls and the conference card."""
         while c := self.bg_calls_box.get_first_child():
             self.bg_calls_box.remove(c)
+        if conf_paths and primary_in_conf:
+            self.bg_calls_box.append(self._build_participants_card(conf_paths))
+        elif conf_paths:
+            self.bg_calls_box.append(self._build_held_conference_card(len(conf_paths)))
         for path, data in bg_list:
             if path in self.ignored_calls:
                 continue
@@ -760,7 +903,10 @@ class InCallWindow(Adw.Window):
         self.manual_hangup = True
         self._start_closing_sequence()
         self.set_visible(False)
-        if len(self.ofono.active_calls) > 1:
+        remaining = self.ofono.active_calls
+        if len(remaining) > 1 and all(d.get('multiparty') for d in remaining.values()):
+            run_in_background(self.ofono.hangup_multiparty)
+        elif len(remaining) > 1:
             self.ofono.hangup_all()
         elif self.active_path:
             self.ofono.hangup_call(self.active_path)
