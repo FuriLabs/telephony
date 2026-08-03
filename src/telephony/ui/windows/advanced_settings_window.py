@@ -25,7 +25,7 @@ from loguru import logger
 
 from ...backend.utils.thread_utils import run_in_background
 from ...constants import MMS_SIZE_LIMIT_DEFAULT_KB
-from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options
+from ..widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, build_nav_row)
 
 
 class AdvancedSettingsWindow(Adw.NavigationPage):
@@ -88,10 +88,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         row_auto = Adw.SwitchRow(title=_("Automatic Modem Recovery"))
         row_auto.set_active(self.parent_win.main_window.gsettings_mgr.get_setting("automatic_modem_recovery") == "true")
         row_auto.connect("notify::active", self._on_auto_recovery_toggled)
-        btn_auto_info = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
-        btn_auto_info.add_css_class("flat")
-        btn_auto_info.add_css_class("circular")
-        btn_auto_info.connect("clicked", lambda b: GLib.idle_add(lambda: self._show_auto_recovery_info(b) or False))
+        btn_auto_info = self._info_button(self._show_auto_recovery_info)
         row_auto.add_suffix(btn_auto_info)
         grp_restart.add(row_auto)
 
@@ -111,11 +108,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             saved_limit = MMS_SIZE_LIMIT_DEFAULT_KB
         set_selector_options(self.row_mms_limit, mms_limit_labels,
                              self.mms_limit_values.index(saved_limit))
-        btn_info_mms = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
-        btn_info_mms.add_css_class("flat")
-        btn_info_mms.add_css_class("circular")
-        btn_info_mms.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_mms_size_info(b) or False))
+        btn_info_mms = self._info_button(self._show_mms_size_info)
         grp_messaging.set_header_suffix(btn_info_mms)
         grp_messaging.add(self.row_mms_limit)
 
@@ -280,16 +273,17 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         else:
             row.set_active(original_state)
 
+    def _info_button(self, handler):
+        """Build the round info button that opens an explanation sheet."""
+        button = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        button.add_css_class("flat")
+        button.add_css_class("circular")
+        button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
+        return button
+
     def _nav_row(self, title, subtitle, callback, destructive=False):
         """Build an activatable navigation row with a chevron."""
-        row = Adw.ActionRow(title=title, activatable=True)
-        if subtitle:
-            row.set_subtitle(subtitle)
-        if destructive:
-            row.add_css_class("error")
-        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
-        return row
+        return build_nav_row(title, subtitle, callback, destructive=destructive)
 
     def _on_data_management(self, btn):
         """Push the data management page."""

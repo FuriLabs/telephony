@@ -156,6 +156,20 @@ def _pick_selector_option(row, index):
         row._on_select(index)
 
 
+def build_nav_row(title, subtitle, callback, icon=None, destructive=False):
+    """Build an activatable row that opens another page."""
+    row = Adw.ActionRow(title=title, activatable=True)
+    if subtitle:
+        row.set_subtitle(subtitle)
+    if icon:
+        row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+    if destructive:
+        row.add_css_class("error")
+    row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+    row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
+    return row
+
+
 class EntryListGroup(Adw.PreferencesGroup):
     """A settings list whose entries are typed in and edited in place.
 

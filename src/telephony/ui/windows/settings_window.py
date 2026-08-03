@@ -31,7 +31,8 @@ from .custom_tone_list_window import CustomToneListWindow
 from .advanced_settings_window import AdvancedSettingsWindow
 from .favorites_list_window import FavoritesListWindow
 from .import_export_window import ImportExportDialog
-from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options, EntryListGroup
+from ..widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options,
+                                     EntryListGroup, build_nav_row)
 
 
 class SettingsWindow(Adw.Dialog):
@@ -182,12 +183,7 @@ class SettingsWindow(Adw.Dialog):
         self.entry_country_code = Adw.EntryRow(title=_("Default Country Code"))
         self.entry_country_code.set_title(_("Default Country Code"))
 
-        btn_cc_info = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_cc_info.set_valign(Gtk.Align.CENTER)
-        btn_cc_info.add_css_class("flat")
-        btn_cc_info.add_css_class("circular")
-        btn_cc_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_country_code_info(b) or False))
+        btn_cc_info = self._info_button(self._show_country_code_info)
         self.entry_country_code.add_suffix(btn_cc_info)
 
         saved_cc = self.main_window.gsettings_mgr.get_setting(
@@ -207,12 +203,7 @@ class SettingsWindow(Adw.Dialog):
         grp_sim.add(self.entry_voicemail)
 
         self.grp_call_volume = Adw.PreferencesGroup(title=_("Call Volume"))
-        btn_info_vol = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_vol.set_valign(Gtk.Align.CENTER)
-        btn_info_vol.add_css_class("flat")
-        btn_info_vol.add_css_class("circular")
-        btn_info_vol.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_call_volume_info(b) or False))
+        btn_info_vol = self._info_button(self._show_call_volume_info)
         self.grp_call_volume.set_header_suffix(btn_info_vol)
         page.add(self.grp_call_volume)
 
@@ -247,12 +238,7 @@ class SettingsWindow(Adw.Dialog):
         self.sw_rb_enable.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
             "ringback_enabled", "true" if w.get_active() else "false"))
 
-        btn_info = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info.set_valign(Gtk.Align.CENTER)
-        btn_info.add_css_class("flat")
-        btn_info.add_css_class("circular")
-        btn_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_ringback_info(b) or False))
+        btn_info = self._info_button(self._show_ringback_info)
         self.sw_rb_enable.add_suffix(btn_info)
 
         grp_rb.add(self.sw_rb_enable)
@@ -331,11 +317,7 @@ class SettingsWindow(Adw.Dialog):
         self.sw_delivery = Adw.SwitchRow(title=_("Request Delivery Reports"))
         self.sw_delivery.set_active(
             self.main_window.gsettings_mgr.get_setting("delivery_reports") == "true")
-        btn_dr_info = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
-        btn_dr_info.add_css_class("flat")
-        btn_dr_info.add_css_class("circular")
-        btn_dr_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_delivery_reports_info(b) or False))
+        btn_dr_info = self._info_button(self._show_delivery_reports_info)
         self.sw_delivery.add_suffix(btn_dr_info)
         self.sw_delivery.connect("notify::active", self._on_delivery_reports_toggled)
         grp_msg.add(self.sw_delivery)
@@ -359,11 +341,7 @@ class SettingsWindow(Adw.Dialog):
         self.source_rows = None
         self.grp_contacts = Adw.PreferencesGroup(title=_("Address Books"))
 
-        btn_info_contacts = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_contacts.add_css_class("flat")
-        btn_info_contacts.add_css_class("circular")
-        btn_info_contacts.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_addressbook_info(b) or False))
+        btn_info_contacts = self._info_button(self._show_addressbook_info)
 
         try:
             self.grp_contacts.set_header_suffix(btn_info_contacts)
@@ -420,12 +398,7 @@ class SettingsWindow(Adw.Dialog):
         self.sw_repeated.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
             "notification_override_repeated_calls_bypass", "true" if w.get_active() else "false"))
 
-        btn_info_rep = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_rep.set_valign(Gtk.Align.CENTER)
-        btn_info_rep.add_css_class("flat")
-        btn_info_rep.add_css_class("circular")
-        btn_info_rep.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_repeated_info(b) or False))
+        btn_info_rep = self._info_button(self._show_repeated_info)
         self.sw_repeated.add_suffix(btn_info_rep)
 
         grp_notif.add(self.sw_repeated)
@@ -433,12 +406,7 @@ class SettingsWindow(Adw.Dialog):
         row_prio = self._nav_row(_("Notification Overrides"),
                                  _("Manage contacts that always play sound"),
                                  lambda: self._open_priority_window(None))
-        btn_info_prio = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_prio.set_valign(Gtk.Align.CENTER)
-        btn_info_prio.add_css_class("flat")
-        btn_info_prio.add_css_class("circular")
-        btn_info_prio.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_overrides_info(b) or False))
+        btn_info_prio = self._info_button(self._show_overrides_info)
         row_prio.add_suffix(btn_info_prio)
         grp_notif.add(row_prio)
 
@@ -450,16 +418,17 @@ class SettingsWindow(Adw.Dialog):
                                     _("Set custom ringtones for specific contacts"),
                                     lambda: self._open_custom_tone_window("ringtone")))
 
+    def _info_button(self, handler):
+        """Build the round info button that opens an explanation sheet."""
+        button = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        button.add_css_class("flat")
+        button.add_css_class("circular")
+        button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
+        return button
+
     def _nav_row(self, title, subtitle, callback, icon=None):
         """Build an activatable navigation row with a chevron."""
-        row = Adw.ActionRow(title=title, activatable=True)
-        if subtitle:
-            row.set_subtitle(subtitle)
-        if icon:
-            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
-        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
-        return row
+        return build_nav_row(title, subtitle, callback, icon=icon)
 
     def _show_country_code_info(self, btn):
         """Show information about country code setting."""
@@ -573,12 +542,7 @@ class SettingsWindow(Adw.Dialog):
         self.entry_uc_custom.connect("apply", lambda r: self.main_window.gsettings_mgr.set_setting(
             "unknown_callers_custom_url", r.get_text()))
 
-        btn_uc_info = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_uc_info.set_valign(Gtk.Align.CENTER)
-        btn_uc_info.add_css_class("flat")
-        btn_uc_info.add_css_class("circular")
-        btn_uc_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_custom_url_info(b) or False))
+        btn_uc_info = self._info_button(self._show_custom_url_info)
         self.entry_uc_custom.add_suffix(btn_uc_info)
 
         grp_uc.add(self.row_uc_engine)
