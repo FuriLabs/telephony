@@ -329,6 +329,11 @@ class ChatBubbleFactory:
                 target_w["bubble"].remove_css_class("chat-bubble-scheduled")
                 target_w["bubble"].add_css_class("chat-bubble-out")
                 target_w["lbl_time"].set_text(_("Sending..."))
+            elif item.status == "delivered":
+                target_w["bubble"].remove_css_class("chat-bubble-scheduled")
+                target_w["bubble"].add_css_class("chat-bubble-out")
+                target_w["lbl_time"].set_text(
+                    _("{time} · Delivered").format(time=item.display_time))
             else:
                 target_w["bubble"].remove_css_class("chat-bubble-scheduled")
                 target_w["bubble"].add_css_class("chat-bubble-out")
