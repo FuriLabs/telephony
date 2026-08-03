@@ -81,13 +81,19 @@ class MmsManager(GObject.Object):
         'message-received': (GObject.SignalFlags.RUN_FIRST, None, (str, object, str, str, object, str)),
     }
 
-    def __init__(self, db_manager, eds_manager=None, gsettings_mgr=None, notification_manager=None):
-        """Initialize the MMS manager."""
+    def __init__(self, db_manager, eds_manager=None, gsettings_mgr=None, notification_manager=None,
+                 owns_reception=True):
+        """Initialize the MMS manager.
+
+        Only the instance that owns reception files arriving messages,
+        so a second instance cannot store the same message again.
+        """
         super().__init__()
         self.db = db_manager
         self.eds = eds_manager
         self.gsettings_mgr = gsettings_mgr
         self.notification_manager = notification_manager
+        self.owns_reception = owns_reception
 
         self.bus = None
         self.proxy = None
@@ -116,11 +122,12 @@ class MmsManager(GObject.Object):
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         try:
 
-            self.subs.append(self.bus.signal_subscribe(
-                "org.ofono.mms", "org.ofono.mms.Service", "MessageAdded",
-                None, None, Gio.DBusSignalFlags.NONE,
-                self._on_message_added_raw, None
-            ))
+            if self.owns_reception:
+                self.subs.append(self.bus.signal_subscribe(
+                    "org.ofono.mms", "org.ofono.mms.Service", "MessageAdded",
+                    None, None, Gio.DBusSignalFlags.NONE,
+                    self._on_message_added_raw, None
+                ))
 
             self.subs.append(self.bus.signal_subscribe(
                 "org.ofono.mms", "org.ofono.mms.Message", "PropertyChanged",
@@ -172,7 +179,7 @@ class MmsManager(GObject.Object):
 
     def load_existing_messages(self):
         """Load messages already present in the daemon."""
-        if not self.proxy:
+        if not self.proxy or not self.owns_reception:
             return
         logger.debug("[MMS-LOG] HISTORY-CHECK | Scanning daemon for existing messages")
         try:

@@ -69,11 +69,18 @@ class OfonoManager(GObject.Object):
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
     }
 
-    def __init__(self, db_manager, gsettings_mgr=None):
-        """Initialize the Ofono manager."""
+    def __init__(self, db_manager, gsettings_mgr=None, owns_reception=True):
+        """Initialize the Ofono manager.
+
+        Only the instance that owns reception stores what arrives and
+        acts on trusted senders. Every other instance reads state to
+        draw with, so an app opened twice cannot file a message twice
+        or run a text triggered action twice.
+        """
         super().__init__()
         self.db = db_manager
         self.gsettings_mgr = gsettings_mgr
+        self.owns_reception = owns_reception
 
         self.voice_proxy = None
         self.msg_proxy = None
@@ -549,7 +556,7 @@ class OfonoManager(GObject.Object):
             self.voice_handler_id = self.voice_proxy.connect("g-signal", self.on_voice_signal)
 
         self.msg_proxy = self._get_proxy("org.ofono.MessageManager")
-        if self.msg_proxy:
+        if self.msg_proxy and self.owns_reception:
             self.msg_handler_id = self.msg_proxy.connect("g-signal", self.on_message_signal)
 
         self.ussd_proxy = self._get_proxy("org.ofono.SupplementaryServices")
@@ -580,7 +587,7 @@ class OfonoManager(GObject.Object):
             self.modem_handler_id = self.modem_proxy.connect("g-signal", self.on_modem_signal)
             self._load_modem_interfaces()
 
-        if self._sms_state_sub is None and self.bus:
+        if self._sms_state_sub is None and self.bus and self.owns_reception:
             self._sms_state_sub = self.bus.signal_subscribe(
                 None, "org.ofono.Message", "PropertyChanged", None, None,
                 Gio.DBusSignalFlags.NONE, self._on_sms_state_signal, None)
@@ -696,7 +703,8 @@ class OfonoManager(GObject.Object):
         """Handle call removal."""
         if path in self.active_calls:
             data = self.active_calls.pop(path)
-            self._log_call(data)
+            if self.owns_reception:
+                self._log_call(data)
             self.emit('call-removed', path)
 
             if self.is_volume_boosted:
