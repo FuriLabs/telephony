@@ -54,6 +54,10 @@ class ImportExportDialog:
         present_choice_sheet(self.app_window, _("Import / Export"), build)
 
     def ask_import_sim(self):
+        """Ask where the SIM contacts should land before reading them."""
+        self._prompt_target_book(self._import_sim_to)
+
+    def _import_sim_to(self, source_uid):
         """Import contacts from SIM using org.ofono.Phonebook."""
         self.app_window.notify_loading(_("Importing contacts from SIM..."))
 
@@ -123,7 +127,7 @@ class ImportExportDialog:
                 )
                 count = 0
                 for vcard in vcards:
-                    if self.eds.save_contact(vcard):
+                    if self.eds.save_contact(vcard, source_uid=source_uid):
                         count += 1
 
                 GLib.idle_add(self.app_window.hide_loading)
@@ -395,6 +399,14 @@ class ImportExportDialog:
 
     def _prompt_import_source(self, path):
         """Prompt user for target address book."""
+        self._prompt_target_book(lambda uid: self._start_import(path, uid))
+
+    def _prompt_target_book(self, on_chosen):
+        """Ask which address book an import should write to.
+
+        The choice is skipped when there is nothing to choose, and the
+        default book leads so the common answer is the first one.
+        """
         sources = self.app_window.eds.get_sources_info()
         enabled_sources = [s for s in sources if s['enabled']]
 
@@ -403,33 +415,20 @@ class ImportExportDialog:
             return
 
         if len(enabled_sources) == 1:
-            self._start_import(path, enabled_sources[0]['uid'])
+            on_chosen(enabled_sources[0]['uid'])
             return
 
-        d = Adw.AlertDialog(
-            heading=_("Select Address Book"),
-            body=_("Where do you want to import contacts?")
-        )
-        d.add_response("cancel", _("Cancel"))
+        enabled_sources.sort(key=lambda s: not s.get('is_system_default'))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        box.set_margin_top(12)
-        box.set_margin_bottom(12)
-        box.set_margin_start(24)
-        box.set_margin_end(24)
+        def build(group, sheet):
+            for source in enabled_sources:
+                subtitle = _("Default") if source.get('is_system_default') else None
+                add_choice_row(group, sheet, source['name'],
+                               lambda uid=source['uid']: on_chosen(uid),
+                               subtitle=subtitle)
 
-        for s in enabled_sources:
-            name = s['name']
-            if len(name) > 30:
-                name = name[:27] + "..."
-
-            btn = Gtk.Button(label=name)
-            btn.add_css_class("suggested-action")
-            btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: [close_dialog(d), self._start_import(path, uid)] and False))
-            box.append(btn)
-
-        d.set_extra_child(box)
-        d.present(self.app_window)
+        present_choice_sheet(self.app_window, _("Select Address Book"), build,
+                             description=_("Where do you want to import contacts?"))
 
     def _start_import(self, path, source_uid):
         self.app_window.notify_loading(_("Importing..."))
@@ -465,41 +464,19 @@ class ImportExportDialog:
             self.app_window.notify_error(_("No enabled address books found"))
             return
 
-        d = Adw.AlertDialog(
-            heading=_("Export Contacts"),
-            body=_("Which address book do you want to export?")
-        )
-        d.add_response("cancel", _("Cancel"))
+        enabled_sources.sort(key=lambda s: not s.get('is_system_default'))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        box.set_margin_top(20)
-        box.set_margin_bottom(10)
-        box.set_margin_start(20)
-        box.set_margin_end(20)
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Export All Address Books"),
+                           lambda: self._show_export_file_chooser(None))
+            for source in enabled_sources:
+                subtitle = _("Default") if source.get('is_system_default') else None
+                add_choice_row(group, sheet, source['name'],
+                               lambda uid=source['uid']: self._show_export_file_chooser(uid),
+                               subtitle=subtitle)
 
-        btn_all = Gtk.Button(label=_("Export All Address Books"))
-
-        def _cb_all(b):
-            close_dialog(d)
-            self._show_export_file_chooser(None)
-        btn_all.connect("clicked", lambda b: GLib.idle_add(lambda: _cb_all(b) or False))
-        box.append(btn_all)
-
-        for s in enabled_sources:
-            name = s['name']
-            if len(name) > 30:
-                name = name[:27] + "..."
-
-            btn = Gtk.Button(label=name)
-
-            def _cb_specific(b, uid=s['uid']):
-                close_dialog(d)
-                self._show_export_file_chooser(uid)
-            btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: _cb_specific(b, uid) or False))
-            box.append(btn)
-
-        d.set_extra_child(box)
-        d.present(self.app_window)
+        present_choice_sheet(self.app_window, _("Export Contacts"), build,
+                             description=_("Which address book do you want to export?"))
 
     def _show_export_file_chooser(self, source_uid):
         """Show file chooser for export location."""
