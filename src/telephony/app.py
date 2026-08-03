@@ -48,6 +48,8 @@ from .backend.managers.emergency_manager import EmergencyManager
 from .ui.windows.incall_window import InCallWindow
 from .backend.managers.ringback_manager import RingbackManager
 from .backend.managers.notification_manager import NotificationManager
+from .backend.managers.stk_manager import StkManager
+from .ui.windows.stk_prompt_window import StkPrompter
 from .backend.managers.schedule_manager import ScheduleManager
 
 from gettext import gettext as _, ngettext
@@ -171,6 +173,8 @@ class App(Adw.Application):
         self._modem_was_healthy = False
         self._recovery_pending_unlock = False
         self.sys_state = SystemStateService()
+        self.stk = StkManager(self.ofono)
+        self.stk_prompter = StkPrompter(self, self.stk, self.sys_state, self.notification_manager)
         self.sys_state.connect('lock-state-changed', self._on_lock_state_changed)
         self._net_nudge_timer = None
         self._denied_timer = None

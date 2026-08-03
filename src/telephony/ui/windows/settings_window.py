@@ -100,12 +100,39 @@ class SettingsWindow(Adw.Dialog):
         grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening and lookup"),
                                    lambda: self._push_category(_("Unknown Callers"), self._build_unknown_callers_page),
                                    icon="dialog-question-symbolic"))
+        app = self.main_window.get_application()
+        if app and app.stk.has_menu():
+            grp_cats.add(self._nav_row(_("SIM Services"), app.stk.main_menu_title or None,
+                                       lambda: self._push_category(
+                                           app.stk.main_menu_title or _("SIM Services"),
+                                           self._build_sim_services_page),
+                                       icon="media-flash-symbolic"))
         grp_cats.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
                                    lambda: self._open_network_services(None),
                                    icon="network-cellular-signal-good-symbolic"))
         grp_cats.add(self._nav_row(_("Advanced Settings"), None,
                                    lambda: self._open_modem_settings(None),
                                    icon="emblem-system-symbolic"))
+
+    def _build_sim_services_page(self, page):
+        """Build the SIM services page from the toolkit main menu."""
+        app = self.main_window.get_application()
+        group = Adw.PreferencesGroup()
+        page.add(group)
+        for index, (label, _icon) in enumerate(app.stk.main_menu):
+            row = self._nav_row(label, None,
+                                lambda i=index: self._on_stk_item_selected(i))
+            group.add(row)
+
+    def _on_stk_item_selected(self, index):
+        """Enter a SIM menu item; the session prompts arrive on their own."""
+        app = self.main_window.get_application()
+
+        def done(result):
+            if not (result and result[0]):
+                self.overlay.add_toast(Adw.Toast.new(_("The SIM did not respond")))
+
+        run_in_background(app.stk.select_item, index, on_complete=done)
 
     def _push_category(self, title, build):
         """Push a settings category page built fresh from current state."""
