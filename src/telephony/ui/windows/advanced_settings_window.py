@@ -61,6 +61,9 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
     def _build_ui(self):
         """Construct the settings UI."""
         self.page = Adw.PreferencesPage()
+        self.page.set_description(
+            _("These settings are meant for experienced users. Changing them "
+              "can stop calls and messages from working."))
         self.content_box.append(self.page)
 
         grp_actions = Adw.PreferencesGroup(title=_("Secret SMS Triggers"))

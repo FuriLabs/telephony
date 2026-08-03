@@ -15,7 +15,6 @@
 
 from ..backend.utils.thread_utils import run_in_background
 import urllib.parse
-from .windows.import_export_window import ImportExportDialog
 from gettext import gettext as _, ngettext
 
 import gi
@@ -34,7 +33,6 @@ from .views.messages_view import MessagesView
 from .windows.settings_window import SettingsWindow
 from .windows.contact_editor_window import ContactEditor
 from .windows.missed_scheduled_messages_window import MissedScheduledMessagesDialog
-from .windows.blocklist_window import BlocklistView
 from .windows.blocklist_editor_window import BlocklistEditor
 from .windows.info_window import InfoPage
 from .windows.contact_picker_window import ContactPicker
@@ -290,8 +288,6 @@ class MainWindow(Adw.Window):
             ("resolve-duplicates", self.on_resolve_duplicates_clicked),
             ("settings", self.on_settings_click),
             ("reload-contacts", self.on_force_sync_click),
-            ("import-export", self.on_import_export_click),
-            ("blocklist", self.on_blocklist_menu_clicked),
         )
         for name, callback in entries:
             action = Gio.SimpleAction.new(name, None)
@@ -304,14 +300,9 @@ class MainWindow(Adw.Window):
         main_section = Gio.Menu()
         main_section.append(_("Settings"), "menu.settings")
         main_section.append(_("Reload Contacts"), "menu.reload-contacts")
-        main_section.append(_("Import / Export"), "menu.import-export")
-        block_section = Gio.Menu()
-        block_section.append(_("Blocklist"), "menu.blocklist")
-
         menu = Gio.Menu()
         menu.append_section(None, self._resolve_section)
         menu.append_section(None, main_section)
-        menu.append_section(None, block_section)
         self.actions_btn.set_menu_model(menu)
 
     def _set_resolve_visible(self, visible):
@@ -319,10 +310,6 @@ class MainWindow(Adw.Window):
         self._resolve_section.remove_all()
         if visible:
             self._resolve_section.append(_("Resolve Duplicates"), "menu.resolve-duplicates")
-
-    def on_import_export_click(self, btn):
-        """Open the import and export dialog."""
-        ImportExportDialog(self).present()
 
     def _update_sensitive_actions(self, sensitive):
         """Enable or disable actions based on readiness."""
@@ -574,30 +561,6 @@ class MainWindow(Adw.Window):
         """Callback when duplicate resolution is done."""
         if self.contacts_view:
             self.contacts_view.check_duplicates()
-
-    def on_blocklist_menu_clicked(self, btn):
-        """Open blocklist manager."""
-        if not self.eds.is_ready:
-            self.notify_error(_("Contacts syncing..."))
-            return
-
-        sheet = Adw.Dialog(title=_("Blocklist"))
-        sheet.set_content_width(360)
-        sheet.set_content_height(500)
-
-        view = BlocklistView(self.db, self)
-        self.blocklist_view = view
-
-        def _cleanup(*args):
-            self.blocklist_view = None
-
-        sheet.connect("closed", _cleanup)
-
-        toolbar = Adw.ToolbarView()
-        toolbar.add_top_bar(Adw.HeaderBar())
-        toolbar.set_content(view)
-        sheet.set_child(toolbar)
-        sheet.present(self)
 
     def present_blocklist_editor(self, number_preset=None):
         """Open blocklist editor dialog."""

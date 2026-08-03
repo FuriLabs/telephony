@@ -15,6 +15,10 @@
 
 from gi.repository import Gtk, Adw, Gio, GObject, GLib
 from gettext import gettext as _
+from loguru import logger
+
+from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.thread_utils import run_in_background
 
 
 class BlocklistView(Adw.Bin):
@@ -45,7 +49,7 @@ class BlocklistView(Adw.Bin):
 
         self.btn_add = Gtk.Button(icon_name="list-add-symbolic")
         self.btn_add.add_css_class("suggested-action")
-        self.btn_add.connect("clicked", lambda x: self.app_window.present_blocklist_editor())
+        self.btn_add.connect("clicked", lambda x: GLib.idle_add(lambda: self._toggle_add_row() or False))
 
         if not self.app_window.eds.is_ready:
             self.btn_add.set_sensitive(False)
@@ -53,6 +57,17 @@ class BlocklistView(Adw.Bin):
         toolbar.append(lbl)
         toolbar.append(self.btn_add)
         box.append(toolbar)
+
+        self.add_group = Adw.PreferencesGroup(margin_start=12, margin_end=12, margin_bottom=12)
+        self.entry_new_number = Adw.EntryRow(title=_("Number"))
+        self.entry_new_number.set_input_purpose(Gtk.InputPurpose.PHONE)
+        self.entry_new_number.set_show_apply_button(True)
+        self.entry_new_number.connect("apply", self._on_new_number_applied)
+        self.entry_new_note = Adw.EntryRow(title=_("Note (Optional)"))
+        self.add_group.add(self.entry_new_number)
+        self.add_group.add(self.entry_new_note)
+        self.add_group.set_visible(False)
+        box.append(self.add_group)
 
         self.store = Gio.ListStore(item_type=BlockedItem)
         self.selection = Gtk.SingleSelection(model=self.store)
@@ -87,6 +102,41 @@ class BlocklistView(Adw.Bin):
         if self._blocklist_sig is not None and self.db.handler_is_connected(self._blocklist_sig):
             self.db.disconnect(self._blocklist_sig)
         self._blocklist_sig = None
+
+    def _toggle_add_row(self):
+        """Reveal the inline fields for a new blocked number."""
+        showing = not self.add_group.get_visible()
+        self.add_group.set_visible(showing)
+        if showing:
+            self.entry_new_number.grab_focus()
+        else:
+            self.entry_new_number.set_text("")
+            self.entry_new_note.set_text("")
+
+    def _on_new_number_applied(self, row):
+        """Block the typed number, keeping the fields in place on failure."""
+        raw = row.get_text().strip()
+        if not raw:
+            return
+        number = normalize_number(raw)
+        note = self.entry_new_note.get_text().strip()
+
+        if self.db.is_blocked(number):
+            logger.warning(f"[Blocklist] Block rejected: {number} is already blocked")
+            self.app_window.notify_error(_("This number is already blocked."))
+            return
+
+        def done(success):
+            if not success:
+                self.app_window.notify_error(_("Failed to save to blocklist."))
+                return
+            logger.info(f"[Blocklist] Added number: {number}")
+            self.entry_new_number.set_text("")
+            self.entry_new_note.set_text("")
+            self.add_group.set_visible(False)
+            self.refresh()
+
+        run_in_background(self.db.add_blocked_number, number, note, on_complete=done)
 
     def refresh(self):
         """Reload the blocklist from DB."""

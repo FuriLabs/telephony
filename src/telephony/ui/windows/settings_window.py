@@ -30,6 +30,8 @@ from .custom_tone_list_window import CustomToneListWindow
 
 from .advanced_settings_window import AdvancedSettingsWindow
 from .favorites_list_window import FavoritesListWindow
+from .blocklist_window import BlocklistView
+from .import_export_window import ImportExportDialog
 from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options
 
 EMERGENCY_COMMIT_DELAY_MS = 500
@@ -92,6 +94,9 @@ class SettingsWindow(Adw.Dialog):
         grp_cats.add(self._nav_row(_("Messages"), _("Quick responses and delivery reports"),
                                    lambda: self._push_category(_("Messages"), self._build_messages_page),
                                    icon="mail-unread-symbolic"))
+        grp_cats.add(self._nav_row(_("Blocklist"), _("Numbers you never hear from"),
+                                   lambda: self._push_category(_("Blocklist"), self._build_blocklist_page),
+                                   icon="action-unavailable-symbolic"))
         grp_cats.add(self._nav_row(_("Contacts"), _("Address books and duplicates"),
                                    lambda: self._push_category(_("Contacts"), self._build_contacts_page),
                                    icon="avatar-default-symbolic"))
@@ -101,9 +106,20 @@ class SettingsWindow(Adw.Dialog):
         grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening and lookup"),
                                    lambda: self._push_category(_("Unknown Callers"), self._build_unknown_callers_page),
                                    icon="dialog-question-symbolic"))
-        grp_cats.add(self._nav_row(_("Advanced Settings"), None,
+        grp_cats.add(self._nav_row(_("Import and Export"), _("Contacts, messages and call history"),
+                                   lambda: ImportExportDialog(self.main_window).present(),
+                                   icon="document-save-symbolic"))
+        grp_cats.add(self._nav_row(_("Advanced Settings"), _("For experienced users"),
                                    lambda: self._open_modem_settings(None),
                                    icon="emblem-system-symbolic"))
+
+    def _build_blocklist_page(self, page):
+        """Build the blocklist category page."""
+        group = Adw.PreferencesGroup()
+        page.add(group)
+        row = Adw.PreferencesRow(activatable=False)
+        row.set_child(BlocklistView(self.main_window.db, self.main_window))
+        group.add(row)
 
     def _push_category(self, title, build):
         """Push a settings category page built fresh from current state."""
