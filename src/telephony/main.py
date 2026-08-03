@@ -107,7 +107,16 @@ def main():
             except Exception as e:
                 logger.warning(f"Failed to check/start systemd service: {e}")
 
-    app = App(application_id=APP_ID)
+    if "--calls" in sys.argv:
+        application_id = f"{APP_ID}.Calls"
+    elif "--messages" in sys.argv:
+        application_id = f"{APP_ID}.Messages"
+    elif "--contacts" in sys.argv:
+        application_id = f"{APP_ID}.Contacts"
+    else:
+        application_id = APP_ID
+
+    app = App(application_id=application_id)
     return app.run(sys.argv)
 
 
