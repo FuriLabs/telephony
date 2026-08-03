@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="io.furios.Telephony" path="/io/furios/Telephony/">
+    <key name="favorites" type="s">
+      <default>"[]"</default>
+      <summary>Speed dial favorites</summary>
+      <description>Contacts assigned to speed dial slots, stored as a JSON list.</description>
+    </key>
     <key name="muted-conversations" type="s">
       <default>"[]"</default>
       <summary>Muted conversations</summary>
