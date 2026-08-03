@@ -42,7 +42,7 @@ from .backend.managers.ofono_manager import OfonoManager
 from .backend.managers.mms_manager import MmsManager
 from .ui.main_window import MainWindow
 from .backend.managers.eds_manager import EdsManager
-from .backend.utils.phone_utils import normalize_number, get_own_number
+from .backend.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from .backend.utils.locale_utils import init_locale
 from .backend.managers.emergency_manager import EmergencyManager
 from .ui.windows.incall_window import InCallWindow
@@ -478,8 +478,12 @@ class App(Adw.Application):
                 if win.handle_new_message(number, body):
                     is_chat_open = True
 
-        if not is_chat_open:
-            self.broadcast_notification(number, body)
+        if is_chat_open:
+            return
+        if self.gsettings_mgr.is_conversation_muted(conversation_id(number)):
+            logger.debug(f"[App] Muted conversation, no notification for {number}")
+            return
+        self.broadcast_notification(number, body)
 
     def on_mms_received(self, _mms_obj, sender, recipients, _date, body, attachments, sender_name):
         """Handle incoming MMS."""
@@ -519,6 +523,9 @@ class App(Adw.Application):
 
     def _process_mms_notification(self, chat_id, body, attachments, real_sender=None):
         """Process MMS notification logic."""
+        if self.gsettings_mgr.is_conversation_muted(conversation_id(chat_id)):
+            logger.debug(f"[App] Muted conversation, no notification for {chat_id}")
+            return False
         preview_text = body if body else "[Picture Message]"
         is_chat_open = False
 

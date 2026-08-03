@@ -104,6 +104,39 @@ class GSettingsManager:
         except Exception as e:
             logger.error(f"[GSettings] Set Call Volume Levels Error: {e}")
 
+    def get_favorites(self):
+        """Return the speed dial entries."""
+        return self._get_json_setting("favorites", "Favorites")
+
+    def set_favorites(self, entries):
+        """Persist the speed dial entries."""
+        self._set_json_setting("favorites", entries, "Favorites")
+
+    def get_muted_conversations(self):
+        """Return the list of muted conversation ids."""
+        try:
+            val = self.get_setting("muted_conversations")
+            if val:
+                return json.loads(val)
+        except Exception as e:
+            logger.error(f"[GSettings] Get Muted Conversations Error: {e}")
+        return []
+
+    def is_conversation_muted(self, conversation_id):
+        """Return whether a conversation is muted."""
+        return conversation_id in self.get_muted_conversations()
+
+    def set_conversation_muted(self, conversation_id, muted):
+        """Add or remove a conversation from the muted list."""
+        current = self.get_muted_conversations()
+        if muted and conversation_id not in current:
+            current.append(conversation_id)
+        elif not muted and conversation_id in current:
+            current.remove(conversation_id)
+        else:
+            return
+        self.set_setting("muted_conversations", json.dumps(current))
+
     def get_reject_call_messages(self):
         """Return the configured quick response messages, falling back to the legacy single message."""
         try:
