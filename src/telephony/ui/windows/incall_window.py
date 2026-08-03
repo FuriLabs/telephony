@@ -25,8 +25,10 @@ from gettext import gettext as _
 from ...backend.managers.audio_manager import TelephonyAudioManager
 from ..windows.fader_window import ProximityFader
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
+from ..widgets.common_widget import present_choice_sheet
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.thread_utils import run_in_background
+from ...backend.utils.system_utils import save_modem_logs, press_power_button
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...backend.utils.phone_utils import normalize_number
 
@@ -100,7 +102,7 @@ HANGUP_RETRY_DELAY_MS = 2000
 KNOCK_REPEAT_SECONDS = 5
 
 
-class InCallWindow(Gtk.Window):
+class InCallWindow(Adw.Window):
     """Main call window handling active calls, incoming calls, and call controls."""
 
     _instance = None
@@ -142,6 +144,7 @@ class InCallWindow(Gtk.Window):
         self.is_ringing = False
         self.is_closing = False
         self.in_error_mode = False
+        self.in_recovery_mode = False
         self.manual_hangup = False
 
         self.is_locked = False
@@ -159,6 +162,8 @@ class InCallWindow(Gtk.Window):
         self._setup_ui()
 
         def _on_close_req(w):
+            if self.in_recovery_mode:
+                return True
             self.set_visible(False)
             return True
 
@@ -192,7 +197,7 @@ class InCallWindow(Gtk.Window):
         self.set_default_size(360, 600)
         self.add_css_class("incall-window")
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_child(self.main_box)
+        self.set_content(self.main_box)
 
         self.bg_scrolled = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=180)
         self.bg_calls_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_top=10, margin_bottom=10, margin_start=15, margin_end=15)
@@ -251,7 +256,6 @@ class InCallWindow(Gtk.Window):
         self.pad_route_stack.add_named(pad_grid, "pad")
         act_box.append(self.pad_route_stack)
 
-        self._setup_audio_routing_popover()
 
         btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, halign=Gtk.Align.CENTER)
         mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
@@ -270,17 +274,29 @@ class InCallWindow(Gtk.Window):
 
         self.err_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, valign=Gtk.Align.CENTER, halign=Gtk.Align.CENTER)
         self.err_box.add_css_class("error-box")
-        lbl_err = Gtk.Label(label=_("Modem Stuck"), css_classes=["error-title"])
-        self.lbl_err_msg = Gtk.Label(label=_("The call failed to disconnect."), css_classes=["body", "error-text"])
+        lbl_err = Gtk.Label(label=_("Modem Recovery"), css_classes=["error-title"])
+        self.lbl_err_msg = Gtk.Label(label=_("The modem is not working correctly."), css_classes=["body", "error-text"])
         self.lbl_err_msg.set_wrap(True)
-        self.btn_restart = Gtk.Button(label=_("Modem Recovery"))
+        self.btn_restart = Gtk.Button(label=_("Recover Modem"))
         self.btn_restart.add_css_class("destructive-action")
         self.btn_restart.add_css_class("pill")
         self.btn_restart.set_size_request(240, 60)
         self.btn_restart.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_modem_recovery_click(b) or False))
+        self.btn_save_logs = Gtk.Button(label=_("Save Modem Logs"))
+        self.btn_save_logs.add_css_class("pill")
+        self.btn_save_logs.set_size_request(240, 60)
+        self.btn_save_logs.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save_logs_click(b) or False))
+        self.btn_reboot = Gtk.Button(label=_("Reboot phone"))
+        self.btn_reboot.add_css_class("destructive-action")
+        self.btn_reboot.add_css_class("pill")
+        self.btn_reboot.set_size_request(240, 60)
+        self.btn_reboot.set_visible(False)
+        self.btn_reboot.connect("clicked", lambda b: GLib.idle_add(lambda: press_power_button() or False))
         self.err_box.append(lbl_err)
         self.err_box.append(self.lbl_err_msg)
         self.err_box.append(self.btn_restart)
+        self.err_box.append(self.btn_save_logs)
+        self.err_box.append(self.btn_reboot)
         self.controls_stack.add_named(self.err_box, "error")
 
     def _mk_btn(self, icon, cb, cls=None):
@@ -336,37 +352,9 @@ class InCallWindow(Gtk.Window):
         self.lbl_input_route.set_text(input_route_label(route_id))
         self.img_input_route.set_from_icon_name(input_route_icon(route_id))
 
-    def _setup_audio_routing_popover(self):
-        """Setup the audio routing popover menu."""
-        self.output_popover = Gtk.Popover()
-        self.output_popover.set_position(Gtk.PositionType.TOP)
-        self.output_popover.set_parent(self.btn_output)
-
-        self.out_pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.out_pop_box.set_margin_top(12)
-        self.out_pop_box.set_margin_bottom(12)
-        self.out_pop_box.set_margin_start(12)
-        self.out_pop_box.set_margin_end(12)
-        self.out_pop_box.set_size_request(280, -1)
-        self.output_popover.set_child(self.out_pop_box)
-
-        self.output_group = Adw.PreferencesGroup(title=_("Output"))
-        self.out_pop_box.append(self.output_group)
-
-        self.input_popover = Gtk.Popover()
-        self.input_popover.set_position(Gtk.PositionType.TOP)
-        self.input_popover.set_parent(self.btn_input)
-
-        self.in_pop_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.in_pop_box.set_margin_top(12)
-        self.in_pop_box.set_margin_bottom(12)
-        self.in_pop_box.set_margin_start(12)
-        self.in_pop_box.set_margin_end(12)
-        self.in_pop_box.set_size_request(280, -1)
-        self.input_popover.set_child(self.in_pop_box)
-
-        self.input_group = Adw.PreferencesGroup(title=_("Input"))
-        self.in_pop_box.append(self.input_group)
+    def _present_choice_sheet(self, title, build_rows):
+        """Show a bottom sheet with a single group of choice rows."""
+        present_choice_sheet(self, title, build_rows)
 
     def _start_timers(self):
         """Start timers only when call is active."""
@@ -387,6 +375,12 @@ class InCallWindow(Gtk.Window):
     def update_state(self):
         """Refresh call state and UI."""
         self.lock_manager.set_locked(self.is_locked)
+
+        if self.in_recovery_mode:
+            if not self.ofono.active_calls:
+                return
+            logger.info("[InCall] Call appeared while on the recovery page, showing call UI")
+            self.in_recovery_mode = False
 
         if self.in_error_mode:
             if not self.ofono.active_calls:
@@ -703,30 +697,18 @@ class InCallWindow(Gtk.Window):
             callback(messages[0])
             return
 
-        popover = Gtk.Popover()
-        popover.set_position(Gtk.PositionType.TOP)
-        popover.set_parent(anchor)
+        def build(group, sheet):
+            for msg in messages:
+                row = Adw.ActionRow(title=msg, activatable=True)
+                row.set_title_lines(2)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6,
-                      margin_top=8, margin_bottom=8, margin_start=8, margin_end=8)
+                def _cb(row_widget, m=msg):
+                    sheet.close()
+                    callback(m)
+                row.connect("activated", _cb)
+                group.add(row)
 
-        def on_pick(_btn, msg):
-            popover.popdown()
-            callback(msg)
-
-        for msg in messages:
-            btn = Gtk.Button(label=msg)
-            btn.add_css_class("flat")
-            child = btn.get_child()
-            if isinstance(child, Gtk.Label):
-                child.set_ellipsize(Pango.EllipsizeMode.END)
-                child.set_max_width_chars(32)
-            btn.connect("clicked", on_pick, msg)
-            box.append(btn)
-
-        popover.set_child(box)
-        popover.connect("closed", lambda p: GLib.idle_add(lambda: p.unparent() or False))
-        popover.popup()
+        self._present_choice_sheet(_("Hangup and Send SMS"), build)
 
     def on_ignore_with_sms(self, btn, path, number):
         """Ignore a call and send a quick response."""
@@ -839,7 +821,7 @@ class InCallWindow(Gtk.Window):
         return False
 
     def _enter_error_state(self):
-        """Show error UI when hangup fails."""
+        """Show the recovery page when a call fails to disconnect."""
         self.audio.play_error_alert()
         self.present()
         self.in_error_mode = True
@@ -852,35 +834,85 @@ class InCallWindow(Gtk.Window):
         self.audio.restore_call_volume()
         self.is_speaker = False
         self.lbl_err_msg.set_text(_("The call failed to disconnect."))
-        self.btn_restart.set_label(_("Modem Recovery"))
+        self.btn_restart.set_label(_("Recover Modem"))
         self.btn_restart.set_sensitive(True)
+        self.btn_reboot.set_visible(False)
         self.controls_stack.set_visible_child_name("error")
 
         app = Gio.Application.get_default()
         auto = self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
-        if auto and app and app.request_auto_recovery(self._on_auto_recovery_done):
+        if auto and app and app.request_auto_recovery(self._on_recovery_done):
             self.btn_restart.set_sensitive(False)
             self.btn_restart.set_label(_("Recovering modem..."))
         else:
             self.lock_manager.show_stuck_notification()
 
-    def _on_auto_recovery_done(self, success):
-        """React to the background ladder result on the stuck screen."""
-        if not self.in_error_mode:
-            return
-        if success:
-            self._reset_from_error()
-            return
-        self.lbl_err_msg.set_text(_("Could not restore the modem. Please reboot the phone."))
-        self.btn_restart.set_label(_("Modem Recovery"))
+    def enter_recovery_mode(self, reason, failed=False):
+        """Show the modem recovery page; it stays until the modem works again."""
+        if not self.in_recovery_mode and not self.in_error_mode:
+            self.audio.play_error_alert()
+            self.lbl_name.set_text("")
+            self.lbl_number.set_text("")
+            self.lbl_status.set_text("")
+        self.in_recovery_mode = True
+        self.in_error_mode = False
+        self.is_closing = False
+        self.fader.set_active(False)
+        self.audio.update_hardware_state(False)
+        if failed:
+            self.lbl_err_msg.set_text(_("Could not restore the modem. Please reboot the phone."))
+        else:
+            self.lbl_err_msg.set_text(reason)
+        self.btn_restart.set_label(_("Recover Modem"))
         self.btn_restart.set_sensitive(True)
-        self.lock_manager.show_stuck_notification()
+        self.btn_reboot.set_visible(failed)
+        self.controls_stack.set_visible_child_name("error")
+
+    def exit_recovery_mode(self):
+        """Leave the recovery page once the modem works again."""
+        if not self.in_recovery_mode:
+            return
+        self.in_recovery_mode = False
+        self.btn_reboot.set_visible(False)
+        if self.ofono.active_calls:
+            self.update_state()
+            return
+        self._clean_reset()
+
+    def _on_recovery_done(self, success):
+        """React to the recovery verdict while the page is showing."""
+        if not self.in_error_mode and not self.in_recovery_mode:
+            return
+        self.btn_restart.set_label(_("Recover Modem"))
+        self.btn_restart.set_sensitive(True)
+        if success:
+            if self.in_error_mode:
+                self._reset_from_error()
+            return
+        if self.in_error_mode and self.is_locked:
+            self.lock_manager.show_stuck_notification()
 
     def on_modem_recovery_click(self, btn):
-        """Open the guided modem recovery window over the stuck screen."""
-        from .modem_recovery_window import ModemRecoveryWindow
-        win = ModemRecoveryWindow(self, self.ofono)
-        win.present()
+        """Restart the modem stack from the recovery page."""
+        app = Gio.Application.get_default()
+        if not app:
+            return
+        if app.request_auto_recovery(self._on_recovery_done):
+            self.btn_restart.set_sensitive(False)
+            self.btn_restart.set_label(_("Recovering modem..."))
+
+    def on_save_logs_click(self, btn):
+        """Capture modem evidence for a bug report."""
+        btn.set_sensitive(False)
+
+        def done(path):
+            btn.set_sensitive(True)
+            if path:
+                self.lbl_err_msg.set_text(_("Logs saved to {path}").format(path=path))
+            else:
+                self.lbl_err_msg.set_text(_("Saving logs failed"))
+
+        run_in_background(save_modem_logs, on_complete=done)
 
     def _reset_from_error(self, *args):
         """Reset UI after error recovery."""
@@ -923,46 +955,40 @@ class InCallWindow(Gtk.Window):
         return row
 
     def on_output_routing_click(self, btn):
-        """Populate and show the output routing popover."""
-        self.output_popover.popup()
+        """Show the output routing sheet."""
+        def build(group, sheet):
+            for r in self.audio.get_available_outputs():
+                route_id = r['id']
+                row = self._mk_route_row(r, route_label(route_id), route_id == self.current_route)
 
-        self.out_pop_box.remove(self.output_group)
-        self.output_group = Adw.PreferencesGroup(title=_("Output"))
-        self.out_pop_box.append(self.output_group)
+                def _cb_out(row_widget, r_id=route_id):
+                    sheet.close()
+                    self._handle_output_selection(r_id)
+                if row.get_sensitive():
+                    row.connect("activated", _cb_out)
+                group.add(row)
 
-        for r in self.audio.get_available_outputs():
-            route_id = r['id']
-            row = self._mk_route_row(r, route_label(route_id), route_id == self.current_route)
-
-            def _cb_out(row_widget, r_id=route_id):
-                GLib.idle_add(lambda: self.output_popover.popdown() or False)
-                self._handle_output_selection(r_id)
-            if row.get_sensitive():
-                row.connect("activated", _cb_out)
-            self.output_group.add(row)
+        self._present_choice_sheet(_("Output"), build)
 
     def on_input_routing_click(self, btn):
-        """Populate and show the input routing popover."""
-        self.input_popover.popup()
+        """Show the input routing sheet."""
+        def build(group, sheet):
+            for r in self.audio.get_available_inputs():
+                route_id = r['id']
+                row = self._mk_route_row(r, input_route_label(route_id), route_id == self.current_input_route)
 
-        self.in_pop_box.remove(self.input_group)
-        self.input_group = Adw.PreferencesGroup(title=_("Input"))
-        self.in_pop_box.append(self.input_group)
+                def _cb_in(row_widget, r_id=route_id):
+                    sheet.close()
+                    if self.is_muted:
+                        self.on_mute_toggle(None)
+                    self.audio.set_input_route(r_id)
+                    self.current_input_route = r_id
+                    self._show_input_route(r_id)
+                if row.get_sensitive():
+                    row.connect("activated", _cb_in)
+                group.add(row)
 
-        for r in self.audio.get_available_inputs():
-            route_id = r['id']
-            row = self._mk_route_row(r, input_route_label(route_id), route_id == self.current_input_route)
-
-            def _cb_in(row_widget, r_id=route_id):
-                GLib.idle_add(lambda: self.input_popover.popdown() or False)
-                if self.is_muted:
-                    self.on_mute_toggle(None)
-                self.audio.set_input_route(r_id)
-                self.current_input_route = r_id
-                self._show_input_route(r_id)
-            if row.get_sensitive():
-                row.connect("activated", _cb_in)
-            self.input_group.add(row)
+        self._present_choice_sheet(_("Input"), build)
 
     def _apply_call_volume(self):
         """Route the new call and apply its configured volume once."""

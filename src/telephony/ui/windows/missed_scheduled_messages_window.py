@@ -22,6 +22,7 @@ from ...backend.utils.thread_utils import run_in_background
 import json
 import os
 import time
+from ..widgets.common_widget import close_dialog
 
 
 class MissedScheduledMessagesDialog:
@@ -78,8 +79,7 @@ class MissedScheduledMessagesDialog:
         display_name = contact_name if len(contact_name) < 30 else contact_name[:27] + "..."
         display_body = body if len(body) < 150 else body[:147] + "..."
 
-        d = Adw.MessageDialog(
-            transient_for=self.app_window,
+        d = Adw.AlertDialog(
             heading=_("Scheduled ({current}/{total})").format(current=current_count, total=total_count)
         )
 
@@ -157,7 +157,7 @@ class MissedScheduledMessagesDialog:
         btn_send.add_css_class("suggested-action")
 
         def _on_send_now(b):
-            GLib.idle_add(lambda: d.close() or False)
+            GLib.idle_add(lambda: close_dialog(d) or False)
             self._send_missed_message_bg(msg)
             GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
 
@@ -168,7 +168,7 @@ class MissedScheduledMessagesDialog:
         btn_remove.add_css_class("destructive-action")
 
         def _on_remove(b):
-            GLib.idle_add(lambda: d.close() or False)
+            GLib.idle_add(lambda: close_dialog(d) or False)
             self.db.delete_scheduled_messages([mid])
             self.scheduler.remove_cron(mid)
             self.app_window.notify_success(_("Message removed"))
@@ -180,7 +180,7 @@ class MissedScheduledMessagesDialog:
 
         main_box.append(btn_box)
         d.set_extra_child(main_box)
-        d.present()
+        d.present(self.app_window)
 
     def _send_missed_message_bg(self, msg):
         """Send message in background thread."""

@@ -24,19 +24,20 @@ from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.vcard_utils import unfold_vcard
+from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 
-class DuplicateResolutionWindow(Adw.Window):
-    """
-    Window to resolve contact duplicates.
+class DuplicateResolutionWindow(Adw.Dialog):
+    """Bottom sheet resolving contact duplicates.
+
     Shows conflicts one by one or allows merging all.
     """
 
     def __init__(self, parent_window, conflicts, eds_manager, on_done_callback):
         super().__init__(title=_("Duplicate Contact"))
-        self.set_transient_for(parent_window)
-        self.set_modal(True)
-        self.set_default_size(500, 600)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
+        self.set_content_height(600)
 
         self.conflicts = conflicts
         self.eds = eds_manager
@@ -47,20 +48,16 @@ class DuplicateResolutionWindow(Adw.Window):
         if not self.eds.is_ready:
             logger.warning("[DuplicateResolutionWindow] Initialized while EDS is not ready!")
 
+        self.connect("closed", lambda d: self._call_done())
+
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-        self.set_content(self.stack)
+        self.set_child(self.stack)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.stack.add_named(self.main_box, "main")
 
         header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(False)
-        header.set_show_start_title_buttons(False)
-
-        self.btn_cancel = Gtk.Button(label=_("Cancel"))
-        self.btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_cancel(b) or False))
-        header.pack_start(self.btn_cancel)
 
         self.btn_merge_all = Gtk.Button(label=_("Merge all"))
         self.btn_merge_all.add_css_class("suggested-action")
@@ -115,8 +112,7 @@ class DuplicateResolutionWindow(Adw.Window):
             child = next_child
 
         if self.current_index >= len(self.conflicts):
-            self.close()
-            self._call_done()
+            close_dialog(self)
             return
 
         self.update_status()
@@ -333,9 +329,4 @@ class DuplicateResolutionWindow(Adw.Window):
 
     def _finish_merge(self):
         self.spinner.stop()
-        self.close()
-        self._call_done()
-
-    def on_cancel(self, btn):
-        self.close()
-        self._call_done()
+        close_dialog(self)

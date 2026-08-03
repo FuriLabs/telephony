@@ -13,14 +13,147 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import weakref
+
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.phone_utils import normalize_number
 
 from gi.repository import Gtk, Adw, GLib
 from loguru import logger
 from gettext import gettext as _
+from ...constants import SHEET_CONTENT_WIDTH
 
 LIST_CHUNK_SIZE = 20
+INFO_SHEET_MAX_HEIGHT = 520
+
+_CLOSING_DIALOGS = weakref.WeakSet()
+
+
+def close_dialog(dialog):
+    """Close a dialog exactly once, ignoring repeats during the animation.
+
+    A double tap otherwise closes an already closed dialog, which
+    Adwaita reports as a critical.
+    """
+    if dialog in _CLOSING_DIALOGS:
+        return
+    _CLOSING_DIALOGS.add(dialog)
+    dialog.connect("closed", _CLOSING_DIALOGS.discard)
+    dialog.close()
+
+
+def present_choice_sheet(parent, title, build_rows, description=None):
+    """Show a bottom sheet with a single group of choice rows.
+
+    build_rows(group, sheet) fills the group; rows close the sheet
+    themselves when picked.
+    """
+    sheet = Adw.Dialog(title=title)
+    sheet.set_content_width(SHEET_CONTENT_WIDTH)
+
+    toolbar = Adw.ToolbarView()
+    toolbar.add_top_bar(Adw.HeaderBar())
+
+    page = Adw.PreferencesPage()
+    group = Adw.PreferencesGroup()
+    if description:
+        group.set_description(description)
+    page.add(group)
+    toolbar.set_content(page)
+    sheet.set_child(toolbar)
+
+    build_rows(group, sheet)
+    sheet.present(parent)
+    return sheet
+
+
+def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=False, icon=None):
+    """Add one activatable row that closes the sheet and runs its callback."""
+    row = Adw.ActionRow(title=label, activatable=True)
+    if subtitle:
+        row.set_subtitle(subtitle)
+    if icon:
+        row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+    if destructive:
+        row.add_css_class("error")
+    row.connect("activated", lambda r: GLib.idle_add(
+        lambda: [close_dialog(sheet), callback()] and False))
+    group.add(row)
+    return row
+
+
+def build_info_sheet(title, text, selectable=False):
+    """Build a bottom sheet holding a titled block of explanatory text.
+
+    The sheet presentation ignores the natural height of a wrapped
+    label, so the scroll area asks for the measured text height up to
+    a cap, otherwise long texts render as a short scrolling stub.
+    """
+    sheet = Adw.Dialog(title=title)
+    sheet.set_content_width(SHEET_CONTENT_WIDTH)
+
+    toolbar = Adw.ToolbarView()
+    toolbar.add_top_bar(Adw.HeaderBar())
+
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=INFO_SHEET_MAX_HEIGHT)
+    lbl = Gtk.Label(label=text, wrap=True, xalign=0, selectable=selectable, valign=Gtk.Align.START)
+    lbl.set_margin_top(4)
+    lbl.set_margin_bottom(24)
+    lbl.set_margin_start(16)
+    lbl.set_margin_end(16)
+    scroll.set_child(lbl)
+    natural_height = lbl.measure(Gtk.Orientation.VERTICAL, SHEET_CONTENT_WIDTH)[1]
+    scroll.set_min_content_height(min(natural_height, INFO_SHEET_MAX_HEIGHT))
+    toolbar.set_content(scroll)
+    sheet.set_child(toolbar)
+    return sheet
+
+
+def present_info_sheet(parent, title, text):
+    """Show a bottom sheet with a titled block of explanatory text."""
+    build_info_sheet(title, text).present(parent)
+
+
+def build_selector_row(title, on_select=None):
+    """Build an expander row selector; options come from set_selector_options."""
+    row = Adw.ExpanderRow(title=title)
+    row._selected_index = 0
+    row._option_rows = []
+    row._option_checks = []
+    row._on_select = on_select
+    return row
+
+
+def set_selector_options(row, labels, selected_index):
+    """Replace the inline options of an expander selector."""
+    for option in row._option_rows:
+        row.remove(option)
+    row._option_rows = []
+    row._option_checks = []
+    for i, name in enumerate(labels):
+        option = Adw.ActionRow(title=name, activatable=True)
+        check = Gtk.Image.new_from_icon_name("object-select-symbolic")
+        check.set_visible(i == selected_index)
+        option.add_suffix(check)
+        option.connect("activated", lambda r, i=i: GLib.idle_add(
+            lambda: _pick_selector_option(row, i) or False))
+        row.add_row(option)
+        row._option_rows.append(option)
+        row._option_checks.append(check)
+    row._selected_index = selected_index
+    if labels:
+        row.set_subtitle(labels[selected_index])
+
+
+def _pick_selector_option(row, index):
+    """Apply a tapped selector option and collapse the row."""
+    row._selected_index = index
+    row.set_subtitle(row._option_rows[index].get_title())
+    for i, check in enumerate(row._option_checks):
+        check.set_visible(i == index)
+    row.set_expanded(False)
+    if row._on_select:
+        row._on_select(index)
 
 
 def translate_phone_label(label):

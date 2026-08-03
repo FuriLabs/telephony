@@ -21,6 +21,7 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from loguru import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
+from ..widgets.common_widget import present_choice_sheet, add_choice_row, close_dialog
 from .import_wizard_window import ImportWizardWindow
 from ...backend.utils.importer_local_utils import import_local_chatty, import_local_calls
 from ...backend.utils.importer_android_utils import import_android_sms, import_android_calls
@@ -39,43 +40,18 @@ class ImportExportDialog:
         self.eds = app_window.eds
 
     def present(self):
-        d = Adw.MessageDialog(heading=_("Import / Export"), body=_("Extract, transform, load (ETL).\nSelect data source or destination."))
-        d.set_transient_for(self.app_window)
+        """Show the import and export sheet."""
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Import Contacts from vCard"), self.on_import_clicked)
+            add_choice_row(group, sheet, _("Export Contacts to vCard"), self.on_export_all_clicked)
+            add_choice_row(group, sheet, _("Import Contacts from SIM card"), self.ask_import_sim)
+            add_choice_row(group, sheet, _("Import From local Chatty"), self.ask_import_chatty)
+            add_choice_row(group, sheet, _("Import From local Calls"), self.ask_import_local_calls)
+            add_choice_row(group, sheet, _("Import From Android"), self.ask_import_android)
+            add_choice_row(group, sheet, _("Import From iOS"), self.ask_import_ios)
+            add_choice_row(group, sheet, _("Export Calls or Messages"), self.ask_export_data)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        box.set_margin_top(20)
-        box.set_margin_bottom(10)
-        box.set_margin_start(20)
-        box.set_margin_end(20)
-
-        def make_btn(label, callback, style=None):
-            b = Gtk.Button(label=label)
-            if style:
-                b.add_css_class(style)
-            b.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), callback()] and False))
-            return b
-
-        box.append(make_btn(_("Import Contacts from vCard"), self.on_import_clicked))
-        box.append(make_btn(_("Export Contacts to vCard"), self.on_export_all_clicked))
-        box.append(make_btn(_("Import Contacts from SIM card"), self.ask_import_sim))
-
-        box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL, margin_top=5, margin_bottom=5))
-
-        box.append(make_btn(_("Import From local Chatty"), self.ask_import_chatty))
-        box.append(make_btn(_("Import From local Calls"), self.ask_import_local_calls))
-        box.append(make_btn(_("Import From Android"), self.ask_import_android))
-        box.append(make_btn(_("Import From iOS"), self.ask_import_ios))
-
-        box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL, margin_top=5, margin_bottom=5))
-
-        box.append(make_btn(_("Export Calls or Messages"), self.ask_export_data))
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        box.append(btn_cancel)
-
-        d.set_extra_child(box)
-        d.present()
+        present_choice_sheet(self.app_window, _("Import / Export"), build)
 
     def ask_import_sim(self):
         """Import contacts from SIM using org.ofono.Phonebook."""
@@ -187,7 +163,7 @@ class ImportExportDialog:
             run_in_background(task)
 
         win = ImportWizardWindow(self.app_window, "chatty", on_wizard_done)
-        win.present()
+        win.present(self.app_window)
 
     def ask_import_local_calls(self):
         def on_wizard_done(db_path, mms_path):
@@ -206,53 +182,24 @@ class ImportExportDialog:
             run_in_background(task)
 
         win = ImportWizardWindow(self.app_window, "calls", on_wizard_done)
-        win.present()
+        win.present(self.app_window)
 
     def ask_import_android(self):
-        d = Adw.MessageDialog(heading=_("Import From Android"), body=_("Select an option:"))
-        d.set_transient_for(self.app_window)
+        """Show the Android import choices."""
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms"))
+            add_choice_row(group, sheet, _("Select Call history file"), lambda: self._open_file_chooser("android_calls"))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin_top=20, margin_bottom=10, margin_start=20, margin_end=20)
-
-        def make_btn(label, callback):
-            b = Gtk.Button(label=label)
-            b.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), callback()] and False))
-            return b
-
-        box.append(make_btn(_("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms")))
-        box.append(make_btn(_("Select Call history file"), lambda: self._open_file_chooser("android_calls")))
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        box.append(btn_cancel)
-
-        d.set_extra_child(box)
-        d.present()
+        present_choice_sheet(self.app_window, _("Import From Android"), build)
 
     def ask_import_ios(self):
-        d = Adw.MessageDialog(heading=_("Import From iOS"), body=_("Select an option:"))
-        d.set_transient_for(self.app_window)
+        """Show the iOS import choices."""
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Direct USB Import (Recommended)"), self._start_ios_usb_import)
+            add_choice_row(group, sheet, _("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms"))
+            add_choice_row(group, sheet, _("Select Call history file"), lambda: self._open_file_chooser("ios_calls"))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin_top=20, margin_bottom=10, margin_start=20, margin_end=20)
-
-        def make_btn(label, callback, is_suggested=False):
-            b = Gtk.Button(label=label)
-            if is_suggested:
-                b.add_css_class("suggested-action")
-            b.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), callback()] and False))
-            return b
-
-        btn_usb = make_btn(_("Direct USB Import (Recommended)"), self._start_ios_usb_import, True)
-        box.append(btn_usb)
-
-        box.append(make_btn(_("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms")))
-        box.append(make_btn(_("Select Call history file"), lambda: self._open_file_chooser("ios_calls")))
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        box.append(btn_cancel)
-
-        d.set_extra_child(box)
-        d.present()
+        present_choice_sheet(self.app_window, _("Import From iOS"), build)
 
     def _start_ios_usb_import(self):
         run_in_background(IOSBackupExtractor.check_connection, on_complete=self._on_ios_connection_checked)
@@ -346,56 +293,29 @@ class ImportExportDialog:
         run_in_background(task)
 
     def ask_export_data(self):
-        d = Adw.MessageDialog(heading=_("Export Data"), body=_("Select destination format:"))
-        d.set_transient_for(self.app_window)
+        """Show the export destination choices."""
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Linux - Chatty/Calls"), lambda: self._show_export_type_chooser("linux_chatty_calls"))
+            add_choice_row(group, sheet, _("Linux - Telephony"), lambda: self._show_export_type_chooser("linux_telephony"))
+            add_choice_row(group, sheet, _("Android"), lambda: self._show_export_type_chooser("android"))
+            add_choice_row(group, sheet, _("iOS"), lambda: self._show_export_type_chooser("ios"))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin_top=20, margin_bottom=10, margin_start=20, margin_end=20)
-
-        def make_btn(label, callback):
-            b = Gtk.Button(label=label)
-            b.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), callback()] and False))
-            return b
-
-        box.append(make_btn(_("Linux - Chatty/Calls"), lambda: self._show_export_type_chooser("linux_chatty_calls")))
-        box.append(make_btn(_("Linux - Telephony"), lambda: self._show_export_type_chooser("linux_telephony")))
-        box.append(make_btn(_("Android"), lambda: self._show_export_type_chooser("android")))
-        box.append(make_btn(_("iOS"), lambda: self._show_export_type_chooser("ios")))
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        box.append(btn_cancel)
-
-        d.set_extra_child(box)
-        d.present()
+        present_choice_sheet(self.app_window, _("Export Data"), build)
 
     def _show_export_type_chooser(self, dest_format):
-        d = Adw.MessageDialog(heading=_("Export to {fmt}").format(fmt=dest_format), body=_("What do you want to export?"))
-        d.set_transient_for(self.app_window)
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin_top=20, margin_bottom=10, margin_start=20, margin_end=20)
-
+        """Show the export content choices for a destination format."""
+        description = None
         if dest_format == "ios":
-            info_lbl = Gtk.Label(
-                label=_("Note: This export uses the Android format. When importing this file onto an iOS device, please use the \"Import From Android\" option."),
-                wrap=True
-            )
-            info_lbl.add_css_class("dim-label")
-            box.append(info_lbl)
+            description = _("Note: This export uses the Android format. When importing this file onto an iOS device, please use the \"Import From Android\" option.")
 
-        def make_btn(label, export_type):
-            b = Gtk.Button(label=label)
-            b.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), self._open_export_file_chooser(dest_format, export_type)] and False))
-            return b
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Messages (SMS/MMS)"),
+                           lambda: self._open_export_file_chooser(dest_format, "sms"))
+            add_choice_row(group, sheet, _("Call History"),
+                           lambda: self._open_export_file_chooser(dest_format, "calls"))
 
-        box.append(make_btn(_("Messages (SMS/MMS)"), "sms"))
-        box.append(make_btn(_("Call History"), "calls"))
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        box.append(btn_cancel)
-
-        d.set_extra_child(box)
-        d.present()
+        present_choice_sheet(self.app_window, _("Export to {fmt}").format(fmt=dest_format),
+                             build, description=description)
 
     def _open_export_file_chooser(self, dest_format, export_type):
         dialog = Gtk.FileChooserNative(title=_("Export File"), transient_for=self.app_window, action=Gtk.FileChooserAction.SAVE)
@@ -486,11 +406,10 @@ class ImportExportDialog:
             self._start_import(path, enabled_sources[0]['uid'])
             return
 
-        d = Adw.MessageDialog(
+        d = Adw.AlertDialog(
             heading=_("Select Address Book"),
             body=_("Where do you want to import contacts?")
         )
-        d.set_transient_for(self.app_window)
         d.add_response("cancel", _("Cancel"))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -506,11 +425,11 @@ class ImportExportDialog:
 
             btn = Gtk.Button(label=name)
             btn.add_css_class("suggested-action")
-            btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: [d.close(), self._start_import(path, uid)] and False))
+            btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: [close_dialog(d), self._start_import(path, uid)] and False))
             box.append(btn)
 
         d.set_extra_child(box)
-        d.present()
+        d.present(self.app_window)
 
     def _start_import(self, path, source_uid):
         self.app_window.notify_loading(_("Importing..."))
@@ -546,11 +465,10 @@ class ImportExportDialog:
             self.app_window.notify_error(_("No enabled address books found"))
             return
 
-        d = Adw.MessageDialog(
+        d = Adw.AlertDialog(
             heading=_("Export Contacts"),
             body=_("Which address book do you want to export?")
         )
-        d.set_transient_for(self.app_window)
         d.add_response("cancel", _("Cancel"))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -562,7 +480,7 @@ class ImportExportDialog:
         btn_all = Gtk.Button(label=_("Export All Address Books"))
 
         def _cb_all(b):
-            d.close()
+            close_dialog(d)
             self._show_export_file_chooser(None)
         btn_all.connect("clicked", lambda b: GLib.idle_add(lambda: _cb_all(b) or False))
         box.append(btn_all)
@@ -575,13 +493,13 @@ class ImportExportDialog:
             btn = Gtk.Button(label=name)
 
             def _cb_specific(b, uid=s['uid']):
-                d.close()
+                close_dialog(d)
                 self._show_export_file_chooser(uid)
             btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: _cb_specific(b, uid) or False))
             box.append(btn)
 
         d.set_extra_child(box)
-        d.present()
+        d.present(self.app_window)
 
     def _show_export_file_chooser(self, source_uid):
         """Show file chooser for export location."""

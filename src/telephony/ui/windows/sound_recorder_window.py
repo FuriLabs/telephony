@@ -26,11 +26,14 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
 from ...constants import (
+    SHEET_CONTENT_WIDTH,
+    CAPTURE_SHEET_HEIGHT,
     PLAYBACK_PROGRESS_INTERVAL_MS,
     EOS_TIMEOUT_MS,
     PROGRESS_BAR_WIDTH,
 )
 from .media_window_base import MediaCaptureWindow, _format_duration
+from ..widgets.common_widget import close_dialog
 
 MAX_RECORD_SECONDS = 120
 RECORD_TIMER_INTERVAL_MS = 1000
@@ -50,12 +53,12 @@ class SoundRecorder(MediaCaptureWindow):
     """A simple sound recorder dialog for capturing voice notes."""
 
     def __init__(self, parent_window, on_attach_callback, max_bytes=MAX_MMS_AUDIO_BYTES):
-        super().__init__(transient_for=parent_window)
+        super().__init__()
         self.on_attach_callback = on_attach_callback
         self.max_bytes = max_bytes
         self._attached = False
-        self.set_modal(True)
-        self.set_default_size(360, 450)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
+        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Voice Message"))
 
         self.output_path = None
@@ -78,12 +81,12 @@ class SoundRecorder(MediaCaptureWindow):
         self.progress_timer_id = None
 
         self._setup_ui()
-        self.connect("close-request", self._on_close_request)
+        self.connect("closed", self._on_closed)
 
     def _setup_ui(self):
         """Build the UI components."""
         self.toast_overlay = Adw.ToastOverlay()
-        self.set_content(self.toast_overlay)
+        self.set_child(self.toast_overlay)
 
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.toast_overlay.set_child(content)
@@ -384,20 +387,19 @@ class SoundRecorder(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
-    def _on_close_request(self, win):
-        """Handle window close request."""
+    def _on_closed(self, _dialog):
+        """Tear down capture state when the sheet closes."""
         self._closed = True
         self._cancel_tracked_timeouts()
         self._stop_recording()
         self._stop_playback()
         self._discard_unattached_output()
-        return False
 
     def _discard_unattached_output(self):
         """Delete the recorded file when the window closes without attaching."""

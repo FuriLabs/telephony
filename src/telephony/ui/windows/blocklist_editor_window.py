@@ -19,28 +19,29 @@ from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.thread_utils import run_in_background
+from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 
-class BlocklistEditor(Adw.Window):
-    """Window to add a new number to the blocklist."""
+class BlocklistEditor(Adw.Dialog):
+    """Bottom sheet to add a new number to the blocklist."""
 
     def __init__(self, db_manager, eds_manager, parent_window, number_preset=None, name_preset=None):
         """Initialize the Blocklist Editor."""
         super().__init__(title=_("Block Number"))
-        self.set_transient_for(parent_window)
-        self.set_modal(True)
-        self.set_default_size(350, 400)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
+        self.set_content_height(400)
 
         self.db = db_manager
         self.eds = eds_manager
 
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_content(content)
+        self.set_child(content)
 
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_dialog(self) or False))
         header.pack_start(btn_cancel)
 
         btn_save = Gtk.Button(label=_("Save"))
@@ -89,7 +90,7 @@ class BlocklistEditor(Adw.Window):
             def done(success):
                 if success:
                     logger.info(f"[Blocklist] Added number: {norm_num}")
-                    self.close()
+                    close_dialog(self)
                 else:
                     self._show_error(_("Database Error"), _("Failed to save to blocklist."))
 
@@ -103,27 +104,23 @@ class BlocklistEditor(Adw.Window):
 
     def _confirm_block_remove(self, _number_str, on_confirm):
         """Show confirmation to block and remove from contacts."""
-        d = Adw.MessageDialog(
+        d = Adw.AlertDialog(
             heading=_("Conflict"),
             body=_("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Blocking and remove the number from Contacts?")
         )
-        d.set_transient_for(self)
         d.add_response("cancel", _("Cancel"))
         d.add_response("yes", _("Yes, Block"))
         d.set_response_appearance("yes", Adw.ResponseAppearance.DESTRUCTIVE)
 
         def _cb(dialog, resp):
-            GLib.idle_add(lambda: dialog.close() or False)
             if resp == "yes":
                 on_confirm()
 
         d.connect("response", _cb)
-        d.present()
+        d.present(self)
 
     def _show_error(self, title, msg):
         """Show error dialog."""
-        d = Adw.MessageDialog(heading=title, body=msg)
-        d.set_transient_for(self)
+        d = Adw.AlertDialog(heading=title, body=msg)
         d.add_response("ok", _("OK"))
-        d.connect("response", lambda d, r: GLib.idle_add(lambda: d.close() or False))
-        d.present()
+        d.present(self)

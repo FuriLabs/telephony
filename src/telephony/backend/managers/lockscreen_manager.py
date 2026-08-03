@@ -79,12 +79,12 @@ class LockScreenManager:
         self.clear_all()
         self._restore_screen_wakeup()
 
-        title = _("Modem Stuck")
-        body = _("Call failed to disconnect.")
+        title = _("Modem Recovery")
+        body = _("Please unlock to see details.")
         icon = "io.furios.Telephony.Emergency"
         display_app_name = _("Telephony Emergency")
 
-        actions = ["app.restart-modem::", _("Modem Recovery")]
+        actions = ["app.restart-modem::", _("Recover Modem")]
 
         hints = {
             'action-icons': GLib.Variant('b', True),

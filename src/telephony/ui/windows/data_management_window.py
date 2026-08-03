@@ -18,72 +18,67 @@ from loguru import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
 import os
+from ..widgets.common_widget import close_dialog
 
 
 class DataManagementDialog:
-    """Dialog and logic for clearing data from the application."""
+    """Data management settings page and its destructive actions."""
 
     def __init__(self, app_window):
         self.app_window = app_window
         self.db = app_window.db
         self.eds = app_window.eds
+        self.page = None
 
-    def present(self):
-        d = Adw.MessageDialog(heading=_("Database Management"), body=_("Select data to permanently delete."))
-        d.set_transient_for(self.app_window)
+    def build_page(self):
+        """Build the data management page for the settings navigation."""
+        self.page = Adw.NavigationPage(title=_("Data Management"))
+        view = Adw.ToolbarView()
+        self.page.set_child(view)
+        view.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        box.set_margin_top(20)
-        box.set_margin_bottom(10)
-        box.set_margin_start(20)
-        box.set_margin_end(20)
+        prefs = Adw.PreferencesPage()
+        view.set_content(prefs)
 
-        def make_red_button(label, callback):
-            b = Gtk.Button(label=label)
-            b.add_css_class("destructive-action")
-            b.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), callback()] and False))
-            return b
+        group = Adw.PreferencesGroup(description=_("Select data to permanently delete."))
+        prefs.add(group)
 
-        box.append(make_red_button(_("Delete Call History"), self.ask_clear_history))
-        box.append(make_red_button(_("Delete All Messages"), self.ask_clear_messages))
-        box.append(make_red_button(_("Delete All Group Names"), self.ask_clear_groups))
-        box.append(make_red_button(_("Delete Blocklist"), self.ask_clear_blocklist))
-        box.append(make_red_button(_("Delete All Contacts"), self.ask_clear_contacts))
-        box.append(make_red_button(_("Delete Address Book"), self.ask_delete_addressbook))
+        entries = (
+            (_("Delete Call History"), self.ask_clear_history),
+            (_("Delete All Messages"), self.ask_clear_messages),
+            (_("Delete All Group Names"), self.ask_clear_groups),
+            (_("Delete Blocklist"), self.ask_clear_blocklist),
+            (_("Delete All Contacts"), self.ask_clear_contacts),
+            (_("Delete Address Book"), self.ask_delete_addressbook),
+        )
+        for label, callback in entries:
+            row = Adw.ActionRow(title=label, activatable=True)
+            row.add_css_class("error")
+            row.connect("activated", lambda r, cb=callback: GLib.idle_add(lambda: cb() or False))
+            group.add(row)
 
+        grp_all = Adw.PreferencesGroup()
+        prefs.add(grp_all)
+        row_all = Adw.ActionRow(title=_("DELETE EVERYTHING"), activatable=True)
+        row_all.add_css_class("error")
+        row_all.connect("activated", lambda r: GLib.idle_add(lambda: self.ask_clear_everything() or False))
+        grp_all.add(row_all)
 
-        sep = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        sep.set_margin_top(10)
-        sep.set_margin_bottom(10)
-        box.append(sep)
-
-        btn_all = Gtk.Button(label=_("DELETE EVERYTHING"))
-        btn_all.add_css_class("destructive-action")
-        btn_all.connect("clicked", lambda x: GLib.idle_add(lambda: [d.close(), self.ask_clear_everything()] and False))
-        box.append(btn_all)
-
-        btn_close = Gtk.Button(label=_("Close"))
-        btn_close.connect("clicked", lambda b: GLib.idle_add(lambda: d.close() or False))
-        box.append(btn_close)
-
-        d.set_extra_child(box)
-        d.present()
+        return self.page
 
     def _confirm_destructive(self, title, body, on_confirm):
         """Show destructive action confirmation."""
-        d = Adw.MessageDialog(heading=title, body=body)
-        d.set_transient_for(self.app_window)
+        d = Adw.AlertDialog(heading=title, body=body)
         d.add_response("cancel", _("Cancel"))
         d.add_response("delete", _("Delete"))
         d.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
 
         def _cb(dialog, resp):
-            GLib.idle_add(lambda: dialog.close() or False)
             if resp == "delete":
                 on_confirm()
 
         d.connect("response", _cb)
-        d.present()
+        d.present(self.page)
 
     def ask_clear_history(self):
         """Ask to clear history."""
@@ -126,11 +121,10 @@ class DataManagementDialog:
             self._confirm_destructive(_("No deletable address books"), _("There are no custom address books that can be deleted."), lambda: None)
             return
 
-        d = Adw.MessageDialog(
+        d = Adw.AlertDialog(
             heading=_("Delete Address Book"),
             body=_("Which address book do you want to delete permanently?\n\nThis will wipe it from the system.")
         )
-        d.set_transient_for(self.app_window)
         d.add_response("cancel", _("Cancel"))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -148,7 +142,7 @@ class DataManagementDialog:
             btn.add_css_class("destructive-action")
 
             def _cb_specific(b, uid=s['uid'], source_name=name):
-                GLib.idle_add(lambda: d.close() or False)
+                GLib.idle_add(lambda: close_dialog(d) or False)
                 self._confirm_destructive(
                     _("Delete Address Book"),
                     _("Are you sure you want to permanently delete the '{name}' address book?").format(name=source_name),
@@ -158,7 +152,7 @@ class DataManagementDialog:
             box.append(btn)
 
         d.set_extra_child(box)
-        d.present()
+        d.present(self.page)
 
     def _prompt_delete_contacts_source(self, callback, everything=False):
         """Prompt user for which address book to delete (or All)."""
@@ -173,11 +167,10 @@ class DataManagementDialog:
             self._confirm_destructive(title, body, lambda: callback(None))
             return
 
-        d = Adw.MessageDialog(
+        d = Adw.AlertDialog(
             heading=title,
             body=body + "\n\n" + _("Select which address book to clear:")
         )
-        d.set_transient_for(self.app_window)
         d.add_response("cancel", _("Cancel"))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
@@ -190,7 +183,7 @@ class DataManagementDialog:
         btn_all.add_css_class("destructive-action")
 
         def _cb_all(b):
-            GLib.idle_add(lambda: d.close() or False)
+            GLib.idle_add(lambda: close_dialog(d) or False)
             callback(None)
         btn_all.connect("clicked", lambda b: GLib.idle_add(lambda: _cb_all(b) or False))
         box.append(btn_all)
@@ -204,13 +197,13 @@ class DataManagementDialog:
             btn.add_css_class("destructive-action")
 
             def _cb_specific(b, uid=s['uid']):
-                GLib.idle_add(lambda: d.close() or False)
+                GLib.idle_add(lambda: close_dialog(d) or False)
                 callback(uid)
             btn.connect("clicked", lambda b, cb=_cb_specific: GLib.idle_add(lambda: cb(b) or False))
             box.append(btn)
 
         d.set_extra_child(box)
-        d.present()
+        d.present(self.page)
 
     def _do_clear_history(self):
         """Clear history action."""

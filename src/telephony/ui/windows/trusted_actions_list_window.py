@@ -23,8 +23,8 @@ from ...backend.utils.phone_utils import normalize_number
 from ..widgets.common_widget import populate_contact_search_results, translate_phone_label
 
 
-class TrustedActionsListWindow(Adw.Window):
-    """Window to manage the list of trusted actions/contacts."""
+class TrustedActionsListWindow(Adw.NavigationPage):
+    """Settings subpage managing the list of trusted actions/contacts."""
 
     def __init__(self, parent, db, eds, mode="trusted_sms_location_request"):
         self.grp_list = None
@@ -99,8 +99,7 @@ class TrustedActionsListWindow(Adw.Window):
             elif mode == "trusted_sms_lock_device":
                 title = _("Set \"SMS Switch Lock Device\"")
 
-            super().__init__(title=title, transient_for=parent, modal=True)
-            self.set_default_size(400, 700)
+            super().__init__(title=title)
 
             self.local_contacts = []
             try:
@@ -112,19 +111,11 @@ class TrustedActionsListWindow(Adw.Window):
                 logger.error(
                     f"[TrustedActions] Failed to load initial contacts for mode {self.mode}: {e}")
 
-            self.overlay = Adw.ToastOverlay()
-            self.set_content(self.overlay)
-
-            main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            self.overlay.set_child(main_box)
+            view = Adw.ToolbarView()
+            self.set_child(view)
 
             header = Adw.HeaderBar(
                 show_end_title_buttons=False, show_start_title_buttons=False)
-
-            btn_cancel = Gtk.Button(label=_("Cancel"))
-            btn_cancel.connect("clicked", lambda b: GLib.idle_add(
-                lambda: self._on_cancel_clicked(b) or False))
-            header.pack_start(btn_cancel)
 
             btn_save = Gtk.Button(label=_("Save"))
             btn_save.add_css_class("suggested-action")
@@ -132,7 +123,13 @@ class TrustedActionsListWindow(Adw.Window):
                 lambda: self._on_save_clicked(b) or False))
             header.pack_end(btn_save)
 
-            main_box.append(header)
+            view.add_top_bar(header)
+
+            self.overlay = Adw.ToastOverlay()
+            view.set_content(self.overlay)
+
+            main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            self.overlay.set_child(main_box)
 
             self.enable_grp = Adw.PreferencesGroup()
             self.enable_grp.set_margin_start(12)
@@ -323,9 +320,11 @@ class TrustedActionsListWindow(Adw.Window):
                 obj.disconnect(sig_id)
         self.db_signals.clear()
 
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+    def close(self):
+        """Pop this page once; repeat taps during the transition are ignored."""
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav and nav.get_visible_page() is self:
+            nav.pop()
 
     def _on_save_clicked(self, btn):
         """Handle save button click."""
@@ -519,43 +518,32 @@ class TrustedActionsListWindow(Adw.Window):
         action_name = self.mode.replace("trusted_sms_", "").replace("_", " ").title()
         uri = self.gsettings_mgr.get_totp_uri(seed, action_name)
 
-        dialog = Adw.Window(title=_("TOTP Setup"), transient_for=self, modal=True)
-        dialog.set_default_size(350, 450)
+        page = Adw.NavigationPage(title=_("TOTP Setup"))
+        view = Adw.ToolbarView()
+        page.set_child(view)
 
-        overlay = Adw.ToastOverlay()
-        dialog.set_content(overlay)
-
-        main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        overlay.set_child(main_vbox)
-
-        header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(False)
-        header.set_show_start_title_buttons(False)
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: dialog.close() or False))
-        header.pack_start(btn_cancel)
+        header = Adw.HeaderBar(show_end_title_buttons=False)
 
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
-        def _on_save(b):
-            seed_setter = self.set_seed_func
-            if seed_setter:
-                seed_setter(seed)
-            dialog.close()
+
         def _on_save_wrapper(b):
-            _on_save(b)
+            if self.set_seed_func:
+                self.set_seed_func(seed)
             self._update_totp_button_label()
+            self._pop_totp_page()
             return False
 
         btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: _on_save_wrapper(b)))
         header.pack_end(btn_save)
+        view.add_top_bar(header)
 
-        main_vbox.append(header)
+        overlay = Adw.ToastOverlay()
+        view.set_content(overlay)
 
         scroll = Gtk.ScrolledWindow()
         scroll.set_vexpand(True)
-        main_vbox.append(scroll)
+        overlay.set_child(scroll)
 
         content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         content_box.set_margin_start(24)
@@ -598,7 +586,7 @@ class TrustedActionsListWindow(Adw.Window):
         btn_copy.add_css_class("suggested-action")
 
         def _copy_seed(b):
-            clipboard = dialog.get_display().get_clipboard()
+            clipboard = self.get_display().get_clipboard()
             clipboard.set(seed)
             overlay.add_toast(Adw.Toast.new(_("Copied to clipboard")))
 
@@ -607,23 +595,30 @@ class TrustedActionsListWindow(Adw.Window):
 
         btn_regen = Gtk.Button(label=_("Regenerate"))
         btn_regen.add_css_class("destructive-action")
-        btn_regen.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_regen(dialog) or False))
+        btn_regen.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_regen() or False))
         content_box.append(btn_regen)
 
         secret = self.gsettings_mgr.secret_manager.get_secret(self.mode)
         if secret:
             btn_remove = Gtk.Button(label=_("Remove current TOTP"))
             btn_remove.add_css_class("destructive-action")
-            btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_remove(dialog) or False))
+            btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_remove() or False))
             content_box.append(btn_remove)
 
-        dialog.present()
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav:
+            nav.push(page)
 
-    def _confirm_remove(self, parent_dialog):
-        confirm = Adw.MessageDialog(
+    def _pop_totp_page(self):
+        """Pop the TOTP page off the settings navigation."""
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav and nav.get_visible_page() is self:
+            nav.pop()
+
+    def _confirm_remove(self):
+        confirm = Adw.AlertDialog(
             heading=_("Remove TOTP Key?"),
             body=_("Are you sure you want to remove the TOTP key? This action will disable TOTP verification for this feature."),
-            transient_for=parent_dialog,
         )
         confirm.add_response("cancel", _("Cancel"))
         confirm.add_response("remove", _("Yes"))
@@ -635,16 +630,15 @@ class TrustedActionsListWindow(Adw.Window):
                 if remover:
                     remover()
                 self._update_totp_button_label()
-                parent_dialog.close()
+                self._pop_totp_page()
 
         confirm.connect("response", on_response)
-        confirm.present()
+        confirm.present(self)
 
-    def _confirm_regen(self, parent_dialog):
-        confirm = Adw.MessageDialog(
+    def _confirm_regen(self):
+        confirm = Adw.AlertDialog(
             heading=_("Regenerate Code?"),
             body=_("This will invalidate the current code in your contact's authenticator app. Are you sure?"),
-            transient_for=parent_dialog,
         )
         confirm.add_response("cancel", _("Cancel"))
         confirm.add_response("regenerate", _("Regenerate"))
@@ -653,8 +647,8 @@ class TrustedActionsListWindow(Adw.Window):
         def on_response(dialog, response):
             if response == "regenerate":
                 new_seed = self.gsettings_mgr.generate_totp_seed()
-                parent_dialog.close()
+                self._pop_totp_page()
                 GLib.idle_add(lambda: self._open_totp_dialog(new_seed) or False)
 
         confirm.connect("response", on_response)
-        confirm.present()
+        confirm.present(self)

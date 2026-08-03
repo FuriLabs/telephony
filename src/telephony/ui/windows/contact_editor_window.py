@@ -651,8 +651,6 @@ class ContactEditor(Adw.Dialog):
         if contact and 'phones' in contact:
             numbers = [p[0] for p in contact['phones']]
 
-        self.main_window.notify_loading(_("Deleting contact..."))
-
         if self.main_window.contacts_view:
             self.main_window.contacts_view.search.set_text("")
 
@@ -853,7 +851,7 @@ class ContactEditor(Adw.Dialog):
                             self.on_save(self.btn_save, force=True)
 
                     win = DuplicateResolutionWindow(self.get_root(), conflicts, self.eds, on_wizard_done)
-                    win.present()
+                    win.present(self)
                     return
 
             self._proceed_with_save(phones_to_save, selected_sources)
@@ -885,7 +883,6 @@ class ContactEditor(Adw.Dialog):
     def _proceed_with_save(self, phones_to_save, selected_sources):
         """Kick off the actual contact write after all pre-checks passed."""
         try:
-            self.main_window.notify_loading(_("Saving contact..."))
             self.btn_save.set_sensitive(False)
 
             if self.main_window.contacts_view:

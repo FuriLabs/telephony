@@ -861,7 +861,7 @@ class ChatPage(Gtk.Box):
             allow_custom_number=True,
             return_contact_uid=False
         )
-        picker.present()
+        picker.present(self.app_window)
 
     def on_delete_message(self, item_id):
         """Handle individual message deletion."""
@@ -1060,11 +1060,11 @@ class ChatPage(Gtk.Box):
         mime, _encoding = mimetypes.guess_type(path)
 
         if mime and mime.startswith("image/"):
-            self.app_window.notify_success(_("Compressing image..."))
+            self.app_window.notify_loading(_("Compressing image..."))
             run_in_background(self._compress_image, path, remaining,
                               on_complete=lambda result: self._on_compressed(result, _("Image is too large to send")))
         elif mime and mime.startswith("video/"):
-            self.app_window.notify_success(_("Compressing video..."))
+            self.app_window.notify_loading(_("Compressing video..."))
             run_in_background(self._compress_video_to_fit, path, remaining,
                               on_complete=lambda result: self._on_compressed(result, _("Video compression failed")))
         else:
@@ -1072,6 +1072,7 @@ class ChatPage(Gtk.Box):
 
     def _on_compressed(self, result_path, error_message):
         """Handle a finished background compression."""
+        self.app_window.hide_loading()
         if result_path:
             self._append_attachment(result_path)
         else:
