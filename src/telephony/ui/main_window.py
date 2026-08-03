@@ -95,6 +95,13 @@ class MainWindow(Adw.Window):
         self.header.pack_end(self.actions_btn)
         main_vbox.append(self.header)
 
+        self.banner = Adw.Banner()
+        self.banner.set_revealed(False)
+        self.banner.connect("button-clicked", self._on_banner_action)
+        self._banner_action = None
+        self._banner_states = {}
+        main_vbox.append(self.banner)
+
         self.stack = Adw.ViewStack()
 
         self.history_view = None
@@ -152,6 +159,7 @@ class MainWindow(Adw.Window):
             self._update_sensitive_actions(True)
         else:
             self._update_sensitive_actions(False)
+            self.set_banner_state("syncing", _("Syncing contacts…"), priority=10)
 
         self.check_own_number()
         self.check_emergency_setup()
@@ -357,6 +365,40 @@ class MainWindow(Adw.Window):
             child = child.get_next_sibling()
         return None
 
+    def set_banner_state(self, key, message, button_label=None, action=None, priority=0):
+        """Record a lasting state and show the most important one.
+
+        States are keyed so two conditions cannot overwrite each other,
+        and a state that ends never takes down a different one that is
+        still true.
+        """
+        self._banner_states[key] = {"message": message, "button": button_label,
+                                    "action": action, "priority": priority}
+        self._refresh_banner()
+
+    def clear_banner_state(self, key):
+        """Drop one state and fall back to whatever else still holds."""
+        if self._banner_states.pop(key, None) is not None:
+            self._refresh_banner()
+
+    def _refresh_banner(self):
+        """Show the highest priority state, or nothing at all."""
+        if not self._banner_states:
+            self._banner_action = None
+            self.banner.set_revealed(False)
+            return
+
+        state = max(self._banner_states.values(), key=lambda s: s["priority"])
+        self.banner.set_title(state["message"])
+        self.banner.set_button_label(state["button"] or "")
+        self._banner_action = state["action"]
+        self.banner.set_revealed(True)
+
+    def _on_banner_action(self, _banner):
+        """Run whatever the banner offered."""
+        if self._banner_action:
+            GLib.idle_add(lambda: self._banner_action() or False)
+
     def _show_toast(self, message, timeout=5, priority=None):
         """Show one toast on the topmost surface, replacing what it supersedes.
 
@@ -429,6 +471,7 @@ class MainWindow(Adw.Window):
     def on_contacts_loaded(self, *args):
         """Handle contacts loaded event."""
         if self.eds.is_ready:
+            self.clear_banner_state("syncing")
             if self._manual_sync_active:
                 self._manual_sync_active = False
                 self.notify_success(_("Contacts refreshed"))
@@ -585,6 +628,7 @@ class MainWindow(Adw.Window):
         if not enabled:
             self._set_resolve_visible(False)
             self.pending_conflicts = []
+            self.clear_banner_state("duplicates")
         else:
             if self.contacts_view:
                 self.contacts_view.check_duplicates()
@@ -602,13 +646,11 @@ class MainWindow(Adw.Window):
                 "Found {count} duplicate contacts.",
                 count
             ).format(count=count)
-            toast = Adw.Toast.new(message)
-            toast.set_button_label(_("Resolve Duplicates"))
-            toast.connect("button-clicked", lambda t: GLib.idle_add(
-                lambda: self.on_resolve_duplicates_clicked(None) or False))
-            self.toast_overlay.add_toast(toast)
+            self.set_banner_state("duplicates", message, _("Resolve"),
+                                  lambda: self.on_resolve_duplicates_clicked(None))
         else:
             self._set_resolve_visible(False)
+            self.clear_banner_state("duplicates")
 
     def on_resolve_duplicates_clicked(self, btn):
         """Handle resolve duplicates button click."""
@@ -625,7 +667,6 @@ class MainWindow(Adw.Window):
     def present_blocklist_editor(self, number_preset=None):
         """Open blocklist editor dialog."""
         if not self.eds.is_ready:
-            self.notify_error(_("Contacts syncing..."))
             return
 
         name_preset = ""
@@ -665,7 +706,6 @@ class MainWindow(Adw.Window):
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""
         if not self.eds.is_ready:
-            self.notify_error(_("Contacts syncing..."))
             return
 
         if contact_data is None and number_preset:
