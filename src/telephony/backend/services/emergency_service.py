@@ -16,7 +16,6 @@
 from gi.repository import Gio, GLib, GObject
 
 from telephony.backend.services.system_state_service import SystemStateService
-from telephony.constants import NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE
 from loguru import logger
 
 

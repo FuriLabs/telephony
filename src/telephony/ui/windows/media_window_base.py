@@ -21,7 +21,6 @@ gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
 from gi.repository import Adw, Gst, GLib
 
-from ...constants import VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH
 
 
 def _format_duration(seconds):
