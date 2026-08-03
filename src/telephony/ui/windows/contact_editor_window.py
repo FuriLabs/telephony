@@ -850,7 +850,7 @@ class ContactEditor(Adw.Dialog):
                         if force_save:
                             self.on_save(self.btn_save, force=True)
 
-                    win = DuplicateResolutionWindow(self.get_root(), conflicts, self.eds, on_wizard_done)
+                    win = DuplicateResolutionWindow(conflicts, self.eds, on_wizard_done)
                     win.present(self)
                     return
 

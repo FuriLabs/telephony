@@ -34,7 +34,7 @@ class DuplicateResolutionWindow(Adw.Dialog):
     Shows conflicts one by one or allows merging all.
     """
 
-    def __init__(self, parent_window, conflicts, eds_manager, on_done_callback):
+    def __init__(self, conflicts, eds_manager, on_done_callback):
         super().__init__(title=_("Duplicate Contact"))
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(600)
