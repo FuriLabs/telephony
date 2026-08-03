@@ -1032,14 +1032,20 @@ class OfonoManager(GObject.Object):
         return True
 
     def send_ussd(self, command):
-        """Send a USSD command."""
+        """Send a USSD command; blocking, call from a worker.
+
+        Returns the network response text, or None when the request
+        could not be made, so failures never masquerade as responses.
+        """
         if not self.ussd_proxy:
-            return _("Not supported")
+            logger.warning("[OfonoManager] USSD unavailable, no proxy")
+            return None
         try:
             res = self.ussd_proxy.call_sync("Initiate", GLib.Variant("(s)", (command,)), Gio.DBusCallFlags.NONE, -1, None)
             return res.unpack()[0]
         except Exception as e:
-            return _("Error: {e}").format(e=e)
+            logger.error(f"[OfonoManager] USSD request failed: {e}")
+            return None
 
     def on_message_signal(self, proxy, sender, signal, params):
         """Handle incoming message signals."""

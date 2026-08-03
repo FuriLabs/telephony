@@ -26,11 +26,14 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
 from ...constants import (
+    SHEET_CONTENT_WIDTH,
+    CAPTURE_SHEET_HEIGHT,
     PLAYBACK_PROGRESS_INTERVAL_MS,
     EOS_TIMEOUT_MS,
     PROGRESS_BAR_WIDTH,
 )
 from .media_window_base import MediaCaptureWindow, _format_duration
+from ..widgets.common_widget import close_dialog
 
 MAX_RECORD_SECONDS = 120
 RECORD_TIMER_INTERVAL_MS = 1000
@@ -54,8 +57,8 @@ class SoundRecorder(MediaCaptureWindow):
         self.on_attach_callback = on_attach_callback
         self.max_bytes = max_bytes
         self._attached = False
-        self.set_content_width(360)
-        self.set_content_height(450)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
+        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Voice Message"))
 
         self.output_path = None
@@ -384,11 +387,11 @@ class SoundRecorder(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

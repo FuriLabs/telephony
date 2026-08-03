@@ -21,7 +21,7 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from loguru import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
-from ..widgets.common_widget import present_choice_sheet, add_choice_row
+from ..widgets.common_widget import present_choice_sheet, add_choice_row, close_dialog
 from .import_wizard_window import ImportWizardWindow
 from ...backend.utils.importer_local_utils import import_local_chatty, import_local_calls
 from ...backend.utils.importer_android_utils import import_android_sms, import_android_calls
@@ -163,7 +163,7 @@ class ImportExportDialog:
             run_in_background(task)
 
         win = ImportWizardWindow(self.app_window, "chatty", on_wizard_done)
-        win.present()
+        win.present(self.app_window)
 
     def ask_import_local_calls(self):
         def on_wizard_done(db_path, mms_path):
@@ -182,7 +182,7 @@ class ImportExportDialog:
             run_in_background(task)
 
         win = ImportWizardWindow(self.app_window, "calls", on_wizard_done)
-        win.present()
+        win.present(self.app_window)
 
     def ask_import_android(self):
         """Show the Android import choices."""
@@ -425,7 +425,7 @@ class ImportExportDialog:
 
             btn = Gtk.Button(label=name)
             btn.add_css_class("suggested-action")
-            btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: [d.close(), self._start_import(path, uid)] and False))
+            btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: [close_dialog(d), self._start_import(path, uid)] and False))
             box.append(btn)
 
         d.set_extra_child(box)
@@ -480,7 +480,7 @@ class ImportExportDialog:
         btn_all = Gtk.Button(label=_("Export All Address Books"))
 
         def _cb_all(b):
-            d.close()
+            close_dialog(d)
             self._show_export_file_chooser(None)
         btn_all.connect("clicked", lambda b: GLib.idle_add(lambda: _cb_all(b) or False))
         box.append(btn_all)
@@ -493,7 +493,7 @@ class ImportExportDialog:
             btn = Gtk.Button(label=name)
 
             def _cb_specific(b, uid=s['uid']):
-                d.close()
+                close_dialog(d)
                 self._show_export_file_chooser(uid)
             btn.connect("clicked", lambda b, uid=s['uid']: GLib.idle_add(lambda: _cb_specific(b, uid) or False))
             box.append(btn)

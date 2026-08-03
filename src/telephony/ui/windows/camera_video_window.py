@@ -26,12 +26,15 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from loguru import logger
 
 from ...constants import (
+    SHEET_CONTENT_WIDTH,
+    CAPTURE_SHEET_HEIGHT,
     VIEWFINDER_START_DELAY_MS,
     PLAYBACK_PROGRESS_INTERVAL_MS,
     EOS_TIMEOUT_MS,
     PROGRESS_BAR_WIDTH,
 )
 from .media_window_base import MediaCaptureWindow
+from ..widgets.common_widget import close_dialog
 
 RECORD_START_DELAY_MS = 500
 RECORD_RETRY_DELAY_MS = 1000
@@ -56,8 +59,8 @@ class CameraVideo(MediaCaptureWindow):
 
         self.on_attach_callback = on_attach_callback
         self._attached = False
-        self.set_content_width(360)
-        self.set_content_height(600)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
+        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Record Video"))
 
         self.output_path = None
@@ -519,11 +522,11 @@ class CameraVideo(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+        GLib.idle_add(lambda: close_dialog(self) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

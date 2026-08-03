@@ -109,9 +109,9 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         self._refresh_list()
 
     def close(self):
-        """Pop this page off the settings navigation."""
+        """Pop this page once; repeat taps during the transition are ignored."""
         nav = self.get_ancestor(Adw.NavigationView)
-        if nav:
+        if nav and nav.get_visible_page() is self:
             nav.pop()
 
     def _on_save_clicked(self, btn):

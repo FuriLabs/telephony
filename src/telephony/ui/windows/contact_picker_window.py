@@ -17,8 +17,9 @@ from gi.repository import Gtk, Adw, Gio, GLib, Pango
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
-from ..widgets.common_widget import DataLoader
+from ..widgets.common_widget import DataLoader, close_dialog
 from ...backend.utils.model_utils import ContactItem
+from ...constants import SHEET_CONTENT_WIDTH
 
 
 class ContactPicker(Adw.Dialog):
@@ -35,7 +36,7 @@ class ContactPicker(Adw.Dialog):
         self.on_picked = on_picked
         self.allow_custom_number = allow_custom_number
         self.return_contact_uid = return_contact_uid
-        self.set_content_width(360)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(500)
         self.load_token = 0
         self.search_timer = None
@@ -46,7 +47,7 @@ class ContactPicker(Adw.Dialog):
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_dialog(self) or False))
         header.pack_start(btn_cancel)
 
         self.btn_enter = Gtk.Button(label=display_action)
@@ -92,7 +93,7 @@ class ContactPicker(Adw.Dialog):
             text = entry.get_text().strip()
             if text:
                 self.on_picked(normalize_number(text))
-                GLib.idle_add(lambda: self.close() or False)
+                GLib.idle_add(lambda: close_dialog(self) or False)
 
     def on_action_button(self, btn):
         """Handle the main action button click."""
@@ -104,7 +105,7 @@ class ContactPicker(Adw.Dialog):
         text = self.search.get_text().strip()
         if self.allow_custom_number and text:
             self.on_picked(normalize_number(text))
-            GLib.idle_add(lambda: self.close() or False)
+            GLib.idle_add(lambda: close_dialog(self) or False)
 
     def on_search_changed(self, entry):
         """Handle search text change."""
@@ -222,7 +223,7 @@ class ContactPicker(Adw.Dialog):
         """Process chosen item."""
         if self.return_contact_uid:
             self.on_picked((item.uid, item.full_name))
-            GLib.idle_add(lambda: self.close() or False)
+            GLib.idle_add(lambda: close_dialog(self) or False)
         else:
             phones = item.phone if isinstance(item.phone, list) else []
             if not phones and item.phone:
@@ -230,4 +231,4 @@ class ContactPicker(Adw.Dialog):
 
             if phones:
                 self.on_picked(normalize_number(phones[0][0]))
-                GLib.idle_add(lambda: self.close() or False)
+                GLib.idle_add(lambda: close_dialog(self) or False)

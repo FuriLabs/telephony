@@ -15,9 +15,11 @@
 
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
+from ..widgets.common_widget import close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 
 
-class ImportWizardWindow(Adw.Window):
+class ImportWizardWindow(Adw.Dialog):
     """
     Wizard window to select source for importing Calls/Chatty databases.
     Matches DuplicateResolutionWindow styling.
@@ -29,17 +31,18 @@ class ImportWizardWindow(Adw.Window):
         done_callback(db_path, mms_dir) -> db_path and mms_dir can be None if system default is chosen
         """
         title = _("Import Messages") if import_type == 'chatty' else _("Import Call History")
-        super().__init__(title=title, modal=True, transient_for=parent_window)
-        self.set_default_size(400, 500)
+        super().__init__(title=title)
+        self.set_content_width(SHEET_CONTENT_WIDTH)
         self.import_type = import_type
         self.done_callback = done_callback
 
         self.custom_db_path = None
         self.custom_mms_path = None
         self._is_finished = False
+        self.connect("closed", self._on_closed)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_content(self.main_box)
+        self.set_child(self.main_box)
 
         self.header = Adw.HeaderBar()
         self.header.set_show_end_title_buttons(False)
@@ -127,20 +130,20 @@ class ImportWizardWindow(Adw.Window):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
         self.done_callback(None, None)
-        self.close()
+        close_dialog(self)
 
-    def do_close_request(self):
+    def _on_closed(self, _dialog):
+        """Report a cancelled wizard exactly once, on any close path."""
         if not self._is_finished:
             self.done_callback(False, False)
-        return False
 
     def on_cancel(self):
-        self.close()
+        close_dialog(self)
 
     def _step_custom_db(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select Database File"),
-            transient_for=self,
+            transient_for=self.get_root(),
             action=Gtk.FileChooserAction.OPEN
         )
         dialog.connect("response", self._on_db_file_selected)
@@ -193,7 +196,7 @@ class ImportWizardWindow(Adw.Window):
     def _step_custom_mms(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select MMS Folder"),
-            transient_for=self,
+            transient_for=self.get_root(),
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
         dialog.connect("response", self._on_mms_folder_selected)
@@ -216,4 +219,4 @@ class ImportWizardWindow(Adw.Window):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
         self.done_callback(self.custom_db_path, self.custom_mms_path)
-        self.close()
+        close_dialog(self)
