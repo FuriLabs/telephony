@@ -22,7 +22,8 @@ from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
 
 from ...backend.utils.thread_utils import run_in_background
-from ..widgets.common_widget import present_info_sheet
+from ...constants import MMS_SIZE_LIMIT_DEFAULT_KB
+from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options
 
 
 class AdvancedSettingsWindow(Adw.NavigationPage):
@@ -92,6 +93,26 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                                       lambda: self._on_modem_recovery(None),
                                       destructive=True))
 
+        grp_messaging = Adw.PreferencesGroup(title=_("Messaging"))
+        self.page.add(grp_messaging)
+
+        self.mms_limit_values = ["100", "300", "600", "900", "1024", "2048", "3072", "4096", "5120"]
+        mms_limit_labels = ["100 kB", "300 kB", "600 kB", "900 kB", "1 MB", "2 MB", "3 MB", "4 MB", "5 MB"]
+        self.row_mms_limit = build_selector_row(
+            _("MMS Size Limit"), self._on_mms_limit_selected)
+        saved_limit = self.parent_win.main_window.gsettings_mgr.get_setting("mms_size_limit")
+        if saved_limit not in self.mms_limit_values:
+            saved_limit = MMS_SIZE_LIMIT_DEFAULT_KB
+        set_selector_options(self.row_mms_limit, mms_limit_labels,
+                             self.mms_limit_values.index(saved_limit))
+        btn_info_mms = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        btn_info_mms.add_css_class("flat")
+        btn_info_mms.add_css_class("circular")
+        btn_info_mms.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self._show_mms_size_info(b) or False))
+        grp_messaging.set_header_suffix(btn_info_mms)
+        grp_messaging.add(self.row_mms_limit)
+
         grp_data = Adw.PreferencesGroup()
         self.page.add(grp_data)
 
@@ -130,6 +151,23 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         run_in_background(lambda: subprocess.run(["pkexec", "true"]).returncode,
                           on_complete=done, on_error=failed)
+
+    def _show_mms_size_info(self, btn):
+        """Show information about the MMS size limit."""
+        body_text = _("Carriers limit how large a multimedia message can be. "
+                      "Images and videos you attach are automatically compressed "
+                      "to fit under this limit before sending.\n\n"
+                      "600 kB is a safe default for most carriers. Pick a smaller "
+                      "value if your messages fail to send, or a larger one if you "
+                      "know your carrier allows it.")
+
+        present_info_sheet(self, _("MMS Size Limit"), body_text)
+
+    def _on_mms_limit_selected(self, idx):
+        """Persist the selected MMS size limit."""
+        if idx < 0 or idx >= len(self.mms_limit_values):
+            return
+        self.parent_win.main_window.gsettings_mgr.set_setting("mms_size_limit", self.mms_limit_values[idx])
 
     def _on_auto_recovery_toggled(self, row, _param):
         """Persist the automatic recovery preference immediately."""
