@@ -657,7 +657,8 @@ class OfonoManager(GObject.Object):
             "direction": "incoming" if state == "incoming" else "outgoing",
             "answered": (state == "active"),
             "proxy": call_proxy,
-            "silenced": is_silenced
+            "silenced": is_silenced,
+            "multiparty": bool(props.get("Multiparty", False))
         }
 
         if call_proxy:
@@ -685,6 +686,10 @@ class OfonoManager(GObject.Object):
             elif name == "LineIdentification":
                 if path in self.active_calls:
                     self.active_calls[path]["number"] = normalize_number(value)
+                    self.emit('call-changed', path, self.active_calls[path]["state"])
+            elif name == "Multiparty":
+                if path in self.active_calls:
+                    self.active_calls[path]["multiparty"] = bool(value)
                     self.emit('call-changed', path, self.active_calls[path]["state"])
 
     def _remove_call(self, path):
@@ -926,6 +931,67 @@ class OfonoManager(GObject.Object):
             self.voice_proxy.call_sync("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
             logger.error(f"SwapCalls failed: {e}")
+
+    def create_multiparty(self):
+        """Join the active and held calls into a conference; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
+        if not self.voice_proxy:
+            return (False, "no proxy")
+        try:
+            self.voice_proxy.call_sync("CreateMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] CreateMultiparty failed: {e}")
+            return (False, str(e))
+
+    def hangup_multiparty(self):
+        """Release every call in the conference; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
+        if not self.voice_proxy:
+            return (False, "no proxy")
+        try:
+            self.voice_proxy.call_sync("HangupMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] HangupMultiparty failed: {e}")
+            return (False, str(e))
+
+    def private_chat(self, path):
+        """Split one conference participant into a private call; blocking, call from a worker.
+
+        The network may refuse this on IMS conferences, so failures are
+        expected and reported, never hidden. Returns (True, None) on
+        success or (False, error text).
+        """
+        if not self.voice_proxy:
+            return (False, "no proxy")
+        try:
+            self.voice_proxy.call_sync("PrivateChat", GLib.Variant("(o)", (path,)),
+                                       Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] PrivateChat failed for {path}: {e}")
+            return (False, str(e))
+
+    def transfer_call(self):
+        """Connect the active and held calls to each other and leave; blocking, call from a worker.
+
+        Requires the Explicit Call Transfer service from the carrier, so
+        rejection is a normal outcome. Returns (True, None) on success
+        or (False, error text).
+        """
+        if not self.voice_proxy:
+            return (False, "no proxy")
+        try:
+            self.voice_proxy.call_sync("Transfer", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Transfer failed: {e}")
+            return (False, str(e))
 
     def _force_remove(self, path):
         """Forcefully remove a call from the active list."""
