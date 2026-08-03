@@ -24,18 +24,17 @@ from ...backend.utils.thread_utils import run_in_background
 from ..widgets.common_widget import populate_contact_search_results, translate_phone_label
 
 
-class CustomToneListWindow(Adw.Window):
-    """Window to manage the list of contacts with custom tones (SMS or Ringtone)."""
+class CustomToneListWindow(Adw.NavigationPage):
+    """Settings subpage managing the contacts with custom tones (SMS or Ringtone)."""
 
     def __init__(self, parent, db, eds, mode="sms"):
         self.grp_list = None
         title = _("Individual SMS Notifications") if mode == "sms" else _("Individual Ringtones")
-        super().__init__(title=title, transient_for=parent, modal=True)
+        super().__init__(title=title)
         self.gsettings_mgr = db
         self.eds = eds
         self.mode = mode
-        self.app_window = getattr(parent, 'main_window', None)
-        self.set_default_size(400, 700)
+        self.app_window = parent.main_window
 
         self.local_tones = []
         try:
@@ -46,24 +45,23 @@ class CustomToneListWindow(Adw.Window):
         except Exception as e:
             logger.error(f"[CustomTone] Failed to load initial data: {e}")
 
-        self.overlay = Adw.ToastOverlay()
-        self.set_content(self.overlay)
-
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.overlay.set_child(main_box)
+        view = Adw.ToolbarView()
+        self.set_child(view)
 
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_cancel_clicked(b) or False))
-        header.pack_start(btn_cancel)
 
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
         btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_save_clicked(b) or False))
         header.pack_end(btn_save)
 
-        main_box.append(header)
+        view.add_top_bar(header)
+
+        self.overlay = Adw.ToastOverlay()
+        view.set_content(self.overlay)
+
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.overlay.set_child(main_box)
 
         search_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         search_box.set_margin_start(12)
@@ -150,9 +148,11 @@ class CustomToneListWindow(Adw.Window):
                 obj.disconnect(sig_id)
         self.db_signals.clear()
 
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+    def close(self):
+        """Pop this page off the settings navigation."""
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav:
+            nav.pop()
 
     def _on_save_clicked(self, btn):
         """Handle save button click."""
@@ -279,7 +279,7 @@ class CustomToneListWindow(Adw.Window):
         """Open file picker to select custom tone."""
         dialog = Gtk.FileChooserNative(
             title=_("Select Tone for {name}").format(name=contact_data.get('name')),
-            transient_for=self,
+            transient_for=self.get_root(),
             action=Gtk.FileChooserAction.OPEN,
             accept_label=_("Select"),
             cancel_label=_("Cancel")

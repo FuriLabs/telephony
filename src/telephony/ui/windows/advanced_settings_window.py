@@ -20,93 +20,32 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
-from loguru import logger
 
 from ...backend.utils.thread_utils import run_in_background
 
 
-class AdvancedSettingsWindow(Adw.Window):
-    """Advanced settings window."""
+class AdvancedSettingsWindow(Adw.NavigationPage):
+    """Advanced settings subpage of the settings navigation."""
 
     def __init__(self, parent):
-        """Initialize the advanced settings window."""
+        """Initialize the advanced settings page."""
         super().__init__(title=_("Advanced Settings"))
-        self.set_transient_for(parent)
         self.parent_win = parent
-        self.set_modal(True)
-        self.set_default_size(450, 800)
+
+        view = Adw.ToolbarView()
+        self.set_child(view)
+        view.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
 
         self.overlay = Adw.ToastOverlay()
-        self.set_content(self.overlay)
-
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.overlay.set_child(main_box)
-
-        header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(False)
-        header.set_show_start_title_buttons(False)
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
-        header.pack_start(btn_cancel)
-
-        btn_save = Gtk.Button(label=_("Save"))
-        btn_save.add_css_class("suggested-action")
-        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save_clicked(b) or False))
-        header.pack_end(btn_save)
-
-        main_box.append(header)
-
-        self.stack = Gtk.Stack()
-        self.stack.set_vexpand(True)
-        self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-        main_box.append(self.stack)
-
-        loading_page = Adw.StatusPage()
-        loading_page.set_title(_("Loading..."))
-        loading_page.set_icon_name("network-cellular-signal-good-symbolic")
-
-        spinner = Gtk.Spinner()
-        spinner.set_size_request(48, 48)
-        spinner.start()
-        spinner.set_halign(Gtk.Align.CENTER)
-
-        box_spin = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        box_spin.set_valign(Gtk.Align.CENTER)
-        box_spin.append(spinner)
-        loading_page.set_child(box_spin)
-
-        self.stack.add_named(loading_page, "loading")
+        view.set_content(self.overlay)
 
         self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scroll = Gtk.ScrolledWindow()
         scroll.set_vexpand(True)
         scroll.set_child(self.content_box)
-        self.stack.add_named(scroll, "content")
+        self.overlay.set_child(scroll)
 
-        self.stack.set_visible_child_name("loading")
-        self._pending_timeouts = set()
-        self.connect("close-request", self._on_close_request)
-        self._add_timeout(100, self._load_data)
-
-    def _add_timeout(self, interval_ms, callback):
-        """Schedule a tracked one-shot timeout cancelled on close."""
-        holder = {}
-
-        def fire():
-            self._pending_timeouts.discard(holder["id"])
-            callback()
-            return False
-
-        holder["id"] = GLib.timeout_add(interval_ms, fire)
-        self._pending_timeouts.add(holder["id"])
-
-    def _on_close_request(self, win):
-        """Cancel pending timeouts when the window closes."""
-        for source_id in self._pending_timeouts:
-            GLib.source_remove(source_id)
-        self._pending_timeouts.clear()
-        return False
+        self._build_ui()
 
     def _show_toast(self, message, is_error=False):
         """Display a toast message."""
@@ -114,15 +53,6 @@ class AdvancedSettingsWindow(Adw.Window):
         if is_error:
             toast.set_priority(Adw.ToastPriority.HIGH)
         self.overlay.add_toast(toast)
-
-    def _load_data(self):
-        """Build the settings UI after the loading page is shown."""
-        try:
-            self._build_ui()
-            self.stack.set_visible_child_name("content")
-        except Exception as e:
-            logger.error(f"[AdvancedSettings] Load error: {e}")
-            self._show_toast(_("Error loading settings: {e}").format(e=e), True)
 
     def _build_ui(self):
         """Construct the settings UI."""
@@ -191,19 +121,14 @@ class AdvancedSettingsWindow(Adw.Window):
             if returncode != 0:
                 self._show_toast(_("Authentication cancelled"), True)
                 return
-            win = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
-            win.present()
+            page = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
+            self.get_ancestor(Adw.NavigationView).push(page)
 
         def failed(error):
             self._show_toast(_("Auth error: {e}").format(e=error), True)
 
         run_in_background(lambda: subprocess.run(["pkexec", "true"]).returncode,
                           on_complete=done, on_error=failed)
-
-    def on_save_clicked(self, btn):
-        """Apply all pending changes."""
-        self.overlay.add_toast(Adw.Toast.new(_("Advanced Settings Applied")))
-        self._add_timeout(1500, self.close)
 
     def _on_auto_recovery_toggled(self, row, _param):
         """Persist the automatic recovery preference immediately."""
@@ -216,11 +141,10 @@ class AdvancedSettingsWindow(Adw.Window):
                  "fails. The phone is never rebooted automatically. When this "
                  "is off, the Modem Recovery screen appears instead so you can "
                  "run the restart yourself.")
-        dialog = Adw.MessageDialog(transient_for=self, heading=_("Automatic Modem Recovery"), body=body)
+        dialog = Adw.AlertDialog(heading=_("Automatic Modem Recovery"), body=body)
         dialog.add_response("close", _("Close"))
         dialog.set_response_appearance("close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.connect("response", lambda d, r: GLib.idle_add(lambda: d.close() or False))
-        dialog.present()
+        dialog.present(self)
 
     def _on_modem_recovery(self, btn):
         """Show the modem recovery screen, unless the modem is fine."""

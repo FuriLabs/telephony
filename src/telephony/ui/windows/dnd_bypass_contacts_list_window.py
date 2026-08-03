@@ -22,16 +22,15 @@ from ...backend.utils.phone_utils import normalize_number
 from ..widgets.common_widget import populate_contact_search_results, translate_phone_label
 
 
-class DndBypassContactsListWindow(Adw.Window):
-    """Window to manage the list of priority contacts (Notification Override)."""
+class DndBypassContactsListWindow(Adw.NavigationPage):
+    """Settings subpage managing the priority contacts (Notification Override)."""
 
     def __init__(self, parent, db, eds):
         self.grp_list = None
         self.search_token = 0
-        super().__init__(title=_("Notification Overrides"), transient_for=parent, modal=True)
+        super().__init__(title=_("Notification Overrides"))
         self.gsettings_mgr = db
         self.eds = eds
-        self.set_default_size(400, 700)
 
         self.local_contacts = []
         try:
@@ -42,24 +41,23 @@ class DndBypassContactsListWindow(Adw.Window):
         except Exception as e:
             logger.error(f"[PriorityContacts] Failed to load initial contacts: {e}")
 
-        self.overlay = Adw.ToastOverlay()
-        self.set_content(self.overlay)
-
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.overlay.set_child(main_box)
+        view = Adw.ToolbarView()
+        self.set_child(view)
 
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_cancel_clicked(b) or False))
-        header.pack_start(btn_cancel)
 
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
         btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_save_clicked(b) or False))
         header.pack_end(btn_save)
 
-        main_box.append(header)
+        view.add_top_bar(header)
+
+        self.overlay = Adw.ToastOverlay()
+        view.set_content(self.overlay)
+
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.overlay.set_child(main_box)
 
         search_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         search_box.set_margin_start(12)
@@ -110,9 +108,11 @@ class DndBypassContactsListWindow(Adw.Window):
 
         self._refresh_list()
 
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
-        GLib.idle_add(lambda: self.close() or False)
+    def close(self):
+        """Pop this page off the settings navigation."""
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav:
+            nav.pop()
 
     def _on_save_clicked(self, btn):
         """Handle save button click."""
