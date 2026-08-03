@@ -30,11 +30,8 @@ from .custom_tone_list_window import CustomToneListWindow
 
 from .advanced_settings_window import AdvancedSettingsWindow
 from .favorites_list_window import FavoritesListWindow
-from .blocklist_window import BlocklistView
 from .import_export_window import ImportExportDialog
-from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options
-
-EMERGENCY_COMMIT_DELAY_MS = 500
+from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options, EntryListGroup
 
 
 class SettingsWindow(Adw.Dialog):
@@ -54,12 +51,10 @@ class SettingsWindow(Adw.Dialog):
 
         self.main_window = main_window
         self.eds = eds_manager
-        self._emergency_commit_timer = None
 
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(750)
 
-        self.emergency_rows = []
         self.reject_rows = []
 
         self.temp_ringback_file = self.main_window.gsettings_mgr.get_setting(
@@ -115,11 +110,44 @@ class SettingsWindow(Adw.Dialog):
 
     def _build_blocklist_page(self, page):
         """Build the blocklist category page."""
-        group = Adw.PreferencesGroup()
-        page.add(group)
-        row = Adw.PreferencesRow(activatable=False)
-        row.set_child(BlocklistView(self.main_window.db, self.main_window))
-        group.add(row)
+        self.grp_blocklist = EntryListGroup(
+            title=_("Blocked Numbers"),
+            fields=[{"key": "number", "label": _("Number"), "required": True,
+                     "purpose": Gtk.InputPurpose.PHONE},
+                    {"key": "note", "label": _("Note (Optional)")}],
+            add_label=_("Add Number"),
+            empty_label=_("No blocked numbers"),
+            on_add=self._on_block_added,
+            on_delete=self._on_block_deleted,
+            on_error=self.main_window.notify_error)
+        self.grp_blocklist.set_description(
+            _("Calls from these numbers are rejected automatically."))
+        page.add(self.grp_blocklist)
+        self._reload_blocklist()
+
+    def _reload_blocklist(self):
+        """Load the blocked numbers into the list group."""
+        entries = [{"id": row[0], "number": row[1], "note": row[2] or ""}
+                   for row in self.main_window.db.get_blocked_numbers()]
+        self.grp_blocklist.set_entries(entries)
+
+    def _on_block_added(self, values):
+        """Validate and store a typed blocked number."""
+        number = normalize_number(values.get("number", ""))
+        if not number:
+            return (False, _("Enter a number to block"))
+        if self.main_window.db.is_blocked(number):
+            return (False, _("This number is already blocked."))
+        if not self.main_window.db.add_blocked_number(number, values.get("note", "")):
+            return (False, _("Failed to save to blocklist."))
+        logger.info(f"[Blocklist] Added number: {number}")
+        self._reload_blocklist()
+        return (True, None)
+
+    def _on_block_deleted(self, entry):
+        """Remove one blocked number."""
+        self.main_window.db.unblock_number(entry["id"], entry.get("number"))
+        self._reload_blocklist()
 
     def _push_category(self, title, build):
         """Push a settings category page built fresh from current state."""
@@ -134,7 +162,6 @@ class SettingsWindow(Adw.Dialog):
 
     def _build_calls_page(self, page):
         """Build the calls category page."""
-        self.emergency_rows = []
         grp_sim = Adw.PreferencesGroup(title=_("SIM Settings"))
         page.add(grp_sim)
 
@@ -264,25 +291,19 @@ class SettingsWindow(Adw.Dialog):
                               lambda w, p: self._set_gsettings_emergency(w.get_active()))
         grp_emerg_toggle.add(self.sw_emerg)
 
-        self.grp_emerg_list = Adw.PreferencesGroup(
-            title=_("Emergency Numbers"))
+        self.grp_emerg_list = EntryListGroup(
+            title=_("Emergency Numbers"),
+            fields=[{"key": "name", "label": _("Name"), "required": True},
+                    {"key": "number", "label": _("Number"), "required": True,
+                     "purpose": Gtk.InputPurpose.PHONE}],
+            add_label=_("Add Number"),
+            empty_label=_("No emergency numbers"),
+            on_add=self._on_emergency_added,
+            on_delete=self._on_emergency_deleted,
+            on_update=self._on_emergency_updated,
+            on_error=self.main_window.notify_error)
         page.add(self.grp_emerg_list)
-
-        row_add = Adw.ActionRow(title=_("Add Number"))
-        btn_add = Gtk.Button(icon_name="list-add-symbolic")
-        btn_add.add_css_class("flat")
-        btn_add.add_css_class("circular")
-        btn_add.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._add_emergency_placeholder(b) or False))
-        row_add.add_suffix(btn_add)
-        self.grp_emerg_list.add(row_add)
-
-        saved_list = self.main_window.gsettings_mgr.get_emergency_numbers()
-        for item in saved_list:
-            self._add_emergency_row(
-                item.get("name", ""), item.get("number", ""))
-
-        self._add_network_emergency_rows()
+        self._reload_emergency_numbers()
 
     def _build_messages_page(self, page):
         """Build the messages category page."""
@@ -627,9 +648,12 @@ class SettingsWindow(Adw.Dialog):
         """Set emergency button setting via Gio.Settings."""
         set_phosh_emergency_calls(enabled)
 
-    def _add_emergency_placeholder(self, btn):
-        """Add a placeholder row for emergency number."""
-        self._add_emergency_row("", "")
+    def _reload_emergency_numbers(self):
+        """Load the configured numbers, then the ones the network publishes."""
+        entries = [{"name": item.get("name", ""), "number": item.get("number", "")}
+                   for item in self.main_window.gsettings_mgr.get_emergency_numbers()]
+        self.grp_emerg_list.set_entries(entries)
+        self._add_network_emergency_rows()
 
     def _add_network_emergency_rows(self):
         """List the emergency numbers the network publishes, read only."""
@@ -641,43 +665,35 @@ class SettingsWindow(Adw.Dialog):
             row.set_subtitle(_("Provided by your network"))
             self.grp_emerg_list.add(row)
 
-    def _add_emergency_row(self, name, number):
-        """Add a configured emergency number row."""
-        row = Adw.PreferencesRow()
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        box.set_margin_top(12)
-        box.set_margin_bottom(12)
-        box.set_margin_start(12)
-        box.set_margin_end(12)
+    def _persist_emergency_entries(self, entries):
+        """Write the configured emergency numbers and reload the list."""
+        self.main_window.gsettings_mgr.set_emergency_numbers(entries)
+        self._reload_emergency_numbers()
 
-        entry_name = Gtk.Entry(placeholder_text=_("Name (e.g. Mom)"))
-        entry_name.set_text(name)
-        entry_name.set_hexpand(True)
-        entry_name.connect("changed", lambda e: self._schedule_emergency_persist())
+    def _on_emergency_added(self, values):
+        """Store a typed emergency contact."""
+        entries = self.main_window.gsettings_mgr.get_emergency_numbers()
+        entries.append({"name": values.get("name", ""), "number": values.get("number", "")})
+        self._persist_emergency_entries(entries)
+        return (True, None)
 
-        entry_num = Gtk.Entry(placeholder_text=_("Number"))
-        entry_num.set_text(number)
-        entry_num.set_hexpand(True)
-        entry_num.connect("changed", lambda e: self._schedule_emergency_persist())
+    def _on_emergency_updated(self, entry, values):
+        """Apply an edit to one emergency contact."""
+        entries = self.main_window.gsettings_mgr.get_emergency_numbers()
+        for item in entries:
+            if item.get("number") == entry.get("number") and item.get("name") == entry.get("name"):
+                item["name"] = values.get("name", "")
+                item["number"] = values.get("number", "")
+                break
+        self._persist_emergency_entries(entries)
+        return (True, None)
 
-        btn_del = Gtk.Button(label=_("Delete"))
-        btn_del.add_css_class("destructive-action")
-        btn_del.set_hexpand(True)
-        btn_del.connect("clicked", lambda b: self._remove_emergency_row(row))
-
-        box.append(entry_name)
-        box.append(entry_num)
-        box.append(btn_del)
-
-        row.set_child(box)
-        self.grp_emerg_list.add(row)
-        self.emergency_rows.append((row, entry_name, entry_num))
-
-    def _remove_emergency_row(self, row):
-        """Remove an emergency row."""
-        self.grp_emerg_list.remove(row)
-        self.emergency_rows = [x for x in self.emergency_rows if x[0] != row]
-        self._persist_emergency_numbers()
+    def _on_emergency_deleted(self, entry):
+        """Remove one emergency contact."""
+        entries = [item for item in self.main_window.gsettings_mgr.get_emergency_numbers()
+                   if not (item.get("number") == entry.get("number")
+                           and item.get("name") == entry.get("name"))]
+        self._persist_emergency_entries(entries)
 
     def _on_volume_scale_changed(self, scale):
         """Snap drags to steps of ten and debounce persisting the values."""
@@ -691,15 +707,11 @@ class SettingsWindow(Adw.Dialog):
         self._volume_commit_timer = GLib.timeout_add(200, self._commit_volume_levels)
 
     def _on_settings_unmap(self, widget):
-        """Flush pending debounced commits so closing quickly cannot drop them."""
+        """Flush a pending volume commit so closing quickly cannot drop it."""
         if self._volume_commit_timer is not None:
             GLib.source_remove(self._volume_commit_timer)
             self._volume_commit_timer = None
             self._commit_volume_levels()
-        if self._emergency_commit_timer is not None:
-            GLib.source_remove(self._emergency_commit_timer)
-            self._emergency_commit_timer = None
-            self._persist_emergency_numbers()
 
     def _commit_volume_levels(self):
         """Write the current slider values to settings."""
@@ -784,23 +796,6 @@ class SettingsWindow(Adw.Dialog):
         app = self.main_window.get_application()
         if app:
             app.ensure_voicemail_contact()
-
-    def _schedule_emergency_persist(self):
-        """Debounce persisting the emergency list while typing."""
-        if self._emergency_commit_timer is not None:
-            GLib.source_remove(self._emergency_commit_timer)
-        self._emergency_commit_timer = GLib.timeout_add(EMERGENCY_COMMIT_DELAY_MS, self._persist_emergency_numbers)
-
-    def _persist_emergency_numbers(self):
-        """Write the configured emergency numbers to settings."""
-        self._emergency_commit_timer = None
-        emerg_list = []
-        for row, ename, enum in self.emergency_rows:
-            num_txt = enum.get_text().strip()
-            if num_txt:
-                emerg_list.append({"name": ename.get_text().strip() or "Unknown", "number": num_txt})
-        self.main_window.gsettings_mgr.set_emergency_numbers(emerg_list)
-        return False
 
     def _on_default_ab_selected(self, idx):
         """Handle default address book selection change."""
