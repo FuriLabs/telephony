@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="io.furios.Telephony" path="/io/furios/Telephony/">
+    <key name="show-network-emergency-numbers" type="s">
+      <default>"true"</default>
+      <summary>Show network emergency numbers</summary>
+      <description>List the emergency numbers the network publishes alongside the configured ones.</description>
+    </key>
     <key name="favorites" type="s">
       <default>"[]"</default>
       <summary>Speed dial favorites</summary>

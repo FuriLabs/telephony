@@ -55,7 +55,6 @@ class SettingsWindow(Adw.Dialog):
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(750)
 
-        self.reject_rows = []
 
         self.temp_ringback_file = self.main_window.gsettings_mgr.get_setting(
             "ringback_custom_file")
@@ -89,6 +88,9 @@ class SettingsWindow(Adw.Dialog):
         grp_cats.add(self._nav_row(_("Messages"), _("Quick responses and delivery reports"),
                                    lambda: self._push_category(_("Messages"), self._build_messages_page),
                                    icon="mail-unread-symbolic"))
+        grp_cats.add(self._nav_row(_("Emergency Calls"), _("Lockscreen button and numbers"),
+                                   lambda: self._push_category(_("Emergency Calls"), self._build_emergency_page),
+                                   icon="dialog-warning-symbolic"))
         grp_cats.add(self._nav_row(_("Blocklist"), _("Numbers you never hear from"),
                                    lambda: self._push_category(_("Blocklist"), self._build_blocklist_page),
                                    icon="action-unavailable-symbolic"))
@@ -116,7 +118,7 @@ class SettingsWindow(Adw.Dialog):
                      "purpose": Gtk.InputPurpose.PHONE},
                     {"key": "note", "label": _("Note (Optional)")}],
             add_label=_("Add Number"),
-            empty_label=_("No blocked numbers"),
+            empty_label=_("No numbers added yet"),
             on_add=self._on_block_added,
             on_delete=self._on_block_deleted,
             on_error=self.main_window.notify_error)
@@ -281,6 +283,8 @@ class SettingsWindow(Adw.Dialog):
 
         grp_rb.add(self.row_rb_file)
 
+    def _build_emergency_page(self, page):
+        """Build the emergency calls category page."""
         grp_emerg_toggle = Adw.PreferencesGroup(
             title=_("Lockscreen Emergency"))
         page.add(grp_emerg_toggle)
@@ -297,17 +301,26 @@ class SettingsWindow(Adw.Dialog):
                     {"key": "number", "label": _("Number"), "required": True,
                      "purpose": Gtk.InputPurpose.PHONE}],
             add_label=_("Add Number"),
-            empty_label=_("No emergency numbers"),
+            empty_label=_("No numbers added yet"),
             on_add=self._on_emergency_added,
             on_delete=self._on_emergency_deleted,
             on_update=self._on_emergency_updated,
             on_error=self.main_window.notify_error)
         page.add(self.grp_emerg_list)
+
+        self.grp_network_emerg = Adw.PreferencesGroup(title=_("Network Emergency Numbers"))
+        self.sw_network_emerg = Adw.SwitchRow(title=_("Show Numbers From Network"))
+        self.sw_network_emerg.set_active(
+            self.main_window.gsettings_mgr.get_setting("show_network_emergency_numbers") != "false")
+        self.sw_network_emerg.connect("notify::active", self._on_network_emergency_toggled)
+        self.grp_network_emerg.add(self.sw_network_emerg)
+        self.network_emerg_rows = []
+        page.add(self.grp_network_emerg)
+
         self._reload_emergency_numbers()
 
     def _build_messages_page(self, page):
         """Build the messages category page."""
-        self.reject_rows = []
         grp_msg = Adw.PreferencesGroup(title=_("Messaging"))
         page.add(grp_msg)
 
@@ -323,23 +336,19 @@ class SettingsWindow(Adw.Dialog):
         self.sw_delivery.connect("notify::active", self._on_delivery_reports_toggled)
         grp_msg.add(self.sw_delivery)
 
-        self.grp_reject_list = Adw.PreferencesGroup(title=_("Quick Response"))
+        self.grp_reject_list = EntryListGroup(
+            title=_("Quick Response"),
+            fields=[{"key": "message", "label": _("Decline Message"), "required": True}],
+            add_label=_("Add Decline Message"),
+            empty_label=_("No messages added yet"),
+            on_add=self._on_reject_added,
+            on_delete=self._on_reject_deleted,
+            on_update=self._on_reject_updated,
+            on_error=self.main_window.notify_error)
+        self.grp_reject_list.set_description(
+            _("Sent when you decline a call with a message."))
         page.add(self.grp_reject_list)
-
-        row_add_msg = Adw.ActionRow(title=_("Add Decline Message"))
-        btn_add_msg = Gtk.Button(icon_name="list-add-symbolic")
-        btn_add_msg.add_css_class("flat")
-        btn_add_msg.add_css_class("circular")
-        btn_add_msg.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._add_reject_row("") or False))
-        row_add_msg.add_suffix(btn_add_msg)
-        self.grp_reject_list.add(row_add_msg)
-
-        saved_msgs = self.main_window.gsettings_mgr.get_reject_call_messages()
-        if not saved_msgs:
-            saved_msgs = [_("I can't talk right now.")]
-        for msg in saved_msgs:
-            self._add_reject_row(msg)
+        self._reload_reject_messages()
 
     def _build_contacts_page(self, page):
         """Build the contacts category page."""
@@ -653,17 +662,28 @@ class SettingsWindow(Adw.Dialog):
         entries = [{"name": item.get("name", ""), "number": item.get("number", "")}
                    for item in self.main_window.gsettings_mgr.get_emergency_numbers()]
         self.grp_emerg_list.set_entries(entries)
-        self._add_network_emergency_rows()
+        self._reload_network_emergency_rows()
 
-    def _add_network_emergency_rows(self):
+    def _on_network_emergency_toggled(self, row, _pspec):
+        """Persist whether the network numbers are listed."""
+        self.main_window.gsettings_mgr.set_setting(
+            "show_network_emergency_numbers", "true" if row.get_active() else "false")
+        self._reload_network_emergency_rows()
+
+    def _reload_network_emergency_rows(self):
         """List the emergency numbers the network publishes, read only."""
+        for row in self.network_emerg_rows:
+            self.grp_network_emerg.remove(row)
+        self.network_emerg_rows = []
+
         ofono = self.main_window.ofono
-        if not ofono:
+        if not ofono or not self.sw_network_emerg.get_active():
             return
         for number in sorted(ofono.network_emergency_numbers):
             row = Adw.ActionRow(title=number)
-            row.set_subtitle(_("Provided by your network"))
-            self.grp_emerg_list.add(row)
+            row.set_subtitle(_("Always reachable, even without a SIM"))
+            self.grp_network_emerg.add(row)
+            self.network_emerg_rows.append(row)
 
     def _persist_emergency_entries(self, entries):
         """Write the configured emergency numbers and reload the list."""
@@ -725,29 +745,6 @@ class SettingsWindow(Adw.Dialog):
         """Show info about base call volume levels."""
         present_info_sheet(self, _("Call Volume"), _("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. The Bluetooth level is stored for upcoming routing support."))
 
-    def _add_reject_row(self, text):
-        """Add an editable decline message row."""
-        row = Adw.EntryRow(title=_("Decline Message"))
-        row.set_text(text)
-        row.set_show_apply_button(True)
-        row.connect("apply", lambda r: self._persist_reject_messages())
-
-        btn_del = Gtk.Button(icon_name="user-trash-symbolic")
-        btn_del.set_valign(Gtk.Align.CENTER)
-        btn_del.add_css_class("flat")
-        btn_del.add_css_class("circular")
-        btn_del.connect("clicked", lambda b: self._remove_reject_row(row))
-        row.add_suffix(btn_del)
-
-        self.grp_reject_list.add(row)
-        self.reject_rows.append(row)
-
-    def _remove_reject_row(self, row):
-        """Remove a decline message row."""
-        self.grp_reject_list.remove(row)
-        self.reject_rows = [r for r in self.reject_rows if r != row]
-        self._persist_reject_messages()
-
     def _show_delivery_reports_info(self, btn):
         """Explain what delivery reports do and how far to trust them."""
         body = _("When enabled, the network is asked to confirm when your "
@@ -769,12 +766,40 @@ class SettingsWindow(Adw.Dialog):
         if app and app.mms:
             run_in_background(app.mms.set_delivery_reports, enabled)
 
-    def _persist_reject_messages(self):
-        """Persist the decline messages immediately."""
-        reject_msgs = [r.get_text().strip() for r in self.reject_rows if r.get_text().strip()]
-        self.main_window.gsettings_mgr.set_reject_call_messages(reject_msgs)
+    def _reload_reject_messages(self):
+        """Load the decline messages into the list group."""
+        messages = self.main_window.gsettings_mgr.get_reject_call_messages()
+        self.grp_reject_list.set_entries([{"message": m} for m in messages])
+
+    def _persist_reject_messages(self, messages):
+        """Write the decline messages and reload the list."""
+        self.main_window.gsettings_mgr.set_reject_call_messages(messages)
         self.main_window.gsettings_mgr.set_setting(
-            "reject_call_message", reject_msgs[0] if reject_msgs else "")
+            "reject_call_message", messages[0] if messages else "")
+        self._reload_reject_messages()
+
+    def _on_reject_added(self, values):
+        """Store a typed decline message."""
+        messages = self.main_window.gsettings_mgr.get_reject_call_messages()
+        messages.append(values.get("message", ""))
+        self._persist_reject_messages(messages)
+        return (True, None)
+
+    def _on_reject_updated(self, entry, values):
+        """Apply an edit to one decline message."""
+        messages = self.main_window.gsettings_mgr.get_reject_call_messages()
+        for index, message in enumerate(messages):
+            if message == entry.get("message"):
+                messages[index] = values.get("message", "")
+                break
+        self._persist_reject_messages(messages)
+        return (True, None)
+
+    def _on_reject_deleted(self, entry):
+        """Remove one decline message."""
+        messages = [m for m in self.main_window.gsettings_mgr.get_reject_call_messages()
+                    if m != entry.get("message")]
+        self._persist_reject_messages(messages)
 
     def _on_own_number_apply(self, row):
         """Persist the own number immediately."""
