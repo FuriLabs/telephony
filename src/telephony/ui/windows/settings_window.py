@@ -88,6 +88,10 @@ class SettingsWindow(Adw.Dialog):
         grp_cats.add(self._nav_row(_("Messages"), _("Quick responses and delivery reports"),
                                    lambda: self._push_category(_("Messages"), self._build_messages_page),
                                    icon="mail-unread-symbolic"))
+        grp_cats.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
+                                   lambda: self.nav_view.push(
+                                       FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds)),
+                                   icon="starred-symbolic"))
         grp_cats.add(self._nav_row(_("Emergency Calls"), _("Lockscreen button and numbers"),
                                    lambda: self._push_category(_("Emergency Calls"), self._build_emergency_page),
                                    icon="dialog-warning-symbolic"))
@@ -374,10 +378,6 @@ class SettingsWindow(Adw.Dialog):
         self.row_default_ab = build_selector_row(
             _("Default Address Book"), self._on_default_ab_selected)
         self.grp_contacts.add(self.row_default_ab)
-
-        self.grp_contacts.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
-                                            lambda: self.nav_view.push(
-                                                FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds))))
 
         self.sw_duplicate_resolver = Adw.SwitchRow(
             title=_("Duplicate Resolver"),
