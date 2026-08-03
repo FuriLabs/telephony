@@ -48,7 +48,6 @@ from .backend.managers.emergency_manager import EmergencyManager
 from .ui.windows.incall_window import InCallWindow
 from .backend.managers.ringback_manager import RingbackManager
 from .backend.managers.notification_manager import NotificationManager
-from .backend.services.daemon_client import DaemonClient
 from .backend.managers.schedule_manager import ScheduleManager
 
 from gettext import gettext as _, ngettext
@@ -80,7 +79,6 @@ class App(Adw.Application):
         self.incall = None
         self.ringback = None
         self.scheduler = None
-        self._replaying_change = False
 
         self.notification_counts = defaultdict(int)
 
@@ -110,67 +108,6 @@ class App(Adw.Application):
         if not claimed:
             logger.info("[App] No telephony daemon found, taking the role")
         return not claimed
-
-    def _announce_changes(self):
-        """Tell window instances when the stored data changed.
-
-        They read the same database and address books but subscribe to
-        nothing on the modem, so the owner is the one that knows when
-        a list is worth rebuilding.
-        """
-        self.db.connect('messages-updated', lambda _db, number, reason: self.dbus_daemon.emit_signal(
-            "MessagesChanged", GLib.Variant("(ss)", (number or "", reason or ""))))
-        self.db.connect('blocklist-updated', lambda *_args: self.dbus_daemon.emit_signal(
-            "BlocklistChanged", None))
-        self.eds.connect('contacts-loaded', lambda *_args: self.dbus_daemon.emit_signal(
-            "ContactsChanged", None))
-
-    def _follow_daemon_changes(self):
-        """Rebuild lists when the owner reports a change.
-
-        The change arrives over the bus and is repeated on the local
-        managers, so every view keeps listening to what it always did.
-        """
-        self.daemon_client = DaemonClient()
-        self.daemon_client.subscribe(
-            "MessagesChanged",
-            lambda *args: GLib.idle_add(
-                self._replay_change, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
-        self.daemon_client.subscribe(
-            "BlocklistChanged",
-            lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
-        self.daemon_client.subscribe(
-            "ContactsChanged",
-            lambda *args: run_in_background(self.eds.reload_cache_from_db))
-
-        self.db.connect('messages-updated', lambda _db, number, reason: self._report_change(
-            "messages", number or "", reason or ""))
-        self.db.connect('blocklist-updated', lambda *_args: self._report_change("blocklist", "", ""))
-
-    def _replay_change(self, name, *args):
-        """Repeat on the local managers what the owner reported.
-
-        The flag marks the emission as second-hand: a window must not
-        report back a change it was only told about, or the report
-        would bounce between the owner and the windows forever.
-        """
-        self._replaying_change = True
-        try:
-            self.db.emit(name, *args)
-        finally:
-            self._replaying_change = False
-        return False
-
-    def _report_change(self, kind, number, reason):
-        """Tell the owner about a write this window made.
-
-        Nothing watches the database file, so a thread marked read here
-        stays unread in the other windows until the owner repeats it.
-        """
-        if self._replaying_change or not self.daemon_client:
-            return
-        self.daemon_client.call_async(
-            "NotifyChanged", GLib.Variant("(sss)", (kind, number, reason)))
 
     def _setup_feedbackd(self):
         """Setup feedbackd application profiles."""
@@ -236,7 +173,7 @@ class App(Adw.Application):
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
-        self.eds = EdsManager(owns_live_views=self.is_daemon)
+        self.eds = EdsManager()
         self.db = DatabaseManager(self.eds, self.gsettings_mgr)
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoManager(self.db, self.gsettings_mgr, owns_reception=self.is_daemon)
@@ -261,12 +198,8 @@ class App(Adw.Application):
             self.mms.connect('message-received', self.on_mms_received)
 
         self.dbus_daemon = None
-        self.daemon_client = None
         if self.is_daemon:
             self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
-            self._announce_changes()
-        else:
-            self._follow_daemon_changes()
 
         self._voicemail_last = (False, 0)
         self._vm_contact_busy = False
