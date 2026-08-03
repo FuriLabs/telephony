@@ -30,6 +30,8 @@ from .audio_manager import TelephonyAudioManager
 from .tmate_manager import TmateManager
 from .device_lock_manager import DeviceLockManager
 from .callback_manager import CallbackManager
+
+SS_REQUEST_TIMEOUT_MS = 90000
 from .relay_manager import RelayManager
 
 REPEATED_CALL_WINDOW_SECONDS = 300
@@ -64,6 +66,7 @@ class OfonoManager(GObject.Object):
         'sim-pin-required-changed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'notification-cleared': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
     }
 
     def __init__(self, db_manager, gsettings_mgr=None):
@@ -75,6 +78,12 @@ class OfonoManager(GObject.Object):
         self.voice_proxy = None
         self.msg_proxy = None
         self.ussd_proxy = None
+        self.cf_proxy = None
+        self.cf_handler_id = None
+        self.cb_proxy = None
+        self.cb_handler_id = None
+        self.cs_proxy = None
+        self.cs_handler_id = None
         self.vol_proxy = None
         self.modem_path = None
         self.bus = None
@@ -468,7 +477,10 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 logger.warning(f"[OfonoManager] Modem disconnect warning: {e}")
         for proxy, handler_id, label in ((self.netreg_proxy, self.netreg_handler_id, "NetworkRegistration"),
-                                         (self.simmgr_proxy, self.simmgr_handler_id, "SimManager")):
+                                         (self.simmgr_proxy, self.simmgr_handler_id, "SimManager"),
+                                         (self.cf_proxy, self.cf_handler_id, "CallForwarding"),
+                                         (self.cb_proxy, self.cb_handler_id, "CallBarring"),
+                                         (self.cs_proxy, self.cs_handler_id, "CallSettings")):
             if proxy and handler_id:
                 try:
                     proxy.disconnect(handler_id)
@@ -509,10 +521,20 @@ class OfonoManager(GObject.Object):
         if self.vol_proxy:
             self.vol_proxy.run_dispose()
 
+        for proxy in (self.cf_proxy, self.cb_proxy, self.cs_proxy):
+            if proxy:
+                proxy.run_dispose()
+
         self.voice_proxy = None
         self.msg_proxy = None
         self.ussd_proxy = None
         self.vol_proxy = None
+        self.cf_proxy = None
+        self.cf_handler_id = None
+        self.cb_proxy = None
+        self.cb_handler_id = None
+        self.cs_proxy = None
+        self.cs_handler_id = None
 
     def _on_modem_ready(self, monitor, path):
         """Handle modem ready event."""
@@ -533,6 +555,18 @@ class OfonoManager(GObject.Object):
         self.ussd_proxy = self._get_proxy("org.ofono.SupplementaryServices")
         if self.ussd_proxy:
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
+
+        self.cf_proxy = self._get_proxy("org.ofono.CallForwarding")
+        if self.cf_proxy:
+            self.cf_handler_id = self.cf_proxy.connect("g-signal", self.on_call_forwarding_signal)
+
+        self.cb_proxy = self._get_proxy("org.ofono.CallBarring")
+        if self.cb_proxy:
+            self.cb_handler_id = self.cb_proxy.connect("g-signal", self.on_call_barring_signal)
+
+        self.cs_proxy = self._get_proxy("org.ofono.CallSettings")
+        if self.cs_proxy:
+            self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
 
         self.mw_proxy = self._get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
@@ -1046,6 +1080,119 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[OfonoManager] USSD request failed: {e}")
             return None
+
+
+    def _service_proxy(self, service):
+        """Map a supplementary service key to its D-Bus proxy."""
+        return {"forwarding": self.cf_proxy, "barring": self.cb_proxy, "settings": self.cs_proxy}.get(service)
+
+    def _relay_service_signal(self, service, signal, params):
+        """Forward a supplementary service PropertyChanged to the UI."""
+        if signal != "PropertyChanged":
+            return
+        name, value = params.unpack()
+        GLib.idle_add(self.emit, 'network-service-changed', service, name, value)
+
+    def on_call_forwarding_signal(self, proxy, sender, signal, params):
+        """Relay call forwarding property changes."""
+        self._relay_service_signal("forwarding", signal, params)
+
+    def on_call_barring_signal(self, proxy, sender, signal, params):
+        """Relay call barring property changes."""
+        self._relay_service_signal("barring", signal, params)
+
+    def on_call_settings_signal(self, proxy, sender, signal, params):
+        """Relay call settings property changes."""
+        self._relay_service_signal("settings", signal, params)
+
+    def has_modem_interface(self, interface):
+        """Return whether the modem currently exports the interface."""
+        return interface in self._seen_interfaces
+
+    def get_service_properties(self, service):
+        """Read a supplementary service's properties; blocking, call from a worker.
+
+        Returns the property dict, or None when the network query failed.
+        """
+        proxy = self._service_proxy(service)
+        if not proxy:
+            logger.warning(f"[OfonoManager] {service} unavailable, no proxy")
+            return None
+        try:
+            res = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return res.unpack()[0]
+        except Exception as e:
+            logger.error(f"[OfonoManager] {service} query failed: {e}")
+            return None
+
+    def set_service_property(self, service, name, value):
+        """Set a supplementary service property; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
+        proxy = self._service_proxy(service)
+        if not proxy:
+            return (False, "no proxy")
+        variant = GLib.Variant("q", value) if isinstance(value, int) else GLib.Variant("s", value)
+        try:
+            proxy.call_sync("SetProperty", GLib.Variant("(sv)", (name, variant)),
+                            Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Setting {service} {name} failed: {e}")
+            return (False, str(e))
+
+    def set_barring_property(self, name, value, password):
+        """Set a call barring rule; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
+        if not self.cb_proxy:
+            return (False, "no proxy")
+        try:
+            self.cb_proxy.call_sync("SetProperty",
+                                    GLib.Variant("(svs)", (name, GLib.Variant("s", value), password)),
+                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Setting barring {name} failed: {e}")
+            return (False, str(e))
+
+    def disable_all_forwarding(self):
+        """Clear every forwarding rule; blocking, call from a worker."""
+        if not self.cf_proxy:
+            return (False, "no proxy")
+        try:
+            self.cf_proxy.call_sync("DisableAll", GLib.Variant("(s)", ("all",)),
+                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Disabling forwarding failed: {e}")
+            return (False, str(e))
+
+    def disable_all_barrings(self, password):
+        """Clear every barring rule; blocking, call from a worker."""
+        if not self.cb_proxy:
+            return (False, "no proxy")
+        try:
+            self.cb_proxy.call_sync("DisableAll", GLib.Variant("(s)", (password,)),
+                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Disabling barrings failed: {e}")
+            return (False, str(e))
+
+    def change_barring_password(self, old, new):
+        """Change the network barring password; blocking, call from a worker."""
+        if not self.cb_proxy:
+            return (False, "no proxy")
+        try:
+            self.cb_proxy.call_sync("ChangePassword", GLib.Variant("(ss)", (old, new)),
+                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Barring password change failed: {e}")
+            return (False, str(e))
 
     def on_message_signal(self, proxy, sender, signal, params):
         """Handle incoming message signals."""

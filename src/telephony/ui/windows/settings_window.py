@@ -30,6 +30,7 @@ from .custom_tone_list_window import CustomToneListWindow
 
 
 from .advanced_settings_window import AdvancedSettingsWindow
+from .network_services_window import NetworkServicesWindow
 from ..widgets.common_widget import present_info_sheet, close_dialog, build_selector_row, set_selector_options
 
 
@@ -352,6 +353,8 @@ class SettingsWindow(Adw.Dialog):
         grp_adv = Adw.PreferencesGroup()
         page.add(grp_adv)
 
+        grp_adv.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
+                                  lambda: self._open_network_services(None)))
         grp_adv.add(self._nav_row(_("Advanced Settings"), None,
                                   lambda: self._open_modem_settings(None)))
 
@@ -417,6 +420,10 @@ class SettingsWindow(Adw.Dialog):
     def _open_modem_settings(self, btn):
         """Push the advanced settings page."""
         self.nav_view.push(AdvancedSettingsWindow(self))
+
+    def _open_network_services(self, btn):
+        """Push the network services page."""
+        self.nav_view.push(NetworkServicesWindow(self))
 
     def _show_addressbook_info(self, btn):
         """Show information about address book priority."""
