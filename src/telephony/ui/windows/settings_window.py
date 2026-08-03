@@ -30,6 +30,7 @@ from .custom_tone_list_window import CustomToneListWindow
 
 from .advanced_settings_window import AdvancedSettingsWindow
 from .network_services_window import NetworkServicesWindow
+from .favorites_list_window import FavoritesListWindow
 from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options
 
 EMERGENCY_COMMIT_DELAY_MS = 500
@@ -329,6 +330,10 @@ class SettingsWindow(Adw.Dialog):
         self.row_default_ab = build_selector_row(
             _("Default Address Book"), self._on_default_ab_selected)
         self.grp_contacts.add(self.row_default_ab)
+
+        self.grp_contacts.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
+                                            lambda: self.nav_view.push(
+                                                FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds))))
 
         self.sw_duplicate_resolver = Adw.SwitchRow(
             title=_("Duplicate Resolver"),

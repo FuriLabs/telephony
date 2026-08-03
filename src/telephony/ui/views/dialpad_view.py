@@ -153,10 +153,27 @@ class DialpadView(Adw.Bin):
             GLib.source_remove(self._lookup_timer)
             self._lookup_timer = None
 
+    def _favorite_for(self, text):
+        """Return the speed dial contact a single digit stands for."""
+        if len(text) != 1 or not text.isdigit():
+            return None
+        for entry in self.app_window.gsettings_mgr.get_favorites():
+            if str(entry.get("slot")) == text:
+                return entry
+        return None
+
     def _perform_lookup(self):
         """Perform contact lookup."""
         self._lookup_timer = None
         text = self.entry.get_text().strip()
+
+        favorite = self._favorite_for(text)
+        if favorite:
+            self.info_label.set_text(_("{name} · Speed dial {slot}").format(
+                name=favorite.get("name") or favorite.get("number", ""),
+                slot=favorite.get("slot")))
+            self.info_label.remove_css_class("dim-label")
+            return False
 
         if len(text) < 3:
             self.info_label.set_text("")
@@ -219,6 +236,11 @@ class DialpadView(Adw.Bin):
         """Handle call button click."""
         number = self.entry.get_text().strip()
         if not number:
+            return
+
+        favorite = self._favorite_for(number)
+        if favorite:
+            self.app_window.start_call(favorite.get("number", ""))
             return
 
         if self._is_ussd(number):
