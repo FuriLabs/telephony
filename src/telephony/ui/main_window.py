@@ -327,11 +327,39 @@ class MainWindow(Adw.Window):
         if self.contacts_view:
             self.contacts_view.set_calling_enabled(available)
 
+    def _toast_target(self):
+        """Return the overlay of the topmost surface.
+
+        A presented dialog is painted above the window content, so a
+        toast raised on the window's own overlay would sit hidden
+        underneath an open sheet.
+        """
+        dialog = self.get_visible_dialog()
+        if dialog is not None:
+            overlay = self._find_toast_overlay(dialog.get_child())
+            if overlay is not None:
+                return overlay
+        return self.toast_overlay
+
+    def _find_toast_overlay(self, widget):
+        """Find the first toast overlay inside a widget tree."""
+        if widget is None:
+            return None
+        if isinstance(widget, Adw.ToastOverlay):
+            return widget
+        child = widget.get_first_child()
+        while child is not None:
+            found = self._find_toast_overlay(child)
+            if found is not None:
+                return found
+            child = child.get_next_sibling()
+        return None
+
     def _show_toast(self, message, timeout=5):
-        """Show a toast and return it."""
+        """Show a toast on the topmost surface and return it."""
         toast = Adw.Toast.new(message)
         toast.set_timeout(timeout)
-        self.toast_overlay.add_toast(toast)
+        self._toast_target().add_toast(toast)
         return toast
 
     def notify_error(self, message):
