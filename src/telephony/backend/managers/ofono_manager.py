@@ -40,6 +40,7 @@ ANSWER_SWAP_DELAY_MS = 500
 EMERGENCY_FEEDBACK_RESTORE_SECONDS = 5
 SMS_RESOLVE_TIMEOUT_SECONDS = 60
 UNCLAIMED_STATE_LIMIT = 20
+DELIVERY_WATCH_LIMIT = 50
 SEEN_SIGNATURE_LIMIT = 50
 VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
@@ -121,6 +122,8 @@ class OfonoManager(GObject.Object):
         self.inflight_sms = {}
         self.inflight_sms_paths = {}
         self.unclaimed_sms_states = {}
+        self.delivery_watch = {}
+        self._sms_history_sub = None
         self.send_lock = threading.Lock()
         self._sms_state_sub = None
 
@@ -584,6 +587,11 @@ class OfonoManager(GObject.Object):
         if self.modem_proxy:
             self.modem_handler_id = self.modem_proxy.connect("g-signal", self.on_modem_signal)
             self._load_modem_interfaces()
+
+        if self._sms_history_sub is None and self.bus:
+            self._sms_history_sub = self.bus.signal_subscribe(
+                None, "org.ofono.SmsHistory", "StatusReport", None, None,
+                Gio.DBusSignalFlags.NONE, self._on_status_report, None)
 
         if self._sms_state_sub is None and self.bus:
             self._sms_state_sub = self.bus.signal_subscribe(
@@ -1172,7 +1180,32 @@ class OfonoManager(GObject.Object):
                         self.unclaimed_sms_states.pop(next(iter(self.unclaimed_sms_states)))
 
         if row_id is not None:
+            if value == "sent":
+                self.delivery_watch[path] = row_id
+                while len(self.delivery_watch) > DELIVERY_WATCH_LIMIT:
+                    self.delivery_watch.pop(next(iter(self.delivery_watch)))
             self._resolve_sms(row_id, value)
+
+    def _on_status_report(self, _conn, _sender, _path, _iface, _signal, params, _data):
+        """Mark a message delivered when the network confirms it.
+
+        Only a positive report is acted on: carriers and gateways often
+        never send one at all, so a missing report says nothing about
+        the message and must never turn into a claim of failure.
+        """
+        try:
+            message_path, delivered = params.unpack()
+        except Exception as e:
+            logger.debug(f"[OfonoManager] Status report unpack failed: {e}")
+            return
+
+        row_id = self.delivery_watch.pop(message_path, None)
+        if row_id is None:
+            return
+        if not delivered:
+            logger.debug(f"[OfonoManager] Network reported no delivery for row {row_id}")
+            return
+        self.db.update_message_status(row_id, "delivered")
 
     def send_quick_response(self, number, text):
         """Record an SMS in the conversation and send it with delivery tracking."""
