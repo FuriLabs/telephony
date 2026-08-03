@@ -30,6 +30,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         self.grp_list = None
         self.gsettings_handler_id = None
         self.totp_btn = None
+        self.totp_page = None
         try:
             self.mode = mode
             self.gsettings_mgr = db
@@ -518,9 +519,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         action_name = self.mode.replace("trusted_sms_", "").replace("_", " ").title()
         uri = self.gsettings_mgr.get_totp_uri(seed, action_name)
 
-        page = Adw.NavigationPage(title=_("TOTP Setup"))
         view = Adw.ToolbarView()
-        page.set_child(view)
 
         header = Adw.HeaderBar(show_end_title_buttons=False)
 
@@ -605,15 +604,28 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_remove() or False))
             content_box.append(btn_remove)
 
+        if self.totp_page is not None:
+            self.totp_page.set_child(view)
+            return
+
+        self.totp_page = Adw.NavigationPage(title=_("TOTP Setup"))
+        self.totp_page.set_child(view)
+        self.totp_page.connect("hidden", self._on_totp_page_hidden)
         nav = self.get_ancestor(Adw.NavigationView)
         if nav:
-            nav.push(page)
+            nav.push(self.totp_page)
+
+    def _on_totp_page_hidden(self, page):
+        """Forget the page once it leaves the navigation stack."""
+        if page.get_parent() is None:
+            self.totp_page = None
 
     def _pop_totp_page(self):
         """Pop the TOTP page off the settings navigation."""
         nav = self.get_ancestor(Adw.NavigationView)
-        if nav and nav.get_visible_page() is self:
+        if nav and self.totp_page is not None and nav.get_visible_page() is self.totp_page:
             nav.pop()
+        self.totp_page = None
 
     def _confirm_remove(self):
         confirm = Adw.AlertDialog(
@@ -647,7 +659,6 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         def on_response(dialog, response):
             if response == "regenerate":
                 new_seed = self.gsettings_mgr.generate_totp_seed()
-                self._pop_totp_page()
                 GLib.idle_add(lambda: self._open_totp_dialog(new_seed) or False)
 
         confirm.connect("response", on_response)
