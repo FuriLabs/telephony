@@ -59,18 +59,6 @@ transition: all 0.1s ease-in-out;
 
 .chat-time { font-size: 0.75em; opacity: 0.6; margin-top: 2px; }
 
-/* Round button styling: Creates circular buttons often used in action toolbars or floating actions, with specific color variants. */
-.round-btn {
-    border-radius: 50%;
-    min-width: 38px;
-    min-height: 38px;
-    padding: 0;
-    margin: 0;
-}
-.success-btn { background-color: #2ec27e; color: white; }
-.suggested-btn { background-color: @accent_bg_color; color: @accent_fg_color; }
-.destructive-btn { background-color: #e01b24; color: white; }
-
 /* Chat input field styling: Defines the appearance of the message composition area, including borders, rounding, and focus states. */
 .chat-input {
     background-color: @view_bg_color;
@@ -95,42 +83,10 @@ transition: all 0.1s ease-in-out;
     margin-right: 6px;
 }
 
-/* Load more button styling: Used at the bottom of paginated lists (like chat history) to fetch older entries. */
-.load-more-btn {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
 /* Fix for GTK Stack minimum size to prevent UI scaling issues when stacks are empty or hidden. */
 stack {
     min-width: 0px;
     min-height: 0px;
-}
-
-/* Action button accent variants: Provides softer shades derived from the system accent for secondary actions. */
-.action-blue-mid {
-    background-color: mix(@accent_bg_color, @window_bg_color, 0.3);
-    color: @accent_fg_color;
-}
-.action-blue-light {
-    background-color: mix(@accent_bg_color, @window_bg_color, 0.6);
-    color: @window_fg_color;
-}
-
-/* Mini chat bubble styling: Used for small inline previews of messages, typically inside dialogs or popovers. */
-.mini-bubble {
-    margin-bottom: 8px;
-}
-
-/* Popover menu header styling: Formats section titles inside popover menus with uppercase, spaced letters, and dim colors. */
-.menu-header {
-    font-weight: bold;
-    font-size: 10px;
-    color: alpha(currentColor, 0.6);
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 /* Fullscreen fader styling: A completely black overlay used to turn the screen black during a call when the proximity sensor is triggered. */
@@ -254,10 +210,6 @@ viewswitcher button:focus {
     padding-left: 16px;
     padding-right: 16px;
 }
-
-/* Yellow action button styling: Used for scheduling messages matching the scheduled message bubble color. */
-.yellow-action { background-color: #f5c211; color: black; }
-.yellow-action:active { background-color: #e5b300; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
 
 .inverted-list {
     transform: scaleY(-1);

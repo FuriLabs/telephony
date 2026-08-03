@@ -21,7 +21,7 @@ from gettext import gettext as _, ngettext
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk
 from loguru import logger
 
 from ..backend.utils.phone_utils import normalize_number, get_own_number
@@ -567,7 +567,7 @@ class MainWindow(Adw.Window):
         """Handle resolve duplicates button click."""
         if not self.pending_conflicts:
             return
-        win = DuplicateResolutionWindow(self, self.pending_conflicts, self.eds, self.on_resolution_done)
+        win = DuplicateResolutionWindow(self.pending_conflicts, self.eds, self.on_resolution_done)
         win.present(self)
 
     def on_resolution_done(self):

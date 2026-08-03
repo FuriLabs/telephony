@@ -115,65 +115,25 @@ class ChatBubbleFactory:
         widgets = {
             "root": row, "bubble": bubble, "media_box": media_box,
             "lbl_msg": lbl_msg, "lbl_time": lbl_time, "lbl_sender": lbl_sender,
-            "btn_menu": btn_menu, "pop": None, "actions": None, "menu_ctx": None
+            "btn_menu": btn_menu, "menu_ctx": None
         }
+        group = Gio.SimpleActionGroup()
+        for key in ("copy", "copy-number", "add-contact", "reschedule", "forward", "unread", "delete"):
+            action = Gio.SimpleAction.new(key, None)
+            action.connect("activate", lambda a, param, k=key: ChatBubbleFactory._safe_run(
+                lambda: ChatBubbleFactory._run_menu_action(widgets, k.replace("-", "_")), "Menu action failed"))
+            group.add_action(action)
+        btn_menu.insert_action_group("bubble", group)
         btn_menu.set_create_popup_func(lambda mb: ChatBubbleFactory._prepare_menu(widgets))
         return widgets
 
     @staticmethod
-    def _build_menu(w):
-        """Build the bubble context menu lazily on first open."""
-        pop = Gtk.Popover()
-
-        menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        menu_box.set_margin_start(6)
-        menu_box.set_margin_end(6)
-        menu_box.set_margin_top(6)
-        menu_box.set_margin_bottom(6)
-
-        def create_menu_btn(icon, label, action, style_class="suggested-action"):
-            b = Gtk.Button()
-            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            box.append(Gtk.Image(icon_name=icon))
-            box.append(Gtk.Label(label=label))
-            b.set_child(box)
-            if style_class:
-                b.add_css_class(style_class)
-            b.connect("clicked", lambda x: ChatBubbleFactory._safe_run(lambda: ChatBubbleFactory._run_menu_action(w, action), "Menu action failed"))
-            return b
-
-        btn_copy = create_menu_btn("edit-copy-symbolic", _("Copy Text"), "copy")
-        btn_copy_num = create_menu_btn("edit-copy-symbolic", _("Copy Number"), "copy_number")
-        btn_add_contact = create_menu_btn("contact-new-symbolic", _("Add to Contacts"), "add_contact", "suggested-action")
-        btn_resched = create_menu_btn("alarm-symbolic", _("Re-Schedule"), "reschedule", "suggested-action")
-        btn_forward = create_menu_btn("mail-forward-symbolic", _("Forward"), "forward")
-        btn_unread = create_menu_btn("mail-unread-symbolic", _("Mark as Unread"), "unread")
-        btn_del = create_menu_btn("user-trash-symbolic", _("Delete"), "delete", "destructive-action")
-
-        menu_box.append(btn_add_contact)
-        menu_box.append(btn_resched)
-        menu_box.append(btn_copy)
-        menu_box.append(btn_copy_num)
-        menu_box.append(btn_forward)
-        menu_box.append(btn_unread)
-        menu_box.append(btn_del)
-
-        pop.set_child(menu_box)
-        w["pop"] = pop
-        w["actions"] = (btn_copy, btn_copy_num, btn_del, btn_add_contact, btn_forward, btn_resched, btn_unread)
-        w["btn_menu"].set_popover(pop)
-
-    @staticmethod
     def _prepare_menu(w):
-        """Materialize the context menu and sync it to the bound message."""
-        if w["pop"] is None:
-            ChatBubbleFactory._build_menu(w)
-
+        """Build the context menu model for the currently bound message."""
         ctx = w["menu_ctx"]
         if not ctx:
             return
 
-        b_copy, b_copy_num, b_del, b_add, b_fwd, b_resched, b_unread = w["actions"]
         item = ctx["item"]
 
         found_number = None
@@ -182,23 +142,21 @@ class ChatBubbleFactory:
             if match:
                 found_number = match.group(0).replace(" ", "")
         ctx["found_number"] = found_number
-        b_copy_num.set_visible(found_number is not None)
 
-        b_add.set_visible(ctx["add_contact_cb"] is not None)
-        b_unread.set_visible(item.direction == "incoming")
-
-        show_resched = item.status in ("scheduled", "failed") and ctx["reschedule_cb"] is not None
-        b_resched.set_visible(show_resched)
-        if show_resched:
-            box = b_resched.get_child()
-            icon = box.get_first_child()
-            label = icon.get_next_sibling()
-            if item.status == "failed":
-                icon.set_from_icon_name("mail-send-symbolic")
-                label.set_label(_("Retry Send"))
-            else:
-                icon.set_from_icon_name("alarm-symbolic")
-                label.set_label(_("Re-Schedule"))
+        menu = Gio.Menu()
+        if ctx["add_contact_cb"] is not None:
+            menu.append(_("Add to Contacts"), "bubble.add-contact")
+        if item.status in ("scheduled", "failed") and ctx["reschedule_cb"] is not None:
+            label = _("Retry Send") if item.status == "failed" else _("Re-Schedule")
+            menu.append(label, "bubble.reschedule")
+        menu.append(_("Copy Text"), "bubble.copy")
+        if found_number is not None:
+            menu.append(_("Copy Number"), "bubble.copy-number")
+        menu.append(_("Forward"), "bubble.forward")
+        if item.direction == "incoming":
+            menu.append(_("Mark as Unread"), "bubble.unread")
+        menu.append(_("Delete"), "bubble.delete")
+        w["btn_menu"].set_menu_model(menu)
 
     @staticmethod
     def _run_menu_action(w, action):
@@ -208,7 +166,6 @@ class ChatBubbleFactory:
             return
 
         item = ctx["item"]
-        w["pop"].popdown()
 
         if action == "copy":
             Gdk.Display.get_default().get_clipboard().set(item.body or "")
@@ -603,36 +560,26 @@ class ChatBubbleFactory:
 
     @staticmethod
     def _on_attachment_clicked(btn, path, widget_ref):
-        """Handle attachment click."""
-        pop = Gtk.Popover()
+        """Show the attachment actions menu."""
+        group = Gio.SimpleActionGroup()
+        entries = (
+            ("open", lambda: ChatBubbleFactory.on_open(path, widget_ref)),
+            ("copy", lambda: ChatBubbleFactory.on_copy_file(path)),
+            ("save-as", lambda: ChatBubbleFactory.on_save_as(path, widget_ref)),
+        )
+        for key, callback in entries:
+            action = Gio.SimpleAction.new(key, None)
+            action.connect("activate", lambda a, param, cb=callback: ChatBubbleFactory._safe_run(cb))
+            group.add_action(action)
+
+        menu = Gio.Menu()
+        menu.append(_("Open with"), "attachment.open")
+        menu.append(_("Copy"), "attachment.copy")
+        menu.append(_("Save as"), "attachment.save-as")
+
+        pop = Gtk.PopoverMenu.new_from_model(menu)
+        pop.insert_action_group("attachment", group)
         pop.connect("closed", lambda p: p.unparent())
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        box.set_margin_top(6)
-        box.set_margin_bottom(6)
-        box.set_margin_start(6)
-        box.set_margin_end(6)
-
-        def _add_action(icon, label, callback, style="suggested-action"):
-            b = Gtk.Button()
-            btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            btn_box.append(Gtk.Image(icon_name=icon))
-            btn_box.append(Gtk.Label(label=label))
-            b.set_child(btn_box)
-            if style:
-                b.add_css_class(style)
-
-            def _handle_click():
-                pop.popdown()
-                GLib.timeout_add(50, lambda: ChatBubbleFactory._safe_run(callback) or False)
-            b.connect("clicked", lambda x: _handle_click())
-            box.append(b)
-
-        _add_action("document-open-symbolic", _("Open with"), lambda: ChatBubbleFactory.on_open(path, widget_ref), "action-blue-light")
-        _add_action("edit-copy-symbolic", _("Copy"), lambda: ChatBubbleFactory.on_copy_file(path), "action-blue-mid")
-        _add_action("document-save-symbolic", _("Save as"), lambda: ChatBubbleFactory.on_save_as(path, widget_ref), "suggested-action")
-
-        pop.set_child(box)
         pop.set_parent(btn)
         GLib.idle_add(lambda: pop.popup() or False)
 

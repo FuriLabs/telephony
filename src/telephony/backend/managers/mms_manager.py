@@ -25,7 +25,6 @@ from gi.repository import Gio, GLib, GObject
 
 from ..utils.phone_utils import get_own_number, normalize_number
 from ..utils.thread_utils import run_in_background
-from ...constants import NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE
 
 
 DEFAULT_MAX_ATTACHMENT_SIZE = 600 * 1024

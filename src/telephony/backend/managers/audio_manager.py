@@ -27,7 +27,7 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Lfb, Gio, GLib, Gst
 
 from ...backend.utils.system_utils import get_feedbackd_profile, set_feedbackd_profile
-from ...constants import APP_ID, CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
+from ...constants import APP_ID
 
 KNOCK_MIN_INTERVAL_SECONDS = 1
 FALLBACK_MEDIA_VOLUME = 0.5
