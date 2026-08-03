@@ -88,7 +88,7 @@ class SettingsWindow(Adw.Dialog):
         grp_cats.add(self._nav_row(_("Calls"), _("Numbers, volume and ringback"),
                                    lambda: self._push_category(_("Calls"), self._build_calls_page),
                                    icon="call-start-symbolic"))
-        grp_cats.add(self._nav_row(_("Messages"), _("Quick responses"),
+        grp_cats.add(self._nav_row(_("Messages"), _("Quick responses and delivery reports"),
                                    lambda: self._push_category(_("Messages"), self._build_messages_page),
                                    icon="mail-unread-symbolic"))
         grp_cats.add(self._nav_row(_("Contacts"), _("Address books and duplicates"),
@@ -271,6 +271,21 @@ class SettingsWindow(Adw.Dialog):
     def _build_messages_page(self, page):
         """Build the messages category page."""
         self.reject_rows = []
+        grp_msg = Adw.PreferencesGroup(title=_("Messaging"))
+        page.add(grp_msg)
+
+        self.sw_delivery = Adw.SwitchRow(title=_("Request Delivery Reports"))
+        self.sw_delivery.set_active(
+            self.main_window.gsettings_mgr.get_setting("delivery_reports") == "true")
+        btn_dr_info = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        btn_dr_info.add_css_class("flat")
+        btn_dr_info.add_css_class("circular")
+        btn_dr_info.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self._show_delivery_reports_info(b) or False))
+        self.sw_delivery.add_suffix(btn_dr_info)
+        self.sw_delivery.connect("notify::active", self._on_delivery_reports_toggled)
+        grp_msg.add(self.sw_delivery)
+
         self.grp_reject_list = Adw.PreferencesGroup(title=_("Quick Response"))
         page.add(self.grp_reject_list)
 
@@ -695,6 +710,27 @@ class SettingsWindow(Adw.Dialog):
         self.grp_reject_list.remove(row)
         self.reject_rows = [r for r in self.reject_rows if r != row]
         self._persist_reject_messages()
+
+    def _show_delivery_reports_info(self, btn):
+        """Explain what delivery reports do and how far to trust them."""
+        body = _("When enabled, the network is asked to confirm when your "
+                 "text and multimedia messages reach the recipient's phone.\n\n"
+                 "A confirmation is reliable when it arrives, but many "
+                 "carriers and automated senders never produce one, so a "
+                 "message without a confirmation may still have been "
+                 "delivered. Delivered never means read.")
+        present_info_sheet(self, _("Request Delivery Reports"), body)
+
+    def _on_delivery_reports_toggled(self, row, _pspec):
+        """Persist and apply the delivery report preference immediately."""
+        enabled = row.get_active()
+        self.main_window.gsettings_mgr.set_setting(
+            "delivery_reports", "true" if enabled else "false")
+        if self.main_window.ofono:
+            run_in_background(self.main_window.ofono.set_delivery_reports, enabled)
+        app = self.main_window.get_application()
+        if app and app.mms:
+            run_in_background(app.mms.set_delivery_reports, enabled)
 
     def _persist_reject_messages(self):
         """Persist the decline messages immediately."""
