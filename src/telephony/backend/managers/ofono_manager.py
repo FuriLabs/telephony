@@ -25,7 +25,6 @@ from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.system_utils import restart_ril_modem
 from ...backend.utils.thread_utils import run_in_background
 from ..services.ofono_service import OfonoService
-from ..services.daemon_client import DaemonClient
 from .location_manager import LocationManager
 from .audio_manager import TelephonyAudioManager
 from .tmate_manager import TmateManager
@@ -70,19 +69,11 @@ class OfonoManager(GObject.Object):
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
     }
 
-    def __init__(self, db_manager, gsettings_mgr=None, owns_reception=True):
-        """Initialize the Ofono manager.
-
-        Only the instance that owns reception stores what arrives and
-        acts on trusted senders. Every other instance reads state to
-        draw with, so an app opened twice cannot file a message twice
-        or run a text triggered action twice.
-        """
+    def __init__(self, db_manager, gsettings_mgr=None):
+        """Initialize the Ofono manager."""
         super().__init__()
         self.db = db_manager
         self.gsettings_mgr = gsettings_mgr
-        self.owns_reception = owns_reception
-        self.daemon = None if owns_reception else DaemonClient()
 
         self.voice_proxy = None
         self.msg_proxy = None
@@ -558,7 +549,7 @@ class OfonoManager(GObject.Object):
             self.voice_handler_id = self.voice_proxy.connect("g-signal", self.on_voice_signal)
 
         self.msg_proxy = self._get_proxy("org.ofono.MessageManager")
-        if self.msg_proxy and self.owns_reception:
+        if self.msg_proxy:
             self.msg_handler_id = self.msg_proxy.connect("g-signal", self.on_message_signal)
 
         self.ussd_proxy = self._get_proxy("org.ofono.SupplementaryServices")
@@ -666,8 +657,7 @@ class OfonoManager(GObject.Object):
             "direction": "incoming" if state == "incoming" else "outgoing",
             "answered": (state == "active"),
             "proxy": call_proxy,
-            "silenced": is_silenced,
-            "multiparty": bool(props.get("Multiparty", False))
+            "silenced": is_silenced
         }
 
         if call_proxy:
@@ -696,17 +686,12 @@ class OfonoManager(GObject.Object):
                 if path in self.active_calls:
                     self.active_calls[path]["number"] = normalize_number(value)
                     self.emit('call-changed', path, self.active_calls[path]["state"])
-            elif name == "Multiparty":
-                if path in self.active_calls:
-                    self.active_calls[path]["multiparty"] = bool(value)
-                    self.emit('call-changed', path, self.active_calls[path]["state"])
 
     def _remove_call(self, path):
         """Handle call removal."""
         if path in self.active_calls:
             data = self.active_calls.pop(path)
-            if self.owns_reception:
-                self._log_call(data)
+            self._log_call(data)
             self.emit('call-removed', path)
 
             if self.is_volume_boosted:
@@ -821,10 +806,6 @@ class OfonoManager(GObject.Object):
 
     def dial(self, number, hide_id=False):
         """Initiate an outgoing call."""
-        if self.daemon is not None:
-            self.daemon.call_async("Dial", GLib.Variant("(sb)", (number, hide_id)))
-            return True
-
         if not self.voice_proxy:
             self.emit('action-error', _("Modem not ready"))
             return False
@@ -866,10 +847,6 @@ class OfonoManager(GObject.Object):
 
     def answer_call(self, target_path):
         """Answer an incoming call."""
-        if self.daemon is not None:
-            self.daemon.call_async("Answer", GLib.Variant("(s)", (target_path,)))
-            return
-
         other_dialing = None
         other_active = False
 
@@ -914,9 +891,6 @@ class OfonoManager(GObject.Object):
     def hangup_call(self, path):
         """Hangup a specific call."""
         self.emit('hangup-requested')
-        if self.daemon is not None:
-            self.daemon.call_async("Hangup", GLib.Variant("(s)", (path,)))
-            return
         try:
             if path in self.active_calls:
                 proxy = self.active_calls[path].get('proxy')
@@ -936,9 +910,6 @@ class OfonoManager(GObject.Object):
     def hangup_all(self):
         """Hangup all active calls."""
         self.emit('hangup-requested')
-        if self.daemon is not None:
-            self.daemon.call_async("HangupAll", None)
-            return
         if self.voice_proxy:
             try:
                 self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
@@ -949,101 +920,12 @@ class OfonoManager(GObject.Object):
 
     def swap_calls(self):
         """Swap active and held calls."""
-        if self.daemon is not None:
-            self.daemon.call_async("SwapCalls", None)
-            return
-
         if not self.voice_proxy:
             return
         try:
             self.voice_proxy.call_sync("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
             logger.error(f"SwapCalls failed: {e}")
-
-    def create_multiparty(self):
-        """Join the active and held calls into a conference; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("create_multiparty", "")),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
-
-        if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("CreateMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] CreateMultiparty failed: {e}")
-            return (False, str(e))
-
-    def hangup_multiparty(self):
-        """Release every call in the conference; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("hangup_multiparty", "")),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
-
-        if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("HangupMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] HangupMultiparty failed: {e}")
-            return (False, str(e))
-
-    def private_chat(self, path):
-        """Split one conference participant into a private call; blocking, call from a worker.
-
-        The network may refuse this on IMS conferences, so failures are
-        expected and reported, never hidden. Returns (True, None) on
-        success or (False, error text).
-        """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("private_chat", path)),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
-
-        if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("PrivateChat", GLib.Variant("(o)", (path,)),
-                                       Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] PrivateChat failed for {path}: {e}")
-            return (False, str(e))
-
-    def transfer_call(self):
-        """Connect the active and held calls to each other and leave; blocking, call from a worker.
-
-        Requires the Explicit Call Transfer service from the carrier, so
-        rejection is a normal outcome. Returns (True, None) on success
-        or (False, error text).
-        """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("transfer", "")),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
-
-        if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("Transfer", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Transfer failed: {e}")
-            return (False, str(e))
 
     def _force_remove(self, path):
         """Forcefully remove a call from the active list."""
@@ -1052,10 +934,6 @@ class OfonoManager(GObject.Object):
 
     def send_dtmf(self, tones):
         """Send DTMF tones during a call."""
-        if self.daemon is not None:
-            self.daemon.call_async("SendDtmf", GLib.Variant("(s)", (tones,)))
-            return
-
         if not self.voice_proxy:
             return
         try:
@@ -1193,11 +1071,6 @@ class OfonoManager(GObject.Object):
         Returns the network response text, or None when the request
         could not be made, so failures never masquerade as responses.
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("SendUssd", GLib.Variant("(s)", (command,)),
-                                     GLib.VariantType("(s)"))
-            return reply[0] if reply and reply[0] else None
-
         if not self.ussd_proxy:
             logger.warning("[OfonoManager] USSD unavailable, no proxy")
             return None
@@ -1208,27 +1081,6 @@ class OfonoManager(GObject.Object):
             logger.error(f"[OfonoManager] USSD request failed: {e}")
             return None
 
-
-    def _restore_service_value(self, name, packed):
-        """Turn a relayed property back into the type the UI expects."""
-        text = packed if isinstance(packed, str) else str(packed)
-        if name.endswith("Timeout"):
-            try:
-                return int(text)
-            except ValueError:
-                return 0
-        return text
-
-    def _ask_daemon_network_write(self, service, name, value, password):
-        """Have the owner change a supplementary service."""
-        reply = self.daemon.call(
-            "SetNetworkProperty",
-            GLib.Variant("(ssvs)", (service, name, GLib.Variant("s", str(value)), password or "")),
-            GLib.VariantType("(s)"))
-        if reply is None:
-            return (False, "no reply")
-        error = reply[0]
-        return (not error, error or None)
 
     def _service_proxy(self, service):
         """Map a supplementary service key to its D-Bus proxy."""
@@ -1262,13 +1114,6 @@ class OfonoManager(GObject.Object):
 
         Returns the property dict, or None when the network query failed.
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("GetNetworkProperties", GLib.Variant("(s)", (service,)),
-                                     GLib.VariantType("(a{sv})"))
-            if reply is None:
-                return None
-            return {k: self._restore_service_value(k, v) for k, v in reply[0].items()}
-
         proxy = self._service_proxy(service)
         if not proxy:
             logger.warning(f"[OfonoManager] {service} unavailable, no proxy")
@@ -1285,9 +1130,6 @@ class OfonoManager(GObject.Object):
 
         Returns (True, None) on success or (False, error text).
         """
-        if self.daemon is not None:
-            return self._ask_daemon_network_write(service, name, value, "")
-
         proxy = self._service_proxy(service)
         if not proxy:
             return (False, "no proxy")
@@ -1305,9 +1147,6 @@ class OfonoManager(GObject.Object):
 
         Returns (True, None) on success or (False, error text).
         """
-        if self.daemon is not None:
-            return self._ask_daemon_network_write("barring", name, value, password)
-
         if not self.cb_proxy:
             return (False, "no proxy")
         try:
