@@ -21,7 +21,8 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from loguru import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
-from ..widgets.common_widget import present_choice_sheet, add_choice_row, close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
+from ..widgets.common_widget import close_dialog
 from .import_wizard_window import ImportWizardWindow
 from ...backend.utils.importer_local_utils import import_local_chatty, import_local_calls
 from ...backend.utils.importer_android_utils import import_android_sms, import_android_calls
@@ -31,27 +32,73 @@ from ...backend.utils.exporter_local_utils import export_linux_chatty, export_li
 from ...backend.utils.ios_extractor_utils import IOSBackupExtractor
 
 
+FLOW_SHEET_HEIGHT = 560
+
+
 class ImportExportDialog:
     """Dialog and logic for ETL style Import/Export."""
 
-    def __init__(self, app_window):
+    def __init__(self, app_window, nav_view=None):
         self.app_window = app_window
         self.db = app_window.db
         self.eds = app_window.eds
+        self.nav_view = nav_view
+        self._sheet = None
+
+    def _on_flow_closed(self, _dialog):
+        """Forget the flow once its sheet goes away."""
+        self.nav_view = None
+        self._sheet = None
+
+    def _show_choices(self, title, entries, description=None):
+        """Show a step of the flow, as a page when a navigation hosts it.
+
+        Inside settings the steps are pushed pages, so the back button
+        and the back gesture walk the flow; without a navigation the
+        same choices open as a sheet.
+        """
+        view = Adw.ToolbarView()
+        view.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
+        page_content = Adw.PreferencesPage()
+        group = Adw.PreferencesGroup()
+        if description:
+            group.set_description(description)
+        for label, callback, subtitle in entries:
+            row = Adw.ActionRow(title=label, activatable=True)
+            if subtitle:
+                row.set_subtitle(subtitle)
+            row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+            row.connect("activated", lambda r, cb=callback: GLib.idle_add(lambda: cb() or False))
+            group.add(row)
+        page_content.add(group)
+        view.set_content(page_content)
+
+        page = Adw.NavigationPage(title=title)
+        page.set_child(view)
+        self.nav_view.push(page)
 
     def present(self):
-        """Show the import and export sheet."""
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Import Contacts from vCard"), self.on_import_clicked)
-            add_choice_row(group, sheet, _("Export Contacts to vCard"), self.on_export_all_clicked)
-            add_choice_row(group, sheet, _("Import Contacts from SIM card"), self.ask_import_sim)
-            add_choice_row(group, sheet, _("Import From local Chatty"), self.ask_import_chatty)
-            add_choice_row(group, sheet, _("Import From local Calls"), self.ask_import_local_calls)
-            add_choice_row(group, sheet, _("Import From Android"), self.ask_import_android)
-            add_choice_row(group, sheet, _("Import From iOS"), self.ask_import_ios)
-            add_choice_row(group, sheet, _("Export Calls or Messages"), self.ask_export_data)
+        """Show the import and export flow in one navigable sheet."""
+        if self.nav_view is None:
+            self.nav_view = Adw.NavigationView()
+            sheet = Adw.Dialog(title=_("Import and Export"))
+            sheet.set_content_width(SHEET_CONTENT_WIDTH)
+            sheet.set_content_height(FLOW_SHEET_HEIGHT)
+            sheet.set_child(self.nav_view)
+            sheet.connect("closed", self._on_flow_closed)
+            self._sheet = sheet
+            sheet.present(self.app_window)
 
-        present_choice_sheet(self.app_window, _("Import / Export"), build)
+        self._show_choices(_("Import and Export"), [
+            (_("Import Contacts from vCard"), self.on_import_clicked, None),
+            (_("Export Contacts to vCard"), self.on_export_all_clicked, None),
+            (_("Import Contacts from SIM card"), self.ask_import_sim, None),
+            (_("Import From local Chatty"), self.ask_import_chatty, None),
+            (_("Import From local Calls"), self.ask_import_local_calls, None),
+            (_("Import From Android"), self.ask_import_android, None),
+            (_("Import From iOS"), self.ask_import_ios, None),
+            (_("Export Calls or Messages"), self.ask_export_data, None),
+        ])
 
     def ask_import_sim(self):
         """Ask where the SIM contacts should land before reading them."""
@@ -166,8 +213,7 @@ class ImportExportDialog:
                     GLib.idle_add(lambda: self.app_window.notify_error(msg))
             run_in_background(task)
 
-        win = ImportWizardWindow(self.app_window, "chatty", on_wizard_done)
-        win.present(self.app_window)
+        self.nav_view.push(ImportWizardWindow(self.app_window, "chatty", on_wizard_done))
 
     def ask_import_local_calls(self):
         def on_wizard_done(db_path, mms_path):
@@ -185,25 +231,22 @@ class ImportExportDialog:
                     GLib.idle_add(lambda: self.app_window.notify_error(msg))
             run_in_background(task)
 
-        win = ImportWizardWindow(self.app_window, "calls", on_wizard_done)
-        win.present(self.app_window)
+        self.nav_view.push(ImportWizardWindow(self.app_window, "calls", on_wizard_done))
 
     def ask_import_android(self):
         """Show the Android import choices."""
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms"))
-            add_choice_row(group, sheet, _("Select Call history file"), lambda: self._open_file_chooser("android_calls"))
-
-        present_choice_sheet(self.app_window, _("Import From Android"), build)
+        self._show_choices(_("Import From Android"), [
+            (_("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms"), None),
+            (_("Select Call history file"), lambda: self._open_file_chooser("android_calls"), None),
+        ])
 
     def ask_import_ios(self):
         """Show the iOS import choices."""
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Direct USB Import (Recommended)"), self._start_ios_usb_import)
-            add_choice_row(group, sheet, _("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms"))
-            add_choice_row(group, sheet, _("Select Call history file"), lambda: self._open_file_chooser("ios_calls"))
-
-        present_choice_sheet(self.app_window, _("Import From iOS"), build)
+        self._show_choices(_("Import From iOS"), [
+            (_("Direct USB Import (Recommended)"), self._start_ios_usb_import, None),
+            (_("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms"), None),
+            (_("Select Call history file"), lambda: self._open_file_chooser("ios_calls"), None),
+        ])
 
     def _start_ios_usb_import(self):
         run_in_background(IOSBackupExtractor.check_connection, on_complete=self._on_ios_connection_checked)
@@ -298,13 +341,12 @@ class ImportExportDialog:
 
     def ask_export_data(self):
         """Show the export destination choices."""
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Linux - Chatty/Calls"), lambda: self._show_export_type_chooser("linux_chatty_calls"))
-            add_choice_row(group, sheet, _("Linux - Telephony"), lambda: self._show_export_type_chooser("linux_telephony"))
-            add_choice_row(group, sheet, _("Android"), lambda: self._show_export_type_chooser("android"))
-            add_choice_row(group, sheet, _("iOS"), lambda: self._show_export_type_chooser("ios"))
-
-        present_choice_sheet(self.app_window, _("Export Data"), build)
+        self._show_choices(_("Export Data"), [
+            (_("Linux - Chatty/Calls"), lambda: self._show_export_type_chooser("linux_chatty_calls"), None),
+            (_("Linux - Telephony"), lambda: self._show_export_type_chooser("linux_telephony"), None),
+            (_("Android"), lambda: self._show_export_type_chooser("android"), None),
+            (_("iOS"), lambda: self._show_export_type_chooser("ios"), None),
+        ])
 
     def _show_export_type_chooser(self, dest_format):
         """Show the export content choices for a destination format."""
@@ -312,14 +354,10 @@ class ImportExportDialog:
         if dest_format == "ios":
             description = _("Note: This export uses the Android format. When importing this file onto an iOS device, please use the \"Import From Android\" option.")
 
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Messages (SMS/MMS)"),
-                           lambda: self._open_export_file_chooser(dest_format, "sms"))
-            add_choice_row(group, sheet, _("Call History"),
-                           lambda: self._open_export_file_chooser(dest_format, "calls"))
-
-        present_choice_sheet(self.app_window, _("Export to {fmt}").format(fmt=dest_format),
-                             build, description=description)
+        self._show_choices(_("Export to {fmt}").format(fmt=dest_format), [
+            (_("Messages (SMS/MMS)"), lambda: self._open_export_file_chooser(dest_format, "sms"), None),
+            (_("Call History"), lambda: self._open_export_file_chooser(dest_format, "calls"), None),
+        ], description=description)
 
     def _open_export_file_chooser(self, dest_format, export_type):
         dialog = Gtk.FileChooserNative(title=_("Export File"), transient_for=self.app_window, action=Gtk.FileChooserAction.SAVE)
@@ -420,15 +458,11 @@ class ImportExportDialog:
 
         enabled_sources.sort(key=lambda s: not s.get('is_system_default'))
 
-        def build(group, sheet):
-            for source in enabled_sources:
-                subtitle = _("Default") if source.get('is_system_default') else None
-                add_choice_row(group, sheet, source['name'],
-                               lambda uid=source['uid']: on_chosen(uid),
-                               subtitle=subtitle)
-
-        present_choice_sheet(self.app_window, _("Select Address Book"), build,
-                             description=_("Where do you want to import contacts?"))
+        self._show_choices(_("Select Address Book"), [
+            (source['name'], (lambda uid=source['uid']: on_chosen(uid)),
+             _("Default") if source.get('is_system_default') else None)
+            for source in enabled_sources
+        ], description=_("Where do you want to import contacts?"))
 
     def _start_import(self, path, source_uid):
         self.app_window.notify_loading(_("Importing..."))
@@ -466,17 +500,13 @@ class ImportExportDialog:
 
         enabled_sources.sort(key=lambda s: not s.get('is_system_default'))
 
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Export All Address Books"),
-                           lambda: self._show_export_file_chooser(None))
-            for source in enabled_sources:
-                subtitle = _("Default") if source.get('is_system_default') else None
-                add_choice_row(group, sheet, source['name'],
-                               lambda uid=source['uid']: self._show_export_file_chooser(uid),
-                               subtitle=subtitle)
-
-        present_choice_sheet(self.app_window, _("Export Contacts"), build,
-                             description=_("Which address book do you want to export?"))
+        self._show_choices(_("Export Contacts"), [
+            (_("Export All Address Books"), lambda: self._show_export_file_chooser(None), None)
+        ] + [
+            (source['name'], (lambda uid=source['uid']: self._show_export_file_chooser(uid)),
+             _("Default") if source.get('is_system_default') else None)
+            for source in enabled_sources
+        ], description=_("Which address book do you want to export?"))
 
     def _show_export_file_chooser(self, source_uid):
         """Show file chooser for export location."""
