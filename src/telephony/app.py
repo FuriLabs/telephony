@@ -384,12 +384,18 @@ class App(Adw.Application):
             self.incall.connect("close-request", self._on_incall_closed)
 
     def _on_incall_closed(self, window):
-        """Let the call window go when it is closed.
+        """Refuse the close during a call, drop the window otherwise.
 
-        Keeping it alive held a full window, its widgets and its render
-        buffers for the whole session for the sake of a rebuild that
-        takes a moment and only happens when the next call starts.
+        A closed window during a call would leave the call running with
+        no way back to it, since the call launcher carries no icon. With
+        no call left there is nothing to return to, and holding the
+        window keeps its widgets and render buffers for the rest of the
+        session to save a rebuild that only costs a moment.
         """
+        if self.ofono and self.ofono.active_calls:
+            logger.info("InCallWindow close refused, a call is running")
+            return True
+
         logger.info("InCallWindow closed, dropping it")
         self.incall = None
         return False
