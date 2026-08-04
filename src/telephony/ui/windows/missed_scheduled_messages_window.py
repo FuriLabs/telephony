@@ -21,7 +21,6 @@ from ..widgets.chat_bubbles_widget import ChatBubbleFactory
 from ...backend.utils.thread_utils import run_in_background
 import json
 import os
-import time
 from ..widgets.common_widget import close_dialog
 
 
@@ -32,9 +31,7 @@ class MissedScheduledMessagesDialog:
         self.app_window = app_window
         self.db = app_window.db
         self.eds = app_window.eds
-        self.scheduler = app_window.app.scheduler
-        self.ofono = app_window.ofono
-        self.mms = app_window.mms
+        self.daemon = app_window.daemon
 
     def check_missed_scheduled_messages(self, done_callback=None):
         """Check for messages that were missed while app was closed."""
@@ -50,7 +47,7 @@ class MissedScheduledMessagesDialog:
             if done_callback:
                 done_callback()
 
-        run_in_background(self.scheduler.get_missed_messages, buffer_minutes=1,
+        run_in_background(self.daemon.get_missed_messages,
                           on_complete=done, on_error=failed)
 
     def _process_missed_message_queue(self, messages, index, done_callback):
@@ -61,7 +58,11 @@ class MissedScheduledMessagesDialog:
             return
 
         msg = messages[index]
-        mid, number, body, subject, attachments_json, scheduled_ts = msg
+        mid = msg.get("id")
+        number = msg.get("number") or ""
+        body = msg.get("body") or ""
+        attachments_json = msg.get("attachments") or ""
+        scheduled_ts = msg.get("timestamp") or ""
         total_count = len(messages)
         current_count = index + 1
 
@@ -158,7 +159,8 @@ class MissedScheduledMessagesDialog:
 
         def _on_send_now(b):
             GLib.idle_add(lambda: close_dialog(d) or False)
-            self._send_missed_message_bg(msg)
+            self.daemon.send_missed_message(mid)
+            self.app_window.notify_success(_("Sending message to {number}...").format(number=number))
             GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
 
         btn_send.connect("clicked", lambda b: GLib.idle_add(lambda: _on_send_now(b) or False))
@@ -169,8 +171,7 @@ class MissedScheduledMessagesDialog:
 
         def _on_remove(b):
             GLib.idle_add(lambda: close_dialog(d) or False)
-            self.db.delete_scheduled_messages([mid])
-            self.scheduler.remove_cron(mid)
+            run_in_background(self.daemon.delete_message, mid)
             self.app_window.notify_success(_("Message removed"))
 
             GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
@@ -182,43 +183,3 @@ class MissedScheduledMessagesDialog:
         d.set_extra_child(main_box)
         d.present(self.app_window)
 
-    def _send_missed_message_bg(self, msg):
-        """Send message in background thread."""
-        def _task():
-            try:
-                if self.ofono and not self.ofono.msg_proxy:
-                    retries = 30
-                    while retries > 0:
-                        if self.ofono.msg_proxy:
-                            break
-                        time.sleep(1)
-                        retries -= 1
-                    if not self.ofono.msg_proxy:
-                        logger.error("[MissedScheduled] Modem not ready after waiting, proceeding with risk of failure")
-
-                mid, number, body, subject, attachments_json, scheduled_ts = msg
-                attachments = []
-                if attachments_json:
-                    try:
-                        attachments = json.loads(attachments_json)
-                    except Exception as e:
-                        logger.warning(f"[MissedScheduled] Failed to parse attachments JSON: {e}")
-
-                self.db.update_message_schedule(mid, status="sending")
-                self.scheduler.remove_cron(mid)
-
-                is_group = "," in number
-                if is_group or attachments or subject:
-                    if self.mms:
-                        targets = [n.strip() for n in number.split(",")] if is_group else [number]
-                        self.mms.send_mms_tracked(targets, body, attachments, mid)
-                else:
-                    if self.ofono:
-                        self.ofono.send_sms_tracked(number, body, mid)
-
-                GLib.idle_add(lambda: self.app_window.notify_success(_("Sending message to {number}...").format(number=number)))
-
-            except Exception as e:
-                logger.error(f"[MissedScheduled] Send missed bg error: {e}")
-
-        run_in_background(_task)
