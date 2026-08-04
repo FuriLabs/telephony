@@ -381,11 +381,18 @@ class App(Adw.Application):
             logger.info("Initializing InCallWindow (Lazy Load)")
             self.incall = InCallWindow(self.gsettings_mgr, self.ofono, self.eds, self.db)
 
-            def _on_incall_closed(_w):
-                logger.info("InCallWindow hidden.")
-                return True
+            self.incall.connect("close-request", self._on_incall_closed)
 
-            self.incall.connect("close-request", _on_incall_closed)
+    def _on_incall_closed(self, window):
+        """Let the call window go when it is closed.
+
+        Keeping it alive held a full window, its widgets and its render
+        buffers for the whole session for the sake of a rebuild that
+        takes a moment and only happens when the next call starts.
+        """
+        logger.info("InCallWindow closed, dropping it")
+        self.incall = None
+        return False
 
     def _any_window_active(self):
         """Return True when any application window currently has focus."""
