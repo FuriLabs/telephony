@@ -822,11 +822,14 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 logger.error(f"[OfonoManager] Sanity check failed: {e}")
 
-        if len(self.active_calls) > 0:
+        lines = len([p for p, d in self.active_calls.items() if not d.get('multiparty')])
+        if any(d.get('multiparty') for d in self.active_calls.values()):
+            lines += 1
+        if lines >= 2:
             self.emit('action-error', _("Cannot dial while in another call"))
             return False
 
-        if self.audio.voice_profile_active:
+        if not self.active_calls and self.audio.voice_profile_active:
             logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
             self.emit('action-error', _("Please wait, the previous call is still ending"))
             return False
