@@ -533,11 +533,7 @@ class TelephonyDaemonDBus:
         success = True
 
         def do_dial():
-            if hide_id:
-                self.ofono.dial(number, hide_id=True)
-                return
-            action = Gio.SimpleAction.new("dial-number", GLib.VariantType.new("s"))
-            self.app.on_action_dial(action, GLib.Variant("s", number))
+            self.ofono.dial(number, hide_id=hide_id)
         GLib.idle_add(do_dial)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
