@@ -16,7 +16,7 @@
 import os
 import shutil
 from datetime import datetime
-from gi.repository import Gtk, Adw, GLib
+from gi.repository import Gtk, Gdk, Adw, GLib
 from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
@@ -24,6 +24,9 @@ from ..widgets.common_widget import present_choice_sheet, add_choice_row
 from .camera_photo_window import CameraPhoto
 from .camera_video_window import CameraVideo
 from .sound_recorder_window import SoundRecorder
+
+URI_LIST_MIME = "text/uri-list"
+IMAGE_PASTE_MIMES = ("image/png", "image/jpeg")
 
 
 class ChatMediaController:
@@ -44,10 +47,65 @@ class ChatMediaController:
                            icon="audio-input-microphone-symbolic")
             add_choice_row(group, sheet, _("Choose File"), self._open_file_chooser,
                            icon="folder-open-symbolic")
+            if self._clipboard_has_media():
+                add_choice_row(group, sheet, _("Paste"), self.ingest_clipboard,
+                               icon="edit-paste-symbolic")
             add_choice_row(group, sheet, _("Schedule"), self.chat_page._open_schedule_picker,
                            icon="alarm-symbolic")
 
         present_choice_sheet(self.window, _("Select Attachment"), build)
+
+    def _clipboard_has_media(self):
+        """Return whether the clipboard offers files or an image."""
+        formats = self.window.get_clipboard().get_formats()
+        if formats.contain_mime_type(URI_LIST_MIME) or formats.contain_gtype(Gdk.FileList):
+            return True
+        if formats.contain_gtype(Gdk.Texture):
+            return True
+        return any(formats.contain_mime_type(m) for m in IMAGE_PASTE_MIMES)
+
+    def ingest_clipboard(self):
+        """Attach clipboard files or a clipboard image; return whether media was found."""
+        clipboard = self.window.get_clipboard()
+        formats = clipboard.get_formats()
+        if formats.contain_mime_type(URI_LIST_MIME) or formats.contain_gtype(Gdk.FileList):
+            clipboard.read_value_async(Gdk.FileList, GLib.PRIORITY_DEFAULT, None,
+                                       self._on_clipboard_files)
+            return True
+        if formats.contain_gtype(Gdk.Texture) or any(formats.contain_mime_type(m) for m in IMAGE_PASTE_MIMES):
+            clipboard.read_texture_async(None, self._on_clipboard_texture)
+            return True
+        return False
+
+    def _on_clipboard_files(self, clipboard, result):
+        """Feed pasted files through the standard attachment pipeline."""
+        try:
+            file_list = clipboard.read_value_finish(result)
+        except GLib.Error as e:
+            logger.warning(f"[MediaController] Clipboard file read failed: {e}")
+            return
+        for file in file_list.get_files():
+            path = file.get_path()
+            if path:
+                self._on_media_captured(None, path)
+            else:
+                logger.debug(f"[MediaController] Skipping non-local clipboard file: {file.get_uri()}")
+
+    def _on_clipboard_texture(self, clipboard, result):
+        """Persist a pasted image and feed it through the attachment pipeline."""
+        try:
+            texture = clipboard.read_texture_finish(result)
+        except GLib.Error as e:
+            logger.warning(f"[MediaController] Clipboard image read failed: {e}")
+            return
+        if texture is None:
+            return
+        now = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = os.path.join(GLib.get_tmp_dir(), f"pasted_{now}.png")
+        if not texture.save_to_png(path):
+            logger.error(f"[MediaController] Saving pasted image to {path} failed")
+            return
+        self._on_media_captured(None, path)
 
     def _open_camera(self):
         """Open photo camera modal."""
