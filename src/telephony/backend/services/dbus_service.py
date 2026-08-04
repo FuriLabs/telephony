@@ -35,6 +35,7 @@ DAEMON_INTERFACE_XML = """
     <!-- Call operations -->
     <method name="Dial">
       <arg type="s" name="number" direction="in"/>
+      <arg type="b" name="hide_id" direction="in"/>
       <arg type="b" name="success" direction="out"/>
     </method>
     <method name="Answer">
@@ -528,10 +529,13 @@ class TelephonyDaemonDBus:
 
     def _handle_dial(self, parameters, invocation):
         """Handle Dial command."""
-        number = parameters.unpack()[0]
+        number, hide_id = parameters.unpack()
         success = True
 
         def do_dial():
+            if hide_id:
+                self.ofono.dial(number, hide_id=True)
+                return
             action = Gio.SimpleAction.new("dial-number", GLib.VariantType.new("s"))
             self.app.on_action_dial(action, GLib.Variant("s", number))
         GLib.idle_add(do_dial)
