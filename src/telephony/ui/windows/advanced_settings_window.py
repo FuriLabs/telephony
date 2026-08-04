@@ -76,6 +76,16 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                                       lambda: self._open_action_window("trusted_sms_lock_device"),
                                       destructive=True))
 
+        grp_calls = Adw.PreferencesGroup(title=_("Experimental Call Features"))
+        self.page.add(grp_calls)
+
+        grp_calls.add(self._experimental_row(
+            _("Allow Conference Calls"), "allow_conference_calls",
+            self._show_conference_info))
+        grp_calls.add(self._experimental_row(
+            _("Allow Call Transfer"), "allow_call_transfer",
+            self._show_transfer_info))
+
         grp_restart = Adw.PreferencesGroup()
         self.page.add(grp_restart)
 
@@ -168,6 +178,38 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         if idx < 0 or idx >= len(self.mms_limit_values):
             return
         self.parent_win.main_window.gsettings_mgr.set_setting("mms_size_limit", self.mms_limit_values[idx])
+
+    def _experimental_row(self, title, setting_key, info_handler):
+        """Build a switch for a feature the carrier may not support."""
+        row = Adw.SwitchRow(title=title)
+        row.set_active(self.parent_win.main_window.gsettings_mgr.get_setting(setting_key) == "true")
+        row.connect("notify::active", lambda w, _p: self.parent_win.main_window.gsettings_mgr.set_setting(
+            setting_key, "true" if w.get_active() else "false"))
+        btn_info = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        btn_info.add_css_class("flat")
+        btn_info.add_css_class("circular")
+        btn_info.connect("clicked", lambda b: GLib.idle_add(lambda: info_handler(b) or False))
+        row.add_suffix(btn_info)
+        return row
+
+    def _show_conference_info(self, btn):
+        """Explain how far conference calls can be trusted."""
+        present_info_sheet(self, _("Allow Conference Calls"), _(
+            "Merging calls into a conference is up to the carrier, and in "
+            "our testing the results varied from working to dropping the "
+            "calls. Turn this on to try it on your own subscription. It "
+            "cannot be officially supported, so leave it off if you would "
+            "rather your calls behaved predictably."))
+
+    def _show_transfer_info(self, btn):
+        """Explain how far call transfer can be trusted."""
+        present_info_sheet(self, _("Allow Call Transfer"), _(
+            "Transferring two calls to each other needs a service the "
+            "carrier has to provide, and in our testing many carriers "
+            "either refuse it or end the calls instead. Turn this on to "
+            "try it on your own subscription. It cannot be officially "
+            "supported, so leave it off if you would rather your calls "
+            "behaved predictably."))
 
     def _on_auto_recovery_toggled(self, row, _param):
         """Persist the automatic recovery preference immediately."""
