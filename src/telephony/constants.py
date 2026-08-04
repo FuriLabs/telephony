@@ -16,6 +16,10 @@
 """Constants shared between modules. Single-module constants stay local."""
 
 APP_ID = "io.furios.Telephony"
+INCALL_APP_ID = "io.furios.Telephony.Incall"
+EMERGENCY_APP_ID = "io.furios.Telephony.Emergency"
+INCALL_DESKTOP_FILE = "io.furios.Telephony.Incall.desktop"
+EMERGENCY_DESKTOP_FILE = "io.furios.Telephony.Emergency.desktop"
 
 DAEMON_BUS_NAME = "io.furios.Telephony"
 DAEMON_OBJECT_PATH = "/io/furios/Telephony/Daemon"

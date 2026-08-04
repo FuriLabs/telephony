@@ -33,7 +33,7 @@ from loguru import logger
 from .app import App
 from .backend.utils.translation_utils import install_i18n
 from .backend.utils.system_utils import start_systemd_service, stop_systemd_service, is_systemd_service_active
-from .constants import APP_ID
+from .constants import APP_ID, INCALL_APP_ID
 
 def is_monitor_running():
     """
@@ -113,6 +113,8 @@ def main():
         application_id = f"{APP_ID}.Messages"
     elif "--contacts" in sys.argv:
         application_id = f"{APP_ID}.Contacts"
+    elif "--incall" in sys.argv:
+        application_id = INCALL_APP_ID
     else:
         application_id = APP_ID
 
