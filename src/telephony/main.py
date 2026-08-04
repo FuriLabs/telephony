@@ -30,7 +30,6 @@ __package__ = "telephony"
 from gi.repository import Gio, GLib
 from loguru import logger
 
-from .app import App
 from .daemon_app import DaemonApp
 from .backend.utils.translation_utils import install_i18n
 from .backend.utils.system_utils import start_systemd_service, stop_systemd_service, is_systemd_service_active
@@ -143,6 +142,7 @@ def main():
     else:
         application_id = APP_ID
 
+    from .app import App
     app = App(application_id=application_id)
     return app.run(sys.argv)
 
