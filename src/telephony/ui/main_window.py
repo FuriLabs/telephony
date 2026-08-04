@@ -39,6 +39,8 @@ from .windows.contact_picker_window import ContactPicker
 from .windows.duplicate_resolution_window import DuplicateResolutionWindow
 from .widgets.common_widget import present_choice_sheet, add_choice_row, build_info_sheet
 
+CAPABILITY_BANNER_REASONS = ("no-modem", "airplane-mode", "no-voice-service")
+
 
 class MainWindow(Adw.Window):
     """The main application window containing the stack of views (History, Dialpad, Messages, Contacts)."""
@@ -149,7 +151,9 @@ class MainWindow(Adw.Window):
         if self.ofono:
             for sig in ('call-added', 'call-removed', 'dial-availability-changed'):
                 self.signal_ids.append((self.ofono, self.ofono.connect(sig, self._refresh_calling_controls)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('dial-availability-changed', self._on_capability_changed)))
             self.signal_ids.append((self.ofono, self.ofono.connect('modem-interface-appeared', self._on_modem_interface_appeared)))
+            self._on_capability_changed()
 
         if self.msgs_page:
             self.signal_ids.append((self.db, self.db.connect('messages-updated', lambda *args: self.update_unread_badge())))
@@ -523,6 +527,19 @@ class MainWindow(Adw.Window):
         """Log ofono status changes; the recovery flow owns the surfacing."""
         logger.debug(f"[MainWindow] ofono status {status}: {message}")
 
+    def _on_capability_changed(self, *args):
+        """Say why calls cannot be placed, when the reason will last.
+
+        Transient states stay off the banner: warming up and call
+        teardown resolve themselves in seconds, and an ongoing call is
+        not a problem to report. Messaging is store-and-forward and is
+        never gated by any of this.
+        """
+        if self.ofono.dial_reason in CAPABILITY_BANNER_REASONS:
+            self.set_banner_state("capability", self.ofono.dial_description, priority=20)
+        else:
+            self.clear_banner_state("capability")
+
     def _on_stack_page_changed(self, *args):
         """Build the newly selected view lazily and refresh the chrome."""
         self._ensure_view(self.stack.get_visible_child_name())
@@ -783,10 +800,8 @@ class MainWindow(Adw.Window):
         self.set_focus(None)
 
         if self.ofono and not self.ofono.dialing_available():
-            if self.ofono.audio.voice_profile_active:
-                self.notify_error(_("Please wait, the previous call is still ending"))
-            else:
-                self.notify_error(_("Call Failed"))
+            description = self.ofono.dial_description
+            self.notify_error(description if description else _("Call Failed"))
             return
 
         status_msg = _("Calling (Anonymous)...") if hide_id else _("Calling {number}...").format(number=number)
