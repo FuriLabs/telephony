@@ -220,6 +220,16 @@ class App(Adw.Application):
         self._ensure_incall_window()
         self.incall.enter_recovery_mode(message, failed=failed)
 
+    def apply_service_presence(self, present, unit_state):
+        """Relay the service's presence to every open window."""
+        for win in self.get_windows():
+            if isinstance(win, MainWindow):
+                win.apply_service_presence(present, unit_state)
+
+    def start_service(self, on_done):
+        """Start the service by whichever path the unit state allows."""
+        self.core.start_service(on_done)
+
     def _setup_icon_paths(self):
         """
         Ensure icon lookup works under the daemon's startup conditions.

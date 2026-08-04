@@ -216,26 +216,38 @@ class MainWindow(Adw.Window):
             self.enqueue_popup(missed_messages_dialog.check_missed_scheduled_messages)
 
     def check_daemon_service(self):
-        """Say when the background service is down, and offer to start it.
+        """Show the service state this window was born into."""
+        self.apply_service_presence(not self.app.daemon_missing,
+                                    self.app.core.service_monitor.state)
 
-        Without it nothing answers for calls or arriving messages, and
-        this window will not stand in, so the user has to know.
+    def apply_service_presence(self, present, unit_state):
+        """Keep a standing banner while the service is away.
+
+        Without the service nothing answers for incoming calls or
+        arriving messages, so its absence deserves a lasting surface.
+        Sending stays enabled: a send revives the service through bus
+        activation. Only the failed state blocks activation, and its
+        Start path resets the unit first.
         """
-        if not self.app.daemon_missing:
+        if present:
+            self.clear_banner_state("service")
             return
+        if unit_state == "restarting":
+            self.set_banner_state("service", _("Telephony service is restarting…"), priority=30)
+            return
+        self.set_banner_state("service", _("Telephony service is not running"),
+                              button_label=_("Start"),
+                              action=self._start_service_from_banner,
+                              priority=30)
 
-        toast = Adw.Toast.new(_("Telephony service is not running"))
-        toast.set_timeout(0)
-        toast.set_button_label(_("Start"))
-        toast.connect("button-clicked", lambda t: self.app.retry_daemon_start(self._on_daemon_retried))
-        self.toast_overlay.add_toast(toast)
+    def _start_service_from_banner(self):
+        """Run the banner's start offer."""
+        self.app.start_service(self._on_daemon_retried)
 
     def _on_daemon_retried(self, started):
         """Report whether the service answered this time."""
         if started:
             self.notify_success(_("Telephony service started"))
-            return
-        self.check_daemon_service()
 
     def on_close_request(self, *args):
         """Handle window close request."""

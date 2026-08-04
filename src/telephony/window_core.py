@@ -17,6 +17,7 @@ from gi.repository import Gio, GLib
 from telephony.backend.utils.log_utils import logger
 
 from .backend.services.daemon_client import DaemonClient
+from .backend.services.service_monitor import ServiceMonitor
 from .backend.managers.database_manager import DatabaseManager
 from .backend.managers.settings_mirror import SettingsMirror
 from .backend.managers.ofono_mirror import OfonoMirror
@@ -61,6 +62,8 @@ class WindowCore:
         self.ofono = None
         self.mms = None
         self.daemon_client = None
+        self.service_monitor = None
+        self._last_presence = None
 
         self._ensure_daemon_running()
 
@@ -152,6 +155,9 @@ class WindowCore:
 
         self._follow_daemon_changes()
 
+        self.service_monitor = ServiceMonitor()
+        self.service_monitor.connect('unit-state-changed', self._publish_presence)
+
         GLib.timeout_add_seconds(HEAP_TRIM_AFTER_STARTUP_SECONDS, trim_native_heap)
         GLib.timeout_add_seconds(HEAP_TRIM_INTERVAL_SECONDS, lambda: trim_native_heap() or True)
 
@@ -168,6 +174,7 @@ class WindowCore:
         if self.daemon_missing:
             logger.info("[App] The telephony service is back")
         self.daemon_missing = False
+        self._publish_presence()
 
     def _on_daemon_vanished(self, _bus, _name):
         """Record that the service left the bus.
@@ -176,6 +183,23 @@ class WindowCore:
         keeps daemon_missing truthful for the windows that show it.
         """
         self.daemon_missing = True
+        self._publish_presence()
+
+    def _publish_presence(self, *args):
+        """Tell the surfaces whether the service answers, and why not."""
+        state = self.service_monitor.state if self.service_monitor else "unknown"
+        snapshot = (not self.daemon_missing, state)
+        if snapshot == self._last_presence:
+            return
+        self._last_presence = snapshot
+        self.ui.apply_service_presence(*snapshot)
+
+    def start_service(self, on_done):
+        """Start the service by whichever path the unit state allows."""
+        if self.service_monitor and self.service_monitor.state == "failed":
+            self.service_monitor.start_service(on_done)
+            return
+        self.retry_daemon_start(on_done)
 
     def _follow_daemon_changes(self):
         """Rebuild lists when the owner reports a change.

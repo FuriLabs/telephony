@@ -89,11 +89,20 @@ class OfonoMirror(GObject.Object):
 
         self._watch_id = Gio.bus_watch_name(
             Gio.BusType.SESSION, DAEMON_BUS_NAME, Gio.BusNameWatcherFlags.NONE,
-            self._on_owner_appeared, None)
+            self._on_owner_appeared, self._on_owner_vanished)
 
     def _on_owner_appeared(self, _connection, _name, _owner):
         """Seed, and re-seed after every daemon restart."""
         self._schedule_reseed()
+
+    def _on_owner_vanished(self, _connection, _name):
+        """A gone owner cannot place calls; say so until it returns.
+
+        Call state is left alone: calls live in ofonod and may still be
+        ringing, and the re-seed on return reconciles what really
+        happened.
+        """
+        self._apply_capability(False, "service-down", _("Telephony service is not running"))
 
     def _schedule_reseed(self):
         """Coalesce state reads; one snapshot answers a burst of events."""
