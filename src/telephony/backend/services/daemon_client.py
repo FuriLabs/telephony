@@ -54,7 +54,7 @@ class DaemonClient:
                 DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
                 params, reply_type, Gio.DBusCallFlags.NONE,
                 timeout_ms, None)
-            return res.unpack() if res else None
+            return res.unpack() if res is not None else None
         except Exception as e:
             logger.error(f"[DaemonClient] {method} failed: {e}")
             return None
