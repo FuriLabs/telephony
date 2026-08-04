@@ -183,6 +183,8 @@ class App(Adw.Application):
             "MessagesChanged", GLib.Variant("(ss)", (number or "", reason or ""))))
         self.db.connect('blocklist-updated', lambda *_args: self.dbus_daemon.emit_signal(
             "BlocklistChanged", None))
+        self.db.connect('history-updated', lambda *_args: self.dbus_daemon.emit_signal(
+            "HistoryChanged", None))
         self.eds.connect('contacts-loaded', lambda *_args: self.dbus_daemon.emit_signal(
             "ContactsChanged", None))
 
@@ -200,6 +202,9 @@ class App(Adw.Application):
         self.daemon_client.subscribe(
             "BlocklistChanged",
             lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
+        self.daemon_client.subscribe(
+            "HistoryChanged",
+            lambda *args: GLib.idle_add(self._replay_change, 'history-updated'))
         self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))

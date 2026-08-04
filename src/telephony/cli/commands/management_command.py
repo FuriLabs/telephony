@@ -100,7 +100,7 @@ def cmd_import_android_calls(args):
 def cmd_import_ios_sms(args):
     """Execute the import ios sms command."""
     proxy = get_proxy()
-    res = proxy.call_sync("ImportIosSms", GLib.Variant("(s)", (args.file_path,)), Gio.DBusCallFlags.NONE, -1, None)
+    res = proxy.call_sync("ImportIosSms", GLib.Variant("(sss)", (args.file_path, "", "")), Gio.DBusCallFlags.NONE, -1, None)
     success, msg = res.unpack()
     print(f"Success: {success}, Message: {msg}")
 
