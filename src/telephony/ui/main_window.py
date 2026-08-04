@@ -23,7 +23,7 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, Gio, GLib, Gdk
 from telephony.backend.utils.log_utils import logger
 
-from ..backend.utils.phone_utils import normalize_number, get_own_number
+from ..backend.utils.phone_utils import normalize_number
 from ..backend.utils.system_utils import get_phosh_emergency_calls
 from ..backend.utils import region_utils as utils
 from .views.history_view import HistoryView
@@ -271,7 +271,7 @@ class MainWindow(Adw.Window):
     def check_own_number(self):
         """Check if own number is set, warn if not."""
         def _check():
-            num = get_own_number()
+            num = self.app.daemon_client.get_own_number()
             if not num:
                 num = self.gsettings_mgr.get_setting("own_number")
 
@@ -286,7 +286,7 @@ class MainWindow(Adw.Window):
             if cc:
                 utils.set_custom_region(cc)
             else:
-                region = utils.detect_region()
+                region = self.app.daemon_client.detect_region()
                 if region:
                     self.gsettings_mgr.set_setting("default_country_code", region)
                     utils.set_custom_region(region)
