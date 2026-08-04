@@ -14,10 +14,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, Adw, GLib
-from loguru import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
-import os
 from ..widgets.common_widget import close_dialog
 
 
@@ -207,7 +205,7 @@ class DataManagementDialog:
 
     def _do_clear_history(self):
         """Clear history action."""
-        run_in_background(self.db.clear_history,
+        run_in_background(self.app_window.daemon.clear_call_history,
                           on_complete=lambda _r: self.app_window.notify_success(_("Call History Deleted")))
 
     def _do_clear_messages(self):
@@ -215,7 +213,7 @@ class DataManagementDialog:
         self.app_window.notify_loading(_("Deleting messages..."))
 
         def task():
-            self.db.clear_messages()
+            self.app_window.daemon.clear_messages()
             GLib.idle_add(self.app_window.hide_loading)
 
             GLib.idle_add(lambda: self.app_window.notify_success(_("Messages & Attachments Deleted")))
@@ -223,12 +221,12 @@ class DataManagementDialog:
 
     def _do_clear_groups(self):
         """Clear groups action."""
-        run_in_background(self.db.clear_group_names,
+        run_in_background(self.app_window.daemon.clear_group_names,
                           on_complete=lambda _r: self.app_window.notify_success(_("Group Names Reset")))
 
     def _do_clear_blocklist(self):
         """Clear blocklist action."""
-        run_in_background(self.db.clear_blocklist,
+        run_in_background(self.app_window.daemon.clear_blocklist,
                           on_complete=lambda _r: self.app_window.notify_success(_("Blocklist Cleared")))
 
     def _do_clear_contacts(self, source_uid=None):
@@ -263,14 +261,7 @@ class DataManagementDialog:
         self.app_window.notify_loading(_("Wiping Database..."))
 
         def task():
-            self.db.clear_everything()
-            self.eds.delete_all_contacts(source_uid=source_uid)
-            try:
-                cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
-                if os.path.exists(cfg):
-                    os.remove(cfg)
-            except Exception as e:
-                logger.warning(f"[DataManagement] Config removal failed: {e}")
+            self.app_window.daemon.clear_everything(source_uid)
             GLib.idle_add(self.app_window.hide_loading)
 
             GLib.idle_add(lambda: self.app_window.notify_success(_("App Reset Complete")))

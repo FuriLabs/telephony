@@ -50,10 +50,10 @@ install: build
 	install -m 644 data/io.furios.Telephony.Calls.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
 	install -m 644 data/io.furios.Telephony.Messages.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
 	install -m 644 data/io.furios.Telephony.Contacts.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
-	install -m 644 data/io.furios.Telephony.incall.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
-	install -m 644 data/io.furios.Telephony.emergency.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
+	install -m 644 data/io.furios.Telephony.Incall.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
+	install -m 644 data/io.furios.Telephony.Emergency.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
 
-	install -m 644 data/io.furios.Telephony.service $(DESTDIR)$(DBUS_SERVICE_DIR)/
+	install -m 644 data/io.furios.Telephony.Daemon.service $(DESTDIR)$(DBUS_SERVICE_DIR)/
 	install -m 644 data/io.furios.Telephony.metainfo.xml $(DESTDIR)$(METAINFO_DIR)/
 
 	install -m 644 data/io.furios.Telephony.svg $(DESTDIR)$(ICON_DIR)/apps/
@@ -82,10 +82,10 @@ uninstall:
 	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Calls.desktop
 	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Messages.desktop
 	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Contacts.desktop
-	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.incall.desktop
-	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.emergency.desktop
+	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Incall.desktop
+	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Emergency.desktop
 
-	rm -f $(DESTDIR)$(DBUS_SERVICE_DIR)/io.furios.Telephony.service
+	rm -f $(DESTDIR)$(DBUS_SERVICE_DIR)/io.furios.Telephony.Daemon.service
 	rm -f $(DESTDIR)$(METAINFO_DIR)/io.furios.Telephony.metainfo.xml
 
 	rm -f $(DESTDIR)$(ICON_DIR)/apps/io.furios.Telephony.svg

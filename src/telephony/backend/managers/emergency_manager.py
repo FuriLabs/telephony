@@ -19,9 +19,8 @@ from ..services.emergency_service import EmergencyService
 
 from gettext import gettext as _
 
-from ...constants import NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE
+from ...constants import EMERGENCY_APP_ID,  NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE
 
-EMERGENCY_APP_ID = "io.furios.Telephony.emergency"
 
 SELECTION_REVERT_MS = 15000
 CONFIRM_REVERT_MS = 10000

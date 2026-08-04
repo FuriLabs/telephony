@@ -163,13 +163,7 @@ class InCallWindow(Adw.Window):
 
         self._setup_ui()
 
-        def _on_close_req(w):
-            if self.in_recovery_mode:
-                return True
-            self.set_visible(False)
-            return True
-
-        self.connect('close-request', _on_close_req)
+        self.connect('close-request', self._on_close_req)
 
         self.ofono.connect('call-removed', self.on_call_removed)
         self.ofono.connect('call-added', lambda *a: self.update_state())
@@ -180,6 +174,20 @@ class InCallWindow(Adw.Window):
         self.sys_state.connect("lock-state-changed", self._on_lock_changed)
 
         self.update_state()
+
+    def _on_close_req(self, window):
+        """Stay put during a call, go away once there is none.
+
+        A call in progress keeps its window: losing it would leave the
+        call running with nothing to hang it up from. Silencing a
+        ringing call is the one way to put it aside, and that hides it
+        directly. With no call left the window closes for real, which
+        ends the process it runs in.
+        """
+        if self.in_recovery_mode or self.ofono.active_calls:
+            return True
+
+        return False
 
     def _proximity_tick(self):
         """Timer callback for proximity sensor handling."""
@@ -1079,6 +1087,7 @@ class InCallWindow(Adw.Window):
             if not (self._closing_paths & set(self.ofono.active_calls)):
                 logger.info("[InCall] Hangup confirmed by ofono, finishing teardown")
                 self._recover_from_closing()
+                self._close_when_idle()
             return
         if self.in_error_mode:
             if not self.ofono.active_calls:
@@ -1090,6 +1099,19 @@ class InCallWindow(Adw.Window):
         if p in self.ignored_calls:
             self.ignored_calls.remove(p)
         self.update_state()
+        self._close_when_idle()
+
+    def _close_when_idle(self):
+        """Close once the last call is gone, unless the modem needs the page.
+
+        This window is its own process now, so a window left standing
+        after the call holds a process worth of memory until the phone
+        is restarted.
+        """
+        if self.ofono.active_calls or self.in_recovery_mode or self.in_error_mode:
+            return
+        logger.info("[InCall] No calls left, closing")
+        self.close()
 
     def _mk_route_row(self, route, name, selected):
         """Build one selectable route row for a routing popover."""

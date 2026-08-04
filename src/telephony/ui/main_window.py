@@ -71,7 +71,7 @@ class MainWindow(Adw.Window):
         self.ofono = ofono_manager
         self.mms = mms_manager
         self.gsettings_mgr = gsettings_mgr
-        self.scheduler = self.app.scheduler
+        self.daemon = self.app.daemon_client
 
 
         self.toast_overlay = Adw.ToastOverlay()
@@ -199,8 +199,31 @@ class MainWindow(Adw.Window):
         """Handle window map event."""
         if not self._initial_check_done:
             self._initial_check_done = True
+            self.check_daemon_service()
             missed_messages_dialog = MissedScheduledMessagesDialog(self)
             self.enqueue_popup(missed_messages_dialog.check_missed_scheduled_messages)
+
+    def check_daemon_service(self):
+        """Say when the background service is down, and offer to start it.
+
+        Without it nothing answers for calls or arriving messages, and
+        this window will not stand in, so the user has to know.
+        """
+        if not self.app.daemon_missing:
+            return
+
+        toast = Adw.Toast.new(_("Telephony service is not running"))
+        toast.set_timeout(0)
+        toast.set_button_label(_("Start"))
+        toast.connect("button-clicked", lambda t: self.app.retry_daemon_start(self._on_daemon_retried))
+        self.toast_overlay.add_toast(toast)
+
+    def _on_daemon_retried(self, started):
+        """Report whether the service answered this time."""
+        if started:
+            self.notify_success(_("Telephony service started"))
+            return
+        self.check_daemon_service()
 
     def on_close_request(self, *args):
         """Handle window close request."""
@@ -756,7 +779,7 @@ class MainWindow(Adw.Window):
 
         if is_blocked_id:
             def _unblock():
-                self.db.unblock_number(is_blocked_id, item.number)
+                self.daemon.remove_blocked_number(is_blocked_id)
                 self.notify_success(_("Unblocked"))
             add_action(_("Unblock Number"), _unblock, needs_eds=True)
         else:
@@ -776,7 +799,7 @@ class MainWindow(Adw.Window):
 
         add_action(_("Delete this call"),
                    lambda: self.confirm_action(_("Delete Call"), _("Remove this call?"),
-                                               lambda: [self.db.delete_call_by_id(item.id)]),
+                                               lambda: [self.daemon.delete_call_entry(item.id)]),
                    destructive=True)
 
         sheet.present(self)

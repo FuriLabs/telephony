@@ -96,9 +96,10 @@ class EdsManager(GObject.Object):
             saved_config.sort(key=lambda x: x.get('rank', 999))
 
             def load_sources_async():
-                for item in saved_config:
-                    if item.get('enabled', True):
-                        self._load_from_local_db(item['uid'], item.get('rank', 0))
+                with self.reload_lock:
+                    for item in saved_config:
+                        if item.get('enabled', True):
+                            self._load_from_local_db(item['uid'], item.get('rank', 0))
                 GLib.idle_add(self.emit, 'contacts-loaded')
 
             run_in_background(load_sources_async)
@@ -327,19 +328,20 @@ class EdsManager(GObject.Object):
             client = EBook.BookClient.connect_sync(source_obj, wait_seconds, None)
             source_info['client'] = client
 
-            try:
-                success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
-                connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
-                if success and (is_local or connected):
-                    comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
-                    if comp_uids or not self._has_cached_contacts(uid):
-                        self.db_ref.sync_deleted_contacts(uid, comp_uids)
-                    else:
-                        logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
-                elif success:
-                    logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
-            except Exception as ex:
-                logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
+            if self.owns_live_views:
+                try:
+                    success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
+                    connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
+                    if success and (is_local or connected):
+                        comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
+                        if comp_uids or not self._has_cached_contacts(uid):
+                            self.db_ref.sync_deleted_contacts(uid, comp_uids)
+                        else:
+                            logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
+                    elif success:
+                        logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
+                except Exception as ex:
+                    logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
 
             if not self.owns_live_views:
                 with self.sources_lock:
@@ -435,27 +437,30 @@ class EdsManager(GObject.Object):
         A window instance watches no address book, so the owner saying
         that the mirror moved is the only reason it has to read it
         again. The rebuilt maps replace the old ones in one step, so a
-        lookup running meanwhile never sees a half-empty cache.
+        lookup running meanwhile never sees a half-empty cache. It waits
+        for a load already in flight, whose contacts would otherwise be
+        thrown away by the rebuild that started without them.
         """
-        with self.cache_lock:
-            ranks = dict(self._source_ranks)
+        with self.reload_lock:
+            with self.cache_lock:
+                ranks = dict(self._source_ranks)
 
-        cache = {}
-        lookup_map = {}
-        for source_uid, rank in ranks.items():
-            entries = self._cache_entries_from_db(source_uid, rank)
-            if entries is None:
-                logger.warning(f"[EDS] Keeping the previous contacts: {source_uid} could not be read")
-                return
+            cache = {}
+            lookup_map = {}
+            for source_uid, rank in ranks.items():
+                entries = self._cache_entries_from_db(source_uid, rank)
+                if entries is None:
+                    logger.warning(f"[EDS] Keeping the previous contacts: {source_uid} could not be read")
+                    return
 
-            updates, lookup_updates = entries
-            cache.update(updates)
-            for norm, items in lookup_updates.items():
-                lookup_map.setdefault(norm, []).extend(items)
+                updates, lookup_updates = entries
+                cache.update(updates)
+                for norm, items in lookup_updates.items():
+                    lookup_map.setdefault(norm, []).extend(items)
 
-        with self.cache_lock:
-            self.cache = cache
-            self.lookup_map = lookup_map
+            with self.cache_lock:
+                self.cache = cache
+                self.lookup_map = lookup_map
 
         GLib.idle_add(self.emit, 'contacts-loaded')
 

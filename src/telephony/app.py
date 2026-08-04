@@ -35,7 +35,7 @@ from loguru import logger
 from .backend.services.dbus_service import TelephonyDaemonDBus
 from .backend.services.system_state_service import SystemStateService
 from .backend.managers.modem_recovery_manager import execute_modem_recovery, watch_recovery_result
-from .constants import APP_ID
+from .constants import APP_ID, INCALL_APP_ID, EMERGENCY_APP_ID, INCALL_DESKTOP_FILE, DAEMON_APP_ID, DAEMON_BUS_NAME
 from .backend.managers.database_manager import DatabaseManager
 from .backend.managers.gsettings_manager import GSettingsManager
 from .backend.managers.ofono_manager import OfonoManager
@@ -58,6 +58,9 @@ BOOT_UNAVAILABLE_DELAY_SECONDS = 5
 STARTUP_MODEM_CHECK_SECONDS = 15
 NETWORK_NUDGE_DELAY_SECONDS = 300
 DENIED_NOTIFY_DELAY_SECONDS = 120
+DAEMON_START_TIMEOUT_MS = 25000
+DBUS_START_REPLY_SUCCESS = 1
+DBUS_START_REPLY_ALREADY_RUNNING = 2
 
 
 class App(Adw.Application):
@@ -70,7 +73,10 @@ class App(Adw.Application):
         super().__init__(application_id=application_id,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
+        self.daemon_missing = False
         self.is_daemon = self._resolve_daemon_role(application_id)
+        self.owns_incall_ui = application_id == INCALL_APP_ID
+        self.recovery_state = (False, "", False)
 
         self.db = None
         self.ofono = None
@@ -80,7 +86,6 @@ class App(Adw.Application):
         self.incall = None
         self.ringback = None
         self.scheduler = None
-        self._replaying_change = False
 
         self.notification_counts = defaultdict(int)
 
@@ -91,25 +96,80 @@ class App(Adw.Application):
         the windows apart, which means one telephony process per icon.
         Exactly one of them may hold the modem, store what arrives and
         run scheduled work: the instance carrying the plain id, which is
-        what the service starts. A window instance takes the role only
-        when nobody else has claimed it, so a phone without the service
-        still receives calls and messages.
+        what the service starts. When no owner answers, this asks the bus
+        to start the service rather than stepping in, because a window
+        that takes the role keeps the plain name unclaimed and the other
+        windows would each take it too and send their calls nowhere.
+        A window never takes the role, not even when the service refuses
+        to start: two owners file every arriving message twice, which is
+        worse than a window that says the service is down and offers to
+        start it again.
         """
-        if application_id == APP_ID:
+        if application_id == DAEMON_APP_ID:
             return True
+
         try:
             bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        except Exception as e:
+            logger.error(f"[App] No session bus, the daemon cannot be reached: {e}")
+            self.daemon_missing = True
+            return False
+
+        if self._daemon_name_owned(bus):
+            return False
+
+        self.daemon_missing = not self._start_daemon_service(bus)
+        if self.daemon_missing:
+            logger.error("[App] The telephony service could not be started")
+        return False
+
+    def retry_daemon_start(self, on_done):
+        """Ask the bus for the service again; on_done hears whether it came.
+
+        The window stays usable while this runs, because the reply can
+        take as long as a cold service start.
+        """
+        def task():
+            bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+            started = self._daemon_name_owned(bus) or self._start_daemon_service(bus)
+            self.daemon_missing = not started
+            return started
+
+        run_in_background(task, on_complete=on_done)
+
+    def _daemon_name_owned(self, bus):
+        """Return True when a process already answers for the plain name."""
+        try:
             res = bus.call_sync(
                 "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
-                "NameHasOwner", GLib.Variant("(s)", (APP_ID,)),
+                "NameHasOwner", GLib.Variant("(s)", (DAEMON_BUS_NAME,)),
                 GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
-            claimed = res.unpack()[0]
+            return res.unpack()[0]
         except Exception as e:
             logger.warning(f"[App] Could not check for a running daemon: {e}")
-            claimed = False
-        if not claimed:
-            logger.info("[App] No telephony daemon found, taking the role")
-        return not claimed
+            return False
+
+    def _start_daemon_service(self, bus):
+        """Have the bus start the telephony service; blocking, bounded wait.
+
+        The reply arrives once the service owns the name, so a window
+        that gets it can proxy its first action straight away.
+        """
+        logger.info("[App] No telephony daemon found, asking the bus to start the service")
+        try:
+            res = bus.call_sync(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                "StartServiceByName", GLib.Variant("(su)", (DAEMON_BUS_NAME, 0)),
+                GLib.VariantType("(u)"), Gio.DBusCallFlags.NONE,
+                DAEMON_START_TIMEOUT_MS, None)
+            started = res.unpack()[0] in (DBUS_START_REPLY_SUCCESS, DBUS_START_REPLY_ALREADY_RUNNING)
+        except Exception as e:
+            logger.warning(f"[App] Could not start the telephony service: {e}")
+            return False
+
+        if started:
+            logger.info("[App] Telephony service started, staying a window")
+        return started
 
     def _announce_changes(self):
         """Tell window instances when the stored data changed.
@@ -122,6 +182,8 @@ class App(Adw.Application):
             "MessagesChanged", GLib.Variant("(ss)", (number or "", reason or ""))))
         self.db.connect('blocklist-updated', lambda *_args: self.dbus_daemon.emit_signal(
             "BlocklistChanged", None))
+        self.db.connect('history-updated', lambda *_args: self.dbus_daemon.emit_signal(
+            "HistoryChanged", None))
         self.eds.connect('contacts-loaded', lambda *_args: self.dbus_daemon.emit_signal(
             "ContactsChanged", None))
 
@@ -131,7 +193,6 @@ class App(Adw.Application):
         The change arrives over the bus and is repeated on the local
         managers, so every view keeps listening to what it always did.
         """
-        self.daemon_client = DaemonClient()
         self.daemon_client.subscribe(
             "MessagesChanged",
             lambda *args: GLib.idle_add(
@@ -140,37 +201,38 @@ class App(Adw.Application):
             "BlocklistChanged",
             lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
         self.daemon_client.subscribe(
+            "HistoryChanged",
+            lambda *args: GLib.idle_add(self._replay_change, 'history-updated'))
+        self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))
 
-        self.db.connect('messages-updated', lambda _db, number, reason: self._report_change(
-            "messages", number or "", reason or ""))
-        self.db.connect('blocklist-updated', lambda *_args: self._report_change("blocklist", "", ""))
+        if self.owns_incall_ui:
+            self.daemon_client.subscribe(
+                "RecoveryStateChanged",
+                lambda *args: GLib.idle_add(self._apply_recovery_state, *args[5].unpack()))
+            self._seed_recovery_state()
+
+    def _seed_recovery_state(self):
+        """Ask the owner what the modem is doing right now.
+
+        This window can start after the state changed, and a signal
+        that already went out would leave its recovery page blank.
+        """
+        def task():
+            return self.daemon_client.call(
+                "GetRecoveryState", None, GLib.VariantType("(bsb)"))
+
+        def done(state):
+            if state:
+                self._apply_recovery_state(*state)
+
+        run_in_background(task, on_complete=done)
 
     def _replay_change(self, name, *args):
-        """Repeat on the local managers what the owner reported.
-
-        The flag marks the emission as second-hand: a window must not
-        report back a change it was only told about, or the report
-        would bounce between the owner and the windows forever.
-        """
-        self._replaying_change = True
-        try:
-            self.db.emit(name, *args)
-        finally:
-            self._replaying_change = False
+        """Repeat on the local managers what the owner reported."""
+        self.db.emit(name, *args)
         return False
-
-    def _report_change(self, kind, number, reason):
-        """Tell the owner about a write this window made.
-
-        Nothing watches the database file, so a thread marked read here
-        stays unread in the other windows until the owner repeats it.
-        """
-        if self._replaying_change or not self.daemon_client:
-            return
-        self.daemon_client.call_async(
-            "NotifyChanged", GLib.Variant("(sss)", (kind, number, reason)))
 
     def _setup_feedbackd(self):
         """Setup feedbackd application profiles."""
@@ -187,7 +249,7 @@ class App(Adw.Application):
                     settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd")
                     allowed = settings.get_strv('allow-important')
 
-                    apps_to_add = ['io.furios.Telephony.incall', 'io.furios.Telephony.emergency']
+                    apps_to_add = [INCALL_APP_ID, EMERGENCY_APP_ID]
                     new_allowed = list(set(allowed + apps_to_add))
 
                     if len(new_allowed) != len(allowed):
@@ -201,10 +263,10 @@ class App(Adw.Application):
                 if not schema or not schema.has_key("profile"):
                     logger.debug("org.sigxcpu.feedbackd.application schema or profile key missing")
                 else:
-                    emerg_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-emergency/")
+                    emerg_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-Emergency/")
                     emerg_settings.set_string("profile", "silent")
 
-                    incall_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-incall/")
+                    incall_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-Incall/")
                     incall_settings.set_string("profile", "silent")
 
                     logger.info("Set feedbackd silent profiles for emergency and incall using Gio.Settings.")
@@ -237,7 +299,7 @@ class App(Adw.Application):
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
         self.eds = EdsManager(owns_live_views=self.is_daemon)
-        self.db = DatabaseManager(self.eds, self.gsettings_mgr)
+        self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=self.is_daemon)
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoManager(self.db, self.gsettings_mgr, owns_reception=self.is_daemon)
 
@@ -261,7 +323,7 @@ class App(Adw.Application):
             self.mms.connect('message-received', self.on_mms_received)
 
         self.dbus_daemon = None
-        self.daemon_client = None
+        self.daemon_client = DaemonClient()
         if self.is_daemon:
             self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
             self._announce_changes()
@@ -302,7 +364,8 @@ class App(Adw.Application):
             self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
             self.scheduler.start()
 
-        run_in_background(self.db.fail_stale_sending)
+        if self.is_daemon:
+            run_in_background(self.db.fail_stale_sending)
 
         action_open = Gio.SimpleAction.new("open-chat", GLib.VariantType.new("s"))
         action_open.connect("activate", self.on_action_open_chat)
@@ -321,12 +384,19 @@ class App(Adw.Application):
         if self.incall is None:
             logger.info("Initializing InCallWindow (Lazy Load)")
             self.incall = InCallWindow(self.gsettings_mgr, self.ofono, self.eds, self.db)
+            self.add_window(self.incall)
 
-            def _on_incall_closed(_w):
-                logger.info("InCallWindow hidden.")
-                return True
+            self.incall.connect("close-request", self._on_incall_closed)
 
-            self.incall.connect("close-request", _on_incall_closed)
+    def _on_incall_closed(self, window):
+        """Forget the call window once it is really gone.
+
+        The window itself decides whether a close means stepping aside
+        or leaving, so reaching here means it left.
+        """
+        logger.info("InCallWindow closed, dropping it")
+        self.incall = None
+        return False
 
     def _any_window_active(self):
         """Return True when any application window currently has focus."""
@@ -359,10 +429,33 @@ class App(Adw.Application):
 
     def _on_global_call_added(self, _manager, path, _props):
         """Global handler for new calls to ensure InCallWindow is presented."""
-        self._ensure_incall_window()
-        self.incall.defer_present = True
-        self.release_keyboard_focus()
-        GLib.idle_add(self._present_incall_window)
+        self.show_incall_ui()
+
+    def show_incall_ui(self):
+        """Bring up the call window, wherever it lives.
+
+        The window runs as its own application so the shell can tell it
+        apart from the other launchers, which means the owner starts it
+        rather than drawing it. Launching an instance that already runs
+        reaches the running one, so a second call is not a second
+        window.
+        """
+        if self.owns_incall_ui:
+            self._ensure_incall_window()
+            self.incall.defer_present = True
+            self.release_keyboard_focus()
+            GLib.idle_add(self._present_incall_window)
+            return
+
+        app_info = Gio.DesktopAppInfo.new(INCALL_DESKTOP_FILE)
+        if not app_info:
+            logger.error(f"[App] {INCALL_DESKTOP_FILE} is missing, no call window to show")
+            return
+
+        try:
+            app_info.launch(None, None)
+        except Exception as e:
+            logger.error(f"[App] Could not start the call window: {e}")
 
     def _setup_icon_paths(self):
         """
@@ -565,10 +658,6 @@ class App(Adw.Application):
                 GLib.idle_add(self.quit)
         return False
 
-    def do_shutdown(self):
-        """Perform shutdown cleanup."""
-        super().do_shutdown()
-
     def on_incoming_message(self, _ofono_obj, number, body):
         """Handle incoming SMS."""
         is_chat_open = False
@@ -727,8 +816,7 @@ class App(Adw.Application):
     def _surface_modem_recovery(self, failed=False):
         """Show the recovery screen, or just a bare notification while locked."""
         self._modem_notified = True
-        self._ensure_incall_window()
-        self.incall.enter_recovery_mode(self._describe_modem_problem(), failed=failed)
+        self._publish_recovery_state(True, self._describe_modem_problem(), failed)
 
         if self.sys_state.is_locked:
             self._recovery_pending_unlock = True
@@ -746,14 +834,39 @@ class App(Adw.Application):
     def _present_recovery_surface(self):
         """Bring up the in-call window on its recovery page."""
         self._recovery_pending_unlock = False
-        self.release_keyboard_focus()
-        GLib.idle_add(self._present_incall_window)
+        self.show_incall_ui()
 
     def _dismiss_recovery_surface(self):
         """Take the recovery page down once the modem works again."""
         self._recovery_pending_unlock = False
-        if self.incall:
-            self.incall.exit_recovery_mode()
+        self._publish_recovery_state(False, "", False)
+
+    def _publish_recovery_state(self, active, message, failed):
+        """Report the recovery state to whoever draws the call window.
+
+        The modem is watched here but the recovery page belongs to the
+        call window, which is moving to a process of its own, so this
+        reports the state instead of reaching into the window.
+        """
+        self.recovery_state = (active, message, failed)
+        if self.dbus_daemon:
+            self.dbus_daemon.emit_signal(
+                "RecoveryStateChanged", GLib.Variant("(bsb)", (active, message, failed)))
+        if self.owns_incall_ui:
+            self._apply_recovery_state(active, message, failed)
+            return
+        if active:
+            self.show_incall_ui()
+
+    def _apply_recovery_state(self, active, message, failed):
+        """Put the call window on its recovery page, or take it off."""
+        if not active:
+            if self.incall:
+                self.incall.exit_recovery_mode()
+            return
+
+        self._ensure_incall_window()
+        self.incall.enter_recovery_mode(message, failed=failed)
 
     def _on_lock_state_changed(self, _service, is_locked):
         """Show the pending recovery screen once the user unlocks."""

@@ -35,6 +35,7 @@ DAEMON_INTERFACE_XML = """
     <!-- Call operations -->
     <method name="Dial">
       <arg type="s" name="number" direction="in"/>
+      <arg type="b" name="hide_id" direction="in"/>
       <arg type="b" name="success" direction="out"/>
     </method>
     <method name="Answer">
@@ -100,6 +101,35 @@ DAEMON_INTERFACE_XML = """
     <method name="MarkThreadAsRead">
       <arg type="s" name="number" direction="in"/>
     </method>
+    <method name="MarkConversationUnread">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="i" name="msg_id" direction="in"/>
+    </method>
+    <method name="SaveDraft">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="s" name="attachments_json" direction="in"/>
+    </method>
+    <method name="RescheduleMessage">
+      <arg type="i" name="msg_id" direction="in"/>
+      <arg type="s" name="scheduled_timestamp" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="RetryMessage">
+      <arg type="i" name="msg_id" direction="in"/>
+    </method>
+    <method name="SendTrackedSms">
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="text" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="DeleteCallHistoryEntry">
+      <arg type="i" name="call_id" direction="in"/>
+    </method>
+    <method name="UpdateHistoryNames">
+      <arg type="s" name="numbers_json" direction="in"/>
+      <arg type="s" name="new_name" direction="in"/>
+    </method>
 
     <!-- Data Retrieval (returns JSON strings for simplicity) -->
 
@@ -151,6 +181,8 @@ DAEMON_INTERFACE_XML = """
     </method>
     <method name="ImportIosSms">
       <arg type="s" name="file_path" direction="in"/>
+      <arg type="s" name="manifest_path" direction="in"/>
+      <arg type="s" name="backup_dir" direction="in"/>
       <arg type="b" name="success" direction="out"/>
       <arg type="s" name="msg" direction="out"/>
     </method>
@@ -200,6 +232,7 @@ DAEMON_INTERFACE_XML = """
     <method name="AddBlockedNumber">
       <arg type="s" name="number" direction="in"/>
       <arg type="s" name="note" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
     </method>
     <method name="RemoveBlockedNumber">
       <arg type="s" name="bid" direction="in"/>
@@ -264,6 +297,12 @@ DAEMON_INTERFACE_XML = """
     </signal>
     <signal name="ContactsChanged"/>
     <signal name="BlocklistChanged"/>
+    <signal name="HistoryChanged"/>
+    <signal name="RecoveryStateChanged">
+      <arg type="b" name="active"/>
+      <arg type="s" name="message"/>
+      <arg type="b" name="failed"/>
+    </signal>
     <method name="SendUssd">
       <arg type="s" name="command" direction="in"/>
       <arg type="s" name="response" direction="out"/>
@@ -284,10 +323,10 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="password" direction="in"/>
       <arg type="s" name="error" direction="out"/>
     </method>
-    <method name="NotifyChanged">
-      <arg type="s" name="kind" direction="in"/>
-      <arg type="s" name="number" direction="in"/>
-      <arg type="s" name="reason" direction="in"/>
+    <method name="GetRecoveryState">
+      <arg type="b" name="active" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+      <arg type="b" name="failed" direction="out"/>
     </method>
   </interface>
 </node>
@@ -409,21 +448,14 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _handle_notifychanged(self, parameters, invocation):
-        """Repeat a change a window made so the other windows hear it.
+    def _handle_getrecoverystate(self, parameters, invocation):
+        """Report the recovery state to a call window that just started.
 
-        Windows write to the same database directly, and a write leaves
-        no trace the other processes can see. The owner re-emits it on
-        its own managers, which announces it to everyone.
+        The window can start after the state changed, so the signal
+        alone would leave it showing nothing.
         """
-        kind, number, reason = parameters.unpack()
-        if kind == "messages" and self.db:
-            self.db.emit('messages-updated', number, reason)
-        elif kind == "blocklist" and self.db:
-            self.db.emit('blocklist-updated')
-        else:
-            logger.warning(f"[Daemon] NotifyChanged with unknown kind: {kind}")
-        invocation.return_value(None)
+        active, message, failed = self.app.recovery_state
+        invocation.return_value(GLib.Variant("(bsb)", (active, message, failed)))
 
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
@@ -454,10 +486,17 @@ class TelephonyDaemonDBus:
             "CallAction": self._handle_callaction,
             "GetNetworkProperties": self._handle_getnetworkproperties,
             "SetNetworkProperty": self._handle_setnetworkproperty,
-            "NotifyChanged": self._handle_notifychanged,
+            "GetRecoveryState": self._handle_getrecoverystate,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,
+            "MarkConversationUnread": self._handle_markconversationunread,
+            "SaveDraft": self._handle_savedraft,
+            "RescheduleMessage": self._handle_reschedulemessage,
+            "RetryMessage": self._handle_retrymessage,
+            "SendTrackedSms": self._handle_sendtrackedsms,
+            "DeleteCallHistoryEntry": self._handle_deletecallhistoryentry,
+            "UpdateHistoryNames": self._handle_updatehistorynames,
             "ClearMessages": self._handle_clearmessages,
             "SetGroupName": self._handle_setgroupname,
             "ClearGroupNames": self._handle_cleargroupnames,
@@ -508,12 +547,11 @@ class TelephonyDaemonDBus:
 
     def _handle_dial(self, parameters, invocation):
         """Handle Dial command."""
-        number = parameters.unpack()[0]
+        number, hide_id = parameters.unpack()
         success = True
 
         def do_dial():
-            action = Gio.SimpleAction.new("dial-number", GLib.VariantType.new("s"))
-            self.app.on_action_dial(action, GLib.Variant("s", number))
+            self.ofono.dial(number, hide_id=hide_id)
         GLib.idle_add(do_dial)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
@@ -650,6 +688,8 @@ class TelephonyDaemonDBus:
         msg_id = parameters.unpack()[0]
         if self.db:
             self.db.delete_message(msg_id)
+        if self.app and self.app.scheduler:
+            self.app.scheduler.remove_cron(msg_id)
         invocation.return_value(None)
 
     def _handle_deleteconversation(self, parameters, invocation):
@@ -657,6 +697,8 @@ class TelephonyDaemonDBus:
         number = parameters.unpack()[0]
         if self.db:
             self.db.delete_conversation(number)
+        if self.app and self.app.scheduler:
+            self.app.scheduler.schedule_next_run()
         invocation.return_value(None)
 
     def _handle_markthreadasread(self, parameters, invocation):
@@ -665,6 +707,127 @@ class TelephonyDaemonDBus:
         if self.db:
             self.db.mark_conversation_read(number)
         invocation.return_value(None)
+
+    def _handle_markconversationunread(self, parameters, invocation):
+        """Handle MarkConversationUnread command."""
+        number, msg_id = parameters.unpack()
+        if not self.db:
+            invocation.return_value(None)
+            return
+        self._run_task_then_reply(
+            invocation, lambda: self.db.mark_conversation_unread_from_message(number, msg_id))
+
+    def _handle_savedraft(self, parameters, invocation):
+        """Replace the stored draft for a conversation.
+
+        An empty text with no attachments just clears the draft, which
+        is what a window asks for right before it hands off a send.
+        """
+        number, text, attachments_json = parameters.unpack()
+        attachments = []
+        try:
+            if attachments_json:
+                attachments = json.loads(attachments_json)
+        except Exception as e:
+            logger.warning(f"[DBus] Failed to parse draft attachments: {e}")
+
+        def task():
+            self.db.delete_drafts(number)
+            if text or attachments:
+                self.db.add_message(number, 'outgoing', text, status='draft',
+                                    subject=None, attachments=attachments, sender="Me")
+
+        if not self.db:
+            invocation.return_value(None)
+            return
+        self._run_task_then_reply(invocation, task)
+
+    def _handle_reschedulemessage(self, parameters, invocation):
+        """Handle RescheduleMessage command."""
+        msg_id, scheduled_timestamp = parameters.unpack()
+        success = False
+        scheduled_timestamp = self._normalize_schedule_timestamp(scheduled_timestamp)
+        if scheduled_timestamp and self.db:
+            success = bool(self.db.update_message_schedule(
+                msg_id, status="scheduled", timestamp=scheduled_timestamp))
+            if success and self.app and self.app.scheduler:
+                self.app.scheduler.add_cron(msg_id, scheduled_timestamp)
+        invocation.return_value(GLib.Variant("(b)", (success,)))
+
+    def _handle_retrymessage(self, parameters, invocation):
+        """Resend a failed message for a window instance, keeping its row."""
+        msg_id = parameters.unpack()[0]
+
+        def task():
+            details = self.db.get_message_details(msg_id)
+            if not details:
+                logger.warning(f"[DBus] Retry asked for unknown message {msg_id}")
+                return
+            _mid, number, body, subject, attachments_json, _status = details
+            attachments = []
+            try:
+                if attachments_json:
+                    attachments = json.loads(attachments_json)
+            except Exception as e:
+                logger.warning(f"[DBus] Failed to parse retry attachments: {e}")
+
+            self.db.update_message_status(msg_id, "sending")
+            is_group = "," in number
+            if is_group or attachments or subject:
+                if self.app and self.app.mms:
+                    targets = [n.strip() for n in number.split(",")] if is_group else [number]
+                    self.app.mms.send_mms_tracked(targets, body, attachments, msg_id)
+                else:
+                    self.db.update_message_status(msg_id, "failed")
+            elif self.ofono:
+                self.ofono.send_sms_tracked(number, body, msg_id)
+            else:
+                self.db.update_message_status(msg_id, "failed")
+
+        if not self.db:
+            invocation.return_value(None)
+            return
+        self._run_task_then_reply(invocation, task)
+
+    def _handle_sendtrackedsms(self, parameters, invocation):
+        """Record an SMS and send it with delivery tracking for a window."""
+        number, text = parameters.unpack()
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Tracked SMS send failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.ofono:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.ofono.send_quick_response, number, text,
+                          on_complete=done, on_error=failed)
+
+    def _handle_deletecallhistoryentry(self, parameters, invocation):
+        """Handle DeleteCallHistoryEntry command."""
+        call_id = parameters.unpack()[0]
+        if self.db:
+            self.db.delete_call_by_id(call_id)
+        invocation.return_value(None)
+
+    def _handle_updatehistorynames(self, parameters, invocation):
+        """Handle UpdateHistoryNames command."""
+        numbers_json, new_name = parameters.unpack()
+        numbers = []
+        try:
+            if numbers_json:
+                numbers = json.loads(numbers_json)
+        except Exception as e:
+            logger.warning(f"[DBus] Failed to parse history numbers: {e}")
+
+        if not numbers or not self.db:
+            invocation.return_value(None)
+            return
+        self._run_task_then_reply(
+            invocation, lambda: self.db.update_history_names(numbers, new_name=new_name or None))
 
     def _handle_clearmessages(self, parameters, invocation):
         """Handle ClearMessages command."""
@@ -839,8 +1002,9 @@ class TelephonyDaemonDBus:
 
     def _handle_importiossms(self, parameters, invocation):
         """Handle ImportIosSms command."""
-        file_path = parameters.unpack()[0]
-        self._run_import(invocation, lambda: import_ios_sms(self.db, file_path))
+        file_path, manifest_path, backup_dir = parameters.unpack()
+        self._run_import(invocation, lambda: import_ios_sms(
+            self.db, file_path, manifest_path or None, backup_dir or None))
 
     def _handle_importioscalls(self, parameters, invocation):
         """Handle ImportIosCalls command."""
@@ -958,9 +1122,19 @@ class TelephonyDaemonDBus:
     def _handle_addblockednumber(self, parameters, invocation):
         """Handle AddBlockedNumber command."""
         number, note = parameters.unpack()
-        if self.db:
-            self.db.block_number(number, note)
-        invocation.return_value(None)
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Block number failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.db:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.db.block_number, number, note,
+                          on_complete=done, on_error=failed)
 
     def _handle_removeblockednumber(self, parameters, invocation):
         """Handle RemoveBlockedNumber command."""
@@ -977,7 +1151,8 @@ class TelephonyDaemonDBus:
         data = []
         if self.app and self.app.scheduler:
             missed = self.app.scheduler.get_missed_messages()
-            data = [{"id": m[0], "number": m[1], "body": m[2], "timestamp": m[5]} for m in missed]
+            data = [{"id": m[0], "number": m[1], "body": m[2], "subject": m[3],
+                     "attachments": m[4] or "[]", "timestamp": m[5]} for m in missed]
         else:
             logger.debug("[DBus] Cannot get missed messages: scheduler not available")
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))

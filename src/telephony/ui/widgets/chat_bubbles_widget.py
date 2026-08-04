@@ -577,9 +577,10 @@ class ChatBubbleFactory:
         menu.append(_("Copy"), "attachment.copy")
         menu.append(_("Save as"), "attachment.save-as")
 
+        btn.insert_action_group("attachment", group)
+
         pop = Gtk.PopoverMenu.new_from_model(menu)
-        pop.insert_action_group("attachment", group)
-        pop.connect("closed", lambda p: p.unparent())
+        pop.connect("closed", lambda p: GLib.idle_add(lambda: p.unparent() or False))
         pop.set_parent(btn)
         GLib.idle_add(lambda: pop.popup() or False)
 

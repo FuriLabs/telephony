@@ -33,7 +33,23 @@ from loguru import logger
 from .app import App
 from .backend.utils.translation_utils import install_i18n
 from .backend.utils.system_utils import start_systemd_service, stop_systemd_service, is_systemd_service_active
-from .constants import APP_ID
+from .constants import APP_ID, INCALL_APP_ID, DAEMON_APP_ID, DAEMON_BUS_NAME
+
+MESSAGE_URI_SCHEMES = ("sms:", "smsto:", "mms:", "mmsto:")
+CALL_URI_SCHEMES = ("tel:", "callto:")
+
+
+def messaging_requested(argv):
+    """Return True when the arguments name a conversation to open."""
+    if any(a.startswith("--open-chat") for a in argv):
+        return True
+    return any(a.startswith(MESSAGE_URI_SCHEMES) for a in argv)
+
+
+def call_requested(argv):
+    """Return True when the arguments name a number to dial."""
+    return any(a.startswith(CALL_URI_SCHEMES) for a in argv)
+
 
 def is_monitor_running():
     """
@@ -45,7 +61,7 @@ def is_monitor_running():
         "/org/freedesktop/DBus",
         "org.freedesktop.DBus",
         "NameHasOwner",
-        GLib.Variant("(s)", (APP_ID,)),
+        GLib.Variant("(s)", (DAEMON_BUS_NAME,)),
         GLib.VariantType("(b)"),
         Gio.DBusCallFlags.NONE,
         -1,
@@ -85,7 +101,7 @@ def main():
 
     has_ui_flags = any(f in sys.argv for f in ["--full", "--calls", "--messages", "--contacts"])
 
-    if not is_monitoring and not has_ui_flags and "--incall" not in sys.argv:
+    if not is_monitoring and not is_debug and not has_ui_flags and "--incall" not in sys.argv:
         sys.argv.append("--full")
         has_ui_flags = True
 
@@ -107,12 +123,20 @@ def main():
             except Exception as e:
                 logger.warning(f"Failed to check/start systemd service: {e}")
 
-    if "--calls" in sys.argv:
+    if is_monitoring or is_debug:
+        application_id = DAEMON_APP_ID
+    elif "--calls" in sys.argv:
         application_id = f"{APP_ID}.Calls"
     elif "--messages" in sys.argv:
         application_id = f"{APP_ID}.Messages"
     elif "--contacts" in sys.argv:
         application_id = f"{APP_ID}.Contacts"
+    elif "--incall" in sys.argv:
+        application_id = INCALL_APP_ID
+    elif messaging_requested(sys.argv):
+        application_id = f"{APP_ID}.Messages"
+    elif call_requested(sys.argv):
+        application_id = f"{APP_ID}.Calls"
     else:
         application_id = APP_ID
 

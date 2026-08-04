@@ -19,8 +19,8 @@ from ..services.notification_service import NotificationService
 
 from gettext import gettext as _
 
-INCALL_DESKTOP_ID = "io.furios.Telephony.incall"
-EMERGENCY_DESKTOP_ID = "io.furios.Telephony.emergency"
+INCALL_DESKTOP_ID = "io.furios.Telephony.Incall"
+EMERGENCY_DESKTOP_ID = "io.furios.Telephony.Emergency"
 PHOSH_NOTIFY_SCHEMA = "sm.puri.phosh.notifications"
 
 RESPAWN_DELAY_MS = 1000
