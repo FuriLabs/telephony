@@ -107,7 +107,7 @@ def main():
             except Exception as e:
                 logger.warning(f"Failed to check/start systemd service: {e}")
 
-    if is_monitoring:
+    if is_monitoring or is_debug:
         application_id = DAEMON_APP_ID
     elif "--calls" in sys.argv:
         application_id = f"{APP_ID}.Calls"
