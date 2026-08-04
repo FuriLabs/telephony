@@ -16,8 +16,9 @@
 from gi.repository import Gio, GLib
 from telephony.backend.utils.log_utils import logger
 
+from .backend.services.daemon_client import DaemonClient
 from .backend.managers.database_manager import DatabaseManager
-from .backend.managers.gsettings_manager import GSettingsManager
+from .backend.managers.settings_mirror import SettingsMirror
 from .backend.managers.ofono_mirror import OfonoMirror
 from .backend.managers.mms_manager import MmsManager
 from .backend.managers.eds_manager import EdsManager
@@ -139,12 +140,12 @@ class WindowCore:
 
         logger.info("Initializing window mirrors...")
         self.notification_manager = NotificationManager()
-        self.gsettings_mgr = GSettingsManager()
+        self.daemon_client = DaemonClient()
+        self.gsettings_mgr = SettingsMirror(self.daemon_client)
         self.eds = EdsManager(owns_live_views=False)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=False)
         self.eds.set_db(self.db, self.gsettings_mgr)
-        self.ofono = OfonoMirror(self.gsettings_mgr)
-        self.daemon_client = self.ofono.daemon
+        self.ofono = OfonoMirror(self.gsettings_mgr, daemon_client=self.daemon_client)
 
         self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager,
                               owns_reception=False)

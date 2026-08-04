@@ -348,7 +348,8 @@ class DaemonClient:
 
     def set_setting(self, key, value):
         """Ask the owner to persist one setting; dconf notifies readers."""
-        self.call_async("SetSetting", GLib.Variant("(ss)", (key, str(value))))
+        packed = json.dumps(value) if isinstance(value, (list, dict)) else str(value)
+        self.call_async("SetSetting", GLib.Variant("(ss)", (key, packed)))
 
     def get_own_number(self):
         """Read the subscriber's number; blocking, call from a worker."""

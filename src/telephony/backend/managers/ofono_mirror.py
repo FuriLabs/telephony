@@ -58,10 +58,10 @@ class OfonoMirror(GObject.Object):
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
     }
 
-    def __init__(self, gsettings_mgr=None):
+    def __init__(self, gsettings_mgr=None, daemon_client=None):
         super().__init__()
         self.gsettings_mgr = gsettings_mgr
-        self.daemon = DaemonClient()
+        self.daemon = daemon_client if daemon_client is not None else DaemonClient()
         self.audio = MirrorAudioState()
         self.active_calls = {}
         self.can_dial = False
