@@ -58,6 +58,9 @@ BOOT_UNAVAILABLE_DELAY_SECONDS = 5
 STARTUP_MODEM_CHECK_SECONDS = 15
 NETWORK_NUDGE_DELAY_SECONDS = 300
 DENIED_NOTIFY_DELAY_SECONDS = 120
+DAEMON_START_TIMEOUT_MS = 25000
+DBUS_START_REPLY_SUCCESS = 1
+DBUS_START_REPLY_ALREADY_RUNNING = 2
 
 
 class App(Adw.Application):
@@ -91,25 +94,64 @@ class App(Adw.Application):
         the windows apart, which means one telephony process per icon.
         Exactly one of them may hold the modem, store what arrives and
         run scheduled work: the instance carrying the plain id, which is
-        what the service starts. A window instance takes the role only
-        when nobody else has claimed it, so a phone without the service
-        still receives calls and messages.
+        what the service starts. When no owner answers, this asks the bus
+        to start the service rather than stepping in, because a window
+        that takes the role keeps the plain name unclaimed and the other
+        windows would each take it too and send their calls nowhere.
+        Only a phone where the service cannot start at all falls back to
+        acting alone, so it still receives calls and messages.
         """
         if application_id == APP_ID:
             return True
+
         try:
             bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        except Exception as e:
+            logger.warning(f"[App] No session bus, acting as the daemon: {e}")
+            return True
+
+        if self._daemon_name_owned(bus):
+            return False
+
+        if self._start_daemon_service(bus):
+            return False
+
+        logger.warning("[App] The telephony service could not be started, taking the role")
+        return True
+
+    def _daemon_name_owned(self, bus):
+        """Return True when a process already answers for the plain name."""
+        try:
             res = bus.call_sync(
                 "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
                 "NameHasOwner", GLib.Variant("(s)", (APP_ID,)),
                 GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
-            claimed = res.unpack()[0]
+            return res.unpack()[0]
         except Exception as e:
             logger.warning(f"[App] Could not check for a running daemon: {e}")
-            claimed = False
-        if not claimed:
-            logger.info("[App] No telephony daemon found, taking the role")
-        return not claimed
+            return False
+
+    def _start_daemon_service(self, bus):
+        """Have the bus start the telephony service; blocking, bounded wait.
+
+        The reply arrives once the service owns the name, so a window
+        that gets it can proxy its first action straight away.
+        """
+        logger.info("[App] No telephony daemon found, asking the bus to start the service")
+        try:
+            res = bus.call_sync(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                "StartServiceByName", GLib.Variant("(su)", (APP_ID, 0)),
+                GLib.VariantType("(u)"), Gio.DBusCallFlags.NONE,
+                DAEMON_START_TIMEOUT_MS, None)
+            started = res.unpack()[0] in (DBUS_START_REPLY_SUCCESS, DBUS_START_REPLY_ALREADY_RUNNING)
+        except Exception as e:
+            logger.warning(f"[App] Could not start the telephony service: {e}")
+            return False
+
+        if started:
+            logger.info("[App] Telephony service started, staying a window")
+        return started
 
     def _announce_changes(self):
         """Tell window instances when the stored data changed.
