@@ -62,20 +62,41 @@ class QrScanDialog(MediaCaptureWindow):
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
 
-        view = Adw.ToolbarView()
-        view.add_top_bar(Adw.HeaderBar())
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.toast_overlay.set_child(content)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        self.picture = Gtk.Picture(hexpand=True, vexpand=True)
-        box.append(self.picture)
+        header = Adw.HeaderBar()
+        header.set_show_start_title_buttons(False)
+        header.set_show_end_title_buttons(False)
+        content.append(header)
+
+        btn_cancel = Gtk.Button(label=_("Cancel"))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
+        header.pack_start(btn_cancel)
+
+        card_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        card_box.add_css_class("card")
+        card_box.set_hexpand(True)
+        card_box.set_vexpand(True)
+        card_box.set_margin_top(10)
+        card_box.set_margin_bottom(10)
+        card_box.set_margin_start(10)
+        card_box.set_margin_end(10)
+        card_box.set_overflow(Gtk.Overflow.HIDDEN)
+
+        self.picture = Gtk.Picture()
+        self.picture.set_can_shrink(True)
+        self.picture.set_hexpand(True)
+        self.picture.set_vexpand(True)
+        self.picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+        card_box.append(self.picture)
+        content.append(card_box)
 
         hint = Gtk.Label(label=_("Point the camera at a contact QR code"),
-                         wrap=True, justify=Gtk.Justification.CENTER, margin_bottom=12)
+                         wrap=True, justify=Gtk.Justification.CENTER,
+                         margin_top=20, margin_bottom=20)
         hint.add_css_class("dim-label")
-        box.append(hint)
-
-        view.set_content(box)
-        self.toast_overlay.set_child(view)
+        content.append(hint)
 
         self.connect("closed", self._on_closed)
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
