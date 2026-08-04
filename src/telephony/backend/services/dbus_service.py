@@ -284,6 +284,11 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="password" direction="in"/>
       <arg type="s" name="error" direction="out"/>
     </method>
+    <method name="NotifyChanged">
+      <arg type="s" name="kind" direction="in"/>
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="reason" direction="in"/>
+    </method>
   </interface>
 </node>
 """
@@ -404,6 +409,22 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
+    def _handle_notifychanged(self, parameters, invocation):
+        """Repeat a change a window made so the other windows hear it.
+
+        Windows write to the same database directly, and a write leaves
+        no trace the other processes can see. The owner re-emits it on
+        its own managers, which announces it to everyone.
+        """
+        kind, number, reason = parameters.unpack()
+        if kind == "messages" and self.db:
+            self.db.emit('messages-updated', number, reason)
+        elif kind == "blocklist" and self.db:
+            self.db.emit('blocklist-updated')
+        else:
+            logger.warning(f"[Daemon] NotifyChanged with unknown kind: {kind}")
+        invocation.return_value(None)
+
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
             None,
@@ -433,6 +454,7 @@ class TelephonyDaemonDBus:
             "CallAction": self._handle_callaction,
             "GetNetworkProperties": self._handle_getnetworkproperties,
             "SetNetworkProperty": self._handle_setnetworkproperty,
+            "NotifyChanged": self._handle_notifychanged,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,
