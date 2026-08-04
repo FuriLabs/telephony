@@ -75,6 +75,7 @@ class App(Adw.Application):
 
         self.daemon_missing = False
         self.is_daemon = self._resolve_daemon_role(application_id)
+        self.owns_incall_ui = self.is_daemon
 
         self.db = None
         self.ofono = None
@@ -795,8 +796,7 @@ class App(Adw.Application):
     def _surface_modem_recovery(self, failed=False):
         """Show the recovery screen, or just a bare notification while locked."""
         self._modem_notified = True
-        self._ensure_incall_window()
-        self.incall.enter_recovery_mode(self._describe_modem_problem(), failed=failed)
+        self._publish_recovery_state(True, self._describe_modem_problem(), failed)
 
         if self.sys_state.is_locked:
             self._recovery_pending_unlock = True
@@ -820,8 +820,30 @@ class App(Adw.Application):
     def _dismiss_recovery_surface(self):
         """Take the recovery page down once the modem works again."""
         self._recovery_pending_unlock = False
-        if self.incall:
-            self.incall.exit_recovery_mode()
+        self._publish_recovery_state(False, "", False)
+
+    def _publish_recovery_state(self, active, message, failed):
+        """Report the recovery state to whoever draws the call window.
+
+        The modem is watched here but the recovery page belongs to the
+        call window, which is moving to a process of its own, so this
+        reports the state instead of reaching into the window.
+        """
+        if self.dbus_daemon:
+            self.dbus_daemon.emit_signal(
+                "RecoveryStateChanged", GLib.Variant("(bsb)", (active, message, failed)))
+        if self.owns_incall_ui:
+            self._apply_recovery_state(active, message, failed)
+
+    def _apply_recovery_state(self, active, message, failed):
+        """Put the call window on its recovery page, or take it off."""
+        if not active:
+            if self.incall:
+                self.incall.exit_recovery_mode()
+            return
+
+        self._ensure_incall_window()
+        self.incall.enter_recovery_mode(message, failed=failed)
 
     def _on_lock_state_changed(self, _service, is_locked):
         """Show the pending recovery screen once the user unlocks."""

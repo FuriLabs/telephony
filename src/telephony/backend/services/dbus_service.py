@@ -264,6 +264,11 @@ DAEMON_INTERFACE_XML = """
     </signal>
     <signal name="ContactsChanged"/>
     <signal name="BlocklistChanged"/>
+    <signal name="RecoveryStateChanged">
+      <arg type="b" name="active"/>
+      <arg type="s" name="message"/>
+      <arg type="b" name="failed"/>
+    </signal>
     <method name="SendUssd">
       <arg type="s" name="command" direction="in"/>
       <arg type="s" name="response" direction="out"/>
