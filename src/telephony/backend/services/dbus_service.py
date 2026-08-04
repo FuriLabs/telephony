@@ -331,6 +331,25 @@ DAEMON_INTERFACE_XML = """
       <arg type="i" name="count" direction="out"/>
       <arg type="s" name="message" direction="out"/>
     </method>
+    <method name="DisableAllForwarding">
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="DisableAllBarrings">
+      <arg type="s" name="password" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="ChangeBarringPassword">
+      <arg type="s" name="old_password" direction="in"/>
+      <arg type="s" name="new_password" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="SetSetting">
+      <arg type="s" name="key" direction="in"/>
+      <arg type="s" name="value" direction="in"/>
+    </method>
     <signal name="CapabilityChanged">
       <arg type="b" name="can_dial"/>
       <arg type="s" name="reason"/>
@@ -584,6 +603,34 @@ class TelephonyDaemonDBus:
         self.ofono.set_active_chat(number if number else None)
         invocation.return_value(None)
 
+    def _reply_ss_result(self, invocation, result):
+        """Answer a supplementary-service request with its worker result."""
+        ok, error = result if result else (False, "no reply")
+        invocation.return_value(GLib.Variant("(bs)", (ok, error or "")))
+
+    def _handle_disableallforwarding(self, parameters, invocation):
+        """Handle DisableAllForwarding command."""
+        run_in_background(self.ofono.disable_all_forwarding,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_disableallbarrings(self, parameters, invocation):
+        """Handle DisableAllBarrings command."""
+        password = parameters.unpack()[0]
+        run_in_background(self.ofono.disable_all_barrings, password,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_changebarringpassword(self, parameters, invocation):
+        """Handle ChangeBarringPassword command."""
+        old, new = parameters.unpack()
+        run_in_background(self.ofono.change_barring_password, old, new,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_setsetting(self, parameters, invocation):
+        """Handle SetSetting command; dconf's own change signal notifies readers."""
+        key, value = parameters.unpack()
+        self.app.gsettings_mgr.set_setting(key, value)
+        invocation.return_value(None)
+
     def _handle_importsimcontacts(self, parameters, invocation):
         """Read the SIM phonebook and import its vcards for a window instance."""
         source_uid = parameters.unpack()[0]
@@ -644,6 +691,10 @@ class TelephonyDaemonDBus:
             "GetTelephonyState": self._handle_gettelephonystate,
             "SetActiveChat": self._handle_setactivechat,
             "ImportSimContacts": self._handle_importsimcontacts,
+            "DisableAllForwarding": self._handle_disableallforwarding,
+            "DisableAllBarrings": self._handle_disableallbarrings,
+            "ChangeBarringPassword": self._handle_changebarringpassword,
+            "SetSetting": self._handle_setsetting,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,

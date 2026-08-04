@@ -331,6 +331,25 @@ class DaemonClient:
         """Tell the owner which chat is open so its alerts stay quiet."""
         self.call_async("SetActiveChat", GLib.Variant("(s)", (number or "",)))
 
+    def disable_all_forwarding(self):
+        """Clear every forwarding rule; blocking, call from a worker."""
+        return self.call("DisableAllForwarding", None,
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def disable_all_barrings(self, password):
+        """Clear every barring rule; blocking, call from a worker."""
+        return self.call("DisableAllBarrings", GLib.Variant("(s)", (password,)),
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def change_barring_password(self, old, new):
+        """Change the network barring password; blocking, call from a worker."""
+        return self.call("ChangeBarringPassword", GLib.Variant("(ss)", (old, new)),
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def set_setting(self, key, value):
+        """Ask the owner to persist one setting; dconf notifies readers."""
+        self.call_async("SetSetting", GLib.Variant("(ss)", (key, str(value))))
+
     def clear_contacts(self, source_uid=None):
         """Delete every contact of a source, or all unprotected ones; blocking."""
         reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
