@@ -37,6 +37,13 @@ from .constants import APP_ID, INCALL_APP_ID, DAEMON_BUS_NAME
 
 MESSAGE_URI_SCHEMES = ("sms:", "smsto:", "mms:", "mmsto:")
 CALL_URI_SCHEMES = ("tel:", "callto:")
+PROGRAM_MODES = {
+    "io.furios.Telephony.Daemon": "--start-monitoring",
+    "io.furios.Telephony.Calls": "--calls",
+    "io.furios.Telephony.Messages": "--messages",
+    "io.furios.Telephony.Contacts": "--contacts",
+    "io.furios.Telephony.Incall": "--incall",
+}
 
 
 def messaging_requested(argv):
@@ -73,8 +80,17 @@ def is_monitor_running():
 def main():
     """
     Main entry point for the application.
+
+    Each launcher is installed as its own program name pointing at
+    this script, so every process is recognizable in ps, cgroups and
+    the system monitors; the name implies the mode flag and explicit
+    flags keep working on the plain name.
     """
     install_i18n()
+
+    implied_mode = PROGRAM_MODES.get(os.path.basename(sys.argv[0]))
+    if implied_mode and implied_mode not in sys.argv:
+        sys.argv.append(implied_mode)
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
