@@ -409,18 +409,11 @@ class App(Adw.Application):
             self.incall.connect("close-request", self._on_incall_closed)
 
     def _on_incall_closed(self, window):
-        """Refuse the close during a call, drop the window otherwise.
+        """Forget the call window once it is really gone.
 
-        A closed window during a call would leave the call running with
-        no way back to it, since the call launcher carries no icon. With
-        no call left there is nothing to return to, and holding the
-        window keeps its widgets and render buffers for the rest of the
-        session to save a rebuild that only costs a moment.
+        The window itself decides whether a close means stepping aside
+        or leaving, so reaching here means it left.
         """
-        if self.ofono and self.ofono.active_calls:
-            logger.info("InCallWindow close refused, a call is running")
-            return True
-
         logger.info("InCallWindow closed, dropping it")
         self.incall = None
         return False
