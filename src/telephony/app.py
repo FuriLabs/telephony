@@ -35,7 +35,7 @@ from loguru import logger
 from .backend.services.dbus_service import TelephonyDaemonDBus
 from .backend.services.system_state_service import SystemStateService
 from .backend.managers.modem_recovery_manager import execute_modem_recovery, watch_recovery_result
-from .constants import APP_ID, INCALL_APP_ID, EMERGENCY_APP_ID, INCALL_DESKTOP_FILE
+from .constants import APP_ID, INCALL_APP_ID, EMERGENCY_APP_ID, INCALL_DESKTOP_FILE, DAEMON_APP_ID, DAEMON_BUS_NAME
 from .backend.managers.database_manager import DatabaseManager
 from .backend.managers.gsettings_manager import GSettingsManager
 from .backend.managers.ofono_manager import OfonoManager
@@ -106,7 +106,7 @@ class App(Adw.Application):
         worse than a window that says the service is down and offers to
         start it again.
         """
-        if application_id == APP_ID:
+        if application_id == DAEMON_APP_ID:
             return True
 
         try:
@@ -143,7 +143,7 @@ class App(Adw.Application):
         try:
             res = bus.call_sync(
                 "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
-                "NameHasOwner", GLib.Variant("(s)", (APP_ID,)),
+                "NameHasOwner", GLib.Variant("(s)", (DAEMON_BUS_NAME,)),
                 GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
             return res.unpack()[0]
         except Exception as e:
@@ -160,7 +160,7 @@ class App(Adw.Application):
         try:
             res = bus.call_sync(
                 "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
-                "StartServiceByName", GLib.Variant("(su)", (APP_ID, 0)),
+                "StartServiceByName", GLib.Variant("(su)", (DAEMON_BUS_NAME, 0)),
                 GLib.VariantType("(u)"), Gio.DBusCallFlags.NONE,
                 DAEMON_START_TIMEOUT_MS, None)
             started = res.unpack()[0] in (DBUS_START_REPLY_SUCCESS, DBUS_START_REPLY_ALREADY_RUNNING)

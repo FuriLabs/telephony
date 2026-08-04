@@ -21,7 +21,8 @@ EMERGENCY_APP_ID = "io.furios.Telephony.Emergency"
 INCALL_DESKTOP_FILE = "io.furios.Telephony.Incall.desktop"
 EMERGENCY_DESKTOP_FILE = "io.furios.Telephony.Emergency.desktop"
 
-DAEMON_BUS_NAME = "io.furios.Telephony"
+DAEMON_APP_ID = "io.furios.Telephony.Daemon"
+DAEMON_BUS_NAME = "io.furios.Telephony.Daemon"
 DAEMON_OBJECT_PATH = "/io/furios/Telephony/Daemon"
 DAEMON_INTERFACE = "io.furios.Telephony.Daemon"
 
