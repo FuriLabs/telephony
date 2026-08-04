@@ -24,12 +24,15 @@ from ...backend.utils.phone_utils import normalize_number
 from ..widgets.common_widget import DataLoader, translate_phone_label, present_choice_sheet, add_choice_row
 from ...backend.utils.model_utils import ContactItem
 
+DUPLICATE_RECHECK_DELAY_MS = 1500
+
 
 class ContactsView(Adw.Bin):
     """View displaying the list of contacts."""
 
     def __init__(self, db, app_window):
         self._refresh_timer = None
+        self._dup_timer = None
         self.source_map = None
         """Initialize the ContactsView."""
         super().__init__()
@@ -151,6 +154,10 @@ class ContactsView(Adw.Bin):
             GLib.source_remove(self._refresh_timer)
             self._refresh_timer = None
 
+        if self._dup_timer:
+            GLib.source_remove(self._dup_timer)
+            self._dup_timer = None
+
         for obj, sig_id in self.signal_ids:
             if obj.handler_is_connected(sig_id):
                 obj.disconnect(sig_id)
@@ -161,8 +168,31 @@ class ContactsView(Adw.Bin):
         self._update_add_button_sensitivity()
         self._update_source_map()
         self.refresh()
-        if self.app_window.eds.is_ready and not self._duplicates_checked:
+
+        if not self.app_window.eds.is_ready:
+            return
+
+        if not self._duplicates_checked:
             self.app_window.enqueue_popup(lambda cb: self.check_duplicates(cb))
+            return
+
+        self._schedule_duplicate_recheck()
+
+    def _schedule_duplicate_recheck(self):
+        """Count the duplicates again once the run of changes settles.
+
+        Contacts can be merged in another window, and the banner here
+        would keep offering to resolve conflicts that no longer exist.
+        """
+        if self._dup_timer:
+            GLib.source_remove(self._dup_timer)
+        self._dup_timer = GLib.timeout_add(DUPLICATE_RECHECK_DELAY_MS, self._on_duplicate_recheck)
+
+    def _on_duplicate_recheck(self):
+        """Run the settled re-count."""
+        self._dup_timer = None
+        self.check_duplicates()
+        return False
 
 
     def check_duplicates(self, done_callback=None):

@@ -166,6 +166,7 @@ class MainWindow(Adw.Window):
         self.popup_queue = []
         self.is_popup_active = False
         self.pending_conflicts = []
+        self._duplicate_count = 0
 
         self.blocklist_view = None
 
@@ -546,10 +547,15 @@ class MainWindow(Adw.Window):
         """Update duplicate resolution UI status."""
         self.pending_conflicts = conflicts
         count = len(conflicts)
+        previous = self._duplicate_count
+        self._duplicate_count = count
         resolver_enabled = self.gsettings_mgr.gsettings.get_boolean("duplicate-resolver-enabled")
 
         if resolver_enabled and count > 0:
             self._set_resolve_visible(True)
+            if count == previous:
+                return
+
             message = ngettext(
                 "Found {count} duplicate contact.",
                 "Found {count} duplicate contacts.",

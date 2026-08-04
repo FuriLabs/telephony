@@ -48,6 +48,7 @@ from .backend.managers.emergency_manager import EmergencyManager
 from .ui.windows.incall_window import InCallWindow
 from .backend.managers.ringback_manager import RingbackManager
 from .backend.managers.notification_manager import NotificationManager
+from .backend.services.daemon_client import DaemonClient
 from .backend.managers.schedule_manager import ScheduleManager
 
 from gettext import gettext as _, ngettext
@@ -69,6 +70,8 @@ class App(Adw.Application):
         super().__init__(application_id=application_id,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
+        self.is_daemon = self._resolve_daemon_role(application_id)
+
         self.db = None
         self.ofono = None
         self.eds = None
@@ -77,8 +80,97 @@ class App(Adw.Application):
         self.incall = None
         self.ringback = None
         self.scheduler = None
+        self._replaying_change = False
 
         self.notification_counts = defaultdict(int)
+
+    def _resolve_daemon_role(self, application_id):
+        """Decide whether this process owns the background work.
+
+        Every launcher has its own application id so the shell can tell
+        the windows apart, which means one telephony process per icon.
+        Exactly one of them may hold the modem, store what arrives and
+        run scheduled work: the instance carrying the plain id, which is
+        what the service starts. A window instance takes the role only
+        when nobody else has claimed it, so a phone without the service
+        still receives calls and messages.
+        """
+        if application_id == APP_ID:
+            return True
+        try:
+            bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+            res = bus.call_sync(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                "NameHasOwner", GLib.Variant("(s)", (APP_ID,)),
+                GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
+            claimed = res.unpack()[0]
+        except Exception as e:
+            logger.warning(f"[App] Could not check for a running daemon: {e}")
+            claimed = False
+        if not claimed:
+            logger.info("[App] No telephony daemon found, taking the role")
+        return not claimed
+
+    def _announce_changes(self):
+        """Tell window instances when the stored data changed.
+
+        They read the same database and address books but subscribe to
+        nothing on the modem, so the owner is the one that knows when
+        a list is worth rebuilding.
+        """
+        self.db.connect('messages-updated', lambda _db, number, reason: self.dbus_daemon.emit_signal(
+            "MessagesChanged", GLib.Variant("(ss)", (number or "", reason or ""))))
+        self.db.connect('blocklist-updated', lambda *_args: self.dbus_daemon.emit_signal(
+            "BlocklistChanged", None))
+        self.eds.connect('contacts-loaded', lambda *_args: self.dbus_daemon.emit_signal(
+            "ContactsChanged", None))
+
+    def _follow_daemon_changes(self):
+        """Rebuild lists when the owner reports a change.
+
+        The change arrives over the bus and is repeated on the local
+        managers, so every view keeps listening to what it always did.
+        """
+        self.daemon_client = DaemonClient()
+        self.daemon_client.subscribe(
+            "MessagesChanged",
+            lambda *args: GLib.idle_add(
+                self._replay_change, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
+        self.daemon_client.subscribe(
+            "BlocklistChanged",
+            lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
+        self.daemon_client.subscribe(
+            "ContactsChanged",
+            lambda *args: run_in_background(self.eds.reload_cache_from_db))
+
+        self.db.connect('messages-updated', lambda _db, number, reason: self._report_change(
+            "messages", number or "", reason or ""))
+        self.db.connect('blocklist-updated', lambda *_args: self._report_change("blocklist", "", ""))
+
+    def _replay_change(self, name, *args):
+        """Repeat on the local managers what the owner reported.
+
+        The flag marks the emission as second-hand: a window must not
+        report back a change it was only told about, or the report
+        would bounce between the owner and the windows forever.
+        """
+        self._replaying_change = True
+        try:
+            self.db.emit(name, *args)
+        finally:
+            self._replaying_change = False
+        return False
+
+    def _report_change(self, kind, number, reason):
+        """Tell the owner about a write this window made.
+
+        Nothing watches the database file, so a thread marked read here
+        stays unread in the other windows until the owner repeats it.
+        """
+        if self._replaying_change or not self.daemon_client:
+            return
+        self.daemon_client.call_async(
+            "NotifyChanged", GLib.Variant("(sss)", (kind, number, reason)))
 
     def _setup_feedbackd(self):
         """Setup feedbackd application profiles."""
@@ -131,7 +223,8 @@ class App(Adw.Application):
         if not Gst.is_initialized():
             Gst.init(None)
 
-        self.hold()
+        if self.is_daemon:
+            self.hold()
 
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
@@ -143,25 +236,37 @@ class App(Adw.Application):
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
-        self.eds = EdsManager()
+        self.eds = EdsManager(owns_live_views=self.is_daemon)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr)
         self.eds.set_db(self.db, self.gsettings_mgr)
-        self.ofono = OfonoManager(self.db, self.gsettings_mgr)
+        self.ofono = OfonoManager(self.db, self.gsettings_mgr, owns_reception=self.is_daemon)
 
-        self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
-        self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
+        self.emergency = None
+        self.ringback = None
+        if self.is_daemon:
+            self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
+            self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
 
         self.incall = None
 
-        self.ofono.connect('call-added', self._on_global_call_added)
+        if self.is_daemon:
+            self.ofono.connect('call-added', self._on_global_call_added)
 
         self.ofono.set_focus_provider(self._any_window_active)
 
-        self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager)
+        self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager,
+                              owns_reception=self.is_daemon)
         self.mms.active_chat_provider = lambda: (self.ofono.active_chat_number, self._any_window_active())
-        self.mms.connect('message-received', self.on_mms_received)
+        if self.is_daemon:
+            self.mms.connect('message-received', self.on_mms_received)
 
-        self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
+        self.dbus_daemon = None
+        self.daemon_client = None
+        if self.is_daemon:
+            self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
+            self._announce_changes()
+        else:
+            self._follow_daemon_changes()
 
         self._voicemail_last = (False, 0)
         self._vm_contact_busy = False
@@ -176,20 +281,26 @@ class App(Adw.Application):
         self._denied_timer = None
         self._sim_pin_notified = False
         self._denied_notified = False
-        self.ofono.connect('dial-availability-changed', self._watch_modem_health)
-        self.ofono.connect('connection-status', self._watch_modem_health)
+        if self.is_daemon:
+            self.ofono.connect('dial-availability-changed', self._watch_modem_health)
+            self.ofono.connect('connection-status', self._watch_modem_health)
         self.ofono.connect('network-status-changed', self._watch_network_status)
         self.ofono.connect('sim-pin-required-changed', self._watch_sim_pin)
-        GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self._watch_modem_health() or False)
-        self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
+        if self.is_daemon:
+            GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self._watch_modem_health() or False)
+        if self.is_daemon:
+            self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
         self.ofono.connect('voicemail-mailbox-changed', lambda *a: self.ensure_voicemail_contact())
         self.eds.connect('contacts-loaded', lambda *a: self.ensure_voicemail_contact())
-        self.ofono.connect('incoming-message', self.on_incoming_message)
-        self.ofono.connect('call-missed', self.on_call_missed)
+        if self.is_daemon:
+            self.ofono.connect('incoming-message', self.on_incoming_message)
+            self.ofono.connect('call-missed', self.on_call_missed)
         self.ofono.connect('notification-cleared', self.on_notification_cleared)
 
-        self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
-        self.scheduler.start()
+        self.scheduler = None
+        if self.is_daemon:
+            self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
+            self.scheduler.start()
 
         run_in_background(self.db.fail_stale_sending)
 
@@ -449,6 +560,9 @@ class App(Adw.Application):
         if not self.get_windows():
             if self.ofono:
                 self.ofono.set_active_chat(None)
+            if not self.is_daemon:
+                logger.info("[App] Last window closed, leaving the daemon to it")
+                GLib.idle_add(self.quit)
         return False
 
     def do_shutdown(self):
