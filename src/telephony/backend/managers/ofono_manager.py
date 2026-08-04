@@ -1180,6 +1180,10 @@ class OfonoManager(GObject.Object):
 
     def send_quick_response(self, number, text):
         """Record an SMS in the conversation and send it with delivery tracking."""
+        if self.daemon is not None:
+            run_in_background(self.daemon.send_tracked_sms, number, text)
+            return True
+
         row_id = self.db.add_message(number, "outgoing", text, "sending", sender="Me")
         if row_id is None:
             return False
