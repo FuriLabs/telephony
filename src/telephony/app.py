@@ -194,7 +194,6 @@ class App(Adw.Application):
         The change arrives over the bus and is repeated on the local
         managers, so every view keeps listening to what it always did.
         """
-        self.daemon_client = DaemonClient()
         self.daemon_client.subscribe(
             "MessagesChanged",
             lambda *args: GLib.idle_add(
@@ -349,7 +348,7 @@ class App(Adw.Application):
             self.mms.connect('message-received', self.on_mms_received)
 
         self.dbus_daemon = None
-        self.daemon_client = None
+        self.daemon_client = DaemonClient()
         if self.is_daemon:
             self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
             self._announce_changes()

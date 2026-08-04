@@ -72,6 +72,7 @@ class MainWindow(Adw.Window):
         self.mms = mms_manager
         self.gsettings_mgr = gsettings_mgr
         self.scheduler = self.app.scheduler
+        self.daemon = self.app.daemon_client
 
 
         self.toast_overlay = Adw.ToastOverlay()
