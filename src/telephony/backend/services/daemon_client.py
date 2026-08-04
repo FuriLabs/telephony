@@ -370,6 +370,29 @@ class DaemonClient:
         """Tell the owner its alerts for a number were seen."""
         self.call_async("ClearNotification", GLib.Variant("(s)", (number,)))
 
+    def silence_ring(self):
+        """Ask the owner to stop the ringer."""
+        self.call_async("SilenceRing")
+
+    def set_audio_route(self, route):
+        """Ask the owner to move call audio to an output route."""
+        self.call_async("SetAudioRoute", GLib.Variant("(s)", (route,)))
+
+    def set_input_route(self, route):
+        """Ask the owner to move call input to a route."""
+        self.call_async("SetInputRoute", GLib.Variant("(s)", (route,)))
+
+    def set_mic_muted(self, muted):
+        """Ask the owner to mute or unmute the microphone."""
+        self.call_async("MuteMic" if muted else "UnmuteMic")
+
+    def get_audio_routes(self):
+        """List selectable routes; blocking, call from a worker.
+
+        Returns (outputs, inputs) or None when the owner is away.
+        """
+        return self.call("GetAudioRoutes", None, GLib.VariantType("(asas)"))
+
     def prepare_attachment(self, source_path, max_bytes):
         """Have the owner store and fit an attachment; blocking, call from a worker.
 

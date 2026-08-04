@@ -31,6 +31,7 @@ class MirrorAudioState:
     def __init__(self):
         self.voice_profile_active = False
         self.current_route = "earpiece"
+        self.current_input = "mic"
         self.mic_muted = False
 
 
@@ -46,6 +47,7 @@ class OfonoMirror(GObject.Object):
     """
 
     __gsignals__ = {
+        'audio-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'connection-status': (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
         'action-error': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'call-added': (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
@@ -145,9 +147,7 @@ class OfonoMirror(GObject.Object):
             self.voicemail_count = count
             self.emit('voicemail-changed', waiting, count)
         self.voicemail_mailbox = state.get("voicemail_mailbox", "")
-
-        self.audio.current_route = "speaker" if state.get("speaker") else "earpiece"
-        self.audio.mic_muted = bool(state.get("mic_muted"))
+        self._apply_audio_state(state)
 
     def _apply_capability(self, can_dial, reason, description):
         self.can_dial = can_dial
@@ -203,8 +203,13 @@ class OfonoMirror(GObject.Object):
 
     def _on_sig_audio(self, *args):
         state = args[5].unpack()[0]
-        self.audio.current_route = "speaker" if state.get("speaker") else "earpiece"
+        self._apply_audio_state(state)
+
+    def _apply_audio_state(self, state):
+        self.audio.current_route = state.get("route") or ("speaker" if state.get("speaker") else "earpiece")
+        self.audio.current_input = state.get("input") or "mic"
         self.audio.mic_muted = bool(state.get("mic_muted"))
+        self.emit('audio-changed')
 
     def _on_sig_ussd(self, *args):
         self.emit('ussd-notification', args[5].unpack()[0])

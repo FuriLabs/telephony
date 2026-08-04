@@ -32,6 +32,7 @@ from .backend.managers.eds_manager import EdsManager
 from .backend.managers.emergency_manager import EmergencyManager
 from .backend.managers.ringback_manager import RingbackManager
 from .backend.managers.notification_manager import NotificationManager
+from .backend.managers.call_audio_manager import CallAudioManager
 from .backend.managers.schedule_manager import ScheduleManager
 from .backend.utils.thread_utils import run_in_background
 from .backend.utils.phone_utils import normalize_number, conversation_id, get_own_number
@@ -81,6 +82,7 @@ class TelephonyCore:
         self.scheduler = None
         self.dbus_daemon = None
         self.sys_state = None
+        self.call_audio = None
 
         self.notification_counts = defaultdict(int)
         self._hangup_requested_at = 0.0
@@ -118,6 +120,8 @@ class TelephonyCore:
                               owns_reception=True)
         self.mms.active_chat_provider = lambda: (self.ofono.active_chat_number, self.ui.any_window_active())
         self.mms.connect('message-received', self.on_mms_received)
+
+        self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
         self._announce_changes()

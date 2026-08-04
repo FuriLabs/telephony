@@ -51,6 +51,7 @@ class TelephonyAudioManager:
         self._initialized = True
         self._last_mute_state = None
         self.current_route = "earpiece"
+        self.current_input = "mic"
         self.mic_muted = False
         self.lfb_available = True
 
@@ -386,6 +387,7 @@ class TelephonyAudioManager:
 
     def set_input_route(self, mode="mic"):
         """Route input audio to mic or dummy routes."""
+        self.current_input = mode
         logger.info(f"[Audio] Setting input route: {mode}")
 
     def initial_call_route(self):

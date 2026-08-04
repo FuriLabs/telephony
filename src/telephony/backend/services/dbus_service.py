@@ -364,6 +364,18 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="path" direction="out"/>
       <arg type="s" name="message" direction="out"/>
     </method>
+    <method name="SilenceRing">
+    </method>
+    <method name="SetAudioRoute">
+      <arg type="s" name="route" direction="in"/>
+    </method>
+    <method name="SetInputRoute">
+      <arg type="s" name="route" direction="in"/>
+    </method>
+    <method name="GetAudioRoutes">
+      <arg type="as" name="outputs" direction="out"/>
+      <arg type="as" name="inputs" direction="out"/>
+    </method>
     <method name="DetectRegion">
       <arg type="s" name="region" direction="out"/>
     </method>
@@ -463,6 +475,10 @@ class TelephonyDaemonDBus:
             self.ofono.connect('ussd-notification', self._on_ussd_received)
             self.ofono.connect('network-service-changed', self._on_network_service_changed)
 
+        if self.app and self.app.call_audio:
+            self.app.call_audio.connect('audio-state-applied',
+                                        lambda *_args: self._emit_audio_route())
+
     def _on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
         self.emit_signal("IncomingCall", GLib.Variant("(ss)", (path, number)))
@@ -507,6 +523,8 @@ class TelephonyDaemonDBus:
         packed = {
             "speaker": GLib.Variant("b", audio.current_route == "speaker"),
             "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "route": GLib.Variant("s", audio.current_route),
+            "input": GLib.Variant("s", audio.current_input),
         }
         self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
 
@@ -660,6 +678,8 @@ class TelephonyDaemonDBus:
             "voicemail_mailbox": GLib.Variant("s", self.ofono.voicemail_mailbox),
             "speaker": GLib.Variant("b", audio.current_route == "speaker"),
             "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "route": GLib.Variant("s", audio.current_route),
+            "input": GLib.Variant("s", audio.current_input),
             "recovery_active": GLib.Variant("b", recovery_active),
             "recovery_message": GLib.Variant("s", recovery_message),
             "recovery_failed": GLib.Variant("b", recovery_failed),
@@ -762,6 +782,10 @@ class TelephonyDaemonDBus:
             "RequestRecovery": self._handle_requestrecovery,
             "ClearNotification": self._handle_clearnotification,
             "PrepareAttachment": self._handle_prepareattachment,
+            "SilenceRing": self._handle_silencering,
+            "SetAudioRoute": self._handle_setaudioroute,
+            "SetInputRoute": self._handle_setinputroute,
+            "GetAudioRoutes": self._handle_getaudioroutes,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,
@@ -882,25 +906,49 @@ class TelephonyDaemonDBus:
 
     def _handle_mutemic(self, parameters, invocation):
         """Handle MuteMic command."""
-        if self.ofono:
-            self.ofono.audio.mute(True)
-            self._emit_audio_route()
+        self.app.call_audio.set_mic_muted(True)
         invocation.return_value(None)
 
     def _handle_unmutemic(self, parameters, invocation):
         """Handle UnmuteMic command."""
-        if self.ofono:
-            self.ofono.audio.mute(False)
-            self._emit_audio_route()
+        self.app.call_audio.set_mic_muted(False)
         invocation.return_value(None)
 
     def _handle_setspeakerphone(self, parameters, invocation):
         """Handle SetSpeakerphone command."""
         enable = parameters.unpack()[0]
-        if self.ofono:
-            self.ofono.audio.set_audio_route("speaker" if enable else "earpiece")
-            self._emit_audio_route()
+        self.app.call_audio.set_route("speaker" if enable else "earpiece")
         invocation.return_value(None)
+
+    def _handle_silencering(self, parameters, invocation):
+        """Handle SilenceRing command."""
+        self.app.call_audio.silence_ring()
+        invocation.return_value(None)
+
+    def _handle_setaudioroute(self, parameters, invocation):
+        """Handle SetAudioRoute command."""
+        route = parameters.unpack()[0]
+        self.app.call_audio.set_route(route)
+        invocation.return_value(None)
+
+    def _handle_setinputroute(self, parameters, invocation):
+        """Handle SetInputRoute command."""
+        route = parameters.unpack()[0]
+        self.app.call_audio.set_input(route)
+        invocation.return_value(None)
+
+    def _handle_getaudioroutes(self, parameters, invocation):
+        """List the selectable output and input routes for a window."""
+        def fetch():
+            outputs = [r['id'] for r in self.ofono.audio.get_available_outputs()]
+            inputs = [r['id'] for r in self.ofono.audio.get_available_inputs()]
+            return (outputs, inputs)
+
+        def done(result):
+            outputs, inputs = result if result else ([], [])
+            invocation.return_value(GLib.Variant("(asas)", (outputs, inputs)))
+
+        run_in_background(fetch, on_complete=done)
 
     def _handle_senddtmf(self, parameters, invocation):
         """Handle SendDtmf command."""
