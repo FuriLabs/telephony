@@ -13,12 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import json
+
 from gi.repository import Gio, GLib
 from loguru import logger
 
 from ...constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 DAEMON_CALL_TIMEOUT_MS = 30000
+DAEMON_SLOW_CALL_TIMEOUT_MS = 600000
 
 
 class DaemonClient:
@@ -38,7 +41,7 @@ class DaemonClient:
         except Exception as e:
             logger.error(f"[DaemonClient] No session bus: {e}")
 
-    def call(self, method, params=None, reply_type=None):
+    def call(self, method, params=None, reply_type=None, timeout_ms=DAEMON_CALL_TIMEOUT_MS):
         """Ask the owner to do something; blocking, call from a worker.
 
         Returns the reply tuple, or None when the owner could not be
@@ -50,7 +53,7 @@ class DaemonClient:
             res = self.bus.call_sync(
                 DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
                 params, reply_type, Gio.DBusCallFlags.NONE,
-                DAEMON_CALL_TIMEOUT_MS, None)
+                timeout_ms, None)
             return res.unpack() if res else None
         except Exception as e:
             logger.error(f"[DaemonClient] {method} failed: {e}")
@@ -87,3 +90,165 @@ class DaemonClient:
         for sub in self._subscriptions:
             self.bus.signal_unsubscribe(sub)
         self._subscriptions = []
+
+    def send_tracked_sms(self, number, text):
+        """Record and send an SMS with tracking; blocking, call from a worker."""
+        reply = self.call("SendTrackedSms", GLib.Variant("(ss)", (number, text)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def send_mms(self, number, text, attachments):
+        """Record and send an MMS with tracking; blocking, call from a worker."""
+        reply = self.call("SendMms",
+                          GLib.Variant("(sss)", (number, text, json.dumps(attachments or []))),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def schedule_sms(self, number, text, timestamp):
+        """Store an SMS for later sending; blocking, call from a worker."""
+        reply = self.call("ScheduleSms", GLib.Variant("(sss)", (number, text, timestamp)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def schedule_mms(self, number, text, attachments, timestamp):
+        """Store an MMS for later sending; blocking, call from a worker."""
+        reply = self.call("ScheduleMms",
+                          GLib.Variant("(ssss)", (number, text, json.dumps(attachments or []), timestamp)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def save_draft(self, number, text, attachments):
+        """Replace the stored draft; blocking, call from a worker."""
+        reply = self.call("SaveDraft",
+                          GLib.Variant("(sss)", (number, text, json.dumps(attachments or []))))
+        return reply is not None
+
+    def mark_thread_read(self, number):
+        """Mark a conversation read without waiting for the reply."""
+        self.call_async("MarkThreadAsRead", GLib.Variant("(s)", (number,)))
+
+    def mark_conversation_unread(self, number, msg_id):
+        """Mark a message and newer ones unread; blocking, call from a worker."""
+        reply = self.call("MarkConversationUnread", GLib.Variant("(si)", (number, msg_id)))
+        return reply is not None
+
+    def reschedule_message(self, msg_id, timestamp):
+        """Move a scheduled message; blocking, call from a worker."""
+        reply = self.call("RescheduleMessage", GLib.Variant("(is)", (msg_id, timestamp)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def retry_message(self, msg_id):
+        """Resend a failed message without waiting for the reply."""
+        self.call_async("RetryMessage", GLib.Variant("(i)", (msg_id,)))
+
+    def delete_message(self, msg_id):
+        """Delete one message; blocking, call from a worker."""
+        reply = self.call("DeleteMessage", GLib.Variant("(i)", (msg_id,)))
+        return reply is not None
+
+    def delete_conversation(self, number):
+        """Delete a whole conversation; blocking, call from a worker."""
+        reply = self.call("DeleteConversation", GLib.Variant("(s)", (number,)))
+        return reply is not None
+
+    def set_group_name(self, recipients, name):
+        """Rename a group conversation; blocking, call from a worker."""
+        reply = self.call("SetGroupName",
+                          GLib.Variant("(ss)", (",".join(recipients), name)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def add_blocked_number(self, number, note):
+        """Block a number; blocking, call from a worker."""
+        reply = self.call("AddBlockedNumber", GLib.Variant("(ss)", (number, note)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def remove_blocked_number(self, bid):
+        """Unblock a blocklist entry without waiting for the reply."""
+        self.call_async("RemoveBlockedNumber", GLib.Variant("(s)", (str(bid),)))
+
+    def delete_call_entry(self, call_id):
+        """Delete one call history row without waiting for the reply."""
+        self.call_async("DeleteCallHistoryEntry", GLib.Variant("(i)", (call_id,)))
+
+    def update_history_names(self, numbers, new_name):
+        """Rename call history rows; blocking, call from a worker."""
+        reply = self.call("UpdateHistoryNames",
+                          GLib.Variant("(ss)", (json.dumps(list(numbers)), new_name or "")))
+        return reply is not None
+
+    def clear_call_history(self):
+        """Wipe call history; blocking, call from a worker."""
+        return self.call("ClearCallHistory") is not None
+
+    def clear_messages(self):
+        """Wipe messages and attachments; blocking, call from a worker."""
+        return self.call("ClearMessages", timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS) is not None
+
+    def clear_group_names(self):
+        """Wipe custom group names; blocking, call from a worker."""
+        return self.call("ClearGroupNames") is not None
+
+    def clear_blocklist(self):
+        """Wipe the blocklist; blocking, call from a worker."""
+        return self.call("ClearBlocklist") is not None
+
+    def clear_everything(self, source_uid):
+        """Wipe all stored data; blocking, call from a worker."""
+        reply = self.call("ClearEverything", GLib.Variant("(s)", (source_uid or "",)),
+                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply is not None
+
+    def get_missed_messages(self):
+        """Fetch missed scheduled messages; blocking, call from a worker."""
+        reply = self.call("GetMissedMessages", None, GLib.VariantType("(s)"))
+        if not reply:
+            return []
+        try:
+            return json.loads(reply[0])
+        except Exception as e:
+            logger.error(f"[DaemonClient] Bad missed messages payload: {e}")
+            return []
+
+    def send_missed_message(self, msg_id):
+        """Send a missed scheduled message without waiting for the reply."""
+        self.call_async("SendMissedMessage", GLib.Variant("(i)", (msg_id,)))
+
+    def import_chatty(self, db_path, mms_path):
+        """Import a chatty database; blocking, call from a worker."""
+        reply = self.call("ImportChatty", GLib.Variant("(ss)", (db_path, mms_path)),
+                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply if reply else (False, "")
+
+    def import_local_calls(self, db_path):
+        """Import a gnome-calls database; blocking, call from a worker."""
+        reply = self.call("ImportLocalCalls", GLib.Variant("(s)", (db_path,)),
+                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply if reply else (False, "")
+
+    def import_android_sms(self, file_path):
+        """Import an Android SMS backup; blocking, call from a worker."""
+        reply = self.call("ImportAndroidSms", GLib.Variant("(s)", (file_path,)),
+                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply if reply else (False, "")
+
+    def import_android_calls(self, file_path):
+        """Import an Android call backup; blocking, call from a worker."""
+        reply = self.call("ImportAndroidCalls", GLib.Variant("(s)", (file_path,)),
+                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply if reply else (False, "")
+
+    def import_ios_sms(self, file_path, manifest_path=None, backup_dir=None):
+        """Import an iOS SMS database; blocking, call from a worker."""
+        reply = self.call("ImportIosSms",
+                          GLib.Variant("(sss)", (file_path, manifest_path or "", backup_dir or "")),
+                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply if reply else (False, "")
+
+    def import_ios_calls(self, file_path):
+        """Import an iOS call database; blocking, call from a worker."""
+        reply = self.call("ImportIosCalls", GLib.Variant("(s)", (file_path,)),
+                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply if reply else (False, "")
