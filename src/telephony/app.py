@@ -324,7 +324,7 @@ class App(Adw.Application):
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
         self.eds = EdsManager(owns_live_views=self.is_daemon)
-        self.db = DatabaseManager(self.eds, self.gsettings_mgr)
+        self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=self.is_daemon)
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoManager(self.db, self.gsettings_mgr, owns_reception=self.is_daemon)
 
@@ -389,7 +389,8 @@ class App(Adw.Application):
             self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
             self.scheduler.start()
 
-        run_in_background(self.db.fail_stale_sending)
+        if self.is_daemon:
+            run_in_background(self.db.fail_stale_sending)
 
         action_open = Gio.SimpleAction.new("open-chat", GLib.VariantType.new("s"))
         action_open.connect("activate", self.on_action_open_chat)

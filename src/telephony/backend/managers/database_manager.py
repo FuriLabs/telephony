@@ -44,11 +44,18 @@ class DatabaseManager(GObject.Object):
         'contacts-updated': (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
-    def __init__(self, eds_manager, gsettings_mgr=None):
-        """Initialize the database manager."""
+    def __init__(self, eds_manager, gsettings_mgr=None, owns_writes=True):
+        """Initialize the database manager.
+
+        owns_writes is False in a window process, whose writes must go
+        through the daemon interface; every data write refuses locally
+        so a bypass cannot creep back in. Schema setup stays allowed
+        because every process opens the same files.
+        """
         GObject.Object.__init__(self)
         self.eds = eds_manager
         self.gsettings_mgr = gsettings_mgr
+        self.owns_writes = owns_writes
 
         self.conn_calls = None
         self.conn_messages = None
@@ -225,8 +232,17 @@ class DatabaseManager(GObject.Object):
         """Return the application data directory."""
         return os.path.join(GLib.get_user_data_dir(), "telephony")
 
+    def _refuse_write(self, action):
+        """Return True and log when this process may not write the databases."""
+        if self.owns_writes:
+            return False
+        logger.error(f"[DB] Refusing {action}: only the daemon writes the database")
+        return True
+
     def set_group_name(self, recipients_list, name):
         """Set a custom name for a group conversation."""
+        if self._refuse_write("set_group_name"):
+            return False
         try:
             sorted_nums = sorted([normalize_number(n, permissive=True) for n in recipients_list])
             group_id = ",".join(sorted_nums)
@@ -270,6 +286,8 @@ class DatabaseManager(GObject.Object):
 
     def clear_messages(self):
         """Delete all messages and attachments."""
+        if self._refuse_write("clear_messages"):
+            return False
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
@@ -292,6 +310,8 @@ class DatabaseManager(GObject.Object):
 
     def clear_group_names(self):
         """Delete all custom group names."""
+        if self._refuse_write("clear_group_names"):
+            return False
         try:
             with self.lock:
                 self.conn_messages.execute("DELETE FROM group_names")
@@ -303,6 +323,8 @@ class DatabaseManager(GObject.Object):
 
     def clear_blocklist(self):
         """Delete all blocked numbers."""
+        if self._refuse_write("clear_blocklist"):
+            return False
         try:
             with self.lock:
                 self.conn_blocklist.execute("DELETE FROM blocklist")
@@ -315,6 +337,8 @@ class DatabaseManager(GObject.Object):
 
     def clear_history(self):
         """Delete all call history."""
+        if self._refuse_write("clear_history"):
+            return
         try:
             with self.lock:
                 c = self.conn_calls.cursor()
@@ -327,6 +351,8 @@ class DatabaseManager(GObject.Object):
 
     def clear_everything(self):
         """Clear all data from all databases."""
+        if self._refuse_write("clear_everything"):
+            return False
         self.clear_messages()
 
         try:
@@ -352,6 +378,9 @@ class DatabaseManager(GObject.Object):
 
     def add_call(self, number, _name_ignored, direction, duration=0):
         """Add a call entry to history."""
+        if self._refuse_write("add_call"):
+            return
+
         def task():
             try:
                 norm_number = normalize_number(number, permissive=False)
@@ -433,6 +462,9 @@ class DatabaseManager(GObject.Object):
 
     def delete_call_by_id(self, call_id):
         """Delete a specific call entry by ID."""
+        if self._refuse_write("delete_call_by_id"):
+            return
+
         def task():
             try:
                 with self.lock:
@@ -447,6 +479,8 @@ class DatabaseManager(GObject.Object):
     def update_history_names(self, numbers, new_name=None):
         """Update the name in call history for specific numbers."""
         if not numbers:
+            return
+        if self._refuse_write("update_history_names"):
             return
         try:
             with self.lock:
@@ -518,6 +552,8 @@ class DatabaseManager(GObject.Object):
         """Add a message to the database."""
         if not remote_number or not direction:
             logger.warning("[DB] Cannot add message: missing remote_number or direction.")
+            return None
+        if self._refuse_write("add_message"):
             return None
         try:
             norm_number = ""
@@ -609,6 +645,8 @@ class DatabaseManager(GObject.Object):
         """Delete multiple scheduled messages by ID."""
         if not ids_list:
             return True
+        if self._refuse_write("delete_scheduled_messages"):
+            return False
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
@@ -623,6 +661,8 @@ class DatabaseManager(GObject.Object):
 
     def update_message_status(self, msg_id, status):
         """Update a single message's status and notify listeners."""
+        if self._refuse_write("update_message_status"):
+            return False
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
@@ -639,6 +679,8 @@ class DatabaseManager(GObject.Object):
 
     def fail_stale_sending(self):
         """Mark messages stuck in sending state from a previous run as failed."""
+        if self._refuse_write("fail_stale_sending"):
+            return
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
@@ -654,6 +696,8 @@ class DatabaseManager(GObject.Object):
 
     def update_message_schedule(self, msg_id, status="sent", timestamp=None):
         """Update message status or reschedule it."""
+        if self._refuse_write("update_message_schedule"):
+            return False
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
@@ -895,6 +939,8 @@ class DatabaseManager(GObject.Object):
 
     def mark_conversation_read(self, number):
         """Mark a conversation as read."""
+        if self._refuse_write("mark_conversation_read"):
+            return
         try:
             if "," in str(number):
                 norm_number = number
@@ -914,6 +960,8 @@ class DatabaseManager(GObject.Object):
 
     def mark_conversation_unread_from_message(self, number, message_id):
         """Mark a message and all newer messages in the conversation as unread."""
+        if self._refuse_write("mark_conversation_unread_from_message"):
+            return
         try:
             if "," in str(number):
                 norm_number = number
@@ -968,6 +1016,8 @@ class DatabaseManager(GObject.Object):
 
     def delete_message(self, msg_id):
         """Delete a single message."""
+        if self._refuse_write("delete_message"):
+            return False
         try:
             with self.lock:
                 c = self.conn_messages.cursor()
@@ -983,6 +1033,8 @@ class DatabaseManager(GObject.Object):
 
     def delete_drafts(self, number):
         """Delete all drafts for a conversation."""
+        if self._refuse_write("delete_drafts"):
+            return False
         try:
             if "," in str(number):
                 norm_number = number
@@ -1004,6 +1056,8 @@ class DatabaseManager(GObject.Object):
 
     def delete_conversation(self, number):
         """Delete an entire conversation."""
+        if self._refuse_write("delete_conversation"):
+            return False
         try:
             if "," in str(number):
                 norm_number = number
@@ -1025,6 +1079,8 @@ class DatabaseManager(GObject.Object):
         Block a number and scrub it everywhere: rename it in call history,
         remove it from contacts and drop it from trusted and special lists.
         """
+        if self._refuse_write("block_number"):
+            return False
         clean_num = normalize_number(number, permissive=False)
         if not self.add_blocked_number(clean_num, note):
             return False
@@ -1036,6 +1092,8 @@ class DatabaseManager(GObject.Object):
 
     def unblock_number(self, bid, number=None):
         """Remove a blocklist entry and rename the number back to Unknown."""
+        if self._refuse_write("unblock_number"):
+            return
         if number is None:
             for row_id, row_num, _note in self.get_blocked_numbers():
                 if row_id == bid:
@@ -1050,6 +1108,8 @@ class DatabaseManager(GObject.Object):
 
     def add_blocked_number(self, number, note=""):
         """Add a number to the blocklist."""
+        if self._refuse_write("add_blocked_number"):
+            return False
         try:
             clean_num = normalize_number(number, permissive=False)
             with self.lock:
@@ -1069,6 +1129,8 @@ class DatabaseManager(GObject.Object):
 
     def remove_blocked_number(self, bid):
         """Remove a number from the blocklist by ID."""
+        if self._refuse_write("remove_blocked_number"):
+            return
         try:
             with self.lock:
                 c = self.conn_blocklist.cursor()
@@ -1229,6 +1291,9 @@ class DatabaseManager(GObject.Object):
             return ""
 
     def upsert_contacts_batch(self, data_list, source_uid):
+        """Insert or update a batch of cached contacts for one source."""
+        if self._refuse_write("upsert_contacts_batch"):
+            return False
         try:
             batch = []
             for data in data_list:
@@ -1257,6 +1322,8 @@ class DatabaseManager(GObject.Object):
 
     def delete_contact(self, uid):
         """Delete a contact from the cache."""
+        if self._refuse_write("delete_contact"):
+            return False
         try:
             with self.lock:
                 c = self.conn_contacts.cursor()
@@ -1285,6 +1352,8 @@ class DatabaseManager(GObject.Object):
 
     def sync_deleted_contacts(self, source_uid, active_uids_list):
         """Remove stale contacts that are no longer in the source."""
+        if self._refuse_write("sync_deleted_contacts"):
+            return False
         try:
             if not active_uids_list:
                 with self.lock:
