@@ -34,6 +34,7 @@ from ...backend.utils.ofono_direct_utils import hangup_all_direct
 from ...backend.utils.system_utils import save_modem_logs, press_power_button
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.call_state_utils import count_lines, conference_paths, held_single_paths, held_conference_paths
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
 PAD_MORPH_DURATION_MS = 250
@@ -569,7 +570,7 @@ class InCallWindow(Adw.Window):
             self._toggle_blue(self.btn_hold, p_data['state'] == 'held')
             self.lbl_status.set_text(call_state_label(p_data['state']))
 
-        conf_paths = [p for p, d in calls.items() if d.get('multiparty')]
+        conf_paths = conference_paths(calls)
         primary_in_conf = self.active_path in conf_paths
 
         if primary_in_conf:
@@ -693,8 +694,8 @@ class InCallWindow(Adw.Window):
 
     def _update_multiparty_actions(self, calls, p_data, conf_paths):
         """Show the merge, join and transfer actions matching the call mix."""
-        held_normal = [p for p, d in calls.items() if d['state'] == 'held' and not d.get('multiparty')]
-        held_conf = [p for p, d in calls.items() if d['state'] == 'held' and d.get('multiparty')]
+        held_normal = held_single_paths(calls)
+        held_conf = held_conference_paths(calls)
         primary_free = bool(self.active_path) and p_data['state'] == 'active' and not p_data.get('multiparty')
 
         conference_allowed = self.gsettings_mgr.get_setting("allow_conference_calls") == "true"
@@ -721,8 +722,7 @@ class InCallWindow(Adw.Window):
 
         self.lbl_transfer_hint.set_visible(self.lbl_transfer_hint.get_visible() and transfer_allowed)
 
-        lines = len([p for p, d in calls.items() if not d.get('multiparty')]) + (1 if conf_paths else 0)
-        self.btn_add_call.set_sensitive(lines < 2 and p_data['state'] in ('active', 'held'))
+        self.btn_add_call.set_sensitive(count_lines(calls) < 2 and p_data['state'] in ('active', 'held'))
 
     def _build_participants_card(self, conf_paths):
         """Build the conference participants card with per leg actions."""

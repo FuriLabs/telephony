@@ -21,6 +21,7 @@ from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib, GObject
 
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.call_state_utils import count_lines
 from ...backend.utils.system_utils import restart_ril_modem
 from ...backend.utils.thread_utils import run_in_background
 from ..services.ofono_service import OfonoService
@@ -900,10 +901,7 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 logger.error(f"[OfonoManager] Sanity check failed: {e}")
 
-        lines = len([p for p, d in self.active_calls.items() if not d.get('multiparty')])
-        if any(d.get('multiparty') for d in self.active_calls.values()):
-            lines += 1
-        if lines >= 2:
+        if count_lines(self.active_calls) >= 2:
             return self._refuse_dial(_("Cannot dial while in another call"), on_result)
 
         if not self.active_calls and self.audio.voice_profile_active:
