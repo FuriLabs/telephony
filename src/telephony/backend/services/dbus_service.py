@@ -258,6 +258,32 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="number"/>
       <arg type="s" name="text"/>
     </signal>
+    <signal name="MessagesChanged">
+      <arg type="s" name="number"/>
+      <arg type="s" name="reason"/>
+    </signal>
+    <signal name="ContactsChanged"/>
+    <signal name="BlocklistChanged"/>
+    <method name="SendUssd">
+      <arg type="s" name="command" direction="in"/>
+      <arg type="s" name="response" direction="out"/>
+    </method>
+    <method name="CallAction">
+      <arg type="s" name="action" direction="in"/>
+      <arg type="s" name="argument" direction="in"/>
+      <arg type="b" name="ok" direction="out"/>
+    </method>
+    <method name="GetNetworkProperties">
+      <arg type="s" name="service" direction="in"/>
+      <arg type="a{sv}" name="properties" direction="out"/>
+    </method>
+    <method name="SetNetworkProperty">
+      <arg type="s" name="service" direction="in"/>
+      <arg type="s" name="name" direction="in"/>
+      <arg type="v" name="value" direction="in"/>
+      <arg type="s" name="password" direction="in"/>
+      <arg type="s" name="error" direction="out"/>
+    </method>
   </interface>
 </node>
 """
@@ -308,6 +334,76 @@ class TelephonyDaemonDBus:
     def _on_incoming_message(self, manager, number, body):
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
 
+    def _handle_sendussd(self, params, invocation):
+        """Run a USSD request for a window instance and hand back the reply."""
+        command = params.unpack()[0]
+
+        def done(response):
+            invocation.return_value(GLib.Variant("(s)", (response or "",)))
+
+        def failed(error):
+            logger.error(f"[Daemon] USSD request failed: {error}")
+            invocation.return_value(GLib.Variant("(s)", ("",)))
+
+        run_in_background(self.ofono.send_ussd, command, on_complete=done, on_error=failed)
+
+    def _handle_callaction(self, params, invocation):
+        """Run a call control action a window instance asked for."""
+        action, argument = params.unpack()
+        actions = {
+            "create_multiparty": lambda: self.ofono.create_multiparty(),
+            "hangup_multiparty": lambda: self.ofono.hangup_multiparty(),
+            "transfer": lambda: self.ofono.transfer_call(),
+            "private_chat": lambda: self.ofono.private_chat(argument),
+        }
+        handler = actions.get(action)
+        if handler is None:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+
+        def done(result):
+            invocation.return_value(GLib.Variant("(b)", (bool(result and result[0]),)))
+
+        def failed(error):
+            logger.error(f"[Daemon] Call action {action} failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        run_in_background(handler, on_complete=done, on_error=failed)
+
+    def _handle_getnetworkproperties(self, params, invocation):
+        """Read a supplementary service for a window instance."""
+        service = params.unpack()[0]
+
+        def done(props):
+            packed = {k: GLib.Variant("s", str(v)) for k, v in (props or {}).items()}
+            invocation.return_value(GLib.Variant("(a{sv})", (packed,)))
+
+        def failed(error):
+            logger.error(f"[Daemon] Network property read failed: {error}")
+            invocation.return_value(GLib.Variant("(a{sv})", ({},)))
+
+        run_in_background(self.ofono.get_service_properties, service,
+                          on_complete=done, on_error=failed)
+
+    def _handle_setnetworkproperty(self, params, invocation):
+        """Change a supplementary service for a window instance."""
+        service, name, value, password = params.unpack()
+
+        def task():
+            if service == "barring" and password:
+                return self.ofono.set_barring_property(name, value, password)
+            return self.ofono.set_service_property(service, name, value)
+
+        def done(result):
+            ok, error = result if result else (False, "no reply")
+            invocation.return_value(GLib.Variant("(s)", ("" if ok else (error or "failed"),)))
+
+        def failed(error):
+            logger.error(f"[Daemon] Network property write failed: {error}")
+            invocation.return_value(GLib.Variant("(s)", (str(error),)))
+
+        run_in_background(task, on_complete=done, on_error=failed)
+
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
             None,
@@ -333,6 +429,10 @@ class TelephonyDaemonDBus:
             "ScheduleSms": self._handle_schedulesms,
             "ScheduleMms": self._handle_schedulemms,
             "SendSms": self._handle_sendsms,
+            "SendUssd": self._handle_sendussd,
+            "CallAction": self._handle_callaction,
+            "GetNetworkProperties": self._handle_getnetworkproperties,
+            "SetNetworkProperty": self._handle_setnetworkproperty,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,
