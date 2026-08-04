@@ -328,19 +328,20 @@ class EdsManager(GObject.Object):
             client = EBook.BookClient.connect_sync(source_obj, wait_seconds, None)
             source_info['client'] = client
 
-            try:
-                success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
-                connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
-                if success and (is_local or connected):
-                    comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
-                    if comp_uids or not self._has_cached_contacts(uid):
-                        self.db_ref.sync_deleted_contacts(uid, comp_uids)
-                    else:
-                        logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
-                elif success:
-                    logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
-            except Exception as ex:
-                logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
+            if self.owns_live_views:
+                try:
+                    success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
+                    connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
+                    if success and (is_local or connected):
+                        comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
+                        if comp_uids or not self._has_cached_contacts(uid):
+                            self.db_ref.sync_deleted_contacts(uid, comp_uids)
+                        else:
+                            logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
+                    elif success:
+                        logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
+                except Exception as ex:
+                    logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
 
             if not self.owns_live_views:
                 with self.sources_lock:
