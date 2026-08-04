@@ -19,10 +19,10 @@ from gi.repository import GLib, GObject
 
 from telephony.backend.utils.log_utils import logger
 from telephony.backend.utils.phone_utils import normalize_number
+from telephony.backend.utils.thread_utils import run_in_background
 from telephony.constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 
-PRIORITY_REBOOST_SECONDS = 1
-PRIORITY_RESTORE_SECONDS = 5
+EXTERNAL_ROUTE_POLL_SECONDS = 1
 
 
 class CallAudioManager(GObject.Object):
@@ -49,8 +49,8 @@ class CallAudioManager(GObject.Object):
         self._ring_suppressed = False
         self._profile_on = False
         self._volume_applied = False
-        self._boosted_paths = set()
-        self._boost_timer_ids = set()
+        self._route_poll_id = 0
+        self._route_poll_busy = False
 
         self.ofono.connect('call-added', self._on_calls_changed)
         self.ofono.connect('call-changed', self._on_calls_changed)
@@ -79,8 +79,11 @@ class CallAudioManager(GObject.Object):
             self._ring_for(path, data)
 
     def _ring_for(self, path, data):
-        """Ring one incoming call, honoring silence and priority callers."""
-        self._maybe_boost(path, data)
+        """Ring one incoming call unless it is silenced.
+
+        The priority-caller volume boost is not repeated here: the
+        modem manager already forces and restores it around the call.
+        """
         if data.get('silenced', False) or self._ring_suppressed:
             self._stop_ring()
             return
@@ -88,37 +91,6 @@ class CallAudioManager(GObject.Object):
             return
         self.audio.start_ringing(custom_path=self._custom_ringtone(data.get('number', '')))
         self._ringing = True
-
-    def _maybe_boost(self, path, data):
-        """Force maximum ring volume once for a DND-bypass caller."""
-        if path in self._boosted_paths:
-            return
-        try:
-            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
-        except Exception as e:
-            logger.warning(f"[CallAudio] Priority caller check failed: {e}")
-            return
-        caller = normalize_number(data.get('number', ''))
-        if not any(caller and normalize_number(p.get("number", "")) == caller for p in priority_list):
-            return
-
-        logger.info(f"[CallAudio] Priority call from {data.get('number')} - forcing MAX volume")
-        self._boosted_paths.add(path)
-        self.audio.force_max_feedback()
-        self._arm_boost_timer(PRIORITY_REBOOST_SECONDS, False)
-        self._arm_boost_timer(PRIORITY_RESTORE_SECONDS, True)
-
-    def _arm_boost_timer(self, seconds, restore):
-        """Arm a tracked one-shot boost timer that prunes itself."""
-        holder = {}
-
-        def fire():
-            self._boost_timer_ids.discard(holder["id"])
-            self.audio.force_max_feedback(restore=restore)
-            return GLib.SOURCE_REMOVE
-
-        holder["id"] = GLib.timeout_add_seconds(seconds, fire)
-        self._boost_timer_ids.add(holder["id"])
 
     def _custom_ringtone(self, number):
         """Return the caller's custom ringtone path, or None."""
@@ -143,7 +115,39 @@ class CallAudioManager(GObject.Object):
             self.audio.ensure_sink_unmuted()
             self._push_route_volume()
         self.audio.mute(self.audio.mic_muted)
+        if not self._route_poll_id:
+            self._route_poll_id = GLib.timeout_add_seconds(
+                EXTERNAL_ROUTE_POLL_SECONDS, self._poll_external_route)
         self.emit('audio-state-applied')
+
+    def _poll_external_route(self):
+        """Adopt port changes made outside the app, like a headset plug.
+
+        PulseAudio moves the port itself when hardware appears, so this
+        follows instead of fighting it: the route name is adopted and
+        its configured volume applied.
+        """
+        if self._route_poll_busy:
+            return GLib.SOURCE_CONTINUE
+
+        self._route_poll_busy = True
+
+        def done(route):
+            self._route_poll_busy = False
+            if not self._volume_applied or not route or route == self.audio.current_route:
+                return
+            logger.info(f"[CallAudio] Output route moved externally to {route}")
+            self.audio.current_route = route
+            self.audio.ensure_sink_unmuted()
+            self._push_route_volume()
+            self.emit('audio-state-applied')
+
+        def failed(error):
+            self._route_poll_busy = False
+            logger.debug(f"[CallAudio] Route poll failed: {error}")
+
+        run_in_background(self.audio.get_active_output_route, on_complete=done, on_error=failed)
+        return GLib.SOURCE_CONTINUE
 
     def _push_route_volume(self):
         """Apply the current route's configured level to the call sink."""
@@ -188,10 +192,9 @@ class CallAudioManager(GObject.Object):
 
     def _teardown(self):
         """Take call audio down after the last call ends."""
-        for timer_id in list(self._boost_timer_ids):
-            GLib.source_remove(timer_id)
-        self._boost_timer_ids = set()
-        self._boosted_paths = set()
+        if self._route_poll_id:
+            GLib.source_remove(self._route_poll_id)
+            self._route_poll_id = 0
         self._ring_suppressed = False
         self._stop_ring()
         if self._profile_on or self._volume_applied:

@@ -373,8 +373,8 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="route" direction="in"/>
     </method>
     <method name="GetAudioRoutes">
-      <arg type="as" name="outputs" direction="out"/>
-      <arg type="as" name="inputs" direction="out"/>
+      <arg type="a(sb)" name="outputs" direction="out"/>
+      <arg type="a(sb)" name="inputs" direction="out"/>
     </method>
     <method name="DetectRegion">
       <arg type="s" name="region" direction="out"/>
@@ -940,13 +940,15 @@ class TelephonyDaemonDBus:
     def _handle_getaudioroutes(self, parameters, invocation):
         """List the selectable output and input routes for a window."""
         def fetch():
-            outputs = [r['id'] for r in self.ofono.audio.get_available_outputs()]
-            inputs = [r['id'] for r in self.ofono.audio.get_available_inputs()]
+            outputs = [(r['id'], bool(r.get('available', True)))
+                       for r in self.ofono.audio.get_available_outputs()]
+            inputs = [(r['id'], bool(r.get('available', True)))
+                      for r in self.ofono.audio.get_available_inputs()]
             return (outputs, inputs)
 
         def done(result):
             outputs, inputs = result if result else ([], [])
-            invocation.return_value(GLib.Variant("(asas)", (outputs, inputs)))
+            invocation.return_value(GLib.Variant("(a(sb)a(sb))", (outputs, inputs)))
 
         run_in_background(fetch, on_complete=done)
 

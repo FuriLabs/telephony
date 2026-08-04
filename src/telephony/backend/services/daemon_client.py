@@ -389,9 +389,10 @@ class DaemonClient:
     def get_audio_routes(self):
         """List selectable routes; blocking, call from a worker.
 
-        Returns (outputs, inputs) or None when the owner is away.
+        Returns (outputs, inputs) as (id, available) pairs, or None
+        when the owner is away.
         """
-        return self.call("GetAudioRoutes", None, GLib.VariantType("(asas)"))
+        return self.call("GetAudioRoutes", None, GLib.VariantType("(a(sb)a(sb))"))
 
     def prepare_attachment(self, source_path, max_bytes):
         """Have the owner store and fit an attachment; blocking, call from a worker.

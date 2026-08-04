@@ -710,6 +710,9 @@ class OfonoManager(GObject.Object):
                     logger.info(f"[OfonoManager] Automatically silencing unknown caller: {number}")
                     is_silenced = True
 
+            if is_silenced and self._is_priority_number(number):
+                is_silenced = False
+
             self._check_priority_call(number)
             self._check_repeated_call_bypass(number)
 
@@ -827,21 +830,28 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[Priority] Check failed: {e}")
 
+    def _is_priority_number(self, number):
+        """Return whether a caller is on the DND-bypass list."""
+        try:
+            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+        except Exception as e:
+            logger.warning(f"[OfonoManager] Priority caller check failed: {e}")
+            return False
+        norm_num = normalize_number(number)
+        return any(norm_num and normalize_number(p.get("number", "")) == norm_num
+                   for p in priority_list)
+
     def _check_priority_call(self, number):
         """Check if caller is priority and override volume."""
         if len(self.active_calls) > 0:
             return
 
         try:
-            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
-            norm_num = normalize_number(number)
-            for p in priority_list:
-                p_num = normalize_number(p.get("number", ""))
-                if p_num and p_num == norm_num:
-                    logger.info(f"[Priority] Call from {number} - forcing MAX volume")
-                    self.audio.force_max_feedback()
-                    self.is_volume_boosted = True
-                    return
+            if self._is_priority_number(number):
+                logger.info(f"[Priority] Call from {number} - forcing MAX volume")
+                self.audio.force_max_feedback()
+                self.is_volume_boosted = True
+                return
         except Exception as e:
             logger.error(f"[Priority] Call Check failed: {e}")
 
