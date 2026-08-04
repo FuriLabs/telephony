@@ -335,7 +335,7 @@ class ChatPage(Gtk.Box):
             if (self.messages_view is not None):
                 self.messages_view.close_active_chat()
 
-        run_in_background(self.db.mark_conversation_unread_from_message,
+        run_in_background(self.app_window.daemon.mark_conversation_unread,
                           self.db_number, message_id, on_complete=done)
 
     def on_reschedule_message(self, item):
@@ -361,13 +361,11 @@ class ChatPage(Gtk.Box):
             ts_str = dt.format("%Y-%m-%d %H:%M:%S")
 
             def done(_result):
-                if (self.app_window and self.app_window.scheduler is not None):
-                    self.app_window.scheduler.add_cron(item.id, ts_str)
                 self._reload_chat()
                 self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
 
-            run_in_background(self.db.update_message_schedule, item.id,
-                              on_complete=done, status="scheduled", timestamp=ts_str)
+            run_in_background(self.app_window.daemon.reschedule_message, item.id, ts_str,
+                              on_complete=done)
 
         DateTimePicker(
             parent=self.app_window,
@@ -787,7 +785,7 @@ class ChatPage(Gtk.Box):
                     norm_rec = normalize_number(number)
                     for bid, bnum, _ignored in blocked:
                         if normalize_number(bnum) == norm_rec:
-                            self.db.unblock_number(bid, number)
+                            self.app_window.daemon.remove_blocked_number(bid)
                             break
                     return True
 
@@ -876,11 +874,9 @@ class ChatPage(Gtk.Box):
                             except Exception as e:
                                 logger.warning(f"[Chat] Attachment delete failed: {e}")
 
-                self.db.delete_message(item_id)
+                self.app_window.daemon.delete_message(item_id)
 
             run_in_background(task)
-            if (self.app_window and self.app_window.scheduler is not None):
-                self.app_window.scheduler.remove_cron(item_id)
 
         self.app_window.confirm_action(_("Delete Message"), _("Are you sure you want to delete this message?"), on_confirm_delete)
 
@@ -985,13 +981,7 @@ class ChatPage(Gtk.Box):
 
     def on_retry_message(self, item):
         """Resend a failed message."""
-        def dispatch(_result):
-            if self.is_group or item.attachments:
-                run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), item.body, list(item.attachments or []), item.id)
-            else:
-                run_in_background(self.app_window.ofono.send_sms_tracked, self.number, item.body, item.id)
-
-        run_in_background(self.db.update_message_status, item.id, "sending", on_complete=dispatch)
+        self.app_window.daemon.retry_message(item.id)
 
     def _reload_chat(self):
         """Reload the chat conversation."""
@@ -1032,7 +1022,7 @@ class ChatPage(Gtk.Box):
             self.title_widget.set_title(new_name)
             self.app_window.notify_success(_("Group renamed"))
 
-        run_in_background(self.db.set_group_name, self.recipients, new_name, on_complete=done)
+        run_in_background(self.app_window.daemon.set_group_name, self.recipients, new_name, on_complete=done)
 
     def _remaining_attachment_budget(self):
         """Return how many bytes of MMS attachment budget are still available."""
@@ -1334,39 +1324,24 @@ class ChatPage(Gtk.Box):
 
         def prepare():
             final_attachments = self._copy_attachments(pending_attachments)
-            self.db.delete_drafts(self.number)
-            status = "scheduled" if scheduled_timestamp else "sending"
-            row_id = self.db.add_message(self.number, 'outgoing', text, status=status, subject=None,
-                                         attachments=final_attachments, sender="Me",
-                                         scheduled_timestamp=scheduled_timestamp)
-            return row_id, final_attachments
-
-        def done(result):
-            self.btn_send.set_sensitive(True)
-            if not result or result[0] is None:
-                return
-            row_id, final_attachments = result
-            now = format_timestamp()
-
+            self.app_window.daemon.save_draft(self.number, "", [])
             if scheduled_timestamp:
-                if (self.app_window and self.app_window.scheduler is not None):
-                    self.app_window.scheduler.add_cron(row_id, scheduled_timestamp)
-                self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
-                msg = MessageItem(row_id, "outgoing", text or _("[Attachment]"), now, "scheduled",
-                                  attachments=final_attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
-                self.store.insert(0, msg)
-                self.scroll_to_bottom()
+                if self.is_group or final_attachments:
+                    return self.app_window.daemon.schedule_mms(
+                        self.number, text, final_attachments, scheduled_timestamp)
+                return self.app_window.daemon.schedule_sms(self.number, text, scheduled_timestamp)
+            if self.is_group or final_attachments:
+                return self.app_window.daemon.send_mms(self.number, text, final_attachments)
+            return self.app_window.daemon.send_tracked_sms(self.number, text)
+
+        def done(sent):
+            self.btn_send.set_sensitive(True)
+            if not sent:
+                self.app_window.notify_error(_("Failed to send"))
                 return
-
-            msg = MessageItem(row_id, "outgoing", text or _("[Attachment]"), now, "sending",
-                              attachments=final_attachments, sender="Me")
-            self.store.insert(0, msg)
+            if scheduled_timestamp:
+                self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
             self.scroll_to_bottom()
-
-            if self.is_group or has_att:
-                run_in_background(self.app_window.mms.send_mms_tracked, list(self.recipients), text, final_attachments, row_id)
-            else:
-                run_in_background(self.app_window.ofono.send_sms_tracked, self.number, text, row_id)
 
         run_in_background(prepare, on_complete=done)
 
@@ -1398,7 +1373,7 @@ class ChatPage(Gtk.Box):
 
     def _do_mark_read(self):
         """Perform mark read logic."""
-        run_in_background(self.db.mark_conversation_read, self.db_number)
+        self.app_window.daemon.mark_thread_read(self.db_number)
         self.messages_view.check_and_clear_notification(self.db_number)
 
         self.has_active_divider = False
@@ -1438,16 +1413,9 @@ class ChatPage(Gtk.Box):
 
                 logger.info(f"[Delete] Wiped {len(all_msgs)} messages and {files_deleted} files for ID: {target_id}")
 
-                scheduled_ids = [m[0] for m in all_msgs if m[4] == 'scheduled']
-                self.db.delete_conversation(target_id)
-                return scheduled_ids
+                self.app_window.daemon.delete_conversation(target_id)
 
-            def done(scheduled_ids):
-                if self.app_window and self.app_window.scheduler is not None:
-                    for msg_id in scheduled_ids or []:
-                        self.app_window.scheduler.remove_cron(msg_id)
-
-            run_in_background(task, on_complete=done)
+            run_in_background(task)
 
         title = _("Delete Group") if self.is_group else _("Delete Conversation")
         body = _("This will permanently delete the conversation history and all saved media files.")
@@ -1519,11 +1487,8 @@ class ChatPage(Gtk.Box):
         draft_attachments = list(self.attachments)
 
         def persist():
-            self.db.delete_drafts(self.number)
-            if not text and not draft_attachments:
-                return False
-            self.db.add_message(self.number, 'outgoing', text, status='draft', subject=None, attachments=draft_attachments, sender="Me")
-            return True
+            self.app_window.daemon.save_draft(self.number, text, draft_attachments)
+            return bool(text or draft_attachments)
 
         def done(saved):
             if saved:
