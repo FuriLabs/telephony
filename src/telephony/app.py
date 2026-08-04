@@ -631,10 +631,6 @@ class App(Adw.Application):
                 GLib.idle_add(self.quit)
         return False
 
-    def do_shutdown(self):
-        """Perform shutdown cleanup."""
-        super().do_shutdown()
-
     def on_incoming_message(self, _ofono_obj, number, body):
         """Handle incoming SMS."""
         is_chat_open = False
