@@ -104,7 +104,7 @@ class ConversationRowFactory:
         else:
             w["date"].set_text(item.display_time)
 
-        body_preview = item.last_msg.replace("\n", " ") if item.last_msg else ""
+        body_preview = " ".join(item.last_msg.split()) if item.last_msg else ""
         if item.status == 'draft':
             body_preview = _("Draft: {message}").format(message=body_preview)
             w["msg"].add_css_class("dim-label")
