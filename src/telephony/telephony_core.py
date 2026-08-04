@@ -36,6 +36,7 @@ from .backend.managers.schedule_manager import ScheduleManager
 from .backend.utils.thread_utils import run_in_background
 from .backend.utils.phone_utils import normalize_number, get_own_number
 from .backend.utils.locale_utils import init_locale
+from .backend.utils.system_utils import trim_native_heap
 from .constants import INCALL_APP_ID, EMERGENCY_APP_ID, DAEMON_APP_ID, DAEMON_BUS_NAME
 
 from gettext import gettext as _, ngettext
@@ -49,6 +50,8 @@ DAEMON_START_TIMEOUT_MS = 25000
 DBUS_START_REPLY_SUCCESS = 1
 DBUS_START_REPLY_ALREADY_RUNNING = 2
 MMS_NOTIFICATION_DELAY_MS = 150
+HEAP_TRIM_AFTER_STARTUP_SECONDS = 120
+HEAP_TRIM_INTERVAL_SECONDS = 1800
 
 
 class TelephonyCore:
@@ -232,6 +235,9 @@ class TelephonyCore:
             self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
             self.scheduler.start()
             run_in_background(self.db.fail_stale_sending)
+
+        GLib.timeout_add_seconds(HEAP_TRIM_AFTER_STARTUP_SECONDS, trim_native_heap)
+        GLib.timeout_add_seconds(HEAP_TRIM_INTERVAL_SECONDS, lambda: trim_native_heap() or True)
 
     def _announce_changes(self):
         """Tell window instances when the stored data changed.
