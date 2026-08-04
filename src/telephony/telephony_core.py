@@ -274,6 +274,9 @@ class TelephonyCore:
         self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))
+        self.daemon_client.subscribe(
+            "HangupRequested",
+            lambda *args: GLib.idle_add(self._replay_hangup_request))
 
         if self.owns_incall_ui:
             self.daemon_client.subscribe(
@@ -300,6 +303,15 @@ class TelephonyCore:
     def _replay_change(self, name, *args):
         """Repeat on the local managers what the owner reported."""
         self.db.emit(name, *args)
+        return False
+
+    def _replay_hangup_request(self):
+        """Repeat the owner's hangup request so local surfaces can react.
+
+        Whichever surface asked, the removal that follows is ours, and
+        the call window must not play the hangup feedback for it.
+        """
+        self.ofono.emit('hangup-requested')
         return False
 
     def _setup_feedbackd(self):

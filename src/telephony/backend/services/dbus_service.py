@@ -295,6 +295,7 @@ DAEMON_INTERFACE_XML = """
     <signal name="ContactsChanged"/>
     <signal name="BlocklistChanged"/>
     <signal name="HistoryChanged"/>
+    <signal name="HangupRequested"/>
     <signal name="RecoveryStateChanged">
       <arg type="b" name="active"/>
       <arg type="s" name="message"/>
@@ -361,6 +362,7 @@ class TelephonyDaemonDBus:
             self.ofono.connect('call-changed', self._on_call_changed)
             self.ofono.connect('call-removed', self._on_call_removed)
             self.ofono.connect('incoming-message', self._on_incoming_message)
+            self.ofono.connect('hangup-requested', self._on_hangup_requested)
 
     def _on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
@@ -374,6 +376,14 @@ class TelephonyDaemonDBus:
 
     def _on_incoming_message(self, manager, number, body):
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
+
+    def _on_hangup_requested(self, manager):
+        """Tell the windows this side asked for the hangup.
+
+        A call removal alone cannot say who ended the call, and the
+        hangup feedback should only sound when the other side did.
+        """
+        self.emit_signal("HangupRequested", None)
 
     def _handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
