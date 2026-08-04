@@ -315,12 +315,24 @@ class EdsManager(GObject.Object):
             logger.error(f"[EDS] Source init failed for {source_info.get('uid')}: {e}")
 
     def _init_source(self, source_info):
-        """Connect to a single source and start monitoring."""
+        """Connect to a single source and start monitoring.
+
+        A window instance stops here with the mirror loaded: it reads
+        contacts from the daemon's mirror and only needs a book client
+        when a write happens, which connects lazily at that moment.
+        Six per-book connects at every window start were the whole
+        reason the syncing banner lingered.
+        """
         uid = source_info['uid']
         source_obj = source_info['source_obj']
         logger.info(f"[EDS] Initializing source: {source_info['name']} (Rank {source_info['rank']})")
 
         self._load_from_local_db(uid, source_info['rank'])
+
+        if not self.owns_live_views:
+            with self.sources_lock:
+                self.sources[uid] = source_info
+            return
 
         try:
             is_local = self._is_local_backend(source_obj)
@@ -328,26 +340,19 @@ class EdsManager(GObject.Object):
             client = EBook.BookClient.connect_sync(source_obj, wait_seconds, None)
             source_info['client'] = client
 
-            if self.owns_live_views:
-                try:
-                    success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
-                    connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
-                    if success and (is_local or connected):
-                        comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
-                        if comp_uids or not self._has_cached_contacts(uid):
-                            self.db_ref.sync_deleted_contacts(uid, comp_uids)
-                        else:
-                            logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
-                    elif success:
-                        logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
-                except Exception as ex:
-                    logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
-
-            if not self.owns_live_views:
-                with self.sources_lock:
-                    self.sources[uid] = source_info
-                logger.info(f"[EDS] Live view skipped for {uid}: the owner watches this book")
-                return
+            try:
+                success, uids = client.get_contacts_uids_sync('(contains "x-evolution-any-field" "")', None)
+                connected = source_obj.get_connection_status() == EDataServer.SourceConnectionStatus.CONNECTED
+                if success and (is_local or connected):
+                    comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in uids]
+                    if comp_uids or not self._has_cached_contacts(uid):
+                        self.db_ref.sync_deleted_contacts(uid, comp_uids)
+                    else:
+                        logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
+                elif success:
+                    logger.info(f"[EDS] Deferring deletion sweep for {uid}: backend not connected yet")
+            except Exception as ex:
+                logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
 
             query = '(contains "x-evolution-any-field" "")'
             success, view = client.get_view_sync(query, None)
@@ -546,12 +551,17 @@ class EdsManager(GObject.Object):
             return []
 
     def refresh_backends(self):
-        """Ask every backend supporting refresh to re-sync with its remote store."""
+        """Ask every backend supporting refresh to re-sync with its remote store.
+
+        Blocking, call from a worker: clients connect on first use.
+        """
         with self.sources_lock:
-            clients = [(uid, info.get('client')) for uid, info in self.sources.items()]
+            infos = list(self.sources.values())
 
         refreshed = 0
-        for uid, client in clients:
+        for info in infos:
+            uid = info['uid']
+            client = self._ensure_client(info)
             if not client:
                 continue
             try:
@@ -960,20 +970,41 @@ class EdsManager(GObject.Object):
             info = self.sources.get(source_uid)
         return bool(info) and info.get('name') == "Andromeda Contacts"
 
+    def _ensure_client(self, info):
+        """Return the source's book client, connecting on first use.
+
+        Blocking, call from a worker. Windows carry no clients until a
+        write happens, and the wait is bounded so a wedged factory
+        surfaces as a logged failure instead of a silent hang.
+        """
+        client = info.get('client')
+        if client:
+            return client
+        try:
+            client = EBook.BookClient.connect_sync(
+                info['source_obj'], EBOOK_CONNECT_TIMEOUT_SECONDS, None)
+        except Exception as e:
+            logger.error(f"[EDS] Lazy connect failed for {info['uid']}: {e}")
+            return None
+        with self.sources_lock:
+            info['client'] = client
+        return client
+
     def _get_writable_client(self, source_uid=None):
-        """Get the client for source_uid, or the highest ranked when unspecified."""
+        """Get the client for source_uid, or the highest ranked when unspecified.
+
+        Blocking, call from a worker: the client connects on first use.
+        """
         with self.sources_lock:
             if source_uid:
                 info = self.sources.get(source_uid)
-                if info is None:
-                    logger.warning(f"[EDS] No connected client for requested source {source_uid}")
-                    return None
-                return info.get('client')
-
-            sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
-            if sorted_sources:
-                return sorted_sources[0].get('client')
-        return None
+            else:
+                sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
+                info = sorted_sources[0] if sorted_sources else None
+        if info is None:
+            logger.warning(f"[EDS] No source available for client request ({source_uid})")
+            return None
+        return self._ensure_client(info)
 
     def save_contact(self, vcard_string, uid=None, source_uid=None):
         """Save a contact from a VCard string."""
