@@ -176,13 +176,22 @@ class InCallWindow(Adw.Window):
         self.update_state()
 
     def _on_close_req(self, window):
-        """Let the window go unless the modem still needs its page.
+        """Step aside during a call, go away once there is none.
 
-        Hiding it made sense while it lived in the service. It is a
-        process of its own now, so hiding would keep that process for
-        the rest of the session.
+        Swiping the call away is how the user reaches the rest of the
+        phone mid-call, so the window hides and the call carries on.
+        With no call there is nothing to come back to, and this window
+        is a process of its own now, so hiding one would hold that
+        process for the rest of the session.
         """
-        return self.in_recovery_mode
+        if self.in_recovery_mode:
+            return True
+
+        if self.ofono.active_calls:
+            self.set_visible(False)
+            return True
+
+        return False
 
     def _proximity_tick(self):
         """Timer callback for proximity sensor handling."""
