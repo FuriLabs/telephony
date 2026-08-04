@@ -800,7 +800,7 @@ class MainWindow(Adw.Window):
 
         add_action(_("Delete this call"),
                    lambda: self.confirm_action(_("Delete Call"), _("Remove this call?"),
-                                               lambda: [self.db.delete_call_by_id(item.id)]),
+                                               lambda: [self.daemon.delete_call_entry(item.id)]),
                    destructive=True)
 
         sheet.present(self)

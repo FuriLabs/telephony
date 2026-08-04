@@ -649,7 +649,7 @@ class ContactEditor(Adw.Dialog):
         def task():
             self.eds.delete_contact(self.uid)
             if numbers:
-                self.main_window.db.update_history_names(numbers, new_name=None)
+                self.main_window.daemon.update_history_names(numbers, None)
             return numbers
 
         def done(deleted_numbers):
