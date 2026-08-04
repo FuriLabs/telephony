@@ -15,10 +15,7 @@
 
 import sys
 
-import gi
-gi.require_version('Gst', '1.0')
-
-from gi.repository import Gio, GLib, Gst
+from gi.repository import Gio, GLib
 from loguru import logger
 
 from .constants import DAEMON_APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE
@@ -49,9 +46,6 @@ class DaemonApp(Gio.Application):
         """Bring up the managers and stay resident."""
         Gio.Application.do_startup(self)
         GLib.set_prgname(self.get_application_id())
-
-        if not Gst.is_initialized():
-            Gst.init(None)
 
         self.hold()
         self.core.start()

@@ -23,9 +23,9 @@ import pulsectl
 from loguru import logger
 
 gi.require_version('Lfb', '0.0')
-gi.require_version('Gst', '1.0')
-from gi.repository import Lfb, Gio, GLib, Gst
+from gi.repository import Lfb, Gio, GLib
 
+from ...backend.utils.gst_utils import get_gst
 from ...backend.utils.system_utils import get_feedbackd_profile, set_feedbackd_profile
 from ...constants import APP_ID
 
@@ -259,6 +259,7 @@ class TelephonyAudioManager:
                     self._teardown_knock_pipeline()
 
                 uri = "file:///usr/share/sounds/freedesktop/stereo/device-added.oga"
+                Gst = get_gst()
                 self.knock_pipeline = Gst.ElementFactory.make("playbin", "knock_player")
                 self.knock_pipeline.set_property("uri", uri)
                 self.knock_pipeline.set_state(Gst.State.PLAYING)
@@ -291,7 +292,7 @@ class TelephonyAudioManager:
             self.knock_bus = None
 
         if self.knock_pipeline:
-            self.knock_pipeline.set_state(Gst.State.NULL)
+            self.knock_pipeline.set_state(get_gst().State.NULL)
             self.knock_pipeline = None
 
     def _on_knock_eos(self, bus, msg):
