@@ -21,8 +21,6 @@ from ...backend.utils.datetime_utils import format_timestamp, parse_timestamp
 import json
 import os
 import shutil
-import tempfile
-import time
 import mimetypes
 from datetime import datetime
 from gettext import gettext as _
@@ -1055,152 +1053,53 @@ class ChatPage(Gtk.Box):
         return budget - used
 
     def on_attachment_captured(self, path):
-        """Callback when an attachment is created by a helper window."""
-        if not path or not os.path.exists(path) or path in self.attachments:
+        """Hand a captured file to the daemon to store and fit the budget."""
+        if not path or path in self.attachments:
             return
 
-        try:
-            size = os.path.getsize(path)
-            remaining = self._remaining_attachment_budget()
-        except Exception as e:
-            logger.warning(f"[Chat] Attachment size check failed: {e}")
-            self._append_attachment(path)
-            return
-
-        if size <= remaining:
-            self._append_attachment(path)
-            return
-
+        remaining = self._remaining_attachment_budget()
         mime, _encoding = mimetypes.guess_type(path)
+        try:
+            oversized = os.path.getsize(path) > remaining
+        except OSError as e:
+            logger.warning(f"[Chat] Attachment size check failed: {e}")
+            oversized = False
 
-        if mime and mime.startswith("image/"):
+        if oversized and mime and mime.startswith("image/"):
             self.app_window.notify_loading(_("Compressing image..."))
-            run_in_background(self._compress_image, path, remaining,
-                              on_complete=lambda result: self._on_compressed(result, _("Image is too large to send")))
-        elif mime and mime.startswith("video/"):
+        elif oversized and mime and mime.startswith("video/"):
             self.app_window.notify_loading(_("Compressing video..."))
-            run_in_background(self._compress_video_to_fit, path, remaining,
-                              on_complete=lambda result: self._on_compressed(result, _("Video compression failed")))
-        else:
-            self.app_window.notify_error(_("File is too large to send via MMS"))
 
-    def _on_compressed(self, result_path, error_message):
-        """Handle a finished background compression."""
+        run_in_background(self.app_window.daemon.prepare_attachment, path, remaining,
+                          on_complete=lambda reply: self._on_attachment_prepared(reply, path))
+
+    def _on_attachment_prepared(self, reply, source_path):
+        """Add the stored attachment, or say why it could not be."""
         self.app_window.hide_loading()
-        if result_path:
-            self._append_attachment(result_path)
-        else:
-            self.app_window.notify_error(error_message)
+        if reply is None:
+            self.app_window.notify_error(_("Failed to prepare attachment."))
+            return
+        stored_path, code = reply
+        if stored_path:
+            self._append_attachment(stored_path)
+            if "/tmp/" in source_path:
+                try:
+                    os.remove(source_path)
+                except OSError as e:
+                    logger.debug(f"[Chat] Temp source removal failed: {e}")
+            return
+        errors = {
+            "image-too-large": _("Image is too large to send"),
+            "video-failed": _("Video compression failed"),
+            "too-large": _("File is too large to send via MMS"),
+        }
+        self.app_window.notify_error(errors.get(code, _("Failed to prepare attachment.")))
 
     def _append_attachment(self, path):
         """Add a processed attachment and refresh the chip area."""
         if path not in self.attachments:
             self.attachments.append(path)
             self.refresh_attachment_ui()
-
-    def _compress_video_to_fit(self, path, max_bytes):
-        """Compress a video and verify it fits the remaining budget."""
-        compressed = self._compress_video(path)
-        if compressed and os.path.getsize(compressed) <= max_bytes:
-            return compressed
-        if compressed and os.path.exists(compressed):
-            os.remove(compressed)
-        return None
-
-    def _compress_image(self, src_path, max_bytes):
-        """Downscale and re-encode an image until it fits the byte budget."""
-        from PIL import Image, ImageOps
-
-        try:
-            with Image.open(src_path) as img:
-                img = ImageOps.exif_transpose(img)
-                if img.mode != "RGB":
-                    img = img.convert("RGB")
-
-                quality = 85
-                scale = 1.0
-                for _attempt in range(8):
-                    width = max(1, int(img.width * scale))
-                    height = max(1, int(img.height * scale))
-                    resized = img if scale == 1.0 else img.resize((width, height), Image.LANCZOS)
-
-                    tmp_path = os.path.join(tempfile.gettempdir(), f"img_c_{int(time.time())}_{_attempt}.jpg")
-                    resized.save(tmp_path, "JPEG", quality=quality, optimize=True)
-
-                    if os.path.getsize(tmp_path) <= max_bytes:
-                        return tmp_path
-
-                    os.remove(tmp_path)
-                    if quality > 45:
-                        quality -= 15
-                    else:
-                        scale *= 0.7
-        except Exception as e:
-            logger.error(f"[Chat] Image compression error: {e}")
-        return None
-
-    def refresh_attachment_ui(self):
-        """Update attachment UI area."""
-        while child := self.att_box.get_first_child():
-            self.att_box.remove(child)
-        if not self.attachments:
-            self.att_scrolled.set_visible(False)
-            return
-        self.att_scrolled.set_visible(True)
-        for path in self.attachments:
-            chip = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-            chip.add_css_class("att-chip")
-            lbl = Gtk.Label(label=os.path.basename(path))
-            lbl.set_ellipsize(Pango.EllipsizeMode.END)
-            lbl.set_max_width_chars(20)
-            btn_close = Gtk.Button(icon_name="window-close-symbolic", css_classes=["flat", "circular"])
-            btn_close.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.remove_attachment_by_path(p) or False))
-            chip.append(lbl)
-            chip.append(btn_close)
-            self.att_box.append(chip)
-
-    def remove_attachment_by_path(self, path_to_remove):
-        """Remove an attachment from the list."""
-        if path_to_remove in self.attachments:
-            self.attachments.remove(path_to_remove)
-            if "/tmp/" in path_to_remove and os.path.exists(path_to_remove):
-                try:
-                    os.remove(path_to_remove)
-                except Exception as e:
-                    logger.warning(f"[Chat] Temp file removal failed: {e}")
-            self.refresh_attachment_ui()
-
-    def _compress_video(self, src_path):
-        """Compress a video to reduce file size."""
-        try:
-            tmp_path = os.path.join(tempfile.gettempdir(), f"vid_c_{int(time.time())}_{os.path.basename(src_path)}")
-
-            pipeline_str = (
-                f"filesrc location=\"{src_path}\" ! decodebin ! videoconvert ! videoscale ! "
-                f"video/x-raw,width=320,height=240 ! videoconvert ! "
-                f"x264enc tune=zerolatency bitrate=200 speed-preset=ultrafast ! h264parse ! mp4mux ! filesink location=\"{tmp_path}\""
-            )
-
-            pipeline = Gst.parse_launch(pipeline_str)
-            bus = pipeline.get_bus()
-            pipeline.set_state(Gst.State.PLAYING)
-
-            msg = bus.timed_pop_filtered(
-                30 * Gst.SECOND,
-                Gst.MessageType.ERROR | Gst.MessageType.EOS
-            )
-
-            pipeline.set_state(Gst.State.NULL)
-
-            if msg and msg.type == Gst.MessageType.EOS:
-                if os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 0:
-                    return tmp_path
-
-            logger.warning("[Chat] Video compression did not finish properly")
-            return None
-        except Exception as e:
-            logger.error(f"[Chat] Video compression error: {e}")
-            return None
 
     def load_context_for_message(self, msg_id):
         """Load messages around a specific message ID."""

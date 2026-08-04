@@ -14,7 +14,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import shutil
 from datetime import datetime
 from gi.repository import Gtk, Gdk, Adw, GLib
 from telephony.backend.utils.log_utils import logger
@@ -157,34 +156,14 @@ class ChatMediaController:
         dialog.open(self.window, None, _on_resp)
 
     def _on_media_captured(self, _source, path):
-        """Handle captured/selected media file and pass to ChatPage."""
+        """Hand captured or selected media to the chat page.
+
+        Storage and shrink-to-fit happen in the daemon, so the file is
+        forwarded as it is.
+        """
         if not path or not os.path.exists(path):
             return
-
-        try:
-            att_dir = os.path.join(GLib.get_user_data_dir(), "telephony", "attachments")
-            os.makedirs(att_dir, exist_ok=True)
-
-            fname = os.path.basename(path)
-            now = datetime.now().strftime("%Y%m%d_%H%M%S")
-            dest = os.path.join(att_dir, f"{now}_{fname}")
-
-            if path != dest:
-                if os.path.exists(dest):
-                    os.remove(dest)
-                shutil.copy2(path, dest)
-
-            if "/tmp/" in path:
-                try:
-                    os.remove(path)
-                except Exception as e:
-                    logger.debug(f"[MediaController] Temp file removal failed: {e}")
-
-            self.chat_page.on_attachment_captured(dest)
-
-        except Exception as e:
-            logger.error(f"Failed to process attachment: {e}")
-            self._show_error(None, _("Failed to prepare attachment."))
+        self.chat_page.on_attachment_captured(path)
 
     def _show_error(self, title, message):
         """Report a failure the user can only acknowledge."""

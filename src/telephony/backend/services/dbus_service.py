@@ -24,6 +24,7 @@ import uuid
 from telephony.backend.utils.thread_utils import run_in_background
 from telephony.backend.utils.phone_utils import get_own_number
 from telephony.backend.utils.region_utils import detect_region
+from telephony.backend.utils.attachment_utils import prepare_attachment
 from telephony.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 MISSED_MESSAGE_BUFFER_MINUTES = 14400
@@ -357,6 +358,12 @@ DAEMON_INTERFACE_XML = """
     <method name="ClearNotification">
       <arg type="s" name="number" direction="in"/>
     </method>
+    <method name="PrepareAttachment">
+      <arg type="s" name="source_path" direction="in"/>
+      <arg type="i" name="max_bytes" direction="in"/>
+      <arg type="s" name="path" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
     <method name="DetectRegion">
       <arg type="s" name="region" direction="out"/>
     </method>
@@ -535,6 +542,19 @@ class TelephonyDaemonDBus:
         number = parameters.unpack()[0]
         self.app.clear_notification(number)
         invocation.return_value(None)
+
+    def _handle_prepareattachment(self, parameters, invocation):
+        """Store an attachment and make it fit the caller's byte budget."""
+        source_path, max_bytes = parameters.unpack()
+
+        def task():
+            return prepare_attachment(source_path, max_bytes)
+
+        def done(result):
+            path, message = result if result else (None, "error")
+            invocation.return_value(GLib.Variant("(ss)", (path or "", message)))
+
+        run_in_background(task, on_complete=done)
 
     def _handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
@@ -741,6 +761,7 @@ class TelephonyDaemonDBus:
             "DetectRegion": self._handle_detectregion,
             "RequestRecovery": self._handle_requestrecovery,
             "ClearNotification": self._handle_clearnotification,
+            "PrepareAttachment": self._handle_prepareattachment,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,

@@ -370,6 +370,16 @@ class DaemonClient:
         """Tell the owner its alerts for a number were seen."""
         self.call_async("ClearNotification", GLib.Variant("(s)", (number,)))
 
+    def prepare_attachment(self, source_path, max_bytes):
+        """Have the owner store and fit an attachment; blocking, call from a worker.
+
+        Returns (path, code) — path is empty when preparation failed —
+        or None when the owner could not be reached.
+        """
+        return self.call("PrepareAttachment",
+                         GLib.Variant("(si)", (source_path, int(max_bytes))),
+                         GLib.VariantType("(ss)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
     def clear_contacts(self, source_uid=None):
         """Delete every contact of a source, or all unprotected ones; blocking."""
         reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
