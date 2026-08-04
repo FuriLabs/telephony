@@ -80,6 +80,7 @@ class App(Adw.Application):
         self.incall = None
         self.ringback = None
         self.scheduler = None
+        self._replaying_change = False
 
         self.notification_counts = defaultdict(int)
 
@@ -134,13 +135,42 @@ class App(Adw.Application):
         self.daemon_client.subscribe(
             "MessagesChanged",
             lambda *args: GLib.idle_add(
-                self.db.emit, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
+                self._replay_change, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
         self.daemon_client.subscribe(
             "BlocklistChanged",
-            lambda *args: GLib.idle_add(self.db.emit, 'blocklist-updated'))
+            lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
         self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: GLib.idle_add(self.eds.emit, 'contacts-loaded'))
+
+        self.db.connect('messages-updated', lambda _db, number, reason: self._report_change(
+            "messages", number or "", reason or ""))
+        self.db.connect('blocklist-updated', lambda *_args: self._report_change("blocklist", "", ""))
+
+    def _replay_change(self, name, *args):
+        """Repeat on the local managers what the owner reported.
+
+        The flag marks the emission as second-hand: a window must not
+        report back a change it was only told about, or the report
+        would bounce between the owner and the windows forever.
+        """
+        self._replaying_change = True
+        try:
+            self.db.emit(name, *args)
+        finally:
+            self._replaying_change = False
+        return False
+
+    def _report_change(self, kind, number, reason):
+        """Tell the owner about a write this window made.
+
+        Nothing watches the database file, so a thread marked read here
+        stays unread in the other windows until the owner repeats it.
+        """
+        if self._replaying_change or not self.daemon_client:
+            return
+        self.daemon_client.call_async(
+            "NotifyChanged", GLib.Variant("(sss)", (kind, number, reason)))
 
     def _setup_feedbackd(self):
         """Setup feedbackd application profiles."""
