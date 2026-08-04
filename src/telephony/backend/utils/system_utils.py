@@ -243,3 +243,21 @@ def press_power_button():
         subprocess.run(["wtype", "-k", "XF86PowerOff"], check=False)
     except Exception as e:
         logger.error(f"Power key simulation failed: {e}")
+
+
+def launch_desktop_uri(desktop_file, uri):
+    """Hand a scheme URI to the launcher that owns it.
+
+    Content always opens under the launcher whose desktop id owns that
+    kind of content, so the shell shows the right icon for the surface.
+    """
+    app_info = Gio.DesktopAppInfo.new(desktop_file)
+    if not app_info:
+        logger.error(f"[Launch] {desktop_file} is missing, cannot open {uri}")
+        return False
+    try:
+        app_info.launch_uris([uri], None)
+        return True
+    except Exception as e:
+        logger.error(f"[Launch] Could not launch {desktop_file}: {e}")
+        return False

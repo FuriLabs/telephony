@@ -29,7 +29,8 @@ gi.require_version('EBook', '1.2')
 from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst
 from loguru import logger
 
-from .constants import APP_ID, INCALL_DESKTOP_FILE
+from .backend.utils.system_utils import launch_desktop_uri
+from .constants import APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE
 from .telephony_core import TelephonyCore
 from .ui.main_window import MainWindow
 from .ui.windows.incall_window import InCallWindow
@@ -442,11 +443,15 @@ class App(Adw.Application):
         self.clear_notification(number)
 
     def open_messages_chat(self, number):
-        """Open a chat in a messages window without spawning a new process.
+        """Open a chat in a messages window this launcher may draw.
 
-        Prefers the dedicated messages window, falls back to an open full
-        window and only creates a messages window when neither exists,
-        the same order do_command_line resolves --messages --open-chat.
+        Prefers the dedicated messages window and falls back to an open
+        full window, the same order do_command_line resolves --messages
+        --open-chat. When this process has no messages surface and its
+        launcher does not own one, the chat is handed to the Messages
+        launcher: a chat drawn inside the Calls process would carry the
+        Calls icon, because the shell names surfaces after the
+        application id, not after what they show.
         """
         target = None
         for win in self.get_windows():
@@ -455,6 +460,10 @@ class App(Adw.Application):
                 if not win.show_calls_mode:
                     break
         if target is None:
+            if self.get_application_id() not in (APP_ID, f"{APP_ID}.Messages"):
+                logger.info("Chat belongs to the Messages launcher, handing it over")
+                launch_desktop_uri(MESSAGES_DESKTOP_FILE, f"sms:{number}")
+                return
             logger.info("No messages window for chat, creating one")
             target = MainWindow(self, self.ofono, self.db, self.eds, self.mms,
                                 self.gsettings_mgr, show_calls=False,
@@ -464,7 +473,11 @@ class App(Adw.Application):
         target.open_chat_for_number(number)
 
     def on_action_dial(self, _action, parameter):
-        """Handle dial-number action."""
+        """Handle dial-number action.
+
+        A process without a dialpad hands the number to the Calls
+        launcher rather than drawing one under its own icon.
+        """
         number = parameter.get_string()
 
         target_win = None
@@ -476,6 +489,12 @@ class App(Adw.Application):
         if target_win:
             target_win.present()
             target_win.open_dialpad_with_number(number)
+            self.clear_notification(number)
+            return
+
+        if self.get_application_id() not in (APP_ID, f"{APP_ID}.Calls"):
+            logger.info("Dialpad belongs to the Calls launcher, handing it over")
+            launch_desktop_uri(CALLS_DESKTOP_FILE, f"tel:{number}")
             self.clear_notification(number)
             return
 

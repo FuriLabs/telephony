@@ -18,6 +18,7 @@ import sys
 from gi.repository import Gio, GLib
 from loguru import logger
 
+from .backend.utils.system_utils import launch_desktop_uri
 from .constants import DAEMON_APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE
 from .telephony_core import TelephonyCore
 
@@ -67,25 +68,14 @@ class DaemonApp(Gio.Application):
     def on_action_open_chat(self, _action, parameter):
         """Open the conversation in the messages launcher."""
         number = parameter.get_string()
-        self._launch_uri(MESSAGES_DESKTOP_FILE, f"sms:{number}")
+        launch_desktop_uri(MESSAGES_DESKTOP_FILE, f"sms:{number}")
         self.core.clear_notification(number)
 
     def on_action_dial(self, _action, parameter):
         """Put the number on the dialpad of the calls launcher."""
         number = parameter.get_string()
-        self._launch_uri(CALLS_DESKTOP_FILE, f"tel:{number}")
+        launch_desktop_uri(CALLS_DESKTOP_FILE, f"tel:{number}")
         self.core.clear_notification(number)
-
-    def _launch_uri(self, desktop_file, uri):
-        """Hand a scheme URI to the launcher that owns it."""
-        app_info = Gio.DesktopAppInfo.new(desktop_file)
-        if not app_info:
-            logger.error(f"[Daemon] {desktop_file} is missing, cannot open {uri}")
-            return
-        try:
-            app_info.launch_uris([uri], None)
-        except Exception as e:
-            logger.error(f"[Daemon] Could not launch {desktop_file}: {e}")
 
     def do_activate(self):
         """Answer an activation without raising anything.
