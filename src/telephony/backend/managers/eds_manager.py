@@ -112,13 +112,34 @@ class EdsManager(GObject.Object):
             return
 
         self.registry.connect("source-added", lambda *a: self.invalidate_sources_info())
-        self.registry.connect("source-removed", lambda *a: self.invalidate_sources_info())
+        self.registry.connect("source-removed", self._on_source_removed)
 
         self._load_sources_config()
 
     def invalidate_sources_info(self):
         """Drop the cached sources info so the next query re-reads the registry."""
         self._sources_info_cache = None
+
+    def _on_source_removed(self, registry, source):
+        """Forget a book that was deleted elsewhere in the system.
+
+        The registry reports the deletion to every process, but only the
+        one that asked for it dropped the contacts, so the others kept
+        offering to call numbers from a book that no longer exists.
+        """
+        self.invalidate_sources_info()
+        uid = source.get_uid()
+
+        with self.sources_lock:
+            if uid not in self.sources:
+                return
+
+        def task():
+            logger.info(f"[EDS] Address book {uid} was removed, dropping its contacts")
+            self._remove_source(uid)
+            GLib.idle_add(self.emit, 'contacts-loaded')
+
+        run_in_background(task)
 
     def reload(self):
         """Tear down all source connections and reload configuration and contacts."""
@@ -743,6 +764,7 @@ class EdsManager(GObject.Object):
 
         with self.cache_lock:
             self._cache_loaded_sources.discard(uid)
+            self._source_ranks.pop(uid, None)
             to_remove = [k for k, v in self.cache.items() if v.get('source_uid') == uid]
             for k in to_remove:
                 del self.cache[k]
