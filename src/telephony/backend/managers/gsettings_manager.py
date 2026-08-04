@@ -14,7 +14,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import json
-import pyotp
 from gi.repository import Gio
 from loguru import logger
 from ...backend.utils.phone_utils import normalize_number
@@ -300,6 +299,7 @@ class GSettingsManager:
 
     def generate_totp_seed(self):
         """Generates a random base32 TOTP seed."""
+        import pyotp
         return pyotp.random_base32()
 
     def get_totp_uri(self, seed, action_name):

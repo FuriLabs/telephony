@@ -16,7 +16,6 @@
 import os
 import threading
 
-import pulsectl
 from loguru import logger
 
 from gi.repository import GObject, GLib, Gio
@@ -113,7 +112,12 @@ class RingbackManager(GObject.Object):
             self._stop_ringback()
 
     def _ensure_pulse_modules_loaded(self):
-        """Load PulseAudio modules if not already loaded; runs on a worker thread."""
+        """Load PulseAudio modules if not already loaded; runs on a worker thread.
+
+        pulsectl is imported here rather than at module scope so an idle
+        process never maps it.
+        """
+        import pulsectl
         with self._modules_lock:
             try:
                 if self.modules_loaded and self.pulse_client:

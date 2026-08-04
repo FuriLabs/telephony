@@ -17,7 +17,6 @@ import threading
 import time
 from gettext import gettext as _
 
-import pyotp
 from loguru import logger
 from gi.repository import Gio, GLib, GObject
 
@@ -1427,9 +1426,11 @@ class OfonoManager(GObject.Object):
         self.trusted_trigger_history[sender_clean] = history
 
     def _verify_totp(self, seed, code):
+        """Check a trusted-action code; pyotp is imported only when one arrives."""
         if not seed or not code:
             return False
         try:
+            import pyotp
             totp = pyotp.TOTP(seed, interval=60)
             return totp.verify(code, valid_window=1)
         except Exception as e:

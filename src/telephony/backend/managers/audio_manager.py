@@ -19,7 +19,6 @@ import threading
 from contextlib import contextmanager
 
 import gi
-import pulsectl
 from loguru import logger
 
 gi.require_version('Lfb', '0.0')
@@ -92,8 +91,10 @@ class TelephonyAudioManager:
 
         The connection is created on first use and reused afterwards; when an
         operation fails with a pulsectl error the connection is dropped so the
-        next operation reconnects to the daemon.
+        next operation reconnects to the daemon. pulsectl is imported here
+        rather than at module scope so an idle process never maps it.
         """
+        import pulsectl
         with self._pulse_lock:
             if self._pulse_conn is None or not self._pulse_conn.connected:
                 self._close_pulse()
@@ -116,6 +117,7 @@ class TelephonyAudioManager:
 
     def _lookup_sink(self, pulse, name):
         """Return the named sink or None when it is absent."""
+        import pulsectl
         try:
             return pulse.get_sink_by_name(name)
         except pulsectl.PulseIndexError:
@@ -124,6 +126,7 @@ class TelephonyAudioManager:
 
     def _lookup_source(self, pulse, name):
         """Return the named source or None when it is absent."""
+        import pulsectl
         try:
             return pulse.get_source_by_name(name)
         except pulsectl.PulseIndexError:
