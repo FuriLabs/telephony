@@ -22,6 +22,8 @@ from telephony.backend.utils.log_utils import logger
 import uuid
 
 from telephony.backend.utils.thread_utils import run_in_background
+from telephony.backend.utils.phone_utils import get_own_number
+from telephony.backend.utils.region_utils import detect_region
 from telephony.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 MISSED_MESSAGE_BUFFER_MINUTES = 14400
@@ -346,10 +348,23 @@ DAEMON_INTERFACE_XML = """
       <arg type="b" name="success" direction="out"/>
       <arg type="s" name="message" direction="out"/>
     </method>
-    <method name="SetSetting">
-      <arg type="s" name="key" direction="in"/>
-      <arg type="s" name="value" direction="in"/>
+    <method name="GetOwnNumber">
+      <arg type="s" name="number" direction="out"/>
     </method>
+    <method name="RequestRecovery">
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="ClearNotification">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="DetectRegion">
+      <arg type="s" name="region" direction="out"/>
+    </method>
+    <signal name="NetworkServiceChanged">
+      <arg type="s" name="service"/>
+      <arg type="s" name="name"/>
+      <arg type="s" name="value"/>
+    </signal>
     <signal name="CapabilityChanged">
       <arg type="b" name="can_dial"/>
       <arg type="s" name="reason"/>
@@ -439,6 +454,7 @@ class TelephonyDaemonDBus:
             self.ofono.connect('modem-interface-appeared', self._on_modem_presence_changed)
             self.ofono.connect('voicemail-changed', self._on_voicemail_changed)
             self.ofono.connect('ussd-notification', self._on_ussd_received)
+            self.ofono.connect('network-service-changed', self._on_network_service_changed)
 
     def _on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
@@ -486,6 +502,39 @@ class TelephonyDaemonDBus:
             "mic_muted": GLib.Variant("b", audio.mic_muted),
         }
         self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
+
+    def _on_network_service_changed(self, _manager, service, name, value):
+        self.emit_signal("NetworkServiceChanged", GLib.Variant("(sss)", (service, name, str(value))))
+
+    def _handle_getownnumber(self, parameters, invocation):
+        """Read the subscriber's own number for a window instance."""
+        run_in_background(get_own_number,
+                          on_complete=lambda num: invocation.return_value(GLib.Variant("(s)", (num or "",))))
+
+    def _handle_detectregion(self, parameters, invocation):
+        """Detect the network region for a window instance."""
+        run_in_background(detect_region,
+                          on_complete=lambda region: invocation.return_value(GLib.Variant("(s)", (region or "",))))
+
+    def _handle_requestrecovery(self, parameters, invocation):
+        """Run modem recovery for a window instance; the reply is the verdict."""
+        state = {"resolved": False}
+
+        def resolve(success):
+            if state["resolved"]:
+                return
+            state["resolved"] = True
+            invocation.return_value(GLib.Variant("(b)", (success,)))
+
+        started = self.app.request_auto_recovery(on_done=resolve)
+        if not started:
+            resolve(False)
+
+    def _handle_clearnotification(self, parameters, invocation):
+        """Withdraw the notifications a window says the user has seen."""
+        number = parameters.unpack()[0]
+        self.app.clear_notification(number)
+        invocation.return_value(None)
 
     def _handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
@@ -625,12 +674,6 @@ class TelephonyDaemonDBus:
         run_in_background(self.ofono.change_barring_password, old, new,
                           on_complete=lambda result: self._reply_ss_result(invocation, result))
 
-    def _handle_setsetting(self, parameters, invocation):
-        """Handle SetSetting command; dconf's own change signal notifies readers."""
-        key, value = parameters.unpack()
-        self.app.gsettings_mgr.set_setting(key, value)
-        invocation.return_value(None)
-
     def _handle_importsimcontacts(self, parameters, invocation):
         """Read the SIM phonebook and import its vcards for a window instance."""
         source_uid = parameters.unpack()[0]
@@ -694,7 +737,10 @@ class TelephonyDaemonDBus:
             "DisableAllForwarding": self._handle_disableallforwarding,
             "DisableAllBarrings": self._handle_disableallbarrings,
             "ChangeBarringPassword": self._handle_changebarringpassword,
-            "SetSetting": self._handle_setsetting,
+            "GetOwnNumber": self._handle_getownnumber,
+            "DetectRegion": self._handle_detectregion,
+            "RequestRecovery": self._handle_requestrecovery,
+            "ClearNotification": self._handle_clearnotification,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,

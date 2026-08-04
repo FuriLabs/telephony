@@ -350,6 +350,25 @@ class DaemonClient:
         """Ask the owner to persist one setting; dconf notifies readers."""
         self.call_async("SetSetting", GLib.Variant("(ss)", (key, str(value))))
 
+    def get_own_number(self):
+        """Read the subscriber's number; blocking, call from a worker."""
+        reply = self.call("GetOwnNumber", None, GLib.VariantType("(s)"))
+        return reply[0] if reply and reply[0] else None
+
+    def detect_region(self):
+        """Detect the network region; blocking, call from a worker."""
+        reply = self.call("DetectRegion", None, GLib.VariantType("(s)"))
+        return reply[0] if reply and reply[0] else None
+
+    def request_recovery(self, callback):
+        """Run modem recovery; callback hears the verdict, or None."""
+        self.call_with_reply("RequestRecovery", None, callback,
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def clear_notification(self, number):
+        """Tell the owner its alerts for a number were seen."""
+        self.call_async("ClearNotification", GLib.Variant("(s)", (number,)))
+
     def clear_contacts(self, source_uid=None):
         """Delete every contact of a source, or all unprotected ones; blocking."""
         reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),

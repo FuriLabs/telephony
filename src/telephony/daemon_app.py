@@ -40,7 +40,7 @@ class DaemonApp(Gio.Application):
         """Initialize the service application."""
         super().__init__(application_id=DAEMON_APP_ID,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
-        self.core = TelephonyCore(DAEMON_APP_ID, ui=self)
+        self.core = TelephonyCore(ui=self)
         self.ofono = None
 
     def do_startup(self):

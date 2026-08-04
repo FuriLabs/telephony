@@ -23,7 +23,6 @@ from telephony.backend.utils.log_utils import logger
 
 from .backend.services.dbus_service import TelephonyDaemonDBus
 from .backend.services.system_state_service import SystemStateService
-from .backend.services.daemon_client import DaemonClient
 from .backend.managers.modem_recovery_manager import execute_modem_recovery, watch_recovery_result
 from .backend.managers.database_manager import DatabaseManager
 from .backend.managers.gsettings_manager import GSettingsManager
@@ -38,7 +37,7 @@ from .backend.utils.thread_utils import run_in_background
 from .backend.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from .backend.utils.locale_utils import init_locale
 from .backend.utils.system_utils import trim_native_heap
-from .constants import INCALL_APP_ID, EMERGENCY_APP_ID, DAEMON_APP_ID, DAEMON_BUS_NAME
+from .constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
 from gettext import gettext as _, ngettext
 
@@ -47,9 +46,6 @@ BOOT_UNAVAILABLE_DELAY_SECONDS = 5
 STARTUP_MODEM_CHECK_SECONDS = 15
 NETWORK_NUDGE_DELAY_SECONDS = 300
 DENIED_NOTIFY_DELAY_SECONDS = 120
-DAEMON_START_TIMEOUT_MS = 25000
-DBUS_START_REPLY_SUCCESS = 1
-DBUS_START_REPLY_ALREADY_RUNNING = 2
 MMS_NOTIFICATION_DELAY_MS = 150
 HEAP_TRIM_AFTER_STARTUP_SECONDS = 120
 HEAP_TRIM_INTERVAL_SECONDS = 1800
@@ -57,22 +53,21 @@ HANGUP_FEEDBACK_SUPPRESS_SECONDS = 5
 
 
 class TelephonyCore:
-    """Owns the managers and background duties of a telephony process.
+    """Owns every manager and background duty of the telephony service.
 
-    A plain object with no toolkit imports, so the daemon can one day
-    run it without a display server. Everything that must reach a
-    window goes through the ui delegate, which the application object
-    implements: show_incall_ui, apply_recovery_state,
+    This is the daemon's core and nothing else's: it holds the modem,
+    the stores, reception, scheduling and the D-Bus service, with no
+    window-role branches — window processes run WindowCore instead.
+    A plain object with no toolkit imports. Everything that must reach
+    a surface goes through the ui delegate, which the application
+    object implements: show_incall_ui, apply_recovery_state,
     any_window_active, deliver_message_to_windows and
     withdraw_number_notifications.
     """
 
-    def __init__(self, application_id, ui):
-        """Resolve the process role; managers are wired in start()."""
+    def __init__(self, ui):
+        """Hold the owner's state; managers are wired in start()."""
         self.ui = ui
-        self.daemon_missing = False
-        self.is_daemon = self._resolve_daemon_role(application_id)
-        self.owns_incall_ui = application_id == INCALL_APP_ID
         self.recovery_state = (False, "", False)
 
         self.notification_manager = None
@@ -85,7 +80,6 @@ class TelephonyCore:
         self.ringback = None
         self.scheduler = None
         self.dbus_daemon = None
-        self.daemon_client = None
         self.sys_state = None
 
         self.notification_counts = defaultdict(int)
@@ -102,171 +96,54 @@ class TelephonyCore:
         self._sim_pin_notified = False
         self._denied_notified = False
 
-    def _resolve_daemon_role(self, application_id):
-        """Decide whether this process owns the background work.
-
-        Every launcher has its own application id so the shell can tell
-        the windows apart, which means one telephony process per icon.
-        Exactly one of them may hold the modem, store what arrives and
-        run scheduled work: the instance carrying the plain id, which is
-        what the service starts. When no owner answers, this asks the bus
-        to start the service rather than stepping in, because a window
-        that takes the role keeps the plain name unclaimed and the other
-        windows would each take it too and send their calls nowhere.
-        A window never takes the role, not even when the service refuses
-        to start: two owners file every arriving message twice, which is
-        worse than a window that says the service is down and offers to
-        start it again.
-        """
-        if application_id == DAEMON_APP_ID:
-            return True
-
-        try:
-            bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        except Exception as e:
-            logger.error(f"[App] No session bus, the daemon cannot be reached: {e}")
-            self.daemon_missing = True
-            return False
-
-        if self._daemon_name_owned(bus):
-            return False
-
-        self.daemon_missing = not self._start_daemon_service(bus)
-        if self.daemon_missing:
-            logger.error("[App] The telephony service could not be started")
-        return False
-
-    def retry_daemon_start(self, on_done):
-        """Ask the bus for the service again; on_done hears whether it came.
-
-        The window stays usable while this runs, because the reply can
-        take as long as a cold service start.
-        """
-        def task():
-            bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-            started = self._daemon_name_owned(bus) or self._start_daemon_service(bus)
-            self.daemon_missing = not started
-            return started
-
-        run_in_background(task, on_complete=on_done)
-
-    def _daemon_name_owned(self, bus):
-        """Return True when a process already answers for the plain name."""
-        try:
-            res = bus.call_sync(
-                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
-                "NameHasOwner", GLib.Variant("(s)", (DAEMON_BUS_NAME,)),
-                GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
-            return res.unpack()[0]
-        except Exception as e:
-            logger.warning(f"[App] Could not check for a running daemon: {e}")
-            return False
-
-    def _start_daemon_service(self, bus):
-        """Have the bus start the telephony service; blocking, bounded wait.
-
-        The reply arrives once the service owns the name, so a window
-        that gets it can proxy its first action straight away.
-        """
-        logger.info("[App] No telephony daemon found, asking the bus to start the service")
-        try:
-            res = bus.call_sync(
-                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
-                "StartServiceByName", GLib.Variant("(su)", (DAEMON_BUS_NAME, 0)),
-                GLib.VariantType("(u)"), Gio.DBusCallFlags.NONE,
-                DAEMON_START_TIMEOUT_MS, None)
-            started = res.unpack()[0] in (DBUS_START_REPLY_SUCCESS, DBUS_START_REPLY_ALREADY_RUNNING)
-        except Exception as e:
-            logger.warning(f"[App] Could not start the telephony service: {e}")
-            return False
-
-        if started:
-            logger.info("[App] Telephony service started, staying a window")
-        return started
-
     def start(self):
-        """Wire the managers and background duties for this role."""
+        """Wire the managers and background duties of the owner."""
         self._setup_feedbackd()
         init_locale()
 
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
-        self.eds = EdsManager(owns_live_views=self.is_daemon)
-        self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=self.is_daemon)
+        self.eds = EdsManager(owns_live_views=True)
+        self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=True)
         self.eds.set_db(self.db, self.gsettings_mgr)
-        self.ofono = OfonoManager(self.db, self.gsettings_mgr, owns_reception=self.is_daemon)
+        self.ofono = OfonoManager(self.db, self.gsettings_mgr)
 
-        if self.is_daemon:
-            self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
-            self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
+        self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
+        self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
 
         self.ofono.set_focus_provider(self.ui.any_window_active)
 
         self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager,
-                              owns_reception=self.is_daemon)
+                              owns_reception=True)
         self.mms.active_chat_provider = lambda: (self.ofono.active_chat_number, self.ui.any_window_active())
-        if self.is_daemon:
-            self.mms.connect('message-received', self.on_mms_received)
+        self.mms.connect('message-received', self.on_mms_received)
 
-        self.daemon_client = DaemonClient()
-        if self.is_daemon:
-            self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
-            self._announce_changes()
-        else:
-            self._follow_daemon_changes()
+        self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
+        self._announce_changes()
 
         self.sys_state = SystemStateService()
         self.sys_state.connect('lock-state-changed', self._on_lock_state_changed)
-        if self.is_daemon:
-            self.ofono.connect('dial-availability-changed', self._watch_modem_health)
-            self.ofono.connect('connection-status', self._watch_modem_health)
+        self.ofono.connect('dial-availability-changed', self._watch_modem_health)
+        self.ofono.connect('connection-status', self._watch_modem_health)
         self.ofono.connect('network-status-changed', self._watch_network_status)
         self.ofono.connect('sim-pin-required-changed', self._watch_sim_pin)
-        if self.is_daemon:
-            GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self._watch_modem_health() or False)
-        if self.is_daemon:
-            self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
+        GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self._watch_modem_health() or False)
+        self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
         self.ofono.connect('voicemail-mailbox-changed', lambda *a: self.ensure_voicemail_contact())
         self.eds.connect('contacts-loaded', lambda *a: self.ensure_voicemail_contact())
-        if self.is_daemon:
-            self.ofono.connect('incoming-message', self.on_incoming_message)
-            self.ofono.connect('call-missed', self.on_call_missed)
-            self.ofono.connect('hangup-requested', self._on_hangup_requested)
-            self.ofono.connect('call-removed', self._on_call_removed_feedback)
+        self.ofono.connect('incoming-message', self.on_incoming_message)
+        self.ofono.connect('call-missed', self.on_call_missed)
+        self.ofono.connect('hangup-requested', self._on_hangup_requested)
+        self.ofono.connect('call-removed', self._on_call_removed_feedback)
         self.ofono.connect('notification-cleared', self.on_notification_cleared)
 
-        if self.is_daemon:
-            self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
-            self.scheduler.start()
-            run_in_background(self.db.fail_stale_sending)
+        self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
+        self.scheduler.start()
+        run_in_background(self.db.fail_stale_sending)
 
         GLib.timeout_add_seconds(HEAP_TRIM_AFTER_STARTUP_SECONDS, trim_native_heap)
         GLib.timeout_add_seconds(HEAP_TRIM_INTERVAL_SECONDS, lambda: trim_native_heap() or True)
-
-        if not self.is_daemon:
-            Gio.bus_watch_name(Gio.BusType.SESSION, DAEMON_BUS_NAME,
-                               Gio.BusNameWatcherFlags.NONE,
-                               self._on_daemon_appeared, self._on_daemon_vanished)
-
-    def _on_daemon_appeared(self, _bus, _name, _owner):
-        """Record that the service answers again.
-
-        The bus re-resolves the signal subscriptions to the new owner
-        by itself, so nothing needs reconnecting here.
-        """
-        if self.daemon_missing:
-            logger.info("[App] The telephony service is back")
-        self.daemon_missing = False
-
-    def _on_daemon_vanished(self, _bus, _name):
-        """Record that the service left the bus.
-
-        The next write revives it through bus activation; this only
-        keeps daemon_missing truthful for the windows that show it.
-        """
-        logger.warning("[App] The telephony service left the bus")
-        self.daemon_missing = True
 
     def _announce_changes(self):
         """Tell window instances when the stored data changed.
@@ -283,53 +160,6 @@ class TelephonyCore:
             "HistoryChanged", None))
         self.eds.connect('contacts-loaded', lambda *_args: self.dbus_daemon.emit_signal(
             "ContactsChanged", None))
-
-    def _follow_daemon_changes(self):
-        """Rebuild lists when the owner reports a change.
-
-        The change arrives over the bus and is repeated on the local
-        managers, so every view keeps listening to what it always did.
-        """
-        self.daemon_client.subscribe(
-            "MessagesChanged",
-            lambda *args: GLib.idle_add(
-                self._replay_change, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
-        self.daemon_client.subscribe(
-            "BlocklistChanged",
-            lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
-        self.daemon_client.subscribe(
-            "HistoryChanged",
-            lambda *args: GLib.idle_add(self._replay_change, 'history-updated'))
-        self.daemon_client.subscribe(
-            "ContactsChanged",
-            lambda *args: run_in_background(self.eds.reload_cache_from_db))
-
-        if self.owns_incall_ui:
-            self.daemon_client.subscribe(
-                "RecoveryStateChanged",
-                lambda *args: GLib.idle_add(self.ui.apply_recovery_state, *args[5].unpack()))
-            self._seed_recovery_state()
-
-    def _seed_recovery_state(self):
-        """Ask the owner what the modem is doing right now.
-
-        This window can start after the state changed, and a signal
-        that already went out would leave its recovery page blank.
-        """
-        def task():
-            return self.daemon_client.call(
-                "GetRecoveryState", None, GLib.VariantType("(bsb)"))
-
-        def done(state):
-            if state:
-                self.ui.apply_recovery_state(*state)
-
-        run_in_background(task, on_complete=done)
-
-    def _replay_change(self, name, *args):
-        """Repeat on the local managers what the owner reported."""
-        self.db.emit(name, *args)
-        return False
 
     def _on_hangup_requested(self, _manager):
         """Remember that this side asked for a hangup, whichever surface did."""
@@ -579,9 +409,6 @@ class TelephonyCore:
         if self.dbus_daemon:
             self.dbus_daemon.emit_signal(
                 "RecoveryStateChanged", GLib.Variant("(bsb)", (active, message, failed)))
-        if self.owns_incall_ui:
-            self.ui.apply_recovery_state(active, message, failed)
-            return
         if active:
             self.ui.show_incall_ui()
 

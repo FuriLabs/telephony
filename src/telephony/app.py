@@ -31,7 +31,7 @@ from telephony.backend.utils.log_utils import logger
 
 from .backend.utils.system_utils import launch_desktop_uri
 from .constants import APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE
-from .telephony_core import TelephonyCore
+from .window_core import WindowCore
 from .ui.main_window import MainWindow
 from .ui.windows.incall_window import InCallWindow
 
@@ -39,7 +39,7 @@ from .ui.windows.incall_window import InCallWindow
 class App(Adw.Application):
     """The windowed face of a telephony process.
 
-    Everything that is not a window lives in TelephonyCore; this class
+    Everything that is not a window lives in WindowCore; this class
     draws windows, routes launcher intents to them and implements the
     ui delegate the core calls when something must reach the screen.
     The manager handles are mirrored as attributes because every
@@ -51,8 +51,7 @@ class App(Adw.Application):
         super().__init__(application_id=application_id,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
-        self.core = TelephonyCore(application_id, ui=self)
-        self.is_daemon = self.core.is_daemon
+        self.core = WindowCore(application_id, ui=self)
         self.owns_incall_ui = self.core.owns_incall_ui
 
         self.db = None
@@ -81,10 +80,6 @@ class App(Adw.Application):
         """Show the modem recovery screen with the current status."""
         self.core.open_modem_recovery()
 
-    def ensure_voicemail_contact(self):
-        """Create a Voicemail contact for the mailbox number when missing."""
-        self.core.ensure_voicemail_contact()
-
     def clear_notification(self, number):
         """Clear active notifications for a number."""
         self.core.clear_notification(number)
@@ -96,9 +91,6 @@ class App(Adw.Application):
 
         if not Gst.is_initialized():
             Gst.init(None)
-
-        if self.is_daemon:
-            self.hold()
 
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
@@ -114,9 +106,6 @@ class App(Adw.Application):
         self.gsettings_mgr = self.core.gsettings_mgr
         self.notification_manager = self.core.notification_manager
         self.daemon_client = self.core.daemon_client
-
-        if self.is_daemon:
-            self.ofono.connect('call-added', self._on_global_call_added)
 
         action_open = Gio.SimpleAction.new("open-chat", GLib.VariantType.new("s"))
         action_open.connect("activate", self.on_action_open_chat)
@@ -194,10 +183,6 @@ class App(Adw.Application):
             self.incall.present()
             self.incall.update_state()
         return False
-
-    def _on_global_call_added(self, _manager, path, _props):
-        """Global handler for new calls to ensure InCallWindow is presented."""
-        self.show_incall_ui()
 
     def show_incall_ui(self):
         """Bring up the call window, wherever it lives.
@@ -431,9 +416,8 @@ class App(Adw.Application):
         if not self.get_windows():
             if self.ofono:
                 self.ofono.set_active_chat(None)
-            if not self.is_daemon:
-                logger.info("[App] Last window closed, leaving the daemon to it")
-                GLib.idle_add(self.quit)
+            logger.info("[App] Last window closed, leaving the daemon to it")
+            GLib.idle_add(self.quit)
         return False
 
     def on_action_open_chat(self, _action, parameter):
