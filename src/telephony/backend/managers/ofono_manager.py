@@ -396,26 +396,6 @@ class OfonoManager(GObject.Object):
         """
         return not self.monitor.connected or self.voice_interface_missing()
 
-    def set_modem_online(self, online):
-        """Set the modem Online property; blocking, call from a worker."""
-        if not self.modem_proxy:
-            return False
-        self.modem_proxy.call_sync(
-            "SetProperty",
-            GLib.Variant("(sv)", ("Online", GLib.Variant("b", online))),
-            Gio.DBusCallFlags.NONE, 30000, None)
-        return True
-
-    def set_modem_powered(self, powered):
-        """Set the modem Powered property; blocking, call from a worker."""
-        if not self.modem_proxy:
-            return False
-        self.modem_proxy.call_sync(
-            "SetProperty",
-            GLib.Variant("(sv)", ("Powered", GLib.Variant("b", powered))),
-            Gio.DBusCallFlags.NONE, 30000, None)
-        return True
-
     def set_active_chat(self, number):
         """Set the currently active chat to suppress notifications."""
         if not number:

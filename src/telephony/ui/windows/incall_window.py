@@ -1214,13 +1214,6 @@ class InCallWindow(Adw.Window):
         self._toggle_blue(self.btn_mute, self.is_muted)
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
-    def on_speaker_toggle(self, btn):
-        """Toggle speaker output."""
-        if self.is_speaker:
-            self._handle_output_selection("earpiece")
-        else:
-            self._handle_output_selection("speaker")
-
     def on_hold_toggle(self, btn):
         """Toggle call hold."""
         self.ofono.swap_calls()
