@@ -927,7 +927,8 @@ class OfonoManager(GObject.Object):
             if call:
                 call.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
-            logger.debug(f"[OfonoManager] Hangup failed for {path}: {e}")
+            call_state = self.active_calls.get(path, {}).get("state", "gone")
+            logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
                 self._force_remove(path)
