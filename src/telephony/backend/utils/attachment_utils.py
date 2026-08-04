@@ -51,15 +51,38 @@ def attachments_dir():
 
 
 def store_attachment(source_path):
-    """Copy a file into the attachment store under a timestamped name."""
+    """Copy a file into the attachment store under a timestamped name.
+
+    The stamp carries microseconds because two same-named files can
+    arrive in the same second — a prepare directly followed by the
+    send-time ownership copy does exactly that.
+    """
     fname = os.path.basename(source_path)
-    now = datetime.now().strftime("%Y%m%d_%H%M%S")
+    now = datetime.now().strftime("%Y%m%d_%H%M%S%f")
     dest = os.path.join(attachments_dir(), f"{now}_{fname}")
     if source_path != dest:
         if os.path.exists(dest):
             os.remove(dest)
         shutil.copy2(source_path, dest)
     return dest
+
+
+def own_attachments(paths):
+    """Give a message its own copy of each attachment.
+
+    Messages must not share files: a forward reuses the original's
+    stored file, and deleting the original would otherwise orphan the
+    forward. A source that cannot be copied is kept as it is, so the
+    failure surfaces in the send instead of vanishing here.
+    """
+    owned = []
+    for src in paths:
+        try:
+            owned.append(store_attachment(src))
+        except Exception as e:
+            logger.warning(f"[Attachments] Ownership copy failed for {src}: {e}")
+            owned.append(src)
+    return owned
 
 
 def prepare_attachment(source_path, max_bytes):

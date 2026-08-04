@@ -24,7 +24,7 @@ import uuid
 from telephony.backend.utils.thread_utils import run_in_background
 from telephony.backend.utils.phone_utils import get_own_number
 from telephony.backend.utils.region_utils import detect_region
-from telephony.backend.utils.attachment_utils import prepare_attachment
+from telephony.backend.utils.attachment_utils import prepare_attachment, own_attachments
 from telephony.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 MISSED_MESSAGE_BUFFER_MINUTES = 14400
@@ -951,7 +951,7 @@ class TelephonyDaemonDBus:
         attachments = []
         try:
             if attachments_json:
-                attachments = json.loads(attachments_json)
+                attachments = own_attachments(json.loads(attachments_json))
         except Exception as e:
             logger.warning(f"Failed to parse attachments: {e}")
 
@@ -1356,7 +1356,7 @@ class TelephonyDaemonDBus:
         attachments = []
         try:
             if attachments_json:
-                attachments = json.loads(attachments_json)
+                attachments = own_attachments(json.loads(attachments_json))
         except Exception as e:
             logger.warning(f"Failed to parse attachments: {e}")
 

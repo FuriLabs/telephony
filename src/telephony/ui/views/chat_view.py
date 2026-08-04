@@ -20,7 +20,6 @@ from ...backend.utils.datetime_utils import format_timestamp, parse_timestamp
 
 import json
 import os
-import shutil
 import mimetypes
 from datetime import datetime
 from gettext import gettext as _
@@ -1209,26 +1208,6 @@ class ChatPage(Gtk.Box):
             on_confirm=_on_picked
         )
 
-    def _copy_attachments(self, sources):
-        """Copy composer attachments into the app's attachment store."""
-        final_attachments = []
-        att_dir = os.path.join(self.db.get_data_dir(), "attachments")
-        for src in sources:
-            try:
-                fname = os.path.basename(src)
-                dest = os.path.join(att_dir, f"{int(datetime.now().timestamp())}_{fname}")
-                shutil.copy2(src, dest)
-                final_attachments.append(dest)
-                if "/tmp/" in src:
-                    try:
-                        os.remove(src)
-                    except Exception as e:
-                        logger.warning(f"[Chat] Temp file cleanup failed: {e}")
-            except Exception as e:
-                logger.warning(f"[Chat] Attachment copy failed: {e}")
-                final_attachments.append(src)
-        return final_attachments
-
     def on_send(self, *args, scheduled_timestamp=None):
         """Handle send button click or scheduled send."""
         buffer = self.msg_view.get_buffer()
@@ -1246,7 +1225,7 @@ class ChatPage(Gtk.Box):
         self.refresh_attachment_ui()
 
         def prepare():
-            final_attachments = self._copy_attachments(pending_attachments)
+            final_attachments = pending_attachments
             self.app_window.daemon.save_draft(self.number, "", [])
             if scheduled_timestamp:
                 if self.is_group or final_attachments:
