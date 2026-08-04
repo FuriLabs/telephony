@@ -176,19 +176,15 @@ class InCallWindow(Adw.Window):
         self.update_state()
 
     def _on_close_req(self, window):
-        """Step aside during a call, go away once there is none.
+        """Stay put during a call, go away once there is none.
 
-        Swiping the call away is how the user reaches the rest of the
-        phone mid-call, so the window hides and the call carries on.
-        With no call there is nothing to come back to, and this window
-        is a process of its own now, so hiding one would hold that
-        process for the rest of the session.
+        A call in progress keeps its window: losing it would leave the
+        call running with nothing to hang it up from. Silencing a
+        ringing call is the one way to put it aside, and that hides it
+        directly. With no call left the window closes for real, which
+        ends the process it runs in.
         """
-        if self.in_recovery_mode:
-            return True
-
-        if self.ofono.active_calls:
-            self.set_visible(False)
+        if self.in_recovery_mode or self.ofono.active_calls:
             return True
 
         return False
