@@ -16,8 +16,7 @@
 import os
 import tempfile
 import shutil
-import re
-from gi.repository import Gtk, Adw, Gio, GLib
+from gi.repository import Gtk, Adw, GLib
 from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
@@ -102,94 +101,25 @@ class ImportExportDialog:
         self._prompt_target_book(self._import_sim_to)
 
     def _import_sim_to(self, source_uid):
-        """Import contacts from SIM using org.ofono.Phonebook."""
+        """Import contacts from the SIM phonebook through the daemon."""
         self.app_window.notify_loading(_("Importing contacts from SIM..."))
 
-        def _task():
-            try:
-                bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+        def done(reply):
+            self.app_window.hide_loading()
+            if reply is None:
+                self.app_window.notify_error(_("SIM Import failed: {e}").format(e="no reply"))
+                return
+            count, message = reply
+            if count < 0:
+                self.app_window.notify_error(_("SIM Import failed: {e}").format(e=message))
+                return
+            if count == 0:
+                self.app_window.notify_error(_("No contacts found on SIM card."))
+                return
+            self.app_window.notify_success(_("Imported {count} contacts from SIM.").format(count=count))
+            self.eds.reload()
 
-                manager = Gio.DBusProxy.new_sync(
-                    bus,
-                    Gio.DBusProxyFlags.NONE,
-                    None,
-                    "org.ofono",
-                    "/",
-                    "org.ofono.Manager",
-                    None,
-                )
-                result = manager.call_sync(
-                    "GetModems",
-                    None,
-                    Gio.DBusCallFlags.NONE,
-                    100000,
-                    None,
-                )
-                modems = result.unpack()[0]
-
-                if not modems:
-                    GLib.idle_add(self.app_window.hide_loading)
-                    GLib.idle_add(
-                        lambda: self.app_window.notify_error(
-                            _("No modem found for SIM import")
-                        )
-                    )
-                    return
-
-                modem_path = modems[0][0]
-                phonebook = Gio.DBusProxy.new_sync(
-                    bus,
-                    Gio.DBusProxyFlags.NONE,
-                    None,
-                    "org.ofono",
-                    modem_path,
-                    "org.ofono.Phonebook",
-                    None,
-                )
-                result = phonebook.call_sync(
-                    "Import",
-                    None,
-                    Gio.DBusCallFlags.NONE,
-                    100000,
-                    None,
-                )
-                vcard_data = result.unpack()[0]
-
-                if not vcard_data:
-                    GLib.idle_add(self.app_window.hide_loading)
-                    GLib.idle_add(
-                        lambda: self.app_window.notify_error(
-                            _("No contacts found on SIM card.")
-                        )
-                    )
-                    return
-
-                vcards = re.findall(
-                    r"BEGIN:VCARD.*?END:VCARD",
-                    vcard_data,
-                    re.DOTALL,
-                )
-                count = self.app_window.daemon.import_contacts("\n".join(vcards), source_uid)
-
-                GLib.idle_add(self.app_window.hide_loading)
-                GLib.idle_add(
-                    lambda: self.app_window.notify_success(
-                        _("Imported {count} contacts from SIM.").format(
-                            count=count
-                        )
-                    )
-                )
-                GLib.idle_add(self.eds.reload)
-            except Exception as e:
-                logger.error(f"[ImportExport] SIM Import error: {e}")
-                GLib.idle_add(self.app_window.hide_loading)
-                GLib.idle_add(
-                    lambda error=e: self.app_window.notify_error(
-                        _("SIM Import failed: {e}").format(e=error)
-                    )
-                )
-
-        run_in_background(_task)
+        run_in_background(lambda: self.app_window.daemon.import_sim_contacts(source_uid), on_complete=done)
 
     def ask_import_chatty(self):
         def on_wizard_done(db_path, mms_path):
