@@ -847,7 +847,7 @@ class SettingsWindow(Adw.Dialog):
         def on_resp(d, resp):
             if resp != "delete":
                 return
-            run_in_background(self.eds.delete_addressbook, uid,
+            run_in_background(self.main_window.daemon.delete_address_book, uid,
                               on_complete=self._on_addressbook_deleted)
 
         dialog.connect("response", on_resp)

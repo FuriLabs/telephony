@@ -34,13 +34,14 @@ class DuplicateResolutionWindow(Adw.Dialog):
     Shows conflicts one by one or allows merging all.
     """
 
-    def __init__(self, conflicts, eds_manager, on_done_callback):
+    def __init__(self, conflicts, eds_manager, daemon, on_done_callback):
         super().__init__(title=_("Duplicate Contact"))
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(600)
 
         self.conflicts = conflicts
         self.eds = eds_manager
+        self.daemon = daemon
         self.on_done = on_done_callback
         self.current_index = 0
         self.keep_pending_edit = False
@@ -222,7 +223,7 @@ class DuplicateResolutionWindow(Adw.Dialog):
         if kept_contact.get('uid') is None:
             self.keep_pending_edit = True
 
-        self.eds.delete_contacts([o['uid'] for o in others if o['uid']])
+        self.daemon.delete_contacts([o['uid'] for o in others if o['uid']])
 
     def _logic_merge_smart(self, kept_contact, contacts):
         """
@@ -233,16 +234,16 @@ class DuplicateResolutionWindow(Adw.Dialog):
 
         if kept_contact.get('uid') is None:
             self.keep_pending_edit = True
-            self.eds.delete_contacts([o['uid'] for o in others if o['uid']])
+            self.daemon.delete_contacts([o['uid'] for o in others if o['uid']])
             return
 
         new_vcard = self._merge_contact_data(kept_contact, others)
 
-        if not self.eds.save_contact(new_vcard, uid=kept_contact['uid']):
+        if not self.daemon.save_contact(new_vcard, uid=kept_contact['uid']):
             logger.error(f"[DuplicateResolution] Merge save failed for {kept_contact['uid']}, keeping duplicates")
             return
 
-        self.eds.delete_contacts([o['uid'] for o in others if o['uid']])
+        self.daemon.delete_contacts([o['uid'] for o in others if o['uid']])
 
     def _merge_contact_data(self, target, others):
         """Merge data from others into target and return vCard string."""

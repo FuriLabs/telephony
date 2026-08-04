@@ -118,10 +118,7 @@ class ImportExportDialog:
                     vcard_data,
                     re.DOTALL,
                 )
-                count = 0
-                for vcard in vcards:
-                    if self.eds.save_contact(vcard):
-                        count += 1
+                count = self.app_window.daemon.import_contacts("\n".join(vcards))
 
                 GLib.idle_add(self.app_window.hide_loading)
                 GLib.idle_add(
@@ -437,11 +434,7 @@ class ImportExportDialog:
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', content, re.DOTALL)
-            count = 0
-            for vcard in vcards:
-                if self.app_window.eds.save_contact(vcard, source_uid=source_uid):
-                    count += 1
+            count = self.app_window.daemon.import_contacts(content, source_uid)
             GLib.idle_add(self.app_window.hide_loading)
             GLib.idle_add(lambda: self.app_window.notify_success(_("Imported {count} contacts").format(count=count)))
         except Exception as e:

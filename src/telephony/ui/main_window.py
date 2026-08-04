@@ -596,7 +596,7 @@ class MainWindow(Adw.Window):
         """Handle resolve duplicates button click."""
         if not self.pending_conflicts:
             return
-        win = DuplicateResolutionWindow(self.pending_conflicts, self.eds, self.on_resolution_done)
+        win = DuplicateResolutionWindow(self.pending_conflicts, self.eds, self.daemon, self.on_resolution_done)
         win.present(self)
 
     def on_resolution_done(self):
@@ -646,7 +646,7 @@ class MainWindow(Adw.Window):
         """Force address book backends to sync, falling back to a local reload."""
 
         def task():
-            refreshed = self.eds.refresh_backends()
+            refreshed = self.daemon.refresh_contacts()
             discovered = self.eds.sync_available_sources()
             return refreshed, discovered
 

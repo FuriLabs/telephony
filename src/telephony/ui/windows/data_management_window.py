@@ -234,7 +234,7 @@ class DataManagementDialog:
         self.app_window.notify_loading(_("Deleting contacts..."))
 
         def task():
-            self.eds.delete_all_contacts(source_uid=source_uid)
+            self.app_window.daemon.clear_contacts(source_uid)
             GLib.idle_add(self.app_window.hide_loading)
 
             GLib.idle_add(lambda: self.app_window.notify_success(_("Contacts Deleted")))
@@ -248,7 +248,7 @@ class DataManagementDialog:
         self.app_window.notify_loading(_("Deleting address book..."))
 
         def task():
-            success = self.eds.delete_addressbook(source_uid)
+            success = self.app_window.daemon.delete_address_book(source_uid)
             GLib.idle_add(self.app_window.hide_loading)
             if success:
                 GLib.idle_add(lambda: self.app_window.notify_success(_("Address Book Deleted")))
