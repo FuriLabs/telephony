@@ -29,6 +29,7 @@ from ..utils.phone_utils import build_search_variants, normalize_number
 from ..utils.thread_utils import run_in_background
 
 SQLITE_MAX_BATCH_VARIABLES = 900
+SQLITE_CACHE_KIB = 512
 PHONE_VARIANT_PATTERN = re.compile(r"[0-9+*#]+")
 
 
@@ -66,10 +67,16 @@ class DatabaseManager(GObject.Object):
         self.init_dbs()
 
     def _tune_connection(self, conn):
-        """Apply WAL journaling and relaxed sync for faster commits."""
+        """Apply WAL journaling, relaxed sync and a bounded page cache.
+
+        sqlite would otherwise keep up to two megabytes of pages warm
+        per connection, and this manager holds four connections in
+        every process for databases read in occasional bursts.
+        """
         try:
             conn.execute("PRAGMA journal_mode=WAL")
             conn.execute("PRAGMA synchronous=NORMAL")
+            conn.execute(f"PRAGMA cache_size=-{SQLITE_CACHE_KIB}")
         except Exception as e:
             logger.warning(f"[DB] Connection tuning failed: {e}")
 
