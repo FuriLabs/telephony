@@ -73,6 +73,7 @@ class App(Adw.Application):
         super().__init__(application_id=application_id,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
+        self.daemon_missing = False
         self.is_daemon = self._resolve_daemon_role(application_id)
 
         self.db = None
@@ -98,8 +99,10 @@ class App(Adw.Application):
         to start the service rather than stepping in, because a window
         that takes the role keeps the plain name unclaimed and the other
         windows would each take it too and send their calls nowhere.
-        Only a phone where the service cannot start at all falls back to
-        acting alone, so it still receives calls and messages.
+        A window never takes the role, not even when the service refuses
+        to start: two owners file every arriving message twice, which is
+        worse than a window that says the service is down and offers to
+        start it again.
         """
         if application_id == APP_ID:
             return True
@@ -107,17 +110,31 @@ class App(Adw.Application):
         try:
             bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         except Exception as e:
-            logger.warning(f"[App] No session bus, acting as the daemon: {e}")
-            return True
+            logger.error(f"[App] No session bus, the daemon cannot be reached: {e}")
+            self.daemon_missing = True
+            return False
 
         if self._daemon_name_owned(bus):
             return False
 
-        if self._start_daemon_service(bus):
-            return False
+        self.daemon_missing = not self._start_daemon_service(bus)
+        if self.daemon_missing:
+            logger.error("[App] The telephony service could not be started")
+        return False
 
-        logger.warning("[App] The telephony service could not be started, taking the role")
-        return True
+    def retry_daemon_start(self, on_done):
+        """Ask the bus for the service again; on_done hears whether it came.
+
+        The window stays usable while this runs, because the reply can
+        take as long as a cold service start.
+        """
+        def task():
+            bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+            started = self._daemon_name_owned(bus) or self._start_daemon_service(bus)
+            self.daemon_missing = not started
+            return started
+
+        run_in_background(task, on_complete=on_done)
 
     def _daemon_name_owned(self, bus):
         """Return True when a process already answers for the plain name."""
