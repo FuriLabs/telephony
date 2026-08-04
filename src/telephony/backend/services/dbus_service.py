@@ -26,6 +26,18 @@ from telephony.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 MISSED_MESSAGE_BUFFER_MINUTES = 14400
 
+
+def _to_variant(value):
+    """Wrap a plain python value as the matching GLib.Variant."""
+    if isinstance(value, bool):
+        return GLib.Variant("b", value)
+    if isinstance(value, int):
+        return GLib.Variant("i", value)
+    if isinstance(value, float):
+        return GLib.Variant("d", value)
+    return GLib.Variant("s", str(value))
+
+
 DAEMON_INTERFACE_XML = """
 <node>
   <interface name="io.furios.Telephony.Daemon">
@@ -308,6 +320,35 @@ DAEMON_INTERFACE_XML = """
     <signal name="ContactsChanged"/>
     <signal name="BlocklistChanged"/>
     <signal name="HistoryChanged"/>
+    <method name="GetTelephonyState">
+      <arg type="a{sv}" name="state" direction="out"/>
+    </method>
+    <method name="SetActiveChat">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="ImportSimContacts">
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="i" name="count" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <signal name="CapabilityChanged">
+      <arg type="b" name="can_dial"/>
+      <arg type="s" name="reason"/>
+      <arg type="s" name="description"/>
+    </signal>
+    <signal name="ModemStateChanged">
+      <arg type="a{sv}" name="state"/>
+    </signal>
+    <signal name="VoicemailChanged">
+      <arg type="b" name="waiting"/>
+      <arg type="i" name="count"/>
+    </signal>
+    <signal name="AudioRouteChanged">
+      <arg type="a{sv}" name="state"/>
+    </signal>
+    <signal name="UssdReceived">
+      <arg type="s" name="text"/>
+    </signal>
     <signal name="RecoveryStateChanged">
       <arg type="b" name="active"/>
       <arg type="s" name="message"/>
@@ -374,6 +415,11 @@ class TelephonyDaemonDBus:
             self.ofono.connect('call-changed', self._on_call_changed)
             self.ofono.connect('call-removed', self._on_call_removed)
             self.ofono.connect('incoming-message', self._on_incoming_message)
+            self.ofono.connect('dial-availability-changed', self._on_dial_availability_changed)
+            self.ofono.connect('connection-status', self._on_modem_presence_changed)
+            self.ofono.connect('modem-interface-appeared', self._on_modem_presence_changed)
+            self.ofono.connect('voicemail-changed', self._on_voicemail_changed)
+            self.ofono.connect('ussd-notification', self._on_ussd_received)
 
     def _on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
@@ -387,6 +433,40 @@ class TelephonyDaemonDBus:
 
     def _on_incoming_message(self, manager, number, body):
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
+
+    def _on_dial_availability_changed(self, _manager, _available):
+        self._emit_capability()
+
+    def _emit_capability(self):
+        """Broadcast whether calls can be placed and why not."""
+        can_dial, reason, description = self.ofono.capability_state()
+        self.emit_signal("CapabilityChanged", GLib.Variant("(bss)", (can_dial, reason, description)))
+
+    def _on_modem_presence_changed(self, _manager, *_args):
+        """Broadcast the modem snapshot; presence also moves capability."""
+        state = self.ofono.modem_state()
+        packed = {
+            "present": GLib.Variant("b", state["present"]),
+            "online": GLib.Variant("b", state["online"]),
+            "interfaces": GLib.Variant("as", state["interfaces"]),
+        }
+        self.emit_signal("ModemStateChanged", GLib.Variant("(a{sv})", (packed,)))
+        self._emit_capability()
+
+    def _on_voicemail_changed(self, _manager, waiting, count):
+        self.emit_signal("VoicemailChanged", GLib.Variant("(bi)", (waiting, count)))
+
+    def _on_ussd_received(self, _manager, text):
+        self.emit_signal("UssdReceived", GLib.Variant("(s)", (text,)))
+
+    def _emit_audio_route(self):
+        """Broadcast the applied in-call audio route."""
+        audio = self.ofono.audio
+        packed = {
+            "speaker": GLib.Variant("b", audio.current_route == "speaker"),
+            "mic_muted": GLib.Variant("b", audio.mic_muted),
+        }
+        self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
 
     def _handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
@@ -467,6 +547,70 @@ class TelephonyDaemonDBus:
         active, message, failed = self.app.recovery_state
         invocation.return_value(GLib.Variant("(bsb)", (active, message, failed)))
 
+    def _handle_gettelephonystate(self, parameters, invocation):
+        """Assemble the full snapshot a client seeds its mirror from.
+
+        Everything the signals report incrementally is here in one read,
+        so a client that subscribes first and seeds second misses nothing.
+        """
+        can_dial, reason, description = self.ofono.capability_state()
+        modem = self.ofono.modem_state()
+        audio = self.ofono.audio
+        recovery_active, recovery_message, recovery_failed = self.app.recovery_state
+        calls = {path: GLib.Variant("a{sv}", {k: _to_variant(v) for k, v in props.items()})
+                 for path, props in self.ofono.calls_snapshot().items()}
+        state = {
+            "calls": GLib.Variant("a{sv}", calls),
+            "can_dial": GLib.Variant("b", can_dial),
+            "dial_reason": GLib.Variant("s", reason),
+            "dial_description": GLib.Variant("s", description),
+            "modem_present": GLib.Variant("b", modem["present"]),
+            "modem_online": GLib.Variant("b", modem["online"]),
+            "interfaces": GLib.Variant("as", modem["interfaces"]),
+            "voicemail_waiting": GLib.Variant("b", self.ofono.voicemail_waiting),
+            "voicemail_count": GLib.Variant("i", self.ofono.voicemail_count),
+            "voicemail_mailbox": GLib.Variant("s", self.ofono.voicemail_mailbox),
+            "speaker": GLib.Variant("b", audio.current_route == "speaker"),
+            "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "recovery_active": GLib.Variant("b", recovery_active),
+            "recovery_message": GLib.Variant("s", recovery_message),
+            "recovery_failed": GLib.Variant("b", recovery_failed),
+        }
+        invocation.return_value(GLib.Variant("(a{sv})", (state,)))
+
+    def _handle_setactivechat(self, parameters, invocation):
+        """Handle SetActiveChat command; an empty number clears it."""
+        number = parameters.unpack()[0]
+        self.ofono.set_active_chat(number if number else None)
+        invocation.return_value(None)
+
+    def _handle_importsimcontacts(self, parameters, invocation):
+        """Read the SIM phonebook and import its vcards for a window instance."""
+        source_uid = parameters.unpack()[0]
+
+        if self._is_protected_source(source_uid, "[DBus] Refusing SIM import to {name}"):
+            invocation.return_value(GLib.Variant("(is)", (-1, "protected-book")))
+            return
+
+        def task():
+            return self.ofono.import_sim_contacts()
+
+        def done(vcard_data):
+            if vcard_data is None:
+                invocation.return_value(GLib.Variant("(is)", (-1, "sim-read-failed")))
+                return
+            vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
+            if not vcards:
+                invocation.return_value(GLib.Variant("(is)", (0, "empty")))
+                return
+            count = 0
+            for vcard in vcards:
+                if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
+                    count += 1
+            invocation.return_value(GLib.Variant("(is)", (count, "")))
+
+        run_in_background(task, on_complete=done)
+
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
             None,
@@ -497,6 +641,9 @@ class TelephonyDaemonDBus:
             "GetNetworkProperties": self._handle_getnetworkproperties,
             "SetNetworkProperty": self._handle_setnetworkproperty,
             "GetRecoveryState": self._handle_getrecoverystate,
+            "GetTelephonyState": self._handle_gettelephonystate,
+            "SetActiveChat": self._handle_setactivechat,
+            "ImportSimContacts": self._handle_importsimcontacts,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,
@@ -619,12 +766,14 @@ class TelephonyDaemonDBus:
         """Handle MuteMic command."""
         if self.ofono:
             self.ofono.audio.mute(True)
+            self._emit_audio_route()
         invocation.return_value(None)
 
     def _handle_unmutemic(self, parameters, invocation):
         """Handle UnmuteMic command."""
         if self.ofono:
             self.ofono.audio.mute(False)
+            self._emit_audio_route()
         invocation.return_value(None)
 
     def _handle_setspeakerphone(self, parameters, invocation):
@@ -632,6 +781,7 @@ class TelephonyDaemonDBus:
         enable = parameters.unpack()[0]
         if self.ofono:
             self.ofono.audio.set_audio_route("speaker" if enable else "earpiece")
+            self._emit_audio_route()
         invocation.return_value(None)
 
     def _handle_senddtmf(self, parameters, invocation):

@@ -313,6 +313,24 @@ class DaemonClient:
                           GLib.VariantType("(i)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply[0] if reply else 0
 
+    def import_sim_contacts(self, source_uid=None):
+        """Import the SIM phonebook into a book; blocking, call from a worker.
+
+        Returns (count, message) where message is a stable code, or None
+        when the owner could not be reached.
+        """
+        return self.call("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
+                         GLib.VariantType("(is)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def get_telephony_state(self):
+        """Read the full state snapshot; blocking, call from a worker."""
+        reply = self.call("GetTelephonyState", None, GLib.VariantType("(a{sv})"))
+        return reply[0] if reply is not None else None
+
+    def set_active_chat(self, number):
+        """Tell the owner which chat is open so its alerts stay quiet."""
+        self.call_async("SetActiveChat", GLib.Variant("(s)", (number or "",)))
+
     def clear_contacts(self, source_uid=None):
         """Delete every contact of a source, or all unprotected ones; blocking."""
         reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),

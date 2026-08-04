@@ -43,6 +43,7 @@ UNCLAIMED_STATE_LIMIT = 20
 DELIVERY_WATCH_LIMIT = 50
 SEEN_SIGNATURE_LIMIT = 50
 PENDING_DIAL_TIMEOUT_SECONDS = 15
+PHONEBOOK_IMPORT_TIMEOUT_MS = 100000
 VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 
@@ -404,15 +405,81 @@ class OfonoManager(GObject.Object):
         return not self.monitor.connected or self.voice_interface_missing()
 
     def set_active_chat(self, number):
-        """Set the currently active chat to suppress notifications."""
+        """Set the currently active chat to suppress notifications.
+
+        Suppression decisions are made where messages are received, so a
+        window forwards the target to the daemon instead of keeping a
+        flag no reception path ever reads.
+        """
+        target = self._normalize_chat_target(number)
+        if self.daemon is not None:
+            self.daemon.set_active_chat(target)
+            return
+        self.active_chat_number = target if target else None
+
+    def _normalize_chat_target(self, number):
+        """Collapse a chat target to the comparable form reception uses."""
         if not number:
-            self.active_chat_number = None
-        elif isinstance(number, list):
-            self.active_chat_number = ",".join(sorted(normalize_number(n) for n in number))
-        elif "," in number:
-            self.active_chat_number = number
-        else:
-            self.active_chat_number = normalize_number(number)
+            return ""
+        if isinstance(number, list):
+            return ",".join(sorted(normalize_number(n) for n in number))
+        if "," in number:
+            return number
+        return normalize_number(number)
+
+    def capability_state(self):
+        """Return (can_dial, reason, description) explaining dial availability.
+
+        The reason is a stable machine-readable code for other clients of
+        the daemon interface; the description is translated here because
+        the daemon runs in the user's session locale.
+        """
+        if not self.monitor.connected:
+            return (False, "no-modem", _("Modem not ready"))
+        if self.modem_online is False:
+            return (False, "airplane-mode", _("Airplane mode is on"))
+        if self.voice_interface_missing():
+            return (False, "no-voice-service", _("Modem not ready"))
+        if self.active_calls:
+            return (False, "in-call", _("Cannot dial while in another call"))
+        if self.audio.voice_profile_active:
+            return (False, "call-ending", _("Please wait, the previous call is still ending"))
+        if not self.voice_proxy:
+            return (False, "starting", _("Modem not ready"))
+        return (True, "", "")
+
+    def modem_state(self):
+        """Return the modem presence snapshot for the state broadcasts."""
+        return {
+            "present": bool(self.monitor.connected),
+            "online": bool(self.modem_online),
+            "interfaces": sorted(self._seen_interfaces),
+        }
+
+    def calls_snapshot(self):
+        """Return the active calls as plain serializable dicts."""
+        snapshot = {}
+        for path, props in self.active_calls.items():
+            snapshot[path] = {k: v for k, v in props.items()
+                              if isinstance(v, (str, bool, int, float))}
+        return snapshot
+
+    def import_sim_contacts(self):
+        """Read the SIM phonebook as vcard text; blocking, call from a worker.
+
+        Returns None when the phonebook cannot be read so an empty SIM
+        stays distinguishable from a failure.
+        """
+        if not self.modem_path or not self.bus:
+            return None
+        try:
+            res = self.bus.call_sync(
+                "org.ofono", self.modem_path, "org.ofono.Phonebook", "Import",
+                None, None, Gio.DBusCallFlags.NONE, PHONEBOOK_IMPORT_TIMEOUT_MS, None)
+            return res.unpack()[0]
+        except Exception as e:
+            logger.error(f"[OfonoManager] SIM phonebook import failed: {e}")
+            return None
 
     def set_focus_provider(self, provider):
         """Set a callable reporting whether an application window is focused."""
