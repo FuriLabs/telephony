@@ -16,7 +16,7 @@
 from gi.repository import Gio, GLib
 from loguru import logger
 
-from ...constants import APP_ID, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
+from ...constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 DAEMON_CALL_TIMEOUT_MS = 30000
 
@@ -48,7 +48,7 @@ class DaemonClient:
             return None
         try:
             res = self.bus.call_sync(
-                APP_ID, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
+                DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
                 params, reply_type, Gio.DBusCallFlags.NONE,
                 DAEMON_CALL_TIMEOUT_MS, None)
             return res.unpack() if res else None
@@ -61,7 +61,7 @@ class DaemonClient:
         if not self.bus:
             return
         self.bus.call(
-            APP_ID, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
+            DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
             params, None, Gio.DBusCallFlags.NONE,
             DAEMON_CALL_TIMEOUT_MS, None, self._on_async_done, method)
 
@@ -77,7 +77,7 @@ class DaemonClient:
         if not self.bus:
             return
         self._subscriptions.append(self.bus.signal_subscribe(
-            APP_ID, DAEMON_INTERFACE, signal_name, DAEMON_OBJECT_PATH,
+            DAEMON_BUS_NAME, DAEMON_INTERFACE, signal_name, DAEMON_OBJECT_PATH,
             None, Gio.DBusSignalFlags.NONE, handler, None))
 
     def disconnect(self):
