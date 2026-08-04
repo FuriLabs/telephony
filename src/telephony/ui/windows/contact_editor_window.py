@@ -867,7 +867,7 @@ class ContactEditor(Adw.Dialog):
             blocked_list = self.main_window.db.get_blocked_numbers()
             for bid, bnum, _ignored in blocked_list:
                 if normalize_number(bnum) == blocked_conflict:
-                    self.main_window.db.remove_blocked_number(bid)
+                    self.main_window.daemon.remove_blocked_number(bid)
                     break
 
         run_in_background(task, on_complete=lambda _result: self.on_save(self.btn_save, force=True))

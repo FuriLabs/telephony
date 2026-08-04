@@ -162,15 +162,7 @@ class BlocklistView(Adw.Bin):
 
     def delete_entry(self, entry_id):
         """Delete a blocklist entry."""
-        number = None
-        for i in range(self.store.get_n_items()):
-            item = self.store.get_item(i)
-            if item.id == entry_id:
-                number = item.number
-                break
-
-        self.db.unblock_number(entry_id, number)
-
+        self.app_window.daemon.remove_blocked_number(entry_id)
         self.app_window.notify_success(_("Unblocked"))
 
 

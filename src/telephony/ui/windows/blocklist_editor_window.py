@@ -34,6 +34,7 @@ class BlocklistEditor(Adw.Dialog):
 
         self.db = db_manager
         self.eds = eds_manager
+        self.daemon = parent_window.daemon
 
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_child(content)
@@ -94,7 +95,7 @@ class BlocklistEditor(Adw.Dialog):
                 else:
                     self._show_error(_("Database Error"), _("Failed to save to blocklist."))
 
-            run_in_background(self.db.block_number, norm_num, note, on_complete=done)
+            run_in_background(self.daemon.add_blocked_number, norm_num, note, on_complete=done)
 
         if self.eds.search_contacts(norm_num):
             self._confirm_block_remove(raw_num, _do_block)

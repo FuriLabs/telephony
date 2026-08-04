@@ -780,7 +780,7 @@ class MainWindow(Adw.Window):
 
         if is_blocked_id:
             def _unblock():
-                self.db.unblock_number(is_blocked_id, item.number)
+                self.daemon.remove_blocked_number(is_blocked_id)
                 self.notify_success(_("Unblocked"))
             add_action(_("Unblock Number"), _unblock, needs_eds=True)
         else:
