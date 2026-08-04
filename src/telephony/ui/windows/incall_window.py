@@ -30,6 +30,7 @@ from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncat
 from ..widgets.common_widget import present_choice_sheet
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.thread_utils import run_in_background
+from ...backend.utils.ofono_direct_utils import hangup_all_direct
 from ...backend.utils.system_utils import save_modem_logs, press_power_button
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...backend.utils.phone_utils import normalize_number
@@ -127,6 +128,7 @@ class InCallWindow(Adw.Window):
         self.ofono = ofono_manager
         self.eds = eds_manager
         self.db = db_manager
+        self.service_present = True
         self.audio = TelephonyAudioManager()
         self.fader = ProximityFader()
 
@@ -283,16 +285,16 @@ class InCallWindow(Adw.Window):
         self.multiparty_box.set_visible(False)
         act_box.append(self.multiparty_box)
 
-        btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
+        self.actions_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
         mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
         pad_wrap, self.btn_pad = self._mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
         hold_wrap, self.btn_hold = self._mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
         add_wrap, self.btn_add_call = self._mk_labeled_btn("contact-new-symbolic", _("Add Call"), self.on_add_call_click)
-        btn_row.append(mute_wrap)
-        btn_row.append(pad_wrap)
-        btn_row.append(hold_wrap)
-        btn_row.append(add_wrap)
-        act_box.append(btn_row)
+        self.actions_row.append(mute_wrap)
+        self.actions_row.append(pad_wrap)
+        self.actions_row.append(hold_wrap)
+        self.actions_row.append(add_wrap)
+        act_box.append(self.actions_row)
 
         self.btn_hangup_act = DynamicHangupButton()
         self.btn_hangup_act.set_halign(Gtk.Align.CENTER)
@@ -399,6 +401,23 @@ class InCallWindow(Adw.Window):
         if self._proximity_timer_id:
             GLib.source_remove(self._proximity_timer_id)
             self._proximity_timer_id = None
+
+    def apply_service_presence(self, present, unit_state):
+        """Grey the call actions while the service is away.
+
+        The call itself lives in ofonod and continues; only our control
+        path is gone, and the daemon's return re-syncs everything.
+        Hangup stays enabled through a direct ofonod path, so a stuck
+        call can always be ended, and answering stays enabled because
+        the request revives the service through bus activation.
+        """
+        self.service_present = present
+        for widget in (self.route_box, self.multiparty_box, self.actions_row):
+            widget.set_sensitive(present)
+        if present:
+            self.update_state()
+        else:
+            self.lbl_status.set_text(_("Telephony service is restarting…"))
 
     def update_state(self):
         """Refresh call state and UI."""
@@ -918,6 +937,9 @@ class InCallWindow(Adw.Window):
         self.manual_hangup = True
         self._start_closing_sequence()
         self.set_visible(False)
+        if not self.service_present:
+            run_in_background(hangup_all_direct)
+            return
         remaining = self.ofono.active_calls
         if len(remaining) > 1 and all(d.get('multiparty') for d in remaining.values()):
             run_in_background(self.ofono.hangup_multiparty)

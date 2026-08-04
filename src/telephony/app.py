@@ -223,7 +223,7 @@ class App(Adw.Application):
     def apply_service_presence(self, present, unit_state):
         """Relay the service's presence to every open window."""
         for win in self.get_windows():
-            if isinstance(win, MainWindow):
+            if isinstance(win, (MainWindow, InCallWindow)):
                 win.apply_service_presence(present, unit_state)
 
     def start_service(self, on_done):
