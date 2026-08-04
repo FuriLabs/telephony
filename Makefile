@@ -77,6 +77,7 @@ install: build
 	cp -a data/icons/status/. $(DESTDIR)$(ICON_DIR)/status/
 
 	install -m 644 data/telephony.service $(DESTDIR)$(SYSTEMD_USER_DIR)/
+	install -m 644 data/telephony-failed.service $(DESTDIR)$(SYSTEMD_USER_DIR)/
 	install -m 644 data/io.furios.Telephony.gschema.xml $(DESTDIR)$(GSCHEMA_DIR)/
 
 	cp -a build/locale/. $(DESTDIR)$(LOCALE_DIR)/
@@ -109,6 +110,7 @@ uninstall:
 	rm -f $(DESTDIR)$(ICON_DIR)/apps/io.furios.Telephony.Emergency.svg
 
 	rm -f $(DESTDIR)$(SYSTEMD_USER_DIR)/telephony.service
+	rm -f $(DESTDIR)$(SYSTEMD_USER_DIR)/telephony-failed.service
 	rm -f $(DESTDIR)$(GSCHEMA_DIR)/io.furios.Telephony.gschema.xml
 
 	for directory in actions devices mimetypes places status; do \

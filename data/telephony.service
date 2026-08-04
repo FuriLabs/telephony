@@ -3,6 +3,7 @@ Description=Telephony Background Service
 After=graphical-session.target
 BindsTo=graphical-session.target
 PartOf=graphical-session.target
+OnFailure=telephony-failed.service
 
 [Service]
 Type=dbus

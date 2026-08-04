@@ -15,8 +15,14 @@
 
 """CLI commands for Management."""
 
+from gettext import gettext as _
 from gi.repository import GLib, Gio
 from telephony.cli.cli_utils import get_proxy
+from telephony.backend.utils.translation_utils import install_i18n
+
+NOTIFICATIONS_BUS = "org.freedesktop.Notifications"
+NOTIFICATIONS_PATH = "/org/freedesktop/Notifications"
+URGENCY_CRITICAL = 2
 
 
 def cmd_clear_messages(args):
@@ -113,8 +119,26 @@ def cmd_import_ios_calls(args):
     print(f"Success: {success}, Message: {msg}")
 
 
+def cmd_service_failed(args):
+    """Show the service-failure notice; run by systemd through OnFailure."""
+    install_i18n()
+    bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+    hints = {"urgency": GLib.Variant("y", URGENCY_CRITICAL)}
+    bus.call_sync(
+        NOTIFICATIONS_BUS, NOTIFICATIONS_PATH, NOTIFICATIONS_BUS, "Notify",
+        GLib.Variant("(susssasa{sv}i)", (
+            "Telephony", 0, "dialog-error-symbolic",
+            _("Telephony service is not running"),
+            _("Incoming calls and messages are not received. Open the app to start it again."),
+            [], hints, 0)),
+        None, Gio.DBusCallFlags.NONE, -1, None)
+
+
 def setup_parsers(subparsers):
     """Setup argument parsers for management commands."""
+    p_sf = subparsers.add_parser("service-failed", help="Show the service-failure notice (run by systemd OnFailure)")
+    p_sf.set_defaults(func=cmd_service_failed)
+
     p_cm = subparsers.add_parser("clear-messages", help="Clear all messages")
     p_cm.set_defaults(func=cmd_clear_messages)
 
