@@ -35,7 +35,7 @@ from loguru import logger
 from .backend.services.dbus_service import TelephonyDaemonDBus
 from .backend.services.system_state_service import SystemStateService
 from .backend.managers.modem_recovery_manager import execute_modem_recovery, watch_recovery_result
-from .constants import APP_ID
+from .constants import APP_ID, INCALL_APP_ID, EMERGENCY_APP_ID, INCALL_DESKTOP_FILE
 from .backend.managers.database_manager import DatabaseManager
 from .backend.managers.gsettings_manager import GSettingsManager
 from .backend.managers.ofono_manager import OfonoManager
@@ -75,7 +75,8 @@ class App(Adw.Application):
 
         self.daemon_missing = False
         self.is_daemon = self._resolve_daemon_role(application_id)
-        self.owns_incall_ui = self.is_daemon
+        self.owns_incall_ui = application_id == INCALL_APP_ID
+        self.recovery_state = (False, "", False)
 
         self.db = None
         self.ofono = None
@@ -203,9 +204,31 @@ class App(Adw.Application):
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))
 
+        if self.owns_incall_ui:
+            self.daemon_client.subscribe(
+                "RecoveryStateChanged",
+                lambda *args: GLib.idle_add(self._apply_recovery_state, *args[5].unpack()))
+            self._seed_recovery_state()
+
         self.db.connect('messages-updated', lambda _db, number, reason: self._report_change(
             "messages", number or "", reason or ""))
         self.db.connect('blocklist-updated', lambda *_args: self._report_change("blocklist", "", ""))
+
+    def _seed_recovery_state(self):
+        """Ask the owner what the modem is doing right now.
+
+        This window can start after the state changed, and a signal
+        that already went out would leave its recovery page blank.
+        """
+        def task():
+            return self.daemon_client.call(
+                "GetRecoveryState", None, GLib.VariantType("(bsb)"))
+
+        def done(state):
+            if state:
+                self._apply_recovery_state(*state)
+
+        run_in_background(task, on_complete=done)
 
     def _replay_change(self, name, *args):
         """Repeat on the local managers what the owner reported.
@@ -247,7 +270,7 @@ class App(Adw.Application):
                     settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd")
                     allowed = settings.get_strv('allow-important')
 
-                    apps_to_add = ['io.furios.Telephony.incall', 'io.furios.Telephony.emergency']
+                    apps_to_add = [INCALL_APP_ID, EMERGENCY_APP_ID]
                     new_allowed = list(set(allowed + apps_to_add))
 
                     if len(new_allowed) != len(allowed):
@@ -261,10 +284,10 @@ class App(Adw.Application):
                 if not schema or not schema.has_key("profile"):
                     logger.debug("org.sigxcpu.feedbackd.application schema or profile key missing")
                 else:
-                    emerg_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-emergency/")
+                    emerg_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-Emergency/")
                     emerg_settings.set_string("profile", "silent")
 
-                    incall_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-incall/")
+                    incall_settings = Gio.Settings(schema_id="org.sigxcpu.feedbackd.application", path="/org/sigxcpu/feedbackd/application/io-furios-telephony-Incall/")
                     incall_settings.set_string("profile", "silent")
 
                     logger.info("Set feedbackd silent profiles for emergency and incall using Gio.Settings.")
@@ -432,10 +455,33 @@ class App(Adw.Application):
 
     def _on_global_call_added(self, _manager, path, _props):
         """Global handler for new calls to ensure InCallWindow is presented."""
-        self._ensure_incall_window()
-        self.incall.defer_present = True
-        self.release_keyboard_focus()
-        GLib.idle_add(self._present_incall_window)
+        self.show_incall_ui()
+
+    def show_incall_ui(self):
+        """Bring up the call window, wherever it lives.
+
+        The window runs as its own application so the shell can tell it
+        apart from the other launchers, which means the owner starts it
+        rather than drawing it. Launching an instance that already runs
+        reaches the running one, so a second call is not a second
+        window.
+        """
+        if self.owns_incall_ui:
+            self._ensure_incall_window()
+            self.incall.defer_present = True
+            self.release_keyboard_focus()
+            GLib.idle_add(self._present_incall_window)
+            return
+
+        app_info = Gio.DesktopAppInfo.new(INCALL_DESKTOP_FILE)
+        if not app_info:
+            logger.error(f"[App] {INCALL_DESKTOP_FILE} is missing, no call window to show")
+            return
+
+        try:
+            app_info.launch(None, None)
+        except Exception as e:
+            logger.error(f"[App] Could not start the call window: {e}")
 
     def _setup_icon_paths(self):
         """
@@ -814,8 +860,7 @@ class App(Adw.Application):
     def _present_recovery_surface(self):
         """Bring up the in-call window on its recovery page."""
         self._recovery_pending_unlock = False
-        self.release_keyboard_focus()
-        GLib.idle_add(self._present_incall_window)
+        self.show_incall_ui()
 
     def _dismiss_recovery_surface(self):
         """Take the recovery page down once the modem works again."""
@@ -829,11 +874,15 @@ class App(Adw.Application):
         call window, which is moving to a process of its own, so this
         reports the state instead of reaching into the window.
         """
+        self.recovery_state = (active, message, failed)
         if self.dbus_daemon:
             self.dbus_daemon.emit_signal(
                 "RecoveryStateChanged", GLib.Variant("(bsb)", (active, message, failed)))
         if self.owns_incall_ui:
             self._apply_recovery_state(active, message, failed)
+            return
+        if active:
+            self.show_incall_ui()
 
     def _apply_recovery_state(self, active, message, failed):
         """Put the call window on its recovery page, or take it off."""

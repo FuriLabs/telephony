@@ -289,6 +289,11 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="password" direction="in"/>
       <arg type="s" name="error" direction="out"/>
     </method>
+    <method name="GetRecoveryState">
+      <arg type="b" name="active" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+      <arg type="b" name="failed" direction="out"/>
+    </method>
     <method name="NotifyChanged">
       <arg type="s" name="kind" direction="in"/>
       <arg type="s" name="number" direction="in"/>
@@ -414,6 +419,15 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
+    def _handle_getrecoverystate(self, parameters, invocation):
+        """Report the recovery state to a call window that just started.
+
+        The window can start after the state changed, so the signal
+        alone would leave it showing nothing.
+        """
+        active, message, failed = self.app.recovery_state
+        invocation.return_value(GLib.Variant("(bsb)", (active, message, failed)))
+
     def _handle_notifychanged(self, parameters, invocation):
         """Repeat a change a window made so the other windows hear it.
 
@@ -460,6 +474,7 @@ class TelephonyDaemonDBus:
             "GetNetworkProperties": self._handle_getnetworkproperties,
             "SetNetworkProperty": self._handle_setnetworkproperty,
             "NotifyChanged": self._handle_notifychanged,
+            "GetRecoveryState": self._handle_getrecoverystate,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,

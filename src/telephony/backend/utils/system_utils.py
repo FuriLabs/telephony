@@ -123,7 +123,7 @@ def get_phosh_emergency_calls():
             settings = Gio.Settings(schema_id="sm.puri.phosh.emergency-calls")
             enabled = settings.get_boolean("enabled")
             if enabled:
-                return ["io.furios.Telephony.emergency"]
+                return ["io.furios.Telephony.Emergency"]
             return []
         return []
     except Exception as e:
