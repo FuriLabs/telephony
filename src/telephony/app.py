@@ -141,7 +141,7 @@ class App(Adw.Application):
             lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
         self.daemon_client.subscribe(
             "ContactsChanged",
-            lambda *args: GLib.idle_add(self.eds.emit, 'contacts-loaded'))
+            lambda *args: run_in_background(self.eds.reload_cache_from_db))
 
         self.db.connect('messages-updated', lambda _db, number, reason: self._report_change(
             "messages", number or "", reason or ""))
@@ -236,7 +236,7 @@ class App(Adw.Application):
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
-        self.eds = EdsManager()
+        self.eds = EdsManager(owns_live_views=self.is_daemon)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr)
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoManager(self.db, self.gsettings_mgr, owns_reception=self.is_daemon)
