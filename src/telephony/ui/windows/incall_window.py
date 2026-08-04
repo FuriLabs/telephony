@@ -101,7 +101,6 @@ def input_route_icon(route_id):
 
 HANGUP_VERIFY_DELAY_MS = 4000
 HANGUP_RETRY_DELAY_MS = 2000
-HANGUP_FEEDBACK_SUPPRESS_SECONDS = 5
 KNOCK_REPEAT_SECONDS = 5
 
 
@@ -160,7 +159,6 @@ class InCallWindow(Adw.Window):
         self._route_poll_running = False
         self._next_knock_time = 0
         self._closing_paths = set()
-        self._hangup_requested_at = 0.0
         self.defer_present = True
 
         self._setup_ui()
@@ -170,7 +168,6 @@ class InCallWindow(Adw.Window):
         self.ofono.connect('call-removed', self.on_call_removed)
         self.ofono.connect('call-added', lambda *a: self.update_state())
         self.ofono.connect('call-changed', lambda *a: self.update_state())
-        self.ofono.connect('hangup-requested', self._note_hangup_request)
 
         self.sys_state = SystemStateService()
         self.is_locked = self.sys_state.is_locked
@@ -1097,22 +1094,12 @@ class InCallWindow(Adw.Window):
                 logger.info("[InCall] Stuck call released on its own, recovering from error state")
                 self._reset_from_error()
             return
-        we_hung_up = time.monotonic() - self._hangup_requested_at < HANGUP_FEEDBACK_SUPPRESS_SECONDS
-        self.audio.play_hangup(feedback=not we_hung_up)
+        self.audio.play_hangup(feedback=False)
         self.fader.set_active(False)
         if p in self.ignored_calls:
             self.ignored_calls.remove(p)
         self.update_state()
         self._close_when_idle()
-
-    def _note_hangup_request(self, _manager):
-        """Remember that this side asked for a hangup, whichever surface did.
-
-        The local manager emits this for the window's own buttons, and
-        the daemon repeats it for hangups asked from other processes,
-        so the removal that follows is recognized as ours.
-        """
-        self._hangup_requested_at = time.monotonic()
 
     def _close_when_idle(self):
         """Close once the last call is gone, unless the modem needs the page.

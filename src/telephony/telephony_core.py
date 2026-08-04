@@ -15,6 +15,7 @@
 
 import datetime
 import os
+import time
 from collections import defaultdict
 
 from gi.repository import Gio, GLib
@@ -52,6 +53,7 @@ DBUS_START_REPLY_ALREADY_RUNNING = 2
 MMS_NOTIFICATION_DELAY_MS = 150
 HEAP_TRIM_AFTER_STARTUP_SECONDS = 120
 HEAP_TRIM_INTERVAL_SECONDS = 1800
+HANGUP_FEEDBACK_SUPPRESS_SECONDS = 5
 
 
 class TelephonyCore:
@@ -87,6 +89,7 @@ class TelephonyCore:
         self.sys_state = None
 
         self.notification_counts = defaultdict(int)
+        self._hangup_requested_at = 0.0
         self._voicemail_last = (False, 0)
         self._vm_contact_busy = False
         self._modem_watch_timer = None
@@ -229,6 +232,8 @@ class TelephonyCore:
         if self.is_daemon:
             self.ofono.connect('incoming-message', self.on_incoming_message)
             self.ofono.connect('call-missed', self.on_call_missed)
+            self.ofono.connect('hangup-requested', self._on_hangup_requested)
+            self.ofono.connect('call-removed', self._on_call_removed_feedback)
         self.ofono.connect('notification-cleared', self.on_notification_cleared)
 
         if self.is_daemon:
@@ -274,9 +279,6 @@ class TelephonyCore:
         self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))
-        self.daemon_client.subscribe(
-            "HangupRequested",
-            lambda *args: GLib.idle_add(self._replay_hangup_request))
 
         if self.owns_incall_ui:
             self.daemon_client.subscribe(
@@ -305,14 +307,23 @@ class TelephonyCore:
         self.db.emit(name, *args)
         return False
 
-    def _replay_hangup_request(self):
-        """Repeat the owner's hangup request so local surfaces can react.
+    def _on_hangup_requested(self, _manager):
+        """Remember that this side asked for a hangup, whichever surface did."""
+        self._hangup_requested_at = time.monotonic()
 
-        Whichever surface asked, the removal that follows is ours, and
-        the call window must not play the hangup feedback for it.
+    def _on_call_removed_feedback(self, _manager, _path):
+        """Sound the hangup tone when the other side ended the call.
+
+        The tone lives in the daemon because the call window's process
+        quits right after the last call, and feedbackd ends a client's
+        running feedbacks when it leaves the bus — a window-played tone
+        gets cut off mid-note. Every local surface proxies its hangup
+        through this process, so a removal shortly after any request
+        here is ours and stays silent.
         """
-        self.ofono.emit('hangup-requested')
-        return False
+        if time.monotonic() - self._hangup_requested_at < HANGUP_FEEDBACK_SUPPRESS_SECONDS:
+            return
+        self.ofono.audio.play_hangup()
 
     def _setup_feedbackd(self):
         """Setup feedbackd application profiles."""
