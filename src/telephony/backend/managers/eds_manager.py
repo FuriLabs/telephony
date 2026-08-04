@@ -53,9 +53,10 @@ class EdsManager(GObject.Object):
         'contacts-loaded': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    def __init__(self):
+    def __init__(self, owns_live_views=True):
         """Initialize the EDS manager."""
         super().__init__()
+        self.owns_live_views = owns_live_views
         self.sources = {}
         self.sources_lock = threading.Lock()
         self.reload_lock = threading.Lock()
@@ -63,6 +64,7 @@ class EdsManager(GObject.Object):
         self.cache = {}
         self.cache_lock = threading.Lock()
         self._cache_loaded_sources = set()
+        self._source_ranks = {}
 
         self.lookup_map = {}
 
@@ -318,6 +320,12 @@ class EdsManager(GObject.Object):
             except Exception as ex:
                 logger.error(f"[EDS] Sync Deletes Failed for {uid}: {ex}")
 
+            if not self.owns_live_views:
+                with self.sources_lock:
+                    self.sources[uid] = source_info
+                logger.info(f"[EDS] Live view skipped for {uid}: the owner watches this book")
+                return
+
             query = '(contains "x-evolution-any-field" "")'
             success, view = client.get_view_sync(query, None)
 
@@ -342,6 +350,40 @@ class EdsManager(GObject.Object):
         with self.cache_lock:
             return set(self._cache_loaded_sources)
 
+    def _cache_entries_from_db(self, source_uid, rank):
+        """Read one source out of the local mirror; blocking, call from a worker.
+
+        Returns the cache and lookup entries the source holds, or None
+        when the mirror could not be read.
+        """
+        try:
+            contacts = self.db_ref.get_cached_contacts(source_uid)
+        except Exception as e:
+            logger.error(f"[EDS] DB fetch error: {e}")
+            return None
+
+        updates = {}
+        lookup_updates = {}
+        for c in contacts:
+            real_uid = c['uid']
+            if not real_uid:
+                continue
+
+            composite_uid = real_uid
+            if ":" not in composite_uid:
+                composite_uid = f"{source_uid}:{real_uid}"
+
+            c['source_uid'] = source_uid
+            updates[composite_uid] = c
+
+            for p_data in c['phones']:
+                norm = normalize_number(p_data[0])
+                if norm:
+                    lookup_updates.setdefault(norm, []).append(
+                        (rank, c['name'], source_uid, composite_uid))
+
+        return updates, lookup_updates
+
     def _load_from_local_db(self, source_uid, rank):
         """Load contacts from local database cache for a specific source once."""
         with self.cache_lock:
@@ -349,45 +391,52 @@ class EdsManager(GObject.Object):
                 logger.debug(f"[EDS] Cache for {source_uid} already loaded, skipping")
                 return
             self._cache_loaded_sources.add(source_uid)
+            self._source_ranks[source_uid] = rank
 
-        try:
-            contacts = self.db_ref.get_cached_contacts(source_uid)
-        except Exception as e:
-            logger.error(f"[EDS] DB fetch error: {e}")
+        entries = self._cache_entries_from_db(source_uid, rank)
+        if entries is None:
             with self.cache_lock:
                 self._cache_loaded_sources.discard(source_uid)
             return
 
-        count = 0
-        updates = {}
-        lookup_updates = {}
-        for c in contacts:
-            real_uid = c['uid']
-            if real_uid:
-                composite_uid = real_uid
-                if ":" not in composite_uid:
-                    composite_uid = f"{source_uid}:{real_uid}"
-
-                c['source_uid'] = source_uid
-                updates[composite_uid] = c
-
-                for p_data in c['phones']:
-                    norm = normalize_number(p_data[0])
-                    if norm:
-                        if norm not in lookup_updates:
-                            lookup_updates[norm] = []
-                        lookup_updates[norm].append((rank, c['name'], source_uid, composite_uid))
-                count += 1
-
+        updates, lookup_updates = entries
         with self.cache_lock:
             self.cache.update(updates)
-            for norm, entries in lookup_updates.items():
-                if norm not in self.lookup_map:
-                    self.lookup_map[norm] = []
-                self.lookup_map[norm].extend(entries)
+            for norm, items in lookup_updates.items():
+                self.lookup_map.setdefault(norm, []).extend(items)
 
-        if count > 0:
-            logger.info(f"[EDS] Loaded {count} contacts from cache for {source_uid}.")
+        if updates:
+            logger.info(f"[EDS] Loaded {len(updates)} contacts from cache for {source_uid}.")
+
+    def reload_cache_from_db(self):
+        """Rebuild the contacts from the local mirror; blocking, call from a worker.
+
+        A window instance watches no address book, so the owner saying
+        that the mirror moved is the only reason it has to read it
+        again. The rebuilt maps replace the old ones in one step, so a
+        lookup running meanwhile never sees a half-empty cache.
+        """
+        with self.cache_lock:
+            ranks = dict(self._source_ranks)
+
+        cache = {}
+        lookup_map = {}
+        for source_uid, rank in ranks.items():
+            entries = self._cache_entries_from_db(source_uid, rank)
+            if entries is None:
+                logger.warning(f"[EDS] Keeping the previous contacts: {source_uid} could not be read")
+                return
+
+            updates, lookup_updates = entries
+            cache.update(updates)
+            for norm, items in lookup_updates.items():
+                lookup_map.setdefault(norm, []).extend(items)
+
+        with self.cache_lock:
+            self.cache = cache
+            self.lookup_map = lookup_map
+
+        GLib.idle_add(self.emit, 'contacts-loaded')
 
     def _make_composite_uid(self, source_uid, real_uid):
         return f"{source_uid}:{real_uid}"
