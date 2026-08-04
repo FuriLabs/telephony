@@ -34,6 +34,7 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="number" direction="in"/>
       <arg type="b" name="hide_id" direction="in"/>
       <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
     </method>
     <method name="Answer">
       <arg type="s" name="call_path" direction="in"/>
@@ -558,14 +559,24 @@ class TelephonyDaemonDBus:
             invocation.return_dbus_error("org.freedesktop.DBus.Error.UnknownMethod", f"Method {method_name} is not implemented")
 
     def _handle_dial(self, parameters, invocation):
-        """Handle Dial command."""
+        """Handle Dial command; the reply waits for the real outcome."""
         number, hide_id = parameters.unpack()
-        success = True
+        state = {"resolved": False}
+
+        def on_result(success, message):
+            if state["resolved"]:
+                return
+            state["resolved"] = True
+            invocation.return_value(GLib.Variant("(bs)", (success, message)))
 
         def do_dial():
-            self.ofono.dial(number, hide_id=hide_id)
+            try:
+                self.ofono.dial(number, hide_id=hide_id, on_result=on_result)
+            except Exception as e:
+                logger.error(f"[DBusService] Dial failed: {e}")
+                on_result(False, str(e))
+
         GLib.idle_add(do_dial)
-        invocation.return_value(GLib.Variant("(b)", (success,)))
 
     def _handle_answer(self, parameters, invocation):
         """Handle Answer command."""

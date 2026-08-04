@@ -42,6 +42,7 @@ SMS_RESOLVE_TIMEOUT_SECONDS = 60
 UNCLAIMED_STATE_LIMIT = 20
 DELIVERY_WATCH_LIMIT = 50
 SEEN_SIGNATURE_LIMIT = 50
+PENDING_DIAL_TIMEOUT_SECONDS = 15
 VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 
@@ -108,6 +109,8 @@ class OfonoManager(GObject.Object):
         self._seen_interfaces = set()
         self._interfaces_known = False
         self.modem_online = None
+        self._pending_dial = None
+        self._pending_dial_timeout_id = 0
 
         self.netreg_proxy = None
         self.netreg_handler_id = None
@@ -539,6 +542,8 @@ class OfonoManager(GObject.Object):
         self.voice_proxy = self._get_proxy("org.ofono.VoiceCallManager")
         if self.voice_proxy:
             self.voice_handler_id = self.voice_proxy.connect("g-signal", self.on_voice_signal)
+            if self._pending_dial is not None:
+                GLib.idle_add(self._flush_parked_dial)
 
         self.msg_proxy = self._get_proxy("org.ofono.MessageManager")
         if self.msg_proxy and self.owns_reception:
@@ -814,19 +819,18 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"Sync calls error: {e}")
 
-    def dial(self, number, hide_id=False):
-        """Initiate an outgoing call."""
+    def dial(self, number, hide_id=False, on_result=None):
+        """Initiate an outgoing call; on_result hears (success, message) exactly once."""
         if self.daemon is not None:
-            self.daemon.call_async("Dial", GLib.Variant("(sb)", (number, hide_id)))
+            self.daemon.dial(number, hide_id, self._on_remote_dial_done)
             return True
 
-        if not self.voice_proxy:
-            self.emit('action-error', _("Modem not ready"))
-            return False
-
         if self._interfaces_known and "org.ofono.VoiceCallManager" not in self._seen_interfaces:
-            self.emit('action-error', _("Modem not ready"))
-            return False
+            return self._refuse_dial(_("Modem not ready"), on_result)
+
+        if not self.voice_proxy:
+            self._park_dial(number, hide_id, on_result)
+            return True
 
         if len(self.active_calls) > 0:
             try:
@@ -842,13 +846,11 @@ class OfonoManager(GObject.Object):
         if any(d.get('multiparty') for d in self.active_calls.values()):
             lines += 1
         if lines >= 2:
-            self.emit('action-error', _("Cannot dial while in another call"))
-            return False
+            return self._refuse_dial(_("Cannot dial while in another call"), on_result)
 
         if not self.active_calls and self.audio.voice_profile_active:
             logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
-            self.emit('action-error', _("Please wait, the previous call is still ending"))
-            return False
+            return self._refuse_dial(_("Please wait, the previous call is still ending"), on_result)
 
         try:
             clean_num = normalize_number(number)
@@ -857,10 +859,72 @@ class OfonoManager(GObject.Object):
 
             clir = "enabled" if hide_id else "default"
             self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
-            return True
         except Exception as e:
-            self.emit('action-error', _("Dial Error: {e}").format(e=e))
-            return False
+            return self._refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+
+        if on_result is not None:
+            on_result(True, "")
+        return True
+
+    def _refuse_dial(self, message, on_result):
+        """Report one dial refusal to the local listeners and the asker."""
+        self.emit('action-error', message)
+        if on_result is not None:
+            on_result(False, message)
+        return False
+
+    def _on_remote_dial_done(self, reply):
+        """Surface a dial the daemon refused or never heard."""
+        if reply is None:
+            self.emit('action-error', _("Telephony service is not running"))
+            return
+        success, message = reply
+        if not success:
+            self.emit('action-error', message if message else _("Modem not ready"))
+
+    def _park_dial(self, number, hide_id, on_result):
+        """Hold a dial while the modem is still being discovered.
+
+        A daemon revived by this very call has not found the modem yet, so
+        refusing here would drop the first dial after every activation. The
+        unknown phase stays optimistic; only concluded discovery refuses.
+        """
+        self._cancel_parked_dial(_("Modem not ready"))
+        self._pending_dial = (number, hide_id, on_result)
+        self._pending_dial_timeout_id = GLib.timeout_add_seconds(
+            PENDING_DIAL_TIMEOUT_SECONDS, self._on_parked_dial_timeout)
+        logger.info(f"[OfonoManager] Parked dial to {number} until the modem appears")
+
+    def _cancel_parked_dial(self, message):
+        """Resolve and drop the parked dial, if any."""
+        if self._pending_dial_timeout_id:
+            GLib.source_remove(self._pending_dial_timeout_id)
+            self._pending_dial_timeout_id = 0
+        if self._pending_dial is None:
+            return
+        number, hide_id, on_result = self._pending_dial
+        self._pending_dial = None
+        if on_result is not None:
+            on_result(False, message)
+
+    def _on_parked_dial_timeout(self):
+        """Give up on a parked dial the modem never came for."""
+        self._pending_dial_timeout_id = 0
+        self.emit('action-error', _("Modem not ready"))
+        self._cancel_parked_dial(_("Modem not ready"))
+        return GLib.SOURCE_REMOVE
+
+    def _flush_parked_dial(self):
+        """Re-run the parked dial now that the modem appeared."""
+        if self._pending_dial is None:
+            return GLib.SOURCE_REMOVE
+        if self._pending_dial_timeout_id:
+            GLib.source_remove(self._pending_dial_timeout_id)
+            self._pending_dial_timeout_id = 0
+        number, hide_id, on_result = self._pending_dial
+        self._pending_dial = None
+        self.dial(number, hide_id=hide_id, on_result=on_result)
+        return GLib.SOURCE_REMOVE
 
     def answer_call(self, target_path):
         """Answer an incoming call."""

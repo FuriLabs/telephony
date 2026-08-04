@@ -68,6 +68,35 @@ class DaemonClient:
             params, None, Gio.DBusCallFlags.NONE,
             DAEMON_CALL_TIMEOUT_MS, None, self._on_async_done, method)
 
+    def call_with_reply(self, method, params, callback, timeout_ms=DAEMON_CALL_TIMEOUT_MS):
+        """Ask and hand the unpacked reply to callback on the main loop.
+
+        The callback receives None when the owner could not be reached or
+        refused the call at the bus level, so silence stays distinguishable
+        from a refusal the owner actually answered.
+        """
+        if not self.bus:
+            GLib.idle_add(callback, None)
+            return
+
+        def done(bus, result):
+            try:
+                res = bus.call_finish(result)
+            except Exception as e:
+                logger.error(f"[DaemonClient] {method} failed: {e}")
+                callback(None)
+                return
+            callback(res.unpack() if res is not None else None)
+
+        self.bus.call(
+            DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
+            params, None, Gio.DBusCallFlags.NONE,
+            timeout_ms, None, done)
+
+    def dial(self, number, hide_id, callback):
+        """Place a call through the owner; callback hears (success, message) or None."""
+        self.call_with_reply("Dial", GLib.Variant("(sb)", (number, bool(hide_id))), callback)
+
     def _on_async_done(self, bus, result, method):
         """Log an asked action that the owner refused."""
         try:
