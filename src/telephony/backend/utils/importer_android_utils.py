@@ -22,7 +22,7 @@ import json
 import os
 import xml.etree.ElementTree as ET
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .importer_core_utils import _get_xml_value, _parse_generic_timestamp
 from .phone_utils import normalize_number

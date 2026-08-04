@@ -28,7 +28,7 @@ from gettext import gettext as _
 import gi
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gdk, Pango, Gio, GLib, Adw
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from ...backend.utils.locale_utils import get_date_format, get_time_format
 
 

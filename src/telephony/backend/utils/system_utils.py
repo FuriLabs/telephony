@@ -16,7 +16,7 @@
 import datetime
 import os
 import subprocess
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib
 
 

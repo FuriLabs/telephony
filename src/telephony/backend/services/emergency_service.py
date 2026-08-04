@@ -16,7 +16,7 @@
 from gi.repository import Gio, GLib, GObject
 
 from telephony.backend.services.system_state_service import SystemStateService
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 
 class EmergencyService(GObject.Object):

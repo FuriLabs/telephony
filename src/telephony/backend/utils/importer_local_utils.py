@@ -22,7 +22,7 @@ import sqlite3
 
 from datetime import datetime
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .datetime_utils import format_timestamp
 from .importer_core_utils import _get_chatty_db_path, _get_value, _get_chatty_mms_path, _get_calls_db_path, _parse_generic_timestamp

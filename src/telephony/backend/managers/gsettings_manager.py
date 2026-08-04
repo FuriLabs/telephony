@@ -15,7 +15,7 @@
 
 import json
 from gi.repository import Gio
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from ...backend.utils.phone_utils import normalize_number
 from .secret_manager import SecretManager
 

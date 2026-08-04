@@ -16,7 +16,7 @@
 import os
 import re
 import gi
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib, GObject
 
 from .audio_manager import TelephonyAudioManager

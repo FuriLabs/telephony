@@ -22,7 +22,7 @@ import threading
 from gettext import gettext as _
 
 from gi.repository import GLib, GObject
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ..utils.datetime_utils import format_timestamp
 from ..utils.phone_utils import build_search_variants, normalize_number

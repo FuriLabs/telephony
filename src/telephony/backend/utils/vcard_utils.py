@@ -15,7 +15,7 @@
 
 import re
 import hashlib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 import gi
 gi.require_version('EBookContacts', '1.2')
 from gi.repository import EBookContacts

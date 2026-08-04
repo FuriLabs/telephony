@@ -28,7 +28,7 @@ sys.path.insert(0, install_dir)
 __package__ = "telephony"
 
 from gi.repository import Gio, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .daemon_app import DaemonApp
 from .backend.utils.translation_utils import install_i18n

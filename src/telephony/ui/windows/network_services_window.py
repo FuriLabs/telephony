@@ -18,7 +18,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ...backend.utils.thread_utils import run_in_background
 from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options

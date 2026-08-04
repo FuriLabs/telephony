@@ -17,7 +17,7 @@ import os
 import locale
 
 from gi.repository import Gio
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 MCC_TO_REGION = {
     "244": "FI", "202": "GR", "204": "NL", "206": "BE", "208": "FR", "212": "MC", "213": "AD", "214": "ES",

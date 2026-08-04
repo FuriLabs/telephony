@@ -15,7 +15,7 @@
 
 import threading
 from gi.repository import GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 
 def run_in_background(task_func, *args, on_complete=None, on_error=None, **kwargs):

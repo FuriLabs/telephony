@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, Adw, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
 from ..widgets.common_widget import close_dialog

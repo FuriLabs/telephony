@@ -18,7 +18,7 @@ import json
 from gi.repository import Gio, GLib
 import os
 import re
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 import uuid
 
 from telephony.backend.utils.thread_utils import run_in_background

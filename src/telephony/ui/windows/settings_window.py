@@ -19,7 +19,7 @@ from ...backend.utils.thread_utils import run_in_background
 from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...constants import SHEET_CONTENT_WIDTH
 from gi.repository import Gtk, Adw, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number

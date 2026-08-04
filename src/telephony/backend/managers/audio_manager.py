@@ -19,7 +19,7 @@ import threading
 from contextlib import contextmanager
 
 import gi
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 gi.require_version('Lfb', '0.0')
 from gi.repository import Lfb, Gio, GLib

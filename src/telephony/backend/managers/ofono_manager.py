@@ -17,7 +17,7 @@ import threading
 import time
 from gettext import gettext as _
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib, GObject
 
 from ...backend.utils.phone_utils import normalize_number

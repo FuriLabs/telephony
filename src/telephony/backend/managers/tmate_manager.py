@@ -18,7 +18,7 @@ from ...backend.utils.thread_utils import run_in_background
 import subprocess
 import time
 import urllib.request
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib
 
 CONNCHECK_URL = "https://conncheck.furios.io/"

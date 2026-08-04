@@ -22,7 +22,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, Gio, GLib, Gdk
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ..backend.utils.phone_utils import normalize_number, get_own_number
 from ..backend.utils.system_utils import get_phosh_emergency_calls

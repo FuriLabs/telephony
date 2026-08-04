@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, Adw, GLib, Pango, Gio, Gdk, GdkPixbuf
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 from io import BytesIO
 

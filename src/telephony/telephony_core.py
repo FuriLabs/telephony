@@ -18,7 +18,7 @@ import os
 from collections import defaultdict
 
 from gi.repository import Gio, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .backend.services.dbus_service import TelephonyDaemonDBus
 from .backend.services.system_state_service import SystemStateService

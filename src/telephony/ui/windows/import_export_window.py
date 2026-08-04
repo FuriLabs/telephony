@@ -18,7 +18,7 @@ import tempfile
 import shutil
 import re
 from gi.repository import Gtk, Adw, Gio, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
 from ..widgets.common_widget import present_choice_sheet, add_choice_row, close_dialog

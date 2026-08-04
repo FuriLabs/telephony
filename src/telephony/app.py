@@ -27,7 +27,7 @@ gi.require_version('EBookContacts', '1.2')
 gi.require_version('EBook', '1.2')
 
 from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .backend.utils.system_utils import launch_desktop_uri
 from .constants import APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE

@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from ...backend.services.system_state_service import SystemStateService
 from ...backend.utils.system_utils import press_power_button
 

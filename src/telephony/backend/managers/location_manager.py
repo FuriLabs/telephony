@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import gi
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from gi.repository import GLib, GObject
 

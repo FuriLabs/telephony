@@ -16,7 +16,7 @@
 import builtins
 import gettext
 import locale
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 LOCALEDIR = "/usr/share/locale"
 DOMAIN = "telephony"

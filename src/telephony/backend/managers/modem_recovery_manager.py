@@ -15,7 +15,7 @@
 
 from gi.repository import GLib
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ..utils.system_utils import restart_ril_modem, restart_ofono_service
 

@@ -16,7 +16,7 @@
 import json
 
 from gi.repository import Gio, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ...constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 

@@ -18,7 +18,7 @@ import os
 import shutil
 from datetime import timedelta, timezone
 from gettext import gettext as _
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from .datetime_utils import parse_timestamp
 
 

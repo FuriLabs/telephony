@@ -16,7 +16,7 @@
 import os
 import threading
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from gi.repository import GObject, GLib, Gio
 

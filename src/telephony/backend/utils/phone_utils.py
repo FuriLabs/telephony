@@ -18,7 +18,7 @@ from functools import lru_cache
 
 import phonenumbers
 from gi.repository import Gio
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .region_utils import get_system_region
 

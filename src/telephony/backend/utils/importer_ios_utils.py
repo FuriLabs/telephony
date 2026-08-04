@@ -21,7 +21,7 @@ import shutil
 import sqlite3
 from datetime import datetime
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from .datetime_utils import format_timestamp
 
 from .importer_core_utils import _get_value

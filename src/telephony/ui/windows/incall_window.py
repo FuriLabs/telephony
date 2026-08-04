@@ -18,7 +18,7 @@ import time
 import os
 import urllib.parse
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from ...backend.services.system_state_service import SystemStateService
 from gettext import gettext as _
 from gettext import ngettext

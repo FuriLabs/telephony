@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, Adw, GLib, Pango
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 from ...backend.utils.datetime_utils import parse_timestamp
 from ..widgets.chat_bubbles_widget import ChatBubbleFactory

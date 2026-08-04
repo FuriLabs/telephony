@@ -17,7 +17,7 @@ from .datetime_utils import parse_timestamp
 
 from datetime import datetime
 from gi.repository import GObject
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from .locale_utils import get_date_format, get_time_format
 
 from gettext import gettext as _

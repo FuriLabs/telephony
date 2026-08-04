@@ -16,7 +16,7 @@
 import sys
 
 from gi.repository import Gio, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from .backend.utils.system_utils import launch_desktop_uri
 from .constants import DAEMON_APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE
