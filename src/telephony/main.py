@@ -85,7 +85,7 @@ def main():
 
     has_ui_flags = any(f in sys.argv for f in ["--full", "--calls", "--messages", "--contacts"])
 
-    if not is_monitoring and not has_ui_flags and "--incall" not in sys.argv:
+    if not is_monitoring and not is_debug and not has_ui_flags and "--incall" not in sys.argv:
         sys.argv.append("--full")
         has_ui_flags = True
 
