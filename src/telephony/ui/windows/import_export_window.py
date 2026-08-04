@@ -23,9 +23,6 @@ from gettext import gettext as _
 from ...backend.utils.thread_utils import run_in_background
 from ..widgets.common_widget import present_choice_sheet, add_choice_row, close_dialog
 from .import_wizard_window import ImportWizardWindow
-from ...backend.utils.importer_local_utils import import_local_chatty, import_local_calls
-from ...backend.utils.importer_android_utils import import_android_sms, import_android_calls
-from ...backend.utils.importer_ios_utils import import_ios_sms, import_ios_calls
 from ...backend.utils.exporter_android_utils import export_android_sms, export_android_calls
 from ...backend.utils.exporter_local_utils import export_linux_chatty, export_linux_calls, export_linux_telephony
 from ...backend.utils.ios_extractor_utils import IOSBackupExtractor
@@ -153,7 +150,7 @@ class ImportExportDialog:
             self.app_window.notify_loading(_("Importing Chatty..."))
 
             def task():
-                success, msg = import_local_chatty(self.db, db_path, mms_path)
+                success, msg = self.app_window.daemon.import_chatty(db_path, mms_path)
                 GLib.idle_add(self.app_window.hide_loading)
                 if success:
                     GLib.idle_add(lambda: self.app_window.notify_success(msg))
@@ -172,7 +169,7 @@ class ImportExportDialog:
             self.app_window.notify_loading(_("Importing Calls..."))
 
             def task():
-                success, msg = import_local_calls(self.db, db_path)
+                success, msg = self.app_window.daemon.import_local_calls(db_path)
                 GLib.idle_add(self.app_window.hide_loading)
                 if success:
                     GLib.idle_add(lambda: self.app_window.notify_success(msg))
@@ -232,11 +229,11 @@ class ImportExportDialog:
 
                 if sms_path and os.path.exists(sms_path):
                     GLib.idle_add(lambda: self.app_window.notify_loading(_("Importing iPhone SMS...")))
-                    _ok, messages_msg = import_ios_sms(self.db, sms_path, manifest_path, tmp_dir)
+                    _ok, messages_msg = self.app_window.daemon.import_ios_sms(sms_path, manifest_path, tmp_dir)
 
                 if calls_path and os.path.exists(calls_path):
                     GLib.idle_add(lambda: self.app_window.notify_loading(_("Importing iPhone Calls...")))
-                    _ok, calls_msg = import_ios_calls(self.db, calls_path)
+                    _ok, calls_msg = self.app_window.daemon.import_ios_calls(calls_path)
 
                 GLib.idle_add(self.app_window.hide_loading)
                 GLib.idle_add(lambda msg=f"{messages_msg}\n{calls_msg}": self.app_window.notify_success(msg))
@@ -275,13 +272,13 @@ class ImportExportDialog:
             success = False
             msg = ""
             if import_type == "android_sms":
-                success, msg = import_android_sms(self.db, file_path)
+                success, msg = self.app_window.daemon.import_android_sms(file_path)
             elif import_type == "android_calls":
-                success, msg = import_android_calls(self.db, file_path)
+                success, msg = self.app_window.daemon.import_android_calls(file_path)
             elif import_type == "ios_sms":
-                success, msg = import_ios_sms(self.db, file_path)
+                success, msg = self.app_window.daemon.import_ios_sms(file_path)
             elif import_type == "ios_calls":
-                success, msg = import_ios_calls(self.db, file_path)
+                success, msg = self.app_window.daemon.import_ios_calls(file_path)
 
             GLib.idle_add(self.app_window.hide_loading)
             if success:
