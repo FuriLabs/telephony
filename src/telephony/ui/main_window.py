@@ -71,7 +71,6 @@ class MainWindow(Adw.Window):
         self.ofono = ofono_manager
         self.mms = mms_manager
         self.gsettings_mgr = gsettings_mgr
-        self.scheduler = self.app.scheduler
         self.daemon = self.app.daemon_client
 
 
