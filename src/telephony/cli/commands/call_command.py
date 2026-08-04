@@ -19,16 +19,18 @@ import json
 from gi.repository import GLib, Gio
 from telephony.cli.cli_utils import get_proxy
 
+DIAL_REPLY_TIMEOUT_MS = 30000
+
 
 def cmd_dial(args):
     """Execute the dial command."""
     proxy = get_proxy()
-    res = proxy.call_sync("Dial", GLib.Variant("(s)", (args.number,)), Gio.DBusCallFlags.NONE, -1, None)
-    success = res.unpack()[0]
+    res = proxy.call_sync("Dial", GLib.Variant("(sb)", (args.number, False)), Gio.DBusCallFlags.NONE, DIAL_REPLY_TIMEOUT_MS, None)
+    success, message = res.unpack()
     if success:
         print(f"Dialing {args.number}...")
     else:
-        print(f"Failed to dial {args.number}")
+        print(f"Failed to dial {args.number}: {message}")
 
 
 def cmd_answer(args):
