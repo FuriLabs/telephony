@@ -404,6 +404,7 @@ class App(Adw.Application):
         if self.incall is None:
             logger.info("Initializing InCallWindow (Lazy Load)")
             self.incall = InCallWindow(self.gsettings_mgr, self.ofono, self.eds, self.db)
+            self.add_window(self.incall)
 
             self.incall.connect("close-request", self._on_incall_closed)
 
