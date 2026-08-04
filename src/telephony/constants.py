@@ -20,6 +20,8 @@ INCALL_APP_ID = "io.furios.Telephony.Incall"
 EMERGENCY_APP_ID = "io.furios.Telephony.Emergency"
 INCALL_DESKTOP_FILE = "io.furios.Telephony.Incall.desktop"
 EMERGENCY_DESKTOP_FILE = "io.furios.Telephony.Emergency.desktop"
+CALLS_DESKTOP_FILE = "io.furios.Telephony.Calls.desktop"
+MESSAGES_DESKTOP_FILE = "io.furios.Telephony.Messages.desktop"
 
 DAEMON_APP_ID = "io.furios.Telephony.Daemon"
 DAEMON_BUS_NAME = "io.furios.Telephony.Daemon"

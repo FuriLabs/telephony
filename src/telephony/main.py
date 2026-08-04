@@ -31,9 +31,10 @@ from gi.repository import Gio, GLib
 from loguru import logger
 
 from .app import App
+from .daemon_app import DaemonApp
 from .backend.utils.translation_utils import install_i18n
 from .backend.utils.system_utils import start_systemd_service, stop_systemd_service, is_systemd_service_active
-from .constants import APP_ID, INCALL_APP_ID, DAEMON_APP_ID, DAEMON_BUS_NAME
+from .constants import APP_ID, INCALL_APP_ID, DAEMON_BUS_NAME
 
 MESSAGE_URI_SCHEMES = ("sms:", "smsto:", "mms:", "mmsto:")
 CALL_URI_SCHEMES = ("tel:", "callto:")
@@ -124,8 +125,10 @@ def main():
                 logger.warning(f"Failed to check/start systemd service: {e}")
 
     if is_monitoring or is_debug:
-        application_id = DAEMON_APP_ID
-    elif "--calls" in sys.argv:
+        app = DaemonApp()
+        return app.run(sys.argv)
+
+    if "--calls" in sys.argv:
         application_id = f"{APP_ID}.Calls"
     elif "--messages" in sys.argv:
         application_id = f"{APP_ID}.Messages"
