@@ -73,14 +73,31 @@ class EdsManager(GObject.Object):
         self.registry = None
         self.is_ready = False
         self._sources_info_cache = None
+        self._applied_config_json = None
 
     def set_db(self, db_manager, gsettings_mgr):
         """Set the database manager reference and start initialization."""
         self.db_ref = db_manager
         self.gsettings_mgr = gsettings_mgr
+        self.gsettings_mgr.gsettings.connect(
+            "changed::address-book-sources", self._on_sources_config_changed)
 
         run_in_background(self._load_cache_initial)
         run_in_background(self._init_backend)
+
+    def _on_sources_config_changed(self, _settings, _key):
+        """Reload when another process rewrote the book configuration.
+
+        dconf reports the change to every process; the one that wrote
+        it already reloaded and recognizes its own value, so only the
+        others rebuild, and the daemon's live views follow a settings
+        change without a restart.
+        """
+        current = self.gsettings_mgr.get_setting("address_book_sources")
+        if current == self._applied_config_json:
+            return
+        logger.info("[EDS] Address book configuration changed elsewhere, reloading")
+        self.reload()
 
     def _load_cache_initial(self):
         """Load contacts from local DB before EDS connection."""
@@ -289,7 +306,9 @@ class EdsManager(GObject.Object):
                 'rank': item['rank']
             })
         try:
-            self.gsettings_mgr.set_setting("address_book_sources", json.dumps(to_save))
+            config_json = json.dumps(to_save)
+            self._applied_config_json = config_json
+            self.gsettings_mgr.set_setting("address_book_sources", config_json)
         except Exception as e:
             logger.error(f"[EDS] Save Config Error: {e}")
 
