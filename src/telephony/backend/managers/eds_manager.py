@@ -989,6 +989,18 @@ class EdsManager(GObject.Object):
             info = self.sources.get(source_uid)
         return bool(info) and info.get('name') == "Andromeda Contacts"
 
+    def _default_source_uid(self):
+        """Return the uid of the address book marked default, if any."""
+        if not self.registry:
+            return None
+        try:
+            default_source = self.registry.ref_default_address_book()
+            if default_source:
+                return default_source.get_uid()
+        except Exception as e:
+            logger.warning(f"[EDS] Default address book lookup failed: {e}")
+        return None
+
     def _ensure_client(self, info):
         """Return the source's book client, connecting on first use.
 
@@ -1010,14 +1022,24 @@ class EdsManager(GObject.Object):
         return client
 
     def _get_writable_client(self, source_uid=None):
-        """Get the client for source_uid, or the highest ranked when unspecified.
+        """Get the client for source_uid, or the default address book.
 
-        Blocking, call from a worker: the client connects on first use.
+        Writing without a stated target belongs in the book the user
+        chose as their default; priority order only decides which book
+        answers first when a number is looked up, so it is the fallback
+        rather than the rule. Blocking, call from a worker: the client
+        connects on first use.
         """
+        if source_uid is None:
+            source_uid = self._default_source_uid()
+
         with self.sources_lock:
+            info = None
             if source_uid:
                 info = self.sources.get(source_uid)
-            else:
+                if info is None:
+                    logger.warning(f"[EDS] No source entry for {source_uid}, using priority order")
+            if info is None:
                 sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
                 info = sorted_sources[0] if sorted_sources else None
         if info is None:

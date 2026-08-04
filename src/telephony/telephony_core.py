@@ -35,7 +35,7 @@ from .backend.managers.ringback_manager import RingbackManager
 from .backend.managers.notification_manager import NotificationManager
 from .backend.managers.schedule_manager import ScheduleManager
 from .backend.utils.thread_utils import run_in_background
-from .backend.utils.phone_utils import normalize_number, get_own_number
+from .backend.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from .backend.utils.locale_utils import init_locale
 from .backend.utils.system_utils import trim_native_heap
 from .constants import INCALL_APP_ID, EMERGENCY_APP_ID, DAEMON_APP_ID, DAEMON_BUS_NAME
@@ -406,8 +406,12 @@ class TelephonyCore:
         except Exception as e:
             logger.debug(f"Exception checking DND bypass: {e}")
 
-        if not self.ui.deliver_message_to_windows(number, body):
-            self.broadcast_notification(number, body)
+        if self.ui.deliver_message_to_windows(number, body):
+            return
+        if self.gsettings_mgr.is_conversation_muted(conversation_id(number)):
+            logger.debug(f"[App] Muted conversation, no notification for {number}")
+            return
+        self.broadcast_notification(number, body)
 
     def on_mms_received(self, _mms_obj, sender, recipients, _date, body, attachments, sender_name):
         """Handle incoming MMS."""
@@ -464,9 +468,13 @@ class TelephonyCore:
             except Exception as e:
                 logger.error(f"[Priority] Check failed in MMS: {e}")
 
-        if not self.ui.deliver_message_to_windows(chat_id, preview_text, attachments, real_sender):
-            sender_to_show = real_sender if real_sender else chat_id
-            self.broadcast_notification(chat_id, preview_text, lookup_number=sender_to_show)
+        if self.ui.deliver_message_to_windows(chat_id, preview_text, attachments, real_sender):
+            return False
+        if self.gsettings_mgr.is_conversation_muted(conversation_id(chat_id)):
+            logger.debug(f"[App] Muted conversation, no notification for {chat_id}")
+            return False
+        sender_to_show = real_sender if real_sender else chat_id
+        self.broadcast_notification(chat_id, preview_text, lookup_number=sender_to_show)
 
         return False
 

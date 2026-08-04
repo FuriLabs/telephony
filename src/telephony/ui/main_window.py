@@ -15,7 +15,6 @@
 
 from ..backend.utils.thread_utils import run_in_background
 import urllib.parse
-from .windows.import_export_window import ImportExportDialog
 from gettext import gettext as _, ngettext
 
 import gi
@@ -34,7 +33,6 @@ from .views.messages_view import MessagesView
 from .windows.settings_window import SettingsWindow
 from .windows.contact_editor_window import ContactEditor
 from .windows.missed_scheduled_messages_window import MissedScheduledMessagesDialog
-from .windows.blocklist_window import BlocklistView
 from .windows.blocklist_editor_window import BlocklistEditor
 from .windows.info_window import InfoPage
 from .windows.contact_picker_window import ContactPicker
@@ -54,6 +52,8 @@ class MainWindow(Adw.Window):
         self._active_alert = None
         self._ussd_in_flight = False
         self._loading_toast = None
+        self._current_toast = None
+        self._current_message = None
         self._setup_hint_shown = False
         """Initialize the main window."""
         super().__init__(application=application)
@@ -94,6 +94,13 @@ class MainWindow(Adw.Window):
         self.setup_actions_menu()
         self.header.pack_end(self.actions_btn)
         main_vbox.append(self.header)
+
+        self.banner = Adw.Banner()
+        self.banner.set_revealed(False)
+        self.banner.connect("button-clicked", self._on_banner_action)
+        self._banner_action = None
+        self._banner_states = {}
+        main_vbox.append(self.banner)
 
         self.stack = Adw.ViewStack()
 
@@ -152,6 +159,7 @@ class MainWindow(Adw.Window):
             self._update_sensitive_actions(True)
         else:
             self._update_sensitive_actions(False)
+            self.set_banner_state("syncing", _("Syncing contacts…"), priority=10)
 
         self.check_own_number()
         self.check_emergency_setup()
@@ -314,8 +322,6 @@ class MainWindow(Adw.Window):
             ("resolve-duplicates", self.on_resolve_duplicates_clicked),
             ("settings", self.on_settings_click),
             ("reload-contacts", self.on_force_sync_click),
-            ("import-export", self.on_import_export_click),
-            ("blocklist", self.on_blocklist_menu_clicked),
         )
         for name, callback in entries:
             action = Gio.SimpleAction.new(name, None)
@@ -328,14 +334,9 @@ class MainWindow(Adw.Window):
         main_section = Gio.Menu()
         main_section.append(_("Settings"), "menu.settings")
         main_section.append(_("Reload Contacts"), "menu.reload-contacts")
-        main_section.append(_("Import / Export"), "menu.import-export")
-        block_section = Gio.Menu()
-        block_section.append(_("Blocklist"), "menu.blocklist")
-
         menu = Gio.Menu()
         menu.append_section(None, self._resolve_section)
         menu.append_section(None, main_section)
-        menu.append_section(None, block_section)
         self.actions_btn.set_menu_model(menu)
 
     def _set_resolve_visible(self, visible):
@@ -343,10 +344,6 @@ class MainWindow(Adw.Window):
         self._resolve_section.remove_all()
         if visible:
             self._resolve_section.append(_("Resolve Duplicates"), "menu.resolve-duplicates")
-
-    def on_import_export_click(self, btn):
-        """Open the import and export dialog."""
-        ImportExportDialog(self).present()
 
     def _update_sensitive_actions(self, sensitive):
         """Enable or disable actions based on readiness."""
@@ -364,20 +361,110 @@ class MainWindow(Adw.Window):
         if self.contacts_view:
             self.contacts_view.set_calling_enabled(available)
 
-    def _show_toast(self, message, timeout=5):
-        """Show a toast and return it."""
+    def _toast_target(self):
+        """Return the overlay of the topmost surface.
+
+        A presented dialog is painted above the window content, so a
+        toast raised on the window's own overlay would sit hidden
+        underneath an open sheet.
+        """
+        dialog = self.get_visible_dialog()
+        if dialog is not None:
+            overlay = self._find_toast_overlay(dialog.get_child())
+            if overlay is not None:
+                return overlay
+        return self.toast_overlay
+
+    def _find_toast_overlay(self, widget):
+        """Find the first toast overlay inside a widget tree."""
+        if widget is None:
+            return None
+        if isinstance(widget, Adw.ToastOverlay):
+            return widget
+        child = widget.get_first_child()
+        while child is not None:
+            found = self._find_toast_overlay(child)
+            if found is not None:
+                return found
+            child = child.get_next_sibling()
+        return None
+
+    def set_banner_state(self, key, message, button_label=None, action=None, priority=0):
+        """Record a lasting state and show the most important one.
+
+        States are keyed so two conditions cannot overwrite each other,
+        and a state that ends never takes down a different one that is
+        still true.
+        """
+        self._banner_states[key] = {"message": message, "button": button_label,
+                                    "action": action, "priority": priority}
+        self._refresh_banner()
+
+    def clear_banner_state(self, key):
+        """Drop one state and fall back to whatever else still holds."""
+        if self._banner_states.pop(key, None) is not None:
+            self._refresh_banner()
+
+    def _refresh_banner(self):
+        """Show the highest priority state, or nothing at all."""
+        if not self._banner_states:
+            self._banner_action = None
+            self.banner.set_revealed(False)
+            return
+
+        state = max(self._banner_states.values(), key=lambda s: s["priority"])
+        self.banner.set_title(state["message"])
+        self.banner.set_button_label(state["button"] or "")
+        self._banner_action = state["action"]
+        self.banner.set_revealed(True)
+
+    def _on_banner_action(self, _banner):
+        """Run whatever the banner offered."""
+        if self._banner_action:
+            GLib.idle_add(lambda: self._banner_action() or False)
+
+    def _show_toast(self, message, timeout=5, priority=None):
+        """Show one toast on the topmost surface, replacing what it supersedes.
+
+        Adwaita shows a single toast at a time and queues the rest, so a
+        stale message would otherwise stand in front of a newer one. The
+        current toast is dismissed instead of queued, and repeating the
+        message that is already showing only restarts its timer.
+        """
+        if self._current_toast is not None and self._current_message == message:
+            return self._current_toast
+
+        if self._current_toast is not None:
+            self._current_toast.dismiss()
+
         toast = Adw.Toast.new(message)
         toast.set_timeout(timeout)
-        self.toast_overlay.add_toast(toast)
+        if priority is not None:
+            toast.set_priority(priority)
+        toast.connect("dismissed", self._on_toast_dismissed, message)
+        self._current_toast = toast
+        self._current_message = message
+        self._toast_target().add_toast(toast)
         return toast
 
-    def notify_error(self, message):
-        """Show a transient feedback toast, ending any loading toast."""
+    def _on_toast_dismissed(self, toast, message):
+        """Forget the toast that just went away."""
+        if self._current_toast is toast:
+            self._current_toast = None
+            self._current_message = None
+
+    def notify_info(self, message):
+        """Report something the screen does not already show."""
         self.hide_loading()
         self._show_toast(message)
 
+    def notify_error(self, message):
+        """Report a refusal, ahead of anything already showing."""
+        self.hide_loading()
+        self._show_toast(message, priority=Adw.ToastPriority.HIGH)
+
     def notify_success(self, message):
-        """Show a transient feedback toast, ending any loading toast."""
+        """Report a finished action the screen does not already show."""
         self.hide_loading()
         self._show_toast(message)
 
@@ -391,6 +478,8 @@ class MainWindow(Adw.Window):
         if self._loading_toast is not None:
             self._loading_toast.dismiss()
             self._loading_toast = None
+            self._current_toast = None
+            self._current_message = None
 
     def _show_setup_hint(self, message):
         """Show at most one settings hint per launch, with a shortcut."""
@@ -406,6 +495,7 @@ class MainWindow(Adw.Window):
     def on_contacts_loaded(self, *args):
         """Handle contacts loaded event."""
         if self.eds.is_ready:
+            self.clear_banner_state("syncing")
             if self._manual_sync_active:
                 self._manual_sync_active = False
                 self.notify_success(_("Contacts refreshed"))
@@ -562,6 +652,7 @@ class MainWindow(Adw.Window):
         if not enabled:
             self._set_resolve_visible(False)
             self.pending_conflicts = []
+            self.clear_banner_state("duplicates")
         else:
             if self.contacts_view:
                 self.contacts_view.check_duplicates()
@@ -584,13 +675,11 @@ class MainWindow(Adw.Window):
                 "Found {count} duplicate contacts.",
                 count
             ).format(count=count)
-            toast = Adw.Toast.new(message)
-            toast.set_button_label(_("Resolve Duplicates"))
-            toast.connect("button-clicked", lambda t: GLib.idle_add(
-                lambda: self.on_resolve_duplicates_clicked(None) or False))
-            self.toast_overlay.add_toast(toast)
+            self.set_banner_state("duplicates", message, _("Resolve"),
+                                  lambda: self.on_resolve_duplicates_clicked(None))
         else:
             self._set_resolve_visible(False)
+            self.clear_banner_state("duplicates")
 
     def on_resolve_duplicates_clicked(self, btn):
         """Handle resolve duplicates button click."""
@@ -604,34 +693,9 @@ class MainWindow(Adw.Window):
         if self.contacts_view:
             self.contacts_view.check_duplicates()
 
-    def on_blocklist_menu_clicked(self, btn):
-        """Open blocklist manager."""
-        if not self.eds.is_ready:
-            self.notify_error(_("Contacts syncing..."))
-            return
-
-        sheet = Adw.Dialog(title=_("Blocklist"))
-        sheet.set_content_width(360)
-        sheet.set_content_height(500)
-
-        view = BlocklistView(self.db, self)
-        self.blocklist_view = view
-
-        def _cleanup(*args):
-            self.blocklist_view = None
-
-        sheet.connect("closed", _cleanup)
-
-        toolbar = Adw.ToolbarView()
-        toolbar.add_top_bar(Adw.HeaderBar())
-        toolbar.set_content(view)
-        sheet.set_child(toolbar)
-        sheet.present(self)
-
     def present_blocklist_editor(self, number_preset=None):
         """Open blocklist editor dialog."""
         if not self.eds.is_ready:
-            self.notify_error(_("Contacts syncing..."))
             return
 
         name_preset = ""
@@ -671,7 +735,6 @@ class MainWindow(Adw.Window):
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""
         if not self.eds.is_ready:
-            self.notify_error(_("Contacts syncing..."))
             return
 
         if contact_data is None and number_preset:

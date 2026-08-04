@@ -176,3 +176,17 @@ def build_search_variants(token):
         variants.add("0" + token[len(region_prefix):])
 
     return variants
+
+
+def conversation_id(number_or_list):
+    """Build the stable id of a conversation from its participants.
+
+    A single number normalizes to itself, a group to its sorted
+    participants joined by commas, matching how group names are keyed.
+    """
+    if isinstance(number_or_list, (list, tuple, set)):
+        numbers = list(number_or_list)
+    else:
+        numbers = str(number_or_list).split(",")
+    cleaned = sorted({normalize_number(n.strip(), permissive=True) for n in numbers if str(n).strip()})
+    return ",".join(cleaned)

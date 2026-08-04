@@ -15,14 +15,13 @@
 
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
-from ..widgets.common_widget import close_dialog
-from ...constants import SHEET_CONTENT_WIDTH
 
 
-class ImportWizardWindow(Adw.Dialog):
-    """
-    Wizard window to select source for importing Calls/Chatty databases.
-    Matches DuplicateResolutionWindow styling.
+class ImportWizardWindow(Adw.NavigationPage):
+    """Wizard page choosing the source of a Calls or Chatty import.
+
+    Lives inside the import flow's navigation, so the back button and
+    the back gesture leave the wizard the way every other step does.
     """
 
     def __init__(self, parent_window, import_type, done_callback):
@@ -32,26 +31,19 @@ class ImportWizardWindow(Adw.Dialog):
         """
         title = _("Import Messages") if import_type == 'chatty' else _("Import Call History")
         super().__init__(title=title)
-        self.set_content_width(SHEET_CONTENT_WIDTH)
+        self.parent_window = parent_window
         self.import_type = import_type
         self.done_callback = done_callback
 
         self.custom_db_path = None
         self.custom_mms_path = None
         self._is_finished = False
-        self.connect("closed", self._on_closed)
+        self.connect("hidden", self._on_hidden)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_child(self.main_box)
 
-        self.header = Adw.HeaderBar()
-        self.header.set_show_end_title_buttons(False)
-        self.header.set_show_start_title_buttons(False)
-
-        self.btn_cancel = Gtk.Button(label=_("Cancel"))
-        self.btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_cancel() or False))
-        self.header.pack_start(self.btn_cancel)
-
+        self.header = Adw.HeaderBar(show_end_title_buttons=False)
         self.main_box.append(self.header)
 
         self.stack = Gtk.Stack()
@@ -130,20 +122,26 @@ class ImportWizardWindow(Adw.Dialog):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
         self.done_callback(None, None)
-        close_dialog(self)
+        self._leave()
 
-    def _on_closed(self, _dialog):
-        """Report a cancelled wizard exactly once, on any close path."""
-        if not self._is_finished:
+    def _on_hidden(self, page):
+        """Report a cancelled wizard exactly once, on any exit path."""
+        if page.get_parent() is None and not self._is_finished:
             self.done_callback(False, False)
 
+    def _leave(self):
+        """Leave the wizard, however it finished."""
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav and nav.get_visible_page() is self:
+            nav.pop()
+
     def on_cancel(self):
-        close_dialog(self)
+        self._leave()
 
     def _step_custom_db(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select Database File"),
-            transient_for=self.get_root(),
+            transient_for=self.parent_window,
             action=Gtk.FileChooserAction.OPEN
         )
         dialog.connect("response", self._on_db_file_selected)
@@ -196,7 +194,7 @@ class ImportWizardWindow(Adw.Dialog):
     def _step_custom_mms(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select MMS Folder"),
-            transient_for=self.get_root(),
+            transient_for=self.parent_window,
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
         dialog.connect("response", self._on_mms_folder_selected)
@@ -219,4 +217,4 @@ class ImportWizardWindow(Adw.Dialog):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
         self.done_callback(self.custom_db_path, self.custom_mms_path)
-        close_dialog(self)
+        self._leave()

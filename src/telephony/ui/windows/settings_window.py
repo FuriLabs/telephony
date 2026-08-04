@@ -28,10 +28,12 @@ from ...backend.utils.system_utils import get_phosh_emergency_calls, set_phosh_e
 from .dnd_bypass_contacts_list_window import DndBypassContactsListWindow
 from .custom_tone_list_window import CustomToneListWindow
 
-
 from .advanced_settings_window import AdvancedSettingsWindow
+from .favorites_list_window import FavoritesListWindow
 from .network_services_window import NetworkServicesWindow
-from ..widgets.common_widget import present_info_sheet, close_dialog, build_selector_row, set_selector_options
+from .import_export_window import ImportExportDialog
+from ..widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options,
+                                     EntryListGroup, build_nav_row)
 
 
 class SettingsWindow(Adw.Dialog):
@@ -51,13 +53,10 @@ class SettingsWindow(Adw.Dialog):
 
         self.main_window = main_window
         self.eds = eds_manager
-        self._saved = False
 
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(750)
 
-        self.emergency_rows = []
-        self.reject_rows = []
 
         self.temp_ringback_file = self.main_window.gsettings_mgr.get_setting(
             "ringback_custom_file")
@@ -70,22 +69,7 @@ class SettingsWindow(Adw.Dialog):
 
         root_view = Adw.ToolbarView()
 
-        header = Adw.HeaderBar()
-        header.set_show_end_title_buttons(False)
-        header.set_show_start_title_buttons(False)
-
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(
-            lambda: close_dialog(self) or False))
-        header.pack_start(btn_cancel)
-
-        btn_save = Gtk.Button(label=_("Save"))
-        btn_save.add_css_class("suggested-action")
-        btn_save.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self.on_save_clicked(b) or False))
-        header.pack_end(btn_save)
-
-        root_view.add_top_bar(header)
+        root_view.add_top_bar(Adw.HeaderBar())
 
         scroll = Gtk.ScrolledWindow()
         scroll.set_vexpand(True)
@@ -98,6 +82,156 @@ class SettingsWindow(Adw.Dialog):
         page = Adw.PreferencesPage()
         content_box.append(page)
 
+        grp_cats = Adw.PreferencesGroup()
+        page.add(grp_cats)
+        grp_cats.add(self._nav_row(_("Calls"), _("Numbers, volume and ringback"),
+                                   lambda: self._push_category(_("Calls"), self._build_calls_page),
+                                   icon="call-start-symbolic"))
+        grp_cats.add(self._nav_row(_("Messages"), _("Quick responses and delivery reports"),
+                                   lambda: self._push_category(_("Messages"), self._build_messages_page),
+                                   icon="mail-unread-symbolic"))
+        grp_cats.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
+                                   lambda: self.nav_view.push(
+                                       FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds)),
+                                   icon="starred-symbolic"))
+        grp_cats.add(self._nav_row(_("Emergency Calls"), _("Lockscreen button and numbers"),
+                                   lambda: self._push_category(_("Emergency Calls"), self._build_emergency_page),
+                                   icon="dialog-warning-symbolic"))
+        grp_cats.add(self._nav_row(_("Blocklist"), _("Numbers you never hear from"),
+                                   lambda: self._push_category(_("Blocklist"), self._build_blocklist_page),
+                                   icon="action-unavailable-symbolic"))
+        grp_cats.add(self._nav_row(_("Contacts"), _("Address books and duplicates"),
+                                   lambda: self._push_category(_("Contacts"), self._build_contacts_page),
+                                   icon="avatar-default-symbolic"))
+        grp_cats.add(self._nav_row(_("Notifications"), _("Exceptions, tones and bypass"),
+                                   lambda: self._push_category(_("Notifications"), self._build_notifications_page),
+                                   icon="audio-volume-high-symbolic"))
+        grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening and lookup"),
+                                   lambda: self._push_category(_("Unknown Callers"), self._build_unknown_callers_page),
+                                   icon="dialog-question-symbolic"))
+        grp_cats.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
+                                   lambda: self._open_network_services(None),
+                                   icon="network-cellular-signal-good-symbolic"))
+        grp_cats.add(self._nav_row(_("Import and Export"), _("Contacts, messages and call history"),
+                                   lambda: ImportExportDialog(self.main_window, nav_view=self.nav_view).present(),
+                                   icon="document-save-symbolic"))
+        grp_cats.add(self._nav_row(_("Advanced Settings"), _("For experienced users"),
+                                   lambda: self._open_modem_settings(None),
+                                   icon="emblem-system-symbolic"))
+
+    def _build_blocklist_page(self, page):
+        """Build the blocklist category page."""
+        self.grp_blocklist = EntryListGroup(
+            title=_("Blocked Numbers"),
+            fields=[{"key": "number", "label": _("Number"), "required": True,
+                     "purpose": Gtk.InputPurpose.PHONE},
+                    {"key": "note", "label": _("Note (Optional)")}],
+            add_label=_("Add Number"),
+            empty_label=_("No numbers added yet"),
+            on_add=self._on_block_added,
+            on_delete=self._on_block_deleted,
+            on_error=self.main_window.notify_error)
+        self.grp_blocklist.set_description(
+            _("Calls from these numbers are rejected automatically."))
+        page.add(self.grp_blocklist)
+        self._reload_blocklist()
+
+    def _reload_blocklist(self):
+        """Load the blocked numbers into the list group."""
+        entries = [{"id": row[0], "number": row[1], "note": row[2] or ""}
+                   for row in self.main_window.db.get_blocked_numbers()]
+        self.grp_blocklist.set_entries(entries)
+
+    def _on_block_added(self, values):
+        """Validate and store a typed blocked number."""
+        number = normalize_number(values.get("number", ""))
+        if not number:
+            return (False, _("Enter a number to block"))
+        if self.main_window.db.is_blocked(number):
+            return (False, _("This number is already blocked."))
+        if not self.main_window.daemon.add_blocked_number(number, values.get("note", "")):
+            return (False, _("Failed to save to blocklist."))
+        logger.info(f"[Blocklist] Added number: {number}")
+        self._reload_blocklist()
+        return (True, None)
+
+    def _on_block_deleted(self, entry):
+        """Remove one blocked number."""
+        self.main_window.daemon.remove_blocked_number(entry["id"])
+        self._reload_blocklist()
+
+    def _push_category(self, title, build):
+        """Push a settings category page built fresh from current state."""
+        view = Adw.ToolbarView()
+        view.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
+        scroll = Gtk.ScrolledWindow(vexpand=True)
+        page = Adw.PreferencesPage()
+        scroll.set_child(page)
+        view.set_content(scroll)
+        build(page)
+        self.nav_view.push(Adw.NavigationPage(title=title, child=view))
+
+    def _build_calls_page(self, page):
+        """Build the calls category page."""
+        grp_sim = Adw.PreferencesGroup(title=_("SIM Settings"))
+        page.add(grp_sim)
+
+        self.entry_own_num = Adw.EntryRow(title=_("My Number"))
+        self.entry_own_num.set_title(_("My Number (International Format)"))
+        saved_num = self.main_window.gsettings_mgr.get_setting("own_number")
+        self.entry_own_num.set_text(saved_num if saved_num else "")
+        self.entry_own_num.set_show_apply_button(True)
+        self.entry_own_num.connect("apply", self._on_own_number_apply)
+        grp_sim.add(self.entry_own_num)
+
+        self.entry_country_code = Adw.EntryRow(title=_("Default Country Code"))
+        self.entry_country_code.set_title(_("Default Country Code"))
+
+        btn_cc_info = self._info_button(self._show_country_code_info)
+        self.entry_country_code.add_suffix(btn_cc_info)
+
+        saved_cc = self.main_window.gsettings_mgr.get_setting(
+            "default_country_code")
+        self.entry_country_code.set_text(saved_cc if saved_cc else "")
+        self.entry_country_code.set_show_apply_button(True)
+        self.entry_country_code.connect("apply", self._on_country_code_apply)
+        grp_sim.add(self.entry_country_code)
+
+        self.entry_voicemail = Adw.EntryRow(title=_("Voicemail Number"))
+        saved_vm = self.main_window.gsettings_mgr.get_setting("voicemail_number")
+        if not saved_vm and self.main_window.ofono:
+            saved_vm = self.main_window.ofono.voicemail_mailbox
+        self.entry_voicemail.set_text(saved_vm if saved_vm else "")
+        self.entry_voicemail.set_show_apply_button(True)
+        self.entry_voicemail.connect("apply", self._on_voicemail_apply)
+        grp_sim.add(self.entry_voicemail)
+
+        self.grp_call_volume = Adw.PreferencesGroup(title=_("Call Volume"))
+        btn_info_vol = self._info_button(self._show_call_volume_info)
+        self.grp_call_volume.set_header_suffix(btn_info_vol)
+        page.add(self.grp_call_volume)
+
+        saved_levels = self.main_window.gsettings_mgr.get_call_volume_levels()
+
+        self.volume_scales = {}
+        route_titles = (("earpiece", _("Earpiece")),
+                        ("speaker", _("Speaker")),
+                        ("wired", _("Wired Headset")),
+                        ("bluetooth", _("Bluetooth")))
+        for route_id, title in route_titles:
+            row = Adw.ActionRow(title=title)
+            scale = Gtk.Scale.new_with_range(
+                Gtk.Orientation.HORIZONTAL, CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, 10)
+            scale.set_value(saved_levels.get(route_id, CALL_VOLUME_DEFAULT_PERCENT))
+            scale.set_hexpand(True)
+            scale.set_size_request(180, -1)
+            scale.set_draw_value(True)
+            scale.set_value_pos(Gtk.PositionType.RIGHT)
+            scale.connect("value-changed", self._on_volume_scale_changed)
+            row.add_suffix(scale)
+            self.grp_call_volume.add(row)
+            self.volume_scales[route_id] = scale
+
         grp_rb = Adw.PreferencesGroup(title=_("Ringback Tone"))
         page.add(grp_rb)
 
@@ -105,13 +239,10 @@ class SettingsWindow(Adw.Dialog):
         enabled_str = self.main_window.gsettings_mgr.get_setting(
             "ringback_enabled")
         self.sw_rb_enable.set_active(enabled_str == "true")
+        self.sw_rb_enable.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
+            "ringback_enabled", "true" if w.get_active() else "false"))
 
-        btn_info = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info.set_valign(Gtk.Align.CENTER)
-        btn_info.add_css_class("flat")
-        btn_info.add_css_class("circular")
-        btn_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_ringback_info(b) or False))
+        btn_info = self._info_button(self._show_ringback_info)
         self.sw_rb_enable.add_suffix(btn_info)
 
         grp_rb.add(self.sw_rb_enable)
@@ -146,46 +277,75 @@ class SettingsWindow(Adw.Dialog):
 
         grp_rb.add(self.row_rb_file)
 
-        grp_sim = Adw.PreferencesGroup(title=_("SIM Settings"))
-        page.add(grp_sim)
+    def _build_emergency_page(self, page):
+        """Build the emergency calls category page."""
+        grp_emerg_toggle = Adw.PreferencesGroup(
+            title=_("Lockscreen Emergency"))
+        page.add(grp_emerg_toggle)
 
-        self.entry_own_num = Adw.EntryRow(title=_("My Number"))
-        self.entry_own_num.set_title(_("My Number (International Format)"))
-        saved_num = self.main_window.gsettings_mgr.get_setting("own_number")
-        self.entry_own_num.set_text(saved_num if saved_num else "")
+        self.sw_emerg = Adw.SwitchRow(title=_("Show Emergency Button"))
+        self.sw_emerg.set_active(self._get_gsettings_emergency())
+        self.sw_emerg.connect("notify::active",
+                              lambda w, p: self._set_gsettings_emergency(w.get_active()))
+        grp_emerg_toggle.add(self.sw_emerg)
 
-        grp_sim.add(self.entry_own_num)
+        self.grp_emerg_list = EntryListGroup(
+            title=_("Emergency Numbers"),
+            fields=[{"key": "name", "label": _("Name"), "required": True},
+                    {"key": "number", "label": _("Number"), "required": True,
+                     "purpose": Gtk.InputPurpose.PHONE}],
+            add_label=_("Add Number"),
+            empty_label=_("No numbers added yet"),
+            on_add=self._on_emergency_added,
+            on_delete=self._on_emergency_deleted,
+            on_update=self._on_emergency_updated,
+            on_error=self.main_window.notify_error)
+        page.add(self.grp_emerg_list)
 
-        self.entry_country_code = Adw.EntryRow(title=_("Default Country Code"))
-        self.entry_country_code.set_title(_("Default Country Code"))
+        self.grp_network_emerg = Adw.PreferencesGroup(title=_("Network Emergency Numbers"))
+        self.sw_network_emerg = Adw.SwitchRow(title=_("Show Numbers From Network"))
+        self.sw_network_emerg.set_active(
+            self.main_window.gsettings_mgr.get_setting("show_network_emergency_numbers") != "false")
+        self.sw_network_emerg.connect("notify::active", self._on_network_emergency_toggled)
+        self.grp_network_emerg.add(self.sw_network_emerg)
+        self.network_emerg_rows = []
+        page.add(self.grp_network_emerg)
 
-        btn_cc_info = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_cc_info.set_valign(Gtk.Align.CENTER)
-        btn_cc_info.add_css_class("flat")
-        btn_cc_info.add_css_class("circular")
-        btn_cc_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_country_code_info(b) or False))
-        self.entry_country_code.add_suffix(btn_cc_info)
+        self._reload_emergency_numbers()
 
-        saved_cc = self.main_window.gsettings_mgr.get_setting(
-            "default_country_code")
-        self.entry_country_code.set_text(saved_cc if saved_cc else "")
-        grp_sim.add(self.entry_country_code)
+    def _build_messages_page(self, page):
+        """Build the messages category page."""
+        grp_msg = Adw.PreferencesGroup(title=_("Messaging"))
+        page.add(grp_msg)
 
-        self.entry_voicemail = Adw.EntryRow(title=_("Voicemail Number"))
-        saved_vm = self.main_window.gsettings_mgr.get_setting("voicemail_number")
-        if not saved_vm and self.main_window.ofono:
-            saved_vm = self.main_window.ofono.voicemail_mailbox
-        self.entry_voicemail.set_text(saved_vm if saved_vm else "")
-        grp_sim.add(self.entry_voicemail)
+        self.sw_delivery = Adw.SwitchRow(title=_("Request Delivery Reports"))
+        self.sw_delivery.set_active(
+            self.main_window.gsettings_mgr.get_setting("delivery_reports") == "true")
+        btn_dr_info = self._info_button(self._show_delivery_reports_info)
+        self.sw_delivery.add_suffix(btn_dr_info)
+        self.sw_delivery.connect("notify::active", self._on_delivery_reports_toggled)
+        grp_msg.add(self.sw_delivery)
 
+        self.grp_reject_list = EntryListGroup(
+            title=_("Quick Response"),
+            fields=[{"key": "message", "label": _("Decline Message"), "required": True}],
+            add_label=_("Add Decline Message"),
+            empty_label=_("No messages added yet"),
+            on_add=self._on_reject_added,
+            on_delete=self._on_reject_deleted,
+            on_update=self._on_reject_updated,
+            on_error=self.main_window.notify_error)
+        self.grp_reject_list.set_description(
+            _("Sent when you decline a call with a message."))
+        page.add(self.grp_reject_list)
+        self._reload_reject_messages()
+
+    def _build_contacts_page(self, page):
+        """Build the contacts category page."""
+        self.source_rows = None
         self.grp_contacts = Adw.PreferencesGroup(title=_("Address Books"))
 
-        btn_info_contacts = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_contacts.add_css_class("flat")
-        btn_info_contacts.add_css_class("circular")
-        btn_info_contacts.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_addressbook_info(b) or False))
+        btn_info_contacts = self._info_button(self._show_addressbook_info)
 
         try:
             self.grp_contacts.set_header_suffix(btn_info_contacts)
@@ -229,84 +389,8 @@ class SettingsWindow(Adw.Dialog):
         self.sources_state = self.eds.get_sources_info()
         self._build_sources_list(rebuild_dropdown=True)
 
-        grp_emerg_toggle = Adw.PreferencesGroup(
-            title=_("Lockscreen Emergency"))
-        page.add(grp_emerg_toggle)
-
-        self.sw_emerg = Adw.SwitchRow(title=_("Show Emergency Button"))
-        self.sw_emerg.set_active(self._get_gsettings_emergency())
-        grp_emerg_toggle.add(self.sw_emerg)
-
-        self.grp_emerg_list = Adw.PreferencesGroup(
-            title=_("Emergency Numbers"))
-        page.add(self.grp_emerg_list)
-
-        row_add = Adw.ActionRow(title=_("Add Number"))
-        btn_add = Gtk.Button(icon_name="list-add-symbolic")
-        btn_add.add_css_class("flat")
-        btn_add.add_css_class("circular")
-        btn_add.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._add_emergency_placeholder(b) or False))
-        row_add.add_suffix(btn_add)
-        self.grp_emerg_list.add(row_add)
-
-        saved_list = self.main_window.gsettings_mgr.get_emergency_numbers()
-        for item in saved_list:
-            self._add_emergency_row(
-                item.get("name", ""), item.get("number", ""))
-
-        self.grp_reject_list = Adw.PreferencesGroup(title=_("Quick Response"))
-        page.add(self.grp_reject_list)
-
-        row_add_msg = Adw.ActionRow(title=_("Add Decline Message"))
-        btn_add_msg = Gtk.Button(icon_name="list-add-symbolic")
-        btn_add_msg.add_css_class("flat")
-        btn_add_msg.add_css_class("circular")
-        btn_add_msg.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._add_reject_row("") or False))
-        row_add_msg.add_suffix(btn_add_msg)
-        self.grp_reject_list.add(row_add_msg)
-
-        saved_msgs = self.main_window.gsettings_mgr.get_reject_call_messages()
-        if not saved_msgs:
-            saved_msgs = [_("I can't talk right now.")]
-        for msg in saved_msgs:
-            self._add_reject_row(msg)
-
-        self.grp_messaging = Adw.PreferencesGroup(title=_("Messaging"))
-        page.add(self.grp_messaging)
-
-        self.grp_call_volume = Adw.PreferencesGroup(title=_("Call Volume"))
-        btn_info_vol = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_vol.set_valign(Gtk.Align.CENTER)
-        btn_info_vol.add_css_class("flat")
-        btn_info_vol.add_css_class("circular")
-        btn_info_vol.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_call_volume_info(b) or False))
-        self.grp_call_volume.set_header_suffix(btn_info_vol)
-        page.add(self.grp_call_volume)
-
-        saved_levels = self.main_window.gsettings_mgr.get_call_volume_levels()
-
-        self.volume_scales = {}
-        route_titles = (("earpiece", _("Earpiece")),
-                        ("speaker", _("Speaker")),
-                        ("wired", _("Wired Headset")),
-                        ("bluetooth", _("Bluetooth")))
-        for route_id, title in route_titles:
-            row = Adw.ActionRow(title=title)
-            scale = Gtk.Scale.new_with_range(
-                Gtk.Orientation.HORIZONTAL, CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, 10)
-            scale.set_value(saved_levels.get(route_id, CALL_VOLUME_DEFAULT_PERCENT))
-            scale.set_hexpand(True)
-            scale.set_size_request(180, -1)
-            scale.set_draw_value(True)
-            scale.set_value_pos(Gtk.PositionType.RIGHT)
-            scale.connect("value-changed", self._on_volume_scale_changed)
-            row.add_suffix(scale)
-            self.grp_call_volume.add(row)
-            self.volume_scales[route_id] = scale
-
+    def _build_notifications_page(self, page):
+        """Build the notifications category page."""
         grp_notif = Adw.PreferencesGroup(title=_("Notification Exceptions"))
         page.add(grp_notif)
 
@@ -315,13 +399,10 @@ class SettingsWindow(Adw.Dialog):
             _("If the same number calls 3 times in 5 minutes, force max volume."))
         self.sw_repeated.set_active(self.main_window.gsettings_mgr.get_setting(
             "notification_override_repeated_calls_bypass") == "true")
+        self.sw_repeated.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
+            "notification_override_repeated_calls_bypass", "true" if w.get_active() else "false"))
 
-        btn_info_rep = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_rep.set_valign(Gtk.Align.CENTER)
-        btn_info_rep.add_css_class("flat")
-        btn_info_rep.add_css_class("circular")
-        btn_info_rep.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_repeated_info(b) or False))
+        btn_info_rep = self._info_button(self._show_repeated_info)
         self.sw_repeated.add_suffix(btn_info_rep)
 
         grp_notif.add(self.sw_repeated)
@@ -329,12 +410,7 @@ class SettingsWindow(Adw.Dialog):
         row_prio = self._nav_row(_("Notification Overrides"),
                                  _("Manage contacts that always play sound"),
                                  lambda: self._open_priority_window(None))
-        btn_info_prio = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_info_prio.set_valign(Gtk.Align.CENTER)
-        btn_info_prio.add_css_class("flat")
-        btn_info_prio.add_css_class("circular")
-        btn_info_prio.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_overrides_info(b) or False))
+        btn_info_prio = self._info_button(self._show_overrides_info)
         row_prio.add_suffix(btn_info_prio)
         grp_notif.add(row_prio)
 
@@ -346,26 +422,17 @@ class SettingsWindow(Adw.Dialog):
                                     _("Set custom ringtones for specific contacts"),
                                     lambda: self._open_custom_tone_window("ringtone")))
 
-        self._init_desktop_toggles(page)
+    def _info_button(self, handler):
+        """Build the round info button that opens an explanation sheet."""
+        button = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        button.add_css_class("flat")
+        button.add_css_class("circular")
+        button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
+        return button
 
-        self._init_unknown_callers(page)
-
-        grp_adv = Adw.PreferencesGroup()
-        page.add(grp_adv)
-
-        grp_adv.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
-                                  lambda: self._open_network_services(None)))
-        grp_adv.add(self._nav_row(_("Advanced Settings"), None,
-                                  lambda: self._open_modem_settings(None)))
-
-    def _nav_row(self, title, subtitle, callback):
+    def _nav_row(self, title, subtitle, callback, icon=None):
         """Build an activatable navigation row with a chevron."""
-        row = Adw.ActionRow(title=title, activatable=True)
-        if subtitle:
-            row.set_subtitle(subtitle)
-        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
-        return row
+        return build_nav_row(title, subtitle, callback, icon=icon)
 
     def _show_country_code_info(self, btn):
         """Show information about country code setting."""
@@ -377,6 +444,7 @@ class SettingsWindow(Adw.Dialog):
         """Clear the custom ringback file to use default."""
         self.temp_ringback_file = ""
         self.lbl_rb_path.set_text(_("System Default"))
+        self.main_window.gsettings_mgr.set_setting("ringback_custom_file", "")
 
     def _show_ringback_info(self, btn):
         """Show information about ringback tones."""
@@ -415,6 +483,7 @@ class SettingsWindow(Adw.Dialog):
             if path:
                 self.temp_ringback_file = path
                 self.lbl_rb_path.set_label(path)
+                self.main_window.gsettings_mgr.set_setting("ringback_custom_file", path)
         GLib.idle_add(lambda: dialog.destroy() or False)
 
     def _open_modem_settings(self, btn):
@@ -449,13 +518,13 @@ class SettingsWindow(Adw.Dialog):
         self.nav_view.push(CustomToneListWindow(
             self, self.main_window.gsettings_mgr, self.eds, mode=mode))
 
-    def _init_unknown_callers(self, page):
-        """Initialize Unknown Callers options."""
+    def _build_unknown_callers_page(self, page):
+        """Build the unknown callers category page."""
         grp_uc = Adw.PreferencesGroup(title=_("Unknown Callers"))
         page.add(grp_uc)
 
         grp_uc.set_description(_("Applies also to hidden numbers."))
-        self.row_uc_action = build_selector_row(_("Unknown Callers Action"))
+        self.row_uc_action = build_selector_row(_("Unknown Callers Action"), self._on_uc_action_selected)
         self.action_options = [
             ("none", _("Do Nothing")),
             ("block", _("Block Completely")),
@@ -470,29 +539,28 @@ class SettingsWindow(Adw.Dialog):
         grp_uc.add(self.sw_uc_search)
 
         self.row_uc_engine = build_selector_row(
-            _("Search Engine"), lambda idx: self._update_uc_ui())
+            _("Search Engine"), self._on_uc_engine_selected)
         self.engine_options = [
             ("duckduckgo", "DuckDuckGo"),
             ("startpage", "Startpage"),
             ("custom", _("Custom URL"))
         ]
         self.entry_uc_custom = Adw.EntryRow(title=_("Custom URL"))
+        self.entry_uc_custom.set_show_apply_button(True)
+        self.entry_uc_custom.connect("apply", lambda r: self.main_window.gsettings_mgr.set_setting(
+            "unknown_callers_custom_url", r.get_text()))
 
-        btn_uc_info = Gtk.Button(icon_name="dialog-information-symbolic")
-        btn_uc_info.set_valign(Gtk.Align.CENTER)
-        btn_uc_info.add_css_class("flat")
-        btn_uc_info.add_css_class("circular")
-        btn_uc_info.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_custom_url_info(b) or False))
+        btn_uc_info = self._info_button(self._show_custom_url_info)
         self.entry_uc_custom.add_suffix(btn_uc_info)
 
         grp_uc.add(self.row_uc_engine)
         grp_uc.add(self.entry_uc_custom)
 
         def _on_search_toggle(w, p):
+            self.main_window.gsettings_mgr.set_setting(
+                "unknown_callers_search", "true" if w.get_active() else "false")
             self._update_uc_ui()
         self.sw_uc_search.connect("notify::active", _on_search_toggle)
-
 
         uc_action = self.main_window.gsettings_mgr.get_setting(
             "unknown_callers") or "none"
@@ -523,6 +591,27 @@ class SettingsWindow(Adw.Dialog):
 
         present_info_sheet(self, _("Custom Search URL"), body_text)
 
+    def _on_uc_action_selected(self, idx):
+        """Persist the unknown callers action immediately."""
+        if 0 <= idx < len(self.action_options):
+            self.main_window.gsettings_mgr.set_setting(
+                "unknown_callers", self.action_options[idx][0])
+
+    def _on_uc_engine_selected(self, idx):
+        """Persist the search engine choice immediately."""
+        if 0 <= idx < len(self.engine_options):
+            self.main_window.gsettings_mgr.set_setting(
+                "unknown_callers_engine", self.engine_options[idx][0])
+        self._update_uc_ui()
+
+    def _persist_sources(self):
+        """Persist address book order, enablement and default in the background."""
+        state = [dict(item) for item in self.sources_state]
+        run_in_background(self.eds.update_sources_config, state)
+        default = next((item for item in state if item.get('is_system_default')), None)
+        if default:
+            run_in_background(self.eds.set_default_addressbook, default['uid'])
+
     def _update_uc_ui(self):
         search_active = self.sw_uc_search.get_active()
         self.row_uc_engine.set_visible(search_active)
@@ -532,158 +621,6 @@ class SettingsWindow(Adw.Dialog):
         else:
             self.entry_uc_custom.set_visible(False)
 
-    def _init_desktop_toggles(self, page):
-        """Initialize desktop shortcut toggles."""
-        grp_dt = Adw.PreferencesGroup(title=_("Desktop Shortcuts"))
-        page.add(grp_dt)
-
-        shortcuts = [
-            ("Telephony", "io.furios.Telephony.desktop", "full"),
-            (_("Calls"), "io.furios.Telephony.Calls.desktop", "calls"),
-            (_("Messages"), "io.furios.Telephony.Messages.desktop", "messages"),
-            (_("Contacts"), "io.furios.Telephony.Contacts.desktop", "contacts")
-        ]
-
-        self.dt_toggles = []
-
-        for name, filename, autostart_key in shortcuts:
-            row = Adw.SwitchRow(title=name)
-
-            is_visible = self._is_desktop_file_visible(filename)
-
-            row.set_active(is_visible)
-            handler_id = row.connect("notify::active", lambda w, p, f=filename,
-                                     k=autostart_key: self._toggle_desktop_file(w, f, k, w.get_active()))
-            grp_dt.add(row)
-            self.dt_toggles.append((row, filename, handler_id, autostart_key))
-
-        self._update_autostart_ui_state()
-
-    def _is_desktop_file_visible(self, filename):
-        """Check if desktop file is visible by looking at home and system files."""
-        user_path = os.path.join(self._get_user_desktop_dir(), filename)
-        sys_path = self._get_system_desktop_path(filename)
-
-        target_path = user_path if os.path.exists(user_path) else sys_path
-
-        if not target_path or not os.path.exists(target_path):
-            return True
-
-        try:
-            with open(target_path, 'r') as f:
-                content = f.read()
-                if "NoDisplay=true" in content or "Hidden=true" in content:
-                    return False
-        except Exception as e:
-            logger.error(f"[Settings] Error reading desktop file {target_path}: {e}")
-
-        return True
-
-    def _update_autostart_ui_state(self):
-        """Update the full toggle based on the others."""
-        full_row = None
-        others_all_active = True
-
-        for row, filename, handler_id, key in self.dt_toggles:
-            if key == "full":
-                full_row = row
-            else:
-                if not row.get_active():
-                    others_all_active = False
-
-        if full_row:
-            if not others_all_active:
-                if not full_row.get_active():
-                    full_row.set_active(True)
-                full_row.set_sensitive(False)
-            else:
-                full_row.set_sensitive(True)
-
-    def _get_user_desktop_dir(self):
-        """Get user applications directory."""
-        return os.path.expanduser("~/.local/share/applications")
-
-    def _get_system_desktop_path(self, filename):
-        """Find system desktop file."""
-        paths = [
-            "/usr/share/applications",
-            "/usr/local/share/applications"
-        ]
-        for p in paths:
-            full = os.path.join(p, filename)
-            if os.path.exists(full):
-                return full
-        return None
-
-    def _toggle_desktop_file(self, row, filename, autostart_key, visible):
-        """Toggle desktop file visibility asynchronously using pkexec."""
-        self._update_autostart_ui_state()
-
-        if visible == self._is_desktop_file_visible(filename):
-            return
-
-        def _task():
-            try:
-                user_path = os.path.join(
-                    self._get_user_desktop_dir(), filename)
-                if os.path.exists(user_path):
-                    try:
-                        os.remove(user_path)
-                    except Exception as e:
-                        logger.warning(
-                            f"[Settings] Remove user desktop file warning: {e}")
-
-                sys_path = self._get_system_desktop_path(filename)
-                if not sys_path:
-                    logger.warning(
-                        f"[Settings] No system desktop file found for {filename}")
-                    GLib.idle_add(self._revert_toggle, row, not visible)
-                    return
-
-                if visible:
-                    cmd_str = (
-                        f"sed -i '/^NoDisplay=true/d' '{sys_path}' && "
-                        f"sed -i '/^Hidden=true/d' '{sys_path}'"
-                    )
-                    cmd = ['pkexec', 'sh', '-c', cmd_str]
-                else:
-                    cmd_str = (
-                        f"grep -q '^NoDisplay=' '{sys_path}' && "
-                        f"sed -i 's/^NoDisplay=.*/NoDisplay=true/' '{sys_path}' || "
-                        f"sed -i '/^\\[Desktop Entry\\]/a NoDisplay=true' '{sys_path}'"
-                    )
-                    cmd = ['pkexec', 'sh', '-c', cmd_str]
-
-                res = subprocess.run(cmd, check=False)
-                if res.returncode == 0:
-                    logger.info(
-                        f"[Settings] Successfully toggled desktop visibility for {filename} to {visible}")
-                else:
-                    logger.warning(
-                        f"[Settings] pkexec failed or was cancelled (exit code {res.returncode})")
-                    GLib.idle_add(self._revert_toggle, row, not visible)
-
-            except Exception as e:
-                logger.error(
-                    f"[SettingsWindow] Toggle desktop file error: {e}")
-                GLib.idle_add(self._revert_toggle, row, not visible)
-
-        run_in_background(_task)
-
-    def _revert_toggle(self, row, original_state):
-        """Revert a desktop toggle switch if pkexec fails."""
-        handler_id = None
-        for r, fname, hid, _ignored in self.dt_toggles:
-            if r == row:
-                handler_id = hid
-                break
-
-        if handler_id:
-            with row.handler_block(handler_id):
-                row.set_active(original_state)
-        else:
-            row.set_active(original_state)
-
     def _get_gsettings_emergency(self):
         """Get emergency button setting via Gio.Settings."""
         return get_phosh_emergency_calls()
@@ -692,44 +629,63 @@ class SettingsWindow(Adw.Dialog):
         """Set emergency button setting via Gio.Settings."""
         set_phosh_emergency_calls(enabled)
 
-    def _add_emergency_placeholder(self, btn):
-        """Add a placeholder row for emergency number."""
-        self._add_emergency_row("", "")
+    def _reload_emergency_numbers(self):
+        """Load the configured numbers, then the ones the network publishes."""
+        entries = [{"name": item.get("name", ""), "number": item.get("number", "")}
+                   for item in self.main_window.gsettings_mgr.get_emergency_numbers()]
+        self.grp_emerg_list.set_entries(entries)
+        self._reload_network_emergency_rows()
 
-    def _add_emergency_row(self, name, number):
-        """Add a configured emergency number row."""
-        row = Adw.PreferencesRow()
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        box.set_margin_top(12)
-        box.set_margin_bottom(12)
-        box.set_margin_start(12)
-        box.set_margin_end(12)
+    def _on_network_emergency_toggled(self, row, _pspec):
+        """Persist whether the network numbers are listed."""
+        self.main_window.gsettings_mgr.set_setting(
+            "show_network_emergency_numbers", "true" if row.get_active() else "false")
+        self._reload_network_emergency_rows()
 
-        entry_name = Gtk.Entry(placeholder_text=_("Name (e.g. Mom)"))
-        entry_name.set_text(name)
-        entry_name.set_hexpand(True)
+    def _reload_network_emergency_rows(self):
+        """List the emergency numbers the network publishes, read only."""
+        for row in self.network_emerg_rows:
+            self.grp_network_emerg.remove(row)
+        self.network_emerg_rows = []
 
-        entry_num = Gtk.Entry(placeholder_text=_("Number"))
-        entry_num.set_text(number)
-        entry_num.set_hexpand(True)
+        ofono = self.main_window.ofono
+        if not ofono or not self.sw_network_emerg.get_active():
+            return
+        for number in sorted(ofono.network_emergency_numbers):
+            row = Adw.ActionRow(title=number)
+            row.set_subtitle(_("Always reachable, even without a SIM"))
+            self.grp_network_emerg.add(row)
+            self.network_emerg_rows.append(row)
 
-        btn_del = Gtk.Button(label=_("Delete"))
-        btn_del.add_css_class("destructive-action")
-        btn_del.set_hexpand(True)
-        btn_del.connect("clicked", lambda b: self._remove_emergency_row(row))
+    def _persist_emergency_entries(self, entries):
+        """Write the configured emergency numbers and reload the list."""
+        self.main_window.gsettings_mgr.set_emergency_numbers(entries)
+        self._reload_emergency_numbers()
 
-        box.append(entry_name)
-        box.append(entry_num)
-        box.append(btn_del)
+    def _on_emergency_added(self, values):
+        """Store a typed emergency contact."""
+        entries = self.main_window.gsettings_mgr.get_emergency_numbers()
+        entries.append({"name": values.get("name", ""), "number": values.get("number", "")})
+        self._persist_emergency_entries(entries)
+        return (True, None)
 
-        row.set_child(box)
-        self.grp_emerg_list.add(row)
-        self.emergency_rows.append((row, entry_name, entry_num))
+    def _on_emergency_updated(self, entry, values):
+        """Apply an edit to one emergency contact."""
+        entries = self.main_window.gsettings_mgr.get_emergency_numbers()
+        for item in entries:
+            if item.get("number") == entry.get("number") and item.get("name") == entry.get("name"):
+                item["name"] = values.get("name", "")
+                item["number"] = values.get("number", "")
+                break
+        self._persist_emergency_entries(entries)
+        return (True, None)
 
-    def _remove_emergency_row(self, row):
-        """Remove an emergency row."""
-        self.grp_emerg_list.remove(row)
-        self.emergency_rows = [x for x in self.emergency_rows if x[0] != row]
+    def _on_emergency_deleted(self, entry):
+        """Remove one emergency contact."""
+        entries = [item for item in self.main_window.gsettings_mgr.get_emergency_numbers()
+                   if not (item.get("number") == entry.get("number")
+                           and item.get("name") == entry.get("name"))]
+        self._persist_emergency_entries(entries)
 
     def _on_volume_scale_changed(self, scale):
         """Snap drags to steps of ten and debounce persisting the values."""
@@ -761,25 +717,82 @@ class SettingsWindow(Adw.Dialog):
         """Show info about base call volume levels."""
         present_info_sheet(self, _("Call Volume"), _("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. The Bluetooth level is stored for upcoming routing support."))
 
-    def _add_reject_row(self, text):
-        """Add an editable decline message row."""
-        row = Adw.EntryRow(title=_("Decline Message"))
-        row.set_text(text)
+    def _show_delivery_reports_info(self, btn):
+        """Explain what delivery reports do and how far to trust them."""
+        body = _("When enabled, the network is asked to confirm when your "
+                 "text and multimedia messages reach the recipient's phone.\n\n"
+                 "A confirmation is reliable when it arrives, but many "
+                 "carriers and automated senders never produce one, so a "
+                 "message without a confirmation may still have been "
+                 "delivered. Delivered never means read.")
+        present_info_sheet(self, _("Request Delivery Reports"), body)
 
-        btn_del = Gtk.Button(icon_name="user-trash-symbolic")
-        btn_del.set_valign(Gtk.Align.CENTER)
-        btn_del.add_css_class("flat")
-        btn_del.add_css_class("circular")
-        btn_del.connect("clicked", lambda b: self._remove_reject_row(row))
-        row.add_suffix(btn_del)
+    def _on_delivery_reports_toggled(self, row, _pspec):
+        """Persist and apply the delivery report preference immediately."""
+        enabled = row.get_active()
+        self.main_window.gsettings_mgr.set_setting(
+            "delivery_reports", "true" if enabled else "false")
+        if self.main_window.ofono:
+            run_in_background(self.main_window.ofono.set_delivery_reports, enabled)
+        app = self.main_window.get_application()
+        if app and app.mms:
+            run_in_background(app.mms.set_delivery_reports, enabled)
 
-        self.grp_reject_list.add(row)
-        self.reject_rows.append(row)
+    def _reload_reject_messages(self):
+        """Load the decline messages into the list group."""
+        messages = self.main_window.gsettings_mgr.get_reject_call_messages()
+        self.grp_reject_list.set_entries([{"message": m} for m in messages])
 
-    def _remove_reject_row(self, row):
-        """Remove a decline message row."""
-        self.grp_reject_list.remove(row)
-        self.reject_rows = [r for r in self.reject_rows if r != row]
+    def _persist_reject_messages(self, messages):
+        """Write the decline messages and reload the list."""
+        self.main_window.gsettings_mgr.set_reject_call_messages(messages)
+        self.main_window.gsettings_mgr.set_setting(
+            "reject_call_message", messages[0] if messages else "")
+        self._reload_reject_messages()
+
+    def _on_reject_added(self, values):
+        """Store a typed decline message."""
+        messages = self.main_window.gsettings_mgr.get_reject_call_messages()
+        messages.append(values.get("message", ""))
+        self._persist_reject_messages(messages)
+        return (True, None)
+
+    def _on_reject_updated(self, entry, values):
+        """Apply an edit to one decline message."""
+        messages = self.main_window.gsettings_mgr.get_reject_call_messages()
+        for index, message in enumerate(messages):
+            if message == entry.get("message"):
+                messages[index] = values.get("message", "")
+                break
+        self._persist_reject_messages(messages)
+        return (True, None)
+
+    def _on_reject_deleted(self, entry):
+        """Remove one decline message."""
+        messages = [m for m in self.main_window.gsettings_mgr.get_reject_call_messages()
+                    if m != entry.get("message")]
+        self._persist_reject_messages(messages)
+
+    def _on_own_number_apply(self, row):
+        """Persist the own number immediately."""
+        raw = row.get_text().strip()
+        self.main_window.gsettings_mgr.set_setting(
+            "own_number", normalize_number(raw) if raw else "")
+
+    def _on_country_code_apply(self, row):
+        """Persist the default country code immediately."""
+        cc = row.get_text().strip().upper()
+        row.set_text(cc)
+        self.main_window.gsettings_mgr.set_setting("default_country_code", cc)
+        set_custom_region(cc)
+
+    def _on_voicemail_apply(self, row):
+        """Persist the voicemail number immediately."""
+        self.main_window.gsettings_mgr.set_setting(
+            "voicemail_number", row.get_text().strip())
+        app = self.main_window.get_application()
+        if app:
+            app.ensure_voicemail_contact()
 
     def _on_default_ab_selected(self, idx):
         """Handle default address book selection change."""
@@ -794,6 +807,7 @@ class SettingsWindow(Adw.Dialog):
                 item['is_system_default'] = False
 
         self._build_sources_list(rebuild_dropdown=False)
+        self._persist_sources()
 
     def _source_row_subtitle(self, item):
         """Build the subtitle for an address book row."""
@@ -832,7 +846,6 @@ class SettingsWindow(Adw.Dialog):
         if not success:
             self.main_window.notify_error(_("Could not create address book"))
             return
-        self.main_window.notify_success(_("Address book '{name}' created").format(name=name))
         self._reload_sources_ui()
 
     def _confirm_delete_addressbook(self, uid, name):
@@ -858,7 +871,6 @@ class SettingsWindow(Adw.Dialog):
         if not success:
             self.main_window.notify_error(_("Failed to delete Address Book"))
             return
-        self.main_window.notify_success(_("Address Book Deleted"))
         self._reload_sources_ui()
 
     def _reload_sources_ui(self):
@@ -870,11 +882,8 @@ class SettingsWindow(Adw.Dialog):
         run_in_background(self.eds.get_sources_info, on_complete=done)
 
     def _show_ab_info(self, title, msg):
-        dialog = Adw.AlertDialog(heading=title, body=msg)
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance(
-            "close", Adw.ResponseAppearance.SUGGESTED)
-        dialog.present(self)
+        """Explain one address book, in the same sheet every info button uses."""
+        present_info_sheet(self, title, msg)
 
     def _build_sources_list(self, rebuild_dropdown=True):
         """Rebuild the address books list UI."""
@@ -972,6 +981,7 @@ class SettingsWindow(Adw.Dialog):
         if 0 <= new_index < len(self.sources_state):
             self.sources_state[index], self.sources_state[new_index] = self.sources_state[new_index], self.sources_state[index]
             self._build_sources_list(rebuild_dropdown=True)
+            self._persist_sources()
 
     def _toggle_source(self, uid, active):
         """Update enabled state of a source."""
@@ -981,88 +991,6 @@ class SettingsWindow(Adw.Dialog):
                 if not active:
                     self.sources_state.append(self.sources_state.pop(i))
                 self._build_sources_list(rebuild_dropdown=True)
+                self._persist_sources()
                 break
 
-    def on_save_clicked(self, btn):
-        """Save settings once and close."""
-        if self._saved:
-            return
-        self._saved = True
-        raw_num = self.entry_own_num.get_text().strip()
-        final_num = ""
-        if raw_num:
-            final_num = normalize_number(raw_num)
-        self.main_window.gsettings_mgr.set_setting("own_number", final_num)
-        self.main_window.gsettings_mgr.set_setting("voicemail_number", self.entry_voicemail.get_text().strip())
-        app = self.main_window.get_application()
-        if app:
-            app.ensure_voicemail_contact()
-
-        cc = self.entry_country_code.get_text().strip()
-        if cc:
-            cc = cc.upper()
-        self.main_window.gsettings_mgr.set_setting("default_country_code", cc)
-        set_custom_region(cc)
-
-        reject_msgs = [r.get_text().strip() for r in self.reject_rows if r.get_text().strip()]
-        self.main_window.gsettings_mgr.set_reject_call_messages(reject_msgs)
-        self.main_window.gsettings_mgr.set_setting(
-            "reject_call_message", reject_msgs[0] if reject_msgs else "")
-
-        volume_levels = {route: int(scale.get_value())
-                         for route, scale in self.volume_scales.items()}
-        self.main_window.gsettings_mgr.set_call_volume_levels(volume_levels)
-
-        self._set_gsettings_emergency(self.sw_emerg.get_active())
-        emerg_list = []
-        for row, ename, enum in self.emergency_rows:
-            n_txt = ename.get_text().strip()
-            num_txt = enum.get_text().strip()
-            if num_txt:
-                emerg_list.append(
-                    {"name": n_txt or "Unknown", "number": num_txt})
-
-        self.main_window.gsettings_mgr.set_emergency_numbers(emerg_list)
-
-        self.main_window.gsettings_mgr.set_setting(
-            "notification_override_repeated_calls_bypass", "true" if self.sw_repeated.get_active() else "false")
-
-        self.main_window.gsettings_mgr.set_setting(
-            "ringback_enabled", "true" if self.sw_rb_enable.get_active() else "false")
-
-        if self.temp_ringback_file:
-            self.main_window.gsettings_mgr.set_setting(
-                "ringback_custom_file", self.temp_ringback_file)
-        else:
-            self.main_window.gsettings_mgr.set_setting(
-                "ringback_custom_file", "")
-
-        idx_act = self.row_uc_action._selected_index
-        action_val = "none"
-        if idx_act >= 0:
-            action_val = self.action_options[idx_act][0]
-        self.main_window.gsettings_mgr.set_setting(
-            "unknown_callers", action_val)
-
-        self.main_window.gsettings_mgr.set_setting(
-            "unknown_callers_search", "true" if self.sw_uc_search.get_active() else "false")
-
-        idx = self.row_uc_engine._selected_index
-        engine = "duckduckgo"
-        if idx >= 0:
-            engine = self.engine_options[idx][0]
-        self.main_window.gsettings_mgr.set_setting(
-            "unknown_callers_engine", engine)
-        self.main_window.gsettings_mgr.set_setting(
-            "unknown_callers_custom_url", self.entry_uc_custom.get_text())
-
-        if self.sources_state:
-            self.eds.update_sources_config(self.sources_state)
-
-            for item in self.sources_state:
-                if item['is_system_default']:
-                    self.eds.set_default_addressbook(item['uid'])
-                    break
-
-        self.overlay.add_toast(Adw.Toast.new(_("Settings Saved")))
-        GLib.idle_add(lambda: close_dialog(self) or False)

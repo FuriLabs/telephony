@@ -103,8 +103,8 @@ class EmergencyManager:
                     self._show_guardian()
 
     def _load_numbers(self):
-        """Load emergency numbers from DB."""
-        return self.gsettings_mgr.get_emergency_numbers()
+        """Load configured emergency numbers merged with the network list."""
+        return self.ofono.get_emergency_numbers()
 
     def _show_guardian(self):
         """Show the initial guardian notification."""

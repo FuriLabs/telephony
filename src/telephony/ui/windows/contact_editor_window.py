@@ -971,7 +971,6 @@ class ContactEditor(Adw.Dialog):
         except Exception as ex:
             logger.error(f"[ContactEditor] Special list update error: {ex}")
 
-        self.main_window.notify_success(_("Contact saved"))
 
     def _on_save_failed(self, error, fn, final_vcard):
         """Reopen the editor with the attempted data after a failed save."""
@@ -1003,7 +1002,5 @@ class ContactEditor(Adw.Dialog):
         d.present(self)
 
     def _show_error(self, title, msg):
-        """Show error dialog."""
-        d = Adw.AlertDialog(heading=title, body=msg)
-        d.add_response("ok", _("OK"))
-        d.present(self)
+        """Report a failure the user can only acknowledge."""
+        self.main_window.notify_error(msg)
