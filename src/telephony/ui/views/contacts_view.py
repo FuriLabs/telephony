@@ -22,6 +22,7 @@ from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
 from ..widgets.common_widget import DataLoader, translate_phone_label, present_choice_sheet, add_choice_row
+from ..windows.qr_scan_window import QrScanDialog
 from ...backend.utils.model_utils import ContactItem
 
 DUPLICATE_RECHECK_DELAY_MS = 1500
@@ -68,12 +69,17 @@ class ContactsView(Adw.Bin):
         self.search.connect("search-changed", self.on_search_changed)
         header.append(self.search)
 
+        self.btn_scan = Gtk.Button(icon_name="camera-photo-symbolic")
+        self.btn_scan.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_qr_scan() or False))
+        header.append(self.btn_scan)
+
         self.btn_add = Gtk.Button(icon_name="list-add-symbolic")
         self.btn_add.connect("clicked", lambda b: GLib.idle_add(lambda: self.app_window.present_edit_contact() or False))
         header.append(self.btn_add)
 
         if (self.app_window and self.app_window.eds is not None) and not self.app_window.eds.is_ready:
             self.btn_add.set_sensitive(False)
+            self.btn_scan.set_sensitive(False)
 
         box.append(header)
 
@@ -127,20 +133,24 @@ class ContactsView(Adw.Bin):
             self.app_window.enqueue_popup(lambda cb: self.check_duplicates(cb))
 
     def _update_add_button_sensitivity(self):
-        """Update add button sensitivity based on EDS readiness and selected source."""
+        """Update add button sensitivity based on EDS readiness and selected source.
+
+        The scan button follows the add button because a scanned code
+        also ends in a new contact.
+        """
         if not self.btn_add:
             return
 
         if not self.app_window.eds.is_ready:
             self.btn_add.set_sensitive(False)
+            self.btn_scan.set_sensitive(False)
             return
 
         sources = self.app_window.eds.get_sources_info()
         default_source = next((s for s in sources if s['is_system_default']), None)
-        if default_source and default_source['name'] == "Andromeda Contacts":
-            self.btn_add.set_sensitive(False)
-        else:
-            self.btn_add.set_sensitive(True)
+        can_add = not (default_source and default_source['name'] == "Andromeda Contacts")
+        self.btn_add.set_sensitive(can_add)
+        self.btn_scan.set_sensitive(can_add)
 
     def set_calling_enabled(self, enabled):
         """Grey out the per-row call buttons while no call can be placed."""
@@ -278,6 +288,20 @@ class ContactsView(Adw.Bin):
             logger.error(f"[ContactsView] Check duplicates error: {e}")
             if done_callback:
                 GLib.idle_add(done_callback)
+
+    def _open_qr_scan(self):
+        """Open the camera sheet that scans a contact QR code."""
+        QrScanDialog(self._on_qr_contact).present(self.app_window)
+
+    def _on_qr_contact(self, vcard_text):
+        """Open the editor prefilled with a scanned vCard; the user saves it."""
+        name = ""
+        for line in vcard_text.splitlines():
+            if line.upper().startswith("FN:"):
+                name = line.split(":", 1)[1].strip()
+                break
+        self.app_window.present_edit_contact(
+            contact_data={'uid': None, 'name': name, 'vcard': vcard_text})
 
     def on_search_changed(self, entry):
         """Handle search entry text change."""

@@ -22,6 +22,7 @@ from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.vcard_utils import extract_e164_number, unfold_vcard
 from .date_time_picker_window import DateTimePicker
 from .duplicate_resolution_window import DuplicateResolutionWindow
+from .qr_share_window import QrShareDialog
 from ..widgets.common_widget import translate_phone_label, close_dialog
 
 
@@ -280,6 +281,13 @@ class ContactEditor(Adw.Dialog):
         if not has_adv_data and self.mode == "VIEW":
             grp_adv.set_visible(False)
         page.add(grp_adv)
+
+        if self.uid:
+            grp_share = Adw.PreferencesGroup()
+            row_qr = Adw.ActionRow(title=_("Share as QR code"), activatable=True)
+            row_qr.connect("activated", lambda r: GLib.idle_add(lambda: self._share_qr() or False))
+            grp_share.add(row_qr)
+            page.add(grp_share)
 
         if self.uid and not is_andromeda:
             grp_danger = Adw.PreferencesGroup()
@@ -627,6 +635,26 @@ class ContactEditor(Adw.Dialog):
             except Exception as e:
                 logger.error(e)
         GLib.idle_add(lambda: dialog.destroy() or False)
+
+    def _share_qr(self):
+        """Show this contact as a QR code built from its saved details.
+
+        The payload is rebuilt slim from the parsed fields so the photo
+        and other bulky properties never enter the code.
+        """
+        name = self.contact_name or self._extract_field("FN") or ""
+        lines = ["BEGIN:VCARD", "VERSION:3.0", f"FN:{name}"]
+        lines.extend(f"TEL;TYPE={label}:{number}"
+                     for number, label in self._extract_phones_with_labels())
+        lines.extend(f"EMAIL;TYPE={label}:{address}"
+                     for address, label in self._extract_emails_with_labels())
+        lines.append("END:VCARD")
+
+        dialog = QrShareDialog(name, "\n".join(lines))
+        if dialog.matrix is None:
+            self.toast_overlay.add_toast(Adw.Toast.new(_("Could not create the QR code")))
+            return
+        dialog.present(self)
 
     def on_delete(self, btn):
         """Handle contact deletion."""

@@ -9,7 +9,7 @@ Type=simple
 Environment=MALLOC_ARENA_MAX=2
 
 # Start App
-ExecStart=/usr/bin/io.furios.Telephony --start-monitoring
+ExecStart=/usr/bin/io.furios.Telephony.Daemon
 
 Restart=on-failure
 RestartSec=5s

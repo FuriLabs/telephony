@@ -44,6 +44,11 @@ install: build
 	cp -r src/telephony $(DESTDIR)$(INSTALL_DIR)/
 
 	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony
+	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Daemon
+	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Calls
+	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Messages
+	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Contacts
+	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Incall
 	ln -sf ../lib/furios-app-telephony/telephony/cli/cli_main.py $(DESTDIR)$(BIN_DIR)/telephony-cli
 
 	install -m 644 data/io.furios.Telephony.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
@@ -52,6 +57,7 @@ install: build
 	install -m 644 data/io.furios.Telephony.Contacts.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
 	install -m 644 data/io.furios.Telephony.Incall.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
 	install -m 644 data/io.furios.Telephony.Emergency.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
+	install -m 644 data/io.furios.Telephony.Daemon.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
 
 	install -m 644 data/io.furios.Telephony.Daemon.service $(DESTDIR)$(DBUS_SERVICE_DIR)/
 	install -m 644 data/io.furios.Telephony.metainfo.xml $(DESTDIR)$(METAINFO_DIR)/
@@ -75,9 +81,15 @@ install: build
 
 uninstall:
 	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony
+	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Daemon
+	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Calls
+	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Messages
+	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Contacts
+	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Incall
 	rm -f $(DESTDIR)$(BIN_DIR)/telephony-cli
 	rm -rf $(DESTDIR)$(INSTALL_DIR)
 
+	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Daemon.desktop
 	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.desktop
 	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Calls.desktop
 	rm -f $(DESTDIR)$(APPLICATIONS_DIR)/io.furios.Telephony.Messages.desktop

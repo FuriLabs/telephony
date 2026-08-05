@@ -275,6 +275,7 @@ class ChatPage(Gtk.Box):
         self.msg_view = Gtk.TextView(buffer=self.msg_buffer)
         self.msg_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         self.msg_view.set_accepts_tab(False)
+        self.msg_view.connect("paste-clipboard", self._on_paste_clipboard)
 
         self.msg_scroll = Gtk.ScrolledWindow()
         self.msg_scroll.set_child(self.msg_view)
@@ -1023,6 +1024,11 @@ class ChatPage(Gtk.Box):
             self.app_window.notify_success(_("Group renamed"))
 
         run_in_background(self.app_window.daemon.set_group_name, self.recipients, new_name, on_complete=done)
+
+    def _on_paste_clipboard(self, text_view):
+        """Divert file and image pastes into the attachment pipeline."""
+        if self.media_controller.ingest_clipboard():
+            text_view.stop_emission_by_name("paste-clipboard")
 
     def _remaining_attachment_budget(self):
         """Return how many bytes of MMS attachment budget are still available."""

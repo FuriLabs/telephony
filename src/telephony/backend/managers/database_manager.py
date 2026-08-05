@@ -648,24 +648,6 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Get Message Details Error: {e}")
             return None
 
-    def delete_scheduled_messages(self, ids_list):
-        """Delete multiple scheduled messages by ID."""
-        if not ids_list:
-            return True
-        if self._refuse_write("delete_scheduled_messages"):
-            return False
-        try:
-            with self.lock:
-                c = self.conn_messages.cursor()
-                placeholders = ",".join("?" * len(ids_list))
-                c.execute(f"DELETE FROM messages WHERE id IN ({placeholders})", ids_list)
-                self.conn_messages.commit()
-                GLib.idle_add(self.emit, 'messages-updated', "", "delete")
-                return True
-        except Exception as e:
-            logger.error(f"[DB] Delete Scheduled Messages Error: {e}")
-            return False
-
     def update_message_status(self, msg_id, status):
         """Update a single message's status and notify listeners."""
         if self._refuse_write("update_message_status"):

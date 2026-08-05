@@ -237,13 +237,18 @@ class TelephonyAudioManager:
         except Exception as e:
             logger.error(f"[Audio] Error alert failed: {e}")
 
-    def play_hangup(self):
-        """Play hangup feedback and release proximity."""
+    def play_hangup(self, feedback=True):
+        """Release ringing and proximity; sound the feedback when asked.
+
+        The caller passes feedback=False when this side requested the
+        hangup, because the tone announces the other side ending the
+        call, while the sensor and ringtone cleanup is owed either way.
+        """
         self.stop_ringing()
         if self.proximity_claimed:
             self._set_claim(False)
 
-        if self.lfb_available:
+        if feedback and self.lfb_available:
             try:
                 Lfb.Event.new("phone-hangup").trigger_feedback_async(None, None, None)
             except Exception as e:

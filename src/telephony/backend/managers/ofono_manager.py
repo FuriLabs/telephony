@@ -396,26 +396,6 @@ class OfonoManager(GObject.Object):
         """
         return not self.monitor.connected or self.voice_interface_missing()
 
-    def set_modem_online(self, online):
-        """Set the modem Online property; blocking, call from a worker."""
-        if not self.modem_proxy:
-            return False
-        self.modem_proxy.call_sync(
-            "SetProperty",
-            GLib.Variant("(sv)", ("Online", GLib.Variant("b", online))),
-            Gio.DBusCallFlags.NONE, 30000, None)
-        return True
-
-    def set_modem_powered(self, powered):
-        """Set the modem Powered property; blocking, call from a worker."""
-        if not self.modem_proxy:
-            return False
-        self.modem_proxy.call_sync(
-            "SetProperty",
-            GLib.Variant("(sv)", ("Powered", GLib.Variant("b", powered))),
-            Gio.DBusCallFlags.NONE, 30000, None)
-        return True
-
     def set_active_chat(self, number):
         """Set the currently active chat to suppress notifications."""
         if not number:
@@ -842,11 +822,14 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 logger.error(f"[OfonoManager] Sanity check failed: {e}")
 
-        if len(self.active_calls) > 0:
+        lines = len([p for p, d in self.active_calls.items() if not d.get('multiparty')])
+        if any(d.get('multiparty') for d in self.active_calls.values()):
+            lines += 1
+        if lines >= 2:
             self.emit('action-error', _("Cannot dial while in another call"))
             return False
 
-        if self.audio.voice_profile_active:
+        if not self.active_calls and self.audio.voice_profile_active:
             logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
             self.emit('action-error', _("Please wait, the previous call is still ending"))
             return False
@@ -927,7 +910,8 @@ class OfonoManager(GObject.Object):
             if call:
                 call.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
-            logger.debug(f"[OfonoManager] Hangup failed for {path}: {e}")
+            call_state = self.active_calls.get(path, {}).get("state", "gone")
+            logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
                 self._force_remove(path)
