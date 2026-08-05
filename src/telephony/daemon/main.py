@@ -25,8 +25,6 @@ install_dir = os.path.dirname(package_dir)
 
 sys.path.insert(0, install_dir)
 
-__package__ = "telephony.daemon"
-
 from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.translation_utils import install_i18n
 from telephony.shared.utils.system_utils import stop_systemd_service, is_daemon_bus_running
