@@ -376,16 +376,17 @@ class InCallWindow(Adw.Window):
         sheet.present(self)
         return nav, sheet
 
-    def _push_sheet_page(self, nav, title, content):
+    def _push_sheet_page(self, nav, title, content, target_path=None):
         """Push one page onto a call sheet's navigation.
 
         Every page carries the caller strip, because the sheet covers
-        the screen area that showed who the call is with.
+        the screen area that showed who the call is with; target_path
+        pins the strip to another call when the page acts on one.
         """
         view = Adw.ToolbarView()
         view.add_top_bar(Adw.HeaderBar())
         wrap = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        wrap.append(self._build_caller_strip())
+        wrap.append(self._build_caller_strip(target_path))
         content.set_vexpand(True)
         wrap.append(content)
         view.set_content(wrap)
@@ -393,17 +394,36 @@ class InCallWindow(Adw.Window):
         page.set_child(view)
         nav.push(page)
 
-    def _build_caller_strip(self):
+    def _build_caller_strip(self, target_path=None):
         """Build a live caller line mirroring the main screen's labels.
 
         The labels are property-bound to the window's own name, number
         and status labels, so the timer keeps ticking inside the sheet
         and second calls and conferences show whatever the main screen
-        shows; the bindings die with the strip.
+        shows; the bindings die with the strip. With a target_path the
+        strip is a snapshot of that call instead, because the page
+        acts on a call that is not the featured one.
         """
         strip = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1,
                         css_classes=["caller-strip"],
                         margin_start=14, margin_end=14)
+
+        if target_path is not None:
+            data = self.ofono.active_calls.get(target_path, {})
+            number_text = data.get('number', '')
+            name_text = self.call_history.get(target_path, {}).get('name') or number_text
+            name = Gtk.Label(label=name_text, css_classes=["heading"])
+            name.set_ellipsize(Pango.EllipsizeMode.END)
+            strip.append(name)
+            sub = Gtk.Box(spacing=4, halign=Gtk.Align.CENTER)
+            if number_text and number_text != name_text:
+                sub.append(Gtk.Label(label=number_text, css_classes=["dim-label", "caption"]))
+                sub.append(Gtk.Label(label="\u00b7", css_classes=["dim-label", "caption"]))
+            sub.append(Gtk.Label(label=call_state_label(data.get('state', '')),
+                                 css_classes=["dim-label", "caption"]))
+            strip.append(sub)
+            return strip
+
         name = Gtk.Label(css_classes=["heading"])
         name.set_ellipsize(Pango.EllipsizeMode.END)
         self.lbl_name.bind_property("label", name, "label", GObject.BindingFlags.SYNC_CREATE)
@@ -1156,8 +1176,13 @@ class InCallWindow(Adw.Window):
         self.ofono.daemon.silence_ring()
         self.update_state()
 
-    def _pick_quick_response(self, anchor, callback):
-        """Invoke callback with a quick response message, showing a picker when several exist."""
+    def _pick_quick_response(self, anchor, callback, target_path=None):
+        """Invoke callback with a quick response message, showing a picker when several exist.
+
+        target_path names the call the message goes to when it is not
+        the featured one, so the sheet's caller strip shows the actual
+        recipient instead of whoever is on the line.
+        """
         messages = self.gsettings_mgr.get_reject_call_messages()
         if not messages:
             messages = [_("I can't talk right now.")]
@@ -1178,7 +1203,8 @@ class InCallWindow(Adw.Window):
                 group.add(row)
 
         nav, sheet = self._present_call_sheet(_("Hangup and Send SMS"))
-        self._push_sheet_page(nav, _("Hangup and Send SMS"), self._rows_page(build, sheet))
+        self._push_sheet_page(nav, _("Hangup and Send SMS"), self._rows_page(build, sheet),
+                              target_path=target_path)
 
     def on_ignore_with_sms(self, btn, path, number):
         """Ignore a call and send a quick response."""
@@ -1188,7 +1214,7 @@ class InCallWindow(Adw.Window):
             self.ofono.daemon.silence_ring()
             self.update_state()
 
-        self._pick_quick_response(btn, do_ignore)
+        self._pick_quick_response(btn, do_ignore, target_path=path)
 
     def on_search_unknown_click(self, btn):
         """Open web browser to search for unknown number."""
