@@ -45,12 +45,12 @@ install: build
 
 	cp -r src/telephony $(DESTDIR)$(INSTALL_DIR)/
 
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(LIBEXEC_DIR)/telephony-server
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Calls
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Messages
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Contacts
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Incall
+	ln -sf ../lib/furios-app-telephony/telephony/client/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony
+	ln -sf ../lib/furios-app-telephony/telephony/daemon/main.py $(DESTDIR)$(LIBEXEC_DIR)/telephony-server
+	ln -sf ../lib/furios-app-telephony/telephony/client/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Calls
+	ln -sf ../lib/furios-app-telephony/telephony/client/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Messages
+	ln -sf ../lib/furios-app-telephony/telephony/client/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Contacts
+	ln -sf ../lib/furios-app-telephony/telephony/client/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Incall
 	ln -sf ../lib/furios-app-telephony/telephony/cli/cli_main.py $(DESTDIR)$(BIN_DIR)/telephony-cli
 
 	install -m 644 data/io.furios.Telephony.desktop $(DESTDIR)$(APPLICATIONS_DIR)/
