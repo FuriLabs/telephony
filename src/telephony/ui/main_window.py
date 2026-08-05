@@ -86,7 +86,7 @@ class MainWindow(Adw.Window):
         title_lbl = Gtk.Label(label=_("Telephony"), css_classes=["title"])
         self.header.set_title_widget(title_lbl)
 
-        info_btn = Gtk.Button(icon_name="dialog-information-symbolic")
+        info_btn = Gtk.Button(icon_name="help-about-symbolic")
         info_btn.add_css_class("flat")
         info_btn.add_css_class("circular")
         info_btn.connect("clicked", lambda b: GLib.idle_add(lambda: InfoPage.show(self) or False))

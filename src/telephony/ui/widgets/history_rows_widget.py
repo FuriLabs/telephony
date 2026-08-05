@@ -82,7 +82,7 @@ class HistoryRowFactory:
         call_btn.set_sensitive(self.calling_enabled)
         self._live_call_btns.add(call_btn)
 
-        info_btn = Gtk.Button(icon_name="dialog-information-symbolic")
+        info_btn = Gtk.Button(icon_name="help-about-symbolic")
         info_btn.handler_id = None
         info_btn.add_css_class("circular")
         info_btn.add_css_class("secondary-btn")

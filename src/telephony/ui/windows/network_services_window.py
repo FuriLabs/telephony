@@ -79,7 +79,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
 
     def _info_button(self, title, body):
         """Build a group header info button opening an info sheet."""
-        btn = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        btn = Gtk.Button(icon_name="help-about-symbolic", valign=Gtk.Align.CENTER)
         btn.add_css_class("flat")
         btn.add_css_class("circular")
         btn.connect("clicked", lambda b: GLib.idle_add(
