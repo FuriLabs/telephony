@@ -242,22 +242,48 @@ class App(Adw.Application):
         provider.load_from_file(css_file)
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
+    def _launcher_modes(self):
+        """Return the (calls, messages, contacts) surfaces this launcher owns.
+
+        A bare activation carries no arguments, so the application id is
+        the only truth about what this process may draw; a full window
+        inside the Calls process would put a Messages tab under the
+        Calls icon.
+        """
+        app_id = self.get_application_id()
+        if app_id == f"{APP_ID}.Calls":
+            return (True, False, True)
+        if app_id == f"{APP_ID}.Messages":
+            return (False, True, False)
+        if app_id == f"{APP_ID}.Contacts":
+            return (False, False, True)
+        return (True, True, True)
+
     def do_activate(self):
         """Activate application."""
         Adw.Application.do_activate(self)
 
         logger.info("Application activated via DBus.")
 
+        if self.owns_incall_ui:
+            self._ensure_incall_window()
+            self._present_incall_window()
+            return
+
+        calls, messages, contacts = self._launcher_modes()
+
         for existing_win in self.get_windows():
             if not isinstance(existing_win, MainWindow):
                 continue
-            if existing_win.show_calls_mode and existing_win.show_messages_mode and existing_win.show_contacts_mode:
-                logger.info("Reusing existing full window upon DBus activation.")
+            if (existing_win.show_calls_mode == calls and
+                    existing_win.show_messages_mode == messages and
+                    existing_win.show_contacts_mode == contacts):
+                logger.info("Reusing this launcher's window upon DBus activation.")
                 existing_win.set_visible(True)
                 existing_win.present()
                 return
 
-        logger.info("Opening GUI Window (Full Mode) upon DBus activation...")
+        logger.info(f"Opening this launcher's window upon DBus activation (calls={calls}, messages={messages}, contacts={contacts})")
         win = MainWindow(
             self,
             self.ofono,
@@ -265,9 +291,9 @@ class App(Adw.Application):
             self.eds,
             self.mms,
             self.gsettings_mgr,
-            show_calls=True,
-            show_messages=True,
-            show_contacts=True
+            show_calls=calls,
+            show_messages=messages,
+            show_contacts=contacts
         )
         win.present()
         return
