@@ -45,7 +45,7 @@ CAPABILITY_BANNER_REASONS = ("no-modem", "airplane-mode", "no-voice-service")
 class MainWindow(Adw.Window):
     """The main application window containing the stack of views (History, Dialpad, Messages, Contacts)."""
 
-    def __init__(self, application, ofono_manager, db_manager, eds_manager, mms_manager=None, gsettings_mgr=None, show_calls=False, show_messages=False, show_contacts=False):
+    def __init__(self, application, ofono_manager, db_manager, eds_manager, gsettings_mgr=None, show_calls=False, show_messages=False, show_contacts=False):
         self._unread_timer = None
         self._menu_actions = {}
         self._resolve_section = None
@@ -71,7 +71,6 @@ class MainWindow(Adw.Window):
         self.eds = eds_manager
         self.db = db_manager
         self.ofono = ofono_manager
-        self.mms = mms_manager
         self.gsettings_mgr = gsettings_mgr
         self.daemon = self.app.daemon_client
 

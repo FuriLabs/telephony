@@ -746,9 +746,6 @@ class SettingsWindow(Adw.Dialog):
             "delivery_reports", "true" if enabled else "false")
         if self.main_window.ofono:
             run_in_background(self.main_window.ofono.set_delivery_reports, enabled)
-        app = self.main_window.get_application()
-        if app and app.mms:
-            run_in_background(app.mms.set_delivery_reports, enabled)
 
     def _reload_reject_messages(self):
         """Load the decline messages into the list group."""
