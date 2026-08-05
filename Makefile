@@ -14,11 +14,15 @@ SYSTEMD_USER_DIR = $(LIB_DIR)/systemd/user
 LOCALE_DIR = $(DATA_DIR)/locale
 GSCHEMA_DIR = $(DATA_DIR)/glib-2.0/schemas
 
-.PHONY: all build install uninstall clean
+.PHONY: all build check install uninstall clean
 
 all: build
 
-build:
+check:
+	python3 scripts/check_boundaries.py
+	python3 -m compileall -q src/telephony
+
+build: check
 	mkdir -p build/locale
 	for po in po/*.po; do \
 		lang=$$(basename "$$po" .po); \
