@@ -94,34 +94,31 @@ def main():
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    logger.remove()
-    if "--debug" in sys.argv:
-        logger.add(sys.stderr, level="DEBUG")
-
-        if is_monitor_running():
-            logger.warning("Another instance is running. Stopping it to enable local debug output...")
-            try:
-                stop_systemd_service("telephony.service")
-                for _ in range(10):
-                    if not is_monitor_running():
-                        logger.info("Service stopped.")
-                        break
-                    time.sleep(0.5)
-            except Exception as e:
-                logger.warning(f"Failed to stop service: {e}")
-    else:
-        logger.add(sys.stderr, level="WARNING")
-
     is_monitoring = "--start-monitoring" in sys.argv
     is_debug = "--debug" in sys.argv
 
+    logger.remove()
+    logger.add(sys.stderr, level="DEBUG" if is_debug else "WARNING")
+
+    if is_monitoring and is_debug and is_monitor_running():
+        logger.warning("Another daemon is running. Stopping it to enable local debug output...")
+        try:
+            stop_systemd_service("telephony.service")
+            for _ in range(10):
+                if not is_monitor_running():
+                    logger.info("Service stopped.")
+                    break
+                time.sleep(0.5)
+        except Exception as e:
+            logger.warning(f"Failed to stop service: {e}")
+
     has_ui_flags = any(f in sys.argv for f in ["--full", "--calls", "--messages", "--contacts"])
 
-    if not is_monitoring and not is_debug and not has_ui_flags and "--incall" not in sys.argv:
+    if not is_monitoring and not has_ui_flags and "--incall" not in sys.argv:
         sys.argv.append("--full")
         has_ui_flags = True
 
-    if has_ui_flags and not is_monitoring and not is_debug:
+    if has_ui_flags and not is_monitoring:
         if is_monitor_running():
             logger.info("Monitor already running (D-Bus). Skipping systemd check.")
         else:
@@ -139,7 +136,7 @@ def main():
             except Exception as e:
                 logger.warning(f"Failed to check/start systemd service: {e}")
 
-    if is_monitoring or is_debug:
+    if is_monitoring:
         app = DaemonApp()
         return app.run(sys.argv)
 
