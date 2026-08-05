@@ -28,7 +28,7 @@ class CallItem(GObject.Object):
     Model representing a single call history item.
     """
 
-    def __init__(self, call_id, number, name, direction, duration, full_ts, display_time, is_saved, is_divider=False, label=None):
+    def __init__(self, call_id, number, name, direction, duration, full_ts, display_time, is_saved, is_divider=False, label=None, anonymous=False):
         """
         Initialize the call item.
         """
@@ -44,6 +44,7 @@ class CallItem(GObject.Object):
         self.is_saved = is_saved
         self.is_divider = is_divider
         self.label = label
+        self.anonymous = anonymous
 
     def _fmt_dur(self, seconds):
         """

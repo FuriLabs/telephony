@@ -52,8 +52,17 @@ class HistoryRowFactory:
         num = Gtk.Label(xalign=0, css_classes=["tiny-label", "dim-label"])
         num.set_ellipsize(Pango.EllipsizeMode.END)
 
+        num_box = Gtk.Box(spacing=4)
+        num_box.append(num)
+
+        anon = Gtk.Image.new_from_icon_name("view-conceal-symbolic")
+        anon.set_pixel_size(10)
+        anon.add_css_class("dim-label")
+        anon.set_visible(False)
+        num_box.append(anon)
+
         vbox.append(name)
-        vbox.append(num)
+        vbox.append(num_box)
 
         spacer = Gtk.Box(hexpand=True)
 
@@ -101,7 +110,7 @@ class HistoryRowFactory:
 
         list_item.widgets = {
             "stack": stack,
-            "icon": icon, "name": name, "num": num, "time": time_lbl,
+            "icon": icon, "name": name, "num": num, "anon": anon, "time": time_lbl,
             "call_btn": call_btn, "info_btn": info_btn,
             "div_lbl": div_lbl
         }
@@ -128,6 +137,7 @@ class HistoryRowFactory:
 
         w["name"].set_text(display_name)
         w["num"].set_text(item.number)
+        w["anon"].set_visible(bool(item.anonymous))
         w["time"].set_text(item.display_time)
 
         w["icon"].remove_css_class("call-icon-missed")

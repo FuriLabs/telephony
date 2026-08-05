@@ -415,7 +415,7 @@ class DatabaseManager(GObject.Object):
         try:
             with self.lock:
                 c = self.conn_calls.cursor()
-                sql = "SELECT id, number, name, direction, duration, timestamp FROM history"
+                sql = "SELECT id, number, name, direction, duration, timestamp, anonymous FROM history"
                 params = []
 
                 if direction and direction != "all":
@@ -450,7 +450,7 @@ class DatabaseManager(GObject.Object):
             with self.lock:
                 c = self.conn_calls.cursor()
 
-                sql = "SELECT id, number, name, direction, duration, timestamp FROM history WHERE "
+                sql = "SELECT id, number, name, direction, duration, timestamp, anonymous FROM history WHERE "
                 params = []
 
                 conditions = ["number LIKE ?"]
