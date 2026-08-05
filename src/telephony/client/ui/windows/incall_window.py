@@ -15,7 +15,6 @@
 
 from gi.repository import Gtk, GLib, Adw, Pango, Gio, GObject
 import time
-import os
 import urllib.parse
 
 from telephony.shared.utils.log_utils import logger

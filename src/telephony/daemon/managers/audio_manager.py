@@ -14,7 +14,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import time
 import threading
 from contextlib import contextmanager
 
@@ -22,7 +21,7 @@ import gi
 from telephony.shared.utils.log_utils import logger
 
 gi.require_version('Lfb', '0.0')
-from gi.repository import Lfb, Gio, GLib
+from gi.repository import Lfb, GLib
 
 from telephony.shared.utils.system_utils import get_feedbackd_profile, set_feedbackd_profile
 from telephony.shared.constants import APP_ID
