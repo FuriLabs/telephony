@@ -517,7 +517,11 @@ class InCallWindow(Adw.Window):
             self._context_mode = "actions"
             self.img_pill_ctx.set_from_icon_name("view-more-symbolic")
             self.lbl_pill_ctx.set_text(_("Actions"))
-            self.lbl_pill_ctx_value.set_text("")
+            featured = calls.get(self.active_path) or {}
+            if featured.get('state') == 'held':
+                self.lbl_pill_ctx_value.set_text(f"\u00b7 {call_state_label('held')}")
+            else:
+                self.lbl_pill_ctx_value.set_text("")
 
     def _open_audio_sheet(self):
         """Show the audio sheet: mute first, then input, then output."""
@@ -601,9 +605,14 @@ class InCallWindow(Adw.Window):
         calls = self.ofono.active_calls
         p_data = calls.get(self.active_path) or {}
 
+        held = p_data.get('state') == 'held'
+
         def build(group, sheet):
-            hold = add_choice_row(group, sheet, _("Hold"), lambda: self.on_hold_toggle(None),
-                                  icon="media-playback-pause-symbolic")
+            hold = add_choice_row(group, sheet,
+                                  _("Resume") if held else _("Hold"),
+                                  lambda: self.on_hold_toggle(None),
+                                  icon="media-playback-start-symbolic" if held
+                                  else "media-playback-pause-symbolic")
             hold.set_sensitive(p_data.get('state') in ('active', 'held'))
             add = add_choice_row(group, sheet, _("Add Call"), lambda: self.on_add_call_click(None),
                                  icon="contact-new-symbolic")
