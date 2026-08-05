@@ -14,10 +14,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import gi
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
-gi.require_version('Geoclue', '2.0')
-from gi.repository import GLib, GObject, Geoclue
+from gi.repository import GLib, GObject
 
 from ...backend.utils.system_utils import is_location_enabled, enable_location
 from ...constants import APP_ID
@@ -82,11 +81,18 @@ class LocationManager(GObject.Object):
         return False
 
     def _start_geoclue_client(self):
-        """Initiates the Geoclue connection."""
+        """Initiates the Geoclue connection.
+
+        Geoclue is imported here rather than at module scope because it
+        drags in Soup and libxml2, and a location request is rare.
+        """
         if not self.is_fetching:
             return False
 
         logger.info("[Location] Starting Geoclue Simple Client...")
+
+        gi.require_version('Geoclue', '2.0')
+        from gi.repository import Geoclue
 
         try:
             Geoclue.Simple.new(
@@ -111,6 +117,9 @@ class LocationManager(GObject.Object):
         """Callback when Geoclue Simple client is ready."""
         if not self.is_fetching:
             return
+
+        gi.require_version('Geoclue', '2.0')
+        from gi.repository import Geoclue
 
         try:
             simple = Geoclue.Simple.new_finish(result)

@@ -15,7 +15,7 @@
 
 import os
 from gi.repository import Gio, GLib, GObject
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 
 class SystemStateService(GObject.Object):

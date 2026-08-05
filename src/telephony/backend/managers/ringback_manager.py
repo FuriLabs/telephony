@@ -16,13 +16,11 @@
 import os
 import threading
 
-import gi
-import pulsectl
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
-gi.require_version('Gst', '1.0')
-from gi.repository import GObject, GLib, Gio, Gst
+from gi.repository import GObject, GLib, Gio
 
+from ..utils.gst_utils import get_gst
 from ..utils.thread_utils import run_in_background
 
 DEFAULT_TONE = "/usr/share/sounds/freedesktop/stereo/phone-outgoing-calling.oga"
@@ -114,7 +112,12 @@ class RingbackManager(GObject.Object):
             self._stop_ringback()
 
     def _ensure_pulse_modules_loaded(self):
-        """Load PulseAudio modules if not already loaded; runs on a worker thread."""
+        """Load PulseAudio modules if not already loaded; runs on a worker thread.
+
+        pulsectl is imported here rather than at module scope so an idle
+        process never maps it.
+        """
+        import pulsectl
         with self._modules_lock:
             try:
                 if self.modules_loaded and self.pulse_client:
@@ -203,6 +206,7 @@ class RingbackManager(GObject.Object):
 
     def _start_pipeline(self):
         """Build and start the playbin pipeline into the injector sink."""
+        Gst = get_gst()
         custom_file = self.gsettings_mgr.get_setting("ringback_custom_file")
 
         self.active_sound_file = DEFAULT_TONE
@@ -270,7 +274,7 @@ class RingbackManager(GObject.Object):
 
         if self.pipeline:
             logger.info("[RingbackManager] Stopping pipeline.")
-            self.pipeline.set_state(Gst.State.NULL)
+            self.pipeline.set_state(get_gst().State.NULL)
             self.pipeline = None
 
         if self.modules_loaded or self.pulse_client:
@@ -280,7 +284,7 @@ class RingbackManager(GObject.Object):
         """Handle End of Stream by pausing and scheduling a delayed restart."""
         logger.info("[RingbackManager] EOS reached. Pausing for loop delay.")
         if self.pipeline:
-            self.pipeline.set_state(Gst.State.PAUSED)
+            self.pipeline.set_state(get_gst().State.PAUSED)
             self.loop_timer_id = GLib.timeout_add(LOOP_DELAY_MS, self._restart_loop)
 
     def _restart_loop(self):
@@ -288,6 +292,7 @@ class RingbackManager(GObject.Object):
         self.loop_timer_id = None
         if self.pipeline:
             logger.debug("[RingbackManager] Restarting loop...")
+            Gst = get_gst()
             if not self.pipeline.seek_simple(Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, 0):
                 logger.warning("[RingbackManager] Seek failed during loop restart.")
                 self.pipeline.set_state(Gst.State.NULL)

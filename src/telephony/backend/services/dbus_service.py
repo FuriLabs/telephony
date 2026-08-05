@@ -18,12 +18,9 @@ import json
 from gi.repository import Gio, GLib
 import os
 import re
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 import uuid
 
-from telephony.backend.utils.importer_local_utils import import_local_chatty, import_local_calls
-from telephony.backend.utils.importer_android_utils import import_android_sms, import_android_calls
-from telephony.backend.utils.importer_ios_utils import import_ios_sms, import_ios_calls
 from telephony.backend.utils.thread_utils import run_in_background
 from telephony.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
@@ -982,32 +979,38 @@ class TelephonyDaemonDBus:
 
     def _handle_importchatty(self, parameters, invocation):
         """Handle ImportChatty command."""
+        from telephony.backend.utils.importer_local_utils import import_local_chatty
         db_path, mms_path = parameters.unpack()
         self._run_import(invocation, lambda: import_local_chatty(self.db, db_path, mms_path))
 
     def _handle_importlocalcalls(self, parameters, invocation):
         """Handle ImportLocalCalls command."""
+        from telephony.backend.utils.importer_local_utils import import_local_calls
         db_path = parameters.unpack()[0]
         self._run_import(invocation, lambda: import_local_calls(self.db, db_path))
 
     def _handle_importandroidsms(self, parameters, invocation):
         """Handle ImportAndroidSms command."""
+        from telephony.backend.utils.importer_android_utils import import_android_sms
         file_path = parameters.unpack()[0]
         self._run_import(invocation, lambda: import_android_sms(self.db, file_path))
 
     def _handle_importandroidcalls(self, parameters, invocation):
         """Handle ImportAndroidCalls command."""
+        from telephony.backend.utils.importer_android_utils import import_android_calls
         file_path = parameters.unpack()[0]
         self._run_import(invocation, lambda: import_android_calls(self.db, file_path))
 
     def _handle_importiossms(self, parameters, invocation):
         """Handle ImportIosSms command."""
+        from telephony.backend.utils.importer_ios_utils import import_ios_sms
         file_path, manifest_path, backup_dir = parameters.unpack()
         self._run_import(invocation, lambda: import_ios_sms(
             self.db, file_path, manifest_path or None, backup_dir or None))
 
     def _handle_importioscalls(self, parameters, invocation):
         """Handle ImportIosCalls command."""
+        from telephony.backend.utils.importer_ios_utils import import_ios_calls
         file_path = parameters.unpack()[0]
         self._run_import(invocation, lambda: import_ios_calls(self.db, file_path))
 

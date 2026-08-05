@@ -23,7 +23,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ...backend.utils.thread_utils import run_in_background
 from ...constants import VIEWFINDER_START_DELAY_MS, SHEET_CONTENT_WIDTH, CAPTURE_SHEET_HEIGHT

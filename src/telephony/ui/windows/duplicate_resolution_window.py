@@ -19,7 +19,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number

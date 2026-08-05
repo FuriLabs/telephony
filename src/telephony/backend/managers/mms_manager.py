@@ -20,7 +20,7 @@ import shutil
 import tempfile
 import threading
 import time
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib, GObject
 
 from ..utils.phone_utils import get_own_number, normalize_number

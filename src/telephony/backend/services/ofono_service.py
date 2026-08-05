@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Gio, GObject
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 
 class OfonoService(GObject.Object):

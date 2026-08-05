@@ -15,7 +15,7 @@
 
 import locale
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 
 def init_locale():

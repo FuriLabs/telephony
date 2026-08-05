@@ -17,7 +17,7 @@ from ...backend.utils.thread_utils import run_in_background
 import hashlib
 
 from gi.repository import Gtk, Adw, Gio, GLib, Pango
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number

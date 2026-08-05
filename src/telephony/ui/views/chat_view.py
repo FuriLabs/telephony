@@ -32,7 +32,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango, GObject, Gst
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ...backend.utils.phone_utils import normalize_number
 from ...backend.utils.model_utils import MessageItem

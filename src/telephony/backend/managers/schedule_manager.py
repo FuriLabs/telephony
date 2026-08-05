@@ -15,7 +15,7 @@
 
 import json
 from datetime import datetime, timedelta
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 from ..utils.thread_utils import run_in_background
 from gi.repository import GLib

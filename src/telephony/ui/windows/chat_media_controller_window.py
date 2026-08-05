@@ -17,7 +17,7 @@ import os
 import shutil
 from datetime import datetime
 from gi.repository import Gtk, Adw, GLib
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
 from ..widgets.common_widget import present_choice_sheet, add_choice_row

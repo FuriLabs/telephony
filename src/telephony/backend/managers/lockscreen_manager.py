@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import GLib, Gio
 from ..services.notification_service import NotificationService
 

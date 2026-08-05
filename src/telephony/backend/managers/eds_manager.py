@@ -19,7 +19,7 @@ import json
 from functools import partial
 from gettext import gettext as _
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 gi.require_version('EDataServer', '1.2')
 gi.require_version('EBook', '1.2')

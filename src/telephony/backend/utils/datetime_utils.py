@@ -15,7 +15,7 @@
 
 from datetime import datetime
 
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 STANDARD_FORMAT = "%Y-%m-%d %H:%M:%S"
 

@@ -16,7 +16,7 @@
 import datetime
 import os
 import subprocess
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib
 
 
@@ -243,3 +243,39 @@ def press_power_button():
         subprocess.run(["wtype", "-k", "XF86PowerOff"], check=False)
     except Exception as e:
         logger.error(f"Power key simulation failed: {e}")
+
+
+def trim_native_heap():
+    """Return freed malloc memory to the kernel; safe to call anytime.
+
+    Loading thousands of contacts through JSON and EDS creates a large
+    transient allocation burst, and glibc keeps the freed pages parked
+    in its arenas forever. Returns False so it can sit directly in a
+    one-shot GLib timeout.
+    """
+    import ctypes
+    import gc
+    gc.collect()
+    try:
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except Exception as e:
+        logger.debug(f"[Memory] malloc_trim unavailable: {e}")
+    return False
+
+
+def launch_desktop_uri(desktop_file, uri):
+    """Hand a scheme URI to the launcher that owns it.
+
+    Content always opens under the launcher whose desktop id owns that
+    kind of content, so the shell shows the right icon for the surface.
+    """
+    app_info = Gio.DesktopAppInfo.new(desktop_file)
+    if not app_info:
+        logger.error(f"[Launch] {desktop_file} is missing, cannot open {uri}")
+        return False
+    try:
+        app_info.launch_uris([uri], None)
+        return True
+    except Exception as e:
+        logger.error(f"[Launch] Could not launch {desktop_file}: {e}")
+        return False

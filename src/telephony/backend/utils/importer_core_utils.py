@@ -17,7 +17,7 @@ from .datetime_utils import format_timestamp
 
 import os
 from datetime import datetime
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 
 def _get_value(data, keys, default=None):

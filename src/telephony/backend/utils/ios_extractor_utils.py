@@ -15,7 +15,7 @@
 
 import os
 import subprocess
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 IOS_SMS_DB_HASH = "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
 IOS_CALLS_DB_HASH = "5a4935c78a5255723f707230a451d79c60df7ea8"

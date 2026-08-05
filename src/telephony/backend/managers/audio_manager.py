@@ -19,13 +19,12 @@ import threading
 from contextlib import contextmanager
 
 import gi
-import pulsectl
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 
 gi.require_version('Lfb', '0.0')
-gi.require_version('Gst', '1.0')
-from gi.repository import Lfb, Gio, GLib, Gst
+from gi.repository import Lfb, Gio, GLib
 
+from ...backend.utils.gst_utils import get_gst
 from ...backend.utils.system_utils import get_feedbackd_profile, set_feedbackd_profile
 from ...constants import APP_ID
 
@@ -92,8 +91,10 @@ class TelephonyAudioManager:
 
         The connection is created on first use and reused afterwards; when an
         operation fails with a pulsectl error the connection is dropped so the
-        next operation reconnects to the daemon.
+        next operation reconnects to the daemon. pulsectl is imported here
+        rather than at module scope so an idle process never maps it.
         """
+        import pulsectl
         with self._pulse_lock:
             if self._pulse_conn is None or not self._pulse_conn.connected:
                 self._close_pulse()
@@ -116,6 +117,7 @@ class TelephonyAudioManager:
 
     def _lookup_sink(self, pulse, name):
         """Return the named sink or None when it is absent."""
+        import pulsectl
         try:
             return pulse.get_sink_by_name(name)
         except pulsectl.PulseIndexError:
@@ -124,6 +126,7 @@ class TelephonyAudioManager:
 
     def _lookup_source(self, pulse, name):
         """Return the named source or None when it is absent."""
+        import pulsectl
         try:
             return pulse.get_source_by_name(name)
         except pulsectl.PulseIndexError:
@@ -259,6 +262,7 @@ class TelephonyAudioManager:
                     self._teardown_knock_pipeline()
 
                 uri = "file:///usr/share/sounds/freedesktop/stereo/device-added.oga"
+                Gst = get_gst()
                 self.knock_pipeline = Gst.ElementFactory.make("playbin", "knock_player")
                 self.knock_pipeline.set_property("uri", uri)
                 self.knock_pipeline.set_state(Gst.State.PLAYING)
@@ -291,7 +295,7 @@ class TelephonyAudioManager:
             self.knock_bus = None
 
         if self.knock_pipeline:
-            self.knock_pipeline.set_state(Gst.State.NULL)
+            self.knock_pipeline.set_state(get_gst().State.NULL)
             self.knock_pipeline = None
 
     def _on_knock_eos(self, bus, msg):

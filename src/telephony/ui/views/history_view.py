@@ -17,7 +17,7 @@ from ...backend.utils.datetime_utils import parse_timestamp
 
 from datetime import datetime, timedelta
 from gi.repository import Gtk, Adw, Gio, GLib, Pango
-from loguru import logger
+from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _, ngettext
 
 from ...backend.utils.phone_utils import normalize_number
