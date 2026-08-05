@@ -248,7 +248,7 @@ class InCallWindow(Adw.Window):
                                                  self.on_silent_click)
         inc_box.append(self.pill_silence)
         inc_box.append(self._mk_action_pill("mail-message-new-symbolic", _("Hangup and Send SMS"),
-                                            self.on_reject_with_msg, chevron=True))
+                                            self.on_reject_with_msg))
         inc_box.append(self._mk_action_pill("call-stop-symbolic", _("Decline"),
                                             self.on_hangup_click, style="stack-pill-red"))
         self.controls_stack.add_named(inc_box, "incoming")
@@ -351,19 +351,15 @@ class InCallWindow(Adw.Window):
         self.err_box.append(self.btn_reboot)
         self.controls_stack.add_named(self.err_box, "error")
 
-    def _mk_action_pill(self, icon, label, on_click, style="stack-pill", chevron=False):
+    def _mk_action_pill(self, icon, label, on_click, style="stack-pill"):
         """Build one full-width action pill for the incoming screen."""
         classes = ["destructive-action", "pill"] if style == "stack-pill-red" else [style]
         b = Gtk.Button(css_classes=classes)
         b.set_size_request(-1, PILL_HEIGHT)
-        center = Gtk.CenterBox()
         mid = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
         mid.append(Gtk.Image.new_from_icon_name(icon))
         mid.append(Gtk.Label(label=label))
-        center.set_center_widget(mid)
-        if chevron:
-            center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        b.set_child(center)
+        b.set_child(mid)
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: on_click(btn) or False))
         return b
 
@@ -461,7 +457,7 @@ class InCallWindow(Adw.Window):
         return page
 
     def _build_stack_pill(self, icon, label, on_click):
-        """Build one full-width pill row with a trailing chevron."""
+        """Build one full-width pill row that opens a sheet."""
         b = Gtk.Button(css_classes=["stack-pill"])
         b.set_size_request(-1, PILL_HEIGHT)
         center = Gtk.CenterBox()
@@ -469,7 +465,6 @@ class InCallWindow(Adw.Window):
         mid.append(Gtk.Image.new_from_icon_name(icon))
         mid.append(Gtk.Label(label=label))
         center.set_center_widget(mid)
-        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
         b.set_child(center)
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: on_click() or False))
         return b
@@ -492,7 +487,6 @@ class InCallWindow(Adw.Window):
         self.lbl_pill_out.set_ellipsize(Pango.EllipsizeMode.END)
         mid.append(self.lbl_pill_out)
         center.set_center_widget(mid)
-        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
         self.pill_output.set_child(center)
         self.pill_output.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_output_sheet() or False))
         row.append(self.pill_output)
@@ -507,7 +501,6 @@ class InCallWindow(Adw.Window):
         self.lbl_pill_in.set_ellipsize(Pango.EllipsizeMode.END)
         mid.append(self.lbl_pill_in)
         center.set_center_widget(mid)
-        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
         self.pill_input.set_child(center)
         self.pill_input.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_input_sheet() or False))
         row.append(self.pill_input)
@@ -527,7 +520,6 @@ class InCallWindow(Adw.Window):
         self.lbl_pill_ctx_value = Gtk.Label(css_classes=["stack-pill-state"])
         mid.append(self.lbl_pill_ctx_value)
         center.set_center_widget(mid)
-        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
         b.set_child(center)
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_context_sheet() or False))
         return b
