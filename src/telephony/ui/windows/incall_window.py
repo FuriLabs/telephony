@@ -432,40 +432,49 @@ class InCallWindow(Adw.Window):
             outputs, inputs = reply if reply else ([], [])
             audio = self.ofono.audio
 
-            def build(group, sheet):
-                mute_row = Adw.ActionRow(title=_("Mute"), activatable=False)
-                mute_row.add_prefix(Gtk.Image.new_from_icon_name("microphone-sensitivity-muted-symbolic"))
-                switch = Gtk.Switch(active=audio.mic_muted, valign=Gtk.Align.CENTER)
-                switch.connect("state-set",
-                               lambda s, state: self.ofono.daemon.set_mic_muted(state) or False)
-                mute_row.add_suffix(switch)
-                mute_row.set_activatable_widget(switch)
-                group.add(mute_row)
+            sheet = Adw.Dialog(title=_("Audio"))
+            sheet.set_content_width(SHEET_CONTENT_WIDTH)
+            toolbar = Adw.ToolbarView()
+            toolbar.add_top_bar(Adw.HeaderBar())
+            page = Adw.PreferencesPage()
 
-                group.add(Gtk.Label(label=_("Input"), xalign=0,
-                                    css_classes=["dim-label"], margin_top=8))
-                for route_id, available in inputs:
-                    row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
-                                             route_id == self.current_input_route, available)
-                    if row.get_sensitive():
-                        row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                            lambda: [close_dialog(sheet),
-                                     self.ofono.daemon.set_mic_muted(False),
-                                     self.ofono.daemon.set_input_route(r_id)] and False))
-                    group.add(row)
+            mute_group = Adw.PreferencesGroup()
+            mute_row = Adw.ActionRow(title=_("Mute"), activatable=False)
+            mute_row.add_prefix(Gtk.Image.new_from_icon_name("microphone-sensitivity-muted-symbolic"))
+            switch = Gtk.Switch(active=audio.mic_muted, valign=Gtk.Align.CENTER)
+            switch.connect("state-set",
+                           lambda s, state: self.ofono.daemon.set_mic_muted(state) or False)
+            mute_row.add_suffix(switch)
+            mute_row.set_activatable_widget(switch)
+            mute_group.add(mute_row)
+            page.add(mute_group)
 
-                group.add(Gtk.Label(label=_("Output"), xalign=0,
-                                    css_classes=["dim-label"], margin_top=8))
-                for route_id, available in outputs:
-                    row = self._mk_route_row(route_icon(route_id), route_label(route_id),
-                                             route_id == self.current_route, available)
-                    if row.get_sensitive():
-                        row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                            lambda: [close_dialog(sheet),
-                                     self._handle_output_selection(r_id)] and False))
-                    group.add(row)
+            input_group = Adw.PreferencesGroup(title=_("Input"))
+            for route_id, available in inputs:
+                row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
+                                         route_id == self.current_input_route, available)
+                if row.get_sensitive():
+                    row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                        lambda: [close_dialog(sheet),
+                                 self.ofono.daemon.set_mic_muted(False),
+                                 self.ofono.daemon.set_input_route(r_id)] and False))
+                input_group.add(row)
+            page.add(input_group)
 
-            self._present_choice_sheet(_("Audio"), build)
+            output_group = Adw.PreferencesGroup(title=_("Output"))
+            for route_id, available in outputs:
+                row = self._mk_route_row(route_icon(route_id), route_label(route_id),
+                                         route_id == self.current_route, available)
+                if row.get_sensitive():
+                    row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                        lambda: [close_dialog(sheet),
+                                 self._handle_output_selection(r_id)] and False))
+                output_group.add(row)
+            page.add(output_group)
+
+            toolbar.set_content(page)
+            sheet.set_child(toolbar)
+            sheet.present(self)
 
         run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
