@@ -227,3 +227,11 @@ viewswitcher button:focus {
 .stack-pill-state { color: alpha(@theme_fg_color, 0.7); font-weight: 400; }
 .stack-pill-muted { color: #c01c28; }
 .keypad-key { font-size: 20px; font-weight: 600; border-radius: 10px; min-height: 44px; background: alpha(@theme_fg_color, 0.05); }
+
+/* Anonymous dial stays dark green so it never reads as the ordinary call action. */
+.btn-anon-green { background-color: #1a633f; color: white; }
+.btn-anon-green:active { background-color: #114429; transform: scale(0.94); }
+
+/* Incoming screen pills: answer in green, mirroring the red hangup pill. */
+.stack-pill-green { background: #26a269; color: white; border-radius: 22px; padding: 13px; font-weight: 700; min-height: 24px; }
+.stack-pill-red { background: #c01c28; color: white; border-radius: 22px; padding: 13px; font-weight: 700; min-height: 24px; }
