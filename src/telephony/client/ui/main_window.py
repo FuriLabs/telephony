@@ -469,11 +469,6 @@ class MainWindow(Adw.Window):
             self._current_toast = None
             self._current_message = None
 
-    def notify_info(self, message):
-        """Report something the screen does not already show."""
-        self.hide_loading()
-        self._show_toast(message)
-
     def notify_error(self, message):
         """Report a refusal, ahead of anything already showing."""
         self.hide_loading()
