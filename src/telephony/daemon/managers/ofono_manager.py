@@ -688,7 +688,8 @@ class OfonoManager(GObject.Object):
     def _add_call(self, path, props):
         """Process a new call."""
         raw_number = props.get("LineIdentification", "Unknown")
-        number = normalize_number(raw_number)
+        withheld = str(raw_number).lower() == "withheld"
+        number = "" if withheld else normalize_number(raw_number)
         state = props.get("State", "unknown")
 
         is_silenced = False
@@ -737,8 +738,11 @@ class OfonoManager(GObject.Object):
             "answered": (state == "active"),
             "proxy": call_proxy,
             "silenced": is_silenced,
-            "anonymous": (self._dial_hides_id or str(raw_number).startswith("#31#")) if is_outgoing else False,
-            "multiparty": bool(props.get("Multiparty", False))
+            "anonymous": (self._dial_hides_id or str(raw_number).startswith("#31#")) if is_outgoing else withheld,
+            "multiparty": bool(props.get("Multiparty", False)),
+            "was_conference": bool(props.get("Multiparty", False)),
+            "rejected": False,
+            "transferred": False
         }
         if is_outgoing:
             self._dial_hides_id = False
@@ -772,6 +776,8 @@ class OfonoManager(GObject.Object):
             elif name == "Multiparty":
                 if path in self.active_calls:
                     self.active_calls[path]["multiparty"] = bool(value)
+                    if value:
+                        self.active_calls[path]["was_conference"] = True
                     self.emit('call-changed', path, self.active_calls[path]["state"])
 
     def _remove_call(self, path):
@@ -798,7 +804,10 @@ class OfonoManager(GObject.Object):
             duration = int(time.time() - data["start"])
         status = "missed"
         if data["direction"] == "incoming":
-            status = "incoming" if data["answered"] else "missed"
+            if data["answered"]:
+                status = "incoming"
+            else:
+                status = "rejected" if data.get("rejected") else "missed"
         else:
             status = "outgoing" if data["answered"] else "cancelled"
             if duration == 0:
@@ -809,7 +818,9 @@ class OfonoManager(GObject.Object):
             num = "Unknown"
 
         try:
-            self.db.add_call(num, None, status, duration, anonymous=bool(data.get("anonymous")))
+            self.db.add_call(num, None, status, duration, anonymous=bool(data.get("anonymous")),
+                             multiparty=bool(data.get("was_conference")),
+                             transferred=bool(data.get("transferred")))
         except Exception as e:
             logger.error(f"[OfonoManager] Logging call failed: {e}")
 
@@ -1038,10 +1049,12 @@ class OfonoManager(GObject.Object):
                 self._force_remove(path)
 
     def hangup_call(self, path):
-        """Hangup a specific call."""
+        """Hangup a specific call; hanging up an unanswered ring is a rejection."""
         self.emit('hangup-requested')
         try:
             if path in self.active_calls:
+                if self.active_calls[path].get('state') in ('incoming', 'waiting'):
+                    self.active_calls[path]['rejected'] = True
                 proxy = self.active_calls[path].get('proxy')
                 if proxy:
                     proxy.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
@@ -1138,6 +1151,9 @@ class OfonoManager(GObject.Object):
             return (False, "no proxy")
         try:
             self.voice_proxy.call_sync("Transfer", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            for data in self.active_calls.values():
+                if data.get('state') in ('active', 'held'):
+                    data['transferred'] = True
             return (True, None)
         except Exception as e:
             logger.error(f"[OfonoManager] Transfer failed: {e}")
