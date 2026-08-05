@@ -18,8 +18,11 @@ import os
 import subprocess
 import time
 from telephony.shared.utils.log_utils import logger
-from telephony.shared.constants import DAEMON_BUS_NAME, DAEMON_WAIT_TRIES, DAEMON_WAIT_STEP_SECONDS
+from telephony.shared.constants import DAEMON_BUS_NAME
 from gi.repository import Gio, GLib
+
+DAEMON_WAIT_TRIES = 20
+DAEMON_WAIT_STEP_SECONDS = 0.5
 
 
 def start_systemd_service(service_name):

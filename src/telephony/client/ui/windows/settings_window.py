@@ -13,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-import subprocess
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import (CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT)
 from telephony.shared.constants import SHEET_CONTENT_WIDTH

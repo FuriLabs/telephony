@@ -16,7 +16,6 @@
 from gi.repository import GObject, Gio, GLib
 from gettext import gettext as _
 
-from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.services.daemon_client import DaemonClient
