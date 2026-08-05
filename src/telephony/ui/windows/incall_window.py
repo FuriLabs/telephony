@@ -27,7 +27,8 @@ from ...backend.managers.audio_manager import TelephonyAudioManager
 from ..windows.fader_window import ProximityFader
 from ..windows.contact_picker_window import ContactPicker
 from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncated_label
-from ..widgets.common_widget import present_choice_sheet
+from ..widgets.common_widget import present_choice_sheet, add_choice_row, close_dialog
+from ...constants import SHEET_CONTENT_WIDTH
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.ofono_direct_utils import hangup_all_direct
@@ -264,7 +265,6 @@ class InCallWindow(Adw.Window):
                                          transition_duration=PAD_MORPH_DURATION_MS)
         self.pad_route_stack.add_named(self.route_box, "routes")
         self.pad_route_stack.add_named(pad_grid, "pad")
-        act_box.append(self.pad_route_stack)
 
 
         self.multiparty_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
@@ -279,7 +279,6 @@ class InCallWindow(Adw.Window):
         self.lbl_transfer_hint = Gtk.Label(css_classes=["caption", "dim-label"], justify=Gtk.Justification.CENTER, wrap=True)
         self.multiparty_box.append(self.lbl_transfer_hint)
         self.multiparty_box.set_visible(False)
-        act_box.append(self.multiparty_box)
 
         self.actions_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
         mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
@@ -290,10 +289,30 @@ class InCallWindow(Adw.Window):
         self.actions_row.append(pad_wrap)
         self.actions_row.append(hold_wrap)
         self.actions_row.append(add_wrap)
-        act_box.append(self.actions_row)
+
+        self._legacy_controls = Gtk.Box(visible=False)
+        self._legacy_controls.append(self.pad_route_stack)
+        self._legacy_controls.append(self.multiparty_box)
+        self._legacy_controls.append(self.actions_row)
+        act_box.append(self._legacy_controls)
+
+        act_box.set_margin_start(18)
+        act_box.set_margin_end(18)
+        act_box.set_spacing(10)
+
+        self.pill_audio = self._build_audio_pill()
+        act_box.append(self.pill_audio)
+
+        self.pill_keypad = self._build_stack_pill(
+            "input-dialpad-symbolic", _("Keypad"), self._open_keypad_sheet)
+        act_box.append(self.pill_keypad)
+
+        self._context_mode = "actions"
+        self.pill_context = self._build_context_pill()
+        act_box.append(self.pill_context)
 
         self.btn_hangup_act = DynamicHangupButton()
-        self.btn_hangup_act.set_halign(Gtk.Align.CENTER)
+        self.btn_hangup_act.set_halign(Gtk.Align.FILL)
         self.btn_hangup_act.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_hangup_click(b) or False))
         act_box.append(self.btn_hangup_act)
         self.controls_stack.add_named(act_box, "active")
@@ -324,6 +343,247 @@ class InCallWindow(Adw.Window):
         self.err_box.append(self.btn_save_logs)
         self.err_box.append(self.btn_reboot)
         self.controls_stack.add_named(self.err_box, "error")
+
+    def _build_stack_pill(self, icon, label, on_click):
+        """Build one full-width pill row with a trailing chevron."""
+        b = Gtk.Button(css_classes=["stack-pill"])
+        center = Gtk.CenterBox()
+        mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
+        mid.append(Gtk.Image.new_from_icon_name(icon))
+        mid.append(Gtk.Label(label=label))
+        center.set_center_widget(mid)
+        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+        b.set_child(center)
+        b.connect("clicked", lambda btn: GLib.idle_add(lambda: on_click() or False))
+        return b
+
+    def _build_audio_pill(self):
+        """Build the audio pill: fixed direction icons, live device names."""
+        b = Gtk.Button(css_classes=["stack-pill"])
+        center = Gtk.CenterBox()
+        mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
+        mid.append(Gtk.Image.new_from_icon_name("audio-volume-high-symbolic"))
+        self.lbl_pill_out = Gtk.Label(css_classes=["stack-pill-state"])
+        self.lbl_pill_out.set_ellipsize(Pango.EllipsizeMode.END)
+        mid.append(self.lbl_pill_out)
+        self.img_pill_in = Gtk.Image.new_from_icon_name("audio-input-microphone-symbolic")
+        mid.append(self.img_pill_in)
+        self.lbl_pill_in = Gtk.Label(css_classes=["stack-pill-state"])
+        self.lbl_pill_in.set_ellipsize(Pango.EllipsizeMode.END)
+        mid.append(self.lbl_pill_in)
+        center.set_center_widget(mid)
+        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+        b.set_child(center)
+        b.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_audio_sheet() or False))
+        return b
+
+    def _build_context_pill(self):
+        """Build the contextual pill whose face follows the call mix."""
+        b = Gtk.Button(css_classes=["stack-pill"])
+        center = Gtk.CenterBox()
+        mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
+        self.img_pill_ctx = Gtk.Image.new_from_icon_name("view-more-symbolic")
+        mid.append(self.img_pill_ctx)
+        self.lbl_pill_ctx = Gtk.Label(label=_("Actions"))
+        mid.append(self.lbl_pill_ctx)
+        self.lbl_pill_ctx_value = Gtk.Label(css_classes=["stack-pill-state"])
+        mid.append(self.lbl_pill_ctx_value)
+        center.set_center_widget(mid)
+        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+        b.set_child(center)
+        b.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_context_sheet() or False))
+        return b
+
+    def _refresh_pills(self):
+        """Mirror the daemon's audio truth and the call mix onto the pills."""
+        audio = self.ofono.audio
+        self.lbl_pill_out.set_text(route_label(audio.current_route))
+        self.lbl_pill_in.set_text(input_route_label(audio.current_input))
+        muted = audio.mic_muted
+        self.img_pill_in.set_from_icon_name(
+            "microphone-sensitivity-muted-symbolic" if muted else "audio-input-microphone-symbolic")
+        for w in (self.img_pill_in, self.lbl_pill_in):
+            if muted:
+                w.add_css_class("stack-pill-muted")
+            else:
+                w.remove_css_class("stack-pill-muted")
+
+        calls = self.ofono.active_calls
+        conf = conference_paths(calls)
+        if conf:
+            self._context_mode = "conference"
+            self.img_pill_ctx.set_from_icon_name("system-users-symbolic")
+            self.lbl_pill_ctx.set_text(_("Participants"))
+            self.lbl_pill_ctx_value.set_text(f"· {len(conf)}")
+        elif count_lines(calls) >= 2:
+            self._context_mode = "calls"
+            self.img_pill_ctx.set_from_icon_name("call-start-symbolic")
+            self.lbl_pill_ctx.set_text(_("Calls"))
+            self.lbl_pill_ctx_value.set_text(f"· {len(calls)}")
+        else:
+            self._context_mode = "actions"
+            self.img_pill_ctx.set_from_icon_name("view-more-symbolic")
+            self.lbl_pill_ctx.set_text(_("Actions"))
+            self.lbl_pill_ctx_value.set_text("")
+
+    def _open_audio_sheet(self):
+        """Show the audio sheet: mute first, then input, then output."""
+        def present(reply):
+            outputs, inputs = reply if reply else ([], [])
+            audio = self.ofono.audio
+
+            def build(group, sheet):
+                mute_row = Adw.ActionRow(title=_("Mute"), activatable=False)
+                mute_row.add_prefix(Gtk.Image.new_from_icon_name("microphone-sensitivity-muted-symbolic"))
+                switch = Gtk.Switch(active=audio.mic_muted, valign=Gtk.Align.CENTER)
+                switch.connect("state-set",
+                               lambda s, state: self.ofono.daemon.set_mic_muted(state) or False)
+                mute_row.add_suffix(switch)
+                mute_row.set_activatable_widget(switch)
+                group.add(mute_row)
+
+                group.add(Gtk.Label(label=_("Input"), xalign=0,
+                                    css_classes=["dim-label"], margin_top=8))
+                for route_id, available in inputs:
+                    row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
+                                             route_id == self.current_input_route, available)
+                    if row.get_sensitive():
+                        row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                            lambda: [close_dialog(sheet),
+                                     self.ofono.daemon.set_mic_muted(False),
+                                     self.ofono.daemon.set_input_route(r_id)] and False))
+                    group.add(row)
+
+                group.add(Gtk.Label(label=_("Output"), xalign=0,
+                                    css_classes=["dim-label"], margin_top=8))
+                for route_id, available in outputs:
+                    row = self._mk_route_row(route_icon(route_id), route_label(route_id),
+                                             route_id == self.current_route, available)
+                    if row.get_sensitive():
+                        row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                            lambda: [close_dialog(sheet),
+                                     self._handle_output_selection(r_id)] and False))
+                    group.add(row)
+
+            self._present_choice_sheet(_("Audio"), build)
+
+        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
+
+    def _open_keypad_sheet(self):
+        """Show the DTMF keypad as a bottom sheet with an echo line."""
+        sheet = Adw.Dialog(title=_("Keypad"))
+        sheet.set_content_width(SHEET_CONTENT_WIDTH)
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8,
+                          margin_start=14, margin_end=14, margin_bottom=18)
+        echo = Gtk.Label(label="", css_classes=["title-2"])
+        echo.set_ellipsize(Pango.EllipsizeMode.START)
+        content.append(echo)
+        grid = Gtk.Grid(row_spacing=8, column_spacing=8, column_homogeneous=True)
+
+        def press(_btn, ch):
+            self.ofono.send_dtmf(ch)
+            echo.set_text(echo.get_text() + ch)
+
+        for i, c in enumerate(KEYPAD_LAYOUT):
+            key = Gtk.Button(label=c, css_classes=["keypad-key"])
+            key.connect("clicked", press, c)
+            grid.attach(key, i % 3, i // 3, 1, 1)
+        content.append(grid)
+        toolbar.set_content(content)
+        sheet.set_child(toolbar)
+        sheet.present(self)
+
+    def _open_context_sheet(self):
+        """Open the sheet the context pill currently stands for."""
+        if self._context_mode == "conference":
+            self._open_participants_sheet()
+        elif self._context_mode == "calls":
+            self._open_calls_sheet()
+        else:
+            self._open_actions_sheet()
+
+    def _open_actions_sheet(self):
+        """Show hold, add-call and quick message for the single call."""
+        calls = self.ofono.active_calls
+        p_data = calls.get(self.active_path) or {}
+
+        def build(group, sheet):
+            hold = add_choice_row(group, sheet, _("Hold"), lambda: self.on_hold_toggle(None),
+                                  icon="media-playback-pause-symbolic")
+            hold.set_sensitive(p_data.get('state') in ('active', 'held'))
+            add = add_choice_row(group, sheet, _("Add Call"), lambda: self.on_add_call_click(None),
+                                 icon="contact-new-symbolic")
+            add.set_sensitive(count_lines(calls) < 2 and p_data.get('state') in ('active', 'held'))
+            add_choice_row(group, sheet, _("Send message"), self._send_message_to_active,
+                           icon="mail-message-new-symbolic")
+
+        self._present_choice_sheet(_("Actions"), build)
+
+    def _send_message_to_active(self):
+        """Send a quick response to the featured call without ending it."""
+        call = self.ofono.active_calls.get(self.active_path)
+        if not call:
+            return
+        number = call['number']
+        self._pick_quick_response(None, lambda msg: self.ofono.send_quick_response(number, msg))
+
+    def _open_calls_sheet(self):
+        """Show swap, merge and transfer for the two-call mix."""
+        calls = self.ofono.active_calls
+        held_normal = held_single_paths(calls)
+        held_conf = held_conference_paths(calls)
+        p_data = calls.get(self.active_path) or {}
+        primary_free = bool(self.active_path) and p_data.get('state') == 'active' and not p_data.get('multiparty')
+        conference_allowed = self.gsettings_mgr.get_setting("allow_conference_calls") == "true"
+        transfer_allowed = self.gsettings_mgr.get_setting("allow_call_transfer") == "true"
+        show_pair = bool(primary_free and held_normal and (conference_allowed or transfer_allowed))
+        show_join = bool(primary_free and held_conf and not held_normal and conference_allowed)
+
+        def build(group, sheet):
+            add_choice_row(group, sheet, _("Swap Calls"), self.ofono.swap_calls,
+                           icon="media-playback-start-symbolic")
+            if show_pair and conference_allowed:
+                add_choice_row(group, sheet, _("Merge Calls"),
+                               lambda: self.on_merge_click(self.pill_context),
+                               icon="object-flip-horizontal-symbolic")
+            elif show_join:
+                add_choice_row(group, sheet, _("Join Conference"),
+                               lambda: self.on_merge_click(self.pill_context),
+                               icon="object-flip-horizontal-symbolic")
+            if show_pair and transfer_allowed:
+                a = self.call_history.get(self.active_path, {}).get('name', _("Unknown"))
+                b_name = self.call_history.get(held_normal[0], {}).get('name', _("Unknown"))
+                add_choice_row(group, sheet, _("Transfer"),
+                               lambda: self.on_transfer_click(self.pill_context),
+                               subtitle=_("Transfer connects {a} and {b} together and you leave the call").format(a=a, b=b_name),
+                               icon="send-to-symbolic")
+
+        self._present_choice_sheet(_("Calls"), build)
+
+    def _open_participants_sheet(self):
+        """Show every conference participant with split and hangup."""
+        calls = self.ofono.active_calls
+        conf = conference_paths(calls)
+
+        def build(group, sheet):
+            for path in conf:
+                name = self.call_history.get(path, {}).get('name') or calls[path].get('number', _("Unknown"))
+                row = Adw.ActionRow(title=name)
+                b_priv = Gtk.Button(icon_name="call-outgoing-symbolic",
+                                    css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
+                b_priv.connect("clicked", lambda b, p=path: GLib.idle_add(
+                    lambda: [close_dialog(sheet), self.on_private_chat_click(p)] and False))
+                b_drop = Gtk.Button(icon_name="call-stop-symbolic",
+                                    css_classes=["flat", "circular", "error"], valign=Gtk.Align.CENTER)
+                b_drop.connect("clicked", lambda b, p=path: GLib.idle_add(
+                    lambda: [close_dialog(sheet), self.ofono.hangup_call(p)] and False))
+                row.add_suffix(b_priv)
+                row.add_suffix(b_drop)
+                group.add(row)
+
+        self._present_choice_sheet(_("Participants"), build)
 
     def _mk_btn(self, icon, cb, cls=None):
         """Helper to create a circular icon button."""
@@ -408,7 +668,7 @@ class InCallWindow(Adw.Window):
         the request revives the service through bus activation.
         """
         self.service_present = present
-        for widget in (self.route_box, self.multiparty_box, self.actions_row):
+        for widget in (self.pill_audio, self.pill_keypad, self.pill_context):
             widget.set_sensitive(present)
         if present:
             self.update_state()
@@ -554,6 +814,7 @@ class InCallWindow(Adw.Window):
 
         bg_list = [(x[1], x[2]) for x in sorted_c[1:] if x[1] not in conf_paths]
         self._render_bg(bg_list, conf_paths, primary_in_conf)
+        self._refresh_pills()
 
     def _bg_call_is_silenced(self, path, c_data):
         """Return True when a background incoming call must stay silent."""
@@ -1145,6 +1406,7 @@ class InCallWindow(Adw.Window):
         self._toggle_blue(self.btn_mute, self.is_muted)
         self._show_output_route(self.current_route)
         self._show_input_route(self.current_input_route)
+        self._refresh_pills()
         self._proximity_tick()
 
     def on_mute_toggle(self, btn):

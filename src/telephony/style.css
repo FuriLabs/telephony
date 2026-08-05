@@ -221,3 +221,9 @@ viewswitcher button:focus {
 .call-icon-voicemail {
   color: @accent_color;
 }
+
+/* In-call pill stack: four uniform full-width rows; the audio pill renders live state names and the red muted flag. */
+.stack-pill { background: alpha(@theme_fg_color, 0.06); border-radius: 22px; padding: 13px; font-weight: 700; }
+.stack-pill-state { color: alpha(@theme_fg_color, 0.7); font-weight: 400; }
+.stack-pill-muted { color: #c01c28; }
+.keypad-key { font-size: 20px; font-weight: 600; border-radius: 10px; min-height: 44px; background: alpha(@theme_fg_color, 0.05); }
