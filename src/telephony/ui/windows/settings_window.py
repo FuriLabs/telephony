@@ -169,7 +169,20 @@ class SettingsWindow(Adw.Dialog):
         scroll.set_child(page)
         view.set_content(scroll)
         build(page)
-        self.nav_view.push(Adw.NavigationPage(title=title, child=view))
+        nav_page = Adw.NavigationPage(title=title, child=view)
+        nav_page.connect("showing", self._on_category_showing)
+        self.nav_view.push(nav_page)
+
+    def _on_category_showing(self, page):
+        """Drop the automatic focus so entry rows don't pop the keyboard."""
+        GLib.idle_add(self._clear_entry_focus)
+
+    def _clear_entry_focus(self):
+        """Move focus off any entry row; the keyboard stays down until tapped."""
+        focus = self.get_focus()
+        if focus is not None and isinstance(focus, Gtk.Text):
+            self.set_focus(None)
+        return False
 
     def _build_calls_page(self, page):
         """Build the calls category page."""
