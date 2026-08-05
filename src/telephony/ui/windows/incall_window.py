@@ -525,18 +525,8 @@ class InCallWindow(Adw.Window):
             add = add_choice_row(group, sheet, _("Add Call"), lambda: self.on_add_call_click(None),
                                  icon="contact-new-symbolic")
             add.set_sensitive(count_lines(calls) < 2 and p_data.get('state') in ('active', 'held'))
-            add_choice_row(group, sheet, _("Send message"), self._send_message_to_active,
-                           icon="mail-message-new-symbolic")
 
         self._present_choice_sheet(_("Actions"), build)
-
-    def _send_message_to_active(self):
-        """Send a quick response to the featured call without ending it."""
-        call = self.ofono.active_calls.get(self.active_path)
-        if not call:
-            return
-        number = call['number']
-        self._pick_quick_response(None, lambda msg: self.ofono.send_quick_response(number, msg))
 
     def _open_calls_sheet(self):
         """Show swap, merge and transfer for the two-call mix."""
