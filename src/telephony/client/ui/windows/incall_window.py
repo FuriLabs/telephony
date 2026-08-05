@@ -23,7 +23,7 @@ from telephony.shared.services.system_state_service import SystemStateService
 from gettext import gettext as _
 from gettext import ngettext
 
-from telephony.shared.managers.audio_manager import TelephonyAudioManager
+from telephony.client.managers.call_feedback import CallFeedback
 from telephony.client.ui.windows.fader_window import ProximityFader
 from telephony.client.ui.windows.contact_picker_window import ContactPicker
 from telephony.client.ui.widgets.incall_elements_widget import (DynamicHangupButton, create_truncated_label)
@@ -132,7 +132,7 @@ class InCallWindow(Adw.Window):
         self.eds = eds_manager
         self.db = db_manager
         self.service_present = True
-        self.audio = TelephonyAudioManager()
+        self.audio = CallFeedback()
         self.fader = ProximityFader()
 
         self.lock_manager = LockScreenManager(self.ofono, self.eds, self.audio, self)
