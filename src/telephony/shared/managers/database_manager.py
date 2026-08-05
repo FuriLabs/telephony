@@ -81,7 +81,12 @@ class DatabaseManager(GObject.Object):
             logger.warning(f"[DB] Connection tuning failed: {e}")
 
     def init_dbs(self):
-        """Initialize all database connections and tables."""
+        """Open every database; only the writing side touches the schema.
+
+        A window may open files the daemon has not migrated yet on the
+        very first boot; its reads degrade gracefully and heal on the
+        next refresh once the daemon has run.
+        """
         try:
             data_dir = os.path.join(GLib.get_user_data_dir(), "telephony")
 
@@ -94,6 +99,23 @@ class DatabaseManager(GObject.Object):
 
             self.conn_contacts = sqlite3.connect(os.path.join(data_dir, "contacts.db"), check_same_thread=False)
             self._tune_connection(self.conn_contacts)
+            self.conn_calls = sqlite3.connect(os.path.join(data_dir, "calls.db"), check_same_thread=False)
+            self._tune_connection(self.conn_calls)
+            self.conn_messages = sqlite3.connect(os.path.join(data_dir, "messages.db"), check_same_thread=False)
+            self._tune_connection(self.conn_messages)
+            self.conn_blocklist = sqlite3.connect(os.path.join(data_dir, "blocklist.db"), check_same_thread=False)
+            self._tune_connection(self.conn_blocklist)
+
+            if self.owns_writes:
+                self._migrate_schema()
+
+            logger.info("[DB] Databases initialized.")
+        except Exception as e:
+            logger.error(f"[DB] Init Error: {e}")
+
+    def _migrate_schema(self):
+        """Create and upgrade every table; daemon only, the single writer."""
+        try:
             c = self.conn_contacts.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS contacts
                          (uid TEXT PRIMARY KEY,
@@ -110,8 +132,6 @@ class DatabaseManager(GObject.Object):
 
             self.conn_contacts.commit()
 
-            self.conn_calls = sqlite3.connect(os.path.join(data_dir, "calls.db"), check_same_thread=False)
-            self._tune_connection(self.conn_calls)
             c = self.conn_calls.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS history
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -131,8 +151,6 @@ class DatabaseManager(GObject.Object):
             c.execute("CREATE INDEX IF NOT EXISTS idx_history_number ON history(number)")
             self.conn_calls.commit()
 
-            self.conn_messages = sqlite3.connect(os.path.join(data_dir, "messages.db"), check_same_thread=False)
-            self._tune_connection(self.conn_messages)
             c = self.conn_messages.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS messages
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -177,18 +195,14 @@ class DatabaseManager(GObject.Object):
             self._upgrade_schema_messages()
             self._rebuild_fts()
 
-            self.conn_blocklist = sqlite3.connect(os.path.join(data_dir, "blocklist.db"), check_same_thread=False)
-            self._tune_connection(self.conn_blocklist)
             c = self.conn_blocklist.cursor()
             c.execute('''CREATE TABLE IF NOT EXISTS blocklist
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
                           number TEXT UNIQUE NOT NULL,
                           note TEXT)''')
             self.conn_blocklist.commit()
-
-            logger.info("[DB] Databases initialized.")
         except Exception as e:
-            logger.error(f"[DB] Init Error: {e}")
+            logger.error(f"[DB] Migrate Error: {e}")
 
     def _upgrade_schema_messages(self):
         """Check for and apply schema updates to the messages database."""
