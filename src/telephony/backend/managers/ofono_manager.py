@@ -111,6 +111,8 @@ class OfonoManager(GObject.Object):
         self.modem_online = None
         self._pending_dial = None
         self._pending_dial_timeout_id = 0
+        self.clir_hidden = False
+        self._dial_hides_id = False
 
         self.netreg_proxy = None
         self.netreg_handler_id = None
@@ -726,6 +728,7 @@ class OfonoManager(GObject.Object):
 
         call_proxy = self._get_proxy("org.ofono.VoiceCall", path)
 
+        is_outgoing = state not in ("incoming", "waiting")
         self.active_calls[path] = {
             "number": number,
             "state": state,
@@ -734,8 +737,11 @@ class OfonoManager(GObject.Object):
             "answered": (state == "active"),
             "proxy": call_proxy,
             "silenced": is_silenced,
+            "anonymous": (self._dial_hides_id or str(raw_number).startswith("#31#")) if is_outgoing else False,
             "multiparty": bool(props.get("Multiparty", False))
         }
+        if is_outgoing:
+            self._dial_hides_id = False
 
         if call_proxy:
             call_proxy.connect("g-signal", self._on_call_prop_changed, path)
@@ -803,7 +809,7 @@ class OfonoManager(GObject.Object):
             num = "Unknown"
 
         try:
-            self.db.add_call(num, None, status, duration)
+            self.db.add_call(num, None, status, duration, anonymous=bool(data.get("anonymous")))
         except Exception as e:
             logger.error(f"[OfonoManager] Logging call failed: {e}")
 
@@ -924,7 +930,10 @@ class OfonoManager(GObject.Object):
 
             self.emit('notification-cleared', clean_num)
 
-            clir = "enabled" if hide_id else "default"
+            if number.startswith("#31#"):
+                hide_id = True
+            clir = "enabled" if hide_id else ("disabled" if number.startswith("*31#") else "default")
+            self._dial_hides_id = bool(hide_id or (self.clir_hidden and clir == "default"))
             self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
             return self._refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
@@ -1367,6 +1376,8 @@ class OfonoManager(GObject.Object):
         if signal != "PropertyChanged":
             return
         name, value = params.unpack()
+        if service == "settings" and name == "HiddenId":
+            self.clir_hidden = (value == "enabled")
         GLib.idle_add(self.emit, 'network-service-changed', service, name, value)
 
     def on_call_forwarding_signal(self, proxy, sender, signal, params):

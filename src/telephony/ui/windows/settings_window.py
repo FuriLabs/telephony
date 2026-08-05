@@ -424,7 +424,7 @@ class SettingsWindow(Adw.Dialog):
 
     def _info_button(self, handler):
         """Build the round info button that opens an explanation sheet."""
-        button = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        button = Gtk.Button(icon_name="help-about-symbolic", valign=Gtk.Align.CENTER)
         button.add_css_class("flat")
         button.add_css_class("circular")
         button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
@@ -912,7 +912,7 @@ class SettingsWindow(Adw.Dialog):
 
             if item.get('uid') == "system-address-book":
                 btn_info_personal = Gtk.Button(
-                    icon_name="dialog-information-symbolic")
+                    icon_name="help-about-symbolic")
                 btn_info_personal.set_valign(Gtk.Align.CENTER)
                 btn_info_personal.add_css_class("flat")
                 btn_info_personal.add_css_class("circular")
@@ -921,7 +921,7 @@ class SettingsWindow(Adw.Dialog):
                 box.append(btn_info_personal)
             elif item.get('name') == "Andromeda Contacts":
                 btn_info_andro = Gtk.Button(
-                    icon_name="dialog-information-symbolic")
+                    icon_name="help-about-symbolic")
                 btn_info_andro.set_valign(Gtk.Align.CENTER)
                 btn_info_andro.add_css_class("flat")
                 btn_info_andro.add_css_class("circular")

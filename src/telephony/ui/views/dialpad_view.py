@@ -101,7 +101,7 @@ class DialpadView(Adw.Bin):
         self.anon_btn = Gtk.Button()
         anon_btn = self.anon_btn
         anon_btn.add_css_class("pill")
-        anon_btn.add_css_class("suggested-action")
+        anon_btn.add_css_class("btn-anon-green")
         anon_btn.add_css_class("compact-btn")
         anon_btn.set_size_request(74, 44)
         anon_content = Gtk.Box(spacing=4)
@@ -252,6 +252,11 @@ class DialpadView(Adw.Bin):
         """Handle anonymous call button click."""
         number = self.entry.get_text().strip()
         if not number:
+            return
+
+        favorite = self._favorite_for(number)
+        if favorite:
+            self.app_window.start_call(favorite.get("number", ""), hide_id=True)
             return
 
         if self._is_ussd(number):

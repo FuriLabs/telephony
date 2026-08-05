@@ -356,7 +356,7 @@ class HistoryView(Adw.Bin):
             raw_rows = raw_rows[:self.page_limit]
 
         for r in raw_rows:
-            call_id, number, _ignored, direction, duration, ts_str = r
+            call_id, number, _ignored, direction, duration, ts_str, anonymous = r
 
             if not self.is_search_mode and self.active_bucket != 'any':
                 try:
@@ -418,7 +418,8 @@ class HistoryView(Adw.Bin):
                 "duration": duration,
                 "full_ts": full_ts_str,
                 "display_time": display_time_str,
-                "is_saved": is_saved
+                "is_saved": is_saved,
+                "anonymous": bool(anonymous)
             })
 
         self.last_fetch_has_more = has_more
@@ -442,7 +443,8 @@ class HistoryView(Adw.Bin):
                 d["duration"],
                 d["full_ts"],
                 d["display_time"],
-                d["is_saved"]
+                d["is_saved"],
+                anonymous=d["anonymous"]
             ))
 
         if new_call_items:

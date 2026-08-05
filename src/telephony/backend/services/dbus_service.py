@@ -1382,7 +1382,7 @@ class TelephonyDaemonDBus:
         """Handle GetCallHistory command."""
         limit = parameters.unpack()[0]
         rows = self.db.get_history(limit=limit) if self.db else []
-        data = [{"id": r[0], "number": r[1], "name": r[2], "direction": r[3], "duration": r[4], "timestamp": r[5]} for r in rows]
+        data = [{"id": r[0], "number": r[1], "name": r[2], "direction": r[3], "duration": r[4], "timestamp": r[5], "anonymous": bool(r[6])} for r in rows]
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
     def _handle_getconversations(self, parameters, invocation):

@@ -285,7 +285,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
     def _info_button(self, handler):
         """Build the round info button that opens an explanation sheet."""
-        button = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        button = Gtk.Button(icon_name="help-about-symbolic", valign=Gtk.Align.CENTER)
         button.add_css_class("flat")
         button.add_css_class("circular")
         button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
@@ -339,7 +339,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         row.set_active(self.parent_win.main_window.gsettings_mgr.get_setting(setting_key) == "true")
         row.connect("notify::active", lambda w, _p: self.parent_win.main_window.gsettings_mgr.set_setting(
             setting_key, "true" if w.get_active() else "false"))
-        btn_info = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        btn_info = Gtk.Button(icon_name="help-about-symbolic", valign=Gtk.Align.CENTER)
         btn_info.add_css_class("flat")
         btn_info.add_css_class("circular")
         btn_info.connect("clicked", lambda b: GLib.idle_add(lambda: info_handler(b) or False))
