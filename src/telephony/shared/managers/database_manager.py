@@ -33,6 +33,10 @@ SQLITE_CACHE_KIB = 512
 PHONE_VARIANT_PATTERN = re.compile(r"[0-9+*#]+")
 
 
+HISTORY_COLUMNS = ("id", "number", "name", "direction", "duration",
+                   "timestamp", "anonymous", "multiparty", "transferred")
+
+
 class DatabaseManager(GObject.Object):
     """
     Manages SQLite databases for settings, calls, messages, contacts, and blocklist.
@@ -450,7 +454,7 @@ class DatabaseManager(GObject.Object):
                 params.extend([limit, offset])
 
                 c.execute(sql, params)
-                return c.fetchall()
+                return [dict(zip(HISTORY_COLUMNS, r)) for r in c.fetchall()]
         except Exception as e:
             logger.error(f"[DB] Get History Error: {e}")
             return []
@@ -485,7 +489,7 @@ class DatabaseManager(GObject.Object):
                 params.extend([limit, offset])
 
                 c.execute(sql, params)
-                return c.fetchall()
+                return [dict(zip(HISTORY_COLUMNS, r)) for r in c.fetchall()]
         except Exception as e:
             logger.error(f"[DB] Search History Error: {e}")
             return []
