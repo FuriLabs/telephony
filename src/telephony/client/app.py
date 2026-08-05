@@ -29,7 +29,8 @@ gi.require_version('EBook', '1.2')
 from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.utils.system_utils import launch_desktop_uri
+from telephony.shared.utils.system_utils import launch_desktop_uri, ensure_daemon_running
+from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import (APP_ID, INCALL_DESKTOP_FILE, CALLS_DESKTOP_FILE, MESSAGES_DESKTOP_FILE)
 from telephony.client.window_core import WindowCore
 from telephony.client.ui.main_window import MainWindow
@@ -86,6 +87,8 @@ class App(Adw.Application):
         """Perform application startup tasks."""
         Gtk.Application.do_startup(self)
         GLib.set_prgname(self.get_application_id())
+
+        run_in_background(ensure_daemon_running)
 
         if not Gst.is_initialized():
             Gst.init(None)

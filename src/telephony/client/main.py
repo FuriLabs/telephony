@@ -17,7 +17,6 @@
 import os
 import sys
 import signal
-import time
 
 script_path = os.path.realpath(__file__)
 package_dir = os.path.dirname(os.path.dirname(script_path))
@@ -27,8 +26,6 @@ sys.path.insert(0, install_dir)
 
 from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.translation_utils import install_i18n
-from telephony.shared.utils.system_utils import (start_systemd_service, is_systemd_service_active,
-                                                 is_daemon_bus_running)
 from telephony.shared.constants import APP_ID, INCALL_APP_ID
 
 MESSAGE_URI_SCHEMES = ("sms:", "smsto:", "mms:", "mmsto:")
@@ -51,26 +48,6 @@ def messaging_requested(argv):
 def call_requested(argv):
     """Return True when the arguments name a number to dial."""
     return any(a.startswith(CALL_URI_SCHEMES) for a in argv)
-
-
-def ensure_daemon_running():
-    """Start the telephony service if it is not on the bus yet."""
-    if is_daemon_bus_running():
-        logger.info("Daemon already running (D-Bus). Skipping systemd check.")
-        return
-    try:
-        if not is_systemd_service_active("telephony.service"):
-            logger.info("Telephony service not running. Starting it...")
-            start_systemd_service("telephony.service")
-
-        logger.info("Waiting for the telephony daemon to appear on the bus...")
-        for _ in range(20):
-            if is_daemon_bus_running():
-                logger.info("Daemon is now running.")
-                break
-            time.sleep(0.5)
-    except Exception as e:
-        logger.warning(f"Failed to check/start systemd service: {e}")
 
 
 def main():
@@ -100,8 +77,6 @@ def main():
 
     if not has_ui_flags and "--incall" not in sys.argv:
         sys.argv.append("--full")
-
-    ensure_daemon_running()
 
     if "--calls" in sys.argv:
         application_id = f"{APP_ID}.Calls"
