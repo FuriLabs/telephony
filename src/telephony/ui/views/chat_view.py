@@ -1100,6 +1100,37 @@ class ChatPage(Gtk.Box):
             self.attachments.append(path)
             self.refresh_attachment_ui()
 
+    def refresh_attachment_ui(self):
+        """Update attachment UI area."""
+        while child := self.att_box.get_first_child():
+            self.att_box.remove(child)
+        if not self.attachments:
+            self.att_scrolled.set_visible(False)
+            return
+        self.att_scrolled.set_visible(True)
+        for path in self.attachments:
+            chip = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            chip.add_css_class("att-chip")
+            lbl = Gtk.Label(label=os.path.basename(path))
+            lbl.set_ellipsize(Pango.EllipsizeMode.END)
+            lbl.set_max_width_chars(20)
+            btn_close = Gtk.Button(icon_name="window-close-symbolic", css_classes=["flat", "circular"])
+            btn_close.connect("clicked", lambda b, p=path: GLib.idle_add(lambda: self.remove_attachment_by_path(p) or False))
+            chip.append(lbl)
+            chip.append(btn_close)
+            self.att_box.append(chip)
+
+    def remove_attachment_by_path(self, path_to_remove):
+        """Remove an attachment from the list."""
+        if path_to_remove in self.attachments:
+            self.attachments.remove(path_to_remove)
+            if "/tmp/" in path_to_remove and os.path.exists(path_to_remove):
+                try:
+                    os.remove(path_to_remove)
+                except Exception as e:
+                    logger.warning(f"[Chat] Temp file removal failed: {e}")
+            self.refresh_attachment_ui()
+
     def load_context_for_message(self, msg_id):
         """Load messages around a specific message ID."""
         self.is_jumping = True
