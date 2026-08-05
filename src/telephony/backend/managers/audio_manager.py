@@ -50,6 +50,9 @@ class TelephonyAudioManager:
             return
         self._initialized = True
         self._last_mute_state = None
+        self.current_route = "earpiece"
+        self.current_input = "mic"
+        self.mic_muted = False
         self.lfb_available = True
 
         try:
@@ -377,12 +380,14 @@ class TelephonyAudioManager:
                     return
 
                 pulse.sink_port_set(sink.index, port_name)
+                self.current_route = mode
                 logger.info(f"[Audio] Output route set to {mode} ({port_name})")
         except Exception as e:
             logger.error(f"[Audio] Set route failed: {e}")
 
     def set_input_route(self, mode="mic"):
         """Route input audio to mic or dummy routes."""
+        self.current_input = mode
         logger.info(f"[Audio] Setting input route: {mode}")
 
     def initial_call_route(self):
@@ -588,6 +593,7 @@ class TelephonyAudioManager:
                 if source:
                     pulse.source_mute(source.index, muted)
                     self._last_mute_state = muted
+                    self.mic_muted = muted
                     logger.info(f"[Audio] Microphone mute set to: {muted}")
                 else:
                     logger.warning(f"[Audio] Default source {default_source_name} not found")

@@ -21,6 +21,7 @@ from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _, ngettext
 
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.contact_display_utils import resolve_contact_name
 from ...backend.utils.locale_utils import get_date_format, get_time_format
 from ...backend.utils.model_utils import CallItem
 from ..widgets.common_widget import DataLoader
@@ -402,17 +403,7 @@ class HistoryView(Adw.Bin):
 
             norm_num = normalize_number(number)
 
-            raw_contact = contact_map.get(norm_num)
-            if raw_contact:
-                if isinstance(raw_contact, list) and raw_contact:
-                    best = sorted(raw_contact, key=lambda x: x[0])[0]
-                    real_name = best[1]
-                elif isinstance(raw_contact, str):
-                    real_name = raw_contact
-                else:
-                    real_name = number
-            else:
-                real_name = number
+            real_name = resolve_contact_name(contact_map, number) or number
 
             if not real_name or real_name == "Unknown":
                 real_name = _("Unknown")

@@ -23,7 +23,7 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, Gio, GLib, Gdk
 from telephony.backend.utils.log_utils import logger
 
-from ..backend.utils.phone_utils import normalize_number, get_own_number
+from ..backend.utils.phone_utils import normalize_number
 from ..backend.utils.system_utils import get_phosh_emergency_calls
 from ..backend.utils import region_utils as utils
 from .views.history_view import HistoryView
@@ -38,6 +38,8 @@ from .windows.info_window import InfoPage
 from .windows.contact_picker_window import ContactPicker
 from .windows.duplicate_resolution_window import DuplicateResolutionWindow
 from .widgets.common_widget import present_choice_sheet, add_choice_row, build_info_sheet
+
+CAPABILITY_BANNER_REASONS = ("no-modem", "airplane-mode", "no-voice-service")
 
 
 class MainWindow(Adw.Window):
@@ -149,7 +151,9 @@ class MainWindow(Adw.Window):
         if self.ofono:
             for sig in ('call-added', 'call-removed', 'dial-availability-changed'):
                 self.signal_ids.append((self.ofono, self.ofono.connect(sig, self._refresh_calling_controls)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('dial-availability-changed', self._on_capability_changed)))
             self.signal_ids.append((self.ofono, self.ofono.connect('modem-interface-appeared', self._on_modem_interface_appeared)))
+            self._on_capability_changed()
 
         if self.msgs_page:
             self.signal_ids.append((self.db, self.db.connect('messages-updated', lambda *args: self.update_unread_badge())))
@@ -212,26 +216,38 @@ class MainWindow(Adw.Window):
             self.enqueue_popup(missed_messages_dialog.check_missed_scheduled_messages)
 
     def check_daemon_service(self):
-        """Say when the background service is down, and offer to start it.
+        """Show the service state this window was born into."""
+        self.apply_service_presence(not self.app.daemon_missing,
+                                    self.app.core.service_monitor.state)
 
-        Without it nothing answers for calls or arriving messages, and
-        this window will not stand in, so the user has to know.
+    def apply_service_presence(self, present, unit_state):
+        """Keep a standing banner while the service is away.
+
+        Without the service nothing answers for incoming calls or
+        arriving messages, so its absence deserves a lasting surface.
+        Sending stays enabled: a send revives the service through bus
+        activation. Only the failed state blocks activation, and its
+        Start path resets the unit first.
         """
-        if not self.app.daemon_missing:
+        if present:
+            self.clear_banner_state("service")
             return
+        if unit_state == "restarting":
+            self.set_banner_state("service", _("Telephony service is restarting…"), priority=30)
+            return
+        self.set_banner_state("service", _("Telephony service is not running"),
+                              button_label=_("Start"),
+                              action=self._start_service_from_banner,
+                              priority=30)
 
-        toast = Adw.Toast.new(_("Telephony service is not running"))
-        toast.set_timeout(0)
-        toast.set_button_label(_("Start"))
-        toast.connect("button-clicked", lambda t: self.app.retry_daemon_start(self._on_daemon_retried))
-        self.toast_overlay.add_toast(toast)
+    def _start_service_from_banner(self):
+        """Run the banner's start offer."""
+        self.app.start_service(self._on_daemon_retried)
 
     def _on_daemon_retried(self, started):
         """Report whether the service answered this time."""
         if started:
             self.notify_success(_("Telephony service started"))
-            return
-        self.check_daemon_service()
 
     def on_close_request(self, *args):
         """Handle window close request."""
@@ -271,7 +287,7 @@ class MainWindow(Adw.Window):
     def check_own_number(self):
         """Check if own number is set, warn if not."""
         def _check():
-            num = get_own_number()
+            num = self.app.daemon_client.get_own_number()
             if not num:
                 num = self.gsettings_mgr.get_setting("own_number")
 
@@ -286,7 +302,7 @@ class MainWindow(Adw.Window):
             if cc:
                 utils.set_custom_region(cc)
             else:
-                region = utils.detect_region()
+                region = self.app.daemon_client.detect_region()
                 if region:
                     self.gsettings_mgr.set_setting("default_country_code", region)
                     utils.set_custom_region(region)
@@ -523,6 +539,19 @@ class MainWindow(Adw.Window):
         """Log ofono status changes; the recovery flow owns the surfacing."""
         logger.debug(f"[MainWindow] ofono status {status}: {message}")
 
+    def _on_capability_changed(self, *args):
+        """Say why calls cannot be placed, when the reason will last.
+
+        Transient states stay off the banner: warming up and call
+        teardown resolve themselves in seconds, and an ongoing call is
+        not a problem to report. Messaging is store-and-forward and is
+        never gated by any of this.
+        """
+        if self.ofono.dial_reason in CAPABILITY_BANNER_REASONS:
+            self.set_banner_state("capability", self.ofono.dial_description, priority=20)
+        else:
+            self.clear_banner_state("capability")
+
     def _on_stack_page_changed(self, *args):
         """Build the newly selected view lazily and refresh the chrome."""
         self._ensure_view(self.stack.get_visible_child_name())
@@ -561,13 +590,6 @@ class MainWindow(Adw.Window):
             self.contacts_view = ContactsView(self.eds, self)
             placeholder.set_child(self.contacts_view)
             self._refresh_calling_controls()
-
-    def handle_new_message(self, sender, body, attachments=[], real_sender=None):
-        """Handle new message injection into UI."""
-        if not self.messages_view:
-            return False
-
-        return self.messages_view.handle_incoming_ui(sender, body, attachments, msg_sender=real_sender)
 
     def open_chat_for_number(self, number):
         """Switch to messages view and open chat."""
@@ -783,10 +805,8 @@ class MainWindow(Adw.Window):
         self.set_focus(None)
 
         if self.ofono and not self.ofono.dialing_available():
-            if self.ofono.audio.voice_profile_active:
-                self.notify_error(_("Please wait, the previous call is still ending"))
-            else:
-                self.notify_error(_("Call Failed"))
+            description = self.ofono.dial_description
+            self.notify_error(description if description else _("Call Failed"))
             return
 
         status_msg = _("Calling (Anonymous)...") if hide_id else _("Calling {number}...").format(number=number)

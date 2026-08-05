@@ -68,6 +68,35 @@ class DaemonClient:
             params, None, Gio.DBusCallFlags.NONE,
             DAEMON_CALL_TIMEOUT_MS, None, self._on_async_done, method)
 
+    def call_with_reply(self, method, params, callback, timeout_ms=DAEMON_CALL_TIMEOUT_MS):
+        """Ask and hand the unpacked reply to callback on the main loop.
+
+        The callback receives None when the owner could not be reached or
+        refused the call at the bus level, so silence stays distinguishable
+        from a refusal the owner actually answered.
+        """
+        if not self.bus:
+            GLib.idle_add(callback, None)
+            return
+
+        def done(bus, result):
+            try:
+                res = bus.call_finish(result)
+            except Exception as e:
+                logger.error(f"[DaemonClient] {method} failed: {e}")
+                callback(None)
+                return
+            callback(res.unpack() if res is not None else None)
+
+        self.bus.call(
+            DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE, method,
+            params, None, Gio.DBusCallFlags.NONE,
+            timeout_ms, None, done)
+
+    def dial(self, number, hide_id, callback):
+        """Place a call through the owner; callback hears (success, message) or None."""
+        self.call_with_reply("Dial", GLib.Variant("(sb)", (number, bool(hide_id))), callback)
+
     def _on_async_done(self, bus, result, method):
         """Log an asked action that the owner refused."""
         try:
@@ -283,6 +312,102 @@ class DaemonClient:
                           GLib.Variant("(ss)", (vcard_data, source_uid or "")),
                           GLib.VariantType("(i)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply[0] if reply else 0
+
+    def import_sim_contacts(self, source_uid=None):
+        """Import the SIM phonebook into a book; blocking, call from a worker.
+
+        Returns (count, message) where message is a stable code, or None
+        when the owner could not be reached.
+        """
+        return self.call("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
+                         GLib.VariantType("(is)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def get_telephony_state(self):
+        """Read the full state snapshot; blocking, call from a worker."""
+        reply = self.call("GetTelephonyState", None, GLib.VariantType("(a{sv})"))
+        return reply[0] if reply is not None else None
+
+    def set_active_chat(self, number):
+        """Tell the owner which chat is open so its alerts stay quiet."""
+        self.call_async("SetActiveChat", GLib.Variant("(s)", (number or "",)))
+
+    def disable_all_forwarding(self):
+        """Clear every forwarding rule; blocking, call from a worker."""
+        return self.call("DisableAllForwarding", None,
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def disable_all_barrings(self, password):
+        """Clear every barring rule; blocking, call from a worker."""
+        return self.call("DisableAllBarrings", GLib.Variant("(s)", (password,)),
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def change_barring_password(self, old, new):
+        """Change the network barring password; blocking, call from a worker."""
+        return self.call("ChangeBarringPassword", GLib.Variant("(ss)", (old, new)),
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def set_setting(self, key, value):
+        """Ask the owner to persist one setting; dconf notifies readers."""
+        packed = json.dumps(value) if isinstance(value, (list, dict)) else str(value)
+        self.call_async("SetSetting", GLib.Variant("(ss)", (key, packed)))
+
+    def get_own_number(self):
+        """Read the subscriber's number; blocking, call from a worker."""
+        reply = self.call("GetOwnNumber", None, GLib.VariantType("(s)"))
+        return reply[0] if reply and reply[0] else None
+
+    def detect_region(self):
+        """Detect the network region; blocking, call from a worker."""
+        reply = self.call("DetectRegion", None, GLib.VariantType("(s)"))
+        return reply[0] if reply and reply[0] else None
+
+    def request_recovery(self, callback):
+        """Run modem recovery; callback hears the verdict, or None."""
+        self.call_with_reply("RequestRecovery", None, callback,
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def clear_notification(self, number):
+        """Tell the owner its alerts for a number were seen."""
+        self.call_async("ClearNotification", GLib.Variant("(s)", (number,)))
+
+    def silence_ring(self):
+        """Ask the owner to stop the ringer."""
+        self.call_async("SilenceRing")
+
+    def set_audio_route(self, route):
+        """Ask the owner to move call audio to an output route."""
+        self.call_async("SetAudioRoute", GLib.Variant("(s)", (route,)))
+
+    def set_input_route(self, route):
+        """Ask the owner to move call input to a route."""
+        self.call_async("SetInputRoute", GLib.Variant("(s)", (route,)))
+
+    def set_delivery_reports(self, enabled):
+        """Ask the network for delivery reports; blocking, call from a worker."""
+        return self.call("SetDeliveryReports", GLib.Variant("(b)", (bool(enabled),)),
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def set_mic_muted(self, muted):
+        """Ask the owner to mute or unmute the microphone."""
+        self.call_async("MuteMic" if muted else "UnmuteMic")
+
+    def get_audio_routes(self):
+        """List selectable routes; blocking, call from a worker.
+
+        Returns (outputs, inputs) as (id, available) pairs, or None
+        when the owner is away.
+        """
+        return self.call("GetAudioRoutes", None, GLib.VariantType("(a(sb)a(sb))"))
+
+    def prepare_attachment(self, source_path, max_bytes):
+        """Have the owner store and fit an attachment; blocking, call from a worker.
+
+        Returns (path, code) — path is empty when preparation failed —
+        or None when the owner could not be reached.
+        """
+        return self.call("PrepareAttachment",
+                         GLib.Variant("(si)", (source_path, int(max_bytes))),
+                         GLib.VariantType("(ss)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def clear_contacts(self, source_uid=None):
         """Delete every contact of a source, or all unprotected ones; blocking."""

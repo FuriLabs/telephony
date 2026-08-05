@@ -22,9 +22,24 @@ from telephony.backend.utils.log_utils import logger
 import uuid
 
 from telephony.backend.utils.thread_utils import run_in_background
+from telephony.backend.utils.phone_utils import get_own_number
+from telephony.backend.utils.region_utils import detect_region
+from telephony.backend.utils.attachment_utils import prepare_attachment, own_attachments
 from telephony.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 MISSED_MESSAGE_BUFFER_MINUTES = 14400
+
+
+def _to_variant(value):
+    """Wrap a plain python value as the matching GLib.Variant."""
+    if isinstance(value, bool):
+        return GLib.Variant("b", value)
+    if isinstance(value, int):
+        return GLib.Variant("i", value)
+    if isinstance(value, float):
+        return GLib.Variant("d", value)
+    return GLib.Variant("s", str(value))
+
 
 DAEMON_INTERFACE_XML = """
 <node>
@@ -34,6 +49,7 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="number" direction="in"/>
       <arg type="b" name="hide_id" direction="in"/>
       <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
     </method>
     <method name="Answer">
       <arg type="s" name="call_path" direction="in"/>
@@ -307,6 +323,90 @@ DAEMON_INTERFACE_XML = """
     <signal name="ContactsChanged"/>
     <signal name="BlocklistChanged"/>
     <signal name="HistoryChanged"/>
+    <method name="GetTelephonyState">
+      <arg type="a{sv}" name="state" direction="out"/>
+    </method>
+    <method name="SetActiveChat">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="ImportSimContacts">
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="i" name="count" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="DisableAllForwarding">
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="DisableAllBarrings">
+      <arg type="s" name="password" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="ChangeBarringPassword">
+      <arg type="s" name="old_password" direction="in"/>
+      <arg type="s" name="new_password" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="GetOwnNumber">
+      <arg type="s" name="number" direction="out"/>
+    </method>
+    <method name="RequestRecovery">
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="ClearNotification">
+      <arg type="s" name="number" direction="in"/>
+    </method>
+    <method name="PrepareAttachment">
+      <arg type="s" name="source_path" direction="in"/>
+      <arg type="i" name="max_bytes" direction="in"/>
+      <arg type="s" name="path" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="SilenceRing">
+    </method>
+    <method name="SetAudioRoute">
+      <arg type="s" name="route" direction="in"/>
+    </method>
+    <method name="SetInputRoute">
+      <arg type="s" name="route" direction="in"/>
+    </method>
+    <method name="SetDeliveryReports">
+      <arg type="b" name="enabled" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
+    <method name="GetAudioRoutes">
+      <arg type="a(sb)" name="outputs" direction="out"/>
+      <arg type="a(sb)" name="inputs" direction="out"/>
+    </method>
+    <method name="DetectRegion">
+      <arg type="s" name="region" direction="out"/>
+    </method>
+    <signal name="NetworkServiceChanged">
+      <arg type="s" name="service"/>
+      <arg type="s" name="name"/>
+      <arg type="s" name="value"/>
+    </signal>
+    <signal name="CapabilityChanged">
+      <arg type="b" name="can_dial"/>
+      <arg type="s" name="reason"/>
+      <arg type="s" name="description"/>
+    </signal>
+    <signal name="ModemStateChanged">
+      <arg type="a{sv}" name="state"/>
+    </signal>
+    <signal name="VoicemailChanged">
+      <arg type="b" name="waiting"/>
+      <arg type="i" name="count"/>
+    </signal>
+    <signal name="AudioRouteChanged">
+      <arg type="a{sv}" name="state"/>
+    </signal>
+    <signal name="UssdReceived">
+      <arg type="s" name="text"/>
+    </signal>
     <signal name="RecoveryStateChanged">
       <arg type="b" name="active"/>
       <arg type="s" name="message"/>
@@ -373,6 +473,16 @@ class TelephonyDaemonDBus:
             self.ofono.connect('call-changed', self._on_call_changed)
             self.ofono.connect('call-removed', self._on_call_removed)
             self.ofono.connect('incoming-message', self._on_incoming_message)
+            self.ofono.connect('dial-availability-changed', self._on_dial_availability_changed)
+            self.ofono.connect('connection-status', self._on_modem_presence_changed)
+            self.ofono.connect('modem-interface-appeared', self._on_modem_presence_changed)
+            self.ofono.connect('voicemail-changed', self._on_voicemail_changed)
+            self.ofono.connect('ussd-notification', self._on_ussd_received)
+            self.ofono.connect('network-service-changed', self._on_network_service_changed)
+
+        if self.app and self.app.call_audio:
+            self.app.call_audio.connect('audio-state-applied',
+                                        lambda *_args: self._emit_audio_route())
 
     def _on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
@@ -386,6 +496,89 @@ class TelephonyDaemonDBus:
 
     def _on_incoming_message(self, manager, number, body):
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
+
+    def _on_dial_availability_changed(self, _manager, _available):
+        self._emit_capability()
+
+    def _emit_capability(self):
+        """Broadcast whether calls can be placed and why not."""
+        can_dial, reason, description = self.ofono.capability_state()
+        self.emit_signal("CapabilityChanged", GLib.Variant("(bss)", (can_dial, reason, description)))
+
+    def _on_modem_presence_changed(self, _manager, *_args):
+        """Broadcast the modem snapshot; presence also moves capability."""
+        state = self.ofono.modem_state()
+        packed = {
+            "present": GLib.Variant("b", state["present"]),
+            "online": GLib.Variant("b", state["online"]),
+            "interfaces": GLib.Variant("as", state["interfaces"]),
+            "emergency_numbers": GLib.Variant("as", state["emergency_numbers"]),
+        }
+        self.emit_signal("ModemStateChanged", GLib.Variant("(a{sv})", (packed,)))
+        self._emit_capability()
+
+    def _on_voicemail_changed(self, _manager, waiting, count):
+        self.emit_signal("VoicemailChanged", GLib.Variant("(bi)", (waiting, count)))
+
+    def _on_ussd_received(self, _manager, text):
+        self.emit_signal("UssdReceived", GLib.Variant("(s)", (text,)))
+
+    def _emit_audio_route(self):
+        """Broadcast the applied in-call audio route."""
+        audio = self.ofono.audio
+        packed = {
+            "speaker": GLib.Variant("b", audio.current_route == "speaker"),
+            "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "route": GLib.Variant("s", audio.current_route),
+            "input": GLib.Variant("s", audio.current_input),
+        }
+        self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
+
+    def _on_network_service_changed(self, _manager, service, name, value):
+        self.emit_signal("NetworkServiceChanged", GLib.Variant("(sss)", (service, name, str(value))))
+
+    def _handle_getownnumber(self, parameters, invocation):
+        """Read the subscriber's own number for a window instance."""
+        run_in_background(get_own_number,
+                          on_complete=lambda num: invocation.return_value(GLib.Variant("(s)", (num or "",))))
+
+    def _handle_detectregion(self, parameters, invocation):
+        """Detect the network region for a window instance."""
+        run_in_background(detect_region,
+                          on_complete=lambda region: invocation.return_value(GLib.Variant("(s)", (region or "",))))
+
+    def _handle_requestrecovery(self, parameters, invocation):
+        """Run modem recovery for a window instance; the reply is the verdict."""
+        state = {"resolved": False}
+
+        def resolve(success):
+            if state["resolved"]:
+                return
+            state["resolved"] = True
+            invocation.return_value(GLib.Variant("(b)", (success,)))
+
+        started = self.app.request_auto_recovery(on_done=resolve)
+        if not started:
+            resolve(False)
+
+    def _handle_clearnotification(self, parameters, invocation):
+        """Withdraw the notifications a window says the user has seen."""
+        number = parameters.unpack()[0]
+        self.app.clear_notification(number)
+        invocation.return_value(None)
+
+    def _handle_prepareattachment(self, parameters, invocation):
+        """Store an attachment and make it fit the caller's byte budget."""
+        source_path, max_bytes = parameters.unpack()
+
+        def task():
+            return prepare_attachment(source_path, max_bytes)
+
+        def done(result):
+            path, message = result if result else (None, "error")
+            invocation.return_value(GLib.Variant("(ss)", (path or "", message)))
+
+        run_in_background(task, on_complete=done)
 
     def _handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
@@ -466,6 +659,95 @@ class TelephonyDaemonDBus:
         active, message, failed = self.app.recovery_state
         invocation.return_value(GLib.Variant("(bsb)", (active, message, failed)))
 
+    def _handle_gettelephonystate(self, parameters, invocation):
+        """Assemble the full snapshot a client seeds its mirror from.
+
+        Everything the signals report incrementally is here in one read,
+        so a client that subscribes first and seeds second misses nothing.
+        """
+        can_dial, reason, description = self.ofono.capability_state()
+        modem = self.ofono.modem_state()
+        audio = self.ofono.audio
+        recovery_active, recovery_message, recovery_failed = self.app.recovery_state
+        calls = {path: GLib.Variant("a{sv}", {k: _to_variant(v) for k, v in props.items()})
+                 for path, props in self.ofono.calls_snapshot().items()}
+        state = {
+            "calls": GLib.Variant("a{sv}", calls),
+            "can_dial": GLib.Variant("b", can_dial),
+            "dial_reason": GLib.Variant("s", reason),
+            "dial_description": GLib.Variant("s", description),
+            "modem_present": GLib.Variant("b", modem["present"]),
+            "modem_online": GLib.Variant("b", modem["online"]),
+            "interfaces": GLib.Variant("as", modem["interfaces"]),
+            "emergency_numbers": GLib.Variant("as", modem["emergency_numbers"]),
+            "voicemail_waiting": GLib.Variant("b", self.ofono.voicemail_waiting),
+            "voicemail_count": GLib.Variant("i", self.ofono.voicemail_count),
+            "voicemail_mailbox": GLib.Variant("s", self.ofono.voicemail_mailbox),
+            "speaker": GLib.Variant("b", audio.current_route == "speaker"),
+            "mic_muted": GLib.Variant("b", audio.mic_muted),
+            "route": GLib.Variant("s", audio.current_route),
+            "input": GLib.Variant("s", audio.current_input),
+            "recovery_active": GLib.Variant("b", recovery_active),
+            "recovery_message": GLib.Variant("s", recovery_message),
+            "recovery_failed": GLib.Variant("b", recovery_failed),
+        }
+        invocation.return_value(GLib.Variant("(a{sv})", (state,)))
+
+    def _handle_setactivechat(self, parameters, invocation):
+        """Handle SetActiveChat command; an empty number clears it."""
+        number = parameters.unpack()[0]
+        self.ofono.set_active_chat(number if number else None)
+        invocation.return_value(None)
+
+    def _reply_ss_result(self, invocation, result):
+        """Answer a supplementary-service request with its worker result."""
+        ok, error = result if result else (False, "no reply")
+        invocation.return_value(GLib.Variant("(bs)", (ok, error or "")))
+
+    def _handle_disableallforwarding(self, parameters, invocation):
+        """Handle DisableAllForwarding command."""
+        run_in_background(self.ofono.disable_all_forwarding,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_disableallbarrings(self, parameters, invocation):
+        """Handle DisableAllBarrings command."""
+        password = parameters.unpack()[0]
+        run_in_background(self.ofono.disable_all_barrings, password,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_changebarringpassword(self, parameters, invocation):
+        """Handle ChangeBarringPassword command."""
+        old, new = parameters.unpack()
+        run_in_background(self.ofono.change_barring_password, old, new,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_importsimcontacts(self, parameters, invocation):
+        """Read the SIM phonebook and import its vcards for a window instance."""
+        source_uid = parameters.unpack()[0]
+
+        if self._is_protected_source(source_uid, "[DBus] Refusing SIM import to {name}"):
+            invocation.return_value(GLib.Variant("(is)", (-1, "protected-book")))
+            return
+
+        def task():
+            return self.ofono.import_sim_contacts()
+
+        def done(vcard_data):
+            if vcard_data is None:
+                invocation.return_value(GLib.Variant("(is)", (-1, "sim-read-failed")))
+                return
+            vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
+            if not vcards:
+                invocation.return_value(GLib.Variant("(is)", (0, "empty")))
+                return
+            count = 0
+            for vcard in vcards:
+                if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
+                    count += 1
+            invocation.return_value(GLib.Variant("(is)", (count, "")))
+
+        run_in_background(task, on_complete=done)
+
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
             None,
@@ -496,6 +778,22 @@ class TelephonyDaemonDBus:
             "GetNetworkProperties": self._handle_getnetworkproperties,
             "SetNetworkProperty": self._handle_setnetworkproperty,
             "GetRecoveryState": self._handle_getrecoverystate,
+            "GetTelephonyState": self._handle_gettelephonystate,
+            "SetActiveChat": self._handle_setactivechat,
+            "ImportSimContacts": self._handle_importsimcontacts,
+            "DisableAllForwarding": self._handle_disableallforwarding,
+            "DisableAllBarrings": self._handle_disableallbarrings,
+            "ChangeBarringPassword": self._handle_changebarringpassword,
+            "GetOwnNumber": self._handle_getownnumber,
+            "DetectRegion": self._handle_detectregion,
+            "RequestRecovery": self._handle_requestrecovery,
+            "ClearNotification": self._handle_clearnotification,
+            "PrepareAttachment": self._handle_prepareattachment,
+            "SilenceRing": self._handle_silencering,
+            "SetAudioRoute": self._handle_setaudioroute,
+            "SetInputRoute": self._handle_setinputroute,
+            "SetDeliveryReports": self._handle_setdeliveryreports,
+            "GetAudioRoutes": self._handle_getaudioroutes,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
             "MarkThreadAsRead": self._handle_markthreadasread,
@@ -558,14 +856,24 @@ class TelephonyDaemonDBus:
             invocation.return_dbus_error("org.freedesktop.DBus.Error.UnknownMethod", f"Method {method_name} is not implemented")
 
     def _handle_dial(self, parameters, invocation):
-        """Handle Dial command."""
+        """Handle Dial command; the reply waits for the real outcome."""
         number, hide_id = parameters.unpack()
-        success = True
+        state = {"resolved": False}
+
+        def on_result(success, message):
+            if state["resolved"]:
+                return
+            state["resolved"] = True
+            invocation.return_value(GLib.Variant("(bs)", (success, message)))
 
         def do_dial():
-            self.ofono.dial(number, hide_id=hide_id)
+            try:
+                self.ofono.dial(number, hide_id=hide_id, on_result=on_result)
+            except Exception as e:
+                logger.error(f"[DBusService] Dial failed: {e}")
+                on_result(False, str(e))
+
         GLib.idle_add(do_dial)
-        invocation.return_value(GLib.Variant("(b)", (success,)))
 
     def _handle_answer(self, parameters, invocation):
         """Handle Answer command."""
@@ -606,22 +914,57 @@ class TelephonyDaemonDBus:
 
     def _handle_mutemic(self, parameters, invocation):
         """Handle MuteMic command."""
-        if self.ofono:
-            self.ofono.audio.mute(True)
+        self.app.call_audio.set_mic_muted(True)
         invocation.return_value(None)
 
     def _handle_unmutemic(self, parameters, invocation):
         """Handle UnmuteMic command."""
-        if self.ofono:
-            self.ofono.audio.mute(False)
+        self.app.call_audio.set_mic_muted(False)
         invocation.return_value(None)
 
     def _handle_setspeakerphone(self, parameters, invocation):
         """Handle SetSpeakerphone command."""
         enable = parameters.unpack()[0]
-        if self.ofono:
-            self.ofono.audio.set_audio_route("speaker" if enable else "earpiece")
+        self.app.call_audio.set_route("speaker" if enable else "earpiece")
         invocation.return_value(None)
+
+    def _handle_silencering(self, parameters, invocation):
+        """Handle SilenceRing command."""
+        self.app.call_audio.silence_ring()
+        invocation.return_value(None)
+
+    def _handle_setaudioroute(self, parameters, invocation):
+        """Handle SetAudioRoute command."""
+        route = parameters.unpack()[0]
+        self.app.call_audio.set_route(route)
+        invocation.return_value(None)
+
+    def _handle_setinputroute(self, parameters, invocation):
+        """Handle SetInputRoute command."""
+        route = parameters.unpack()[0]
+        self.app.call_audio.set_input(route)
+        invocation.return_value(None)
+
+    def _handle_setdeliveryreports(self, parameters, invocation):
+        """Ask the network for SMS delivery reports for a window instance."""
+        enabled = parameters.unpack()[0]
+        run_in_background(self.ofono.set_delivery_reports, enabled,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+
+    def _handle_getaudioroutes(self, parameters, invocation):
+        """List the selectable output and input routes for a window."""
+        def fetch():
+            outputs = [(r['id'], bool(r.get('available', True)))
+                       for r in self.ofono.audio.get_available_outputs()]
+            inputs = [(r['id'], bool(r.get('available', True)))
+                      for r in self.ofono.audio.get_available_inputs()]
+            return (outputs, inputs)
+
+        def done(result):
+            outputs, inputs = result if result else ([], [])
+            invocation.return_value(GLib.Variant("(a(sb)a(sb))", (outputs, inputs)))
+
+        run_in_background(fetch, on_complete=done)
 
     def _handle_senddtmf(self, parameters, invocation):
         """Handle SendDtmf command."""
@@ -672,7 +1015,7 @@ class TelephonyDaemonDBus:
         attachments = []
         try:
             if attachments_json:
-                attachments = json.loads(attachments_json)
+                attachments = own_attachments(json.loads(attachments_json))
         except Exception as e:
             logger.warning(f"Failed to parse attachments: {e}")
 
@@ -1077,7 +1420,7 @@ class TelephonyDaemonDBus:
         attachments = []
         try:
             if attachments_json:
-                attachments = json.loads(attachments_json)
+                attachments = own_attachments(json.loads(attachments_json))
         except Exception as e:
             logger.warning(f"Failed to parse attachments: {e}")
 

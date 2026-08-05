@@ -30,9 +30,10 @@ from ..widgets.incall_elements_widget import DynamicHangupButton, create_truncat
 from ..widgets.common_widget import present_choice_sheet
 from ...backend.managers.lockscreen_manager import LockScreenManager
 from ...backend.utils.thread_utils import run_in_background
+from ...backend.utils.ofono_direct_utils import hangup_all_direct
 from ...backend.utils.system_utils import save_modem_logs, press_power_button
-from ...constants import CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.call_state_utils import count_lines, conference_paths, held_single_paths, held_conference_paths
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
 PAD_MORPH_DURATION_MS = 250
@@ -127,6 +128,7 @@ class InCallWindow(Adw.Window):
         self.ofono = ofono_manager
         self.eds = eds_manager
         self.db = db_manager
+        self.service_present = True
         self.audio = TelephonyAudioManager()
         self.fader = ProximityFader()
 
@@ -138,12 +140,9 @@ class InCallWindow(Adw.Window):
         self.dtmf_visible = False
         self.current_route = "earpiece"
         self.current_input_route = "mic"
-        self.call_volume_applied = False
-        self.gsettings_mgr.gsettings.connect("changed", self._on_volume_settings_changed)
         self.call_history = {}
         self.ignored_calls = set()
 
-        self.is_ringing = False
         self.is_closing = False
         self.in_error_mode = False
         self.in_recovery_mode = False
@@ -155,8 +154,6 @@ class InCallWindow(Adw.Window):
         self._proximity_timer_id = None
         self._hangup_verify_id = None
         self._hangup_retry_id = None
-        self._priority_timer_ids = []
-        self._route_poll_running = False
         self._next_knock_time = 0
         self._closing_paths = set()
         self.defer_present = True
@@ -167,6 +164,7 @@ class InCallWindow(Adw.Window):
 
         self.ofono.connect('call-removed', self.on_call_removed)
         self.ofono.connect('call-added', lambda *a: self.update_state())
+        self.ofono.connect('audio-changed', lambda *a: self._on_audio_changed())
         self.ofono.connect('call-changed', lambda *a: self.update_state())
 
         self.sys_state = SystemStateService()
@@ -283,16 +281,16 @@ class InCallWindow(Adw.Window):
         self.multiparty_box.set_visible(False)
         act_box.append(self.multiparty_box)
 
-        btn_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
+        self.actions_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
         mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
         pad_wrap, self.btn_pad = self._mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
         hold_wrap, self.btn_hold = self._mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
         add_wrap, self.btn_add_call = self._mk_labeled_btn("contact-new-symbolic", _("Add Call"), self.on_add_call_click)
-        btn_row.append(mute_wrap)
-        btn_row.append(pad_wrap)
-        btn_row.append(hold_wrap)
-        btn_row.append(add_wrap)
-        act_box.append(btn_row)
+        self.actions_row.append(mute_wrap)
+        self.actions_row.append(pad_wrap)
+        self.actions_row.append(hold_wrap)
+        self.actions_row.append(add_wrap)
+        act_box.append(self.actions_row)
 
         self.btn_hangup_act = DynamicHangupButton()
         self.btn_hangup_act.set_halign(Gtk.Align.CENTER)
@@ -400,6 +398,23 @@ class InCallWindow(Adw.Window):
             GLib.source_remove(self._proximity_timer_id)
             self._proximity_timer_id = None
 
+    def apply_service_presence(self, present, unit_state):
+        """Grey the call actions while the service is away.
+
+        The call itself lives in ofonod and continues; only our control
+        path is gone, and the daemon's return re-syncs everything.
+        Hangup stays enabled through a direct ofonod path, so a stuck
+        call can always be ended, and answering stays enabled because
+        the request revives the service through bus activation.
+        """
+        self.service_present = present
+        for widget in (self.route_box, self.multiparty_box, self.actions_row):
+            widget.set_sensitive(present)
+        if present:
+            self.update_state()
+        else:
+            self.lbl_status.set_text(_("Telephony service is restarting…"))
+
     def update_state(self):
         """Refresh call state and UI."""
         self.lock_manager.set_locked(self.is_locked)
@@ -434,7 +449,7 @@ class InCallWindow(Adw.Window):
             self._recover_from_closing()
 
         if not calls:
-            if self.active_path is not None or self.is_ringing or self.is_muted or self.is_speaker:
+            if self.active_path is not None or self.is_muted or self.is_speaker:
                 self._clean_reset()
             if self.is_visible():
                 self.set_visible(False)
@@ -514,32 +529,9 @@ class InCallWindow(Adw.Window):
             if uc_action in ["hide", "silence"] and is_unknown and not override_volume:
                 is_silenced = True
 
-            if not self.manual_hangup and len(calls) == 1:
-                if override_volume and not self.call_history[self.active_path].get('boosted', False):
-                    logger.info(f"[Priority] Call from {p_data['number']} - forcing MAX volume")
-                    self.call_history[self.active_path]['boosted'] = True
-                    self.audio.force_max_feedback()
-                    self._schedule_priority_boost(1, False)
-                    self._schedule_priority_boost(5, True)
-
-                if not self.is_ringing and not is_silenced:
-                    custom_ring = self._get_custom_ringtone(p_data['number'])
-                    self.audio.start_ringing(custom_path=custom_ring)
-                    self.is_ringing = True
-                elif is_silenced and self.is_ringing:
-                    self.audio.stop_ringing()
-                    self.is_ringing = False
-
             self.controls_stack.set_visible_child_name("incoming")
             self.lbl_status.set_text(_("Incoming Call...") if not is_silenced else _("Silenced Incoming Call"))
         else:
-            if self.is_ringing:
-                self.audio.stop_ringing()
-                self.is_ringing = False
-            self.audio.save_media_state()
-            self.audio.set_voice_profile(True)
-            self._apply_call_volume()
-            self.audio.mute(self.is_muted)
             self.controls_stack.set_visible_child_name("active")
             self._show_output_route(self.current_route)
             self._toggle_blue(self.btn_mute, self.is_muted)
@@ -550,7 +542,7 @@ class InCallWindow(Adw.Window):
             self._toggle_blue(self.btn_hold, p_data['state'] == 'held')
             self.lbl_status.set_text(call_state_label(p_data['state']))
 
-        conf_paths = [p for p, d in calls.items() if d.get('multiparty')]
+        conf_paths = conference_paths(calls)
         primary_in_conf = self.active_path in conf_paths
 
         if primary_in_conf:
@@ -562,31 +554,6 @@ class InCallWindow(Adw.Window):
 
         bg_list = [(x[1], x[2]) for x in sorted_c[1:] if x[1] not in conf_paths]
         self._render_bg(bg_list, conf_paths, primary_in_conf)
-
-    def _get_custom_ringtone(self, number):
-        """Check for a custom ringtone for the caller."""
-        tones = self.gsettings_mgr.get_notification_override_call_custom_contacts()
-        norm = normalize_number(number)
-
-        for t in tones:
-            if normalize_number(t.get("number", "")) == norm:
-                path = t.get("path")
-                if path and os.path.exists(path):
-                    return path
-        return None
-
-    def _schedule_priority_boost(self, seconds, restore):
-        """Arm a tracked one-shot priority volume timer that prunes itself."""
-        holder = {}
-
-        def fire():
-            if holder["id"] in self._priority_timer_ids:
-                self._priority_timer_ids.remove(holder["id"])
-            self.audio.force_max_feedback(restore=restore)
-            return False
-
-        holder["id"] = GLib.timeout_add_seconds(seconds, fire)
-        self._priority_timer_ids.append(holder["id"])
 
     def _bg_call_is_silenced(self, path, c_data):
         """Return True when a background incoming call must stay silent."""
@@ -635,20 +602,11 @@ class InCallWindow(Adw.Window):
         if self._hangup_retry_id:
             GLib.source_remove(self._hangup_retry_id)
             self._hangup_retry_id = None
-        for timer_id in self._priority_timer_ids:
-            GLib.source_remove(timer_id)
-        self._priority_timer_ids = []
         self._closing_paths = set()
 
-        self.call_volume_applied = False
         self.current_route = "earpiece"
-        self.audio.set_voice_profile(False)
-        self.audio.restore_call_volume()
-        self.audio.mute(False)
 
         self.lock_manager.clear_all()
-        self.audio.stop_ringing()
-        self.is_ringing = False
         self.audio.update_hardware_state(False)
 
         self.active_path = None
@@ -674,8 +632,8 @@ class InCallWindow(Adw.Window):
 
     def _update_multiparty_actions(self, calls, p_data, conf_paths):
         """Show the merge, join and transfer actions matching the call mix."""
-        held_normal = [p for p, d in calls.items() if d['state'] == 'held' and not d.get('multiparty')]
-        held_conf = [p for p, d in calls.items() if d['state'] == 'held' and d.get('multiparty')]
+        held_normal = held_single_paths(calls)
+        held_conf = held_conference_paths(calls)
         primary_free = bool(self.active_path) and p_data['state'] == 'active' and not p_data.get('multiparty')
 
         conference_allowed = self.gsettings_mgr.get_setting("allow_conference_calls") == "true"
@@ -702,8 +660,7 @@ class InCallWindow(Adw.Window):
 
         self.lbl_transfer_hint.set_visible(self.lbl_transfer_hint.get_visible() and transfer_allowed)
 
-        lines = len([p for p, d in calls.items() if not d.get('multiparty')]) + (1 if conf_paths else 0)
-        self.btn_add_call.set_sensitive(lines < 2 and p_data['state'] in ('active', 'held'))
+        self.btn_add_call.set_sensitive(count_lines(calls) < 2 and p_data['state'] in ('active', 'held'))
 
     def _build_participants_card(self, conf_paths):
         """Build the conference participants card with per leg actions."""
@@ -840,9 +797,7 @@ class InCallWindow(Adw.Window):
     def on_ignore_call(self, path):
         """Ignore a background call."""
         self.ignored_calls.add(path)
-        if self.is_ringing:
-            self.audio.stop_ringing()
-            self.is_ringing = False
+        self.ofono.daemon.silence_ring()
         self.update_state()
 
     def _pick_quick_response(self, anchor, callback):
@@ -873,9 +828,7 @@ class InCallWindow(Adw.Window):
         def do_ignore(msg):
             self.ofono.send_quick_response(number, msg)
             self.ignored_calls.add(path)
-            if self.is_ringing:
-                self.audio.stop_ringing()
-                self.is_ringing = False
+            self.ofono.daemon.silence_ring()
             self.update_state()
 
         self._pick_quick_response(btn, do_ignore)
@@ -905,7 +858,7 @@ class InCallWindow(Adw.Window):
 
     def on_silent_click(self, btn):
         """Silences the ringer and hides the window."""
-        self.audio.stop_ringing()
+        self.ofono.daemon.silence_ring()
         self.set_visible(False)
 
     def on_answer_click(self, btn):
@@ -918,6 +871,9 @@ class InCallWindow(Adw.Window):
         self.manual_hangup = True
         self._start_closing_sequence()
         self.set_visible(False)
+        if not self.service_present:
+            run_in_background(hangup_all_direct)
+            return
         remaining = self.ofono.active_calls
         if len(remaining) > 1 and all(d.get('multiparty') for d in remaining.values()):
             run_in_background(self.ofono.hangup_multiparty)
@@ -932,7 +888,7 @@ class InCallWindow(Adw.Window):
         """Start the call closing animation/logic."""
         self.is_closing = True
         self._closing_paths = set(self.ofono.active_calls.keys())
-        self.audio.stop_ringing()
+        self.ofono.daemon.silence_ring()
         if self._hangup_verify_id:
             GLib.source_remove(self._hangup_verify_id)
         self._hangup_verify_id = GLib.timeout_add(HANGUP_VERIFY_DELAY_MS, self._verify_hangup_success)
@@ -990,9 +946,6 @@ class InCallWindow(Adw.Window):
         self.audio.play_hangup()
         self.fader.set_active(False)
         self.audio.update_hardware_state(False)
-        self.call_volume_applied = False
-        self.audio.set_voice_profile(False)
-        self.audio.restore_call_volume()
         self.is_speaker = False
         self.lbl_err_msg.set_text(_("The call failed to disconnect."))
         self.btn_restart.set_label(_("Recover Modem"))
@@ -1113,12 +1066,12 @@ class InCallWindow(Adw.Window):
         logger.info("[InCall] No calls left, closing")
         self.close()
 
-    def _mk_route_row(self, route, name, selected):
+    def _mk_route_row(self, icon_name, name, selected, available):
         """Build one selectable route row for a routing popover."""
         row = Adw.ActionRow(title=name)
-        row.add_prefix(Gtk.Image.new_from_icon_name(route['icon']))
+        row.add_prefix(Gtk.Image.new_from_icon_name(icon_name))
 
-        if not route.get('available', True):
+        if not available:
             row.set_subtitle(_("Not connected"))
             row.set_sensitive(False)
             return row
@@ -1130,88 +1083,73 @@ class InCallWindow(Adw.Window):
         return row
 
     def on_output_routing_click(self, btn):
-        """Show the output routing sheet."""
-        def build(group, sheet):
-            for r in self.audio.get_available_outputs():
-                route_id = r['id']
-                row = self._mk_route_row(r, route_label(route_id), route_id == self.current_route)
+        """Show the output routing sheet from the daemon's route list."""
+        def present(reply):
+            if reply is None:
+                return
+            outputs, _inputs = reply
 
-                def _cb_out(row_widget, r_id=route_id):
-                    sheet.close()
-                    self._handle_output_selection(r_id)
-                if row.get_sensitive():
-                    row.connect("activated", _cb_out)
-                group.add(row)
+            def build(group, sheet):
+                for route_id, available in outputs:
+                    row = self._mk_route_row(route_icon(route_id), route_label(route_id),
+                                             route_id == self.current_route, available)
 
-        self._present_choice_sheet(_("Output"), build)
+                    def _cb_out(row_widget, r_id=route_id):
+                        sheet.close()
+                        self._handle_output_selection(r_id)
+                    if row.get_sensitive():
+                        row.connect("activated", _cb_out)
+                    group.add(row)
+
+            self._present_choice_sheet(_("Output"), build)
+
+        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
     def on_input_routing_click(self, btn):
-        """Show the input routing sheet."""
-        def build(group, sheet):
-            for r in self.audio.get_available_inputs():
-                route_id = r['id']
-                row = self._mk_route_row(r, input_route_label(route_id), route_id == self.current_input_route)
+        """Show the input routing sheet from the daemon's route list."""
+        def present(reply):
+            if reply is None:
+                return
+            _outputs, inputs = reply
 
-                def _cb_in(row_widget, r_id=route_id):
-                    sheet.close()
-                    if self.is_muted:
-                        self.on_mute_toggle(None)
-                    self.audio.set_input_route(r_id)
-                    self.current_input_route = r_id
-                    self._show_input_route(r_id)
-                if row.get_sensitive():
-                    row.connect("activated", _cb_in)
-                group.add(row)
+            def build(group, sheet):
+                for route_id, available in inputs:
+                    row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
+                                             route_id == self.current_input_route, available)
 
-        self._present_choice_sheet(_("Input"), build)
+                    def _cb_in(row_widget, r_id=route_id):
+                        sheet.close()
+                        if self.is_muted:
+                            self.on_mute_toggle(None)
+                        self.ofono.daemon.set_input_route(r_id)
+                    if row.get_sensitive():
+                        row.connect("activated", _cb_in)
+                    group.add(row)
 
-    def _apply_call_volume(self):
-        """Route the new call and apply its configured volume once."""
-        if self.call_volume_applied:
-            return
-        self.call_volume_applied = True
+            self._present_choice_sheet(_("Input"), build)
 
-        self.current_route = self.audio.initial_call_route()
-        self.is_speaker = self.current_route == "speaker"
-        self._show_output_route(self.current_route)
-
-        self.audio.set_audio_route(self.current_route)
-        self.audio.ensure_sink_unmuted()
-        self._push_route_volume()
-
-    def _push_route_volume(self):
-        """Apply the current route's configured level to the call sink."""
-        levels = self.gsettings_mgr.get_call_volume_levels()
-        level = max(CALL_VOLUME_MIN_PERCENT, min(CALL_VOLUME_MAX_PERCENT, levels.get(self.current_route, CALL_VOLUME_DEFAULT_PERCENT))) / 100.0
-        self.audio.set_call_volume_level(level)
-
-    def _on_volume_settings_changed(self, settings, key):
-        """Re-apply the active route's level live when its slider changes mid-call."""
-        if key != "call-volume-levels":
-            return
-        if not self.call_volume_applied:
-            return
-        self._push_route_volume()
+        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
     def _handle_output_selection(self, route_id):
-        """Handle output route selection."""
-        self.audio.set_audio_route(route_id)
-        self.current_route = route_id
-        if self.call_volume_applied:
-            self.audio.ensure_sink_unmuted()
-            self._push_route_volume()
-
-        self.is_speaker = route_id == "speaker"
-        self._show_output_route(route_id)
-
-        self._proximity_tick()
+        """Send the route intent; the daemon's broadcast renders it."""
+        self.ofono.daemon.set_audio_route(route_id)
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
-    def on_mute_toggle(self, btn):
-        """Toggle microphone mute."""
-        self.is_muted = not self.is_muted
-        self.audio.mute(self.is_muted)
+    def _on_audio_changed(self):
+        """Render the daemon's applied audio state."""
+        audio = self.ofono.audio
+        self.is_muted = audio.mic_muted
+        self.current_route = audio.current_route
+        self.current_input_route = audio.current_input
+        self.is_speaker = audio.current_route == "speaker"
         self._toggle_blue(self.btn_mute, self.is_muted)
+        self._show_output_route(self.current_route)
+        self._show_input_route(self.current_input_route)
+        self._proximity_tick()
+
+    def on_mute_toggle(self, btn):
+        """Toggle microphone mute; the daemon's broadcast renders it."""
+        self.ofono.daemon.set_mic_muted(not self.is_muted)
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
     def on_hold_toggle(self, btn):
@@ -1244,36 +1182,6 @@ class InCallWindow(Adw.Window):
         else:
             btn.remove_css_class("blue-active")
 
-    def _sync_external_route_change(self):
-        """Poll the active output port off the main thread and adopt changes."""
-        if self._route_poll_running:
-            return
-        self._route_poll_running = True
-
-        def done(route):
-            self._route_poll_running = False
-            self._adopt_external_route(route)
-
-        def failed(error):
-            self._route_poll_running = False
-            logger.debug(f"[InCall] Route poll failed: {error}")
-
-        run_in_background(self.audio.get_active_output_route, on_complete=done, on_error=failed)
-
-    def _adopt_external_route(self, route):
-        """Adopt port changes made outside the app, like a headset plug."""
-        if self.is_closing or self.in_error_mode or not self.call_volume_applied:
-            return
-        if not route or route == self.current_route:
-            return
-
-        logger.info(f"[InCall] Output route moved externally to {route}")
-        self.current_route = route
-        self.is_speaker = route == "speaker"
-        self._show_output_route(route)
-        self.audio.ensure_sink_unmuted()
-        self._push_route_volume()
-
     def _update_timer(self):
         """Update call duration timer."""
         if not self.is_visible():
@@ -1283,9 +1191,6 @@ class InCallWindow(Adw.Window):
             if d and d['state'] == 'active':
                 diff = int(time.time() - d.get('start', time.time()))
                 self.lbl_status.set_text(f"{diff // 60:02}:{diff % 60:02}")
-
-        if self.call_volume_applied and not self.is_closing and not self.in_error_mode:
-            self._sync_external_route_change()
 
         if not self.is_closing and not self.in_error_mode:
             self._maybe_repeat_knock()

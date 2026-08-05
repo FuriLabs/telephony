@@ -20,12 +20,15 @@ from telephony.backend.utils.log_utils import logger
 from gettext import gettext as _
 
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.contact_display_utils import resolve_contact_name
 from ...backend.utils.locale_utils import get_date_format
 from ..widgets.messages_rows_widget import ConversationRowFactory
 from .chat_view import ChatPage
 from ..widgets.common_widget import DataLoader
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.model_utils import ConversationItem
+
+TOP_STICK_THRESHOLD_PX = 48
 
 
 class MessagesView(Adw.Bin):
@@ -77,24 +80,6 @@ class MessagesView(Adw.Bin):
     def _on_visible_page_changed(self, *args):
         """Tell the window to drop its own header while a chat is open."""
         self.app_window.sync_chat_chrome()
-
-    def _resolve_contact_name(self, contact_map, number):
-        """Resolve contact name from map, handling list/string types."""
-        norm_num = normalize_number(number)
-        val = contact_map.get(norm_num)
-
-        if val:
-            if isinstance(val, list):
-                try:
-                    best = sorted(val, key=lambda x: x[0])[0]
-                    return best[1]
-                except (IndexError, TypeError):
-                    logger.warning(f"[MessagesView] Invalid contact map entry for {number}: {val}")
-                    return None
-            elif isinstance(val, str):
-                return val
-
-        return None
 
     def cleanup(self):
         """Cleanup resources before destruction."""
@@ -294,11 +279,8 @@ class MessagesView(Adw.Bin):
     def check_and_clear_notification(self, number):
         """Clear notifications for the given number."""
         try:
-            if (self.app_window and self.app_window.app is not None) and (self.app_window.app is not None):
+            if self.app_window and self.app_window.app is not None:
                 self.app_window.app.clear_notification(number)
-                norm = normalize_number(number)
-                self.app_window.app.clear_notification(norm)
-                self.app_window.app.clear_notification(f"missed_{norm}")
         except Exception as e:
             logger.warning(f"[Messages] Notification clear warning: {e}")
         return number
@@ -350,8 +332,22 @@ class MessagesView(Adw.Bin):
 
         new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status)
         target = 0 if change == "insert" else idx
+        was_at_top = self.v_adj.get_value() < TOP_STICK_THRESHOLD_PX
         self.model.remove(idx)
         self.model.insert(target, new_item)
+        if target == 0 and was_at_top:
+            GLib.idle_add(self._stick_to_top)
+
+
+    def _stick_to_top(self):
+        """Keep the list pinned to the newest row after a top insert.
+
+        The list view anchors scrolling by pixel offset, so a row moved
+        to the top pushes the viewport down and hides the very message
+        the user is waiting for; a reader mid-list keeps their place.
+        """
+        self.v_adj.set_value(self.v_adj.get_lower())
+        return False
 
     def refresh_list(self):
         """Trigger a reload of the conversation list."""
@@ -446,7 +442,7 @@ class MessagesView(Adw.Bin):
                 else:
                     display_names = []
                     for rc in recipients:
-                        resolved = self._resolve_contact_name(contact_map, rc)
+                        resolved = resolve_contact_name(contact_map, rc)
                         display_names.append(resolved if resolved else rc)
                     name = ", ".join(display_names)
             else:
@@ -458,7 +454,7 @@ class MessagesView(Adw.Bin):
                     if custom_name:
                         name = custom_name
                     else:
-                        name = self._resolve_contact_name(contact_map, num)
+                        name = resolve_contact_name(contact_map, num)
                         if not name:
                             if any(c.isalpha() for c in num):
                                 name = _("Unknown")
@@ -889,7 +885,7 @@ class MessagesView(Adw.Bin):
 
             for r in results:
                 number, body, ts, msg_id = r[0], r[1], r[2], r[3]
-                name = self._resolve_contact_name(contact_map, number)
+                name = resolve_contact_name(contact_map, number)
                 if not name:
                     name = number
 

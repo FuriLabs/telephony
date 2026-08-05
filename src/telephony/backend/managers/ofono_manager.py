@@ -21,10 +21,10 @@ from telephony.backend.utils.log_utils import logger
 from gi.repository import Gio, GLib, GObject
 
 from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.call_state_utils import count_lines
 from ...backend.utils.system_utils import restart_ril_modem
 from ...backend.utils.thread_utils import run_in_background
 from ..services.ofono_service import OfonoService
-from ..services.daemon_client import DaemonClient
 from .location_manager import LocationManager
 from .audio_manager import TelephonyAudioManager
 from .tmate_manager import TmateManager
@@ -42,6 +42,8 @@ SMS_RESOLVE_TIMEOUT_SECONDS = 60
 UNCLAIMED_STATE_LIMIT = 20
 DELIVERY_WATCH_LIMIT = 50
 SEEN_SIGNATURE_LIMIT = 50
+PENDING_DIAL_TIMEOUT_SECONDS = 15
+PHONEBOOK_IMPORT_TIMEOUT_MS = 100000
 VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 
@@ -70,19 +72,18 @@ class OfonoManager(GObject.Object):
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
     }
 
-    def __init__(self, db_manager, gsettings_mgr=None, owns_reception=True):
+    def __init__(self, db_manager, gsettings_mgr=None):
         """Initialize the Ofono manager.
 
-        Only the instance that owns reception stores what arrives and
-        acts on trusted senders. Every other instance reads state to
-        draw with, so an app opened twice cannot file a message twice
-        or run a text triggered action twice.
+        Only the daemon constructs this class: it stores what arrives,
+        acts on trusted senders and answers for the modem. Window
+        processes hold an OfonoMirror instead, so an app opened twice
+        cannot file a message twice or run a text triggered action
+        twice.
         """
         super().__init__()
         self.db = db_manager
         self.gsettings_mgr = gsettings_mgr
-        self.owns_reception = owns_reception
-        self.daemon = None if owns_reception else DaemonClient()
 
         self.voice_proxy = None
         self.msg_proxy = None
@@ -108,6 +109,8 @@ class OfonoManager(GObject.Object):
         self._seen_interfaces = set()
         self._interfaces_known = False
         self.modem_online = None
+        self._pending_dial = None
+        self._pending_dial_timeout_id = 0
 
         self.netreg_proxy = None
         self.netreg_handler_id = None
@@ -401,15 +404,79 @@ class OfonoManager(GObject.Object):
         return not self.monitor.connected or self.voice_interface_missing()
 
     def set_active_chat(self, number):
-        """Set the currently active chat to suppress notifications."""
+        """Set the currently active chat to suppress notifications.
+
+        Suppression decisions are made where messages are received, so a
+        window forwards the target to the daemon instead of keeping a
+        flag no reception path ever reads.
+        """
+        target = self._normalize_chat_target(number)
+        self.active_chat_number = target if target else None
+
+    def _normalize_chat_target(self, number):
+        """Collapse a chat target to the comparable form reception uses."""
         if not number:
-            self.active_chat_number = None
-        elif isinstance(number, list):
-            self.active_chat_number = ",".join(sorted(normalize_number(n) for n in number))
-        elif "," in number:
-            self.active_chat_number = number
-        else:
-            self.active_chat_number = normalize_number(number)
+            return ""
+        if isinstance(number, list):
+            return ",".join(sorted(normalize_number(n) for n in number))
+        if "," in number:
+            return number
+        return normalize_number(number)
+
+    def capability_state(self):
+        """Return (can_dial, reason, description) explaining dial availability.
+
+        The reason is a stable machine-readable code for other clients of
+        the daemon interface; the description is translated here because
+        the daemon runs in the user's session locale.
+        """
+        if not self.monitor.connected:
+            return (False, "no-modem", _("Modem not ready"))
+        if self.modem_online is False:
+            return (False, "airplane-mode", _("Airplane mode is on"))
+        if self.voice_interface_missing():
+            return (False, "no-voice-service", _("Modem not ready"))
+        if self.active_calls:
+            return (False, "in-call", _("Cannot dial while in another call"))
+        if self.audio.voice_profile_active:
+            return (False, "call-ending", _("Please wait, the previous call is still ending"))
+        if not self.voice_proxy:
+            return (False, "starting", _("Modem not ready"))
+        return (True, "", "")
+
+    def modem_state(self):
+        """Return the modem presence snapshot for the state broadcasts."""
+        return {
+            "present": bool(self.monitor.connected),
+            "online": bool(self.modem_online),
+            "interfaces": sorted(self._seen_interfaces),
+            "emergency_numbers": sorted(self.network_emergency_numbers),
+        }
+
+    def calls_snapshot(self):
+        """Return the active calls as plain serializable dicts."""
+        snapshot = {}
+        for path, props in self.active_calls.items():
+            snapshot[path] = {k: v for k, v in props.items()
+                              if isinstance(v, (str, bool, int, float))}
+        return snapshot
+
+    def import_sim_contacts(self):
+        """Read the SIM phonebook as vcard text; blocking, call from a worker.
+
+        Returns None when the phonebook cannot be read so an empty SIM
+        stays distinguishable from a failure.
+        """
+        if not self.modem_path or not self.bus:
+            return None
+        try:
+            res = self.bus.call_sync(
+                "org.ofono", self.modem_path, "org.ofono.Phonebook", "Import",
+                None, None, Gio.DBusCallFlags.NONE, PHONEBOOK_IMPORT_TIMEOUT_MS, None)
+            return res.unpack()[0]
+        except Exception as e:
+            logger.error(f"[OfonoManager] SIM phonebook import failed: {e}")
+            return None
 
     def set_focus_provider(self, provider):
         """Set a callable reporting whether an application window is focused."""
@@ -539,9 +606,11 @@ class OfonoManager(GObject.Object):
         self.voice_proxy = self._get_proxy("org.ofono.VoiceCallManager")
         if self.voice_proxy:
             self.voice_handler_id = self.voice_proxy.connect("g-signal", self.on_voice_signal)
+            if self._pending_dial is not None:
+                GLib.idle_add(self._flush_parked_dial)
 
         self.msg_proxy = self._get_proxy("org.ofono.MessageManager")
-        if self.msg_proxy and self.owns_reception:
+        if self.msg_proxy:
             self.msg_handler_id = self.msg_proxy.connect("g-signal", self.on_message_signal)
 
         self.ussd_proxy = self._get_proxy("org.ofono.SupplementaryServices")
@@ -642,6 +711,9 @@ class OfonoManager(GObject.Object):
                     logger.info(f"[OfonoManager] Automatically silencing unknown caller: {number}")
                     is_silenced = True
 
+            if is_silenced and self._is_priority_number(number):
+                is_silenced = False
+
             self._check_priority_call(number)
             self._check_repeated_call_bypass(number)
 
@@ -700,8 +772,7 @@ class OfonoManager(GObject.Object):
         """Handle call removal."""
         if path in self.active_calls:
             data = self.active_calls.pop(path)
-            if self.owns_reception:
-                self._log_call(data)
+            self._log_call(data)
             self.emit('call-removed', path)
 
             if self.is_volume_boosted:
@@ -760,21 +831,28 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[Priority] Check failed: {e}")
 
+    def _is_priority_number(self, number):
+        """Return whether a caller is on the DND-bypass list."""
+        try:
+            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+        except Exception as e:
+            logger.warning(f"[OfonoManager] Priority caller check failed: {e}")
+            return False
+        norm_num = normalize_number(number)
+        return any(norm_num and normalize_number(p.get("number", "")) == norm_num
+                   for p in priority_list)
+
     def _check_priority_call(self, number):
         """Check if caller is priority and override volume."""
         if len(self.active_calls) > 0:
             return
 
         try:
-            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
-            norm_num = normalize_number(number)
-            for p in priority_list:
-                p_num = normalize_number(p.get("number", ""))
-                if p_num and p_num == norm_num:
-                    logger.info(f"[Priority] Call from {number} - forcing MAX volume")
-                    self.audio.force_max_feedback()
-                    self.is_volume_boosted = True
-                    return
+            if self._is_priority_number(number):
+                logger.info(f"[Priority] Call from {number} - forcing MAX volume")
+                self.audio.force_max_feedback()
+                self.is_volume_boosted = True
+                return
         except Exception as e:
             logger.error(f"[Priority] Call Check failed: {e}")
 
@@ -814,19 +892,15 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"Sync calls error: {e}")
 
-    def dial(self, number, hide_id=False):
-        """Initiate an outgoing call."""
-        if self.daemon is not None:
-            self.daemon.call_async("Dial", GLib.Variant("(sb)", (number, hide_id)))
-            return True
-
-        if not self.voice_proxy:
-            self.emit('action-error', _("Modem not ready"))
-            return False
+    def dial(self, number, hide_id=False, on_result=None):
+        """Initiate an outgoing call; on_result hears (success, message) exactly once."""
 
         if self._interfaces_known and "org.ofono.VoiceCallManager" not in self._seen_interfaces:
-            self.emit('action-error', _("Modem not ready"))
-            return False
+            return self._refuse_dial(_("Modem not ready"), on_result)
+
+        if not self.voice_proxy:
+            self._park_dial(number, hide_id, on_result)
+            return True
 
         if len(self.active_calls) > 0:
             try:
@@ -838,17 +912,12 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 logger.error(f"[OfonoManager] Sanity check failed: {e}")
 
-        lines = len([p for p, d in self.active_calls.items() if not d.get('multiparty')])
-        if any(d.get('multiparty') for d in self.active_calls.values()):
-            lines += 1
-        if lines >= 2:
-            self.emit('action-error', _("Cannot dial while in another call"))
-            return False
+        if count_lines(self.active_calls) >= 2:
+            return self._refuse_dial(_("Cannot dial while in another call"), on_result)
 
         if not self.active_calls and self.audio.voice_profile_active:
             logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
-            self.emit('action-error', _("Please wait, the previous call is still ending"))
-            return False
+            return self._refuse_dial(_("Please wait, the previous call is still ending"), on_result)
 
         try:
             clean_num = normalize_number(number)
@@ -857,16 +926,66 @@ class OfonoManager(GObject.Object):
 
             clir = "enabled" if hide_id else "default"
             self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
-            return True
         except Exception as e:
-            self.emit('action-error', _("Dial Error: {e}").format(e=e))
-            return False
+            return self._refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+
+        if on_result is not None:
+            on_result(True, "")
+        return True
+
+    def _refuse_dial(self, message, on_result):
+        """Report one dial refusal to the local listeners and the asker."""
+        self.emit('action-error', message)
+        if on_result is not None:
+            on_result(False, message)
+        return False
+
+    def _park_dial(self, number, hide_id, on_result):
+        """Hold a dial while the modem is still being discovered.
+
+        A daemon revived by this very call has not found the modem yet, so
+        refusing here would drop the first dial after every activation. The
+        unknown phase stays optimistic; only concluded discovery refuses.
+        """
+        self._cancel_parked_dial(_("Modem not ready"))
+        self._pending_dial = (number, hide_id, on_result)
+        self._pending_dial_timeout_id = GLib.timeout_add_seconds(
+            PENDING_DIAL_TIMEOUT_SECONDS, self._on_parked_dial_timeout)
+        logger.info(f"[OfonoManager] Parked dial to {number} until the modem appears")
+
+    def _cancel_parked_dial(self, message):
+        """Resolve and drop the parked dial, if any."""
+        if self._pending_dial_timeout_id:
+            GLib.source_remove(self._pending_dial_timeout_id)
+            self._pending_dial_timeout_id = 0
+        if self._pending_dial is None:
+            return
+        number, hide_id, on_result = self._pending_dial
+        self._pending_dial = None
+        if on_result is not None:
+            on_result(False, message)
+
+    def _on_parked_dial_timeout(self):
+        """Give up on a parked dial the modem never came for."""
+        self._pending_dial_timeout_id = 0
+        self.emit('action-error', _("Modem not ready"))
+        self._cancel_parked_dial(_("Modem not ready"))
+        return GLib.SOURCE_REMOVE
+
+    def _flush_parked_dial(self):
+        """Re-run the parked dial now that the modem appeared."""
+        if self._pending_dial is None:
+            return GLib.SOURCE_REMOVE
+        if self._pending_dial_timeout_id:
+            GLib.source_remove(self._pending_dial_timeout_id)
+            self._pending_dial_timeout_id = 0
+        number, hide_id, on_result = self._pending_dial
+        self._pending_dial = None
+        self.dial(number, hide_id=hide_id, on_result=on_result)
+        return GLib.SOURCE_REMOVE
 
     def answer_call(self, target_path):
         """Answer an incoming call."""
-        if self.daemon is not None:
-            self.daemon.call_async("Answer", GLib.Variant("(s)", (target_path,)))
-            return
 
         other_dialing = None
         other_active = False
@@ -912,9 +1031,6 @@ class OfonoManager(GObject.Object):
     def hangup_call(self, path):
         """Hangup a specific call."""
         self.emit('hangup-requested')
-        if self.daemon is not None:
-            self.daemon.call_async("Hangup", GLib.Variant("(s)", (path,)))
-            return
         try:
             if path in self.active_calls:
                 proxy = self.active_calls[path].get('proxy')
@@ -935,9 +1051,6 @@ class OfonoManager(GObject.Object):
     def hangup_all(self):
         """Hangup all active calls."""
         self.emit('hangup-requested')
-        if self.daemon is not None:
-            self.daemon.call_async("HangupAll", None)
-            return
         if self.voice_proxy:
             try:
                 self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
@@ -948,9 +1061,6 @@ class OfonoManager(GObject.Object):
 
     def swap_calls(self):
         """Swap active and held calls."""
-        if self.daemon is not None:
-            self.daemon.call_async("SwapCalls", None)
-            return
 
         if not self.voice_proxy:
             return
@@ -964,11 +1074,6 @@ class OfonoManager(GObject.Object):
 
         Returns (True, None) on success or (False, error text).
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("create_multiparty", "")),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
 
         if not self.voice_proxy:
             return (False, "no proxy")
@@ -984,11 +1089,6 @@ class OfonoManager(GObject.Object):
 
         Returns (True, None) on success or (False, error text).
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("hangup_multiparty", "")),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
 
         if not self.voice_proxy:
             return (False, "no proxy")
@@ -1006,11 +1106,6 @@ class OfonoManager(GObject.Object):
         expected and reported, never hidden. Returns (True, None) on
         success or (False, error text).
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("private_chat", path)),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
 
         if not self.voice_proxy:
             return (False, "no proxy")
@@ -1029,11 +1124,6 @@ class OfonoManager(GObject.Object):
         rejection is a normal outcome. Returns (True, None) on success
         or (False, error text).
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("transfer", "")),
-                                     GLib.VariantType("(b)"))
-            ok = bool(reply and reply[0])
-            return (ok, None if ok else "refused")
 
         if not self.voice_proxy:
             return (False, "no proxy")
@@ -1092,9 +1182,6 @@ class OfonoManager(GObject.Object):
 
     def send_dtmf(self, tones):
         """Send DTMF tones during a call."""
-        if self.daemon is not None:
-            self.daemon.call_async("SendDtmf", GLib.Variant("(s)", (tones,)))
-            return
 
         if not self.voice_proxy:
             return
@@ -1245,9 +1332,6 @@ class OfonoManager(GObject.Object):
 
     def send_quick_response(self, number, text):
         """Record an SMS in the conversation and send it with delivery tracking."""
-        if self.daemon is not None:
-            run_in_background(self.daemon.send_tracked_sms, number, text)
-            return True
 
         row_id = self.db.add_message(number, "outgoing", text, "sending", sender="Me")
         if row_id is None:
@@ -1262,10 +1346,6 @@ class OfonoManager(GObject.Object):
         Returns the network response text, or None when the request
         could not be made, so failures never masquerade as responses.
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("SendUssd", GLib.Variant("(s)", (command,)),
-                                     GLib.VariantType("(s)"))
-            return reply[0] if reply and reply[0] else None
 
         if not self.ussd_proxy:
             logger.warning("[OfonoManager] USSD unavailable, no proxy")
@@ -1277,27 +1357,6 @@ class OfonoManager(GObject.Object):
             logger.error(f"[OfonoManager] USSD request failed: {e}")
             return None
 
-
-    def _restore_service_value(self, name, packed):
-        """Turn a relayed property back into the type the UI expects."""
-        text = packed if isinstance(packed, str) else str(packed)
-        if name.endswith("Timeout"):
-            try:
-                return int(text)
-            except ValueError:
-                return 0
-        return text
-
-    def _ask_daemon_network_write(self, service, name, value, password):
-        """Have the owner change a supplementary service."""
-        reply = self.daemon.call(
-            "SetNetworkProperty",
-            GLib.Variant("(ssvs)", (service, name, GLib.Variant("s", str(value)), password or "")),
-            GLib.VariantType("(s)"))
-        if reply is None:
-            return (False, "no reply")
-        error = reply[0]
-        return (not error, error or None)
 
     def _service_proxy(self, service):
         """Map a supplementary service key to its D-Bus proxy."""
@@ -1331,12 +1390,6 @@ class OfonoManager(GObject.Object):
 
         Returns the property dict, or None when the network query failed.
         """
-        if self.daemon is not None:
-            reply = self.daemon.call("GetNetworkProperties", GLib.Variant("(s)", (service,)),
-                                     GLib.VariantType("(a{sv})"))
-            if reply is None:
-                return None
-            return {k: self._restore_service_value(k, v) for k, v in reply[0].items()}
 
         proxy = self._service_proxy(service)
         if not proxy:
@@ -1354,8 +1407,6 @@ class OfonoManager(GObject.Object):
 
         Returns (True, None) on success or (False, error text).
         """
-        if self.daemon is not None:
-            return self._ask_daemon_network_write(service, name, value, "")
 
         proxy = self._service_proxy(service)
         if not proxy:
@@ -1374,8 +1425,6 @@ class OfonoManager(GObject.Object):
 
         Returns (True, None) on success or (False, error text).
         """
-        if self.daemon is not None:
-            return self._ask_daemon_network_write("barring", name, value, password)
 
         if not self.cb_proxy:
             return (False, "no proxy")

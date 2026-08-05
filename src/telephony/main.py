@@ -38,7 +38,7 @@ from .constants import APP_ID, INCALL_APP_ID, DAEMON_BUS_NAME
 MESSAGE_URI_SCHEMES = ("sms:", "smsto:", "mms:", "mmsto:")
 CALL_URI_SCHEMES = ("tel:", "callto:")
 PROGRAM_MODES = {
-    "io.furios.Telephony.Daemon": "--start-monitoring",
+    "telephony-server": "--start-monitoring",
     "io.furios.Telephony.Calls": "--calls",
     "io.furios.Telephony.Messages": "--messages",
     "io.furios.Telephony.Contacts": "--contacts",

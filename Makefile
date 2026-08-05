@@ -4,6 +4,7 @@ LIB_DIR = $(PREFIX)/lib
 BIN_DIR = $(PREFIX)/bin
 DATA_DIR = $(PREFIX)/share
 
+LIBEXEC_DIR = $(PREFIX)/libexec
 INSTALL_DIR = $(LIB_DIR)/furios-app-telephony
 APPLICATIONS_DIR = $(DATA_DIR)/applications
 DBUS_SERVICE_DIR = $(DATA_DIR)/dbus-1/services
@@ -28,6 +29,7 @@ build:
 install: build
 	install -d $(DESTDIR)$(INSTALL_DIR)
 	install -d $(DESTDIR)$(BIN_DIR)
+	install -d $(DESTDIR)$(LIBEXEC_DIR)
 	install -d $(DESTDIR)$(APPLICATIONS_DIR)
 	install -d $(DESTDIR)$(DBUS_SERVICE_DIR)
 	install -d $(DESTDIR)$(METAINFO_DIR)
@@ -44,7 +46,7 @@ install: build
 	cp -r src/telephony $(DESTDIR)$(INSTALL_DIR)/
 
 	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony
-	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Daemon
+	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(LIBEXEC_DIR)/telephony-server
 	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Calls
 	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Messages
 	ln -sf ../lib/furios-app-telephony/telephony/main.py $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Contacts
@@ -75,13 +77,14 @@ install: build
 	cp -a data/icons/status/. $(DESTDIR)$(ICON_DIR)/status/
 
 	install -m 644 data/telephony.service $(DESTDIR)$(SYSTEMD_USER_DIR)/
+	install -m 644 data/telephony-failed.service $(DESTDIR)$(SYSTEMD_USER_DIR)/
 	install -m 644 data/io.furios.Telephony.gschema.xml $(DESTDIR)$(GSCHEMA_DIR)/
 
 	cp -a build/locale/. $(DESTDIR)$(LOCALE_DIR)/
 
 uninstall:
 	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony
-	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Daemon
+	rm -f $(DESTDIR)$(LIBEXEC_DIR)/telephony-server
 	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Calls
 	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Messages
 	rm -f $(DESTDIR)$(BIN_DIR)/io.furios.Telephony.Contacts
@@ -107,6 +110,7 @@ uninstall:
 	rm -f $(DESTDIR)$(ICON_DIR)/apps/io.furios.Telephony.Emergency.svg
 
 	rm -f $(DESTDIR)$(SYSTEMD_USER_DIR)/telephony.service
+	rm -f $(DESTDIR)$(SYSTEMD_USER_DIR)/telephony-failed.service
 	rm -f $(DESTDIR)$(GSCHEMA_DIR)/io.furios.Telephony.gschema.xml
 
 	for directory in actions devices mimetypes places status; do \
