@@ -254,6 +254,11 @@ class DialpadView(Adw.Bin):
         if not number:
             return
 
+        favorite = self._favorite_for(number)
+        if favorite:
+            self.app_window.start_call(favorite.get("number", ""), hide_id=True)
+            return
+
         if self._is_ussd(number):
             self.app_window.handle_ussd(number)
         else:
