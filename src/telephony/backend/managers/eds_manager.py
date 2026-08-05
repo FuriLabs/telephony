@@ -73,14 +73,31 @@ class EdsManager(GObject.Object):
         self.registry = None
         self.is_ready = False
         self._sources_info_cache = None
+        self._applied_config_json = None
 
     def set_db(self, db_manager, gsettings_mgr):
         """Set the database manager reference and start initialization."""
         self.db_ref = db_manager
         self.gsettings_mgr = gsettings_mgr
+        self.gsettings_mgr.gsettings.connect(
+            "changed::address-book-sources", self._on_sources_config_changed)
 
         run_in_background(self._load_cache_initial)
         run_in_background(self._init_backend)
+
+    def _on_sources_config_changed(self, _settings, _key):
+        """Reload when another process rewrote the book configuration.
+
+        dconf reports the change to every process; the one that wrote
+        it already reloaded and recognizes its own value, so only the
+        others rebuild, and the daemon's live views follow a settings
+        change without a restart.
+        """
+        current = self.gsettings_mgr.get_setting("address_book_sources")
+        if current == self._applied_config_json:
+            return
+        logger.info("[EDS] Address book configuration changed elsewhere, reloading")
+        self.reload()
 
     def _load_cache_initial(self):
         """Load contacts from local DB before EDS connection."""
@@ -289,7 +306,9 @@ class EdsManager(GObject.Object):
                 'rank': item['rank']
             })
         try:
-            self.gsettings_mgr.set_setting("address_book_sources", json.dumps(to_save))
+            config_json = json.dumps(to_save)
+            self._applied_config_json = config_json
+            self.gsettings_mgr.set_setting("address_book_sources", config_json)
         except Exception as e:
             logger.error(f"[EDS] Save Config Error: {e}")
 
@@ -970,6 +989,18 @@ class EdsManager(GObject.Object):
             info = self.sources.get(source_uid)
         return bool(info) and info.get('name') == "Andromeda Contacts"
 
+    def _default_source_uid(self):
+        """Return the uid of the address book marked default, if any."""
+        if not self.registry:
+            return None
+        try:
+            default_source = self.registry.ref_default_address_book()
+            if default_source:
+                return default_source.get_uid()
+        except Exception as e:
+            logger.warning(f"[EDS] Default address book lookup failed: {e}")
+        return None
+
     def _ensure_client(self, info):
         """Return the source's book client, connecting on first use.
 
@@ -991,14 +1022,24 @@ class EdsManager(GObject.Object):
         return client
 
     def _get_writable_client(self, source_uid=None):
-        """Get the client for source_uid, or the highest ranked when unspecified.
+        """Get the client for source_uid, or the default address book.
 
-        Blocking, call from a worker: the client connects on first use.
+        Writing without a stated target belongs in the book the user
+        chose as their default; priority order only decides which book
+        answers first when a number is looked up, so it is the fallback
+        rather than the rule. Blocking, call from a worker: the client
+        connects on first use.
         """
+        if source_uid is None:
+            source_uid = self._default_source_uid()
+
         with self.sources_lock:
+            info = None
             if source_uid:
                 info = self.sources.get(source_uid)
-            else:
+                if info is None:
+                    logger.warning(f"[EDS] No source entry for {source_uid}, using priority order")
+            if info is None:
                 sorted_sources = sorted(self.sources.values(), key=lambda x: x['rank'])
                 info = sorted_sources[0] if sorted_sources else None
         if info is None:

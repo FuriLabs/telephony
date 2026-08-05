@@ -40,6 +40,7 @@ ANSWER_SWAP_DELAY_MS = 500
 EMERGENCY_FEEDBACK_RESTORE_SECONDS = 5
 SMS_RESOLVE_TIMEOUT_SECONDS = 60
 UNCLAIMED_STATE_LIMIT = 20
+DELIVERY_WATCH_LIMIT = 50
 SEEN_SIGNATURE_LIMIT = 50
 VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
@@ -92,6 +93,7 @@ class OfonoManager(GObject.Object):
         self.cb_handler_id = None
         self.cs_proxy = None
         self.cs_handler_id = None
+        self.network_emergency_numbers = set()
         self.vol_proxy = None
         self.modem_path = None
         self.bus = None
@@ -128,6 +130,8 @@ class OfonoManager(GObject.Object):
         self.inflight_sms = {}
         self.inflight_sms_paths = {}
         self.unclaimed_sms_states = {}
+        self.delivery_watch = {}
+        self._sms_history_sub = None
         self.send_lock = threading.Lock()
         self._sms_state_sub = None
 
@@ -555,6 +559,9 @@ class OfonoManager(GObject.Object):
         self.cs_proxy = self._get_proxy("org.ofono.CallSettings")
         if self.cs_proxy:
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
+        if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
+            run_in_background(self.set_delivery_reports, True)
+        run_in_background(self._load_emergency_numbers)
 
         self.mw_proxy = self._get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
@@ -567,6 +574,11 @@ class OfonoManager(GObject.Object):
         if self.modem_proxy:
             self.modem_handler_id = self.modem_proxy.connect("g-signal", self.on_modem_signal)
             self._load_modem_interfaces()
+
+        if self._sms_history_sub is None and self.bus:
+            self._sms_history_sub = self.bus.signal_subscribe(
+                None, "org.ofono.SmsHistory", "StatusReport", None, None,
+                Gio.DBusSignalFlags.NONE, self._on_status_report, None)
 
         if self._sms_state_sub is None and self.bus:
             self._sms_state_sub = self.bus.signal_subscribe(
@@ -595,6 +607,10 @@ class OfonoManager(GObject.Object):
             elif signal == "CallRemoved":
                 path = params.unpack()[0]
                 self._remove_call(path)
+            elif signal == "PropertyChanged":
+                name, value = params.unpack()
+                if name == "EmergencyNumbers" and value:
+                    self.network_emergency_numbers = set(value)
         except Exception as e:
             logger.error(f"Voice signal error: {e}")
 
@@ -1026,6 +1042,47 @@ class OfonoManager(GObject.Object):
             return (True, None)
         except Exception as e:
             logger.error(f"[OfonoManager] Transfer failed: {e}")
+    def _load_emergency_numbers(self):
+        """Seed the network emergency number list; blocking, call from a worker.
+
+        The cached list deliberately survives modem loss, so a flaky
+        modem can only ever add numbers, never remove them.
+        """
+        if not self.voice_proxy:
+            return
+        try:
+            res = self.voice_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
+            numbers = res.unpack()[0].get("EmergencyNumbers", [])
+            if numbers:
+                self.network_emergency_numbers = set(numbers)
+        except Exception as e:
+            logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
+
+    def get_emergency_numbers(self):
+        """Return configured emergency entries merged with the network list."""
+        entries = []
+        if self.gsettings_mgr:
+            entries = list(self.gsettings_mgr.get_emergency_numbers())
+        known = {normalize_number(e.get("number", "")) for e in entries}
+        for number in sorted(self.network_emergency_numbers):
+            if normalize_number(number) not in known:
+                entries.append({"name": number, "number": number})
+        return entries
+
+    def set_delivery_reports(self, enabled):
+        """Ask the network for SMS delivery reports; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
+        if not self.msg_proxy:
+            return (False, "no proxy")
+        try:
+            self.msg_proxy.call_sync("SetProperty",
+                                     GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                                     Gio.DBusCallFlags.NONE, -1, None)
+            return (True, None)
+        except Exception as e:
+            logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
             return (False, str(e))
 
     def _force_remove(self, path):
@@ -1159,7 +1216,32 @@ class OfonoManager(GObject.Object):
                         self.unclaimed_sms_states.pop(next(iter(self.unclaimed_sms_states)))
 
         if row_id is not None:
+            if value == "sent":
+                self.delivery_watch[path] = row_id
+                while len(self.delivery_watch) > DELIVERY_WATCH_LIMIT:
+                    self.delivery_watch.pop(next(iter(self.delivery_watch)))
             self._resolve_sms(row_id, value)
+
+    def _on_status_report(self, _conn, _sender, _path, _iface, _signal, params, _data):
+        """Mark a message delivered when the network confirms it.
+
+        Only a positive report is acted on: carriers and gateways often
+        never send one at all, so a missing report says nothing about
+        the message and must never turn into a claim of failure.
+        """
+        try:
+            message_path, delivered = params.unpack()
+        except Exception as e:
+            logger.debug(f"[OfonoManager] Status report unpack failed: {e}")
+            return
+
+        row_id = self.delivery_watch.pop(message_path, None)
+        if row_id is None:
+            return
+        if not delivered:
+            logger.debug(f"[OfonoManager] Network reported no delivery for row {row_id}")
+            return
+        self.db.update_message_status(row_id, "delivered")
 
     def send_quick_response(self, number, text):
         """Record an SMS in the conversation and send it with delivery tracking."""

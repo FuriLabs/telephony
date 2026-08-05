@@ -11,6 +11,26 @@
       <summary>Allow call transfer</summary>
       <description>Offer transferring two calls to each other, which many carriers do not support.</description>
     </key>
+    <key name="show-network-emergency-numbers" type="s">
+      <default>"true"</default>
+      <summary>Show network emergency numbers</summary>
+      <description>List the emergency numbers the network publishes alongside the configured ones.</description>
+    </key>
+    <key name="favorites" type="s">
+      <default>"[]"</default>
+      <summary>Speed dial favorites</summary>
+      <description>Contacts assigned to speed dial slots, stored as a JSON list.</description>
+    </key>
+    <key name="muted-conversations" type="s">
+      <default>"[]"</default>
+      <summary>Muted conversations</summary>
+      <description>Conversation ids that never raise a notification, stored as a JSON list.</description>
+    </key>
+    <key name="delivery-reports" type="s">
+      <default>"false"</default>
+      <summary>Request delivery reports</summary>
+      <description>Ask the network to confirm when sent SMS and MMS messages reach the recipient.</description>
+    </key>
     <key name="own-number" type="s">
       <default>''</default>
       <summary>Own Number</summary>

@@ -675,7 +675,7 @@ class ContactEditor(Adw.Dialog):
             self.main_window.contacts_view.search.set_text("")
 
         def task():
-            self.eds.delete_contact(self.uid)
+            self.main_window.daemon.delete_contact(self.uid)
             if numbers:
                 self.main_window.daemon.update_history_names(numbers, None)
             return numbers
@@ -870,7 +870,7 @@ class ContactEditor(Adw.Dialog):
                         if force_save:
                             self.on_save(self.btn_save, force=True)
 
-                    win = DuplicateResolutionWindow(conflicts, self.eds, on_wizard_done)
+                    win = DuplicateResolutionWindow(conflicts, self.eds, self.main_window.daemon, on_wizard_done)
                     win.present(self)
                     return
 
@@ -936,9 +936,9 @@ class ContactEditor(Adw.Dialog):
         failures = 0
         for s_uid in selected_sources:
             if self.uid and s_uid == original_source:
-                ok = self.eds.save_contact(final_vcard, self.uid)
+                ok = self.main_window.daemon.save_contact(final_vcard, uid=self.uid)
             else:
-                ok = self.eds.save_contact(final_vcard, source_uid=s_uid)
+                ok = self.main_window.daemon.save_contact(final_vcard, source_uid=s_uid)
             if not ok:
                 failures += 1
 
@@ -971,7 +971,6 @@ class ContactEditor(Adw.Dialog):
         except Exception as ex:
             logger.error(f"[ContactEditor] Special list update error: {ex}")
 
-        self.main_window.notify_success(_("Contact saved"))
 
     def _on_save_failed(self, error, fn, final_vcard):
         """Reopen the editor with the attempted data after a failed save."""
@@ -1003,7 +1002,5 @@ class ContactEditor(Adw.Dialog):
         d.present(self)
 
     def _show_error(self, title, msg):
-        """Show error dialog."""
-        d = Adw.AlertDialog(heading=title, body=msg)
-        d.add_response("ok", _("OK"))
-        d.present(self)
+        """Report a failure the user can only acknowledge."""
+        self.main_window.notify_error(msg)

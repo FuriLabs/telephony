@@ -278,7 +278,7 @@ class ContactsView(Adw.Bin):
 
             if identical_dupes:
                 logger.info(f"[ContactsView] Removing {len(identical_dupes)} identical duplicate contacts")
-                self.app_window.eds.delete_contacts(identical_dupes)
+                self.app_window.daemon.delete_contacts(identical_dupes)
 
             GLib.idle_add(self.app_window.update_duplicate_status, conflicts)
             if done_callback:

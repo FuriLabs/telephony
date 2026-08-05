@@ -506,9 +506,13 @@ class MessagesView(Adw.Bin):
 
         return False
 
+    def _muted_ids(self):
+        """Return the muted conversation ids as a set."""
+        return set(self.app_window.gsettings_mgr.get_muted_conversations())
+
     def _on_bind_row(self, factory, list_item):
         """Bind row items to widgets."""
-        ConversationRowFactory.bind(factory, list_item)
+        ConversationRowFactory.bind(factory, list_item, self._muted_ids())
 
     def on_activate_conv(self, lv, pos):
         """Handle activation of a conversation row."""

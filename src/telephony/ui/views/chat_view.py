@@ -34,7 +34,7 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango, GObject, Gst
 from telephony.backend.utils.log_utils import logger
 
-from ...backend.utils.phone_utils import normalize_number
+from ...backend.utils.phone_utils import normalize_number, conversation_id
 from ...backend.utils.model_utils import MessageItem
 from ..windows.date_time_picker_window import DateTimePicker
 from ..windows.contact_picker_window import ContactPicker
@@ -676,6 +676,16 @@ class ChatPage(Gtk.Box):
             self._details_built = True
             self.setup_details_panel()
 
+    def _conversation_id(self):
+        """Return the stable id of this conversation."""
+        return conversation_id(self.recipients if self.is_group else self.number)
+
+    def _on_mute_toggled(self, row, _pspec):
+        """Persist the mute preference for this conversation."""
+        muted = row.get_active()
+        self.app_window.gsettings_mgr.set_conversation_muted(self._conversation_id(), muted)
+        self.db.emit('messages-updated', "", "status")
+
     def _refresh_recipient_call_buttons(self):
         """Sync recipient call buttons with the current dial availability."""
         available = self.app_window.ofono.dialing_available() if self.app_window.ofono else True
@@ -700,6 +710,15 @@ class ChatPage(Gtk.Box):
             box.append(lbl)
             box.append(entry)
             box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
+
+        self.sw_mute = Adw.SwitchRow(title=_("Mute This Chat"))
+        self.sw_mute.set_subtitle(_("Messages arrive without a notification"))
+        self.sw_mute.set_active(self.app_window.gsettings_mgr.is_conversation_muted(
+            self._conversation_id()))
+        self.sw_mute.connect("notify::active", self._on_mute_toggled)
+        grp_mute = Adw.PreferencesGroup()
+        grp_mute.add(self.sw_mute)
+        box.append(grp_mute)
 
         lbl_part = Gtk.Label(label=_("Participants"), xalign=0, css_classes=["heading"])
         box.append(lbl_part)
@@ -1021,7 +1040,6 @@ class ChatPage(Gtk.Box):
         def done(_result):
             self.contact_name = new_name
             self.title_widget.set_title(new_name)
-            self.app_window.notify_success(_("Group renamed"))
 
         run_in_background(self.app_window.daemon.set_group_name, self.recipients, new_name, on_complete=done)
 

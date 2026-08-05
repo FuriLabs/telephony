@@ -114,7 +114,7 @@ class ChatMediaController:
             cam.present(self.window)
         except Exception as e:
             logger.error(f"Failed to open camera: {e}")
-            self._show_error(_("Camera Error"), _("Could not start the camera."))
+            self._show_error(None, _("Could not start the camera."))
 
     def _open_video(self):
         """Open video camera modal."""
@@ -123,7 +123,7 @@ class ChatMediaController:
             cam.present(self.window)
         except Exception as e:
             logger.error(f"Failed to open video camera: {e}")
-            self._show_error(_("Camera Error"), _("Could not start video recording."))
+            self._show_error(None, _("Could not start video recording."))
 
     def _open_audio_recorder(self):
         """Open audio recorder modal."""
@@ -134,7 +134,7 @@ class ChatMediaController:
             rec.present(self.window)
         except Exception as e:
             logger.error(f"Failed to open audio recorder: {e}")
-            self._show_error(_("Audio Error"), _("Could not start audio recorder."))
+            self._show_error(None, _("Could not start audio recorder."))
 
     def _open_file_chooser(self):
         """Open standard file chooser for attachments."""
@@ -184,10 +184,8 @@ class ChatMediaController:
 
         except Exception as e:
             logger.error(f"Failed to process attachment: {e}")
-            self._show_error(_("Attachment Error"), _("Failed to prepare attachment."))
+            self._show_error(None, _("Failed to prepare attachment."))
 
     def _show_error(self, title, message):
-        """Show error dialog."""
-        d = Adw.AlertDialog(heading=title, body=message)
-        d.add_response("close", _("Close"))
-        d.present(self.window)
+        """Report a failure the user can only acknowledge."""
+        self.window.notify_error(message)

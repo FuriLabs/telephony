@@ -263,6 +263,18 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="name" direction="in"/>
       <arg type="s" name="number" direction="in"/>
     </method>
+    <method name="SaveContact">
+      <arg type="s" name="vcard" direction="in"/>
+      <arg type="s" name="uid" direction="in"/>
+      <arg type="s" name="source_uid" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="DeleteContacts">
+      <arg type="s" name="uids_json" direction="in"/>
+    </method>
+    <method name="RefreshContacts">
+      <arg type="i" name="count" direction="out"/>
+    </method>
     <method name="ModifyContact">
       <arg type="s" name="uid" direction="in"/>
       <arg type="s" name="name" direction="in"/>
@@ -527,7 +539,10 @@ class TelephonyDaemonDBus:
             "ImportContacts": self._handle_importcontacts,
             "ExportContacts": self._handle_exportcontacts,
             "AddContact": self._handle_addcontact,
+            "SaveContact": self._handle_savecontact,
             "DeleteContact": self._handle_deletecontact,
+            "DeleteContacts": self._handle_deletecontacts,
+            "RefreshContacts": self._handle_refreshcontacts,
             "ModifyContact": self._handle_modifycontact,
         }
         handler = handlers.get(method_name)
@@ -1238,6 +1253,72 @@ class TelephonyDaemonDBus:
             vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
             self.eds.save_contact(vcard_data)
         invocation.return_value(None)
+
+    def _handle_savecontact(self, parameters, invocation):
+        """Write a full vCard to a book, refusing the read-only sync book."""
+        vcard, uid, source_uid = parameters.unpack()
+
+        if uid:
+            with self.eds.cache_lock:
+                contact = self.eds.cache.get(uid)
+            if contact and self._is_protected_contact_source(contact.get('source_uid')):
+                logger.warning(f"[DBus] Refusing to modify protected contact {uid}")
+                invocation.return_value(GLib.Variant("(b)", (False,)))
+                return
+        if source_uid and self._is_protected_contact_source(source_uid):
+            logger.warning(f"[DBus] Refusing to write into protected source {source_uid}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Save contact failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.eds:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.eds.save_contact, vcard, uid or None, source_uid or None,
+                          on_complete=done, on_error=failed)
+
+    def _handle_deletecontacts(self, parameters, invocation):
+        """Delete a batch of contacts, skipping the protected ones."""
+        uids_json = parameters.unpack()[0]
+        uids = []
+        try:
+            if uids_json:
+                uids = json.loads(uids_json)
+        except Exception as e:
+            logger.warning(f"[DBus] Failed to parse contact uids: {e}")
+
+        def task():
+            for uid in uids:
+                with self.eds.cache_lock:
+                    contact = self.eds.cache.get(uid)
+                if contact and self._is_protected_contact(contact, uid, "delete"):
+                    continue
+                self.eds.delete_contact(uid)
+
+        if not uids or not self.eds:
+            invocation.return_value(None)
+            return
+        self._run_task_then_reply(invocation, task)
+
+    def _handle_refreshcontacts(self, parameters, invocation):
+        """Ask every refresh-capable backend to re-sync with its remote."""
+        def done(count):
+            invocation.return_value(GLib.Variant("(i)", (int(count or 0),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Backend refresh failed: {error}")
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+
+        if not self.eds:
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+            return
+        run_in_background(self.eds.refresh_backends, on_complete=done, on_error=failed)
 
     def _handle_deletecontact(self, parameters, invocation):
         """Handle DeleteContact command."""

@@ -35,7 +35,7 @@ from .backend.managers.ringback_manager import RingbackManager
 from .backend.managers.notification_manager import NotificationManager
 from .backend.managers.schedule_manager import ScheduleManager
 from .backend.utils.thread_utils import run_in_background
-from .backend.utils.phone_utils import normalize_number, get_own_number
+from .backend.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from .backend.utils.locale_utils import init_locale
 from .backend.utils.system_utils import trim_native_heap
 from .constants import INCALL_APP_ID, EMERGENCY_APP_ID, DAEMON_APP_ID, DAEMON_BUS_NAME
@@ -244,6 +244,30 @@ class TelephonyCore:
         GLib.timeout_add_seconds(HEAP_TRIM_AFTER_STARTUP_SECONDS, trim_native_heap)
         GLib.timeout_add_seconds(HEAP_TRIM_INTERVAL_SECONDS, lambda: trim_native_heap() or True)
 
+        if not self.is_daemon:
+            Gio.bus_watch_name(Gio.BusType.SESSION, DAEMON_BUS_NAME,
+                               Gio.BusNameWatcherFlags.NONE,
+                               self._on_daemon_appeared, self._on_daemon_vanished)
+
+    def _on_daemon_appeared(self, _bus, _name, _owner):
+        """Record that the service answers again.
+
+        The bus re-resolves the signal subscriptions to the new owner
+        by itself, so nothing needs reconnecting here.
+        """
+        if self.daemon_missing:
+            logger.info("[App] The telephony service is back")
+        self.daemon_missing = False
+
+    def _on_daemon_vanished(self, _bus, _name):
+        """Record that the service left the bus.
+
+        The next write revives it through bus activation; this only
+        keeps daemon_missing truthful for the windows that show it.
+        """
+        logger.warning("[App] The telephony service left the bus")
+        self.daemon_missing = True
+
     def _announce_changes(self):
         """Tell window instances when the stored data changed.
 
@@ -382,8 +406,12 @@ class TelephonyCore:
         except Exception as e:
             logger.debug(f"Exception checking DND bypass: {e}")
 
-        if not self.ui.deliver_message_to_windows(number, body):
-            self.broadcast_notification(number, body)
+        if self.ui.deliver_message_to_windows(number, body):
+            return
+        if self.gsettings_mgr.is_conversation_muted(conversation_id(number)):
+            logger.debug(f"[App] Muted conversation, no notification for {number}")
+            return
+        self.broadcast_notification(number, body)
 
     def on_mms_received(self, _mms_obj, sender, recipients, _date, body, attachments, sender_name):
         """Handle incoming MMS."""
@@ -440,9 +468,13 @@ class TelephonyCore:
             except Exception as e:
                 logger.error(f"[Priority] Check failed in MMS: {e}")
 
-        if not self.ui.deliver_message_to_windows(chat_id, preview_text, attachments, real_sender):
-            sender_to_show = real_sender if real_sender else chat_id
-            self.broadcast_notification(chat_id, preview_text, lookup_number=sender_to_show)
+        if self.ui.deliver_message_to_windows(chat_id, preview_text, attachments, real_sender):
+            return False
+        if self.gsettings_mgr.is_conversation_muted(conversation_id(chat_id)):
+            logger.debug(f"[App] Muted conversation, no notification for {chat_id}")
+            return False
+        sender_to_show = real_sender if real_sender else chat_id
+        self.broadcast_notification(chat_id, preview_text, lookup_number=sender_to_show)
 
         return False
 

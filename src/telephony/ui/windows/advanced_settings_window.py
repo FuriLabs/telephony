@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import os
 import subprocess
 from .trusted_actions_list_window import TrustedActionsListWindow
 import gi
@@ -20,10 +21,11 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
+from telephony.backend.utils.log_utils import logger
 
 from ...backend.utils.thread_utils import run_in_background
 from ...constants import MMS_SIZE_LIMIT_DEFAULT_KB
-from ..widgets.common_widget import present_info_sheet, build_selector_row, set_selector_options
+from ..widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, build_nav_row)
 
 
 class AdvancedSettingsWindow(Adw.NavigationPage):
@@ -59,6 +61,10 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
     def _build_ui(self):
         """Construct the settings UI."""
         self.page = Adw.PreferencesPage()
+        self.page.set_description(
+            _("For experienced users. This page lets trusted senders trigger "
+              "actions on your phone by text message, restarts the modem, "
+              "changes which app icons are installed, and erases your data."))
         self.content_box.append(self.page)
 
         grp_actions = Adw.PreferencesGroup(title=_("Secret SMS Triggers"))
@@ -92,10 +98,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         row_auto = Adw.SwitchRow(title=_("Automatic Modem Recovery"))
         row_auto.set_active(self.parent_win.main_window.gsettings_mgr.get_setting("automatic_modem_recovery") == "true")
         row_auto.connect("notify::active", self._on_auto_recovery_toggled)
-        btn_auto_info = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
-        btn_auto_info.add_css_class("flat")
-        btn_auto_info.add_css_class("circular")
-        btn_auto_info.connect("clicked", lambda b: GLib.idle_add(lambda: self._show_auto_recovery_info(b) or False))
+        btn_auto_info = self._info_button(self._show_auto_recovery_info)
         row_auto.add_suffix(btn_auto_info)
         grp_restart.add(row_auto)
 
@@ -115,11 +118,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             saved_limit = MMS_SIZE_LIMIT_DEFAULT_KB
         set_selector_options(self.row_mms_limit, mms_limit_labels,
                              self.mms_limit_values.index(saved_limit))
-        btn_info_mms = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
-        btn_info_mms.add_css_class("flat")
-        btn_info_mms.add_css_class("circular")
-        btn_info_mms.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._show_mms_size_info(b) or False))
+        btn_info_mms = self._info_button(self._show_mms_size_info)
         grp_messaging.set_header_suffix(btn_info_mms)
         grp_messaging.add(self.row_mms_limit)
 
@@ -130,16 +129,171 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                                    lambda: self._on_data_management(None),
                                    destructive=True))
 
+        self._init_desktop_toggles(self.page)
+
+    def _init_desktop_toggles(self, page):
+        """Initialize desktop shortcut toggles."""
+        grp_dt = Adw.PreferencesGroup(title=_("Desktop Shortcuts"))
+        page.add(grp_dt)
+
+        shortcuts = [
+            ("Telephony", "io.furios.Telephony.desktop", "full"),
+            (_("Calls"), "io.furios.Telephony.Calls.desktop", "calls"),
+            (_("Messages"), "io.furios.Telephony.Messages.desktop", "messages"),
+            (_("Contacts"), "io.furios.Telephony.Contacts.desktop", "contacts")
+        ]
+
+        self.dt_toggles = []
+
+        for name, filename, autostart_key in shortcuts:
+            row = Adw.SwitchRow(title=name)
+
+            is_visible = self._is_desktop_file_visible(filename)
+
+            row.set_active(is_visible)
+            handler_id = row.connect("notify::active", lambda w, p, f=filename,
+                                     k=autostart_key: self._toggle_desktop_file(w, f, k, w.get_active()))
+            grp_dt.add(row)
+            self.dt_toggles.append((row, filename, handler_id, autostart_key))
+
+        self._update_autostart_ui_state()
+
+    def _is_desktop_file_visible(self, filename):
+        """Check if desktop file is visible by looking at home and system files."""
+        user_path = os.path.join(self._get_user_desktop_dir(), filename)
+        sys_path = self._get_system_desktop_path(filename)
+
+        target_path = user_path if os.path.exists(user_path) else sys_path
+
+        if not target_path or not os.path.exists(target_path):
+            return True
+
+        try:
+            with open(target_path, 'r') as f:
+                content = f.read()
+                if "NoDisplay=true" in content or "Hidden=true" in content:
+                    return False
+        except Exception as e:
+            logger.error(f"[Settings] Error reading desktop file {target_path}: {e}")
+
+        return True
+
+    def _update_autostart_ui_state(self):
+        """Update the full toggle based on the others."""
+        full_row = None
+        others_all_active = True
+
+        for row, filename, handler_id, key in self.dt_toggles:
+            if key == "full":
+                full_row = row
+            else:
+                if not row.get_active():
+                    others_all_active = False
+
+        if full_row:
+            if not others_all_active:
+                if not full_row.get_active():
+                    full_row.set_active(True)
+                full_row.set_sensitive(False)
+            else:
+                full_row.set_sensitive(True)
+
+    def _get_user_desktop_dir(self):
+        """Get user applications directory."""
+        return os.path.expanduser("~/.local/share/applications")
+
+    def _get_system_desktop_path(self, filename):
+        """Find system desktop file."""
+        paths = [
+            "/usr/share/applications",
+            "/usr/local/share/applications"
+        ]
+        for p in paths:
+            full = os.path.join(p, filename)
+            if os.path.exists(full):
+                return full
+        return None
+
+    def _toggle_desktop_file(self, row, filename, autostart_key, visible):
+        """Toggle desktop file visibility asynchronously using pkexec."""
+        self._update_autostart_ui_state()
+
+        if visible == self._is_desktop_file_visible(filename):
+            return
+
+        def _task():
+            try:
+                user_path = os.path.join(
+                    self._get_user_desktop_dir(), filename)
+                if os.path.exists(user_path):
+                    try:
+                        os.remove(user_path)
+                    except Exception as e:
+                        logger.warning(
+                            f"[Settings] Remove user desktop file warning: {e}")
+
+                sys_path = self._get_system_desktop_path(filename)
+                if not sys_path:
+                    logger.warning(
+                        f"[Settings] No system desktop file found for {filename}")
+                    GLib.idle_add(self._revert_toggle, row, not visible)
+                    return
+
+                if visible:
+                    cmd_str = (
+                        f"sed -i '/^NoDisplay=true/d' '{sys_path}' && "
+                        f"sed -i '/^Hidden=true/d' '{sys_path}'"
+                    )
+                    cmd = ['pkexec', 'sh', '-c', cmd_str]
+                else:
+                    cmd_str = (
+                        f"grep -q '^NoDisplay=' '{sys_path}' && "
+                        f"sed -i 's/^NoDisplay=.*/NoDisplay=true/' '{sys_path}' || "
+                        f"sed -i '/^\\[Desktop Entry\\]/a NoDisplay=true' '{sys_path}'"
+                    )
+                    cmd = ['pkexec', 'sh', '-c', cmd_str]
+
+                res = subprocess.run(cmd, check=False)
+                if res.returncode == 0:
+                    logger.info(
+                        f"[Settings] Successfully toggled desktop visibility for {filename} to {visible}")
+                else:
+                    logger.warning(
+                        f"[Settings] pkexec failed or was cancelled (exit code {res.returncode})")
+                    GLib.idle_add(self._revert_toggle, row, not visible)
+
+            except Exception as e:
+                logger.error(
+                    f"[SettingsWindow] Toggle desktop file error: {e}")
+                GLib.idle_add(self._revert_toggle, row, not visible)
+
+        run_in_background(_task)
+
+    def _revert_toggle(self, row, original_state):
+        """Revert a desktop toggle switch if pkexec fails."""
+        handler_id = None
+        for r, fname, hid, _ignored in self.dt_toggles:
+            if r == row:
+                handler_id = hid
+                break
+
+        if handler_id:
+            with row.handler_block(handler_id):
+                row.set_active(original_state)
+        else:
+            row.set_active(original_state)
+
+    def _info_button(self, handler):
+        """Build the round info button that opens an explanation sheet."""
+        button = Gtk.Button(icon_name="dialog-information-symbolic", valign=Gtk.Align.CENTER)
+        button.add_css_class("flat")
+        button.add_css_class("circular")
+        button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
+        return button
+
     def _nav_row(self, title, subtitle, callback, destructive=False):
         """Build an activatable navigation row with a chevron."""
-        row = Adw.ActionRow(title=title, activatable=True)
-        if subtitle:
-            row.set_subtitle(subtitle)
-        if destructive:
-            row.add_css_class("error")
-        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        row.connect("activated", lambda r: GLib.idle_add(lambda: callback() or False))
-        return row
+        return build_nav_row(title, subtitle, callback, destructive=destructive)
 
     def _on_data_management(self, btn):
         """Push the data management page."""

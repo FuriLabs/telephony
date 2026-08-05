@@ -214,7 +214,6 @@ class CustomToneListWindow(Adw.NavigationPage):
         self.local_tones = [c for c in self.local_tones if normalize_number(c.get("number", "")) != target_num]
 
         GLib.idle_add(lambda: self._refresh_list())
-        self.overlay.add_toast(Adw.Toast.new(_("Custom tone removed (Click Save to commit)")))
 
     def _on_search_changed(self, entry):
         """Handle search text change."""
@@ -345,4 +344,3 @@ class CustomToneListWindow(Adw.NavigationPage):
             return False
 
         GLib.idle_add(_update_ui)
-        self.overlay.add_toast(Adw.Toast.new(_("Custom tone added")))

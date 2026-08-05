@@ -15,6 +15,7 @@
 
 from gi.repository import Gtk, Pango
 from gettext import gettext as _
+from ...backend.utils.phone_utils import conversation_id
 
 
 class ConversationRowFactory:
@@ -56,10 +57,15 @@ class ConversationRowFactory:
         lbl_msg.set_ellipsize(Pango.EllipsizeMode.END)
         lbl_msg.set_max_width_chars(30)
 
+        img_muted = Gtk.Image(icon_name="audio-volume-muted-symbolic", css_classes=["dim-label"])
+        img_muted.set_pixel_size(14)
+        img_muted.set_visible(False)
+
         lbl_badge = Gtk.Label(css_classes=["numeric", "badge"])
         lbl_badge.set_visible(False)
 
         btm_line.append(lbl_msg)
+        btm_line.append(img_muted)
         btm_line.append(lbl_badge)
 
         vbox.append(top_line)
@@ -77,11 +83,12 @@ class ConversationRowFactory:
         list_item.widgets = {
             "stack": stack,
             "name": lbl_name, "date": lbl_date, "msg": lbl_msg,
-            "badge": lbl_badge, "btn": btn_open, "num": lbl_number
+            "badge": lbl_badge, "btn": btn_open, "num": lbl_number,
+            "muted": img_muted
         }
 
     @staticmethod
-    def bind(factory, list_item):
+    def bind(factory, list_item, muted_ids=()):
         """Bind data to the conversation row widgets."""
         if list_item.get_child() is None:
             ConversationRowFactory.setup(factory, list_item)
@@ -114,6 +121,7 @@ class ConversationRowFactory:
             w["msg"].remove_css_class("italic")
 
         w["msg"].set_text(body_preview)
+        w["muted"].set_visible(conversation_id(item.number) in muted_ids)
 
         if item.unread_count > 0:
             w["badge"].set_text(str(item.unread_count))

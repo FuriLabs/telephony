@@ -252,3 +252,46 @@ class DaemonClient:
         reply = self.call("ImportIosCalls", GLib.Variant("(s)", (file_path,)),
                           GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply if reply else (False, "")
+
+    def save_contact(self, vcard, uid=None, source_uid=None):
+        """Write a full vCard to a book; blocking, call from a worker."""
+        reply = self.call("SaveContact",
+                          GLib.Variant("(sss)", (vcard, uid or "", source_uid or "")),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def delete_contact(self, uid):
+        """Delete one contact; blocking, call from a worker."""
+        reply = self.call("DeleteContact", GLib.Variant("(s)", (uid,)))
+        return reply is not None
+
+    def delete_contacts(self, uids):
+        """Delete a batch of contacts; blocking, call from a worker."""
+        reply = self.call("DeleteContacts", GLib.Variant("(s)", (json.dumps(list(uids)),)),
+                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply is not None
+
+    def refresh_contacts(self):
+        """Ask the backends to re-sync; blocking, call from a worker."""
+        reply = self.call("RefreshContacts", None, GLib.VariantType("(i)"),
+                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply[0] if reply else 0
+
+    def import_contacts(self, vcard_data, source_uid=None):
+        """Import vCards into a book; blocking, call from a worker."""
+        reply = self.call("ImportContacts",
+                          GLib.Variant("(ss)", (vcard_data, source_uid or "")),
+                          GLib.VariantType("(i)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply[0] if reply else 0
+
+    def clear_contacts(self, source_uid=None):
+        """Delete every contact of a source, or all unprotected ones; blocking."""
+        reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
+                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return reply is not None
+
+    def delete_address_book(self, source_uid):
+        """Delete a whole address book; blocking, call from a worker."""
+        reply = self.call("DeleteAddressBook", GLib.Variant("(s)", (source_uid,)),
+                          GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return bool(reply and reply[0])
