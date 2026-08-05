@@ -875,6 +875,8 @@ class OfonoManager(GObject.Object):
 
     def _check_repeated_call_bypass(self, number):
         """Check if repeated calls should bypass silent mode."""
+        if not number:
+            return
         try:
             if self.gsettings_mgr.get_setting("notification_override_repeated_calls_bypass") != "true":
                 return

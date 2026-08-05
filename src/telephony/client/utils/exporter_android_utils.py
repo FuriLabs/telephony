@@ -179,6 +179,8 @@ def export_android_calls(db_manager, file_path):
                         type_val = "2"
                     elif direction == "missed":
                         type_val = "3"
+                    elif direction == "rejected":
+                        type_val = "5"
 
                     call = ET.SubElement(root, "call")
                     call.set("number", number)
