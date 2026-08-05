@@ -382,6 +382,11 @@ class DaemonClient:
         """Ask the owner to move call input to a route."""
         self.call_async("SetInputRoute", GLib.Variant("(s)", (route,)))
 
+    def set_delivery_reports(self, enabled):
+        """Ask the network for delivery reports; blocking, call from a worker."""
+        return self.call("SetDeliveryReports", GLib.Variant("(b)", (bool(enabled),)),
+                         GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
     def set_mic_muted(self, muted):
         """Ask the owner to mute or unmute the microphone."""
         self.call_async("MuteMic" if muted else "UnmuteMic")

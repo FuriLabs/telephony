@@ -372,6 +372,11 @@ DAEMON_INTERFACE_XML = """
     <method name="SetInputRoute">
       <arg type="s" name="route" direction="in"/>
     </method>
+    <method name="SetDeliveryReports">
+      <arg type="b" name="enabled" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
     <method name="GetAudioRoutes">
       <arg type="a(sb)" name="outputs" direction="out"/>
       <arg type="a(sb)" name="inputs" direction="out"/>
@@ -507,6 +512,7 @@ class TelephonyDaemonDBus:
             "present": GLib.Variant("b", state["present"]),
             "online": GLib.Variant("b", state["online"]),
             "interfaces": GLib.Variant("as", state["interfaces"]),
+            "emergency_numbers": GLib.Variant("as", state["emergency_numbers"]),
         }
         self.emit_signal("ModemStateChanged", GLib.Variant("(a{sv})", (packed,)))
         self._emit_capability()
@@ -673,6 +679,7 @@ class TelephonyDaemonDBus:
             "modem_present": GLib.Variant("b", modem["present"]),
             "modem_online": GLib.Variant("b", modem["online"]),
             "interfaces": GLib.Variant("as", modem["interfaces"]),
+            "emergency_numbers": GLib.Variant("as", modem["emergency_numbers"]),
             "voicemail_waiting": GLib.Variant("b", self.ofono.voicemail_waiting),
             "voicemail_count": GLib.Variant("i", self.ofono.voicemail_count),
             "voicemail_mailbox": GLib.Variant("s", self.ofono.voicemail_mailbox),
@@ -785,6 +792,7 @@ class TelephonyDaemonDBus:
             "SilenceRing": self._handle_silencering,
             "SetAudioRoute": self._handle_setaudioroute,
             "SetInputRoute": self._handle_setinputroute,
+            "SetDeliveryReports": self._handle_setdeliveryreports,
             "GetAudioRoutes": self._handle_getaudioroutes,
             "DeleteMessage": self._handle_deletemessage,
             "DeleteConversation": self._handle_deleteconversation,
@@ -936,6 +944,12 @@ class TelephonyDaemonDBus:
         route = parameters.unpack()[0]
         self.app.call_audio.set_input(route)
         invocation.return_value(None)
+
+    def _handle_setdeliveryreports(self, parameters, invocation):
+        """Ask the network for SMS delivery reports for a window instance."""
+        enabled = parameters.unpack()[0]
+        run_in_background(self.ofono.set_delivery_reports, enabled,
+                          on_complete=lambda result: self._reply_ss_result(invocation, result))
 
     def _handle_getaudioroutes(self, parameters, invocation):
         """List the selectable output and input routes for a window."""

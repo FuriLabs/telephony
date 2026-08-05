@@ -450,6 +450,7 @@ class OfonoManager(GObject.Object):
             "present": bool(self.monitor.connected),
             "online": bool(self.modem_online),
             "interfaces": sorted(self._seen_interfaces),
+            "emergency_numbers": sorted(self.network_emergency_numbers),
         }
 
     def calls_snapshot(self):

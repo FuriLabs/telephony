@@ -72,6 +72,7 @@ class OfonoMirror(GObject.Object):
         self.modem_present = False
         self.modem_online = False
         self.interfaces = set()
+        self.network_emergency_numbers = set()
         self.voicemail_waiting = False
         self.voicemail_count = 0
         self.voicemail_mailbox = ""
@@ -138,7 +139,8 @@ class OfonoMirror(GObject.Object):
                                state.get("dial_description", ""))
         self._apply_modem_state(state.get("modem_present", False),
                                 state.get("modem_online", False),
-                                state.get("interfaces", []))
+                                state.get("interfaces", []),
+                                state.get("emergency_numbers", []))
 
         waiting = state.get("voicemail_waiting", False)
         count = state.get("voicemail_count", 0)
@@ -156,7 +158,8 @@ class OfonoMirror(GObject.Object):
         self.audio.voice_profile_active = (reason == "call-ending")
         self.emit('dial-availability-changed', can_dial)
 
-    def _apply_modem_state(self, present, online, interfaces):
+    def _apply_modem_state(self, present, online, interfaces, emergency_numbers):
+        self.network_emergency_numbers = set(emergency_numbers)
         new_interfaces = set(interfaces)
         added = new_interfaces - self.interfaces
         presence_changed = present != self.modem_present
@@ -192,7 +195,8 @@ class OfonoMirror(GObject.Object):
         state = args[5].unpack()[0]
         self._apply_modem_state(state.get("present", False),
                                 state.get("online", False),
-                                state.get("interfaces", []))
+                                state.get("interfaces", []),
+                                state.get("emergency_numbers", []))
 
     def _on_sig_voicemail(self, *args):
         waiting, count = args[5].unpack()
@@ -368,6 +372,13 @@ class OfonoMirror(GObject.Object):
     def disable_all_barrings(self, password):
         """Clear every barring rule; blocking, call from a worker."""
         reply = self.daemon.disable_all_barrings(password)
+        if reply is None:
+            return (False, "no reply")
+        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+
+    def set_delivery_reports(self, enabled):
+        """Ask the network for delivery reports; blocking, call from a worker."""
+        reply = self.daemon.set_delivery_reports(enabled)
         if reply is None:
             return (False, "no reply")
         return (reply[0], None if reply[0] else (reply[1] or "refused"))
