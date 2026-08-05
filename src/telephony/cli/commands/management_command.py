@@ -18,7 +18,7 @@
 from gettext import gettext as _
 from gi.repository import GLib, Gio
 from telephony.cli.cli_utils import get_proxy
-from telephony.backend.utils.translation_utils import install_i18n
+from telephony.shared.utils.translation_utils import install_i18n
 
 NOTIFICATIONS_BUS = "org.freedesktop.Notifications"
 NOTIFICATIONS_PATH = "/org/freedesktop/Notifications"
