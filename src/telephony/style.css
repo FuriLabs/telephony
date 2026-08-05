@@ -222,8 +222,9 @@ viewswitcher button:focus {
   color: @accent_color;
 }
 
-/* In-call pill stack: four uniform full-width rows; the audio pill renders live state names and the red muted flag. */
-.stack-pill { background: alpha(@theme_fg_color, 0.06); border-radius: 22px; padding: 13px; font-weight: 700; }
+/* In-call pill stack: four uniform full-width rows sharing the hangup pill's 12px radius and height; the audio pill renders live state names and the red muted flag. */
+.stack-pill { background-color: alpha(@theme_fg_color, 0.08); border-radius: 12px; font-weight: 700; }
+.stack-pill:active { background-color: alpha(@theme_fg_color, 0.2); transform: scale(0.97); }
 .stack-pill-state { color: alpha(@theme_fg_color, 0.7); font-weight: 400; }
 .stack-pill-muted { color: #c01c28; }
 .keypad-key { font-size: 20px; font-weight: 600; border-radius: 10px; min-height: 44px; background: alpha(@theme_fg_color, 0.05); }
@@ -232,6 +233,6 @@ viewswitcher button:focus {
 .btn-anon-green { background-color: #1a633f; color: white; }
 .btn-anon-green:active { background-color: #114429; transform: scale(0.94); }
 
-/* Incoming screen pills: answer in green, mirroring the red hangup pill. */
-.stack-pill-green { background: #26a269; color: white; border-radius: 22px; padding: 13px; font-weight: 700; min-height: 24px; }
-.stack-pill-red { background: #c01c28; color: white; border-radius: 22px; padding: 13px; font-weight: 700; min-height: 24px; }
+/* Incoming screen answer pill: the call green, in the shared pill geometry. */
+.stack-pill-green { background-color: #2ec27e; color: white; border-radius: 12px; font-weight: 700; }
+.stack-pill-green:active { background-color: #1a7f50; transform: scale(0.95); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }

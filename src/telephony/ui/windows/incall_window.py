@@ -38,6 +38,7 @@ from ...backend.utils.call_state_utils import count_lines, conference_paths, hel
 
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
 INCALL_SHEET_HEIGHT = 520
+PILL_HEIGHT = 60
 PAD_MORPH_DURATION_MS = 250
 
 SEARCH_ENGINE_URLS = {
@@ -346,7 +347,9 @@ class InCallWindow(Adw.Window):
 
     def _mk_action_pill(self, icon, label, on_click, style="stack-pill", chevron=False):
         """Build one full-width action pill for the incoming screen."""
-        b = Gtk.Button(css_classes=[style])
+        classes = ["destructive-action", "pill"] if style == "stack-pill-red" else [style]
+        b = Gtk.Button(css_classes=classes)
+        b.set_size_request(-1, PILL_HEIGHT)
         center = Gtk.CenterBox()
         mid = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
         mid.append(Gtk.Image.new_from_icon_name(icon))
@@ -393,6 +396,7 @@ class InCallWindow(Adw.Window):
     def _build_stack_pill(self, icon, label, on_click):
         """Build one full-width pill row with a trailing chevron."""
         b = Gtk.Button(css_classes=["stack-pill"])
+        b.set_size_request(-1, PILL_HEIGHT)
         center = Gtk.CenterBox()
         mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
         mid.append(Gtk.Image.new_from_icon_name(icon))
@@ -406,6 +410,7 @@ class InCallWindow(Adw.Window):
     def _build_audio_pill(self):
         """Build the audio pill: fixed direction icons, live device names."""
         b = Gtk.Button(css_classes=["stack-pill"])
+        b.set_size_request(-1, PILL_HEIGHT)
         center = Gtk.CenterBox()
         mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
         mid.append(Gtk.Image.new_from_icon_name("audio-volume-high-symbolic"))
@@ -426,6 +431,7 @@ class InCallWindow(Adw.Window):
     def _build_context_pill(self):
         """Build the contextual pill whose face follows the call mix."""
         b = Gtk.Button(css_classes=["stack-pill"])
+        b.set_size_request(-1, PILL_HEIGHT)
         center = Gtk.CenterBox()
         mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
         self.img_pill_ctx = Gtk.Image.new_from_icon_name("view-more-symbolic")
