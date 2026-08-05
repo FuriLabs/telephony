@@ -41,20 +41,20 @@ def _normalize_number_cached(number, region, permissive=False):
 
     number_str = str(number).strip()
 
-    prefix = ""
-    if number_str.startswith("#31#"):
-        prefix = "#31#"
-        number_str = number_str[4:]
+    for clir_prefix in ("#31#", "*31#"):
+        if number_str.startswith(clir_prefix):
+            number_str = number_str[len(clir_prefix):]
+            break
 
     if any(c.isalpha() for c in number_str):
-        logger.warning(f"[Utils] normalize_number: Input contains letters, returning as-is: {prefix}{number_str}")
-        return prefix + number_str
+        logger.warning(f"[Utils] normalize_number: Input contains letters, returning as-is: {number_str}")
+        return number_str
 
     if not number_str.startswith("+"):
         clean_check = number_str.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
         if clean_check.isdigit() and len(clean_check) < 7:
             logger.info(f"[Utils] normalize_number: Preserving short number: {clean_check}")
-            return prefix + clean_check
+            return clean_check
 
     try:
         parsed = phonenumbers.parse(number_str, region)
@@ -63,8 +63,8 @@ def _normalize_number_cached(number, region, permissive=False):
                 clean_input = re.sub(r'[^0-9\+]', '', number_str)
                 if not clean_input.startswith("+" + str(parsed.country_code)):
                     logger.warning(f"[Utils] normalize_number: CC mismatch! Input: {number_str}, Parsed CC: {parsed.country_code}. Returning input.")
-                    return prefix + clean_input
-            return prefix + phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
+                    return clean_input
+            return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
         logger.warning(f"[Utils] normalize_number: Number parsed but not possible: {number_str}")
     except phonenumbers.NumberParseException as e:
         logger.warning(f"[Utils] normalize_number: Lib parsing failed for '{number_str}': {e}")
@@ -73,15 +73,15 @@ def _normalize_number_cached(number, region, permissive=False):
 
     if clean_s.isdigit() and 2 <= len(clean_s) <= 6:
         logger.warning(f"[Utils] normalize_number: Detected short code or local number, returning raw: {clean_s}")
-        return prefix + clean_s
+        return clean_s
 
     if permissive:
         logger.warning(f"[Utils] normalize_number: Permissive mode enabled, returning original: {number_str}")
-        return prefix + number_str
+        return number_str
 
     final_clean = re.sub(r'[^0-9\+\*\#]', '', number_str)
     logger.warning(f"[Utils] normalize_number: Fallback regex cleaning used on: {number_str} -> {final_clean}")
-    return prefix + final_clean
+    return final_clean
 
 
 def parse_evolution_e164_param(param_value):
@@ -166,7 +166,7 @@ def build_search_variants(token):
 
     region_prefix = f"+{country_code}" if country_code else ""
     if region_prefix and token.startswith("0"):
-        variant = region_prefix + token[1:]
+        variant = region_token[1:]
         variants.add(variant)
         v_norm = normalize_number(variant)
         if v_norm:

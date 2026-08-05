@@ -119,7 +119,11 @@ class DatabaseManager(GObject.Object):
                           name TEXT,
                           direction TEXT,
                           duration INTEGER,
-                          timestamp DATETIME)''')
+                          timestamp DATETIME,
+                          anonymous INTEGER DEFAULT 0)''')
+            history_cols = [row[1] for row in c.execute("PRAGMA table_info(history)").fetchall()]
+            if "anonymous" not in history_cols:
+                c.execute("ALTER TABLE history ADD COLUMN anonymous INTEGER DEFAULT 0")
             c.execute("CREATE INDEX IF NOT EXISTS idx_history_ts ON history(timestamp DESC, id DESC)")
             c.execute("CREATE INDEX IF NOT EXISTS idx_history_number ON history(number)")
             self.conn_calls.commit()
@@ -383,7 +387,7 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Clear Everything Error: {e}")
             return False
 
-    def add_call(self, number, _name_ignored, direction, duration=0):
+    def add_call(self, number, _name_ignored, direction, duration=0, anonymous=False):
         """Add a call entry to history."""
         if self._refuse_write("add_call"):
             return
@@ -398,8 +402,8 @@ class DatabaseManager(GObject.Object):
 
                 with self.lock:
                     c = self.conn_calls.cursor()
-                    c.execute("INSERT INTO history (number, name, direction, duration, timestamp) VALUES (?, ?, ?, ?, ?)",
-                              (norm_number, real_name, direction, duration, now_str))
+                    c.execute("INSERT INTO history (number, name, direction, duration, timestamp, anonymous) VALUES (?, ?, ?, ?, ?, ?)",
+                              (norm_number, real_name, direction, duration, now_str, 1 if anonymous else 0))
                     self.conn_calls.commit()
                 GLib.idle_add(self.emit, 'history-updated')
             except Exception as e:

@@ -737,7 +737,7 @@ class OfonoManager(GObject.Object):
             "answered": (state == "active"),
             "proxy": call_proxy,
             "silenced": is_silenced,
-            "anonymous": self._dial_hides_id if is_outgoing else False,
+            "anonymous": (self._dial_hides_id or str(raw_number).startswith("#31#")) if is_outgoing else False,
             "multiparty": bool(props.get("Multiparty", False))
         }
         if is_outgoing:
@@ -809,7 +809,7 @@ class OfonoManager(GObject.Object):
             num = "Unknown"
 
         try:
-            self.db.add_call(num, None, status, duration)
+            self.db.add_call(num, None, status, duration, anonymous=bool(data.get("anonymous")))
         except Exception as e:
             logger.error(f"[OfonoManager] Logging call failed: {e}")
 
@@ -930,8 +930,10 @@ class OfonoManager(GObject.Object):
 
             self.emit('notification-cleared', clean_num)
 
-            clir = "enabled" if hide_id else "default"
-            self._dial_hides_id = bool(hide_id or self.clir_hidden)
+            if number.startswith("#31#"):
+                hide_id = True
+            clir = "enabled" if hide_id else ("disabled" if number.startswith("*31#") else "default")
+            self._dial_hides_id = bool(hide_id or (self.clir_hidden and clir == "default"))
             self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
             return self._refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
