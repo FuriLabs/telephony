@@ -16,8 +16,9 @@
 import datetime
 import os
 import subprocess
+import time
 from telephony.shared.utils.log_utils import logger
-from telephony.shared.constants import DAEMON_BUS_NAME
+from telephony.shared.constants import DAEMON_BUS_NAME, DAEMON_WAIT_TRIES, DAEMON_WAIT_STEP_SECONDS
 from gi.repository import Gio, GLib
 
 
@@ -297,3 +298,24 @@ def is_daemon_bus_running():
         None
     )
     return res.unpack()[0]
+
+
+def ensure_daemon_running():
+    """Start the telephony service if absent; blocking, call from a worker."""
+    if is_daemon_bus_running():
+        logger.info("[Service] Daemon already running (D-Bus). Skipping systemd check.")
+        return
+    try:
+        if not is_systemd_service_active("telephony.service"):
+            logger.info("[Service] Telephony service not running. Starting it...")
+            start_systemd_service("telephony.service")
+
+        logger.info("[Service] Waiting for the telephony daemon to appear on the bus...")
+        for _ in range(DAEMON_WAIT_TRIES):
+            if is_daemon_bus_running():
+                logger.info("[Service] Daemon is now running.")
+                return
+            time.sleep(DAEMON_WAIT_STEP_SECONDS)
+        logger.warning("[Service] Daemon did not appear; the windows will say so.")
+    except Exception as e:
+        logger.warning(f"[Service] Failed to check/start systemd service: {e}")
