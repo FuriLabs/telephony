@@ -102,10 +102,6 @@ class DaemonApp(Gio.Application):
         """No window ever has focus in the service process."""
         return False
 
-    def deliver_message_to_windows(self, chat_id, body, attachments=None, real_sender=None):
-        """No chat is ever open here, so every message gets a notification."""
-        return False
-
     def apply_recovery_state(self, active, message, failed):
         """The recovery page lives in the in-call process.
 

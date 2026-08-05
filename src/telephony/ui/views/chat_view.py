@@ -1284,6 +1284,7 @@ class ChatPage(Gtk.Box):
 
     def on_window_focus_changed(self, window, param):
         """Handle window focus change."""
+        self._report_active_chat()
         if not window.is_active():
             return
 
@@ -1332,9 +1333,23 @@ class ChatPage(Gtk.Box):
             return False
         GLib.idle_add(_do)
 
+    def _report_active_chat(self):
+        """Tell the daemon whether this chat is open and focused.
+
+        The daemon mutes notifications only for the reported chat, so
+        the report must go both ways: set while this page is on screen
+        in a focused window, cleared the moment either stops holding.
+        """
+        focused = self.get_mapped() and self.app_window and self.app_window.is_active()
+        if focused:
+            self.app_window.ofono.set_active_chat(self.recipients if self.is_group else self.number)
+        else:
+            self.app_window.ofono.set_active_chat(None)
+
     def on_map(self, widget):
         """Reconnect listeners dropped on unmap and catch up missed changes."""
         self._draft_saved = False
+        self._report_active_chat()
 
         if self.app_window and self.focus_handler_id is None:
             self.focus_handler_id = self.app_window.connect("notify::is-active", lambda obj, pspec: self.on_window_focus_changed(obj, pspec))
@@ -1351,6 +1366,7 @@ class ChatPage(Gtk.Box):
 
     def on_unmap(self, widget):
         """Cleanup on widget unmap."""
+        self._report_active_chat()
         if not self._draft_saved:
             self._save_draft()
 

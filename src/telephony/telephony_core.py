@@ -62,7 +62,7 @@ class TelephonyCore:
     A plain object with no toolkit imports. Everything that must reach
     a surface goes through the ui delegate, which the application
     object implements: show_incall_ui, apply_recovery_state,
-    any_window_active, deliver_message_to_windows and
+    any_window_active and
     withdraw_number_notifications.
     """
 
@@ -118,7 +118,8 @@ class TelephonyCore:
 
         self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager,
                               owns_reception=True)
-        self.mms.active_chat_provider = lambda: (self.ofono.active_chat_number, self.ui.any_window_active())
+        self.mms.active_chat_provider = lambda: (self.ofono.active_chat_number,
+                                                 bool(self.ofono.active_chat_number))
         self.mms.connect('message-received', self.on_mms_received)
 
         self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
@@ -224,6 +225,18 @@ class TelephonyCore:
 
         run_in_background(task)
 
+    def _chat_is_open(self, number):
+        """Return whether a window reports this chat open and focused.
+
+        The windows keep SetActiveChat truthful on map, unmap and focus
+        change, so matching the reported target is the whole answer;
+        this process has no windows to ask.
+        """
+        active = self.ofono.active_chat_number
+        if not active:
+            return False
+        return number == active or normalize_number(number) == active
+
     def on_incoming_message(self, _ofono_obj, number, body):
         """Handle incoming SMS."""
         priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
@@ -240,7 +253,7 @@ class TelephonyCore:
         except Exception as e:
             logger.debug(f"Exception checking DND bypass: {e}")
 
-        if self.ui.deliver_message_to_windows(number, body):
+        if self._chat_is_open(number):
             return
         if self.gsettings_mgr.is_conversation_muted(conversation_id(number)):
             logger.debug(f"[App] Muted conversation, no notification for {number}")
@@ -302,7 +315,7 @@ class TelephonyCore:
             except Exception as e:
                 logger.error(f"[Priority] Check failed in MMS: {e}")
 
-        if self.ui.deliver_message_to_windows(chat_id, preview_text, attachments, real_sender):
+        if self._chat_is_open(chat_id):
             return False
         if self.gsettings_mgr.is_conversation_muted(conversation_id(chat_id)):
             logger.debug(f"[App] Muted conversation, no notification for {chat_id}")

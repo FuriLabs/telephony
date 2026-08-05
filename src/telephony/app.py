@@ -142,15 +142,6 @@ class App(Adw.Application):
         """Return True when any application window currently has focus."""
         return any(win.is_active() for win in self.get_windows())
 
-    def deliver_message_to_windows(self, chat_id, body, attachments=None, real_sender=None):
-        """Offer an arriving message to open windows; True when one shows it."""
-        is_chat_open = False
-        for win in self.get_windows():
-            if isinstance(win, MainWindow):
-                if win.handle_new_message(chat_id, body, attachments or [], real_sender):
-                    is_chat_open = True
-        return is_chat_open
-
     def withdraw_number_notifications(self, norm_num):
         """Withdraw the shell notifications filed under a number."""
         try:

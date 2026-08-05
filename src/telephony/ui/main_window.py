@@ -591,13 +591,6 @@ class MainWindow(Adw.Window):
             placeholder.set_child(self.contacts_view)
             self._refresh_calling_controls()
 
-    def handle_new_message(self, sender, body, attachments=[], real_sender=None):
-        """Handle new message injection into UI."""
-        if not self.messages_view:
-            return False
-
-        return self.messages_view.handle_incoming_ui(sender, body, attachments, msg_sender=real_sender)
-
     def open_chat_for_number(self, number):
         """Switch to messages view and open chat."""
         if self.show_messages_mode:
