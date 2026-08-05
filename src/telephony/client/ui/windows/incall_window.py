@@ -475,15 +475,32 @@ class InCallWindow(Adw.Window):
         return b
 
     def _build_audio_pill(self):
-        """Build the audio pill: fixed direction icons, live device names."""
-        b = Gtk.Button(css_classes=["stack-pill"])
-        b.set_size_request(-1, PILL_HEIGHT)
-        center = Gtk.CenterBox()
-        mid = Gtk.Box(spacing=7, halign=Gtk.Align.CENTER)
+        """Build the split audio row: an output pill and an input pill.
+
+        Both halves follow the pill grammar of the rest of the stack;
+        the input half turns red with the crossed microphone while the
+        daemon reports the microphone muted.
+        """
+        row = Gtk.Box(spacing=8, homogeneous=True)
+
+        self.pill_output = Gtk.Button(css_classes=["stack-pill"], hexpand=True)
+        self.pill_output.set_size_request(-1, PILL_HEIGHT)
+        center = Gtk.CenterBox(hexpand=True)
+        mid = Gtk.Box(spacing=6, halign=Gtk.Align.CENTER)
         mid.append(Gtk.Image.new_from_icon_name("audio-volume-high-symbolic"))
         self.lbl_pill_out = Gtk.Label(css_classes=["stack-pill-state"])
         self.lbl_pill_out.set_ellipsize(Pango.EllipsizeMode.END)
         mid.append(self.lbl_pill_out)
+        center.set_center_widget(mid)
+        center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
+        self.pill_output.set_child(center)
+        self.pill_output.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_output_sheet() or False))
+        row.append(self.pill_output)
+
+        self.pill_input = Gtk.Button(css_classes=["stack-pill"], hexpand=True)
+        self.pill_input.set_size_request(-1, PILL_HEIGHT)
+        center = Gtk.CenterBox(hexpand=True)
+        mid = Gtk.Box(spacing=6, halign=Gtk.Align.CENTER)
         self.img_pill_in = Gtk.Image.new_from_icon_name("audio-input-microphone-symbolic")
         mid.append(self.img_pill_in)
         self.lbl_pill_in = Gtk.Label(css_classes=["stack-pill-state"])
@@ -491,9 +508,11 @@ class InCallWindow(Adw.Window):
         mid.append(self.lbl_pill_in)
         center.set_center_widget(mid)
         center.set_end_widget(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        b.set_child(center)
-        b.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_audio_sheet() or False))
-        return b
+        self.pill_input.set_child(center)
+        self.pill_input.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_input_sheet() or False))
+        row.append(self.pill_input)
+
+        return row
 
     def _build_context_pill(self):
         """Build the contextual pill whose face follows the call mix."""
@@ -517,8 +536,8 @@ class InCallWindow(Adw.Window):
         """Mirror the daemon's audio truth and the call mix onto the pills."""
         audio = self.ofono.audio
         self.lbl_pill_out.set_text(route_label(audio.current_route))
-        self.lbl_pill_in.set_text(input_route_label(audio.current_input))
         muted = audio.mic_muted
+        self.lbl_pill_in.set_text(_("Muted") if muted else input_route_label(audio.current_input))
         self.img_pill_in.set_from_icon_name(
             "microphone-sensitivity-muted-symbolic" if muted else "audio-input-microphone-symbolic")
         for w in (self.img_pill_in, self.lbl_pill_in):
@@ -549,13 +568,33 @@ class InCallWindow(Adw.Window):
             else:
                 self.lbl_pill_ctx_value.set_text("")
 
-    def _open_audio_sheet(self):
-        """Show the audio sheet: mute first, then input, then output."""
+    def _open_output_sheet(self):
+        """Show the output routes on their own sheet."""
         def present(reply):
-            outputs, inputs = reply if reply else ([], [])
+            outputs, _inputs = reply if reply else ([], [])
+            nav, sheet = self._present_call_sheet(_("Output"))
+            page = Adw.PreferencesPage()
+            group = Adw.PreferencesGroup()
+            for route_id, available in outputs:
+                row = self._mk_route_row(route_icon(route_id), route_label(route_id),
+                                         route_id == self.current_route, available)
+                if row.get_sensitive():
+                    row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                        lambda: [close_dialog(sheet),
+                                 self._handle_output_selection(r_id)] and False))
+                group.add(row)
+            page.add(group)
+            self._push_sheet_page(nav, _("Output"), page)
+
+        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
+
+    def _open_input_sheet(self):
+        """Show mute and the input routes on their own sheet."""
+        def present(reply):
+            _outputs, inputs = reply if reply else ([], [])
             audio = self.ofono.audio
 
-            nav, sheet = self._present_call_sheet(_("Audio"))
+            nav, sheet = self._present_call_sheet(_("Input"))
             page = Adw.PreferencesPage()
 
             mute_group = Adw.PreferencesGroup()
@@ -569,7 +608,7 @@ class InCallWindow(Adw.Window):
             mute_group.add(mute_row)
             page.add(mute_group)
 
-            input_group = Adw.PreferencesGroup(title=_("Input"))
+            input_group = Adw.PreferencesGroup()
             for route_id, available in inputs:
                 row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
                                          route_id == self.current_input_route, available)
@@ -581,18 +620,7 @@ class InCallWindow(Adw.Window):
                 input_group.add(row)
             page.add(input_group)
 
-            output_group = Adw.PreferencesGroup(title=_("Output"))
-            for route_id, available in outputs:
-                row = self._mk_route_row(route_icon(route_id), route_label(route_id),
-                                         route_id == self.current_route, available)
-                if row.get_sensitive():
-                    row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                        lambda: [close_dialog(sheet),
-                                 self._handle_output_selection(r_id)] and False))
-                output_group.add(row)
-            page.add(output_group)
-
-            self._push_sheet_page(nav, _("Audio"), page)
+            self._push_sheet_page(nav, _("Input"), page)
 
         run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
@@ -615,6 +643,16 @@ class InCallWindow(Adw.Window):
             key.connect("clicked", press, c)
             grid.attach(key, i % 3, i // 3, 1, 1)
         content.append(grid)
+
+        speaker = self._mk_action_pill("audio-volume-high-symbolic", _("Turn to Speaker"),
+                                       lambda b: self._handle_output_selection("speaker"))
+        speaker.set_margin_top(6)
+        speaker.set_visible(self.ofono.audio.current_route == "earpiece")
+        content.append(speaker)
+        handler = self.ofono.connect("audio-changed", lambda *a: GLib.idle_add(
+            lambda: speaker.set_visible(self.ofono.audio.current_route == "earpiece") or False))
+        sheet.connect("closed", lambda d: self.ofono.disconnect(handler))
+
         self._push_sheet_page(nav, _("Keypad"), content)
 
     def _open_context_sheet(self):
@@ -627,7 +665,7 @@ class InCallWindow(Adw.Window):
             self._open_actions_sheet()
 
     def _open_actions_sheet(self):
-        """Show hold, add-call and quick message for the single call."""
+        """Show hold and add-call for the single call."""
         calls = self.ofono.active_calls
         p_data = calls.get(self.active_path) or {}
 
