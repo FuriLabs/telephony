@@ -223,6 +223,13 @@ class InCallWindow(Adw.Window):
         self.lbl_status = Gtk.Label(css_classes=["body", "accent"])
         for lbl in [self.lbl_name, self.lbl_number, self.lbl_status]:
             self.info_box.append(lbl)
+
+        self.anon_chip = Gtk.Box(spacing=6, css_classes=["anon-chip"],
+                                 halign=Gtk.Align.CENTER, margin_top=6)
+        self.anon_chip.append(Gtk.Image.new_from_icon_name("view-conceal-symbolic"))
+        self.anon_chip.append(Gtk.Label(label=_("Your number is hidden")))
+        self.anon_chip.set_visible(False)
+        self.info_box.append(self.anon_chip)
         self.main_box.append(self.info_box)
 
         self.controls_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
@@ -903,10 +910,12 @@ class InCallWindow(Adw.Window):
             if uc_action in ["hide", "silence"] and is_unknown and not override_volume:
                 is_silenced = True
 
+            self.anon_chip.set_visible(False)
             self.controls_stack.set_visible_child_name("incoming")
             self.pill_silence.set_sensitive(not is_silenced)
             self.lbl_status.set_text(_("Incoming Call...") if not is_silenced else _("Silenced Incoming Call"))
         else:
+            self.anon_chip.set_visible(bool(p_data.get('anonymous')))
             self.controls_stack.set_visible_child_name("active")
             self._show_output_route(self.current_route)
             self._toggle_blue(self.btn_mute, self.is_muted)
