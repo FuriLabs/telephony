@@ -164,7 +164,7 @@ def import_android_calls(db_manager, file_path):
                 elif call_type == "3":
                     dir_str = "missed"
                 elif call_type == "5":
-                    dir_str = "incoming"
+                    dir_str = "rejected"
                 else:
                     dir_str = "incoming"
 

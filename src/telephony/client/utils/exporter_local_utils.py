@@ -263,7 +263,7 @@ def export_linux_calls(db_manager, dest_db_path):
                 duration = 0
             start_dt = parse_timestamp(row_dict.get('timestamp', ''))
 
-            inbound = 1 if direction in ("incoming", "missed") else 0
+            inbound = 1 if direction in ("incoming", "missed", "rejected") else 0
             answered = None
             if direction == "incoming" or (direction == "outgoing" and duration > 0):
                 answered = _to_gom_iso(start_dt)
