@@ -28,6 +28,8 @@ from ..widgets.common_widget import DataLoader
 from ...backend.utils.thread_utils import run_in_background
 from ...backend.utils.model_utils import ConversationItem
 
+TOP_STICK_THRESHOLD_PX = 48
+
 
 class MessagesView(Adw.Bin):
     """Main view for displaying the list of conversations and message search."""
@@ -330,8 +332,22 @@ class MessagesView(Adw.Bin):
 
         new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status)
         target = 0 if change == "insert" else idx
+        was_at_top = self.v_adj.get_value() < TOP_STICK_THRESHOLD_PX
         self.model.remove(idx)
         self.model.insert(target, new_item)
+        if target == 0 and was_at_top:
+            GLib.idle_add(self._stick_to_top)
+
+
+    def _stick_to_top(self):
+        """Keep the list pinned to the newest row after a top insert.
+
+        The list view anchors scrolling by pixel offset, so a row moved
+        to the top pushes the viewport down and hides the very message
+        the user is waiting for; a reader mid-list keeps their place.
+        """
+        self.v_adj.set_value(self.v_adj.get_lower())
+        return False
 
     def refresh_list(self):
         """Trigger a reload of the conversation list."""
