@@ -16,7 +16,7 @@
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
-from telephony.shared.utils.datetime_utils import format_timestamp, parse_timestamp
+from telephony.shared.utils.datetime_utils import parse_timestamp
 
 import json
 import os
@@ -554,33 +554,6 @@ class ChatPage(Gtk.Box):
             return False
 
         GLib.timeout_add(50, reveal)
-
-    def inject_incoming(self, body, attachments=[], is_window_active=True, sender=None):
-        """Inject a new incoming message into the view."""
-        if sender is None:
-            sender = "Unknown"
-
-        for i in range(min(RECENT_DUPLICATE_SCAN_ITEMS, self.store.get_n_items())):
-            item = self.store.get_item(i)
-            if item.id and item.direction == "incoming" and item.body == body:
-                logger.debug("[Chat] Skipping inject: message already delivered via DB signal")
-                return
-
-        now_str = format_timestamp()
-        dummy_tuple = (0, self.number, body, now_str, "unread", None, attachments, sender)
-        self.full_history.append(dummy_tuple)
-
-        is_at_bottom = self.v_adj.get_value() <= 20
-        should_show_divider = (not is_window_active) or (not is_at_bottom)
-        if should_show_divider and not self.has_active_divider:
-            self.store.insert(0, MessageItem(0, "divider", _("— New Messages —"), "", "", is_divider=True))
-            self.has_active_divider = True
-
-        self.store.insert(0, MessageItem(0, "incoming", body, now_str, "unread", attachments=attachments, sender=sender))
-
-        if is_at_bottom and is_window_active:
-            self.scroll_to_bottom()
-            self._mark_read_debounced()
 
     def on_search_changed(self, entry):
         """Handle search query changes."""

@@ -248,34 +248,6 @@ class MessagesView(Adw.Bin):
             menu.append_item(item)
         self.btn_filter.set_menu_model(menu)
 
-    def handle_incoming_ui(self, target_chat_id, body, attachments=[], msg_sender=None):
-        """Handle incoming message updates for the UI."""
-        self.refresh_list()
-
-        actual_sender = msg_sender if msg_sender else target_chat_id
-
-        if self.active_chat_number and self.active_chat_page:
-            norm_target = normalize_number(target_chat_id) if "," not in target_chat_id else target_chat_id
-
-            is_match = False
-
-            if isinstance(self.active_chat_number, list):
-                active_id = ",".join(sorted([normalize_number(n) for n in self.active_chat_number]))
-                if norm_target == active_id:
-                    is_match = True
-
-            else:
-                norm_active = normalize_number(self.active_chat_number) if "," not in str(self.active_chat_number) else self.active_chat_number
-                if norm_target == norm_active:
-                    is_match = True
-
-            if is_match:
-                is_focused = self.app_window.is_active()
-                self.active_chat_page.inject_incoming(body, attachments=attachments, is_window_active=is_focused, sender=actual_sender)
-                return is_focused
-
-        return False
-
     def check_and_clear_notification(self, number):
         """Clear notifications for the given number."""
         try:

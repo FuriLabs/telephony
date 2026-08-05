@@ -135,9 +135,6 @@ class ImportWizardWindow(Adw.NavigationPage):
         if nav and nav.get_visible_page() is self:
             nav.pop()
 
-    def on_cancel(self):
-        self._leave()
-
     def _step_custom_db(self):
         dialog = Gtk.FileChooserNative(
             title=_("Select Database File"),
