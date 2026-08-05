@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, GLib, Adw, Pango, Gio
+from gi.repository import Gtk, GLib, Adw, Pango, Gio, GObject
 import time
 import os
 import urllib.parse
@@ -377,13 +377,54 @@ class InCallWindow(Adw.Window):
         return nav, sheet
 
     def _push_sheet_page(self, nav, title, content):
-        """Push one page onto a call sheet's navigation."""
+        """Push one page onto a call sheet's navigation.
+
+        Every page carries the caller strip, because the sheet covers
+        the screen area that showed who the call is with.
+        """
         view = Adw.ToolbarView()
         view.add_top_bar(Adw.HeaderBar())
-        view.set_content(content)
+        wrap = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        wrap.append(self._build_caller_strip())
+        content.set_vexpand(True)
+        wrap.append(content)
+        view.set_content(wrap)
         page = Adw.NavigationPage(title=title)
         page.set_child(view)
         nav.push(page)
+
+    def _build_caller_strip(self):
+        """Build a live caller line mirroring the main screen's labels.
+
+        The labels are property-bound to the window's own name, number
+        and status labels, so the timer keeps ticking inside the sheet
+        and second calls and conferences show whatever the main screen
+        shows; the bindings die with the strip.
+        """
+        strip = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1,
+                        css_classes=["caller-strip"],
+                        margin_start=14, margin_end=14)
+        name = Gtk.Label(css_classes=["heading"])
+        name.set_ellipsize(Pango.EllipsizeMode.END)
+        self.lbl_name.bind_property("label", name, "label", GObject.BindingFlags.SYNC_CREATE)
+        strip.append(name)
+
+        sub = Gtk.Box(spacing=4, halign=Gtk.Align.CENTER)
+        number = Gtk.Label(css_classes=["dim-label", "caption"])
+        number.set_ellipsize(Pango.EllipsizeMode.END)
+        self.lbl_number.bind_property("label", number, "label", GObject.BindingFlags.SYNC_CREATE)
+        dot = Gtk.Label(label="\u00b7", css_classes=["dim-label", "caption"])
+        self.lbl_number.bind_property("label", dot, "visible", GObject.BindingFlags.SYNC_CREATE,
+                                      lambda _binding, text: bool(text))
+        self.lbl_number.bind_property("label", number, "visible", GObject.BindingFlags.SYNC_CREATE,
+                                      lambda _binding, text: bool(text))
+        status = Gtk.Label(css_classes=["dim-label", "caption"])
+        self.lbl_status.bind_property("label", status, "label", GObject.BindingFlags.SYNC_CREATE)
+        sub.append(number)
+        sub.append(dot)
+        sub.append(status)
+        strip.append(sub)
+        return strip
 
     def _rows_page(self, build, sheet):
         """Build one preferences page whose group build fills with rows."""
