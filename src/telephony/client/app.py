@@ -57,9 +57,7 @@ class App(Adw.Application):
         self.db = None
         self.ofono = None
         self.eds = None
-        self.mms = None
         self.gsettings_mgr = None
-        self.notification_manager = None
         self.daemon_client = None
         self.incall = None
 
@@ -102,9 +100,7 @@ class App(Adw.Application):
         self.db = self.core.db
         self.ofono = self.core.ofono
         self.eds = self.core.eds
-        self.mms = self.core.mms
         self.gsettings_mgr = self.core.gsettings_mgr
-        self.notification_manager = self.core.notification_manager
         self.daemon_client = self.core.daemon_client
 
         action_open = Gio.SimpleAction.new("open-chat", GLib.VariantType.new("s"))
@@ -289,7 +285,6 @@ class App(Adw.Application):
             self.ofono,
             self.db,
             self.eds,
-            self.mms,
             self.gsettings_mgr,
             show_calls=calls,
             show_messages=messages,
@@ -418,7 +413,6 @@ class App(Adw.Application):
             self.ofono,
             self.db,
             self.eds,
-            self.mms,
             self.gsettings_mgr,
             show_calls=mode_calls,
             show_messages=mode_messages,
@@ -476,7 +470,7 @@ class App(Adw.Application):
                 launch_desktop_uri(MESSAGES_DESKTOP_FILE, f"sms:{number}")
                 return
             logger.info("No messages window for chat, creating one")
-            target = MainWindow(self, self.ofono, self.db, self.eds, self.mms,
+            target = MainWindow(self, self.ofono, self.db, self.eds,
                                 self.gsettings_mgr, show_calls=False,
                                 show_messages=True, show_contacts=False)
         target.set_visible(True)
@@ -515,7 +509,6 @@ class App(Adw.Application):
             self.ofono,
             self.db,
             self.eds,
-            self.mms,
             self.gsettings_mgr,
             show_calls=True,
             show_messages=True,

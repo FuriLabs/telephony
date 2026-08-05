@@ -14,6 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from telephony.shared.utils.mms_utils import max_attachment_size
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
 from telephony.shared.utils.datetime_utils import parse_timestamp
@@ -1020,7 +1021,7 @@ class ChatPage(Gtk.Box):
 
     def _remaining_attachment_budget(self):
         """Return how many bytes of MMS attachment budget are still available."""
-        budget = self.app_window.mms.get_max_attachment_size()
+        budget = max_attachment_size(self.app_window.gsettings_mgr)
         used = sum(os.path.getsize(p) for p in self.attachments if os.path.exists(p))
         return budget - used
 
