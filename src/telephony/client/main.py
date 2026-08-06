@@ -28,6 +28,11 @@ from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.translation_utils import install_i18n
 from telephony.shared.constants import APP_ID, INCALL_APP_ID
 
+import argparse
+from urllib.parse import unquote
+
+from gi.repository import GLib
+
 MESSAGE_URI_SCHEMES = ("sms:", "smsto:", "mms:", "mmsto:")
 CALL_URI_SCHEMES = ("tel:", "callto:")
 PROGRAM_MODES = {
@@ -36,6 +41,22 @@ PROGRAM_MODES = {
     "io.furios.Telephony.Contacts": "--contacts",
     "io.furios.Telephony.Incall": "--incall",
 }
+
+
+def build_arg_parser():
+    """Build the window command line contract, shared with the running instance."""
+    parser = argparse.ArgumentParser(
+        prog="io.furios.Telephony",
+        description="Telephony windows for calls, messages and contacts.")
+    parser.add_argument("--calls", action="store_true", help="open the calls window")
+    parser.add_argument("--messages", action="store_true", help="open the messages window")
+    parser.add_argument("--contacts", action="store_true", help="open the contacts window")
+    parser.add_argument("--full", action="store_true", help="open the full window")
+    parser.add_argument("--incall", action="store_true", help="open the in-call window")
+    parser.add_argument("--open-chat", metavar="NUMBER", help="open the chat with a number")
+    parser.add_argument("--debug", action="store_true", help="log at debug level")
+    parser.add_argument("uris", nargs="*", metavar="URI", help="tel: or sms: URIs to open")
+    return parser
 
 
 def messaging_requested(argv):
@@ -68,23 +89,21 @@ def main():
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    is_debug = "--debug" in sys.argv
+    opts = build_arg_parser().parse_args()
 
     logger.remove()
-    logger.add(sys.stderr, level="DEBUG" if is_debug else "WARNING")
+    logger.add(sys.stderr, level="DEBUG" if opts.debug else "WARNING")
 
-    has_ui_flags = any(f in sys.argv for f in ["--full", "--calls", "--messages", "--contacts"])
+    if not any((opts.full, opts.calls, opts.messages, opts.contacts, opts.incall)):
+        opts.full = True
 
-    if not has_ui_flags and "--incall" not in sys.argv:
-        sys.argv.append("--full")
-
-    if "--calls" in sys.argv:
+    if opts.calls:
         application_id = f"{APP_ID}.Calls"
-    elif "--messages" in sys.argv:
+    elif opts.messages:
         application_id = f"{APP_ID}.Messages"
-    elif "--contacts" in sys.argv:
+    elif opts.contacts:
         application_id = f"{APP_ID}.Contacts"
-    elif "--incall" in sys.argv:
+    elif opts.incall:
         application_id = INCALL_APP_ID
     elif messaging_requested(sys.argv):
         application_id = f"{APP_ID}.Messages"
@@ -93,9 +112,33 @@ def main():
     else:
         application_id = APP_ID
 
+    open_chat_number = opts.open_chat
+    dial_number = None
+    for uri in opts.uris:
+        if uri.startswith(CALL_URI_SCHEMES):
+            dial_number = unquote(uri.split(":", 1)[1])
+        elif uri.startswith(MESSAGE_URI_SCHEMES):
+            rest = uri.split(":", 1)[1].split("?", 1)[0]
+            open_chat_number = unquote(rest)
+
     from telephony.client.app import App
     app = App(application_id=application_id)
-    return app.run(sys.argv)
+    app.register(None)
+
+    if app.get_is_remote():
+        if open_chat_number:
+            app.activate_action("open-chat", GLib.Variant("s", open_chat_number))
+        elif dial_number:
+            app.activate_action("dial-number", GLib.Variant("s", dial_number))
+        else:
+            app.activate()
+        return 0
+
+    if open_chat_number:
+        GLib.idle_add(lambda: app.activate_action("open-chat", GLib.Variant("s", open_chat_number)) or False)
+    elif dial_number:
+        GLib.idle_add(lambda: app.activate_action("dial-number", GLib.Variant("s", dial_number)) or False)
+    return app.run([sys.argv[0]])
 
 
 if __name__ == "__main__":

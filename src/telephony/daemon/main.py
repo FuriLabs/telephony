@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import argparse
 import os
 import sys
 import signal
@@ -30,6 +31,16 @@ from telephony.shared.utils.translation_utils import install_i18n
 from telephony.shared.utils.system_utils import stop_systemd_service, is_daemon_bus_running
 
 
+def build_arg_parser():
+    """Build the daemon command line contract."""
+    parser = argparse.ArgumentParser(
+        prog="telephony-server",
+        description="The telephony daemon: owns the modem, audio and databases.")
+    parser.add_argument("--debug", action="store_true",
+                        help="log at debug level, replacing a running service")
+    return parser
+
+
 def main():
     """
     Entry point for the headless telephony daemon.
@@ -42,7 +53,7 @@ def main():
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    is_debug = "--debug" in sys.argv
+    is_debug = build_arg_parser().parse_args().debug
 
     logger.remove()
     logger.add(sys.stderr, level="DEBUG" if is_debug else "WARNING")
@@ -61,7 +72,7 @@ def main():
 
     from telephony.daemon.daemon_app import DaemonApp
     app = DaemonApp()
-    return app.run(sys.argv)
+    return app.run([sys.argv[0]])
 
 
 if __name__ == "__main__":
