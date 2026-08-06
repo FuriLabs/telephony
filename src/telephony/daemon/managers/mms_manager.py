@@ -21,13 +21,14 @@ import tempfile
 import threading
 import time
 from telephony.shared.utils.log_utils import logger
+from telephony.shared.utils.mms_utils import max_attachment_size
+from telephony.shared.constants import DEFAULT_MAX_ATTACHMENT_SIZE
 from gi.repository import Gio, GLib, GObject
 
 from telephony.shared.utils.phone_utils import get_own_number, normalize_number
 from telephony.shared.utils.thread_utils import run_in_background
 
 
-DEFAULT_MAX_ATTACHMENT_SIZE = 600 * 1024
 
 MMS_RESOLVE_TIMEOUT_SECONDS = 180
 UNCLAIMED_STATE_LIMIT = 20
@@ -280,15 +281,9 @@ class MmsManager(GObject.Object):
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
 
     def _user_size_limit(self):
-        """Return the configured size limit in bytes, or None when unreadable."""
-        if not self.gsettings_mgr:
-            return None
-        try:
-            val = self.gsettings_mgr.get_setting("mms_size_limit")
-            return int(val) * 1024
-        except Exception as e:
-            logger.warning(f"[MMS] Invalid size limit setting, using default: {e}")
-            return None
+        """Return the configured size limit in bytes, or None when unset."""
+        limit = max_attachment_size(self.gsettings_mgr)
+        return limit if limit != DEFAULT_MAX_ATTACHMENT_SIZE else None
 
     def get_max_attachment_size(self):
         """Return the attachment size budget from settings, else the default."""

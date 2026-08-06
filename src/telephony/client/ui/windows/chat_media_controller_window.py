@@ -15,7 +15,7 @@
 
 import os
 from datetime import datetime
-from gi.repository import Gtk, Gdk, Adw, GLib
+from gi.repository import Gtk, Gdk, GLib
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 

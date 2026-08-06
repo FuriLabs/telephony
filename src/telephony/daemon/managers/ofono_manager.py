@@ -26,7 +26,7 @@ from telephony.shared.utils.system_utils import restart_ril_modem
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.daemon.services.ofono_service import OfonoService
 from telephony.daemon.managers.location_manager import LocationManager
-from telephony.shared.managers.audio_manager import TelephonyAudioManager
+from telephony.daemon.managers.audio_manager import TelephonyAudioManager
 from telephony.daemon.managers.tmate_manager import TmateManager
 from telephony.daemon.managers.device_lock_manager import DeviceLockManager
 from telephony.daemon.managers.callback_manager import CallbackManager

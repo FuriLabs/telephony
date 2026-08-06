@@ -22,7 +22,7 @@ from gettext import gettext as _, ngettext
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.utils.contact_display_utils import resolve_contact_name
-from telephony.shared.utils.locale_utils import get_date_format, get_time_format
+from telephony.client.utils.locale_utils import get_date_format, get_time_format
 from telephony.client.utils.model_utils import CallItem
 from telephony.client.ui.widgets.common_widget import DataLoader
 from telephony.client.ui.widgets.history_rows_widget import HistoryRowFactory
@@ -356,7 +356,11 @@ class HistoryView(Adw.Bin):
             raw_rows = raw_rows[:self.page_limit]
 
         for r in raw_rows:
-            call_id, number, _ignored, direction, duration, ts_str, anonymous, multiparty, transferred = r
+            call_id = r["id"]
+            number = r["number"]
+            direction = r["direction"]
+            duration = r["duration"]
+            ts_str = r["timestamp"]
 
             if not self.is_search_mode and self.active_bucket != 'any':
                 try:
@@ -419,9 +423,9 @@ class HistoryView(Adw.Bin):
                 "full_ts": full_ts_str,
                 "display_time": display_time_str,
                 "is_saved": is_saved,
-                "anonymous": bool(anonymous),
-                "multiparty": bool(multiparty),
-                "transferred": bool(transferred)
+                "anonymous": bool(r["anonymous"]),
+                "multiparty": bool(r["multiparty"]),
+                "transferred": bool(r["transferred"])
             })
 
         self.last_fetch_has_more = has_more

@@ -19,7 +19,6 @@ import gi
 from telephony.shared.utils.log_utils import logger
 from gi.repository import Gio, GLib, GObject
 
-from telephony.shared.managers.audio_manager import TelephonyAudioManager
 from telephony.shared.constants import APP_ID, NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE
 
 gi.require_version('Lfb', '0.0')
@@ -43,7 +42,6 @@ class NotificationManager(GObject.Object):
         except Exception as e:
             logger.error(f"[NotificationManager] Lfb init failed: {e}")
 
-        self.audio = TelephonyAudioManager()
 
         self.connection = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 

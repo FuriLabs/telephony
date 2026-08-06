@@ -18,7 +18,7 @@ from telephony.shared.utils.datetime_utils import parse_timestamp
 from datetime import datetime
 from gi.repository import GObject
 from telephony.shared.utils.log_utils import logger
-from telephony.shared.utils.locale_utils import get_date_format, get_time_format
+from telephony.client.utils.locale_utils import get_date_format, get_time_format
 
 from gettext import gettext as _
 

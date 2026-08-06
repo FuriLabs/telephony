@@ -21,7 +21,7 @@ from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.utils.contact_display_utils import resolve_contact_name
-from telephony.shared.utils.locale_utils import get_date_format
+from telephony.client.utils.locale_utils import get_date_format
 from telephony.client.ui.widgets.messages_rows_widget import ConversationRowFactory
 from telephony.client.ui.views.chat_view import ChatPage
 from telephony.client.ui.widgets.common_widget import DataLoader

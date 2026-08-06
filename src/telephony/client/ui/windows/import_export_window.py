@@ -21,7 +21,6 @@ from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import SHEET_CONTENT_WIDTH
-from telephony.client.ui.widgets.common_widget import close_dialog
 from telephony.client.ui.windows.import_wizard_window import ImportWizardWindow
 from telephony.client.utils.exporter_android_utils import export_android_sms, export_android_calls
 from telephony.client.utils.exporter_local_utils import (export_linux_chatty, export_linux_calls, export_linux_telephony)

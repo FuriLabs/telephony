@@ -21,11 +21,9 @@ from telephony.client.services.service_monitor import ServiceMonitor
 from telephony.shared.managers.database_manager import DatabaseManager
 from telephony.client.managers.settings_mirror import SettingsMirror
 from telephony.client.managers.ofono_mirror import OfonoMirror
-from telephony.shared.managers.mms_manager import MmsManager
 from telephony.shared.managers.eds_manager import EdsManager
-from telephony.shared.managers.notification_manager import NotificationManager
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.utils.locale_utils import init_locale
+from telephony.client.utils.locale_utils import init_locale
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.system_utils import trim_native_heap
 from telephony.shared.constants import INCALL_APP_ID, DAEMON_BUS_NAME
@@ -55,12 +53,10 @@ class WindowCore:
         self.daemon_missing = False
         self.recovery_state = (False, "", False)
 
-        self.notification_manager = None
         self.gsettings_mgr = None
         self.eds = None
         self.db = None
         self.ofono = None
-        self.mms = None
         self.daemon_client = None
         self.service_monitor = None
         self._last_presence = None
@@ -142,16 +138,12 @@ class WindowCore:
         init_locale()
 
         logger.info("Initializing window mirrors...")
-        self.notification_manager = NotificationManager()
         self.daemon_client = DaemonClient()
         self.gsettings_mgr = SettingsMirror(self.daemon_client)
         self.eds = EdsManager(owns_live_views=False)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=False)
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoMirror(self.gsettings_mgr, daemon_client=self.daemon_client)
-
-        self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager,
-                              owns_reception=False)
 
         self._follow_daemon_changes()
 
