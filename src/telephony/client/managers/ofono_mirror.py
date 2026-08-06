@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from dataclasses import dataclass
 from gi.repository import GObject, Gio, GLib
 from gettext import gettext as _
 
@@ -24,14 +25,14 @@ from telephony.shared.constants import DAEMON_BUS_NAME
 RESEED_DEBOUNCE_MS = 80
 
 
+@dataclass
 class MirrorAudioState:
     """Audio route facts mirrored from the daemon's broadcasts."""
 
-    def __init__(self):
-        self.voice_profile_active = False
-        self.current_route = "earpiece"
-        self.current_input = "mic"
-        self.mic_muted = False
+    voice_profile_active: bool = False
+    current_route: str = "earpiece"
+    current_input: str = "mic"
+    mic_muted: bool = False
 
 
 class OfonoMirror(GObject.Object):
