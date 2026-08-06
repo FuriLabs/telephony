@@ -55,11 +55,17 @@ class HistoryRowFactory:
         num_box = Gtk.Box(spacing=4)
         num_box.append(num)
 
-        anon = Gtk.Image.new_from_icon_name("view-conceal-symbolic")
-        anon.set_pixel_size(10)
-        anon.add_css_class("dim-label")
-        anon.set_visible(False)
-        num_box.append(anon)
+        markers = {}
+        for key, icon_name, css in (("anon", "view-conceal-symbolic", "dim-label"),
+                                    ("conf", "system-users-symbolic", "dim-label"),
+                                    ("xfer", "send-to-symbolic", "dim-label"),
+                                    ("rej", "action-unavailable-symbolic", "marker-rejected")):
+            mark = Gtk.Image.new_from_icon_name(icon_name)
+            mark.set_pixel_size(10)
+            mark.add_css_class(css)
+            mark.set_visible(False)
+            num_box.append(mark)
+            markers[key] = mark
 
         vbox.append(name)
         vbox.append(num_box)
@@ -110,7 +116,7 @@ class HistoryRowFactory:
 
         list_item.widgets = {
             "stack": stack,
-            "icon": icon, "name": name, "num": num, "anon": anon, "time": time_lbl,
+            "icon": icon, "name": name, "num": num, "markers": markers, "time": time_lbl,
             "call_btn": call_btn, "info_btn": info_btn,
             "div_lbl": div_lbl
         }
@@ -136,8 +142,12 @@ class HistoryRowFactory:
             display_name = _("Unknown")
 
         w["name"].set_text(display_name)
-        w["num"].set_text(item.number)
-        w["anon"].set_visible(bool(item.anonymous))
+        hidden_number = item.anonymous and not any(c.isdigit() for c in str(item.number))
+        w["num"].set_text(_("Hidden number") if hidden_number else item.number)
+        w["markers"]["anon"].set_visible(bool(item.anonymous))
+        w["markers"]["conf"].set_visible(bool(item.multiparty))
+        w["markers"]["xfer"].set_visible(bool(item.transferred))
+        w["markers"]["rej"].set_visible(item.direction == 'rejected')
         w["time"].set_text(item.display_time)
 
         w["icon"].remove_css_class("call-icon-missed")
@@ -154,7 +164,7 @@ class HistoryRowFactory:
         elif item.direction == 'incoming':
             w["icon"].set_from_icon_name("call-incoming-symbolic")
             w["icon"].add_css_class("call-icon-incoming")
-        elif item.direction == 'missed':
+        elif item.direction in ('missed', 'rejected'):
             w["icon"].set_from_icon_name("call-missed-symbolic")
             w["icon"].add_css_class("call-icon-missed")
         elif item.direction == 'outgoing':
