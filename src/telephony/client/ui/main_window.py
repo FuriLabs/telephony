@@ -85,12 +85,6 @@ class MainWindow(Adw.Window):
         title_lbl = Gtk.Label(label=_("Telephony"), css_classes=["title"])
         self.header.set_title_widget(title_lbl)
 
-        info_btn = Gtk.Button(icon_name="help-about-symbolic")
-        info_btn.add_css_class("flat")
-        info_btn.add_css_class("circular")
-        info_btn.connect("clicked", lambda b: GLib.idle_add(lambda: InfoPage.show(self) or False))
-        self.header.pack_start(info_btn)
-
         self.actions_btn = Gtk.MenuButton(icon_name="open-menu-symbolic")
         self.setup_actions_menu()
         self.header.pack_end(self.actions_btn)
@@ -337,6 +331,7 @@ class MainWindow(Adw.Window):
             ("resolve-duplicates", self.on_resolve_duplicates_clicked),
             ("settings", self.on_settings_click),
             ("reload-contacts", self.on_force_sync_click),
+            ("about", self.on_about_click),
         )
         for name, callback in entries:
             action = Gio.SimpleAction.new(name, None)
@@ -349,10 +344,15 @@ class MainWindow(Adw.Window):
         main_section = Gio.Menu()
         main_section.append(_("Settings"), "menu.settings")
         main_section.append(_("Reload Contacts"), "menu.reload-contacts")
+        main_section.append(_("About"), "menu.about")
         menu = Gio.Menu()
         menu.append_section(None, self._resolve_section)
         menu.append_section(None, main_section)
         self.actions_btn.set_menu_model(menu)
+
+    def on_about_click(self, _btn):
+        """Open the about page from the menu."""
+        InfoPage.show(self)
 
     def _set_resolve_visible(self, visible):
         """Show or hide the duplicate resolution menu entry."""
