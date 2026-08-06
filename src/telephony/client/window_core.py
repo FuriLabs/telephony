@@ -23,7 +23,7 @@ from telephony.client.managers.settings_mirror import SettingsMirror
 from telephony.client.managers.ofono_mirror import OfonoMirror
 from telephony.shared.managers.eds_manager import EdsManager
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.utils.locale_utils import init_locale
+from telephony.client.utils.locale_utils import init_locale
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.system_utils import trim_native_heap
 from telephony.shared.constants import INCALL_APP_ID, DAEMON_BUS_NAME

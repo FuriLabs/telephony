@@ -22,7 +22,7 @@ from gettext import gettext as _, ngettext
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.utils.contact_display_utils import resolve_contact_name
-from telephony.shared.utils.locale_utils import get_date_format, get_time_format
+from telephony.client.utils.locale_utils import get_date_format, get_time_format
 from telephony.client.utils.model_utils import CallItem
 from telephony.client.ui.widgets.common_widget import DataLoader
 from telephony.client.ui.widgets.history_rows_widget import HistoryRowFactory

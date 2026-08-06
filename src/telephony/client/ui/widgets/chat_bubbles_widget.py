@@ -29,7 +29,7 @@ import gi
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gdk, Pango, Gio, GLib, Adw
 from telephony.shared.utils.log_utils import logger
-from telephony.shared.utils.locale_utils import get_date_format, get_time_format
+from telephony.client.utils.locale_utils import get_date_format, get_time_format
 
 
 class ChatBubbleFactory:

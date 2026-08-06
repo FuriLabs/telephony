@@ -36,7 +36,6 @@ from telephony.daemon.managers.call_audio_manager import CallAudioManager
 from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
-from telephony.shared.utils.locale_utils import init_locale
 from telephony.shared.utils.system_utils import trim_native_heap
 from telephony.shared.constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
@@ -101,7 +100,6 @@ class TelephonyCore:
     def start(self):
         """Wire the managers and background duties of the owner."""
         self._setup_feedbackd()
-        init_locale()
 
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
