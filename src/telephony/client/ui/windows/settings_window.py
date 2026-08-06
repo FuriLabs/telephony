@@ -50,6 +50,9 @@ class SettingsWindow(Adw.Dialog):
 
         self.main_window = main_window
         self.eds = eds_manager
+        self.mode_calls = bool(main_window.show_calls_mode)
+        self.mode_messages = bool(main_window.show_messages_mode)
+        self.mode_contacts = bool(main_window.show_contacts_mode)
 
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(750)
@@ -81,34 +84,40 @@ class SettingsWindow(Adw.Dialog):
 
         grp_cats = Adw.PreferencesGroup()
         page.add(grp_cats)
-        grp_cats.add(self._nav_row(_("Calls"), _("Numbers, volume and ringback"),
-                                   lambda: self._push_category(_("Calls"), self._build_calls_page),
-                                   icon="call-start-symbolic"))
-        grp_cats.add(self._nav_row(_("Messages"), _("Quick responses and delivery reports"),
-                                   lambda: self._push_category(_("Messages"), self._build_messages_page),
-                                   icon="mail-unread-symbolic"))
-        grp_cats.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
-                                   lambda: self.nav_view.push(
-                                       FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds)),
-                                   icon="starred-symbolic"))
-        grp_cats.add(self._nav_row(_("Emergency Calls"), _("Lockscreen button and numbers"),
-                                   lambda: self._push_category(_("Emergency Calls"), self._build_emergency_page),
-                                   icon="dialog-warning-symbolic"))
+        if self.mode_calls:
+            grp_cats.add(self._nav_row(_("Calls"), _("Numbers, volume and ringback"),
+                                       lambda: self._push_category(_("Calls"), self._build_calls_page),
+                                       icon="call-start-symbolic"))
+        if self.mode_messages:
+            grp_cats.add(self._nav_row(_("Messages"), _("Delivery reports"),
+                                       lambda: self._push_category(_("Messages"), self._build_messages_page),
+                                       icon="mail-unread-symbolic"))
+        if self.mode_calls:
+            grp_cats.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
+                                       lambda: self.nav_view.push(
+                                           FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds)),
+                                       icon="starred-symbolic"))
+            grp_cats.add(self._nav_row(_("Emergency Calls"), _("Lockscreen button and numbers"),
+                                       lambda: self._push_category(_("Emergency Calls"), self._build_emergency_page),
+                                       icon="dialog-warning-symbolic"))
         grp_cats.add(self._nav_row(_("Blocklist"), _("Numbers you never hear from"),
                                    lambda: self._push_category(_("Blocklist"), self._build_blocklist_page),
                                    icon="action-unavailable-symbolic"))
-        grp_cats.add(self._nav_row(_("Contacts"), _("Address books and duplicates"),
-                                   lambda: self._push_category(_("Contacts"), self._build_contacts_page),
-                                   icon="avatar-default-symbolic"))
-        grp_cats.add(self._nav_row(_("Notifications"), _("Exceptions, tones and bypass"),
-                                   lambda: self._push_category(_("Notifications"), self._build_notifications_page),
-                                   icon="audio-volume-high-symbolic"))
-        grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening and lookup"),
-                                   lambda: self._push_category(_("Unknown Callers"), self._build_unknown_callers_page),
-                                   icon="dialog-question-symbolic"))
-        grp_cats.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
-                                   lambda: self._open_network_services(None),
-                                   icon="network-cellular-signal-good-symbolic"))
+        if self.mode_contacts:
+            grp_cats.add(self._nav_row(_("Contacts"), _("Address books and duplicates"),
+                                       lambda: self._push_category(_("Contacts"), self._build_contacts_page),
+                                       icon="avatar-default-symbolic"))
+        if self.mode_calls or self.mode_messages:
+            grp_cats.add(self._nav_row(_("Notifications"), _("Exceptions, tones and bypass"),
+                                       lambda: self._push_category(_("Notifications"), self._build_notifications_page),
+                                       icon="audio-volume-high-symbolic"))
+        if self.mode_calls:
+            grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening and lookup"),
+                                       lambda: self._push_category(_("Unknown Callers"), self._build_unknown_callers_page),
+                                       icon="dialog-question-symbolic"))
+            grp_cats.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
+                                       lambda: self._open_network_services(None),
+                                       icon="network-cellular-signal-good-symbolic"))
         grp_cats.add(self._nav_row(_("Import and Export"), _("Contacts, messages and call history"),
                                    lambda: ImportExportDialog(self.main_window, nav_view=self.nav_view).present(),
                                    icon="document-save-symbolic"))
@@ -329,6 +338,20 @@ class SettingsWindow(Adw.Dialog):
         self.entry_voicemail.connect("apply", self._on_voicemail_apply)
         grp_sim.add(self.entry_voicemail)
 
+        self.grp_reject_list = EntryListGroup(
+            title=_("Quick Response"),
+            fields=[{"key": "message", "label": _("Decline Message"), "required": True}],
+            add_label=_("Add Decline Message"),
+            empty_label=_("No messages added yet"),
+            on_add=self._on_reject_added,
+            on_delete=self._on_reject_deleted,
+            on_update=self._on_reject_updated,
+            on_error=self.main_window.notify_error)
+        self.grp_reject_list.set_description(
+            _("Sent when you decline a call with a message."))
+        page.add(self.grp_reject_list)
+        self._reload_reject_messages()
+
         self.grp_call_volume = Adw.PreferencesGroup(title=_("Call Volume"))
         btn_info_vol = self._info_button(self._show_call_volume_info)
         self.grp_call_volume.set_header_suffix(btn_info_vol)
@@ -449,19 +472,6 @@ class SettingsWindow(Adw.Dialog):
         self.sw_delivery.connect("notify::active", self._on_delivery_reports_toggled)
         grp_msg.add(self.sw_delivery)
 
-        self.grp_reject_list = EntryListGroup(
-            title=_("Quick Response"),
-            fields=[{"key": "message", "label": _("Decline Message"), "required": True}],
-            add_label=_("Add Decline Message"),
-            empty_label=_("No messages added yet"),
-            on_add=self._on_reject_added,
-            on_delete=self._on_reject_deleted,
-            on_update=self._on_reject_updated,
-            on_error=self.main_window.notify_error)
-        self.grp_reject_list.set_description(
-            _("Sent when you decline a call with a message."))
-        page.add(self.grp_reject_list)
-        self._reload_reject_messages()
 
     def _build_contacts_page(self, page):
         """Build the contacts category page."""
@@ -517,33 +527,47 @@ class SettingsWindow(Adw.Dialog):
         grp_notif = Adw.PreferencesGroup(title=_("Notification Exceptions"))
         page.add(grp_notif)
 
-        self.sw_repeated = Adw.SwitchRow(title=_("Repeated Calls Bypass"))
-        self.sw_repeated.set_subtitle(
-            _("If the same number calls 3 times in 5 minutes, force max volume."))
-        self.sw_repeated.set_active(self.main_window.gsettings_mgr.get_setting(
-            "notification_override_repeated_calls_bypass") == "true")
-        self.sw_repeated.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
-            "notification_override_repeated_calls_bypass", "true" if w.get_active() else "false"))
+        if self.mode_calls:
+            row_prio = self._nav_row(_("Contacts that always ring"),
+                                     _("A call breaks through silent mode"),
+                                     lambda: self._open_priority_window("calls"))
+            btn_info_prio = self._info_button(self._show_overrides_info)
+            row_prio.add_suffix(btn_info_prio)
+            grp_notif.add(row_prio)
 
-        btn_info_rep = self._info_button(self._show_repeated_info)
-        self.sw_repeated.add_suffix(btn_info_rep)
+            self.sw_repeated = Adw.SwitchRow(title=_("Repeated Calls Bypass"))
+            self.sw_repeated.set_subtitle(
+                _("If the same number calls 3 times in 5 minutes, force max volume."))
+            self.sw_repeated.set_active(self.main_window.gsettings_mgr.get_setting(
+                "notification_override_repeated_calls_bypass") == "true")
+            self.sw_repeated.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
+                "notification_override_repeated_calls_bypass", "true" if w.get_active() else "false"))
+            btn_info_rep = self._info_button(self._show_repeated_info)
+            self.sw_repeated.add_suffix(btn_info_rep)
+            grp_notif.add(self.sw_repeated)
 
-        grp_notif.add(self.sw_repeated)
+            grp_notif.add(self._nav_row(_("Individual Ringtones"),
+                                        _("Set custom ringtones for specific contacts"),
+                                        lambda: self._open_custom_tone_window("ringtone")))
 
-        row_prio = self._nav_row(_("Notification Overrides"),
-                                 _("Manage contacts that always play sound"),
-                                 lambda: self._open_priority_window(None))
-        btn_info_prio = self._info_button(self._show_overrides_info)
-        row_prio.add_suffix(btn_info_prio)
-        grp_notif.add(row_prio)
+        if self.mode_messages:
+            row_prio_msg = self._nav_row(_("Messages that always sound"),
+                                         _("A message breaks through silent mode"),
+                                         lambda: self._open_priority_window("messages"))
+            grp_notif.add(row_prio_msg)
 
-        grp_notif.add(self._nav_row(_("Individual SMS Notifications"),
-                                    _("Set custom notification sounds for specific contacts"),
-                                    lambda: self._open_custom_tone_window("sms")))
+            self.sw_repeated_msgs = Adw.SwitchRow(title=_("Repeated Messages Bypass"))
+            self.sw_repeated_msgs.set_subtitle(
+                _("If the same sender writes 3 times in a minute, play the sound."))
+            self.sw_repeated_msgs.set_active(self.main_window.gsettings_mgr.get_setting(
+                "notification_override_repeated_messages_bypass") == "true")
+            self.sw_repeated_msgs.connect("notify::active", lambda w, p: self.main_window.gsettings_mgr.set_setting(
+                "notification_override_repeated_messages_bypass", "true" if w.get_active() else "false"))
+            grp_notif.add(self.sw_repeated_msgs)
 
-        grp_notif.add(self._nav_row(_("Individual Ringtones"),
-                                    _("Set custom ringtones for specific contacts"),
-                                    lambda: self._open_custom_tone_window("ringtone")))
+            grp_notif.add(self._nav_row(_("Individual SMS Notifications"),
+                                        _("Set custom notification sounds for specific contacts"),
+                                        lambda: self._open_custom_tone_window("sms")))
 
     def _info_button(self, handler):
         """Build the round info button that opens an explanation sheet."""
@@ -631,10 +655,10 @@ class SettingsWindow(Adw.Dialog):
         """Show info about notification overrides."""
         present_info_sheet(self, _("Notification Overrides"), _("Choose contacts that will always play notifications at full volume, even when the phone is in Silent or Do Not Disturb mode."))
 
-    def _open_priority_window(self, btn):
-        """Push the priority contacts management page."""
+    def _open_priority_window(self, kind):
+        """Push the priority contacts page for one bypass list."""
         self.nav_view.push(DndBypassContactsListWindow(
-            self, self.main_window.gsettings_mgr, self.eds))
+            self, self.main_window.gsettings_mgr, self.eds, kind=kind))
 
     def _open_custom_tone_window(self, mode):
         """Push the custom tone management page."""

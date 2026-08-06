@@ -48,6 +48,9 @@ VOICEMAIL_UNCONFIGURED_COUNT = 255
 OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 
 
+REPEATED_MESSAGES_BYPASS_COUNT = 3
+REPEATED_MESSAGES_WINDOW_SECONDS = 60
+
 class OfonoManager(GObject.Object):
     """
     Manages voice calls, SMS, and USSD via ofono.
@@ -113,6 +116,7 @@ class OfonoManager(GObject.Object):
         self._pending_dial_timeout_id = 0
         self.clir_hidden = False
         self._dial_hides_id = False
+        self.message_history_tracker = {}
 
         self.netreg_proxy = None
         self.netreg_handler_id = None
@@ -844,7 +848,7 @@ class OfonoManager(GObject.Object):
     def _check_priority_contact(self, sender):
         """Check if sender is a priority contact and override volume."""
         try:
-            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts_messages()
             norm_sender = normalize_number(sender)
             for p in priority_list:
                 p_num = normalize_number(p.get("number", ""))
@@ -856,6 +860,33 @@ class OfonoManager(GObject.Object):
                     return
         except Exception as e:
             logger.error(f"[Priority] Check failed: {e}")
+
+    def _check_repeated_message_bypass(self, sender):
+        """Sound the tone when one sender writes three times inside a minute."""
+        if not sender:
+            return
+        try:
+            if self.gsettings_mgr.get_setting("notification_override_repeated_messages_bypass") != "true":
+                return
+
+            norm = normalize_number(sender)
+            if not norm:
+                return
+            now = time.time()
+            history = [t for t in self.message_history_tracker.get(norm, [])
+                       if now - t <= REPEATED_MESSAGES_WINDOW_SECONDS]
+            history.append(now)
+            self.message_history_tracker[norm] = history
+            if len(history) < REPEATED_MESSAGES_BYPASS_COUNT:
+                return
+
+            logger.info(f"[Priority] {len(history)} messages inside the window from {norm} - forcing MAX volume")
+            self.message_history_tracker[norm] = []
+            self.audio.force_max_feedback()
+            GLib.timeout_add_seconds(1, lambda: self.audio.force_max_feedback())
+            GLib.timeout_add_seconds(5, lambda: self.audio.force_max_feedback(restore=True))
+        except Exception as e:
+            logger.error(f"[Priority] Repeated message check failed: {e}")
 
     def _is_priority_number(self, number):
         """Return whether a caller is on the DND-bypass list."""
@@ -1530,6 +1561,7 @@ class OfonoManager(GObject.Object):
                                          lambda: self.audio.force_max_feedback(restore=True) or False)
             else:
                 self._check_priority_contact(msg_sender)
+                self._check_repeated_message_bypass(msg_sender)
 
             sent_time = props.get('SentTime', '')
             if not sent_time:

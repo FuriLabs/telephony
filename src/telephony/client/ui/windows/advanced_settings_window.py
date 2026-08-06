@@ -69,6 +69,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         grp_actions = Adw.PreferencesGroup(title=_("Secret SMS Triggers"))
         self.page.add(grp_actions)
+        grp_actions.set_visible(self.parent_win.mode_messages)
 
         grp_actions.add(self._nav_row(_("Find my Telephony"), _("Location by trusted SMS"),
                                       lambda: self._open_action_window("trusted_sms_location_request")))
@@ -84,6 +85,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         grp_calls = Adw.PreferencesGroup(title=_("Experimental Call Features"))
         self.page.add(grp_calls)
+        grp_calls.set_visible(self.parent_win.mode_calls)
 
         grp_calls.add(self._experimental_row(
             _("Allow Conference Calls"), "allow_conference_calls",
@@ -94,6 +96,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         grp_restart = Adw.PreferencesGroup()
         self.page.add(grp_restart)
+        grp_restart.set_visible(self.parent_win.mode_calls or self.parent_win.mode_messages)
 
         row_auto = Adw.SwitchRow(title=_("Automatic Modem Recovery"))
         row_auto.set_active(self.parent_win.main_window.gsettings_mgr.get_setting("automatic_modem_recovery") == "true")
@@ -108,6 +111,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         grp_messaging = Adw.PreferencesGroup(title=_("Messaging"))
         self.page.add(grp_messaging)
+        grp_messaging.set_visible(self.parent_win.mode_messages)
 
         self.mms_limit_values = ["100", "300", "600", "900", "1024", "2048", "3072", "4096", "5120"]
         mms_limit_labels = ["100 kB", "300 kB", "600 kB", "900 kB", "1 MB", "2 MB", "3 MB", "4 MB", "5 MB"]
