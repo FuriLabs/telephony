@@ -20,7 +20,7 @@ import time
 
 from gi.repository import Gio
 
-from telephony.constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
+from telephony.shared.constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 
 def get_proxy():

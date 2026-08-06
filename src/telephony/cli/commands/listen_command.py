@@ -16,7 +16,7 @@
 """CLI commands for Listen."""
 
 from gi.repository import GLib, Gio
-from telephony.constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
+from telephony.shared.constants import DAEMON_BUS_NAME, DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
 
 def cmd_listen(args):
