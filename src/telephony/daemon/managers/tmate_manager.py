@@ -17,7 +17,6 @@ from telephony.shared.utils.thread_utils import run_in_background
 
 import subprocess
 import time
-import urllib.request
 from telephony.shared.utils.log_utils import logger
 from gi.repository import Gio, GLib
 
@@ -35,6 +34,10 @@ class TmateManager:
         run_in_background(self._task, target_number,)
 
     def _task(self, target_number):
+        """Build the session on a worker; urllib stays out of the
+        module scope so the idle daemon never maps ssl and libcrypto
+        for a feature that almost never runs."""
+        import urllib.request
         try:
             with urllib.request.urlopen(CONNCHECK_URL, timeout=5) as res:
                 has_internet = res.read().decode().strip() == "OK"
