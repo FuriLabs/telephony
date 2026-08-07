@@ -247,13 +247,13 @@ class DaemonClient:
 
     def import_chatty(self, db_path, mms_path):
         """Import a chatty database; blocking, call from a worker."""
-        reply = self.call("ImportChatty", GLib.Variant("(ss)", (db_path, mms_path)),
+        reply = self.call("ImportChatty", GLib.Variant("(ss)", (db_path or "", mms_path or "")),
                           GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply if reply else (False, "")
 
     def import_local_calls(self, db_path):
         """Import a gnome-calls database; blocking, call from a worker."""
-        reply = self.call("ImportLocalCalls", GLib.Variant("(s)", (db_path,)),
+        reply = self.call("ImportLocalCalls", GLib.Variant("(s)", (db_path or "",)),
                           GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply if reply else (False, "")
 

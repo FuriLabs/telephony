@@ -1339,13 +1339,13 @@ class TelephonyDaemonDBus:
         """Handle ImportChatty command."""
         from telephony.daemon.utils.importer_local_utils import import_local_chatty
         db_path, mms_path = parameters.unpack()
-        self._run_import(invocation, lambda: import_local_chatty(self.db, db_path, mms_path))
+        self._run_import(invocation, lambda: import_local_chatty(self.db, db_path or None, mms_path or None))
 
     def _handle_importlocalcalls(self, parameters, invocation):
         """Handle ImportLocalCalls command."""
         from telephony.daemon.utils.importer_local_utils import import_local_calls
         db_path = parameters.unpack()[0]
-        self._run_import(invocation, lambda: import_local_calls(self.db, db_path))
+        self._run_import(invocation, lambda: import_local_calls(self.db, db_path or None))
 
     def _handle_importandroidsms(self, parameters, invocation):
         """Handle ImportAndroidSms command."""
