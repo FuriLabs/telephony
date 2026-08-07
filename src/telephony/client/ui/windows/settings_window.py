@@ -85,13 +85,16 @@ class SettingsWindow(Adw.Dialog):
         grp_cats = Adw.PreferencesGroup()
         page.add(grp_cats)
         if self.mode_calls:
-            grp_cats.add(self._nav_row(_("Calls"), _("Numbers, volume and ringback"),
+            grp_cats.add(self._nav_row(_("Calls"), _("Voicemail, volume and ringback"),
                                        lambda: self._push_category(_("Calls"), self._build_calls_page),
                                        icon="call-start-symbolic"))
         if self.mode_messages:
             grp_cats.add(self._nav_row(_("Messages"), _("Delivery reports"),
                                        lambda: self._push_category(_("Messages"), self._build_messages_page),
                                        icon="mail-unread-symbolic"))
+        grp_cats.add(self._nav_row(_("SIM Settings"), _("Own number and country code"),
+                                   lambda: self._push_category(_("SIM Settings"), self._build_sim_page),
+                                   icon="auth-sim-symbolic"))
         if self.mode_calls:
             grp_cats.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
                                        lambda: self.nav_view.push(
@@ -303,8 +306,8 @@ class SettingsWindow(Adw.Dialog):
             self.set_focus(None)
         return False
 
-    def _build_calls_page(self, page):
-        """Build the calls category page."""
+    def _build_sim_page(self, page):
+        """Build the SIM settings category page."""
         grp_sim = Adw.PreferencesGroup(title=_("SIM Settings"))
         page.add(grp_sim)
 
@@ -329,6 +332,11 @@ class SettingsWindow(Adw.Dialog):
         self.entry_country_code.connect("apply", self._on_country_code_apply)
         grp_sim.add(self.entry_country_code)
 
+    def _build_calls_page(self, page):
+        """Build the calls category page."""
+        grp_voicemail = Adw.PreferencesGroup(title=_("Voicemail"))
+        page.add(grp_voicemail)
+
         self.entry_voicemail = Adw.EntryRow(title=_("Voicemail Number"))
         saved_vm = self.main_window.gsettings_mgr.get_setting("voicemail_number")
         if not saved_vm and self.main_window.ofono:
@@ -336,7 +344,7 @@ class SettingsWindow(Adw.Dialog):
         self.entry_voicemail.set_text(saved_vm if saved_vm else "")
         self.entry_voicemail.set_show_apply_button(True)
         self.entry_voicemail.connect("apply", self._on_voicemail_apply)
-        grp_sim.add(self.entry_voicemail)
+        grp_voicemail.add(self.entry_voicemail)
 
         self.grp_reject_list = EntryListGroup(
             title=_("Quick Response"),
