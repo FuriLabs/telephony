@@ -43,6 +43,8 @@ class FavoritesListWindow(Adw.NavigationPage):
         self.eds = eds
         self.app_window = parent.main_window
         self.search_timer = None
+        self._source_map = {}
+        run_in_background(self._load_source_map)
         self._pending_contact = None
 
         view = Adw.ToolbarView()
@@ -139,6 +141,13 @@ class FavoritesListWindow(Adw.NavigationPage):
         self.gsettings_mgr.set_favorites(remaining)
         self._refresh_list()
 
+    def _load_source_map(self):
+        """Fetch the address book names once; blocking, call from a worker."""
+        names = {}
+        for source in self.eds.get_sources_info():
+            names[source['uid']] = source['name']
+        self._source_map = names
+
     def _on_search_changed(self, entry):
         """Debounce the contact search."""
         if self.search_timer:
@@ -160,7 +169,8 @@ class FavoritesListWindow(Adw.NavigationPage):
                 is_added=lambda number: False,
                 on_add=self._on_result_activated_row,
                 translate_label=translate_phone_label,
-                unknown_name=_("Unknown"))
+                unknown_name=_("Unknown"),
+                source_map=self._source_map)
 
         run_in_background(self.eds.search_contacts, query, on_complete=done)
         return False
