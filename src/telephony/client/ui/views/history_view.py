@@ -268,7 +268,7 @@ class HistoryView(Adw.Bin):
         else:
             subtitle = _("New voicemail")
 
-        item = CallItem(-1, ofono.voicemail_number() or "", _("Voicemail"),
+        item = CallItem(-1, ofono.voicemail_mailbox or "", _("Voicemail"),
                         "voicemail", 0, "", subtitle, True)
         self.model.insert(0, item)
 
