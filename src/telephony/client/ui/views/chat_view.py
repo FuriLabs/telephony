@@ -774,9 +774,9 @@ class ChatPage(Gtk.Box):
                         return False
                     blocked = self.db.get_blocked_numbers()
                     norm_rec = normalize_number(number)
-                    for bid, bnum, _ignored in blocked:
-                        if normalize_number(bnum) == norm_rec:
-                            self.app_window.daemon.remove_blocked_number(bid)
+                    for entry in blocked:
+                        if normalize_number(entry["number"]) == norm_rec:
+                            self.app_window.daemon.remove_blocked_number(entry["id"])
                             break
                     return True
 

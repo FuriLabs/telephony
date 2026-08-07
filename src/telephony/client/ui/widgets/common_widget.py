@@ -455,3 +455,46 @@ class DataLoader:
             except Exception as e:
                 logger.error(f"Data loading error: {e}")
         run_in_background(task)
+
+
+def blocklist_domains_for(main_window):
+    """Which blocklist domains this launcher speaks for: (calls, messages).
+
+    A single-purpose launcher blocks only its own domain; the full
+    window and a contacts-only window speak for both.
+    """
+    calls = bool(main_window.show_calls_mode)
+    messages = bool(main_window.show_messages_mode)
+    if calls and not messages:
+        return (True, False)
+    if messages and not calls:
+        return (False, True)
+    return (True, True)
+
+
+def wire_blocklist_switch_locks(sw_calls, sw_messages):
+    """Keep at least one blocklist switch on; the last block locks.
+
+    With both switches present either may turn off while the other
+    holds; the survivor locks with a hint until both are on again.
+    A lone switch is information, not a question: it stays locked and
+    points at the trash can, which owns removal.
+    """
+    if sw_calls is None or sw_messages is None:
+        lone = sw_calls or sw_messages
+        if lone is not None:
+            lone.set_sensitive(False)
+            lone.set_subtitle(_("Remove the block with the trash can"))
+        return
+
+    def sync(*_args):
+        calls_on = sw_calls.get_active()
+        messages_on = sw_messages.get_active()
+        sw_calls.set_sensitive(messages_on)
+        sw_messages.set_sensitive(calls_on)
+        sw_calls.set_subtitle("" if messages_on else _("Last block — remove the number with the trash can"))
+        sw_messages.set_subtitle("" if calls_on else _("Last block — remove the number with the trash can"))
+
+    sw_calls.connect("notify::active", sync)
+    sw_messages.connect("notify::active", sync)
+    sync()

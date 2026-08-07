@@ -695,7 +695,7 @@ class OfonoManager(GObject.Object):
         is_silenced = False
 
         if state in ["incoming", "waiting"]:
-            if self.db.is_blocked(number):
+            if self.db.is_blocked(number, kind="calls"):
                 return
 
             contact_name = None
@@ -1511,7 +1511,7 @@ class OfonoManager(GObject.Object):
             raw_sender = props.get('Sender', 'Unknown')
             msg_sender = normalize_number(raw_sender)
 
-            if self.db.is_blocked(msg_sender):
+            if self.db.is_blocked(msg_sender, kind="messages"):
                 return
 
             if signal == "ImmediateMessage":

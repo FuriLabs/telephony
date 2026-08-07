@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import json
 import os
 import tempfile
 import shutil
@@ -93,7 +94,63 @@ class ImportExportDialog:
             (_("Import From Android"), self.ask_import_android, None),
             (_("Import From iOS"), self.ask_import_ios, None),
             (_("Export Calls or Messages"), self.ask_export_data, None),
+            (_("Export Blocklist"), self.on_export_blocklist, None),
+            (_("Import Blocklist"), self.on_import_blocklist, None),
         ])
+
+    def on_export_blocklist(self):
+        """Save the blocklist as a JSON file."""
+        dialog = Gtk.FileChooserNative(title=_("Export File"), transient_for=self.app_window,
+                                       action=Gtk.FileChooserAction.SAVE)
+        dialog.set_current_name("blocklist.json")
+
+        def _on_resp(d, r):
+            if r == Gtk.ResponseType.ACCEPT:
+                path = d.get_file().get_path()
+
+                def task():
+                    entries = self.db.get_blocked_numbers()
+                    for entry in entries:
+                        entry.pop("id", None)
+                    with open(path, "w") as handle:
+                        json.dump(entries, handle, indent=2)
+                    return len(entries)
+
+                run_in_background(task, on_complete=lambda n: self.app_window.notify_success(
+                    _("Exported {count} entries.").format(count=n)),
+                    on_error=lambda e: self.app_window.notify_error(_("Export failed.")))
+            GLib.idle_add(lambda: d.destroy() or False)
+
+        dialog.connect("response", _on_resp)
+        dialog.show()
+
+    def on_import_blocklist(self):
+        """Merge a blocklist JSON file; importing only ever adds or widens."""
+        dialog = Gtk.FileChooserNative(title=_("Select File"), transient_for=self.app_window,
+                                       action=Gtk.FileChooserAction.OPEN)
+
+        def _on_resp(d, r):
+            if r == Gtk.ResponseType.ACCEPT:
+                path = d.get_file().get_path()
+
+                def task():
+                    with open(path) as handle:
+                        payload = handle.read()
+                    json.loads(payload)
+                    return self.app_window.daemon.import_blocklist(payload)
+
+                def done(result):
+                    added, updated = result
+                    self.app_window.notify_success(
+                        _("Imported: {added} added, {updated} widened.").format(
+                            added=added, updated=updated))
+
+                run_in_background(task, on_complete=done,
+                                  on_error=lambda e: self.app_window.notify_error(_("Import failed.")))
+            GLib.idle_add(lambda: d.destroy() or False)
+
+        dialog.connect("response", _on_resp)
+        dialog.show()
 
     def ask_import_sim(self):
         """Ask where the SIM contacts should land before reading them."""

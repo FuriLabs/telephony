@@ -849,9 +849,9 @@ class MainWindow(Adw.Window):
         blocked_list = self.db.get_blocked_numbers()
         is_blocked_id = None
         norm_item_num = normalize_number(item.number)
-        for (bid, bnum, _ignored) in blocked_list:
-            if normalize_number(bnum) == norm_item_num:
-                is_blocked_id = bid
+        for entry in blocked_list:
+            if normalize_number(entry["number"]) == norm_item_num:
+                is_blocked_id = entry["id"]
                 break
 
         if is_blocked_id:

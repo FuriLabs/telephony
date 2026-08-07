@@ -393,7 +393,7 @@ class MessagesView(Adw.Bin):
         raw_rows = self.db.get_conversations(limit=current_limit + 1, offset=offset, filter_type=self.active_filter)
         contact_map = self.db.get_contacts_lookup_map()
         group_names = self.db.get_all_group_names()
-        blocked_numbers = {normalize_number(b[1]) for b in self.db.get_blocked_numbers()}
+        blocked_numbers = {normalize_number(b["number"]) for b in self.db.get_blocked_numbers()}
 
         processed = []
         has_more = False

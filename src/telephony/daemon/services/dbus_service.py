@@ -245,7 +245,20 @@ DAEMON_INTERFACE_XML = """
     <method name="AddBlockedNumber">
       <arg type="s" name="number" direction="in"/>
       <arg type="s" name="note" direction="in"/>
+      <arg type="b" name="block_calls" direction="in"/>
+      <arg type="b" name="block_messages" direction="in"/>
       <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="SetBlockedNumberFlags">
+      <arg type="s" name="bid" direction="in"/>
+      <arg type="b" name="block_calls" direction="in"/>
+      <arg type="b" name="block_messages" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
+    <method name="ImportBlocklist">
+      <arg type="s" name="json_data" direction="in"/>
+      <arg type="u" name="added" direction="out"/>
+      <arg type="u" name="updated" direction="out"/>
     </method>
     <method name="RemoveBlockedNumber">
       <arg type="s" name="bid" direction="in"/>
@@ -829,6 +842,8 @@ class TelephonyDaemonDBus:
             "SetSetting": self._handle_setsetting,
             "GetBlocklist": self._handle_getblocklist,
             "AddBlockedNumber": self._handle_addblockednumber,
+            "SetBlockedNumberFlags": self._handle_setblockednumberflags,
+            "ImportBlocklist": self._handle_importblocklist,
             "RemoveBlockedNumber": self._handle_removeblockednumber,
             "GetMissedMessages": self._handle_getmissedmessages,
             "SendMissedMessage": self._handle_sendmissedmessage,
@@ -1478,12 +1493,11 @@ class TelephonyDaemonDBus:
     def _handle_getblocklist(self, parameters, invocation):
         """Handle GetBlocklist command."""
         rows = self.db.get_blocked_numbers() if self.db else []
-        data = [{"id": r[0], "number": r[1], "note": r[2]} for r in rows]
-        invocation.return_value(GLib.Variant("(s)", (json.dumps(data),)))
+        invocation.return_value(GLib.Variant("(s)", (json.dumps(rows),)))
 
     def _handle_addblockednumber(self, parameters, invocation):
         """Handle AddBlockedNumber command."""
-        number, note = parameters.unpack()
+        number, note, block_calls, block_messages = parameters.unpack()
 
         def done(ok):
             invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
@@ -1495,8 +1509,26 @@ class TelephonyDaemonDBus:
         if not self.db:
             invocation.return_value(GLib.Variant("(b)", (False,)))
             return
-        run_in_background(self.db.block_number, number, note,
+        run_in_background(self.db.block_number, number, note, block_calls, block_messages,
                           on_complete=done, on_error=failed)
+
+    def _handle_setblockednumberflags(self, parameters, invocation):
+        """Handle SetBlockedNumberFlags command."""
+        bid, block_calls, block_messages = parameters.unpack()
+        ok = self.db.set_blocked_flags(bid, block_calls, block_messages) if self.db else False
+        invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+    def _handle_importblocklist(self, parameters, invocation):
+        """Handle ImportBlocklist command."""
+        added = 0
+        updated = 0
+        if self.db:
+            try:
+                entries = json.loads(parameters.unpack()[0])
+                added, updated = self.db.import_blocklist(entries)
+            except ValueError as e:
+                logger.error(f"[DBus] Blocklist import unreadable: {e}")
+        invocation.return_value(GLib.Variant("(uu)", (added, updated)))
 
     def _handle_removeblockednumber(self, parameters, invocation):
         """Handle RemoveBlockedNumber command."""
