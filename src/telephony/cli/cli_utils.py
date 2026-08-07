@@ -54,9 +54,9 @@ def get_proxy():
                 bus,
                 Gio.DBusProxyFlags.DO_NOT_AUTO_START,
                 None,
-                BUS_NAME,
-                OBJ_PATH,
-                IFACE_NAME,
+                DAEMON_BUS_NAME,
+                DAEMON_OBJECT_PATH,
+                DAEMON_INTERFACE,
                 None
             )
             if proxy.get_name_owner():

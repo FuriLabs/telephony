@@ -123,17 +123,13 @@ def get_own_number():
     try:
         modem_path = None
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
-        app = Gio.Application.get_default()
-        if app and app.ofono is not None and app.ofono.modem_path:
-            modem_path = app.ofono.modem_path
-        else:
-            manager = Gio.DBusProxy.new_sync(
-                bus, Gio.DBusProxyFlags.NONE, None,
-                "org.ofono", "/", "org.ofono.Manager", None)
-            result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
-            modems = result.unpack()[0]
-            if modems:
-                modem_path = modems[0][0]
+        manager = Gio.DBusProxy.new_sync(
+            bus, Gio.DBusProxyFlags.NONE, None,
+            "org.ofono", "/", "org.ofono.Manager", None)
+        result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
+        modems = result.unpack()[0]
+        if modems:
+            modem_path = modems[0][0]
 
         if modem_path:
             sim_proxy = Gio.DBusProxy.new_sync(
@@ -166,7 +162,7 @@ def build_search_variants(token):
 
     region_prefix = f"+{country_code}" if country_code else ""
     if region_prefix and token.startswith("0"):
-        variant = region_token[1:]
+        variant = region_prefix + token[1:]
         variants.add(variant)
         v_norm = normalize_number(variant)
         if v_norm:

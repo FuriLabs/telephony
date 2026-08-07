@@ -887,7 +887,7 @@ class ContactEditor(Adw.Dialog):
         logger.error(f"[ContactEditor] Save pre-check failed: {error}")
         if self._destroyed:
             return
-        self.main_window.notify_error(_("Failed to save contact"))
+        self.toast_overlay.add_toast(Adw.Toast.new(_("Failed to save contact")))
 
     def _unblock_and_resave(self, blocked_conflict):
         """Remove the conflicting blocklist entry, then retry the save."""
@@ -934,16 +934,18 @@ class ContactEditor(Adw.Dialog):
             raise RuntimeError("No address book selected for the contact")
 
         failures = 0
+        reason = ""
         for s_uid in selected_sources:
             if self.uid and s_uid == original_source:
-                ok = self.main_window.daemon.save_contact(final_vcard, uid=self.uid)
+                ok, why = self.main_window.daemon.save_contact(final_vcard, uid=self.uid)
             else:
-                ok = self.main_window.daemon.save_contact(final_vcard, source_uid=s_uid)
+                ok, why = self.main_window.daemon.save_contact(final_vcard, source_uid=s_uid)
             if not ok:
                 failures += 1
+                reason = why or reason
 
         if failures:
-            raise RuntimeError(f"{failures} of {len(selected_sources)} address book writes failed")
+            raise RuntimeError(reason or "write-failed")
 
         new_phones = set()
         for p, _lbl in phones_to_save:
@@ -975,14 +977,18 @@ class ContactEditor(Adw.Dialog):
     def _on_save_failed(self, error, fn, final_vcard):
         """Reopen the editor with the attempted data after a failed save."""
         logger.error(f"[ContactEditor] Save failed: {error}")
-        self.main_window.notify_error(_("Failed to save contact"))
         try:
             editor = ContactEditor(self.eds, self.main_window,
                                    contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard})
             editor.on_edit_mode_click(None)
             editor.present(self.main_window)
+            messages = {"read-only": _("This address book is read-only"),
+                        "no-writable-book": _("No writable address book available")}
+            editor.toast_overlay.add_toast(Adw.Toast.new(
+                messages.get(str(error), _("Failed to save contact"))))
         except Exception as e:
             logger.error(f"[ContactEditor] Could not reopen editor after failure: {e}")
+            self.main_window.notify_error(_("Failed to save contact"))
 
     def _confirm_unblock_add(self, _number_str, on_confirm):
         """Show confirmation to unblock and add to contacts."""
@@ -1002,5 +1008,5 @@ class ContactEditor(Adw.Dialog):
         d.present(self)
 
     def _show_error(self, title, msg):
-        """Report a failure the user can only acknowledge."""
-        self.main_window.notify_error(msg)
+        """Report a failure on this sheet, where the user is looking."""
+        self.toast_overlay.add_toast(Adw.Toast.new(msg))

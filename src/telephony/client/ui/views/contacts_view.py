@@ -223,6 +223,7 @@ class ContactsView(Adw.Bin):
         try:
             num_map = {}
             snapshot_items = []
+            read_only_uids = self.app_window.eds.read_only_source_uids()
             with self.app_window.eds.cache_lock:
                 snapshot_items = list(self.app_window.eds.cache.values())
 
@@ -232,7 +233,7 @@ class ContactsView(Adw.Bin):
                 source_uid = data.get('source_uid', "")
                 uid = data.get('uid')
 
-                if source_uid in self.app_window.eds.sources and self.app_window.eds.sources[source_uid].get('name') == "Andromeda Contacts":
+                if source_uid in read_only_uids:
                     continue
 
                 for p_num, p_lbl in data['phones']:

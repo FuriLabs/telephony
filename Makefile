@@ -21,6 +21,7 @@ all: build
 check:
 	python3 scripts/check_boundaries.py
 	python3 -m compileall -q src/telephony
+	python3 -m pyflakes src/telephony
 
 build: check
 	mkdir -p build/locale

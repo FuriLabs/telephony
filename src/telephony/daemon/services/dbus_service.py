@@ -284,6 +284,7 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="uid" direction="in"/>
       <arg type="s" name="source_uid" direction="in"/>
       <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="reason" direction="out"/>
     </method>
     <method name="DeleteContacts">
       <arg type="s" name="uids_json" direction="in"/>
@@ -1607,24 +1608,25 @@ class TelephonyDaemonDBus:
                 contact = self.eds.cache.get(uid)
             if contact and self._is_protected_contact_source(contact.get('source_uid')):
                 logger.warning(f"[DBus] Refusing to modify protected contact {uid}")
-                invocation.return_value(GLib.Variant("(b)", (False,)))
+                invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
                 return
         if source_uid and self._is_protected_contact_source(source_uid):
             logger.warning(f"[DBus] Refusing to write into protected source {source_uid}")
-            invocation.return_value(GLib.Variant("(b)", (False,)))
+            invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
             return
 
-        def done(ok):
-            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+        def done(result):
+            ok, reason = result
+            invocation.return_value(GLib.Variant("(bs)", (bool(ok), reason)))
 
         def failed(error):
             logger.error(f"[DBus] Save contact failed: {error}")
-            invocation.return_value(GLib.Variant("(b)", (False,)))
+            invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
 
         if not self.eds:
-            invocation.return_value(GLib.Variant("(b)", (False,)))
+            invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
             return
-        run_in_background(self.eds.save_contact, vcard, uid or None, source_uid or None,
+        run_in_background(self.eds.save_contact_with_reason, vcard, uid or None, source_uid or None,
                           on_complete=done, on_error=failed)
 
     def _handle_deletecontacts(self, parameters, invocation):

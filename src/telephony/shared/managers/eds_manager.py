@@ -983,6 +983,23 @@ class EdsManager(GObject.Object):
             return []
         return self.db_ref.search_contacts_db(query, limit=limit, offset=offset)
 
+    def read_only_source_uids(self):
+        """Return the uids of books that refuse writes; blocking, call from a worker.
+
+        A window with a deferred backend has no registry names in
+        self.sources, so this falls back to the sources info the
+        daemon provides, which always carries the names.
+        """
+        uids = set()
+        with self.sources_lock:
+            named = {uid: info.get('name') for uid, info in self.sources.items() if info.get('name')}
+        if named:
+            return {uid for uid, name in named.items() if name == "Andromeda Contacts"}
+        for item in self.get_sources_info():
+            if item.get('name') == "Andromeda Contacts":
+                uids.add(item.get('uid'))
+        return uids
+
     def _is_andromeda_source(self, source_uid):
         """Return True when the source is the read-only Andromeda Contacts book."""
         with self.sources_lock:
@@ -1046,6 +1063,20 @@ class EdsManager(GObject.Object):
             logger.warning(f"[EDS] No source available for client request ({source_uid})")
             return None
         return self._ensure_client(info)
+
+    def save_contact_with_reason(self, vcard_string, uid=None, source_uid=None):
+        """Save a contact and say why a refusal happened; blocking, call from a worker."""
+        target = None
+        if uid and ':' in uid:
+            target = uid.split(':', 1)[0]
+        elif source_uid:
+            target = source_uid
+        else:
+            target = self._default_source_uid()
+        if target and self._is_andromeda_source(target):
+            return (False, "read-only")
+        ok = self.save_contact(vcard_string, uid=uid, source_uid=source_uid)
+        return (ok, "" if ok else "write-failed")
 
     def save_contact(self, vcard_string, uid=None, source_uid=None):
         """Save a contact from a VCard string."""
