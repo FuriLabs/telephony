@@ -59,6 +59,8 @@ class HistoryRowFactory:
         for key, icon_name, css in (("anon", "view-conceal-symbolic", "dim-label"),
                                     ("conf", "system-users-symbolic", "dim-label"),
                                     ("xfer", "send-to-symbolic", "dim-label"),
+                                    ("declined", "action-unavailable-symbolic", "dim-label"),
+                                    ("netfail", "dialog-warning-symbolic", "dim-label"),
                                     ("rej", "action-unavailable-symbolic", "marker-rejected")):
             mark = Gtk.Image.new_from_icon_name(icon_name)
             mark.set_pixel_size(10)
@@ -148,6 +150,9 @@ class HistoryRowFactory:
         w["markers"]["conf"].set_visible(bool(item.multiparty))
         w["markers"]["xfer"].set_visible(bool(item.transferred))
         w["markers"]["rej"].set_visible(item.direction == 'rejected')
+        w["markers"]["declined"].set_visible(
+            item.direction == 'cancelled' and item.disconnect_reason == 'remote')
+        w["markers"]["netfail"].set_visible(item.disconnect_reason == 'network')
         w["time"].set_text(item.display_time)
 
         w["icon"].remove_css_class("call-icon-missed")

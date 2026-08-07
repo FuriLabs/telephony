@@ -34,7 +34,8 @@ PHONE_VARIANT_PATTERN = re.compile(r"[0-9+*#]+")
 
 
 HISTORY_COLUMNS = ("id", "number", "name", "direction", "duration",
-                   "timestamp", "anonymous", "multiparty", "transferred")
+                   "timestamp", "anonymous", "multiparty", "transferred",
+                   "disconnect_reason")
 
 
 class DatabaseManager(GObject.Object):
@@ -151,6 +152,8 @@ class DatabaseManager(GObject.Object):
             for column in ("anonymous", "multiparty", "transferred"):
                 if column not in history_cols:
                     c.execute(f"ALTER TABLE history ADD COLUMN {column} INTEGER DEFAULT 0")
+            if "disconnect_reason" not in history_cols:
+                c.execute("ALTER TABLE history ADD COLUMN disconnect_reason TEXT DEFAULT NULL")
             c.execute("CREATE INDEX IF NOT EXISTS idx_history_ts ON history(timestamp DESC, id DESC)")
             c.execute("CREATE INDEX IF NOT EXISTS idx_history_number ON history(number)")
             self.conn_calls.commit()
@@ -409,7 +412,7 @@ class DatabaseManager(GObject.Object):
             return False
 
     def add_call(self, number, _name_ignored, direction, duration=0, anonymous=False,
-                 multiparty=False, transferred=False):
+                 multiparty=False, transferred=False, disconnect_reason=None):
         """Add a call entry to history."""
         if self._refuse_write("add_call"):
             return
@@ -424,9 +427,9 @@ class DatabaseManager(GObject.Object):
 
                 with self.lock:
                     c = self.conn_calls.cursor()
-                    c.execute("INSERT INTO history (number, name, direction, duration, timestamp, anonymous, multiparty, transferred) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    c.execute("INSERT INTO history (number, name, direction, duration, timestamp, anonymous, multiparty, transferred, disconnect_reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                               (norm_number, real_name, direction, duration, now_str, 1 if anonymous else 0,
-                               1 if multiparty else 0, 1 if transferred else 0))
+                               1 if multiparty else 0, 1 if transferred else 0, disconnect_reason))
                     self.conn_calls.commit()
                 GLib.idle_add(self.emit, 'history-updated')
             except Exception as e:
@@ -438,7 +441,7 @@ class DatabaseManager(GObject.Object):
         try:
             with self.lock:
                 c = self.conn_calls.cursor()
-                sql = "SELECT id, number, name, direction, duration, timestamp, anonymous, multiparty, transferred FROM history"
+                sql = "SELECT id, number, name, direction, duration, timestamp, anonymous, multiparty, transferred, disconnect_reason FROM history"
                 params = []
 
                 if direction and direction != "all":
@@ -473,7 +476,7 @@ class DatabaseManager(GObject.Object):
             with self.lock:
                 c = self.conn_calls.cursor()
 
-                sql = "SELECT id, number, name, direction, duration, timestamp, anonymous, multiparty, transferred FROM history WHERE "
+                sql = "SELECT id, number, name, direction, duration, timestamp, anonymous, multiparty, transferred, disconnect_reason FROM history WHERE "
                 params = []
 
                 conditions = ["number LIKE ?"]
