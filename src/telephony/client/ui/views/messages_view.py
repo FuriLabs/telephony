@@ -148,7 +148,7 @@ class MessagesView(Adw.Bin):
         self.content_stack.set_vexpand(True)
 
         self.model = Gio.ListStore(item_type=ConversationItem)
-        self.selection = Gtk.SingleSelection(model=self.model)
+        self.selection = Gtk.NoSelection(model=self.model)
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", ConversationRowFactory.setup)
@@ -304,6 +304,9 @@ class MessagesView(Adw.Bin):
 
         new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status)
         target = 0 if change == "insert" else idx
+        if target == idx:
+            self.model.splice(idx, 1, [new_item])
+            return
         was_at_top = self.v_adj.get_value() < TOP_STICK_THRESHOLD_PX
         self.model.remove(idx)
         self.model.insert(target, new_item)

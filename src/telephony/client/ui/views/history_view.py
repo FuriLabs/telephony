@@ -93,8 +93,7 @@ class HistoryView(Adw.Bin):
         main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
 
         self.model = Gio.ListStore(item_type=CallItem)
-        self.selection_model = Gtk.SingleSelection(model=self.model)
-        self.selection_model.set_autoselect(False)
+        self.selection_model = Gtk.NoSelection(model=self.model)
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self.row_factory.setup)

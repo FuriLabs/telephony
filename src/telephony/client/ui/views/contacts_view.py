@@ -84,7 +84,7 @@ class ContactsView(Adw.Bin):
         box.append(header)
 
         self.model = Gio.ListStore(item_type=ContactItem)
-        self.selection = Gtk.SingleSelection(model=self.model)
+        self.selection = Gtk.NoSelection(model=self.model)
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self.setup_row)

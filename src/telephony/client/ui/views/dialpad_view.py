@@ -73,8 +73,6 @@ class DialpadView(Adw.Bin):
         paste_btn.add_css_class("pill")
         paste_btn.add_css_class("compact-btn")
         paste_btn.set_size_request(74, 44)
-        paste_btn.add_css_class("icon-blue")
-        paste_btn.set_opacity(0.7)
         paste_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_paste_clicked(b) or False))
         grid.attach(paste_btn, 0, 4, 1, 1)
 
@@ -93,8 +91,6 @@ class DialpadView(Adw.Bin):
         backspace_btn.add_css_class("pill")
         backspace_btn.add_css_class("compact-btn")
         backspace_btn.set_size_request(74, 44)
-        backspace_btn.add_css_class("icon-red")
-        backspace_btn.set_opacity(0.7)
         backspace_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_backspace(b) or False))
         grid.attach(backspace_btn, 2, 4, 1, 1)
 

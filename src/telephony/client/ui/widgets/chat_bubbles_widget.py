@@ -198,7 +198,7 @@ class ChatBubbleFactory:
         stack.add_css_class("inverted-row")
 
         div_box = Gtk.Box()
-        div_lbl = Gtk.Label(css_classes=["dim-label", "caption"], hexpand=True, halign=Gtk.Align.CENTER)
+        div_lbl = Gtk.Label(css_classes=["accent", "caption"], hexpand=True, halign=Gtk.Align.CENTER)
         div_box.append(div_lbl)
         stack.add_named(div_box, "divider")
 
