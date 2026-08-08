@@ -40,6 +40,9 @@ class ImportExportDialog:
         self.eds = app_window.eds
         self.nav_view = nav_view
         self._sheet = None
+        self.mode_calls = bool(app_window.show_calls_mode)
+        self.mode_messages = bool(app_window.show_messages_mode)
+        self.mode_contacts = bool(app_window.show_contacts_mode)
 
     def _on_flow_closed(self, _dialog):
         """Forget the flow once its sheet goes away."""
@@ -85,18 +88,28 @@ class ImportExportDialog:
             self._sheet = sheet
             sheet.present(self.app_window)
 
-        self._show_choices(_("Import and Export"), [
-            (_("Import Contacts from vCard"), self.on_import_clicked, None),
-            (_("Export Contacts to vCard"), self.on_export_all_clicked, None),
-            (_("Import Contacts from SIM card"), self.ask_import_sim, None),
-            (_("Import From local Chatty"), self.ask_import_chatty, None),
-            (_("Import From local Calls"), self.ask_import_local_calls, None),
-            (_("Import From Android"), self.ask_import_android, None),
-            (_("Import From iOS"), self.ask_import_ios, None),
-            (_("Export Calls or Messages"), self.ask_export_data, None),
-            (_("Export Blocklist"), self.on_export_blocklist, None),
-            (_("Import Blocklist"), self.on_import_blocklist, None),
-        ])
+        rows = []
+        if self.mode_contacts:
+            rows.append((_("Import Contacts from vCard"), self.on_import_clicked, None))
+            rows.append((_("Export Contacts to vCard"), self.on_export_all_clicked, None))
+            rows.append((_("Import Contacts from SIM card"), self.ask_import_sim, None))
+        if self.mode_messages:
+            rows.append((_("Import From local Chatty"), self.ask_import_chatty, None))
+        if self.mode_calls:
+            rows.append((_("Import From local Calls"), self.ask_import_local_calls, None))
+        if self.mode_calls or self.mode_messages:
+            rows.append((_("Import From Android"), self.ask_import_android, None))
+            rows.append((_("Import From iOS"), self.ask_import_ios, None))
+            if self.mode_calls and self.mode_messages:
+                export_title = _("Export Calls or Messages")
+            elif self.mode_calls:
+                export_title = _("Export Call History")
+            else:
+                export_title = _("Export Messages")
+            rows.append((export_title, self.ask_export_data, None))
+        rows.append((_("Export Blocklist"), self.on_export_blocklist, None))
+        rows.append((_("Import Blocklist"), self.on_import_blocklist, None))
+        self._show_choices(_("Import and Export"), rows)
 
     def on_export_blocklist(self):
         """Save the blocklist as a JSON file."""
@@ -215,18 +228,21 @@ class ImportExportDialog:
 
     def ask_import_android(self):
         """Show the Android import choices."""
-        self._show_choices(_("Import From Android"), [
-            (_("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms"), None),
-            (_("Select Call history file"), lambda: self._open_file_chooser("android_calls"), None),
-        ])
+        rows = []
+        if self.mode_messages:
+            rows.append((_("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms"), None))
+        if self.mode_calls:
+            rows.append((_("Select Call history file"), lambda: self._open_file_chooser("android_calls"), None))
+        self._show_choices(_("Import From Android"), rows)
 
     def ask_import_ios(self):
         """Show the iOS import choices."""
-        self._show_choices(_("Import From iOS"), [
-            (_("Direct USB Import (Recommended)"), self._start_ios_usb_import, None),
-            (_("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms"), None),
-            (_("Select Call history file"), lambda: self._open_file_chooser("ios_calls"), None),
-        ])
+        rows = [(_("Direct USB Import (Recommended)"), self._start_ios_usb_import, None)]
+        if self.mode_messages:
+            rows.append((_("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms"), None))
+        if self.mode_calls:
+            rows.append((_("Select Call history file"), lambda: self._open_file_chooser("ios_calls"), None))
+        self._show_choices(_("Import From iOS"), rows)
 
     def _start_ios_usb_import(self):
         run_in_background(IOSBackupExtractor.check_connection, on_complete=self._on_ios_connection_checked)
@@ -334,10 +350,15 @@ class ImportExportDialog:
         if dest_format == "ios":
             description = _("Note: This export uses the Android format. When importing this file onto an iOS device, please use the \"Import From Android\" option.")
 
-        self._show_choices(_("Export to {fmt}").format(fmt=dest_format), [
-            (_("Messages (SMS/MMS)"), lambda: self._open_export_file_chooser(dest_format, "sms"), None),
-            (_("Call History"), lambda: self._open_export_file_chooser(dest_format, "calls"), None),
-        ], description=description)
+        rows = []
+        if self.mode_messages:
+            rows.append((_("Messages (SMS/MMS)"), lambda: self._open_export_file_chooser(dest_format, "sms"), None))
+        if self.mode_calls:
+            rows.append((_("Call History"), lambda: self._open_export_file_chooser(dest_format, "calls"), None))
+        if len(rows) == 1:
+            rows[0][1]()
+            return
+        self._show_choices(_("Export to {fmt}").format(fmt=dest_format), rows, description=description)
 
     def _open_export_file_chooser(self, dest_format, export_type):
         dialog = Gtk.FileChooserNative(title=_("Export File"), transient_for=self.app_window, action=Gtk.FileChooserAction.SAVE)

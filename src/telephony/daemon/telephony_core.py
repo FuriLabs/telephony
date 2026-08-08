@@ -237,7 +237,7 @@ class TelephonyCore:
 
     def on_incoming_message(self, _ofono_obj, number, body):
         """Handle incoming SMS."""
-        priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+        priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts_messages()
         try:
             norm_sender = normalize_number(number)
             for p in priority_list:
@@ -299,7 +299,7 @@ class TelephonyCore:
         preview_text = body if body else "[Picture Message]"
 
         if real_sender:
-            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+            priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts_messages()
             try:
                 norm_sender = normalize_number(real_sender)
                 for p in priority_list:

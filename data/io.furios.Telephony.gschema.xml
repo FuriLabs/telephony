@@ -61,6 +61,11 @@
       <summary>Repeated Calls Bypass</summary>
       <description>Whether repeated calls bypass Do Not Disturb.</description>
     </key>
+    <key name="notification-override-repeated-messages-bypass" type="s">
+      <default>'false'</default>
+      <summary>Repeated Messages Bypass</summary>
+      <description>Whether three messages from one sender within a minute sound through silent mode.</description>
+    </key>
     <key name="ringback-enabled" type="s">
       <default>'false'</default>
       <summary>Ringback Enabled</summary>
@@ -104,7 +109,12 @@
     <key name="notification-override-dnd-bypass-contacts" type="s">
       <default>'[]'</default>
       <summary>Priority Contacts</summary>
-      <description>JSON serialized array of priority contacts.</description>
+      <description>JSON serialized array of contacts whose calls sound through silent mode.</description>
+    </key>
+    <key name="notification-override-dnd-bypass-contacts-messages" type="s">
+      <default>'[]'</default>
+      <summary>Priority Message Contacts</summary>
+      <description>JSON serialized array of contacts whose messages sound through silent mode.</description>
     </key>
     <key name="notification-override-sms-custom-tone-contacts" type="s">
       <default>'[]'</default>

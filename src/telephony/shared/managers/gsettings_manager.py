@@ -340,12 +340,20 @@ class GSettingsManager:
         return f"otpauth://totp/Telephony:{action_name}?secret={seed}&issuer=Telephony&period=60"
 
     def get_notification_override_dnd_bypass_contacts(self):
-        """Return the DND bypass contacts list."""
+        """Return the contacts whose calls ring through DND."""
         return self._get_json_setting("notification_override_dnd_bypass_contacts", "DND Bypass")
 
     def set_notification_override_dnd_bypass_contacts(self, contacts_list):
-        """Persist the DND bypass contacts list."""
+        """Persist the contacts whose calls ring through DND."""
         self._set_json_setting("notification_override_dnd_bypass_contacts", contacts_list, "DND Bypass")
+
+    def get_notification_override_dnd_bypass_contacts_messages(self):
+        """Return the contacts whose messages sound through DND."""
+        return self._get_json_setting("notification_override_dnd_bypass_contacts_messages", "DND Bypass")
+
+    def set_notification_override_dnd_bypass_contacts_messages(self, contacts_list):
+        """Persist the contacts whose messages sound through DND."""
+        self._set_json_setting("notification_override_dnd_bypass_contacts_messages", contacts_list, "DND Bypass")
 
     def get_notification_override_sms_custom_tone_contacts(self):
         """Return the SMS custom tone contacts list."""

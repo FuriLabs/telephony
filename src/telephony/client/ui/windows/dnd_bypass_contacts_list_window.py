@@ -25,18 +25,22 @@ from telephony.client.ui.widgets.common_widget import (populate_contact_search_r
 class DndBypassContactsListWindow(Adw.NavigationPage):
     """Settings subpage managing the priority contacts (Notification Override)."""
 
-    def __init__(self, parent, db, eds):
+    def __init__(self, parent, db, eds, kind="calls"):
         self.grp_list = None
         self.search_token = 0
         self._source_map = {}
         run_in_background(self._load_source_map)
+        self.kind = kind
         super().__init__(title=_("Notification Overrides"))
         self.gsettings_mgr = db
         self.eds = eds
 
         self.local_contacts = []
         try:
-            current = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+            if self.kind == "calls":
+                current = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
+            else:
+                current = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts_messages()
             if current:
                 for c in current:
                     self.local_contacts.append(c.copy())
@@ -118,7 +122,10 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
 
     def _on_save_clicked(self, btn):
         """Handle save button click."""
-        self.gsettings_mgr.set_notification_override_dnd_bypass_contacts(self.local_contacts)
+        if self.kind == "calls":
+            self.gsettings_mgr.set_notification_override_dnd_bypass_contacts(self.local_contacts)
+        else:
+            self.gsettings_mgr.set_notification_override_dnd_bypass_contacts_messages(self.local_contacts)
         GLib.idle_add(lambda: self.close() or False)
 
     def _refresh_list(self):
