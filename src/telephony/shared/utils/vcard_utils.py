@@ -16,9 +16,6 @@
 import re
 import hashlib
 from telephony.shared.utils.log_utils import logger
-import gi
-gi.require_version('EBookContacts', '1.2')
-from gi.repository import EBookContacts
 
 from telephony.shared.utils.phone_utils import normalize_number, parse_evolution_e164_param
 
@@ -103,23 +100,58 @@ def _build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fa
     }
 
 
-def parse_contact_safe(contact, source_uid):
-    """
-    Extract contact details (UID, name, phones, emails, and generated vcard hash)
-    from an EBookContacts.Contact object by parsing its serialized vcard.
+def _property_key(key_part):
+    """Return a vcard property name stripped of its group and parameters.
 
-    The EContact field accessors (get_const/get) return raw gconstpointer values
-    that PyGObject marshals as integers, so the string-based parser is the only
-    path that works from Python.
+    Exports commonly group related lines as item1.TEL / item1.FN; the
+    group prefix carries no meaning here and hid the property name.
     """
-    try:
-        vcard = unfold_vcard(contact.to_string(1))
-    except Exception as e:
-        logger.warning(f"[VCardUtils] VCard generation failed: {e}")
-        vcard = "BEGIN:VCARD\nVERSION:3.0\nFN:Unknown\nEND:VCARD"
+    main_key = key_part.split(";")[0]
+    if "." in main_key:
+        main_key = main_key.split(".", 1)[1]
+    return main_key.upper()
 
-    real_uid = contact.get(EBookContacts.ContactField.UID)
-    if not real_uid or not isinstance(real_uid, str):
+
+def is_property(line, name):
+    """Return True when a vcard line carries the named property.
+
+    Grouped lines such as item1.TEL name the same property as TEL, so
+    the group prefix is stripped before the comparison.
+    """
+    head = line.split(":", 1)[0]
+    return _property_key(head) == name.upper()
+
+
+def _unescape_value(value):
+    """Decode vcard text escaping: backslashed comma, semicolon, newline."""
+    out = []
+    i = 0
+    while i < len(value):
+        ch = value[i]
+        if ch == "\\" and i + 1 < len(value):
+            nxt = value[i + 1]
+            if nxt in (",", ";", "\\"):
+                out.append(nxt)
+                i += 2
+                continue
+            if nxt in ("n", "N"):
+                out.append("\n")
+                i += 2
+                continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def parse_vcard_string(vcard_str, source_uid, real_uid=None):
+    """
+    Extract contact details (UID, name, phones, emails, and generated vcard
+    hash) from a serialized vcard string, as delivered by the D-Bus book
+    views whose signals carry vcards.
+    """
+    vcard = unfold_vcard(vcard_str)
+
+    if not real_uid:
         for line in vcard.splitlines():
             if line.startswith("UID:"):
                 real_uid = line[4:].strip()
@@ -139,10 +171,10 @@ def parse_contact_safe(contact, source_uid):
 
         key_part = parts[0].strip()
         value_part = parts[1].strip()
-        main_key = key_part.split(";")[0].upper()
+        main_key = _property_key(key_part)
 
         if main_key == "FN":
-            name = value_part
+            name = _unescape_value(value_part)
         elif main_key == "TEL":
             parsed = _parse_tel_line(line)
             if parsed:

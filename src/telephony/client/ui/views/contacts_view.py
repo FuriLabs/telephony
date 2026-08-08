@@ -56,6 +56,7 @@ class ContactsView(Adw.Bin):
         self.signal_ids.append((self.app_window.db, self.app_window.db.connect('contacts-updated', lambda *args: GLib.idle_add(lambda: self.refresh()))))
         if self.app_window.eds:
             self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(self.on_contacts_loaded_signal))))
+            self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('address-books-changed', lambda *args: GLib.idle_add(self.on_books_changed_signal))))
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         header = Gtk.Box(spacing=6)
@@ -173,6 +174,19 @@ class ContactsView(Adw.Bin):
                 obj.disconnect(sig_id)
         self.signal_ids.clear()
 
+    def on_books_changed_signal(self, *args):
+        """Refresh the book names the rows label themselves with.
+
+        A window learns its books from the daemon in the background, so
+        the first read of an empty cache returns nothing and the rows
+        would keep showing no address book until some unrelated contact
+        change happened to rebuild them.
+        """
+        self._update_source_map()
+        self._update_add_button_sensitivity()
+        self.refresh()
+        return False
+
     def on_contacts_loaded_signal(self, *args):
         """Handle contacts loaded signal."""
         self._update_add_button_sensitivity()
@@ -221,6 +235,12 @@ class ContactsView(Adw.Bin):
     def _check_duplicates_thread(self, done_callback):
         """Threaded logic for check_duplicates."""
         try:
+            if not self.app_window.eds.get_sources_info():
+                logger.info("[ContactsView] Duplicate scan deferred: the books are not known yet")
+                self._duplicates_checked = False
+                if done_callback:
+                    GLib.idle_add(lambda: done_callback() or False)
+                return
             num_map = {}
             snapshot_items = []
             read_only_uids = self.app_window.eds.read_only_source_uids()
@@ -520,9 +540,7 @@ class ContactsView(Adw.Bin):
         uid = item.uid
         cached_data = self.app_window.eds.cache.get(uid)
         if not cached_data:
-            return
-        source_uid = cached_data.get('source_uid')
-        if source_uid and source_uid in self.app_window.eds.sources and self.app_window.eds.sources[source_uid].get('name') == "Andromeda Contacts":
+            logger.warning(f"[Contacts] No cached data for {uid}, cannot open")
             return
         self.app_window.present_edit_contact(contact_data=cached_data)
 

@@ -141,6 +141,7 @@ class WindowCore:
         self.daemon_client = DaemonClient()
         self.gsettings_mgr = SettingsMirror(self.daemon_client)
         self.eds = EdsManager(owns_live_views=False)
+        self.eds.sources_provider = self.daemon_client.get_address_books
         self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=False)
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoMirror(self.gsettings_mgr, daemon_client=self.daemon_client)
@@ -212,6 +213,9 @@ class WindowCore:
         self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))
+        self.daemon_client.subscribe(
+            "AddressBooksChanged",
+            lambda *args: GLib.idle_add(self.eds.invalidate_sources_info))
 
         if self.owns_incall_ui:
             self.daemon_client.subscribe(
