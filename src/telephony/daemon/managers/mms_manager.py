@@ -429,6 +429,11 @@ class MmsManager(GObject.Object):
             if isinstance(sender, GLib.Variant):
                 sender = sender.unpack()
 
+            if self.db and self.db.is_blocked(sender, kind="messages"):
+                logger.info(f"[MMS] Dropping message from blocked sender {sender}")
+                self._delete_message_from_daemon(path)
+                return
+
             recipients = props.get('Recipients', [])
             if isinstance(recipients, GLib.Variant):
                 recipients = recipients.unpack()

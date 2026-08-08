@@ -30,7 +30,7 @@ from telephony.client.ui.windows.advanced_settings_window import AdvancedSetting
 from telephony.client.ui.windows.favorites_list_window import FavoritesListWindow
 from telephony.client.ui.windows.network_services_window import NetworkServicesWindow
 from telephony.client.ui.windows.import_export_window import ImportExportDialog
-from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row)
+from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row, wire_blocklist_switch_locks)
 
 
 class SettingsWindow(Adw.Dialog):
@@ -116,46 +116,159 @@ class SettingsWindow(Adw.Dialog):
                                    lambda: self._open_modem_settings(None),
                                    icon="emblem-system-symbolic"))
 
+    def _blocklist_toggle_visibility(self):
+        """Which domain toggles this launcher shows; a contacts-only window shows both."""
+        show_calls = bool(self.main_window.show_calls_mode)
+        show_messages = bool(self.main_window.show_messages_mode)
+        if not show_calls and not show_messages:
+            return (True, True)
+        return (show_calls, show_messages)
+
     def _build_blocklist_page(self, page):
         """Build the blocklist category page."""
-        self.grp_blocklist = EntryListGroup(
+        self.grp_blocklist = Adw.PreferencesGroup(
             title=_("Blocked Numbers"),
-            fields=[{"key": "number", "label": _("Number"), "required": True,
-                     "purpose": Gtk.InputPurpose.PHONE},
-                    {"key": "note", "label": _("Note (Optional)")}],
-            add_label=_("Add Number"),
-            empty_label=_("No numbers added yet"),
-            on_add=self._on_block_added,
-            on_delete=self._on_block_deleted,
-            on_error=self.main_window.notify_error)
-        self.grp_blocklist.set_description(
-            _("Calls from these numbers are rejected automatically."))
+            description=_("Tap the pencil to change what a number blocks."))
+        btn_add = Gtk.Button(icon_name="list-add-symbolic", valign=Gtk.Align.CENTER,
+                             css_classes=["flat", "circular"])
+        btn_add.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_block_sheet() or False))
+        self.grp_blocklist.set_header_suffix(btn_add)
         page.add(self.grp_blocklist)
+        self._blocklist_rows = []
         self._reload_blocklist()
 
     def _reload_blocklist(self):
-        """Load the blocked numbers into the list group."""
-        entries = [{"id": row[0], "number": row[1], "note": row[2] or ""}
-                   for row in self.main_window.db.get_blocked_numbers()]
-        self.grp_blocklist.set_entries(entries)
+        """Rebuild the blocklist rows this launcher cares about."""
+        for row in self._blocklist_rows:
+            self.grp_blocklist.remove(row)
+        self._blocklist_rows = []
 
-    def _on_block_added(self, values):
-        """Validate and store a typed blocked number."""
-        number = normalize_number(values.get("number", ""))
-        if not number:
-            return (False, _("Enter a number to block"))
-        if self.main_window.db.is_blocked(number):
-            return (False, _("This number is already blocked."))
-        if not self.main_window.daemon.add_blocked_number(number, values.get("note", "")):
-            return (False, _("Failed to save to blocklist."))
-        logger.info(f"[Blocklist] Added number: {number}")
-        self._reload_blocklist()
-        return (True, None)
+        show_calls, show_messages = self._blocklist_toggle_visibility()
+        for entry in self.main_window.db.get_blocked_numbers():
+            relevant = ((entry["block_calls"] and show_calls) or
+                        (entry["block_messages"] and show_messages))
+            if not relevant:
+                continue
+            row = Adw.ActionRow(title=entry["number"], subtitle=entry["note"] or "")
+            for flag, icon, shown in (("block_calls", "call-stop-symbolic", show_calls),
+                                      ("block_messages", "mail-unread-symbolic", show_messages)):
+                if entry[flag] and shown:
+                    badge = Gtk.Image.new_from_icon_name(icon)
+                    badge.set_pixel_size(14)
+                    badge.set_valign(Gtk.Align.CENTER)
+                    badge.add_css_class("blocklist-on")
+                    row.add_suffix(badge)
+            btn_edit = Gtk.Button(icon_name="document-edit-symbolic", valign=Gtk.Align.CENTER,
+                                  css_classes=["flat", "circular"])
+            btn_edit.connect("clicked", lambda b, e=dict(entry): GLib.idle_add(
+                lambda: self._open_block_sheet(e) or False))
+            row.add_suffix(btn_edit)
+            btn_del = Gtk.Button(icon_name="user-trash-symbolic", valign=Gtk.Align.CENTER,
+                                 css_classes=["flat", "circular"])
+            btn_del.connect("clicked", lambda b, e=dict(entry): GLib.idle_add(
+                lambda: self._on_block_deleted(e) or False))
+            row.add_suffix(btn_del)
+            self.grp_blocklist.add(row)
+            self._blocklist_rows.append(row)
+
+        if not self._blocklist_rows:
+            empty = Adw.ActionRow(title=_("No numbers added yet"))
+            empty.set_sensitive(False)
+            self.grp_blocklist.add(empty)
+            self._blocklist_rows.append(empty)
+
+    def _open_block_sheet(self, entry=None):
+        """Show the block sheet, blank for a new number or pre-filled to edit."""
+        sheet = Adw.Dialog(title=_("Block Number"))
+        sheet.set_content_width(SHEET_CONTENT_WIDTH)
+        view = Adw.ToolbarView()
+        view.add_top_bar(Adw.HeaderBar())
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10,
+                      margin_start=14, margin_end=14, margin_bottom=16)
+        group = Adw.PreferencesGroup()
+        entry_num = Adw.EntryRow(title=_("Number"))
+        entry_num.set_input_purpose(Gtk.InputPurpose.PHONE)
+        group.add(entry_num)
+        entry_note = Adw.EntryRow(title=_("Note (Optional)"))
+        group.add(entry_note)
+        if entry:
+            entry_num.set_text(entry["number"])
+            entry_num.set_editable(False)
+            entry_note.set_text(entry["note"] or "")
+        show_calls, show_messages = self._blocklist_toggle_visibility()
+        sw_calls = None
+        sw_messages = None
+        if show_calls:
+            sw_calls = Adw.SwitchRow(title=_("Block Calls"),
+                                     active=entry["block_calls"] if entry else True)
+            sw_calls.add_prefix(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
+            group.add(sw_calls)
+        if show_messages:
+            sw_messages = Adw.SwitchRow(title=_("Block Messages"),
+                                        active=entry["block_messages"] if entry else True)
+            sw_messages.add_prefix(Gtk.Image.new_from_icon_name("mail-unread-symbolic"))
+            group.add(sw_messages)
+        wire_blocklist_switch_locks(sw_calls, sw_messages)
+        box.append(group)
+
+        btn = Gtk.Button(label=_("Block"), css_classes=["destructive-action", "pill"])
+        btn.set_size_request(-1, 44)
+
+        def submit(_btn):
+            number = normalize_number(entry_num.get_text())
+            if not number:
+                self.main_window.notify_error(_("Enter a number to block"))
+                return
+            block_calls = bool(sw_calls and sw_calls.get_active())
+            block_messages = bool(sw_messages and sw_messages.get_active())
+
+            def done(ok):
+                if ok:
+                    self._reload_blocklist()
+                    sheet.close()
+                else:
+                    self.main_window.notify_error(_("Failed to save to blocklist."))
+
+            if entry:
+                final_calls = block_calls if show_calls else entry["block_calls"]
+                final_messages = block_messages if show_messages else entry["block_messages"]
+
+                def edit_task():
+                    self.main_window.daemon.add_blocked_number(
+                        number, entry_note.get_text().strip(), False, False)
+                    return self.main_window.daemon.set_blocked_number_flags(
+                        entry["id"], final_calls, final_messages)
+
+                run_in_background(edit_task, on_complete=done)
+            else:
+                run_in_background(self.main_window.daemon.add_blocked_number,
+                                  number, entry_note.get_text().strip(),
+                                  block_calls, block_messages,
+                                  on_complete=done)
+
+        btn.connect("clicked", submit)
+        box.append(btn)
+        view.set_content(box)
+        sheet.set_child(view)
+        sheet.present(self)
 
     def _on_block_deleted(self, entry):
-        """Remove one blocked number."""
-        self.main_window.daemon.remove_blocked_number(entry["id"])
-        self._reload_blocklist()
+        """Remove this launcher's block; the entry dies when nothing remains.
+
+        A slimmed launcher only takes away its own domain, so a number
+        also blocked elsewhere stays blocked there; the full and
+        contacts views own the whole entry and delete it outright.
+        """
+        show_calls, show_messages = self._blocklist_toggle_visibility()
+        keep_calls = entry["block_calls"] and not show_calls
+        keep_messages = entry["block_messages"] and not show_messages
+        if keep_calls or keep_messages:
+            run_in_background(self.main_window.daemon.set_blocked_number_flags,
+                              entry["id"], keep_calls, keep_messages,
+                              on_complete=lambda ok: self._reload_blocklist())
+        else:
+            self.main_window.daemon.remove_blocked_number(entry["id"])
+            GLib.timeout_add(300, lambda: self._reload_blocklist() or False)
 
     def _push_category(self, title, build):
         """Push a settings category page built fresh from current state."""

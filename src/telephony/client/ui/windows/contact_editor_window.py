@@ -893,9 +893,9 @@ class ContactEditor(Adw.Dialog):
         """Remove the conflicting blocklist entry, then retry the save."""
         def task():
             blocked_list = self.main_window.db.get_blocked_numbers()
-            for bid, bnum, _ignored in blocked_list:
-                if normalize_number(bnum) == blocked_conflict:
-                    self.main_window.daemon.remove_blocked_number(bid)
+            for entry in blocked_list:
+                if normalize_number(entry["number"]) == blocked_conflict:
+                    self.main_window.daemon.remove_blocked_number(entry["id"])
                     break
 
         run_in_background(task, on_complete=lambda _result: self.on_save(self.btn_save, force=True))

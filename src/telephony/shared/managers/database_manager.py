@@ -203,7 +203,14 @@ class DatabaseManager(GObject.Object):
             c.execute('''CREATE TABLE IF NOT EXISTS blocklist
                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
                           number TEXT UNIQUE NOT NULL,
-                          note TEXT)''')
+                          note TEXT,
+                          block_calls INTEGER DEFAULT 1,
+                          block_messages INTEGER DEFAULT 1)'''
+                      )
+            block_cols = [row[1] for row in c.execute("PRAGMA table_info(blocklist)").fetchall()]
+            for column in ("block_calls", "block_messages"):
+                if column not in block_cols:
+                    c.execute(f"ALTER TABLE blocklist ADD COLUMN {column} INTEGER DEFAULT 1")
             self.conn_blocklist.commit()
         except Exception as e:
             logger.error(f"[DB] Migrate Error: {e}")
@@ -1090,7 +1097,46 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Delete Conv Error: {e}")
             return False
 
-    def block_number(self, number, note=""):
+    def set_blocked_flags(self, bid, block_calls, block_messages):
+        """Set both domain flags of one blocklist entry."""
+        if self._refuse_write("set_blocked_flags"):
+            return False
+        try:
+            with self.lock:
+                c = self.conn_blocklist.cursor()
+                c.execute("UPDATE blocklist SET block_calls = ?, block_messages = ? WHERE id = ?",
+                          (1 if block_calls else 0, 1 if block_messages else 0, bid))
+                self.conn_blocklist.commit()
+            GLib.idle_add(self.emit, 'blocklist-updated')
+            return True
+        except Exception as e:
+            logger.error(f"[DB] Set Blocked Flags Error: {e}")
+            return False
+
+    def import_blocklist(self, entries):
+        """Merge imported entries; adds numbers and only ever raises flags."""
+        if self._refuse_write("import_blocklist"):
+            return (0, 0)
+        before = {e["number"]: e for e in self.get_blocked_numbers()}
+        added = 0
+        updated = 0
+        for entry in entries:
+            number = str(entry.get("number", "")).strip()
+            if not number:
+                continue
+            clean = normalize_number(number, permissive=False)
+            ok = self.add_blocked_number(number, str(entry.get("note", "") or ""),
+                                         bool(entry.get("block_calls", True)),
+                                         bool(entry.get("block_messages", True)))
+            if not ok:
+                continue
+            if clean in before:
+                updated += 1
+            else:
+                added += 1
+        return (added, updated)
+
+    def block_number(self, number, note="", block_calls=True, block_messages=True):
         """
         Block a number and scrub it everywhere: rename it in call history,
         remove it from contacts and drop it from trusted and special lists.
@@ -1098,7 +1144,7 @@ class DatabaseManager(GObject.Object):
         if self._refuse_write("block_number"):
             return False
         clean_num = normalize_number(number, permissive=False)
-        if not self.add_blocked_number(clean_num, note):
+        if not self.add_blocked_number(clean_num, note, block_calls, block_messages):
             return False
 
         self.update_history_names([clean_num], _("Blocked Number"))
@@ -1111,9 +1157,9 @@ class DatabaseManager(GObject.Object):
         if self._refuse_write("unblock_number"):
             return
         if number is None:
-            for row_id, row_num, _note in self.get_blocked_numbers():
-                if row_id == bid:
-                    number = row_num
+            for entry in self.get_blocked_numbers():
+                if entry["id"] == bid:
+                    number = entry["number"]
                     break
 
         self.remove_blocked_number(bid)
@@ -1122,15 +1168,21 @@ class DatabaseManager(GObject.Object):
             clean_num = normalize_number(number, permissive=False)
             self.update_history_names([clean_num], _("Unknown"))
 
-    def add_blocked_number(self, number, note=""):
-        """Add a number to the blocklist."""
+    def add_blocked_number(self, number, note="", block_calls=True, block_messages=True):
+        """Add or widen a blocklist entry; merging never unblocks a domain."""
         if self._refuse_write("add_blocked_number"):
             return False
         try:
             clean_num = normalize_number(number, permissive=False)
             with self.lock:
                 c = self.conn_blocklist.cursor()
-                c.execute("INSERT INTO blocklist (number, note) VALUES (?, ?)", (clean_num, note))
+                c.execute("""INSERT INTO blocklist (number, note, block_calls, block_messages)
+                             VALUES (?, ?, ?, ?)
+                             ON CONFLICT(number) DO UPDATE SET
+                               block_calls = MAX(block_calls, excluded.block_calls),
+                               block_messages = MAX(block_messages, excluded.block_messages),
+                               note = CASE WHEN excluded.note != '' THEN excluded.note ELSE note END""",
+                          (clean_num, note, 1 if block_calls else 0, 1 if block_messages else 0))
                 self.conn_blocklist.commit()
 
             if self.gsettings_mgr:
@@ -1156,25 +1208,27 @@ class DatabaseManager(GObject.Object):
         except Exception as e:
             logger.error(f"[DB] Unblock Error: {e}")
 
-    def is_blocked(self, number):
-        """Check if a number is blocked."""
+    def is_blocked(self, number, kind="calls"):
+        """Check whether a number is blocked for one domain: calls or messages."""
+        column = "block_calls" if kind == "calls" else "block_messages"
         try:
             clean_num = normalize_number(number, permissive=False)
             with self.lock:
                 c = self.conn_blocklist.cursor()
-                c.execute("SELECT id FROM blocklist WHERE number = ?", (clean_num,))
+                c.execute(f"SELECT id FROM blocklist WHERE number = ? AND {column} = 1", (clean_num,))
                 return c.fetchone() is not None
         except Exception as e:
             logger.error(f"[DB] Block check error: {e}")
             return False
 
     def get_blocked_numbers(self):
-        """Retrieve all blocked numbers."""
+        """Retrieve every blocklist entry as a dict with its domain flags."""
         try:
             with self.lock:
                 c = self.conn_blocklist.cursor()
-                c.execute("SELECT id, number, note FROM blocklist ORDER BY id DESC")
-                return c.fetchall()
+                c.execute("SELECT id, number, note, block_calls, block_messages FROM blocklist ORDER BY id DESC")
+                return [{"id": r[0], "number": r[1], "note": r[2],
+                         "block_calls": bool(r[3]), "block_messages": bool(r[4])} for r in c.fetchall()]
         except Exception as e:
             logger.error(f"[DB] Get Blocked Numbers Error: {e}")
             return []

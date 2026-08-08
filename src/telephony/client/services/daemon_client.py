@@ -188,11 +188,25 @@ class DaemonClient:
                           GLib.VariantType("(b)"))
         return bool(reply and reply[0])
 
-    def add_blocked_number(self, number, note):
-        """Block a number; blocking, call from a worker."""
-        reply = self.call("AddBlockedNumber", GLib.Variant("(ss)", (number, note)),
+    def add_blocked_number(self, number, note, block_calls=True, block_messages=True):
+        """Block a number for the chosen domains; blocking, call from a worker."""
+        reply = self.call("AddBlockedNumber",
+                          GLib.Variant("(ssbb)", (number, note, block_calls, block_messages)),
                           GLib.VariantType("(b)"))
         return bool(reply and reply[0])
+
+    def set_blocked_number_flags(self, bid, block_calls, block_messages):
+        """Set one entry's domain flags; blocking, call from a worker."""
+        reply = self.call("SetBlockedNumberFlags",
+                          GLib.Variant("(sbb)", (str(bid), block_calls, block_messages)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
+    def import_blocklist(self, json_data):
+        """Merge an exported blocklist; blocking, call from a worker."""
+        reply = self.call("ImportBlocklist", GLib.Variant("(s)", (json_data,)),
+                          GLib.VariantType("(uu)"))
+        return tuple(reply) if reply else (0, 0)
 
     def remove_blocked_number(self, bid):
         """Unblock a blocklist entry without waiting for the reply."""

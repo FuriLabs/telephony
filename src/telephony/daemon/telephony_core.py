@@ -262,7 +262,7 @@ class TelephonyCore:
         """Handle incoming MMS."""
         logger.info(f"MMS Received from {sender}. Recipients: {recipients}")
 
-        if self.db.is_blocked(sender):
+        if self.db.is_blocked(sender, kind="messages"):
             logger.info(f"Blocked MMS from {sender}")
             return
 
