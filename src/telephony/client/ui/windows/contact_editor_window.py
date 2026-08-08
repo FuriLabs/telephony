@@ -871,7 +871,7 @@ class ContactEditor(Adw.Dialog):
                             self.on_save(self.btn_save, force=True)
 
                     win = DuplicateResolutionWindow(conflicts, self.eds, self.main_window.daemon, on_wizard_done)
-                    win.present(self)
+                    win.present(self.main_window)
                     return
 
             self._proceed_with_save(phones_to_save, selected_sources)

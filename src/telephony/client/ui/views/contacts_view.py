@@ -221,6 +221,12 @@ class ContactsView(Adw.Bin):
     def _check_duplicates_thread(self, done_callback):
         """Threaded logic for check_duplicates."""
         try:
+            if not self.app_window.eds.get_sources_info():
+                logger.info("[ContactsView] Duplicate scan deferred: the books are not known yet")
+                self._duplicates_checked = False
+                if done_callback:
+                    GLib.idle_add(lambda: done_callback() or False)
+                return
             num_map = {}
             snapshot_items = []
             read_only_uids = self.app_window.eds.read_only_source_uids()
