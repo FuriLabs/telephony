@@ -23,7 +23,7 @@ gi.require_version('EDataServer', '1.2')
 gi.require_version('EBookContacts', '1.2')
 gi.require_version('EBook', '1.2')
 
-from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst
+from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst, GObject
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.system_utils import launch_desktop_uri, ensure_daemon_running
@@ -79,10 +79,26 @@ class App(Adw.Application):
         """Clear active notifications for a number."""
         self.core.clear_notification(number)
 
+    def _close_through_hook(self, *args):
+        """Clear a main window's stacked sheets so one close closes everything."""
+        window = next((a for a in args if isinstance(a, Gtk.Window)), None)
+        if not isinstance(window, MainWindow):
+            return True
+        dialog = window.get_visible_dialog()
+        while dialog is not None:
+            dialog.force_close()
+            following = window.get_visible_dialog()
+            if following is dialog:
+                break
+            dialog = following
+        return True
+
     def do_startup(self):
         """Perform application startup tasks."""
         Gtk.Application.do_startup(self)
         GLib.set_prgname(self.get_application_id())
+
+        GObject.add_emission_hook(Gtk.Window, "close-request", self._close_through_hook)
 
         run_in_background(ensure_daemon_running)
 
