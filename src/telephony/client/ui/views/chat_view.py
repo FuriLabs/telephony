@@ -200,7 +200,7 @@ class ChatPage(Gtk.Box):
         self.filter = Gtk.CustomFilter.new(self._filter_func, None)
         self.filter_model = Gtk.FilterListModel.new(self.store, self.filter)
 
-        self.selection = Gtk.SingleSelection(model=self.filter_model)
+        self.selection = Gtk.NoSelection(model=self.filter_model)
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self._on_factory_setup)
