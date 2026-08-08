@@ -425,7 +425,8 @@ class HistoryView(Adw.Bin):
                 "is_saved": is_saved,
                 "anonymous": bool(r["anonymous"]),
                 "multiparty": bool(r["multiparty"]),
-                "transferred": bool(r["transferred"])
+                "transferred": bool(r["transferred"]),
+                "disconnect_reason": r["disconnect_reason"]
             })
 
         self.last_fetch_has_more = has_more
@@ -452,7 +453,8 @@ class HistoryView(Adw.Bin):
                 d["is_saved"],
                 anonymous=d["anonymous"],
                 multiparty=d["multiparty"],
-                transferred=d["transferred"]
+                transferred=d["transferred"],
+                disconnect_reason=d["disconnect_reason"]
             ))
 
         if new_call_items:

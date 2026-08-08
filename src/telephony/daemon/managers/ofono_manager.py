@@ -742,7 +742,8 @@ class OfonoManager(GObject.Object):
             "multiparty": bool(props.get("Multiparty", False)),
             "was_conference": bool(props.get("Multiparty", False)),
             "rejected": False,
-            "transferred": False
+            "transferred": False,
+            "disconnect_reason": None
         }
         if is_outgoing:
             self._dial_hides_id = False
@@ -754,6 +755,12 @@ class OfonoManager(GObject.Object):
 
     def _on_call_prop_changed(self, proxy, sender, signal, params, path):
         """Handle property changes for a specific call."""
+        if signal == "DisconnectReason":
+            if path in self.active_calls:
+                reason = params.unpack()[0]
+                self.active_calls[path]["disconnect_reason"] = reason
+                logger.info(f"[OfonoManager] Call {path} disconnect reason: {reason}")
+            return
         if signal == "PropertyChanged":
             name, value = params.unpack()
             if name == "State":
@@ -802,12 +809,13 @@ class OfonoManager(GObject.Object):
         duration = 0
         if data["answered"] and data["start"]:
             duration = int(time.time() - data["start"])
+        reason = data.get("disconnect_reason")
         status = "missed"
         if data["direction"] == "incoming":
             if data["answered"]:
                 status = "incoming"
             else:
-                status = "rejected" if data.get("rejected") else "missed"
+                status = "rejected" if (data.get("rejected") or reason == "local") else "missed"
         else:
             status = "outgoing" if data["answered"] else "cancelled"
             if duration == 0:
@@ -819,6 +827,7 @@ class OfonoManager(GObject.Object):
 
         try:
             self.db.add_call(num, None, status, duration, anonymous=bool(data.get("anonymous")),
+                             disconnect_reason=reason,
                              multiparty=bool(data.get("was_conference")),
                              transferred=bool(data.get("transferred")))
         except Exception as e:
