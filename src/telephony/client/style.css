@@ -37,6 +37,12 @@ transition: all 0.1s ease-in-out;
 .call-icon-cancelled { color: #e01b24; }
 .icon-blue { color: @accent_color; }
 
+/* Dialpad paste and delete: tinted buttons with white glyphs, matching the solid green anonymous and red clear-all buttons in the same block; the tint is the button's highlight, the icon stays white so it reads at a glance. */
+.dialpad-paste { background-color: @accent_bg_color; color: #ffffff; }
+.dialpad-paste:active { background-color: shade(@accent_bg_color, 0.9); transform: scale(0.95); }
+.dialpad-delete { background-color: #c01c28; color: #ffffff; }
+.dialpad-delete:active { background-color: #a0131a; transform: scale(0.95); }
+
 /* General utility classes for layouts: Compact buttons, dimming secondary text, tiny fonts for timestamps, blue accents, and pill-shaped borders. */
 .compact-btn { padding-top: 0px; padding-bottom: 0px; min-height: 20px; }
 .dim-label { opacity: 0.7; font-size: 0.9em; }
