@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys
 
 from gi.repository import Gio, GLib
 from telephony.shared.utils.log_utils import logger
@@ -38,8 +37,7 @@ class DaemonApp(Gio.Application):
 
     def __init__(self):
         """Initialize the service application."""
-        super().__init__(application_id=DAEMON_APP_ID,
-                         flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
+        super().__init__(application_id=DAEMON_APP_ID)
         self.core = TelephonyCore(ui=self)
         self.ofono = None
 
@@ -84,19 +82,6 @@ class DaemonApp(Gio.Application):
         application ids and never this one.
         """
         logger.info("[Daemon] Activated; the service has no window to raise")
-
-    def do_command_line(self, command_line):
-        """Accept the service arguments and refuse the window ones."""
-        args = command_line.get_arguments()[1:]
-
-        if "--debug" in args:
-            logger.remove()
-            logger.add(sys.stderr, level="DEBUG")
-
-        extra = [a for a in args if a not in ("--start-monitoring", "--debug")]
-        if extra:
-            logger.warning(f"[Daemon] Ignoring window arguments: {extra}")
-        return 0
 
     def any_window_active(self):
         """No window ever has focus in the service process."""

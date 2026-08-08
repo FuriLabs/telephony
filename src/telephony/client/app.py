@@ -13,10 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import argparse
-import sys
 import os
-from urllib.parse import unquote
 
 import gi
 gi.require_version('Gtk', '4.0')
@@ -49,8 +46,7 @@ class App(Adw.Application):
 
     def __init__(self, application_id=APP_ID):
         """Initialize the Application."""
-        super().__init__(application_id=application_id,
-                         flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
+        super().__init__(application_id=application_id)
 
         self.core = WindowCore(application_id, ui=self)
         self.owns_incall_ui = self.core.owns_incall_ui
@@ -295,144 +291,6 @@ class App(Adw.Application):
         )
         win.present()
         return
-
-    def _parse_command_line(self, argv):
-        """Parse command line arguments delivered to the primary instance."""
-        parser = argparse.ArgumentParser(prog="telephony", add_help=False)
-        parser.add_argument("--start-monitoring", action="store_true", help="Start in monitoring mode")
-        parser.add_argument("--calls", action="store_true", help="Calls mode")
-        parser.add_argument("--messages", action="store_true", help="Messages mode")
-        parser.add_argument("--contacts", action="store_true", help="Contacts mode")
-        parser.add_argument("--full", action="store_true", help="Full mode")
-        parser.add_argument("--open-chat", metavar="NUMBER", help="Open chat for number")
-        parser.add_argument("--debug", action="store_true", help="Debug mode")
-        parser.add_argument("--incall", action="store_true", help="Incall mode")
-        parser.add_argument("uris", nargs="*", help="tel:/sms: URIs to open")
-
-        opts, unknown = parser.parse_known_args(argv)
-        if unknown:
-            logger.warning(f"Ignoring unknown command line arguments: {unknown}")
-        return opts
-
-    def do_command_line(self, command_line):
-        """Handle command line arguments."""
-        try:
-            opts = self._parse_command_line(command_line.get_arguments()[1:])
-        except (argparse.ArgumentError, SystemExit) as e:
-            logger.warning(f"Failed to parse command line: {e}")
-            return 1
-
-        if opts.debug:
-            logger.remove()
-            logger.add(sys.stderr, level="DEBUG")
-
-        if opts.start_monitoring or (opts.debug and not opts.uris):
-            logger.info("Started in Monitoring/Debug Mode. Skipping background window creation.")
-            return 0
-
-        if opts.incall:
-            logger.info("Opening InCallWindow requested via command line.")
-            self._ensure_incall_window()
-            self.release_keyboard_focus()
-            GLib.idle_add(self._present_incall_window)
-            return 0
-
-        focus_tab = None
-        open_chat_number = None
-        dialpad_number = None
-
-        if opts.calls:
-            focus_tab = "dialpad"
-        if opts.messages:
-            focus_tab = "messages"
-        if opts.contacts:
-            focus_tab = "contacts"
-        if opts.open_chat:
-            open_chat_number = opts.open_chat
-            focus_tab = "messages"
-
-        for arg in opts.uris:
-            if arg.startswith(("tel:", "callto:")):
-                dialpad_number = unquote(arg.split(":", 1)[1])
-                focus_tab = "dialpad"
-            elif arg.startswith(("sms:", "smsto:", "mms:", "mmsto:")):
-                rest = arg.split(":", 1)[1]
-                if "?" in rest:
-                    rest = rest.split("?", 1)[0]
-                open_chat_number = unquote(rest)
-                focus_tab = "messages"
-
-        mode_calls = True
-        mode_messages = True
-        mode_contacts = True
-
-        if opts.calls:
-            mode_messages = False
-        elif opts.contacts:
-            mode_calls = False
-            mode_messages = False
-        elif opts.messages:
-            mode_calls = False
-            mode_contacts = False
-
-        target_win = None
-        for existing_win in self.get_windows():
-            if isinstance(existing_win, MainWindow):
-                if (existing_win.show_calls_mode == mode_calls and
-                    existing_win.show_messages_mode == mode_messages and
-                        existing_win.show_contacts_mode == mode_contacts):
-                    target_win = existing_win
-                    break
-
-        if target_win is None and (dialpad_number or open_chat_number):
-            for existing_win in self.get_windows():
-                if isinstance(existing_win, MainWindow):
-                    if dialpad_number and existing_win.show_calls_mode:
-                        target_win = existing_win
-                        break
-                    if open_chat_number and existing_win.show_messages_mode:
-                        target_win = existing_win
-                        break
-
-        if target_win:
-            logger.info("Reusing existing matching main window.")
-            target_win.set_visible(True)
-            target_win.present()
-
-            if open_chat_number:
-                logger.info(f"Auto-opening chat for: {open_chat_number}")
-                target_win.open_chat_for_number(open_chat_number)
-            elif dialpad_number:
-                logger.info(f"Auto-opening dialpad for: {dialpad_number}")
-                target_win.open_dialpad_with_number(dialpad_number)
-            elif focus_tab and target_win.stack and target_win.stack.get_child_by_name(focus_tab):
-                target_win.stack.set_visible_child_name(focus_tab)
-
-            return 0
-
-        logger.info(f"Opening GUI Window (Calls: {mode_calls}, Messages: {mode_messages}, Contacts: {mode_contacts})...")
-        win = MainWindow(
-            self,
-            self.ofono,
-            self.db,
-            self.eds,
-            self.gsettings_mgr,
-            show_calls=mode_calls,
-            show_messages=mode_messages,
-            show_contacts=mode_contacts
-        )
-        win.present()
-
-        if open_chat_number:
-            logger.info(f"Auto-opening chat for: {open_chat_number}")
-            win.open_chat_for_number(open_chat_number)
-        elif dialpad_number:
-            logger.info(f"Auto-opening dialpad for: {dialpad_number}")
-            win.open_dialpad_with_number(dialpad_number)
-        elif focus_tab and win.stack and win.stack.get_child_by_name(focus_tab):
-            win.stack.set_visible_child_name(focus_tab)
-
-        return 0
 
     def on_window_destroyed(self, win):
         """Handle window destruction."""
