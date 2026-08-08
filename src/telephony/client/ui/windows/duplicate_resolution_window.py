@@ -239,7 +239,7 @@ class DuplicateResolutionWindow(Adw.Dialog):
 
         new_vcard = self._merge_contact_data(kept_contact, others)
 
-        if not self.daemon.save_contact(new_vcard, uid=kept_contact['uid']):
+        if not self.daemon.save_contact(new_vcard, uid=kept_contact['uid'])[0]:
             logger.error(f"[DuplicateResolution] Merge save failed for {kept_contact['uid']}, keeping duplicates")
             return
 

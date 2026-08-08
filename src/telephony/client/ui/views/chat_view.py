@@ -22,14 +22,12 @@ from telephony.shared.utils.datetime_utils import parse_timestamp
 import json
 import os
 import mimetypes
-from datetime import datetime
 from gettext import gettext as _
 
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-gi.require_version('Gst', '1.0')
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango, GObject, Gst
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango, GObject
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id

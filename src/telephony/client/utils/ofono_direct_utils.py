@@ -21,7 +21,7 @@ direct path for when the daemon cannot serve. Single calls only,
 never subscriptions, so windows stay stateless toward ofonod.
 """
 
-from gi.repository import Gio, GLib
+from gi.repository import Gio
 from telephony.shared.utils.log_utils import logger
 
 OFONO_BUS = "org.ofono"

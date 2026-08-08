@@ -422,11 +422,14 @@ class ImportExportDialog:
     def _prompt_target_book(self, on_chosen):
         """Ask which address book an import should write to.
 
-        The choice is skipped when there is nothing to choose, and the
-        default book leads so the common answer is the first one.
+        The choice is skipped when there is nothing to choose, the
+        default book leads so the common answer is the first one, and
+        read-only books never appear because the daemon would refuse
+        the write anyway.
         """
         sources = self.app_window.eds.get_sources_info()
-        enabled_sources = [s for s in sources if s['enabled']]
+        read_only_uids = self.app_window.eds.read_only_source_uids()
+        enabled_sources = [s for s in sources if s['enabled'] and s['uid'] not in read_only_uids]
 
         if not enabled_sources:
             self.app_window.notify_error(_("No enabled address books found"))

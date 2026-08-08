@@ -297,11 +297,17 @@ class DaemonClient:
         return reply if reply else (False, "")
 
     def save_contact(self, vcard, uid=None, source_uid=None):
-        """Write a full vCard to a book; blocking, call from a worker."""
+        """Write a full vCard to a book; blocking, call from a worker.
+
+        Returns (success, reason); reason is a short key like read-only
+        when the daemon refused, empty when it worked.
+        """
         reply = self.call("SaveContact",
                           GLib.Variant("(sss)", (vcard, uid or "", source_uid or "")),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+                          GLib.VariantType("(bs)"))
+        if not reply:
+            return (False, "write-failed")
+        return (bool(reply[0]), reply[1])
 
     def delete_contact(self, uid):
         """Delete one contact; blocking, call from a worker."""
