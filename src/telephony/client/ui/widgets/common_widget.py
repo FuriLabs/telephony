@@ -334,7 +334,7 @@ def translate_phone_label(label):
     return LABELS.get(label, label)
 
 
-def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown"):
+def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown", source_map=None):
     """Populate a Gtk.ListBox with contact search result rows.
 
     Clears results_list, then appends one Adw.ActionRow per phone number of
@@ -351,11 +351,12 @@ def populate_contact_search_results(results_list, contacts, eds, is_added, on_ad
 
     has_results = False
 
-    source_map = {}
-    if eds:
-        sources = eds.get_sources_info()
-        for s in sources:
-            source_map[s['uid']] = s['name']
+    if source_map is None:
+        source_map = {}
+        if eds:
+            sources = eds.get_sources_info()
+            for s in sources:
+                source_map[s['uid']] = s['name']
 
     if contacts:
         for c in contacts:
@@ -388,6 +389,7 @@ def populate_contact_search_results(results_list, contacts, eds, is_added, on_ad
                     btn_add = Gtk.Button(icon_name="list-add-symbolic")
                     btn_add.add_css_class("flat")
                     btn_add.add_css_class("circular")
+                    btn_add.set_valign(Gtk.Align.CENTER)
                     btn_add.connect("clicked", lambda b, r=row: on_add(r))
                     row.add_suffix(btn_add)
 

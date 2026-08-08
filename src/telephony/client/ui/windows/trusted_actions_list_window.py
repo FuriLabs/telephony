@@ -162,6 +162,8 @@ class TrustedActionsListWindow(Adw.NavigationPage):
 
             self.search_timer = None
             self.search_token = 0
+            self._source_map = {}
+            run_in_background(self._load_source_map)
 
             self.content_box.append(search_box)
 
@@ -415,6 +417,13 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         self.overlay.add_toast(Adw.Toast.new(
             _("Contact removed (Click Save to commit)")))
 
+    def _load_source_map(self):
+        """Fetch the address book names once; blocking, call from a worker."""
+        names = {}
+        for source in self.eds.get_sources_info():
+            names[source['uid']] = source['name']
+        self._source_map = names
+
     def _on_search_changed(self, entry):
         """Handle search text change."""
         if self.search_timer:
@@ -469,8 +478,8 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             is_added=self._is_result_added,
             on_add=lambda row: self._on_result_activated(None, row),
             translate_label=translate_phone_label,
-            unknown_name=_("Unknown")
-        )
+            unknown_name=_("Unknown"),
+            source_map=self._source_map)
 
     def _on_result_activated(self, listbox, row):
         """Handle activation of a search result."""
