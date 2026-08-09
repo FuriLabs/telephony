@@ -200,12 +200,17 @@ def restart_ofono_service():
         logger.error(f"[SystemUtils] ofono restart error: {e}")
 
 
+def setprop(name, value):
+    """Write an Android property; blocking, call from a worker."""
+    try:
+        subprocess.run(["setprop", name, value], check=False)
+    except Exception as e:
+        logger.error(f"Failed to set the property {name}: {e}")
+
+
 def restart_ril_modem():
     """Restart the vendor RIL daemon; blocking, call from a worker."""
-    try:
-        subprocess.run(["setprop", "ctl.restart", "vendor.ril-daemon-mtk"], check=False)
-    except Exception as e:
-        logger.error(f"Failed to restart RIL modem: {e}")
+    setprop("ctl.restart", "vendor.ril-daemon-mtk")
 
 
 def save_modem_logs():
