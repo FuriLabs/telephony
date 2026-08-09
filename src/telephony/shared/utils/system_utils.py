@@ -180,6 +180,11 @@ def enable_location():
         logger.warning(f"Could not enable location: {e}")
 
 
+OFONO_BUS_NAME = "org.ofono"
+OFONO_WAIT_TRIES = 20
+OFONO_WAIT_STEP_SECONDS = 0.5
+
+
 def restart_ofono_service():
     """Restart the system ofono service; blocking, call from a worker.
 
@@ -188,6 +193,74 @@ def restart_ofono_service():
     """
     restart_systemd_service("ofono.service", Gio.BusType.SYSTEM)
 
+
+def wait_for_ofono():
+    """Wait until ofono answers on the system bus; blocking, call from a worker.
+
+    Bounded, and says so when it gives up: whoever waited carries on
+    regardless, so the wait is the point and the outcome is only worth
+    knowing about in the log.
+    """
+    bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+    for _ in range(OFONO_WAIT_TRIES):
+        try:
+            res = bus.call_sync(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+                "NameHasOwner", GLib.Variant("(s)", (OFONO_BUS_NAME,)),
+                GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
+            if res.unpack()[0]:
+                return
+        except Exception as e:
+            logger.debug(f"[SystemUtils] ofono name check failed: {e}")
+        time.sleep(OFONO_WAIT_STEP_SECONDS)
+    logger.warning("[SystemUtils] ofono did not answer within the wait")
+
+
+def restart_modemmanager():
+    """Restart ModemManager; blocking, call from a worker.
+
+    A system unit like ofono, so it goes to the system manager rather
+    than the session one every other service here lives on.
+    """
+    restart_systemd_service("ModemManager.service", Gio.BusType.SYSTEM)
+
+
+def getprop(name):
+    """Read an Android property, empty when it cannot be read; blocking, call from a worker."""
+    try:
+        result = subprocess.run(["getprop", name], capture_output=True, text=True)
+        return result.stdout.strip()
+    except Exception as e:
+        logger.debug(f"Could not read the property {name}: {e}")
+        return ""
+
+
+def is_vendor_radio_disabled():
+    """Return True when the device ships with its radio turned off; blocking, call from a worker."""
+    return getprop("persist.vendor.radio.disabled") == "1"
+
+
+def is_gsd_airplane_mode():
+    """Return True while the desktop reports airplane mode.
+
+    The setting daemon owns the rfkill switches and is the one that
+    knows the user asked for them to be off, so the answer comes from
+    there rather than from the kernel state it maintains.
+    """
+    try:
+        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        proxy = Gio.DBusProxy.new_sync(
+            bus, Gio.DBusProxyFlags.DO_NOT_AUTO_START, None,
+            "org.gnome.SettingsDaemon.Rfkill",
+            "/org/gnome/SettingsDaemon/Rfkill",
+            "org.gnome.SettingsDaemon.Rfkill",
+            None
+        )
+        airplane_mode = proxy.get_cached_property("AirplaneMode")
+        return bool(airplane_mode.unpack()) if airplane_mode else False
+    except Exception as e:
+        logger.debug(f"Could not read the airplane mode state: {e}")
+        return False
 
 def setprop(name, value):
     """Write an Android property; blocking, call from a worker."""

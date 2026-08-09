@@ -199,9 +199,10 @@ class App(Adw.Application):
             GLib.idle_add(self._present_incall_window)
             return
 
-        app_info = Gio.DesktopAppInfo.new(INCALL_DESKTOP_FILE)
-        if not app_info:
-            logger.error(f"[App] {INCALL_DESKTOP_FILE} is missing, no call window to show")
+        try:
+            app_info = Gio.DesktopAppInfo.new(INCALL_DESKTOP_FILE)
+        except TypeError as e:
+            logger.error(f"[App] {INCALL_DESKTOP_FILE} is missing, no call window to show: {e}")
             return
 
         try:

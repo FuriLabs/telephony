@@ -105,9 +105,10 @@ class DaemonApp(Gio.Application):
         Launching an instance that already runs reaches the running
         one, so a second call is not a second window.
         """
-        app_info = Gio.DesktopAppInfo.new(INCALL_DESKTOP_FILE)
-        if not app_info:
-            logger.error(f"[Daemon] {INCALL_DESKTOP_FILE} is missing, no call window to show")
+        try:
+            app_info = Gio.DesktopAppInfo.new(INCALL_DESKTOP_FILE)
+        except TypeError as e:
+            logger.error(f"[Daemon] {INCALL_DESKTOP_FILE} is missing, no call window to show: {e}")
             return
 
         try:

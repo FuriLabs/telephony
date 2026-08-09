@@ -31,7 +31,7 @@ from telephony.shared.constants import SHEET_CONTENT_WIDTH
 from telephony.client.managers.lockscreen_manager import LockScreenManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.utils.ofono_direct_utils import hangup_all_direct
-from telephony.shared.utils.system_utils import save_modem_logs, press_power_button
+from telephony.shared.utils.system_utils import save_modem_logs, press_power_button, is_gsd_airplane_mode
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.call_state_utils import (count_lines, conference_paths, held_single_paths, held_conference_paths)
 
@@ -341,11 +341,22 @@ class InCallWindow(Adw.Window):
         act_box.append(self.btn_hangup_act)
         self.controls_stack.add_named(act_box, "active")
 
-        self.err_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20, valign=Gtk.Align.CENTER, halign=Gtk.Align.CENTER)
+        self.err_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.err_box.set_vexpand(True)
+        self.err_box.set_hexpand(True)
         self.err_box.add_css_class("error-box")
+        self.err_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20,
+                                   valign=Gtk.Align.CENTER, vexpand=True)
+        self.err_box.append(self.err_content)
         lbl_err = Gtk.Label(label=_("Modem Recovery"), css_classes=["error-title"])
         self.lbl_err_msg = Gtk.Label(label=_("The modem is not working correctly."), css_classes=["body", "error-text"])
         self.lbl_err_msg.set_wrap(True)
+        self.lbl_err_detail = Gtk.Label(css_classes=["error-detail"])
+        self.lbl_err_detail.set_wrap(True)
+        self.lbl_err_detail.set_justify(Gtk.Justification.CENTER)
+        self.lbl_err_detail.set_label(
+            _("Calls, messages and mobile data will not work until it is restarted.\n\n"
+              "Restarting takes about 30 seconds and ends any call in progress."))
         self.btn_restart = Gtk.Button(label=_("Recover Modem"))
         self.btn_restart.add_css_class("destructive-action")
         self.btn_restart.add_css_class("pill")
@@ -361,11 +372,12 @@ class InCallWindow(Adw.Window):
         self.btn_reboot.set_size_request(240, 60)
         self.btn_reboot.set_visible(False)
         self.btn_reboot.connect("clicked", lambda b: GLib.idle_add(lambda: press_power_button() or False))
-        self.err_box.append(lbl_err)
-        self.err_box.append(self.lbl_err_msg)
-        self.err_box.append(self.btn_restart)
-        self.err_box.append(self.btn_save_logs)
-        self.err_box.append(self.btn_reboot)
+        self.err_content.append(lbl_err)
+        self.err_content.append(self.lbl_err_msg)
+        self.err_content.append(self.lbl_err_detail)
+        self.err_content.append(self.btn_restart)
+        self.err_content.append(self.btn_save_logs)
+        self.err_content.append(self.btn_reboot)
         self.controls_stack.add_named(self.err_box, "error")
 
     def _mk_action_pill(self, icon, label, on_click, style="stack-pill"):
@@ -848,6 +860,10 @@ class InCallWindow(Adw.Window):
 
         if self.in_recovery_mode:
             if not self.ofono.active_calls:
+                if not self.is_locked and not self.is_visible():
+                    logger.info("[InCall] Showing the recovery page held back by the lock screen")
+                    self.defer_present = False
+                    self.present()
                 return
             logger.info("[InCall] Call appeared while on the recovery page, showing call UI")
             self.in_recovery_mode = False
@@ -1025,6 +1041,9 @@ class InCallWindow(Adw.Window):
 
     def _clean_reset(self):
         """Reset window state to idle."""
+        self.main_box.remove_css_class("recovery-mode")
+        self.info_box.set_visible(True)
+        self.controls_stack.set_vexpand(False)
         self._stop_timers()
         self._next_knock_time = 0
         if self._hangup_verify_id:
@@ -1390,6 +1409,9 @@ class InCallWindow(Adw.Window):
         self.btn_restart.set_sensitive(True)
         self.btn_reboot.set_visible(False)
         self.controls_stack.set_visible_child_name("error")
+        self.main_box.add_css_class("recovery-mode")
+        self.info_box.set_visible(False)
+        self.controls_stack.set_vexpand(True)
 
         app = Gio.Application.get_default()
         auto = self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
@@ -1400,7 +1422,16 @@ class InCallWindow(Adw.Window):
             self.lock_manager.show_stuck_notification()
 
     def enter_recovery_mode(self, reason, failed=False):
-        """Show the modem recovery page; it stays until the modem works again."""
+        """Show the modem recovery page; it stays until the modem works again.
+
+        Whether this window was ever on screen used to depend on how its
+        process came to exist, since filling the page in is not the same
+        as asking to be seen. A recovery reaching a process that was
+        already running left it repairing the modem invisibly.
+
+        A locked phone is told about it by notification instead, so the
+        page is prepared and left waiting rather than shown to nobody.
+        """
         if not self.in_recovery_mode and not self.in_error_mode:
             self.audio.play_error_alert()
             self.lbl_name.set_text("")
@@ -1419,17 +1450,36 @@ class InCallWindow(Adw.Window):
         self.btn_restart.set_sensitive(True)
         self.btn_reboot.set_visible(failed)
         self.controls_stack.set_visible_child_name("error")
+        self.main_box.add_css_class("recovery-mode")
+        self.info_box.set_visible(False)
+        self.controls_stack.set_vexpand(True)
+        if self.is_locked:
+            logger.info("[InCall] Recovery page ready but the phone is locked, notifying instead")
+            self.lock_manager.show_stuck_notification()
+            return
+        logger.info("[InCall] Showing the recovery page")
+        self.defer_present = False
+        self.present()
 
     def exit_recovery_mode(self):
-        """Leave the recovery page once the modem works again."""
+        """Leave the recovery page once the modem works again.
+
+        Resetting only hides the window, and this window is its own
+        process, so a repair that ended without a call ending left a
+        process standing with nothing on screen to explain it.
+        """
         if not self.in_recovery_mode:
             return
         self.in_recovery_mode = False
         self.btn_reboot.set_visible(False)
+        self.main_box.remove_css_class("recovery-mode")
+        self.info_box.set_visible(True)
+        self.controls_stack.set_vexpand(False)
         if self.ofono.active_calls:
             self.update_state()
             return
         self._clean_reset()
+        self._close_when_idle()
 
     def _on_recovery_done(self, success):
         """React to the recovery verdict while the page is showing."""
@@ -1445,9 +1495,17 @@ class InCallWindow(Adw.Window):
             self.lock_manager.show_stuck_notification()
 
     def on_modem_recovery_click(self, btn):
-        """Restart the modem stack from the recovery page."""
+        """Restart the modem stack from the recovery page.
+
+        Restarting cannot power on a radio that was switched off, so a
+        recovery asked for during airplane mode would only report a
+        failure over something that is not broken.
+        """
         app = Gio.Application.get_default()
         if not app:
+            return
+        if is_gsd_airplane_mode():
+            self.lbl_err_msg.set_text(_("Airplane mode is on"))
             return
         if app.request_auto_recovery(self._on_recovery_done):
             self.btn_restart.set_sensitive(False)

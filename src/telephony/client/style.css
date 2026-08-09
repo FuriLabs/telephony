@@ -127,8 +127,16 @@ stack {
 .bg-action { padding: 6px 10px; font-size: 14px; }
 
 /* Error message box styling: A visually distinct dark red container for displaying critical errors. */
-.error-box { background-color: #3d1414; border-radius: 15px; padding: 20px; }
+/* The box keeps its own colours in either theme, so anything inside it has to
+   state its own as well: a button left to the theme is dark on dark in light mode. */
+.error-box { background-color: #3d1414; padding: 24px; }
+.recovery-mode { background-color: #3d1414; }
+.recovery-mode scrolledwindow, .recovery-mode viewport { background-color: transparent; }
 .error-text { color: #ffffff; }
+.error-detail { color: #e8c4c4; font-size: 13px; }
+.error-box .pill:not(.destructive-action) { background-color: #5a2020; color: #ffffff; }
+.error-box .pill:not(.destructive-action):hover { background-color: #6d2828; }
+.error-box .pill:not(.destructive-action):active { background-color: #4a1a1a; }
 .error-title { font-weight: 800; font-size: 24px; color: #ff7b7b; }
 
 /* Utility class for rounded corners: standardizes the corner radius across various custom elements. */

@@ -37,6 +37,8 @@ from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from telephony.shared.utils.region_utils import detect_region, set_custom_region
+from telephony.shared.utils.system_utils import (is_gsd_airplane_mode,
+                                                 is_vendor_radio_disabled)
 from telephony.shared.constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
 from gettext import gettext as _, ngettext
@@ -95,6 +97,7 @@ class TelephonyCore:
         self._recovery_pending_unlock = False
         self._net_nudge_timer = None
         self._denied_timer = None
+        self._airplane_sub = None
         self._sim_pin_notified = False
         self._denied_notified = False
 
@@ -129,6 +132,7 @@ class TelephonyCore:
 
         self.sys_state = SystemStateService()
         self.sys_state.connect('lock-state-changed', self._on_lock_state_changed)
+        self._watch_airplane_mode()
         self.ofono.connect('dial-availability-changed', self._watch_modem_health)
         self.ofono.connect('connection-status', self._watch_modem_health)
         self.ofono.connect('network-status-changed', self._watch_network_status)
@@ -386,23 +390,71 @@ class TelephonyCore:
             self._dismiss_recovery_surface()
 
     def _on_modem_unavailable(self):
-        """Act on the dead modem: silent recovery first, the screen otherwise."""
+        """Act on the dead modem, unless the radio is off on purpose."""
         self._modem_watch_timer = None
         if not self.ofono.modem_health_degraded():
             return False
+
+        run_in_background(self._radio_off_by_choice, on_complete=self._decide_modem_recovery,
+                          on_error=lambda error: self._decide_modem_recovery(False))
+        return False
+
+    def _watch_airplane_mode(self):
+        """Notice the radio being switched back on.
+
+        A modem that is gone reports nothing, so nothing would ask
+        again after the radio was found switched off, and a recovery
+        that was declined would never be offered once it was wanted.
+        The switch itself is what says the answer changed.
+        """
+        try:
+            bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+            self._airplane_sub = bus.signal_subscribe(
+                "org.gnome.SettingsDaemon.Rfkill",
+                "org.freedesktop.DBus.Properties", "PropertiesChanged",
+                "/org/gnome/SettingsDaemon/Rfkill", None,
+                Gio.DBusSignalFlags.NONE, self._on_airplane_mode_changed, None)
+        except Exception as e:
+            logger.debug(f"[App] Cannot watch the airplane switch: {e}")
+
+    def _on_airplane_mode_changed(self, *_args):
+        """Rearm the modem watchdog when the airplane switch moves."""
+        self._watch_modem_health()
+
+    def _radio_off_by_choice(self):
+        """Return True when the radio is off because it was asked to be; blocking, call from a worker."""
+        return is_gsd_airplane_mode() or is_vendor_radio_disabled()
+
+    def _decide_modem_recovery(self, off_by_choice):
+        """Recover the modem silently, or show the screen, or leave it alone.
+
+        Reading the radio state runs off the main loop because asking
+        the vendor property means a process, and the answer is only
+        needed on the rare path where the modem already looks dead.
+
+        Leaving a switched-off radio alone means the watchdog stops
+        here, so the radio coming back on is what starts it again.
+        """
+        if off_by_choice:
+            logger.info("[App] Modem is unavailable because the radio is off, not offering recovery")
+            return
+
+        if not self.ofono.modem_health_degraded():
+            return
 
         if self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true":
             self.request_auto_recovery()
         else:
             self._surface_modem_recovery()
-        return False
 
     def _describe_modem_problem(self):
-        """One plain sentence about what exactly is broken."""
+        """Say which part stopped, since they are repaired the same way but do not look alike."""
         if not self.ofono.monitor.connected:
-            return _("The modem is not responding.")
+            return _("The modem service is not responding.")
         if self.ofono.voice_interface_missing():
-            return _("The modem lost its calling service.")
+            return _("The modem is answering, but it lost its calling service.")
+        if self.ofono.modem_online is False:
+            return _("The modem is answering, but its radio is switched off.")
         return _("The modem is not working correctly.")
 
     def _surface_modem_recovery(self, failed=False):
@@ -439,13 +491,16 @@ class TelephonyCore:
         The modem is watched here but the recovery page belongs to the
         call window, which runs as its own process, so this reports the
         state instead of reaching into the window.
+
+        Reporting is all it does. Bringing the window up was decided
+        here as well, before the caller had decided whether the user
+        should see anything, which is how a locked phone was told to
+        show a screen and send a notification instead of it.
         """
         self.recovery_state = (active, message, failed)
         if self.dbus_daemon:
             self.dbus_daemon.emit_signal(
                 "RecoveryStateChanged", GLib.Variant("(bsb)", (active, message, failed)))
-        if active:
-            self.ui.show_incall_ui()
 
     def _on_lock_state_changed(self, _service, is_locked):
         """Show the pending recovery screen once the user unlocks."""
