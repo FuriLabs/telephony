@@ -592,7 +592,11 @@ class TelephonyDaemonDBus:
             path, message = result if result else (None, "error")
             invocation.return_value(GLib.Variant("(ss)", (path or "", message)))
 
-        run_in_background(task, on_complete=done)
+        def failed(error):
+            logger.error(f"[Daemon] Attachment preparation failed: {error}")
+            invocation.return_value(GLib.Variant("(ss)", ("", str(error))))
+
+        run_in_background(task, on_complete=done, on_error=failed)
 
     def _handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
@@ -1526,8 +1530,11 @@ class TelephonyDaemonDBus:
         if self.db:
             try:
                 entries = json.loads(parameters.unpack()[0])
-                added, updated = self.db.import_blocklist(entries)
-            except ValueError as e:
+                if not isinstance(entries, list):
+                    raise ValueError(f"expected a list of entries, got {type(entries).__name__}")
+                added, updated = self.db.import_blocklist(
+                    [e for e in entries if isinstance(e, dict)])
+            except Exception as e:
                 logger.error(f"[DBus] Blocklist import unreadable: {e}")
         invocation.return_value(GLib.Variant("(uu)", (added, updated)))
 

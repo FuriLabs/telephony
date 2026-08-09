@@ -1199,6 +1199,8 @@ class OfonoManager(GObject.Object):
             return (True, None)
         except Exception as e:
             logger.error(f"[OfonoManager] Transfer failed: {e}")
+            return (False, str(e))
+
     def _load_emergency_numbers(self):
         """Seed the network emergency number list; blocking, call from a worker.
 

@@ -168,6 +168,10 @@ class ContactsView(Adw.Bin):
             GLib.source_remove(self._dup_timer)
             self._dup_timer = None
 
+        if self.search_timer:
+            GLib.source_remove(self.search_timer)
+            self.search_timer = None
+
         for obj, sig_id in self.signal_ids:
             if obj.handler_is_connected(sig_id):
                 obj.disconnect(sig_id)
