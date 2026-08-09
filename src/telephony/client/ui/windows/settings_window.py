@@ -33,6 +33,9 @@ from telephony.client.ui.windows.import_export_window import ImportExportDialog
 from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row, wire_blocklist_switch_locks)
 
 
+PENDING_BOOKS_TIMEOUT_SECONDS = 5
+
+
 class SettingsWindow(Adw.Dialog):
     """Settings dialog holding every settings page in one navigation view.
 
@@ -53,6 +56,9 @@ class SettingsWindow(Adw.Dialog):
         self.mode_calls = bool(main_window.show_calls_mode)
         self.mode_messages = bool(main_window.show_messages_mode)
         self.mode_contacts = bool(main_window.show_contacts_mode)
+        self._eds_signal_id = None
+        self._pending_books_signature = None
+        self._pending_books_timer = None
 
         self.set_content_width(SHEET_CONTENT_WIDTH)
         self.set_content_height(750)
@@ -530,6 +536,63 @@ class SettingsWindow(Adw.Dialog):
         self.sources_state = self.eds.get_sources_info()
         self._build_sources_list(rebuild_dropdown=True)
 
+        if self._eds_signal_id is None:
+            self._eds_signal_id = self.eds.connect(
+                'address-books-changed', self._on_books_changed)
+
+    @staticmethod
+    def _sources_signature(state):
+        """An order-sensitive snapshot of a book list for change detection."""
+        return tuple((s['uid'], bool(s.get('enabled')), s.get('rank'))
+                     for s in (state or []))
+
+    def _mark_pending_books(self):
+        """Remember the book layout this page just wrote, and time it out.
+
+        A change persisted here echoes back from the daemon, possibly
+        through an unsettled intermediate first. Recording the expected
+        result lets the echo be recognised and ignored until it lands,
+        so the page never redraws from its own change; the timer clears
+        the mark if the daemon never reports the expected layout.
+        """
+        self._pending_books_signature = self._sources_signature(self.sources_state)
+        if self._pending_books_timer is not None:
+            GLib.source_remove(self._pending_books_timer)
+        self._pending_books_timer = GLib.timeout_add_seconds(
+            PENDING_BOOKS_TIMEOUT_SECONDS, self._clear_pending_books)
+
+    def _clear_pending_books(self):
+        """Stop waiting for this page's own book change to echo back."""
+        self._pending_books_signature = None
+        self._pending_books_timer = None
+        return False
+
+    def _on_books_changed(self, _eds):
+        """Reflect a book change, live from anywhere, without fighting our own.
+
+        The daemon is authoritative: a change made here is recognised
+        when its layout echoes back and redraws nothing, its unsettled
+        intermediates are ignored while the change is still pending, and
+        anything else is a genuine change from another process and is
+        drawn at once.
+        """
+        if self.source_rows is None:
+            return False
+        fresh = self.eds.get_sources_info()
+        signature = self._sources_signature(fresh)
+
+        if signature == self._pending_books_signature:
+            self._clear_pending_books()
+            return False
+        if self._pending_books_signature is not None:
+            return False
+        if signature == self._sources_signature(self.sources_state):
+            return False
+
+        self.sources_state = fresh
+        self._build_sources_list(rebuild_dropdown=True)
+        return False
+
     def _build_notifications_page(self, page):
         """Build the notifications category page."""
         grp_notif = Adw.PreferencesGroup(title=_("Notification Exceptions"))
@@ -761,6 +824,7 @@ class SettingsWindow(Adw.Dialog):
 
     def _persist_sources(self):
         """Persist address book order, enablement and default in the background."""
+        self._mark_pending_books()
         state = [dict(item) for item in self.sources_state]
         run_in_background(self.eds.update_sources_config, state)
         default = next((item for item in state if item.get('is_system_default')), None)
@@ -855,6 +919,13 @@ class SettingsWindow(Adw.Dialog):
 
     def _on_settings_unmap(self, widget):
         """Flush a pending volume commit so closing quickly cannot drop it."""
+        if self._eds_signal_id is not None:
+            if self.eds.handler_is_connected(self._eds_signal_id):
+                self.eds.disconnect(self._eds_signal_id)
+            self._eds_signal_id = None
+        if self._pending_books_timer is not None:
+            GLib.source_remove(self._pending_books_timer)
+            self._pending_books_timer = None
         if self._volume_commit_timer is not None:
             GLib.source_remove(self._volume_commit_timer)
             self._volume_commit_timer = None
@@ -990,7 +1061,7 @@ class SettingsWindow(Adw.Dialog):
             return
         self.entry_new_ab.set_text("")
         self.row_add_ab.set_expanded(False)
-        run_in_background(self.eds.create_local_addressbook, name,
+        run_in_background(self.main_window.daemon.create_address_book, name,
                           on_complete=lambda ok: self._on_addressbook_created(ok, name))
 
     def _on_addressbook_created(self, success, name):
@@ -1136,12 +1207,16 @@ class SettingsWindow(Adw.Dialog):
             self._persist_sources()
 
     def _toggle_source(self, uid, active):
-        """Update enabled state of a source."""
-        for i, item in enumerate(self.sources_state):
+        """Update enabled state of a source, keeping it in place.
+
+        A disabled book stays where it sits with its move buttons greyed;
+        the priority order only ranks the enabled books, so its position
+        is cosmetic and holding it steady keeps enabling and disabling
+        from shuffling the list.
+        """
+        for item in self.sources_state:
             if item['uid'] == uid:
                 item['enabled'] = active
-                if not active:
-                    self.sources_state.append(self.sources_state.pop(i))
                 self._build_sources_list(rebuild_dropdown=True)
                 self._persist_sources()
                 break

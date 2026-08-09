@@ -440,3 +440,24 @@ class DaemonClient:
         reply = self.call("DeleteAddressBook", GLib.Variant("(s)", (source_uid,)),
                           GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return bool(reply and reply[0])
+
+    def get_address_books(self):
+        """Return the daemon's address book list, or None when unreachable.
+
+        Blocking, call from a worker. This is the window's window onto
+        the books; the window never reads Evolution itself.
+        """
+        reply = self.call("GetAddressBooks", None, GLib.VariantType("(s)"))
+        if not reply:
+            return None
+        try:
+            return json.loads(reply[0])
+        except Exception as e:
+            logger.error(f"[DaemonClient] Bad address book list: {e}")
+            return None
+
+    def create_address_book(self, name):
+        """Ask the daemon to create a local address book; blocking, from a worker."""
+        reply = self.call("CreateAddressBook", GLib.Variant("(s)", (name,)),
+                          GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        return bool(reply and reply[0])

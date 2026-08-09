@@ -24,6 +24,7 @@ from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
 from telephony.client.ui.widgets.common_widget import translate_phone_label, close_dialog
+from telephony.shared.constants import CONTACT_SHEET_WIDTH, CONTACT_SHEET_HEIGHT
 
 
 class ContactEditor(Adw.Dialog):
@@ -60,11 +61,16 @@ class ContactEditor(Adw.Dialog):
 
         self.mode = "VIEW" if self.uid else "EDIT"
 
-        self.set_content_width(380)
-        self.set_content_height(650)
+        self.set_content_width(CONTACT_SHEET_WIDTH)
+        self.set_content_height(CONTACT_SHEET_HEIGHT)
 
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
+
+        self.nav_view = Adw.NavigationView()
+        self.toast_overlay.set_child(self.nav_view)
+        self.editor_page = Adw.NavigationPage(title=_("Contact Details"))
+        self.nav_view.add(self.editor_page)
 
         self.phone_entries = []
         self.email_entries = []
@@ -299,7 +305,7 @@ class ContactEditor(Adw.Dialog):
             grp_danger.add(row_del)
             page.add(grp_danger)
 
-        self.toast_overlay.set_child(view)
+        self.editor_page.set_child(view)
 
     def _add_address_books_group(self, page):
         grp = Adw.PreferencesGroup(title=_("Address Books"))
@@ -866,12 +872,11 @@ class ContactEditor(Adw.Dialog):
                     self._saving_in_progress = False
 
                     def on_wizard_done(force_save=False):
-                        close_dialog(self)
                         if force_save:
                             self.on_save(self.btn_save, force=True)
 
-                    win = DuplicateResolutionWindow(conflicts, self.eds, self.main_window.daemon, on_wizard_done)
-                    win.present(self)
+                    page = DuplicateResolutionWindow(conflicts, self.eds, self.main_window.daemon, on_wizard_done)
+                    self.nav_view.push(page)
                     return
 
             self._proceed_with_save(phones_to_save, selected_sources)

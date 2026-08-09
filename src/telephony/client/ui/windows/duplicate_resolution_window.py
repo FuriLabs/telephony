@@ -25,19 +25,20 @@ from gettext import gettext as _
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.vcard_utils import unfold_vcard
 from telephony.client.ui.widgets.common_widget import close_dialog
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
+from telephony.shared.constants import CONTACT_SHEET_WIDTH, CONTACT_SHEET_HEIGHT
 
 
-class DuplicateResolutionWindow(Adw.Dialog):
-    """Bottom sheet resolving contact duplicates.
+class DuplicateResolutionWindow(Adw.NavigationPage):
+    """Page resolving contact duplicates, one conflict at a time.
 
-    Shows conflicts one by one or allows merging all.
+    Lives inside a navigation stack so the contact editor can push it
+    into the sheet it already owns instead of stacking a second sheet
+    on top of it. Leaving pops back to the editor with its fields
+    untouched, which is what makes the forced save still find them.
     """
 
     def __init__(self, conflicts, eds_manager, daemon, on_done_callback):
         super().__init__(title=_("Duplicate Contact"))
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(600)
 
         self.conflicts = conflicts
         self.eds = eds_manager
@@ -45,18 +46,15 @@ class DuplicateResolutionWindow(Adw.Dialog):
         self.on_done = on_done_callback
         self.current_index = 0
         self.keep_pending_edit = False
+        self._done_called = False
 
         if not self.eds.is_ready:
             logger.warning("[DuplicateResolutionWindow] Initialized while EDS is not ready!")
 
-        self.connect("closed", lambda d: self._call_done())
+        self.connect("hidden", lambda p: self._call_done())
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-        self.set_child(self.stack)
-
-        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.stack.add_named(self.main_box, "main")
 
         header = Adw.HeaderBar()
 
@@ -65,7 +63,13 @@ class DuplicateResolutionWindow(Adw.Dialog):
         self.btn_merge_all.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_merge_all(b) or False))
         header.pack_end(self.btn_merge_all)
 
-        self.main_box.append(header)
+        view = Adw.ToolbarView()
+        view.add_top_bar(header)
+        view.set_content(self.stack)
+        self.set_child(view)
+
+        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.stack.add_named(self.main_box, "main")
 
         self.lbl_status = Gtk.Label()
         self.lbl_status.set_margin_top(12)
@@ -113,7 +117,7 @@ class DuplicateResolutionWindow(Adw.Dialog):
             child = next_child
 
         if self.current_index >= len(self.conflicts):
-            close_dialog(self)
+            self._leave()
             return
 
         self.update_status()
@@ -171,8 +175,47 @@ class DuplicateResolutionWindow(Adw.Dialog):
 
             self.content_box.append(card)
 
+    def present_standalone(self, parent):
+        """Show the page as its own sheet, for entries with no editor.
+
+        A closing dialog does not hide its pages, so the sheet reports
+        the completion itself, otherwise dismissing it would leave the
+        duplicates banner claiming conflicts that were already handled.
+        """
+        nav_view = Adw.NavigationView()
+        nav_view.add(self)
+        sheet = Adw.Dialog(title=self.get_title())
+        sheet.set_content_width(CONTACT_SHEET_WIDTH)
+        sheet.set_content_height(CONTACT_SHEET_HEIGHT)
+        sheet.set_child(nav_view)
+        sheet.connect("closed", lambda d: self._call_done())
+        sheet.present(parent)
+
+    def _leave(self):
+        """Leave the page, however the resolution finished.
+
+        Pushed by the contact editor the page pops back to it, but
+        opened from the duplicates banner it is the only page in its
+        stack, where popping does nothing and the sheet has to close.
+        """
+        nav = self.get_ancestor(Adw.NavigationView)
+        if nav and nav.get_visible_page() is self and nav.get_previous_page(self):
+            nav.pop()
+            return
+        dialog = self.get_ancestor(Adw.Dialog)
+        if dialog:
+            close_dialog(dialog)
+
     def _call_done(self):
-        """Invoke the completion callback, forwarding a pending editor save."""
+        """Invoke the completion callback, forwarding a pending editor save.
+
+        Every exit runs through the page being hidden, whether that is
+        the back button, the back gesture or a finished merge, so the
+        callback is guarded to fire exactly once.
+        """
+        if self._done_called:
+            return
+        self._done_called = True
         if not self.on_done:
             return
         if self.keep_pending_edit:
@@ -330,4 +373,4 @@ class DuplicateResolutionWindow(Adw.Dialog):
 
     def _finish_merge(self):
         self.spinner.stop()
-        close_dialog(self)
+        self._leave()

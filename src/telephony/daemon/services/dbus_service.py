@@ -169,6 +169,10 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="source_uid" direction="in"/>
       <arg type="b" name="success" direction="out"/>
     </method>
+    <method name="CreateAddressBook">
+      <arg type="s" name="name" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
 
     <!-- Import operations -->
     <method name="ImportChatty">
@@ -335,6 +339,7 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="reason"/>
     </signal>
     <signal name="ContactsChanged"/>
+    <signal name="AddressBooksChanged"/>
     <signal name="BlocklistChanged"/>
     <signal name="HistoryChanged"/>
     <method name="GetTelephonyState">
@@ -826,6 +831,7 @@ class TelephonyDaemonDBus:
 
             "ClearEverything": self._handle_cleareverything,
             "DeleteAddressBook": self._handle_deleteaddressbook,
+            "CreateAddressBook": self._handle_createaddressbook,
             "ImportChatty": self._handle_importchatty,
             "ImportLocalCalls": self._handle_importlocalcalls,
             "ImportAndroidSms": self._handle_importandroidsms,
@@ -1231,12 +1237,12 @@ class TelephonyDaemonDBus:
     def _is_protected_source(self, source_uid, log_template):
         """Return True when the source must not be modified via CLI.
 
-        log_template must contain a {name} placeholder which is filled with
-        the protected source name for the refusal warning.
+        Protection is by name: Andromeda Contacts keeps its uid per
+        device, and the system book is the user's writable Personal
+        book, not a protected one. log_template must contain a {name}
+        placeholder which is filled with the protected source name for
+        the refusal warning.
         """
-        if source_uid == "system-address-book":
-            logger.warning(log_template.format(name="system-address-book"))
-            return True
         if not self.eds:
             return False
         sources = self.eds.get_sources_info()
@@ -1247,23 +1253,27 @@ class TelephonyDaemonDBus:
         return False
 
     def _is_protected_contact_source(self, source_uid):
-        """Return True when a contact's source is protected, without logging."""
-        if source_uid == "system-address-book":
-            return True
+        """Return True when a contact's source is protected, without logging.
+
+        The loaded sources answer first; a book that appeared after they
+        were loaded is not in there yet, so the registry decides instead
+        and a sync book set up mid-session is protected from the start.
+        """
         with self.eds.sources_lock:
             info = self.eds.sources.get(source_uid)
-        return bool(info) and info.get('name') == "Andromeda Contacts"
+        if info:
+            return info.get('name') == "Andromeda Contacts"
+        for item in self.eds.get_sources_info():
+            if item.get('uid') == source_uid:
+                return item.get('name') == "Andromeda Contacts"
+        return False
 
     def _is_protected_contact(self, contact, uid, verb):
         """Return True when the contact lives in a protected source.
 
         Logs the exact per-verb refusal warning used by the CLI handlers.
         """
-        s_uid = contact.get('source_uid')
-        if s_uid == "system-address-book":
-            logger.warning(f"[DBus] Refusing to {verb} system-address-book Contact {uid} via CLI")
-            return True
-        if self._is_protected_contact_source(s_uid):
+        if self._is_protected_contact_source(contact.get('source_uid')):
             logger.warning(f"[DBus] Refusing to {verb} Andromeda Contact {uid} via CLI")
             return True
         return False
@@ -1324,6 +1334,24 @@ class TelephonyDaemonDBus:
                 logger.warning(f"[DBus] Config removal failed: {e}")
 
         self._run_task_then_reply(invocation, task)
+
+    def _handle_createaddressbook(self, parameters, invocation):
+        """Handle CreateAddressBook command."""
+        name = parameters.unpack()[0]
+
+        def task():
+            if not self.eds or not name:
+                return False
+            return self.eds.create_local_addressbook(name)
+
+        def done(success):
+            invocation.return_value(GLib.Variant("(b)", (bool(success),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Create address book failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        run_in_background(task, on_complete=done, on_error=failed)
 
     def _handle_deleteaddressbook(self, parameters, invocation):
         """Handle DeleteAddressBook command."""

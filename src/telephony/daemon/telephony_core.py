@@ -44,6 +44,8 @@ from gettext import gettext as _, ngettext
 MODEM_UNAVAILABLE_DELAY_SECONDS = 60
 BOOT_UNAVAILABLE_DELAY_SECONDS = 5
 STARTUP_MODEM_CHECK_SECONDS = 15
+VOICEMAIL_CONTACT_UID_PREFIX = "telephony-voicemail-"
+SYSTEM_ADDRESS_BOOK_UID = "system-address-book"
 NETWORK_NUDGE_DELAY_SECONDS = 300
 DENIED_NOTIFY_DELAY_SECONDS = 120
 MMS_NOTIFICATION_DELAY_MS = 150
@@ -87,6 +89,7 @@ class TelephonyCore:
         self._hangup_requested_at = 0.0
         self._voicemail_last = (False, 0)
         self._vm_contact_busy = False
+        self._vm_contact_number = None
         self._modem_watch_timer = None
         self._modem_notified = False
         self._auto_recovery_running = False
@@ -163,6 +166,8 @@ class TelephonyCore:
             "HistoryChanged", None))
         self.eds.connect('contacts-loaded', lambda *_args: self.dbus_daemon.emit_signal(
             "ContactsChanged", None))
+        self.eds.connect('address-books-changed', lambda *_args: self.dbus_daemon.emit_signal(
+            "AddressBooksChanged", None))
 
     def _on_hangup_requested(self, _manager):
         """Remember that this side asked for a hangup, whichever surface did."""
@@ -542,23 +547,34 @@ class TelephonyCore:
         """Create a Voicemail contact for the mailbox number when missing.
 
         Create-only by design: when the number already belongs to any
-        contact under any name, that reference is left alone.
+        contact under any name, that reference is left alone. The
+        contact carries a uid derived from the number, so a repeat save
+        rewrites that one contact instead of minting another, and the
+        check reads the stored contacts rather than the in-memory map,
+        which trails a write by the time a view takes to stream it back.
         """
         if not self.ofono or not self.eds or not self.eds.is_ready:
             return
         number = self.ofono.voicemail_number()
         if not number or self._vm_contact_busy:
             return
+        if number == self._vm_contact_number:
+            return
         self._vm_contact_busy = True
 
         def task():
             if self.eds.get_contact_name(number):
                 return False
-            vcard = f"BEGIN:VCARD\nVERSION:3.0\nFN:{_('Voicemail')}\nTEL;TYPE=VOICE:{number}\nEND:VCARD"
-            return self.eds.save_contact(vcard, source_uid="system-address-book")
+            if self.eds.search_contacts(normalize_number(number) or number):
+                return False
+            uid = f"{VOICEMAIL_CONTACT_UID_PREFIX}{normalize_number(number) or number}"
+            vcard = (f"BEGIN:VCARD\nVERSION:3.0\nFN:{_('Voicemail')}\n"
+                     f"TEL;TYPE=VOICE:{number}\nUID:{uid}\nEND:VCARD")
+            return self.eds.save_contact(vcard, source_uid=SYSTEM_ADDRESS_BOOK_UID)
 
         def done(created):
             self._vm_contact_busy = False
+            self._vm_contact_number = number
             if created:
                 logger.info("[App] Voicemail contact created in the Personal book")
 

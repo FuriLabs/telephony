@@ -702,7 +702,7 @@ class MainWindow(Adw.Window):
         if not self.pending_conflicts:
             return
         win = DuplicateResolutionWindow(self.pending_conflicts, self.eds, self.daemon, self.on_resolution_done)
-        win.present(self)
+        win.present_standalone(self)
 
     def on_resolution_done(self):
         """Callback when duplicate resolution is done."""
@@ -726,15 +726,9 @@ class MainWindow(Adw.Window):
         """Force address book backends to sync, falling back to a local reload."""
 
         def task():
-            refreshed = self.daemon.refresh_contacts()
-            discovered = self.eds.sync_available_sources()
-            return refreshed, discovered
+            return self.daemon.refresh_contacts()
 
-        def done(result):
-            refreshed, discovered = result
-            if discovered:
-                self._manual_sync_active = True
-                return
+        def done(refreshed):
             if refreshed:
                 self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
                 return
@@ -917,7 +911,13 @@ class MainWindow(Adw.Window):
                     logger.error(f"[MainWindow] Failed to add number {item.number} to contact {uid}")
                     self.notify_error(_("Failed to add number"))
 
-            run_in_background(self.eds.add_number_to_contact, uid, item.number, on_complete=done)
+            def add_task():
+                vcard = self.eds.build_number_added_vcard(uid, item.number)
+                if not vcard:
+                    return False
+                return self.daemon.save_contact(vcard, uid=uid)[0]
+
+            run_in_background(add_task, on_complete=done)
 
         picker = ContactPicker(
             self.eds,

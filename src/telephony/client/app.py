@@ -19,9 +19,6 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
-gi.require_version('EDataServer', '1.2')
-gi.require_version('EBookContacts', '1.2')
-gi.require_version('EBook', '1.2')
 
 from gi.repository import Gtk, Adw, Gio, Gdk, GLib, Gst, GObject
 from telephony.shared.utils.log_utils import logger
