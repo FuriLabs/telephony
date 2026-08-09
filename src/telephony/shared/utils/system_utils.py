@@ -200,12 +200,17 @@ def restart_ofono_service():
         logger.error(f"[SystemUtils] ofono restart error: {e}")
 
 
+def setprop(name, value):
+    """Write an Android property; blocking, call from a worker."""
+    try:
+        subprocess.run(["setprop", name, value], check=False)
+    except Exception as e:
+        logger.error(f"Failed to set the property {name}: {e}")
+
+
 def restart_ril_modem():
     """Restart the vendor RIL daemon; blocking, call from a worker."""
-    try:
-        subprocess.run(["setprop", "ctl.restart", "vendor.ril-daemon-mtk"], check=False)
-    except Exception as e:
-        logger.error(f"Failed to restart RIL modem: {e}")
+    setprop("ctl.restart", "vendor.ril-daemon-mtk")
 
 
 def save_modem_logs():
@@ -242,12 +247,17 @@ def save_modem_logs():
     return path
 
 
+def wtype(*args):
+    """Send input to the compositor through wtype; blocking, call from a worker."""
+    try:
+        subprocess.run(["wtype", *args], check=False)
+    except Exception as e:
+        logger.error(f"Input simulation failed: {e}")
+
+
 def press_power_button():
     """Simulates a Power Button Press via wtype."""
-    try:
-        subprocess.run(["wtype", "-k", "XF86PowerOff"], check=False)
-    except Exception as e:
-        logger.error(f"Power key simulation failed: {e}")
+    wtype("-k", "XF86PowerOff")
 
 
 def trim_native_heap():
