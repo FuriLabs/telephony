@@ -32,6 +32,7 @@ from telephony.shared.utils.thread_utils import run_in_background
 
 MMS_RESOLVE_TIMEOUT_SECONDS = 180
 UNCLAIMED_STATE_LIMIT = 20
+DELIVERY_WATCH_LIMIT = 50
 SEEN_SIGNATURE_LIMIT = 50
 
 MIME_EXTENSION_MAP = {
@@ -111,6 +112,7 @@ class MmsManager(GObject.Object):
         self.inflight_mms = {}
         self.inflight_mms_paths = {}
         self.unclaimed_mms_states = {}
+        self.mms_delivery_watch = {}
         self.mms_send_lock = threading.Lock()
 
         if not mimetypes.inited:
@@ -384,7 +386,14 @@ class MmsManager(GObject.Object):
             logger.debug(f"[MMS] Message state unpack failed: {e}")
             return
 
-        if name != "status" or value != "sent":
+        if name != "status":
+            return
+
+        if value == "delivered":
+            self._on_mms_delivered(path)
+            return
+
+        if value != "sent":
             return
 
         row_id = None
@@ -398,7 +407,27 @@ class MmsManager(GObject.Object):
                     self.unclaimed_mms_states.pop(next(iter(self.unclaimed_mms_states)))
 
         if row_id is not None:
+            with self.mms_send_lock:
+                self.mms_delivery_watch[path] = row_id
+                while len(self.mms_delivery_watch) > DELIVERY_WATCH_LIMIT:
+                    self.mms_delivery_watch.pop(next(iter(self.mms_delivery_watch)))
             self._resolve_mms(row_id, "sent")
+
+    def _on_mms_delivered(self, path):
+        """Mark a sent message delivered once the network confirms it.
+
+        The confirmation arrives long after the send resolved, so the
+        message is no longer in flight and is remembered separately.
+        Only a delivery is reported this way: a message that expired or
+        was rejected was still sent, and saying otherwise would be a
+        worse lie than saying nothing.
+        """
+        with self.mms_send_lock:
+            row_id = self.mms_delivery_watch.pop(path, None)
+        if row_id is None:
+            return
+        logger.info(f"[MMS] Row {row_id} delivered")
+        self.db.update_message_status(row_id, "delivered")
 
     def _on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
         """Fail the oldest in-flight MMS when the daemon reports a send error."""
