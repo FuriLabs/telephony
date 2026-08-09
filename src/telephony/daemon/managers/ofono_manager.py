@@ -1382,12 +1382,20 @@ class OfonoManager(GObject.Object):
         Only a positive report is acted on: carriers and gateways often
         never send one at all, so a missing report says nothing about
         the message and must never turn into a claim of failure.
+
+        The report carries its verdict in a property dictionary, not as
+        a plain boolean the way the ofono documentation describes it.
+        Read as a boolean the dictionary is always true, which turns a
+        network saying the message never arrived into a claim that it
+        did, so the value is taken from the Delivered property.
         """
         try:
-            message_path, delivered = params.unpack()
+            message_path, properties = params.unpack()
         except Exception as e:
             logger.debug(f"[OfonoManager] Status report unpack failed: {e}")
             return
+
+        delivered = properties.get("Delivered") if isinstance(properties, dict) else properties
 
         row_id = self.delivery_watch.pop(message_path, None)
         if row_id is None:
