@@ -764,12 +764,22 @@ class TelephonyDaemonDBus:
                 invocation.return_value(GLib.Variant("(is)", (0, "empty")))
                 return
             count = 0
+            reason = ""
             for vcard in vcards:
-                if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
-                    count += 1
-            invocation.return_value(GLib.Variant("(is)", (count, "")))
+                try:
+                    if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
+                        count += 1
+                except Exception as e:
+                    logger.error(f"[Daemon] Storing a SIM contact failed: {e}")
+                    reason = str(e)
+                    break
+            invocation.return_value(GLib.Variant("(is)", (count, reason)))
 
-        run_in_background(task, on_complete=done)
+        def failed(error):
+            logger.error(f"[Daemon] Reading the SIM phonebook failed: {error}")
+            invocation.return_value(GLib.Variant("(is)", (-1, "sim-read-failed")))
+
+        run_in_background(task, on_complete=done, on_error=failed)
 
     def emit_signal(self, signal_name, parameters):
         self.bus.emit_signal(
@@ -990,7 +1000,11 @@ class TelephonyDaemonDBus:
             outputs, inputs = result if result else ([], [])
             invocation.return_value(GLib.Variant("(a(sb)a(sb))", (outputs, inputs)))
 
-        run_in_background(fetch, on_complete=done)
+        def failed(error):
+            logger.error(f"[Daemon] Listing audio routes failed: {error}")
+            invocation.return_value(GLib.Variant("(a(sb)a(sb))", ([], [])))
+
+        run_in_background(fetch, on_complete=done, on_error=failed)
 
     def _handle_senddtmf(self, parameters, invocation):
         """Handle SendDtmf command."""
