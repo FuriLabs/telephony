@@ -164,14 +164,16 @@ class InCallWindow(Adw.Window):
 
         self.connect('close-request', self._on_close_req)
 
-        self.ofono.connect('call-removed', self.on_call_removed)
-        self.ofono.connect('call-added', lambda *a: self.update_state())
-        self.ofono.connect('audio-changed', lambda *a: self._on_audio_changed())
-        self.ofono.connect('call-changed', lambda *a: self.update_state())
-
         self.sys_state = SystemStateService()
         self.is_locked = self.sys_state.is_locked
-        self.sys_state.connect("lock-state-changed", self._on_lock_changed)
+
+        self.signal_ids = [
+            (self.ofono, self.ofono.connect('call-removed', self.on_call_removed)),
+            (self.ofono, self.ofono.connect('call-added', lambda *a: self.update_state())),
+            (self.ofono, self.ofono.connect('audio-changed', lambda *a: self._on_audio_changed())),
+            (self.ofono, self.ofono.connect('call-changed', lambda *a: self.update_state())),
+            (self.sys_state, self.sys_state.connect("lock-state-changed", self._on_lock_changed)),
+        ]
 
         self.update_state()
 
@@ -187,7 +189,21 @@ class InCallWindow(Adw.Window):
         if self.in_recovery_mode or self.ofono.active_calls:
             return True
 
+        self._release_signals()
         return False
+
+    def _release_signals(self):
+        """Stop listening to what outlives this window.
+
+        The modem mirror is owned by the process, not by the window,
+        and a call window is built again for every call. Handlers left
+        on the mirror would keep a closed window alive and go on
+        driving its destroyed widgets from the next call onwards.
+        """
+        for source, handler_id in self.signal_ids:
+            if source.handler_is_connected(handler_id):
+                source.disconnect(handler_id)
+        self.signal_ids.clear()
 
     def _proximity_tick(self):
         """Timer callback for proximity sensor handling."""
