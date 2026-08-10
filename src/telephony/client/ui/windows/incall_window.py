@@ -204,6 +204,7 @@ class InCallWindow(Adw.Window):
             if source.handler_is_connected(handler_id):
                 source.disconnect(handler_id)
         self.signal_ids.clear()
+        self.fader.release()
 
     def _proximity_tick(self):
         """Timer callback for proximity sensor handling."""

@@ -32,12 +32,28 @@ class ProximityFader(Gtk.Window):
         self.is_locked = self.sys_state.is_locked
         self._fader_turned_off_screen = False
 
-        self.sys_state.connect("idle-state-changed", self._on_idle_changed)
-        self.sys_state.connect("lock-state-changed", self._on_lock_changed)
+        self.signal_ids = [
+            (self.sys_state, self.sys_state.connect("idle-state-changed", self._on_idle_changed)),
+            (self.sys_state, self.sys_state.connect("lock-state-changed", self._on_lock_changed)),
+        ]
 
         self.set_title("Fader")
         self.set_decorated(False)
         self.set_css_classes(["black-fader"])
+
+    def release(self):
+        """Stop listening to the state the whole process shares.
+
+        The lock and idle state is one object for the process, while a
+        fader belongs to a call window and is built again for every
+        call. Handlers left on it would keep a finished call's fader
+        alive and let it go on blanking the screen during the next
+        call but one.
+        """
+        for source, handler_id in self.signal_ids:
+            if source.handler_is_connected(handler_id):
+                source.disconnect(handler_id)
+        self.signal_ids.clear()
 
     def set_active(self, active):
         """Enable or disable the fader, blanking by power key when locked."""
