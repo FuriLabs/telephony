@@ -255,22 +255,6 @@ def press_power_button():
         logger.error(f"Power key simulation failed: {e}")
 
 
-def trim_native_heap():
-    """Return freed malloc memory to the kernel; safe to call anytime.
-
-    Loading thousands of contacts through JSON and EDS creates a large
-    transient allocation burst, and glibc keeps the freed pages parked
-    in its arenas forever. Returns False so it can sit directly in a
-    one-shot GLib timeout.
-    """
-    import ctypes
-    import gc
-    gc.collect()
-    try:
-        ctypes.CDLL("libc.so.6").malloc_trim(0)
-    except Exception as e:
-        logger.debug(f"[Memory] malloc_trim unavailable: {e}")
-    return False
 
 
 def launch_desktop_uri(desktop_file, uri):
