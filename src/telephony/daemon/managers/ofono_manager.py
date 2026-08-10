@@ -286,7 +286,22 @@ class OfonoManager(GObject.Object):
             if value is not None:
                 setter(value)
 
-        run_in_background(fetch, on_complete=apply)
+        run_in_background(fetch, on_complete=apply,
+                          on_error=self._modem_went_away(f"property {name}"))
+
+    @staticmethod
+    def _modem_went_away(what):
+        """Return a handler that shrugs when the modem answers no more.
+
+        A property read races the modem disappearing, and losing that
+        race is how a modem goes away rather than a fault of its own.
+        Reporting it as an unhandled failure said nothing about which
+        read it was, and every one of them is asked again when the
+        interface comes back.
+        """
+        def handler(error):
+            logger.info(f"[OfonoManager] {what} not read, the modem is gone: {error}")
+        return handler
 
     def on_netreg_signal(self, proxy, sender, signal, params):
         """Handle NetworkRegistration property changes."""
@@ -361,7 +376,8 @@ class OfonoManager(GObject.Object):
             if online is not None and self.modem_online is None:
                 self._set_modem_online(online)
 
-        run_in_background(fetch, on_complete=apply_seed)
+        run_in_background(fetch, on_complete=apply_seed,
+                          on_error=self._modem_went_away("the modem properties"))
 
     def _load_voicemail_state(self):
         """Fetch the initial MessageWaiting properties off the main thread."""
@@ -373,7 +389,8 @@ class OfonoManager(GObject.Object):
             ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
             return ret.unpack()[0]
 
-        run_in_background(fetch, on_complete=self._apply_voicemail_props)
+        run_in_background(fetch, on_complete=self._apply_voicemail_props,
+                          on_error=self._modem_went_away("the voicemail state"))
 
     def dialing_available(self):
         """Return True when a new outgoing call can be placed right now.
