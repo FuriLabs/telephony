@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import quopri
 import re
 import hashlib
 from telephony.shared.utils.log_utils import logger
@@ -23,12 +24,40 @@ from telephony.shared.utils.phone_utils import normalize_number, parse_evolution
 def unfold_vcard(vcard_str):
     """
     Unfold vCard lines that are wrapped with a CRLF/LF followed by a space.
+
+    A quoted-printable value wraps differently, ending a line with an
+    equals sign and continuing without indenting it, so the two ways a
+    line can be broken are both put back together here.
     """
     if not vcard_str:
         return ""
 
     unfolded = re.sub(r'\r?\n[ \t]', '', vcard_str)
-    return unfolded
+    return re.sub(r'=\r?\n', '', unfolded)
+
+
+def _decode_quoted_printable(key_part, value):
+    """Decode a value the exporter escaped, leaving anything else alone.
+
+    Phones that wrote vcards before UTF-8 was safe to put on a wire
+    escaped every byte above ASCII, so a name keeps its letters and a
+    number keeps its digits only if the escaping is undone. Read as
+    written, the escapes stay in the text: a name reads as its own
+    encoding and a number gains digits that were never dialled.
+    """
+    if "ENCODING=QUOTED-PRINTABLE" not in key_part.upper():
+        return value
+
+    charset = "utf-8"
+    match = re.search(r'CHARSET=([^;:]+)', key_part, re.IGNORECASE)
+    if match:
+        charset = match.group(1).strip('"') or "utf-8"
+
+    try:
+        return quopri.decodestring(value.encode("ascii", "replace")).decode(charset, "replace")
+    except Exception as e:
+        logger.warning(f"[VCardUtils] Quoted-printable decode failed: {e}")
+        return value
 
 
 def _get_phone_label(meta):
@@ -64,16 +93,37 @@ def extract_e164_number(key_part, default):
     return default
 
 
+def _number_from_value(value):
+    """Return the dialable part of a stored TEL value.
+
+    Newer address books write the number as a uri rather than as
+    digits, and everything a uri carries besides the number itself is
+    for the caller that dials it, not for the number: an extension
+    reaches a desk after the call connects and cannot be dialled with
+    the rest.
+    """
+    if value.lower().startswith("tel:"):
+        value = value[4:]
+    return value.split(";", 1)[0].strip()
+
+
 def _parse_tel_line(line):
-    """Parse a TEL vcard line into a (number, label) tuple, or None."""
+    """Parse a TEL vcard line into a (number, label) tuple, or None.
+
+    The stored number wins whenever it already carries a country code,
+    because the E164 parameter beside it is often just the national
+    digits with no country at all. Reading those digits means guessing
+    the country they belong to, and a guess is exactly what a number
+    written in full does not need.
+    """
     parts = line.split(":", 1)
     if len(parts) < 2:
         return None
 
     key_part = parts[0].strip()
-    number = parts[1].strip()
+    number = _number_from_value(_decode_quoted_printable(key_part, parts[1].strip()))
 
-    if "X-EVOLUTION-E164" in key_part.upper():
+    if not number.startswith("+") and "X-EVOLUTION-E164" in key_part.upper():
         number = extract_e164_number(key_part, number)
 
     if number == "UNKNOWN":
@@ -170,7 +220,7 @@ def parse_vcard_string(vcard_str, source_uid, real_uid=None):
             continue
 
         key_part = parts[0].strip()
-        value_part = parts[1].strip()
+        value_part = _decode_quoted_printable(key_part, parts[1].strip())
         main_key = _property_key(key_part)
 
         if main_key == "FN":
