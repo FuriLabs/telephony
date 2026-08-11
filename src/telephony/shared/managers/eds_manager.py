@@ -846,6 +846,27 @@ class EdsManager(GObject.Object):
             self._sources_info_cache = [dict(item) for item in provided]
             self._emit_books_changed_if_moved()
 
+    def sources_info_async(self, on_ready):
+        """Hand over the book list once there is a list to hand over.
+
+        A window's first read is empty on purpose: the books live in the
+        daemon and the cache fills in the background. Drawing an empty
+        list is harmless because the refill redraws it, but a caller
+        that decides something from the answer reads the emptiness as a
+        phone with no address books at all.
+        """
+        if self.owns_live_views or self._sources_info_cache is not None or not self.sources_provider:
+            on_ready(self.get_sources_info())
+            return
+
+        def task():
+            self._fetch_sources_from_provider()
+
+        def done(_result):
+            on_ready(self.get_sources_info())
+
+        run_in_background(task, on_complete=done)
+
     def get_sources_info(self):
         """Return the sources info for the Settings UI, never blocking the caller.
 

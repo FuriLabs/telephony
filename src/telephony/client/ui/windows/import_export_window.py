@@ -448,7 +448,11 @@ class ImportExportDialog:
         read-only books never appear because the daemon would refuse
         the write anyway.
         """
-        sources = self.app_window.eds.get_sources_info()
+        self.app_window.eds.sources_info_async(
+            lambda sources: self._choose_target_book(sources, on_chosen))
+
+    def _choose_target_book(self, sources, on_chosen):
+        """Ask for the book now that the list is known."""
         read_only_uids = self.app_window.eds.read_only_source_uids()
         enabled_sources = [s for s in sources if s['enabled'] and s['uid'] not in read_only_uids]
 
@@ -491,7 +495,10 @@ class ImportExportDialog:
 
     def _prompt_export_source(self):
         """Prompt user for which address book to export (or All)."""
-        sources = self.app_window.eds.get_sources_info()
+        self.app_window.eds.sources_info_async(self._choose_export_source)
+
+    def _choose_export_source(self, sources):
+        """Offer the books now that the list is known."""
         enabled_sources = [s for s in sources if s['enabled']]
 
         if not enabled_sources:

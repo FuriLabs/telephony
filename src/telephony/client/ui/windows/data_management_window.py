@@ -108,8 +108,11 @@ class DataManagementDialog:
 
     def _prompt_delete_addressbook(self, callback):
         """Prompt user for which address book to permanently delete."""
-        sources = self.eds.get_sources_info()
+        self.eds.sources_info_async(
+            lambda sources: self._choose_addressbook_to_delete(sources, callback))
 
+    def _choose_addressbook_to_delete(self, sources, callback):
+        """Offer the books now that the list is known."""
         protected_uids = ["system-address-book"]
         protected_names = ["Andromeda Contacts"]
 
@@ -154,8 +157,11 @@ class DataManagementDialog:
 
     def _prompt_delete_contacts_source(self, callback, everything=False):
         """Prompt user for which address book to delete (or All)."""
-        sources = self.eds.get_sources_info()
+        self.eds.sources_info_async(
+            lambda sources: self._choose_contacts_source_to_delete(sources, callback, everything))
 
+    def _choose_contacts_source_to_delete(self, sources, callback, everything):
+        """Offer the books now that the list is known."""
         enabled_sources = [s for s in sources if s['enabled']]
 
         title = _("Delete EVERYTHING") if everything else _("Delete All Contacts")
