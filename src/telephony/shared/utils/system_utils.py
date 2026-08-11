@@ -102,7 +102,7 @@ def is_systemd_service_active(service_name, bus_type=Gio.BusType.SESSION):
             -1,
             None
         )
-        state = state_variant.unpack()[0].unpack()
+        state = state_variant.unpack()[0]
         return state == "active"
     except Exception as e:
         logger.debug(f"Failed to check systemd service active state for {service_name}: {e}")

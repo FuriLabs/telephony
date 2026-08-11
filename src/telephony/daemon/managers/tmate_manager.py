@@ -57,7 +57,7 @@ class TmateManager:
 
                 res = nm.call_sync("Get", GLib.Variant("(ss)", ("org.freedesktop.NetworkManager", "Devices")), Gio.DBusCallFlags.NONE, -1, None)
                 if res:
-                    devices = res.unpack()[0].unpack()
+                    devices = res.unpack()[0]
                     for dev_path in devices:
                         dev_proxy = Gio.DBusProxy.new_sync(
                             bus, Gio.DBusProxyFlags.NONE, None,
@@ -66,7 +66,7 @@ class TmateManager:
                         )
                         udi_res = dev_proxy.call_sync("Get", GLib.Variant("(ss)", ("org.freedesktop.NetworkManager.Device", "Udi")), Gio.DBusCallFlags.NONE, -1, None)
                         if udi_res:
-                            udi = udi_res.unpack()[0].unpack()
+                            udi = udi_res.unpack()[0]
                             if "/ril_" in udi:
                                 logger.info(f"[SMStmate] Activating NM device {dev_path}")
                                 nm.call_sync("ActivateConnection", GLib.Variant("(ooo)", ("/", dev_path, "/")), Gio.DBusCallFlags.NONE, -1, None)
