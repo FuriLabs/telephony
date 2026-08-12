@@ -124,6 +124,7 @@ class MainWindow(Adw.Window):
             add_lazy_page("contacts", _("Contacts"), "system-users-symbolic")
 
         self.stack.connect("notify::visible-child-name", self._on_stack_page_changed)
+        self._check_country_code()
         self._ensure_view(self.stack.get_visible_child_name())
 
         self.stack.set_vexpand(True)
@@ -160,7 +161,6 @@ class MainWindow(Adw.Window):
 
         self.check_own_number()
         self.check_emergency_setup()
-        self._check_country_code()
 
         self.connect("close-request", self.on_close_request)
         self.connect("map", self._on_window_map)
@@ -289,18 +289,27 @@ class MainWindow(Adw.Window):
         run_in_background(_check)
 
     def _check_country_code(self):
-        """Check and setup default country code."""
+        """Give this window the country its numbers belong to.
+
+        A stored number without a country code is read as belonging to
+        wherever the app thinks it is, so the answer has to be in hand
+        before the first list is built rather than shortly after it.
+        The setting is a local read and is applied straight away; only
+        asking the modem is worth a thread, and that is the case where
+        there is no answer to be late with.
+        """
+        cc = self.gsettings_mgr.get_setting("default_country_code")
+        if cc:
+            utils.set_custom_region(cc)
+            return
+
         def _task():
-            cc = self.gsettings_mgr.get_setting("default_country_code")
-            if cc:
-                utils.set_custom_region(cc)
+            region = self.app.daemon_client.detect_region()
+            if region:
+                self.gsettings_mgr.set_setting("default_country_code", region)
+                utils.set_custom_region(region)
             else:
-                region = self.app.daemon_client.detect_region()
-                if region:
-                    self.gsettings_mgr.set_setting("default_country_code", region)
-                    utils.set_custom_region(region)
-                else:
-                    GLib.idle_add(lambda: self._show_setup_hint(_("Please set Default Country Code in Settings")) or False)
+                GLib.idle_add(lambda: self._show_setup_hint(_("Please set Default Country Code in Settings")) or False)
         run_in_background(_task)
 
     def _on_modem_interface_appeared(self, _ofono, interface):
