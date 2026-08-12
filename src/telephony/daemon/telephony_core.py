@@ -36,7 +36,6 @@ from telephony.daemon.managers.call_audio_manager import CallAudioManager
 from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
-from telephony.shared.utils.system_utils import trim_native_heap
 from telephony.shared.constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
 from gettext import gettext as _, ngettext
@@ -49,8 +48,6 @@ SYSTEM_ADDRESS_BOOK_UID = "system-address-book"
 NETWORK_NUDGE_DELAY_SECONDS = 300
 DENIED_NOTIFY_DELAY_SECONDS = 120
 MMS_NOTIFICATION_DELAY_MS = 150
-HEAP_TRIM_AFTER_STARTUP_SECONDS = 120
-HEAP_TRIM_INTERVAL_SECONDS = 1800
 HANGUP_FEEDBACK_SUPPRESS_SECONDS = 5
 
 
@@ -148,8 +145,6 @@ class TelephonyCore:
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
 
-        GLib.timeout_add_seconds(HEAP_TRIM_AFTER_STARTUP_SECONDS, trim_native_heap)
-        GLib.timeout_add_seconds(HEAP_TRIM_INTERVAL_SECONDS, lambda: trim_native_heap() or True)
 
     def _announce_changes(self):
         """Tell window instances when the stored data changed.

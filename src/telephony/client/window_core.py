@@ -25,14 +25,11 @@ from telephony.shared.managers.eds_manager import EdsManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.utils.locale_utils import init_locale
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.shared.utils.system_utils import trim_native_heap
 from telephony.shared.constants import INCALL_APP_ID, DAEMON_BUS_NAME
 
 DAEMON_START_TIMEOUT_MS = 25000
 DBUS_START_REPLY_SUCCESS = 1
 DBUS_START_REPLY_ALREADY_RUNNING = 2
-HEAP_TRIM_AFTER_STARTUP_SECONDS = 120
-HEAP_TRIM_INTERVAL_SECONDS = 1800
 
 
 class WindowCore:
@@ -151,8 +148,6 @@ class WindowCore:
         self.service_monitor = ServiceMonitor()
         self.service_monitor.connect('unit-state-changed', self._publish_presence)
 
-        GLib.timeout_add_seconds(HEAP_TRIM_AFTER_STARTUP_SECONDS, trim_native_heap)
-        GLib.timeout_add_seconds(HEAP_TRIM_INTERVAL_SECONDS, lambda: trim_native_heap() or True)
 
         Gio.bus_watch_name(Gio.BusType.SESSION, DAEMON_BUS_NAME,
                            Gio.BusNameWatcherFlags.NONE,
