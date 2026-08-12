@@ -25,70 +25,60 @@ DAEMON_WAIT_TRIES = 20
 DAEMON_WAIT_STEP_SECONDS = 0.5
 
 
-def start_systemd_service(service_name):
-    """
-    Starts a systemd user service via DBus.
-    """
+def _systemd_manager(bus_type):
+    """Return a proxy to a systemd manager; blocking, call from a worker."""
+    bus = Gio.bus_get_sync(bus_type, None)
+    return Gio.DBusProxy.new_sync(
+        bus, Gio.DBusProxyFlags.NONE, None,
+        "org.freedesktop.systemd1",
+        "/org/freedesktop/systemd1",
+        "org.freedesktop.systemd1.Manager",
+        None
+    )
+
+
+def _systemd_unit_action(method, service_name, bus_type):
+    """Ask a systemd manager to act on one unit; blocking, call from a worker."""
+    _systemd_manager(bus_type).call_sync(
+        method,
+        GLib.Variant("(ss)", (service_name, "replace")),
+        Gio.DBusCallFlags.NONE,
+        -1,
+        None
+    )
+
+
+def start_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
+    """Start a systemd service; blocking, call from a worker."""
     try:
-        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        manager = Gio.DBusProxy.new_sync(
-            bus, Gio.DBusProxyFlags.NONE, None,
-            "org.freedesktop.systemd1",
-            "/org/freedesktop/systemd1",
-            "org.freedesktop.systemd1.Manager",
-            None
-        )
-        manager.call_sync(
-            "StartUnit",
-            GLib.Variant("(ss)", (service_name, "replace")),
-            Gio.DBusCallFlags.NONE,
-            -1,
-            None
-        )
-        logger.info(f"Started user service: {service_name}")
+        _systemd_unit_action("StartUnit", service_name, bus_type)
+        logger.info(f"Started service: {service_name}")
     except Exception as e:
         logger.error(f"Failed to start systemd service {service_name}: {e}")
 
 
-def stop_systemd_service(service_name):
-    """
-    Stops a systemd user service via DBus.
-    """
+def stop_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
+    """Stop a systemd service; blocking, call from a worker."""
     try:
-        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        manager = Gio.DBusProxy.new_sync(
-            bus, Gio.DBusProxyFlags.NONE, None,
-            "org.freedesktop.systemd1",
-            "/org/freedesktop/systemd1",
-            "org.freedesktop.systemd1.Manager",
-            None
-        )
-        manager.call_sync(
-            "StopUnit",
-            GLib.Variant("(ss)", (service_name, "replace")),
-            Gio.DBusCallFlags.NONE,
-            -1,
-            None
-        )
-        logger.info(f"Stopped user service: {service_name}")
+        _systemd_unit_action("StopUnit", service_name, bus_type)
+        logger.info(f"Stopped service: {service_name}")
     except Exception as e:
         logger.error(f"Failed to stop systemd service {service_name}: {e}")
 
 
-def is_systemd_service_active(service_name):
-    """
-    Checks if a systemd user service is active via DBus.
-    """
+def restart_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
+    """Restart a systemd service; blocking, call from a worker."""
     try:
-        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        manager = Gio.DBusProxy.new_sync(
-            bus, Gio.DBusProxyFlags.NONE, None,
-            "org.freedesktop.systemd1",
-            "/org/freedesktop/systemd1",
-            "org.freedesktop.systemd1.Manager",
-            None
-        )
-        result = manager.call_sync(
+        _systemd_unit_action("RestartUnit", service_name, bus_type)
+        logger.info(f"Restarted service: {service_name}")
+    except Exception as e:
+        logger.error(f"Failed to restart systemd service {service_name}: {e}")
+
+
+def is_systemd_service_active(service_name, bus_type=Gio.BusType.SESSION):
+    """Return True while a systemd service is active; blocking, call from a worker."""
+    try:
+        result = _systemd_manager(bus_type).call_sync(
             "GetUnit",
             GLib.Variant("(s)", (service_name,)),
             Gio.DBusCallFlags.NONE,
@@ -97,6 +87,7 @@ def is_systemd_service_active(service_name):
         )
         unit_path = result.unpack()[0]
 
+        bus = Gio.bus_get_sync(bus_type, None)
         unit_proxy = Gio.DBusProxy.new_sync(
             bus, Gio.DBusProxyFlags.NONE, None,
             "org.freedesktop.systemd1",
@@ -190,14 +181,12 @@ def enable_location():
 
 
 def restart_ofono_service():
-    """Restart the system ofono service; blocking, call from a worker."""
-    try:
-        result = subprocess.run(["systemctl", "restart", "ofono.service"],
-                                capture_output=True, text=True, timeout=60)
-        if result.returncode != 0:
-            logger.error(f"[SystemUtils] ofono restart failed: {result.stderr.strip()}")
-    except Exception as e:
-        logger.error(f"[SystemUtils] ofono restart error: {e}")
+    """Restart the system ofono service; blocking, call from a worker.
+
+    ofono is a system unit, so this goes to the system manager rather
+    than the session one every other service here lives on.
+    """
+    restart_systemd_service("ofono.service", Gio.BusType.SYSTEM)
 
 
 def setprop(name, value):
@@ -247,12 +236,17 @@ def save_modem_logs():
     return path
 
 
+def wtype(*args):
+    """Send input to the compositor through wtype; blocking, call from a worker."""
+    try:
+        subprocess.run(["wtype", *args], check=False)
+    except Exception as e:
+        logger.error(f"Input simulation failed: {e}")
+
+
 def press_power_button():
     """Simulates a Power Button Press via wtype."""
-    try:
-        subprocess.run(["wtype", "-k", "XF86PowerOff"], check=False)
-    except Exception as e:
-        logger.error(f"Power key simulation failed: {e}")
+    wtype("-k", "XF86PowerOff")
 
 
 def trim_native_heap():
