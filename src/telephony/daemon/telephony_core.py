@@ -36,6 +36,7 @@ from telephony.daemon.managers.call_audio_manager import CallAudioManager
 from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
+from telephony.shared.utils.region_utils import detect_region, set_custom_region
 from telephony.shared.constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
 from gettext import gettext as _, ngettext
@@ -104,6 +105,7 @@ class TelephonyCore:
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
+        self._apply_region()
         self.eds = EdsManager(owns_live_views=True)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=True)
         self.eds.set_db(self.db, self.gsettings_mgr)
@@ -145,6 +147,24 @@ class TelephonyCore:
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
 
+
+    def _apply_region(self):
+        """Give this process the country its numbers belong to.
+
+        Numbers are read into the cache here, and one written without a
+        country code has to be given one from somewhere. Only the
+        windows were ever told which country to assume, so the store
+        they all read was built by the one process still guessing from
+        the session locale.
+        """
+        def task():
+            country_code = self.gsettings_mgr.get_setting("default_country_code")
+            region = country_code or detect_region()
+            if region:
+                set_custom_region(region)
+                logger.info(f"[App] Numbers without a country code are read as {region}")
+
+        run_in_background(task)
 
     def _announce_changes(self):
         """Tell window instances when the stored data changed.
