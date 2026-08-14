@@ -25,6 +25,7 @@ from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import MMS_SIZE_LIMIT_DEFAULT_KB
+from telephony.shared.utils.system_utils import is_gsd_airplane_mode
 from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, build_nav_row)
 
 
@@ -35,6 +36,9 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         """Initialize the advanced settings page."""
         super().__init__(title=_("Advanced Settings"))
         self.parent_win = parent
+        self.row_recovery = None
+        self.recovery_spinner = None
+        self._recovery_running = False
 
         view = Adw.ToolbarView()
         self.set_child(view)
@@ -105,9 +109,14 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         row_auto.add_suffix(btn_auto_info)
         grp_restart.add(row_auto)
 
-        grp_restart.add(self._nav_row(_("Modem Recovery"), None,
-                                      lambda: self._on_modem_recovery(None),
-                                      destructive=True))
+        self.row_recovery = Adw.ActionRow(title=_("Modem Recovery"), activatable=True)
+        self.row_recovery.add_css_class("error")
+        self.row_recovery.connect("activated", lambda r: self._on_modem_recovery(None))
+        self.recovery_spinner = Adw.Spinner()
+        self.recovery_spinner.set_visible(False)
+        self.row_recovery.add_suffix(self.recovery_spinner)
+        self._describe_recovery_row()
+        grp_restart.add(self.row_recovery)
 
         grp_messaging = Adw.PreferencesGroup(title=_("Messaging"))
         self.page.add(grp_messaging)
@@ -382,12 +391,58 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                  "run the restart yourself.")
         present_info_sheet(self, _("Automatic Modem Recovery"), body)
 
-    def _on_modem_recovery(self, btn):
-        """Show the modem recovery screen, unless the modem is fine."""
-        main_window = self.parent_win.main_window
-        if main_window.ofono and main_window.ofono.dialing_available():
-            self._show_toast(_("The modem is working normally."))
+    def _describe_recovery_row(self, subtitle=None):
+        """Say what the row would do, or what it just did.
+
+        A working modem has nothing to repair, so the row says that and
+        stops offering: an enabled button that answers every press with
+        a refusal is a worse answer than a disabled one.
+        """
+        if subtitle is not None:
+            self.row_recovery.set_subtitle(subtitle)
             return
+
+        ofono = self.parent_win.main_window.ofono
+        working = bool(ofono and ofono.dialing_available())
+        self.row_recovery.set_subtitle(
+            _("The modem is working") if working
+            else _("Restart the modem, which takes about 30 seconds"))
+        self.row_recovery.set_sensitive(not working)
+
+    def _on_modem_recovery(self, btn):
+        """Repair the modem from here, and say what came of it.
+
+        The row does the work itself rather than sending the user to a
+        screen that may not appear, because a press that shows nothing
+        is indistinguishable from one that did nothing. Restarting the
+        stack cannot power on a radio that was switched off, so that is
+        said instead of attempted.
+        """
+        main_window = self.parent_win.main_window
+        if self._recovery_running:
+            return
+
+        if is_gsd_airplane_mode():
+            self._describe_recovery_row(
+                _("Airplane mode is on. Turn it off to use the modem"))
+            return
+
         app = main_window.get_application()
-        if app:
-            app.open_modem_recovery()
+        if not app:
+            return
+
+        self._recovery_running = True
+        self.row_recovery.set_sensitive(False)
+        self.recovery_spinner.set_visible(True)
+        self._describe_recovery_row(_("Restarting the modem…"))
+
+        if not app.request_auto_recovery(self._on_recovery_finished):
+            self._on_recovery_finished(False)
+
+    def _on_recovery_finished(self, success):
+        """Report the outcome in the row the user pressed."""
+        self._recovery_running = False
+        self.recovery_spinner.set_visible(False)
+        self.row_recovery.set_sensitive(True)
+        self._describe_recovery_row(_("Calls and messages work again") if success
+                                    else _("Recovery did not help. The modem still is not responding"))

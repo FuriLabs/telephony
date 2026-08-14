@@ -17,7 +17,8 @@ from gi.repository import GLib
 
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.utils.system_utils import restart_ril_modem, restart_ofono_service
+from telephony.shared.utils.system_utils import (restart_ril_modem, restart_ofono_service,
+                                                 restart_modemmanager, wait_for_ofono)
 
 RECOVERY_TIMEOUT_SECONDS = 30
 
@@ -28,10 +29,19 @@ def execute_modem_recovery():
     Restarting the RIL daemon and then ofono restores every known failure
     the stack can recover from without a reboot, so there is no ladder of
     gentler steps anymore.
+
+    ModemManager reaches the modem through ofono, and roughly one time in
+    ten it stays wedged on the old one even after ofono is healthy again,
+    which leaves mobile data down on a phone whose calls work. It is
+    restarted last and only once ofono answers, since one restarted
+    against a modem that is not back yet is a restart spent on nothing.
     """
     logger.warning("[ModemRecovery] Restarting RIL daemon and ofono")
     restart_ril_modem()
     restart_ofono_service()
+    wait_for_ofono()
+    logger.warning("[ModemRecovery] Restarting ModemManager")
+    restart_modemmanager()
 
 
 def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECONDS):
@@ -40,6 +50,11 @@ def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECON
     The verdict comes from the modem itself: the dial-availability signal
     the ofono manager emits once the restarted stack republishes its voice
     interface, with a timeout as the failure path. No polling.
+
+    A modem that has come back but has not said whether its radio is on
+    does not count. Its interfaces reappear before anything reads that,
+    so accepting the first word would report a repaired modem while it
+    still cannot place a call.
     """
     state = {"handler": None, "timer": None, "done": False}
 
@@ -57,7 +72,7 @@ def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECON
         on_done(success)
 
     def on_availability(_ofono, available):
-        if available:
+        if available and ofono.modem_online is True:
             finish(True)
 
     def on_timeout():
@@ -68,5 +83,5 @@ def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECON
     state["handler"] = ofono.connect('dial-availability-changed', on_availability)
     state["timer"] = GLib.timeout_add_seconds(timeout_seconds, on_timeout)
 
-    if ofono.dialing_available():
+    if ofono.dialing_available() and ofono.modem_online is True:
         finish(True)
