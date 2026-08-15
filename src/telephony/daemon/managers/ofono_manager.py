@@ -34,6 +34,7 @@ from telephony.daemon.managers.callback_manager import CallbackManager
 from telephony.daemon.managers.relay_manager import RelayManager
 
 SS_REQUEST_TIMEOUT_MS = 90000
+HANGUP_GRACE_MS = 1500
 REPEATED_CALL_WINDOW_SECONDS = 300
 REPEATED_CALL_THRESHOLD = 3
 ANSWER_SWAP_DELAY_MS = 500
@@ -1129,12 +1130,19 @@ class OfonoManager(GObject.Object):
                 self._force_remove(path)
 
     def hangup_call(self, path):
-        """Hangup a specific call; hanging up an unanswered ring is a rejection."""
+        """Hangup a specific call; hanging up an unanswered ring is a rejection.
+
+        The call is marked as ended here before the modem is asked,
+        because the user asking is what makes it local. Whatever the
+        modem reports afterwards replaces it, so a call the other end
+        happened to drop at the same moment still says so.
+        """
         self.emit('hangup-requested')
         try:
             if path in self.active_calls:
                 if self.active_calls[path].get('state') in ('incoming', 'waiting'):
                     self.active_calls[path]['rejected'] = True
+                self.active_calls[path]['disconnect_reason'] = "local"
                 proxy = self.active_calls[path].get('proxy')
                 if proxy:
                     proxy.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
@@ -1148,18 +1156,31 @@ class OfonoManager(GObject.Object):
             logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                self._force_remove(path)
+                GLib.timeout_add(HANGUP_GRACE_MS, self._force_remove_if_left, path)
 
     def hangup_all(self):
-        """Hangup all active calls."""
+        """Hangup all active calls, which is as local as hanging up one.
+
+        The whole set is marked before the modem is asked, for the same
+        reason a single call is: the user asking is what makes it
+        local, and asking for all of them at once does not make it any
+        less so.
+        """
         self.emit('hangup-requested')
-        if self.voice_proxy:
-            try:
-                self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
-            except Exception as e:
-                logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
-                for path in list(self.active_calls.keys()):
-                    self.hangup_call(path)
+        if not self.voice_proxy:
+            return
+
+        for path, data in self.active_calls.items():
+            if data.get('state') in ('incoming', 'waiting'):
+                data['rejected'] = True
+            data['disconnect_reason'] = "local"
+
+        try:
+            self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
+        except Exception as e:
+            logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
+            for path in list(self.active_calls.keys()):
+                self.hangup_call(path)
 
     def swap_calls(self):
         """Swap active and held calls."""
@@ -1286,6 +1307,21 @@ class OfonoManager(GObject.Object):
         """Forcefully remove a call from the active list."""
         if path in self.active_calls:
             self._remove_call(path)
+
+    def _force_remove_if_left(self, path):
+        """Drop a call the modem never reported gone.
+
+        Asking this modem to hang up an answered call answers with an
+        error and hangs it up anyway, so the error cannot be taken as
+        the call being gone. Waiting a moment lets the modem say so
+        itself, which is also how the call keeps the reason it ended
+        for: dropping it here writes the history first and the reason
+        arrives to find nothing to attach itself to.
+        """
+        if path in self.active_calls:
+            logger.warning(f"[OfonoManager] {path} outlived the hangup, dropping it")
+            self._force_remove(path)
+        return False
 
     def send_dtmf(self, tones):
         """Send DTMF tones during a call."""
