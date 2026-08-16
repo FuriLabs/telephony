@@ -368,9 +368,10 @@ class HistoryView(Adw.Bin):
                     logger.debug(f"[History] Duration parse error: {e}")
                     d = 0
                 b = self.active_bucket
-                if b == "0" and d != 0:
+                answered = direction not in ("missed", "rejected", "cancelled")
+                if b == "0" and answered:
                     continue
-                elif b == "60s" and not (0 < d <= 60):
+                elif b == "60s" and not (answered and d <= 60):
                     continue
                 elif b == "3m" and not (60 < d <= 180):
                     continue
