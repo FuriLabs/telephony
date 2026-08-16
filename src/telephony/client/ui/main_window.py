@@ -37,6 +37,8 @@ from telephony.client.ui.windows.blocklist_editor_window import BlocklistEditor
 from telephony.client.ui.windows.info_window import InfoPage
 from telephony.client.ui.windows.contact_picker_window import ContactPicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
+from telephony.client.utils.model_utils import (call_direction_text, call_outcome_text,
+                                                call_ending_text)
 from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add_choice_row,
                                                       build_info_sheet,
                                                       install_sheet_host, present_sheet,
@@ -821,8 +823,21 @@ class MainWindow(Adw.Window):
 
         grp_info = Adw.PreferencesGroup()
         page.add(grp_info)
-        for title, value in ((_("Number"), item.number), (_("Name"), item.name),
-                             (_("Date"), item.full_ts), (_("Duration"), item.duration_str)):
+        rows = [(_("Number"), item.number), (_("Name"), item.name),
+                (_("Direction"), call_direction_text(item.direction)),
+                (_("Result"), call_outcome_text(item.direction, item.disconnect_reason)),
+                (_("Date"), item.full_ts), (_("Duration"), item.duration_str)]
+
+        if item.anonymous:
+            rows.append((_("Caller ID"), _("Hidden")))
+        if item.multiparty:
+            rows.append((_("Conference"), _("This call was part of a conference")))
+        if item.transferred:
+            rows.append((_("Transferred"), _("The call was handed to someone else")))
+
+        rows.append((_("Ended"), call_ending_text(item.disconnect_reason, item.direction)))
+
+        for title, value in rows:
             grp_info.add(Adw.ActionRow(title=title, subtitle=str(value)))
 
         grp_actions = Adw.PreferencesGroup()
