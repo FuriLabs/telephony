@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from gi.repository import Adw, GLib
-from gettext import gettext as _
+from gettext import gettext as _, ngettext
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.widgets.common_widget import (present_alert_sheet, present_choice_sheet,
                                                       add_choice_row)
@@ -74,19 +74,43 @@ class DataManagementDialog:
 
     def ask_clear_history(self):
         """Ask to clear history."""
-        self._confirm_destructive(_("Delete Call History"), _("Are you sure? This cannot be undone."), self._do_clear_history)
+        def ask(count):
+            body = ngettext("This will delete {count} call. It cannot be undone.",
+                            "This will delete {count} calls. It cannot be undone.",
+                            count).format(count=count)
+            self._confirm_destructive(_("Delete Call History"), body, self._do_clear_history)
+
+        run_in_background(self.db.count_rows, "history", on_complete=ask)
 
     def ask_clear_messages(self):
         """Ask to clear messages."""
-        self._confirm_destructive(_("Delete All Messages"), _("This will delete all SMS/MMS and attachments."), self._do_clear_messages)
+        def ask(count):
+            body = ngettext("This will delete {count} message and its attachments.",
+                            "This will delete {count} messages and their attachments.",
+                            count).format(count=count)
+            self._confirm_destructive(_("Delete All Messages"), body, self._do_clear_messages)
+
+        run_in_background(self.db.count_rows, "messages", on_complete=ask)
 
     def ask_clear_groups(self):
         """Ask to clear group names."""
-        self._confirm_destructive(_("Delete Group Names"), _("Reset all custom group chat names?"), self._do_clear_groups)
+        def ask(count):
+            body = ngettext("This will reset {count} custom group name.",
+                            "This will reset {count} custom group names.",
+                            count).format(count=count)
+            self._confirm_destructive(_("Delete Group Names"), body, self._do_clear_groups)
+
+        run_in_background(self.db.count_rows, "group_names", on_complete=ask)
 
     def ask_clear_blocklist(self):
-        """Ask to clear the blocklist."""
-        self._confirm_destructive(_("Delete Blocklist"), _("Unblock all numbers?"), self._do_clear_blocklist)
+        """Ask to clear blocklist."""
+        def ask(count):
+            body = ngettext("This will unblock {count} number.",
+                            "This will unblock {count} numbers.",
+                            count).format(count=count)
+            self._confirm_destructive(_("Delete Blocklist"), body, self._do_clear_blocklist)
+
+        run_in_background(self.db.count_rows, "blocklist", on_complete=ask)
 
     def ask_clear_contacts(self):
         """Ask to clear contacts."""
