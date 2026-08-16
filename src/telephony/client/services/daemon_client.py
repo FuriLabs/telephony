@@ -195,6 +195,14 @@ class DaemonClient:
                           GLib.VariantType("(b)"))
         return bool(reply and reply[0])
 
+    def update_blocked_number(self, bid, number, note, block_calls=True, block_messages=True):
+        """Change one entry, number included; blocking, call from a worker."""
+        reply = self.call("UpdateBlockedNumber",
+                          GLib.Variant("(sssbb)", (str(bid), number, note,
+                                                   block_calls, block_messages)),
+                          GLib.VariantType("(b)"))
+        return bool(reply and reply[0])
+
     def set_blocked_number_flags(self, bid, block_calls, block_messages):
         """Set one entry's domain flags; blocking, call from a worker."""
         reply = self.call("SetBlockedNumberFlags",

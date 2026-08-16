@@ -259,6 +259,14 @@ DAEMON_INTERFACE_XML = """
       <arg type="b" name="block_messages" direction="in"/>
       <arg type="b" name="success" direction="out"/>
     </method>
+    <method name="UpdateBlockedNumber">
+      <arg type="s" name="bid" direction="in"/>
+      <arg type="s" name="number" direction="in"/>
+      <arg type="s" name="note" direction="in"/>
+      <arg type="b" name="block_calls" direction="in"/>
+      <arg type="b" name="block_messages" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+    </method>
     <method name="ImportBlocklist">
       <arg type="s" name="json_data" direction="in"/>
       <arg type="u" name="added" direction="out"/>
@@ -865,6 +873,7 @@ class TelephonyDaemonDBus:
             "GetBlocklist": self._handle_getblocklist,
             "AddBlockedNumber": self._handle_addblockednumber,
             "SetBlockedNumberFlags": self._handle_setblockednumberflags,
+            "UpdateBlockedNumber": self._handle_updateblockednumber,
             "ImportBlocklist": self._handle_importblocklist,
             "RemoveBlockedNumber": self._handle_removeblockednumber,
             "GetMissedMessages": self._handle_getmissedmessages,
@@ -1565,6 +1574,23 @@ class TelephonyDaemonDBus:
         bid, block_calls, block_messages = parameters.unpack()
         ok = self.db.set_blocked_flags(bid, block_calls, block_messages) if self.db else False
         invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+    def _handle_updateblockednumber(self, parameters, invocation):
+        """Handle UpdateBlockedNumber command."""
+        bid, number, note, block_calls, block_messages = parameters.unpack()
+
+        def done(ok):
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
+        def failed(error):
+            logger.error(f"[DBus] Update blocked number failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        if not self.db:
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+            return
+        run_in_background(self.db.update_blocked_number, bid, number, note,
+                          block_calls, block_messages, on_complete=done, on_error=failed)
 
     def _handle_importblocklist(self, parameters, invocation):
         """Handle ImportBlocklist command."""

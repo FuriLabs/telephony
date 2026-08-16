@@ -1142,6 +1142,50 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Set Blocked Flags Error: {e}")
             return False
 
+    def update_blocked_number(self, bid, number, note="", block_calls=True, block_messages=True):
+        """Change one blocklist entry, its number included.
+
+        The number is what a block is, so changing it changes this row
+        rather than starting another one: the entry keeps its id, and
+        the flags are written as given instead of merged, because an
+        edit is the user saying what the block should be now.
+
+        A number already blocked under another entry is refused rather
+        than folded into it, since folding would silently take the
+        other entry's settings and drop this one.
+
+        Blocking, call from a worker.
+        """
+        if self._refuse_write("update_blocked_number"):
+            return False
+        try:
+            clean_num = normalize_number(number, permissive=False)
+            if not clean_num:
+                logger.warning("[DB] Refusing a blocklist entry with no number")
+                return False
+
+            with self.lock:
+                c = self.conn_blocklist.cursor()
+                c.execute("SELECT id FROM blocklist WHERE number = ? AND id != ?", (clean_num, bid))
+                if c.fetchone() is not None:
+                    logger.warning(f"[DB] {clean_num} is already blocked under another entry")
+                    return False
+
+                c.execute("""UPDATE blocklist
+                             SET number = ?, note = ?, block_calls = ?, block_messages = ?
+                             WHERE id = ?""",
+                          (clean_num, note, 1 if block_calls else 0,
+                           1 if block_messages else 0, bid))
+                self.conn_blocklist.commit()
+
+            if self.gsettings_mgr:
+                self.gsettings_mgr.remove_from_special_lists(clean_num)
+            GLib.idle_add(self.emit, 'blocklist-updated')
+            return True
+        except Exception as e:
+            logger.error(f"[DB] Update blocked number error: {e}")
+            return False
+
     def import_blocklist(self, entries):
         """Merge imported entries; adds numbers and only ever raises flags."""
         if self._refuse_write("import_blocklist"):
