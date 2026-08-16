@@ -13,10 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Adw, GLib
+from gi.repository import Adw, GLib
 from gettext import gettext as _
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import close_dialog
+from telephony.client.ui.widgets.common_widget import (present_alert_sheet, present_choice_sheet,
+                                                      add_choice_row)
 
 
 class DataManagementDialog:
@@ -66,17 +67,10 @@ class DataManagementDialog:
 
     def _confirm_destructive(self, title, body, on_confirm):
         """Show destructive action confirmation."""
-        d = Adw.AlertDialog(heading=title, body=body)
-        d.add_response("cancel", _("Cancel"))
-        d.add_response("delete", _("Delete"))
-        d.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def _cb(dialog, resp):
-            if resp == "delete":
-                on_confirm()
-
-        d.connect("response", _cb)
-        d.present(self.page)
+        present_alert_sheet(
+            self.page.get_root(), title, body,
+            [("cancel", _("Cancel"), None), ("delete", _("Delete"), "destructive")],
+            lambda answer: on_confirm() if answer == "delete" else None)
 
     def ask_clear_history(self):
         """Ask to clear history."""
@@ -91,7 +85,7 @@ class DataManagementDialog:
         self._confirm_destructive(_("Delete Group Names"), _("Reset all custom group chat names?"), self._do_clear_groups)
 
     def ask_clear_blocklist(self):
-        """Ask to clear blocklist."""
+        """Ask to clear the blocklist."""
         self._confirm_destructive(_("Delete Blocklist"), _("Unblock all numbers?"), self._do_clear_blocklist)
 
     def ask_clear_contacts(self):
@@ -122,38 +116,19 @@ class DataManagementDialog:
             self._confirm_destructive(_("No deletable address books"), _("There are no custom address books that can be deleted."), lambda: None)
             return
 
-        d = Adw.AlertDialog(
-            heading=_("Delete Address Book"),
-            body=_("Which address book do you want to delete permanently?\n\nThis will wipe it from the system.")
-        )
-        d.add_response("cancel", _("Cancel"))
+        def build(group, window):
+            for source in enabled_sources:
+                def chosen(uid=source['uid'], source_name=source['name']):
+                    self._confirm_destructive(
+                        _("Delete Address Book"),
+                        _("Are you sure you want to permanently delete the '{name}' address book?").format(name=source_name),
+                        lambda: callback(uid))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        box.set_margin_top(12)
-        box.set_margin_bottom(12)
-        box.set_margin_start(24)
-        box.set_margin_end(24)
+                add_choice_row(group, window, source['name'], chosen, destructive=True)
 
-        for s in enabled_sources:
-            name = s['name']
-            if len(name) > 30:
-                name = name[:27] + "..."
-
-            btn = Gtk.Button(label=name)
-            btn.add_css_class("destructive-action")
-
-            def _cb_specific(b, uid=s['uid'], source_name=name):
-                GLib.idle_add(lambda: close_dialog(d) or False)
-                self._confirm_destructive(
-                    _("Delete Address Book"),
-                    _("Are you sure you want to permanently delete the '{name}' address book?").format(name=source_name),
-                    lambda: callback(uid)
-                )
-            btn.connect("clicked", lambda b, cb=_cb_specific: GLib.idle_add(lambda: cb(b) or False))
-            box.append(btn)
-
-        d.set_extra_child(box)
-        d.present(self.page)
+        present_choice_sheet(
+            self.page, _("Delete Address Book"), build,
+            description=_("Which address book do you want to delete permanently? This wipes it from the system."))
 
     def _prompt_delete_contacts_source(self, callback, everything=False):
         """Prompt user for which address book to delete (or All)."""
@@ -171,43 +146,14 @@ class DataManagementDialog:
             self._confirm_destructive(title, body, lambda: callback(None))
             return
 
-        d = Adw.AlertDialog(
-            heading=title,
-            body=body + "\n\n" + _("Select which address book to clear:")
-        )
-        d.add_response("cancel", _("Cancel"))
+        def build(group, window):
+            add_choice_row(group, window, _("All Address Books"),
+                           lambda: callback(None), destructive=True)
+            for source in enabled_sources:
+                add_choice_row(group, window, source['name'],
+                               lambda uid=source['uid']: callback(uid), destructive=True)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        box.set_margin_top(12)
-        box.set_margin_bottom(12)
-        box.set_margin_start(24)
-        box.set_margin_end(24)
-
-        btn_all = Gtk.Button(label=_("All Address Books"))
-        btn_all.add_css_class("destructive-action")
-
-        def _cb_all(b):
-            GLib.idle_add(lambda: close_dialog(d) or False)
-            callback(None)
-        btn_all.connect("clicked", lambda b: GLib.idle_add(lambda: _cb_all(b) or False))
-        box.append(btn_all)
-
-        for s in enabled_sources:
-            name = s['name']
-            if len(name) > 30:
-                name = name[:27] + "..."
-
-            btn = Gtk.Button(label=name)
-            btn.add_css_class("destructive-action")
-
-            def _cb_specific(b, uid=s['uid']):
-                GLib.idle_add(lambda: close_dialog(d) or False)
-                callback(uid)
-            btn.connect("clicked", lambda b, cb=_cb_specific: GLib.idle_add(lambda: cb(b) or False))
-            box.append(btn)
-
-        d.set_extra_child(box)
-        d.present(self.page)
+        present_choice_sheet(self.page, title, build, description=body)
 
     def _do_clear_history(self):
         """Clear history action."""

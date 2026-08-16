@@ -29,7 +29,7 @@ def _format_duration(seconds):
     return f"{total // 60}:{total % 60:02d}"
 
 
-class MediaCaptureWindow(Adw.Dialog):
+class MediaCaptureWindow(Adw.NavigationPage):
     """Base capture sheet providing shared timeout, bus watch and progress scaffolding."""
 
     def __init__(self, **kwargs):

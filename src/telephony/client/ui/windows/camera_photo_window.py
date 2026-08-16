@@ -26,9 +26,9 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, SHEET_CONTENT_WIDTH, CAPTURE_SHEET_HEIGHT)
+from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, CAPTURE_SHEET_HEIGHT)
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
-from telephony.client.ui.widgets.common_widget import close_dialog
+from telephony.client.ui.widgets.common_widget import close_sheet_page
 
 CAPTURE_START_DELAY_MS = 500
 CAPTURE_RETRY_DELAY_MS = 1000
@@ -43,9 +43,8 @@ class CameraPhoto(MediaCaptureWindow):
 
     def __init__(self, parent_window, on_attach_callback):
         super().__init__()
+        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
         self.on_attach_callback = on_attach_callback
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Take Picture"))
 
         self.output_path = None
@@ -60,7 +59,7 @@ class CameraPhoto(MediaCaptureWindow):
         self.max_retries = MAX_CAPTURE_RETRIES
 
         self._setup_ui()
-        self.connect("closed", self._on_closed)
+        self.connect("hidden", self._on_closed)
 
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
 
@@ -414,11 +413,11 @@ class CameraPhoto(MediaCaptureWindow):
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: close_dialog(self) or False)
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: close_dialog(self) or False)
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

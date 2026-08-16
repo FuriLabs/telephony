@@ -17,8 +17,7 @@ from gi.repository import Gtk, Adw, GLib
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
-from telephony.client.ui.widgets.common_widget import close_dialog
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
+from telephony.client.ui.widgets.common_widget import present_sheet_page, close_sheet_page
 
 CONTENT_MARGIN = 16
 BOTTOM_MARGIN = 24
@@ -44,14 +43,11 @@ class DateTimePicker:
 
         self.selected_date = initial_date if initial_date else GLib.DateTime.new_now_local()
 
-        self.dialog = Adw.Dialog(title=self.title)
-        self.dialog.set_content_width(SHEET_CONTENT_WIDTH)
-
         self.toolbar = Adw.ToolbarView()
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda x: GLib.idle_add(lambda: close_dialog(self.dialog) or False))
+        btn_cancel.connect("clicked", lambda x: GLib.idle_add(lambda: close_sheet_page(self.window) or False))
         header.pack_start(btn_cancel)
 
         btn_confirm = Gtk.Button(label=_("Confirm"))
@@ -60,10 +56,11 @@ class DateTimePicker:
         header.pack_end(btn_confirm)
 
         self.toolbar.add_top_bar(header)
-        self.dialog.set_child(self.toolbar)
 
         self._build_ui()
-        self.dialog.present(self.parent)
+        self.window = self.parent.get_root()
+        present_sheet_page(self.window,
+                           Adw.NavigationPage(title=self.title, child=self.toolbar))
 
     def _build_ui(self):
         """Construct the picker UI."""
@@ -199,9 +196,9 @@ class DateTimePicker:
             final_dt = GLib.DateTime.new_local(y, m, d, h, mn, 0)
         except Exception as e:
             logger.error(f"DateTime selection error: {e}")
-            close_dialog(self.dialog)
+            close_sheet_page(self.window)
             return
 
-        close_dialog(self.dialog)
+        close_sheet_page(self.window)
         if self.callback:
             self.callback(final_dt)

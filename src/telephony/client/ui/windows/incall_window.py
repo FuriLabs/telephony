@@ -26,8 +26,10 @@ from telephony.client.managers.call_feedback import CallFeedback
 from telephony.client.ui.windows.fader_window import ProximityFader
 from telephony.client.ui.windows.contact_picker_window import ContactPicker
 from telephony.client.ui.widgets.incall_elements_widget import (DynamicHangupButton, create_truncated_label)
-from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add_choice_row, close_dialog)
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
+from telephony.client.ui.widgets.common_widget import (
+                                                      install_sheet_host, present_sheet,
+                                                      close_sheet, on_sheet_closed,
+                                                      add_choice_row, present_sheet_page)
 from telephony.client.managers.lockscreen_manager import LockScreenManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.utils.ofono_direct_utils import hangup_all_direct
@@ -227,6 +229,7 @@ class InCallWindow(Adw.Window):
         self.toast_overlay = Adw.ToastOverlay()
         self.toast_overlay.set_child(self.main_box)
         self.set_content(self.toast_overlay)
+        self.sheet_host = install_sheet_host(self)
 
         self.bg_scrolled = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=180)
         self.bg_calls_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_top=10, margin_bottom=10, margin_start=15, margin_end=15)
@@ -393,19 +396,16 @@ class InCallWindow(Adw.Window):
         return b
 
     def _present_call_sheet(self, title):
-        """Open the shared call sheet host and return (nav, sheet).
+        """Show the window's sheet on a fresh navigation and return it.
 
         Every call sheet shares one geometry, like the settings flows,
         and nested steps push pages on the returned navigation so back
-        walks the flow instead of stacking dialogs.
+        walks the flow instead of opening a second sheet.
         """
         nav = Adw.NavigationView()
-        sheet = Adw.Dialog(title=title)
-        sheet.set_content_width(SHEET_CONTENT_WIDTH)
-        sheet.set_content_height(INCALL_SHEET_HEIGHT)
-        sheet.set_child(nav)
-        sheet.present(self)
-        return nav, sheet
+        nav.set_size_request(-1, INCALL_SHEET_HEIGHT)
+        present_sheet(self, nav)
+        return nav
 
     def _push_sheet_page(self, nav, title, content, target_path=None):
         """Push one page onto a call sheet's navigation.
@@ -477,11 +477,11 @@ class InCallWindow(Adw.Window):
         strip.append(sub)
         return strip
 
-    def _rows_page(self, build, sheet):
+    def _rows_page(self, build):
         """Build one preferences page whose group build fills with rows."""
         page = Adw.PreferencesPage()
         group = Adw.PreferencesGroup()
-        build(group, sheet)
+        build(group)
         page.add(group)
         return page
 
@@ -593,7 +593,7 @@ class InCallWindow(Adw.Window):
         """Show the output routes on their own sheet."""
         def present(reply):
             outputs, _inputs = reply if reply else ([], [])
-            nav, sheet = self._present_call_sheet(_("Output"))
+            nav = self._present_call_sheet(_("Output"))
             page = Adw.PreferencesPage()
             group = Adw.PreferencesGroup()
             for route_id, available in outputs:
@@ -601,7 +601,7 @@ class InCallWindow(Adw.Window):
                                          route_id == self.current_route, available)
                 if row.get_sensitive():
                     row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                        lambda: [close_dialog(sheet),
+                        lambda: [close_sheet(self),
                                  self._handle_output_selection(r_id)] and False))
                 group.add(row)
             page.add(group)
@@ -615,7 +615,7 @@ class InCallWindow(Adw.Window):
             _outputs, inputs = reply if reply else ([], [])
             audio = self.ofono.audio
 
-            nav, sheet = self._present_call_sheet(_("Input"))
+            nav = self._present_call_sheet(_("Input"))
             page = Adw.PreferencesPage()
 
             mute_group = Adw.PreferencesGroup()
@@ -635,7 +635,7 @@ class InCallWindow(Adw.Window):
                                          route_id == self.current_input_route, available)
                 if row.get_sensitive():
                     row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                        lambda: [close_dialog(sheet),
+                        lambda: [close_sheet(self),
                                  self.ofono.daemon.set_mic_muted(False),
                                  self.ofono.daemon.set_input_route(r_id)] and False))
                 input_group.add(row)
@@ -647,7 +647,7 @@ class InCallWindow(Adw.Window):
 
     def _open_keypad_sheet(self):
         """Show the DTMF keypad as a bottom sheet with an echo line."""
-        nav, sheet = self._present_call_sheet(_("Keypad"))
+        nav = self._present_call_sheet(_("Keypad"))
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8,
                           margin_start=14, margin_end=14, margin_bottom=18)
         echo = Gtk.Label(label="", css_classes=["title-2"])
@@ -672,7 +672,7 @@ class InCallWindow(Adw.Window):
         content.append(speaker)
         handler = self.ofono.connect("audio-changed", lambda *a: GLib.idle_add(
             lambda: speaker.set_visible(self.ofono.audio.current_route == "earpiece") or False))
-        sheet.connect("closed", lambda d: self.ofono.disconnect(handler))
+        on_sheet_closed(self, lambda: self.ofono.disconnect(handler))
 
         self._push_sheet_page(nav, _("Keypad"), content)
 
@@ -692,19 +692,19 @@ class InCallWindow(Adw.Window):
 
         held = p_data.get('state') == 'held'
 
-        def build(group, sheet):
-            hold = add_choice_row(group, sheet,
+        def build(group):
+            hold = add_choice_row(group, self,
                                   _("Resume") if held else _("Hold"),
                                   lambda: self.on_hold_toggle(None),
                                   icon="media-playback-start-symbolic" if held
                                   else "media-playback-pause-symbolic")
             hold.set_sensitive(p_data.get('state') in ('active', 'held'))
-            add = add_choice_row(group, sheet, _("Add Call"), lambda: self.on_add_call_click(None),
-                                 icon="contact-new-symbolic")
+            add = add_choice_row(group, self, _("Add Call"), lambda: self.on_add_call_click(None),
+                                 icon="contact-new-symbolic", opens_flow=True)
             add.set_sensitive(count_lines(calls) < 2 and p_data.get('state') in ('active', 'held'))
 
-        nav, sheet = self._present_call_sheet(_("Actions"))
-        self._push_sheet_page(nav, _("Actions"), self._rows_page(build, sheet))
+        nav = self._present_call_sheet(_("Actions"))
+        self._push_sheet_page(nav, _("Actions"), self._rows_page(build))
 
     def _open_calls_sheet(self):
         """Show swap, merge and transfer for the two-call mix."""
@@ -718,51 +718,51 @@ class InCallWindow(Adw.Window):
         show_pair = bool(primary_free and held_normal and (conference_allowed or transfer_allowed))
         show_join = bool(primary_free and held_conf and not held_normal and conference_allowed)
 
-        def build(group, sheet):
-            add_choice_row(group, sheet, _("Swap Calls"), self.ofono.swap_calls,
+        def build(group):
+            add_choice_row(group, self, _("Swap Calls"), self.ofono.swap_calls,
                            icon="media-playback-start-symbolic")
             if show_pair and conference_allowed:
-                add_choice_row(group, sheet, _("Merge Calls"),
+                add_choice_row(group, self, _("Merge Calls"),
                                lambda: self.on_merge_click(self.pill_context),
                                icon="object-flip-horizontal-symbolic")
             elif show_join:
-                add_choice_row(group, sheet, _("Join Conference"),
+                add_choice_row(group, self, _("Join Conference"),
                                lambda: self.on_merge_click(self.pill_context),
                                icon="object-flip-horizontal-symbolic")
             if show_pair and transfer_allowed:
                 a = self.call_history.get(self.active_path, {}).get('name', _("Unknown"))
                 b_name = self.call_history.get(held_normal[0], {}).get('name', _("Unknown"))
-                add_choice_row(group, sheet, _("Transfer"),
+                add_choice_row(group, self, _("Transfer"),
                                lambda: self.on_transfer_click(self.pill_context),
                                subtitle=_("Transfer connects {a} and {b} together and you leave the call").format(a=a, b=b_name),
                                icon="send-to-symbolic")
 
-        nav, sheet = self._present_call_sheet(_("Calls"))
-        self._push_sheet_page(nav, _("Calls"), self._rows_page(build, sheet))
+        nav = self._present_call_sheet(_("Calls"))
+        self._push_sheet_page(nav, _("Calls"), self._rows_page(build))
 
     def _open_participants_sheet(self):
         """Show every conference participant with split and hangup."""
         calls = self.ofono.active_calls
         conf = conference_paths(calls)
 
-        def build(group, sheet):
+        def build(group):
             for path in conf:
                 name = self.call_history.get(path, {}).get('name') or calls[path].get('number', _("Unknown"))
                 row = Adw.ActionRow(title=name)
                 b_priv = Gtk.Button(icon_name="call-outgoing-symbolic",
                                     css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
                 b_priv.connect("clicked", lambda b, p=path: GLib.idle_add(
-                    lambda: [close_dialog(sheet), self.on_private_chat_click(p)] and False))
+                    lambda: [close_sheet(self), self.on_private_chat_click(p)] and False))
                 b_drop = Gtk.Button(icon_name="call-stop-symbolic",
                                     css_classes=["flat", "circular", "error"], valign=Gtk.Align.CENTER)
                 b_drop.connect("clicked", lambda b, p=path: GLib.idle_add(
-                    lambda: [close_dialog(sheet), self.ofono.hangup_call(p)] and False))
+                    lambda: [close_sheet(self), self.ofono.hangup_call(p)] and False))
                 row.add_suffix(b_priv)
                 row.add_suffix(b_drop)
                 group.add(row)
 
-        nav, sheet = self._present_call_sheet(_("Participants"))
-        self._push_sheet_page(nav, _("Participants"), self._rows_page(build, sheet))
+        nav = self._present_call_sheet(_("Participants"))
+        self._push_sheet_page(nav, _("Participants"), self._rows_page(build))
 
     def _mk_btn(self, icon, cb, cls=None):
         """Helper to create a circular icon button."""
@@ -818,8 +818,9 @@ class InCallWindow(Adw.Window):
         self.img_input_route.set_from_icon_name(input_route_icon(route_id))
 
     def _present_choice_sheet(self, title, build_rows):
-        """Show a bottom sheet with a single group of choice rows."""
-        present_choice_sheet(self, title, build_rows)
+        """Show one group of choice rows in the window's sheet."""
+        nav = self._present_call_sheet(title)
+        self._push_sheet_page(nav, title, self._rows_page(build_rows))
 
     def _start_timers(self):
         """Start timers only when call is active."""
@@ -1188,7 +1189,7 @@ class InCallWindow(Adw.Window):
         """Pick a contact or number and dial it as a second call."""
         picker = ContactPicker(self.eds, self, self._on_add_call_picked,
                                title=_("Add Call"), action_label=_("Call"))
-        picker.present(self)
+        present_sheet_page(self, picker)
 
     def _on_add_call_picked(self, number):
         """Dial the picked number; ofono holds the current call itself."""
@@ -1265,19 +1266,19 @@ class InCallWindow(Adw.Window):
             callback(messages[0])
             return
 
-        def build(group, sheet):
+        def build(group):
             for msg in messages:
                 row = Adw.ActionRow(title=msg, activatable=True)
                 row.set_title_lines(2)
 
                 def _cb(row_widget, m=msg):
-                    close_dialog(sheet)
+                    close_sheet(self)
                     callback(m)
                 row.connect("activated", _cb)
                 group.add(row)
 
-        nav, sheet = self._present_call_sheet(_("Hangup and Send SMS"))
-        self._push_sheet_page(nav, _("Hangup and Send SMS"), self._rows_page(build, sheet),
+        nav = self._present_call_sheet(_("Hangup and Send SMS"))
+        self._push_sheet_page(nav, _("Hangup and Send SMS"), self._rows_page(build),
                               target_path=target_path)
 
     def on_ignore_with_sms(self, btn, path, number):
@@ -1585,13 +1586,13 @@ class InCallWindow(Adw.Window):
                 return
             outputs, _inputs = reply
 
-            def build(group, sheet):
+            def build(group):
                 for route_id, available in outputs:
                     row = self._mk_route_row(route_icon(route_id), route_label(route_id),
                                              route_id == self.current_route, available)
 
                     def _cb_out(row_widget, r_id=route_id):
-                        sheet.close()
+                        close_sheet(self)
                         self._handle_output_selection(r_id)
                     if row.get_sensitive():
                         row.connect("activated", _cb_out)
@@ -1608,13 +1609,13 @@ class InCallWindow(Adw.Window):
                 return
             _outputs, inputs = reply
 
-            def build(group, sheet):
+            def build(group):
                 for route_id, available in inputs:
                     row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
                                              route_id == self.current_input_route, available)
 
                     def _cb_in(row_widget, r_id=route_id):
-                        sheet.close()
+                        close_sheet(self)
                         if self.is_muted:
                             self.on_mute_toggle(None)
                         self.ofono.daemon.set_input_route(r_id)

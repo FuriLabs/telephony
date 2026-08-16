@@ -25,7 +25,7 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.vcard_utils import unfold_vcard
-from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, SHEET_CONTENT_WIDTH, CAPTURE_SHEET_HEIGHT)
+from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, CAPTURE_SHEET_HEIGHT)
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 
 SCAN_PIPELINE = (
@@ -56,8 +56,7 @@ class QrScanDialog(MediaCaptureWindow):
         self._found = False
         self._last_bad_toast = 0.0
 
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(CAPTURE_SHEET_HEIGHT)
+        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
 
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
@@ -98,7 +97,7 @@ class QrScanDialog(MediaCaptureWindow):
         hint.add_css_class("dim-label")
         content.append(hint)
 
-        self.connect("closed", self._on_closed)
+        self.connect("hidden", self._on_closed)
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
 
     def _start_viewfinder(self):

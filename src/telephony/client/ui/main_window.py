@@ -37,7 +37,11 @@ from telephony.client.ui.windows.blocklist_editor_window import BlocklistEditor
 from telephony.client.ui.windows.info_window import InfoPage
 from telephony.client.ui.windows.contact_picker_window import ContactPicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
-from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add_choice_row, build_info_sheet)
+from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add_choice_row,
+                                                      build_info_sheet,
+                                                      install_sheet_host, present_sheet,
+                                                      present_sheet_page, close_sheet_page,
+                                                      present_alert_sheet)
 
 CAPABILITY_BANNER_REASONS = ("no-modem", "airplane-mode", "no-voice-service")
 
@@ -51,7 +55,6 @@ class MainWindow(Adw.Window):
         self._resolve_section = None
         self.in_error_mode = False
         self._manual_sync_active = False
-        self._active_alert = None
         self._ussd_in_flight = False
         self._loading_toast = None
         self._current_toast = None
@@ -77,6 +80,7 @@ class MainWindow(Adw.Window):
 
         self.toast_overlay = Adw.ToastOverlay()
         self.set_content(self.toast_overlay)
+        self.sheet_host = install_sheet_host(self)
 
         main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.toast_overlay.set_child(main_vbox)
@@ -609,19 +613,6 @@ class MainWindow(Adw.Window):
             self.dialpad_view.entry.set_text(number)
             self.dialpad_view.entry.set_position(-1)
 
-    def present_alert(self, dialog):
-        """Present an alert, dismissing any alert already showing."""
-        if self._active_alert is not None:
-            self._active_alert.close()
-        self._active_alert = dialog
-        dialog.connect("closed", self._on_alert_closed)
-        dialog.present(self)
-
-    def _on_alert_closed(self, dialog):
-        """Forget the tracked alert once it goes away."""
-        if self._active_alert is dialog:
-            self._active_alert = None
-
     def handle_ussd(self, code):
         """Initiate a USSD request, one at a time."""
         if self._ussd_in_flight:
@@ -652,24 +643,21 @@ class MainWindow(Adw.Window):
 
     def show_ussd_dialog(self, text):
         """Show the USSD response sheet, replacing any shown before it."""
-        self.present_alert(build_info_sheet(_("USSD Result"), text, selectable=True))
+        present_sheet_page(self, build_info_sheet(_("USSD Result"), text, selectable=True),
+                           replace=True)
 
     def confirm_action(self, title, body, on_confirm):
         """Show a confirmation dialog."""
-        d = Adw.AlertDialog(heading=title, body=body)
-        d.add_response("cancel", _("Cancel"))
-        d.add_response("yes", _("Confirm"))
-        d.set_response_appearance("yes", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def _cb(dialog, resp):
+        def _cb(resp):
             if resp == "yes":
                 on_confirm()
-        d.connect("response", _cb)
-        self.present_alert(d)
+        present_alert_sheet(self, title, body,
+                            [("cancel", _("Cancel"), None), ("yes", _("Confirm"), "destructive")],
+                            _cb)
 
     def on_settings_click(self, btn):
         """Open the settings sheet."""
-        SettingsWindow(self, self.eds, self.ofono).present(self)
+        present_sheet(self, SettingsWindow(self, self.eds, self.ofono))
 
     def on_duplicate_resolver_setting_changed(self, settings, key):
         """Handle toggle of duplicate resolver setting."""
@@ -728,8 +716,9 @@ class MainWindow(Adw.Window):
             contact_name = self.eds.get_contact_name(number_preset)
             if contact_name:
                 name_preset = contact_name
-        BlocklistEditor(self.db, self.eds, self, number_preset=number_preset,
-                        name_preset=name_preset).present(self)
+        present_sheet_page(self, BlocklistEditor(self.db, self.eds, self,
+                                                 number_preset=number_preset,
+                                                 name_preset=name_preset))
 
     def on_force_sync_click(self, btn):
         """Force address book backends to sync, falling back to a local reload."""
@@ -763,7 +752,7 @@ class MainWindow(Adw.Window):
             elif len(results) == 1:
                 contact_data = self.eds.cache.get(results[0][0])
             else:
-                def build(group, sheet):
+                def build(group, window):
                     for res in results:
                         c_data = self.eds.cache.get(res[0])
                         if not c_data:
@@ -775,16 +764,20 @@ class MainWindow(Adw.Window):
                         if source_uid and source_uid in self.eds.sources:
                             source_name = self.eds.sources[source_uid].get('name', source_name)
 
-                        add_choice_row(group, sheet, name,
+                        add_choice_row(group, window, name,
                                        lambda data=c_data: self.present_edit_contact(contact_data=data),
-                                       subtitle=source_name)
+                                       subtitle=source_name, opens_flow=True)
 
                 present_choice_sheet(self, _("Multiple Contacts Found"), build,
                                      description=_("Which contact would you like to edit?"))
                 return
 
-        win = ContactEditor(self.eds, self, contact_data, number_preset=number_preset)
-        win.present(self)
+        self._open_contact_editor(contact_data, number_preset)
+
+    def _open_contact_editor(self, contact_data, number_preset):
+        """Show the editor for one contact."""
+        present_sheet_page(self, ContactEditor(self.eds, self, contact_data,
+                                               number_preset=number_preset))
 
     def present_chat(self, number):
         """Open chat for a number."""
@@ -821,14 +814,10 @@ class MainWindow(Adw.Window):
 
     def show_call_details(self, item):
         """Show the call details sheet for a history item."""
-        sheet = Adw.Dialog(title=_("Call Details"))
-        sheet.set_content_width(360)
-
         toolbar = Adw.ToolbarView()
         toolbar.add_top_bar(Adw.HeaderBar())
         page = Adw.PreferencesPage()
         toolbar.set_content(page)
-        sheet.set_child(toolbar)
 
         grp_info = Adw.PreferencesGroup()
         page.add(grp_info)
@@ -839,14 +828,24 @@ class MainWindow(Adw.Window):
         grp_actions = Adw.PreferencesGroup()
         page.add(grp_actions)
 
-        def add_action(label, callback, destructive=False, needs_eds=False):
+        def add_action(label, callback, destructive=False, needs_eds=False, opens_flow=False):
+            """Add one action row.
+
+            An action that opens another flow leaves these details
+            where they are, so the flow goes on top of them and back
+            comes here. One that finishes the job takes them away.
+            """
             row = Adw.ActionRow(title=label, activatable=True)
             if destructive:
                 row.add_css_class("error")
             if needs_eds and not self.eds.is_ready:
                 row.set_sensitive(False)
-            row.connect("activated", lambda r: GLib.idle_add(
-                lambda: [sheet.close(), callback()] and False))
+            if opens_flow:
+                row.connect("activated", lambda r: GLib.idle_add(
+                    lambda: callback() or False))
+            else:
+                row.connect("activated", lambda r: GLib.idle_add(
+                    lambda: [close_sheet_page(self), callback()] and False))
             grp_actions.add(row)
 
         blocked_list = self.db.get_blocked_numbers()
@@ -864,10 +863,12 @@ class MainWindow(Adw.Window):
             add_action(_("Unblock Number"), _unblock, needs_eds=True)
         else:
             lbl = _("Edit Contact") if item.is_saved else _("Add to Contacts")
-            add_action(lbl, lambda: self.present_edit_contact(number_preset=item.number), needs_eds=True)
+            add_action(lbl, lambda: self.present_edit_contact(number_preset=item.number),
+                           needs_eds=True, opens_flow=True)
 
             if not item.is_saved:
-                add_action(_("Add to Existing Contact"), lambda: self.on_add_to_existing(item), needs_eds=True)
+                add_action(_("Add to Existing Contact"), lambda: self.on_add_to_existing(item),
+                               needs_eds=True, opens_flow=True)
                 add_action(_("Search Number"), lambda: self._search_number_online(item.number))
 
         add_action(_("Send Message"), lambda: self.present_chat(item.number))
@@ -875,14 +876,16 @@ class MainWindow(Adw.Window):
 
         if not is_blocked_id:
             add_action(_("Block Number"), lambda: self.present_blocklist_editor(number_preset=item.number),
+                       opens_flow=True,
                        destructive=True, needs_eds=True)
 
         add_action(_("Delete this call"),
                    lambda: self.confirm_action(_("Delete Call"), _("Remove this call?"),
-                                               lambda: [self.daemon.delete_call_entry(item.id)]),
-                   destructive=True)
+                                               lambda: [close_sheet_page(self),
+                                                        self.daemon.delete_call_entry(item.id)]),
+                   destructive=True, opens_flow=True)
 
-        sheet.present(self)
+        present_sheet_page(self, Adw.NavigationPage(title=_("Call Details"), child=toolbar))
 
     def _search_number_online(self, number):
         """Open the configured search engine for a phone number."""
@@ -937,4 +940,4 @@ class MainWindow(Adw.Window):
             allow_custom_number=False,
             return_contact_uid=True
         )
-        picker.present(self)
+        present_sheet_page(self, picker)

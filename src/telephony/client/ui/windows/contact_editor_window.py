@@ -23,15 +23,19 @@ from telephony.shared.utils.vcard_utils import extract_e164_number, unfold_vcard
 from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
-from telephony.client.ui.widgets.common_widget import translate_phone_label, close_dialog
-from telephony.shared.constants import CONTACT_SHEET_WIDTH, CONTACT_SHEET_HEIGHT
+from telephony.client.ui.widgets.common_widget import (translate_phone_label, present_alert_sheet,
+                                                      close_sheet_page, present_sheet_page)
+from telephony.shared.constants import CONTACT_SHEET_HEIGHT
 
 
-class ContactEditor(Adw.Dialog):
-    """Dialog for editing or viewing contact details.
+class ContactEditor(Adw.NavigationPage):
+    """The page for editing or viewing contact details.
 
-    Presents as a bottom sheet on phone-sized windows and as a floating
-    dialog on wide ones, which Adw.Dialog decides by itself.
+    Its own pages go onto the sheet's navigation rather than a private
+    one. A navigation view inside a page of another one puts a second
+    back gesture over the first, and the inner one takes the swipe and
+    then has nowhere to go, so going back happens without the
+    transition that every other page gets.
     """
 
     def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None):
@@ -42,7 +46,7 @@ class ContactEditor(Adw.Dialog):
         self._saving_in_progress = False
         self._destroyed = False
         super().__init__(title=_("Contact Details"))
-        self.connect("closed", self._on_closed)
+        self.connect("hidden", self._on_closed)
         self.eds = eds_manager
         self.main_window = main_window
         self.uid = contact_data['uid'] if contact_data else None
@@ -61,16 +65,11 @@ class ContactEditor(Adw.Dialog):
 
         self.mode = "VIEW" if self.uid else "EDIT"
 
-        self.set_content_width(CONTACT_SHEET_WIDTH)
-        self.set_content_height(CONTACT_SHEET_HEIGHT)
+        self.set_size_request(-1, CONTACT_SHEET_HEIGHT)
 
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
 
-        self.nav_view = Adw.NavigationView()
-        self.toast_overlay.set_child(self.nav_view)
-        self.editor_page = Adw.NavigationPage(title=_("Contact Details"))
-        self.nav_view.add(self.editor_page)
 
         self.phone_entries = []
         self.email_entries = []
@@ -305,7 +304,7 @@ class ContactEditor(Adw.Dialog):
             grp_danger.add(row_del)
             page.add(grp_danger)
 
-        self.editor_page.set_child(view)
+        self.toast_overlay.set_child(view)
 
     def _add_address_books_group(self, page):
         grp = Adw.PreferencesGroup(title=_("Address Books"))
@@ -442,7 +441,7 @@ class ContactEditor(Adw.Dialog):
             self.set_title(_("Contact Details"))
             self.refresh_ui()
         else:
-            GLib.idle_add(lambda: close_dialog(self) or False)
+            GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _add_phone_row(self, text="", label="Mobile"):
         """Add a phone number entry row."""
@@ -539,12 +538,12 @@ class ContactEditor(Adw.Dialog):
 
     def _message_number(self, number):
         """Open a chat for the number, leaving the modal editor first."""
-        close_dialog(self)
+        close_sheet_page(self.get_root())
         self.main_window.present_chat(normalize_number(number))
 
     def _call_number(self, number):
         """Start a call to the number, leaving the modal editor first."""
-        close_dialog(self)
+        close_sheet_page(self.get_root())
         self.main_window.start_call(number)
 
     def _open_mailto(self, address):
@@ -669,7 +668,7 @@ class ContactEditor(Adw.Dialog):
     def _do_delete(self):
         """Perform deletion."""
         if not self.uid:
-            GLib.idle_add(lambda: close_dialog(self) or False)
+            GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
             return
 
         contact = self.eds.cache.get(self.uid)
@@ -689,7 +688,7 @@ class ContactEditor(Adw.Dialog):
         def done(deleted_numbers):
             for num in deleted_numbers or []:
                 self.main_window.gsettings_mgr.reset_special_list_names(num)
-            close_dialog(self)
+            close_sheet_page(self.get_root())
 
         run_in_background(task, on_complete=done)
 
@@ -876,7 +875,7 @@ class ContactEditor(Adw.Dialog):
                             self.on_save(self.btn_save, force=True)
 
                     page = DuplicateResolutionWindow(conflicts, self.eds, self.main_window.daemon, on_wizard_done)
-                    self.nav_view.push(page)
+                    present_sheet_page(self.get_root(), page)
                     return
 
             self._proceed_with_save(phones_to_save, selected_sources)
@@ -927,7 +926,7 @@ class ContactEditor(Adw.Dialog):
                 on_error=lambda error: self._on_save_failed(error, fn, final_vcard)
             )
             self._saving_in_progress = False
-            close_dialog(self)
+            close_sheet_page(self.get_root())
         except Exception as e:
             self._saving_in_progress = False
             self.btn_save.set_sensitive(True)
@@ -986,7 +985,7 @@ class ContactEditor(Adw.Dialog):
             editor = ContactEditor(self.eds, self.main_window,
                                    contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard})
             editor.on_edit_mode_click(None)
-            editor.present(self.main_window)
+            present_sheet_page(self.main_window, editor)
             messages = {"read-only": _("This address book is read-only"),
                         "no-writable-book": _("No writable address book available")}
             editor.toast_overlay.add_toast(Adw.Toast.new(
@@ -997,20 +996,14 @@ class ContactEditor(Adw.Dialog):
 
     def _confirm_unblock_add(self, _number_str, on_confirm):
         """Show confirmation to unblock and add to contacts."""
-        d = Adw.AlertDialog(
-            heading=_("Conflict"),
-            body=_("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Unblocking and add the number to Contacts?")
-        )
-        d.add_response("cancel", _("Cancel"))
-        d.add_response("yes", _("Yes, Add to Contacts"))
-        d.set_response_appearance("yes", Adw.ResponseAppearance.SUGGESTED)
-
-        def _cb(dialog, resp):
+        def _cb(resp):
             if resp == "yes":
                 on_confirm()
-
-        d.connect("response", _cb)
-        d.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Conflict"),
+            _("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Unblocking and add the number to Contacts?"),
+            [("cancel", _("Cancel"), None), ("yes", _("Yes, Add to Contacts"), "suggested")],
+            _cb)
 
     def _show_error(self, title, msg):
         """Report a failure on this sheet, where the user is looking."""

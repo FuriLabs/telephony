@@ -25,9 +25,9 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.constants import (SHEET_CONTENT_WIDTH, CAPTURE_SHEET_HEIGHT, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
+from telephony.shared.constants import (CAPTURE_SHEET_HEIGHT, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow, _format_duration
-from telephony.client.ui.widgets.common_widget import close_dialog
+from telephony.client.ui.widgets.common_widget import close_sheet_page
 
 MAX_RECORD_SECONDS = 120
 RECORD_TIMER_INTERVAL_MS = 1000
@@ -48,11 +48,10 @@ class SoundRecorder(MediaCaptureWindow):
 
     def __init__(self, parent_window, on_attach_callback, max_bytes=MAX_MMS_AUDIO_BYTES):
         super().__init__()
+        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
         self.on_attach_callback = on_attach_callback
         self.max_bytes = max_bytes
         self._attached = False
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Voice Message"))
 
         self.output_path = None
@@ -75,7 +74,7 @@ class SoundRecorder(MediaCaptureWindow):
         self.progress_timer_id = None
 
         self._setup_ui()
-        self.connect("closed", self._on_closed)
+        self.connect("hidden", self._on_closed)
 
     def _setup_ui(self):
         """Build the UI components."""
@@ -381,11 +380,11 @@ class SoundRecorder(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: close_dialog(self) or False)
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: close_dialog(self) or False)
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

@@ -14,8 +14,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.constants import (CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT, CALL_VOLUME_DEFAULT_PERCENT)
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
+from telephony.shared.constants import (CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT,
+                                       CALL_VOLUME_DEFAULT_PERCENT, SETTINGS_SHEET_HEIGHT)
 from gi.repository import Gtk, Adw, GLib
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
@@ -30,17 +30,22 @@ from telephony.client.ui.windows.advanced_settings_window import AdvancedSetting
 from telephony.client.ui.windows.favorites_list_window import FavoritesListWindow
 from telephony.client.ui.windows.network_services_window import NetworkServicesWindow
 from telephony.client.ui.windows.import_export_window import ImportExportDialog
-from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row, wire_blocklist_switch_locks)
+from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row, wire_blocklist_switch_locks,
+                                                      present_sheet_page,
+                                                      close_sheet_page,
+                                                      present_alert_sheet)
 
 
 PENDING_BOOKS_TIMEOUT_SECONDS = 5
 
 
-class SettingsWindow(Adw.Dialog):
-    """Settings dialog holding every settings page in one navigation view.
+class SettingsWindow(Adw.Bin):
+    """Settings holding every settings page in one navigation view.
 
-    Presents as a bottom sheet on phone sized windows; subpages push onto
-    the navigation view instead of spawning their own windows.
+    Shown in the window's bottom sheet rather than as a dialog dressed
+    as one, so it spans the window whatever the display scale is.
+    Subpages push onto the navigation view instead of spawning their
+    own windows.
     """
 
     def __init__(self, main_window, eds_manager, ofono_manager):
@@ -48,7 +53,7 @@ class SettingsWindow(Adw.Dialog):
         self._volume_commit_timer = None
         self.source_rows = None
         self.sources_state = None
-        super().__init__(title=_("Settings"))
+        super().__init__()
         self.connect("unmap", self._on_settings_unmap)
 
         self.main_window = main_window
@@ -60,9 +65,7 @@ class SettingsWindow(Adw.Dialog):
         self._pending_books_signature = None
         self._pending_books_timer = None
 
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(750)
-
+        self.set_size_request(-1, SETTINGS_SHEET_HEIGHT)
 
         self.temp_ringback_file = self.main_window.gsettings_mgr.get_setting(
             "ringback_custom_file")
@@ -197,8 +200,6 @@ class SettingsWindow(Adw.Dialog):
 
     def _open_block_sheet(self, entry=None):
         """Show the block sheet, blank for a new number or pre-filled to edit."""
-        sheet = Adw.Dialog(title=_("Block Number"))
-        sheet.set_content_width(SHEET_CONTENT_WIDTH)
         view = Adw.ToolbarView()
         view.add_top_bar(Adw.HeaderBar())
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10,
@@ -243,7 +244,7 @@ class SettingsWindow(Adw.Dialog):
             def done(ok):
                 if ok:
                     self._reload_blocklist()
-                    sheet.close()
+                    close_sheet_page(self.get_root())
                 else:
                     self.main_window.notify_error(_("Failed to save to blocklist."))
 
@@ -267,8 +268,8 @@ class SettingsWindow(Adw.Dialog):
         btn.connect("clicked", submit)
         box.append(btn)
         view.set_content(box)
-        sheet.set_child(view)
-        sheet.present(self)
+        present_sheet_page(self.get_root(),
+                           Adw.NavigationPage(title=_("Block Number"), child=view))
 
     def _on_block_deleted(self, entry):
         """Remove this launcher's block; the entry dies when nothing remains.
@@ -297,20 +298,7 @@ class SettingsWindow(Adw.Dialog):
         scroll.set_child(page)
         view.set_content(scroll)
         build(page)
-        nav_page = Adw.NavigationPage(title=title, child=view)
-        nav_page.connect("showing", self._on_category_showing)
-        self.nav_view.push(nav_page)
-
-    def _on_category_showing(self, page):
-        """Drop the automatic focus so entry rows don't pop the keyboard."""
-        GLib.idle_add(self._clear_entry_focus)
-
-    def _clear_entry_focus(self):
-        """Move focus off any entry row; the keyboard stays down until tapped."""
-        focus = self.get_focus()
-        if focus is not None and isinstance(focus, Gtk.Text):
-            self.set_focus(None)
-        return False
+        self.nav_view.push(Adw.NavigationPage(title=title, child=view))
 
     def _build_sim_page(self, page):
         """Build the SIM settings category page."""
@@ -1073,21 +1061,12 @@ class SettingsWindow(Adw.Dialog):
 
     def _confirm_delete_addressbook(self, uid, name):
         """Confirm and delete a local address book."""
-        dialog = Adw.AlertDialog(
-            heading=_("Delete Address Book"),
-            body=_("Are you sure you want to permanently delete the '{name}' address book?").format(name=name))
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_resp(d, resp):
-            if resp != "delete":
-                return
-            run_in_background(self.main_window.daemon.delete_address_book, uid,
-                              on_complete=self._on_addressbook_deleted)
-
-        dialog.connect("response", on_resp)
-        dialog.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Delete Address Book"),
+            _("Are you sure you want to permanently delete the '{name}' address book?").format(name=name),
+            [("cancel", _("Cancel"), None), ("delete", _("Delete"), "destructive")],
+            lambda answer: self.main_window.daemon.delete_address_book(
+                uid, callback=self._on_addressbook_deleted) if answer == "delete" else None)
 
     def _on_addressbook_deleted(self, success):
         """Refresh the sources list after an address book removal."""
