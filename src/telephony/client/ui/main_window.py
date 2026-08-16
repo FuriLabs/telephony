@@ -752,24 +752,11 @@ class MainWindow(Adw.Window):
             elif len(results) == 1:
                 contact_data = self.eds.cache.get(results[0][0])
             else:
-                def build(group, window):
-                    for res in results:
-                        c_data = self.eds.cache.get(res[0])
-                        if not c_data:
-                            continue
+                def offer(books):
+                    book_names = {book['uid']: book['name'] for book in (books or [])}
+                    self._choose_contact_to_edit(results, book_names)
 
-                        name = c_data.get('name', _("Unknown"))
-                        source_uid = c_data.get('source_uid')
-                        source_name = _("Unknown Addressbook")
-                        if source_uid and source_uid in self.eds.sources:
-                            source_name = self.eds.sources[source_uid].get('name', source_name)
-
-                        add_choice_row(group, window, name,
-                                       lambda data=c_data: self.present_edit_contact(contact_data=data),
-                                       subtitle=source_name, opens_flow=True)
-
-                present_choice_sheet(self, _("Multiple Contacts Found"), build,
-                                     description=_("Which contact would you like to edit?"))
+                run_in_background(self.daemon.get_address_books, on_complete=offer)
                 return
 
         self._open_contact_editor(contact_data, number_preset)
@@ -778,6 +765,28 @@ class MainWindow(Adw.Window):
         """Show the editor for one contact."""
         present_sheet_page(self, ContactEditor(self.eds, self, contact_data,
                                                number_preset=number_preset))
+
+    def _choose_contact_to_edit(self, results, book_names):
+        """Ask which of the matching contacts to edit.
+
+        The books are named by the owner rather than by this window: a
+        window keeps no address book registry of its own, so asking it
+        leaves every book reading as unknown.
+        """
+        def build(group, window):
+            for res in results:
+                c_data = self.eds.cache.get(res[0])
+                if not c_data:
+                    continue
+
+                add_choice_row(group, window, c_data.get('name', _("Unknown")),
+                               lambda data=c_data: self.present_edit_contact(contact_data=data),
+                               subtitle=book_names.get(c_data.get('source_uid'),
+                                                       _("Unknown Addressbook")),
+                               opens_flow=True)
+
+        present_choice_sheet(self, _("Multiple Contacts Found"), build,
+                             description=_("Which contact would you like to edit?"))
 
     def present_chat(self, number):
         """Open chat for a number."""
