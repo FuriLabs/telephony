@@ -21,7 +21,7 @@ from telephony.shared.utils.phone_utils import normalize_number
 from gi.repository import Gtk, Adw, GLib
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
+from telephony.shared.constants import SHEET_CONTENT_WIDTH, ALERT_SHEET_SPACING, ALERT_SHEET_MARGIN
 
 LIST_CHUNK_SIZE = 20
 INFO_SHEET_MAX_HEIGHT = 520
@@ -29,17 +29,191 @@ INFO_SHEET_MAX_HEIGHT = 520
 _CLOSING_DIALOGS = weakref.WeakSet()
 
 
-def close_dialog(dialog):
-    """Close a dialog exactly once, ignoring repeats during the animation.
+def install_sheet_host(window):
+    """Give a window the bottom sheet its flows are shown in.
 
-    A double tap otherwise closes an already closed dialog, which
-    Adwaita reports as a critical.
+    Adwaita's sheet is a widget that lives in the window rather than
+    something presented onto it, so the window keeps one and shows
+    whatever is asked for in it. It spans the window by itself, which
+    a sheet made out of a dialog does not, and a dialog offers nothing
+    to ask for it with.
+
+    One per window is the design rather than a limit: a flow opened
+    from inside a sheet pushes a page on the navigation already there
+    instead of opening a second sheet over the first.
+
+    The window lets go of what it is showing before the sheet is given
+    it. A widget has one parent, so handing it over while the window
+    still holds it fails and leaves the window with nothing in it.
     """
-    if dialog in _CLOSING_DIALOGS:
+    content = window.get_content()
+    window.set_content(None)
+
+    host = Adw.BottomSheet()
+    host.set_modal(True)
+    host.set_content(content)
+    window.set_content(host)
+    return host
+
+
+def present_sheet(window, child):
+    """Show a widget as the window's bottom sheet."""
+    window.sheet_host.set_sheet(child)
+    window.sheet_host.set_open(True)
+
+
+def present_alert_sheet(window, heading, body, responses, on_response, extra_child=None):
+    """Ask a question in the window's sheet.
+
+    responses are (id, label, appearance) with appearance one of None,
+    "suggested" or "destructive". The answer reaches on_response only
+    when a button is pressed: leaving by the back arrow is the same as
+    saying no, which is what every caller of this already treated an
+    untouched question as.
+
+    A question asked on top of a flow keeps that flow's height, so the
+    sheet does not shrink to the question and grow back afterwards, and
+    it is left by the back arrow the flow already has. A question asked
+    with nothing underneath has no arrow to offer, so it carries its
+    own way out.
+    """
+    host = window.sheet_host
+    showing = sheet_navigation(host.get_sheet()) if host.get_open() else None
+
+    toolbar = Adw.ToolbarView()
+    header = Adw.HeaderBar()
+    if showing is None:
+        btn_cancel = Gtk.Button(label=_("Cancel"))
+        btn_cancel.connect("clicked", lambda _b: GLib.idle_add(
+            lambda: close_sheet(window) or False))
+        header.pack_start(btn_cancel)
+    toolbar.add_top_bar(header)
+
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=ALERT_SHEET_SPACING,
+                  margin_top=ALERT_SHEET_MARGIN, margin_bottom=ALERT_SHEET_MARGIN,
+                  margin_start=ALERT_SHEET_MARGIN, margin_end=ALERT_SHEET_MARGIN)
+
+    if body:
+        label = Gtk.Label(label=body, wrap=True, xalign=0, valign=Gtk.Align.START)
+        box.append(label)
+
+    if extra_child is not None:
+        box.append(extra_child)
+
+    for response_id, label_text, appearance in responses:
+        button = Gtk.Button(label=label_text)
+        button.add_css_class("pill")
+        if appearance:
+            button.add_css_class(f"{appearance}-action")
+        button.connect("clicked", lambda _b, rid=response_id: GLib.idle_add(
+            lambda: [close_sheet_page(window), on_response(rid)] and False))
+        box.append(button)
+
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, vexpand=True)
+    scroll.set_child(box)
+    toolbar.set_content(scroll)
+
+    present_sheet_page(window, Adw.NavigationPage(title=heading, child=toolbar))
+
+
+def sheet_navigation(widget):
+    """Find the navigation a sheet keeps its pages in.
+
+    A flow does not have to be a navigation itself to hold one: the
+    settings sheet is a bin around a toast overlay around its own
+    navigation, and pages opened from inside it belong on that one
+    rather than on a fresh one that would replace the flow.
+    """
+    if widget is None:
+        return None
+    if isinstance(widget, Adw.NavigationView):
+        return widget
+
+    child = widget.get_first_child()
+    while child is not None:
+        found = sheet_navigation(child)
+        if found is not None:
+            return found
+        child = child.get_next_sibling()
+    return None
+
+
+def present_sheet_page(window, page, replace=False):
+    """Show a page in the window's sheet, pushing it onto whatever is there.
+
+    A window has one sheet, so a flow opened from inside another one
+    goes on top of it as a page and back walks out of it. That is what
+    a sheet on top of a sheet was standing in for.
+
+    Replacing is for what arrives on its own rather than by asking: a
+    second answer to a network request takes the place of the first
+    instead of burying it.
+
+    A page going onto an open sheet asks for the height the sheet
+    already has, so a short page does not shrink the sheet around it
+    and let it spring back when the page is left.
+    """
+    host = window.sheet_host
+    nav = sheet_navigation(host.get_sheet()) if host.get_open() else None
+    if nav is not None:
+        page.set_size_request(-1, nav.get_height())
+        if replace:
+            nav.replace([page])
+            return
+        nav.push(page)
         return
-    _CLOSING_DIALOGS.add(dialog)
-    dialog.connect("closed", _CLOSING_DIALOGS.discard)
-    dialog.close()
+
+    nav = Adw.NavigationView()
+    nav.add(page)
+    present_sheet(window, nav)
+
+
+def close_sheet_page(window):
+    """Leave the flow on top, or take the sheet down when it is the last."""
+    nav = sheet_navigation(window.sheet_host.get_sheet())
+    if nav is not None:
+        visible = nav.get_visible_page()
+        if visible is not None and nav.get_previous_page(visible) is not None:
+            nav.pop()
+            return
+    close_sheet(window)
+
+
+def on_sheet_closed(window, callback):
+    """Run callback once, when the window's sheet is taken down.
+
+    A sheet is a widget rather than a dialog, so it reports going away
+    by its open state changing rather than by closing.
+    """
+    state = {"id": None}
+
+    def watch(host, _param):
+        if host.get_open():
+            return
+        host.disconnect(state["id"])
+        callback()
+
+    state["id"] = window.sheet_host.connect("notify::open", watch)
+
+
+def close_sheet(window):
+    """Take the window's bottom sheet down."""
+    window.sheet_host.set_open(False)
+
+
+def stay_a_sheet(dialog):
+    """Keep a dialog at the bottom of the screen rather than floating.
+
+    Adwaita decides between a sheet and a floating dialog from how wide
+    the window is, and window width is display scale: the same phone is
+    360 points across at 300 per cent and 540 at 200, so lowering the
+    scale turned every dialog into a box in the middle of the screen.
+
+    What still comes through here is what a dialog is for: the alerts,
+    which stack over whatever is showing and answer with a response.
+    The flows are sheets in their own right and go to the window's.
+    """
+    dialog.set_presentation_mode(Adw.DialogPresentationMode.BOTTOM_SHEET)
 
 
 def present_choice_sheet(parent, title, build_rows, description=None):
@@ -48,11 +222,10 @@ def present_choice_sheet(parent, title, build_rows, description=None):
     build_rows(group, sheet) fills the group; rows close the sheet
     themselves when picked.
     """
-    sheet = Adw.Dialog(title=title)
-    sheet.set_content_width(SHEET_CONTENT_WIDTH)
+    window = parent.get_root()
 
     toolbar = Adw.ToolbarView()
-    toolbar.add_top_bar(Adw.HeaderBar())
+    toolbar.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
 
     page = Adw.PreferencesPage()
     group = Adw.PreferencesGroup()
@@ -60,15 +233,14 @@ def present_choice_sheet(parent, title, build_rows, description=None):
         group.set_description(description)
     page.add(group)
     toolbar.set_content(page)
-    sheet.set_child(toolbar)
 
-    build_rows(group, sheet)
-    sheet.present(parent)
-    return sheet
+    build_rows(group, window)
+    present_sheet_page(window, Adw.NavigationPage(title=title, child=toolbar))
+    return window
 
 
-def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=False, icon=None):
-    """Add one activatable row that closes the sheet and runs its callback."""
+def _choice_row(group, label, callback, dismiss, subtitle=None, destructive=False, icon=None):
+    """Add one activatable row that puts its own surface away and runs callback."""
     row = Adw.ActionRow(title=label, activatable=True)
     if subtitle:
         row.set_subtitle(subtitle)
@@ -77,23 +249,34 @@ def add_choice_row(group, sheet, label, callback, subtitle=None, destructive=Fal
     if destructive:
         row.add_css_class("error")
     row.connect("activated", lambda r: GLib.idle_add(
-        lambda: [close_dialog(sheet), callback()] and False))
+        lambda: [dismiss(), callback()] and False))
     group.add(row)
     return row
 
 
+def add_choice_row(group, window, label, callback, subtitle=None, destructive=False,
+                   icon=None, opens_flow=False):
+    """Add one activatable row that leaves its flow and runs its callback.
+
+    A row that opens another flow keeps the one it is in, so the new
+    flow arrives on top of it and back walks out the way the user came.
+    Taking the choice away first leaves whatever it opens with nothing
+    behind it and no way back.
+    """
+    dismiss = (lambda: None) if opens_flow else (lambda: close_sheet_page(window))
+    return _choice_row(group, label, callback, dismiss,
+                       subtitle=subtitle, destructive=destructive, icon=icon)
+
+
 def build_info_sheet(title, text, selectable=False):
-    """Build a bottom sheet holding a titled block of explanatory text.
+    """Build the page holding a titled block of explanatory text.
 
     The sheet presentation ignores the natural height of a wrapped
     label, so the scroll area asks for the measured text height up to
     a cap, otherwise long texts render as a short scrolling stub.
     """
-    sheet = Adw.Dialog(title=title)
-    sheet.set_content_width(SHEET_CONTENT_WIDTH)
-
     toolbar = Adw.ToolbarView()
-    toolbar.add_top_bar(Adw.HeaderBar())
+    toolbar.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
 
     scroll = Gtk.ScrolledWindow(propagate_natural_height=True, max_content_height=INFO_SHEET_MAX_HEIGHT)
     lbl = Gtk.Label(label=text, wrap=True, xalign=0, selectable=selectable, valign=Gtk.Align.START)
@@ -105,13 +288,12 @@ def build_info_sheet(title, text, selectable=False):
     natural_height = lbl.measure(Gtk.Orientation.VERTICAL, SHEET_CONTENT_WIDTH)[1]
     scroll.set_min_content_height(min(natural_height, INFO_SHEET_MAX_HEIGHT))
     toolbar.set_content(scroll)
-    sheet.set_child(toolbar)
-    return sheet
+    return Adw.NavigationPage(title=title, child=toolbar)
 
 
 def present_info_sheet(parent, title, text):
-    """Show a bottom sheet with a titled block of explanatory text."""
-    build_info_sheet(title, text).present(parent)
+    """Show a titled block of explanatory text in the window's sheet."""
+    present_sheet_page(parent.get_root(), build_info_sheet(title, text))
 
 
 def build_selector_row(title, on_select=None):

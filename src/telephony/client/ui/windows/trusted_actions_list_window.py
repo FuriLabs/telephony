@@ -20,7 +20,7 @@ from io import BytesIO
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.client.ui.widgets.common_widget import (populate_contact_search_results, translate_phone_label)
+from telephony.client.ui.widgets.common_widget import (populate_contact_search_results, translate_phone_label, present_alert_sheet)
 
 
 class TrustedActionsListWindow(Adw.NavigationPage):
@@ -637,38 +637,26 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         self.totp_page = None
 
     def _confirm_remove(self):
-        confirm = Adw.AlertDialog(
-            heading=_("Remove TOTP Key?"),
-            body=_("Are you sure you want to remove the TOTP key? This action will disable TOTP verification for this feature."),
-        )
-        confirm.add_response("cancel", _("Cancel"))
-        confirm.add_response("remove", _("Yes"))
-        confirm.set_response_appearance("remove", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_response(dialog, response):
+        def on_response(response):
             if response == "remove":
                 remover = self.remove_seed_func
                 if remover:
                     remover()
                 self._update_totp_button_label()
                 self._pop_totp_page()
-
-        confirm.connect("response", on_response)
-        confirm.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Remove TOTP Key?"),
+            _("Are you sure you want to remove the TOTP key? This action will disable TOTP verification for this feature."),
+            [("cancel", _("Cancel"), None), ("remove", _("Yes"), "destructive")],
+            on_response)
 
     def _confirm_regen(self):
-        confirm = Adw.AlertDialog(
-            heading=_("Regenerate Code?"),
-            body=_("This will invalidate the current code in your contact's authenticator app. Are you sure?"),
-        )
-        confirm.add_response("cancel", _("Cancel"))
-        confirm.add_response("regenerate", _("Regenerate"))
-        confirm.set_response_appearance("regenerate", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_response(dialog, response):
+        def on_response(response):
             if response == "regenerate":
                 new_seed = self.gsettings_mgr.generate_totp_seed()
                 GLib.idle_add(lambda: self._open_totp_dialog(new_seed) or False)
-
-        confirm.connect("response", on_response)
-        confirm.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Regenerate Code?"),
+            _("This will invalidate the current code in your contact's authenticator app. Are you sure?"),
+            [("cancel", _("Cancel"), None), ("regenerate", _("Regenerate"), "destructive")],
+            on_response)

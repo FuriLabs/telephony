@@ -19,18 +19,18 @@ from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import close_dialog, blocklist_domains_for, wire_blocklist_switch_locks
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
+from telephony.client.ui.widgets.common_widget import (blocklist_domains_for,
+                                                      wire_blocklist_switch_locks,
+                                                      close_sheet_page, present_alert_sheet)
 
 
-class BlocklistEditor(Adw.Dialog):
+class BlocklistEditor(Adw.NavigationPage):
     """Bottom sheet to add a new number to the blocklist."""
 
     def __init__(self, db_manager, eds_manager, parent_window, number_preset=None, name_preset=None):
         """Initialize the Blocklist Editor."""
         super().__init__(title=_("Block Number"))
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(400)
+        self.set_size_request(-1, 400)
 
         self.db = db_manager
         self.eds = eds_manager
@@ -43,7 +43,7 @@ class BlocklistEditor(Adw.Dialog):
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_dialog(self) or False))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False))
         header.pack_start(btn_cancel)
 
         btn_save = Gtk.Button(label=_("Save"))
@@ -104,7 +104,7 @@ class BlocklistEditor(Adw.Dialog):
             def done(success):
                 if success:
                     logger.info(f"[Blocklist] Added number: {norm_num}")
-                    close_dialog(self)
+                    close_sheet_page(self.get_root())
                 else:
                     self._show_error(_("Database Error"), _("Failed to save to blocklist."))
 
@@ -121,20 +121,11 @@ class BlocklistEditor(Adw.Dialog):
 
     def _confirm_block_remove(self, _number_str, on_confirm):
         """Show confirmation to block and remove from contacts."""
-        d = Adw.AlertDialog(
-            heading=_("Conflict"),
-            body=_("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Blocking and remove the number from Contacts?")
-        )
-        d.add_response("cancel", _("Cancel"))
-        d.add_response("yes", _("Yes, Block"))
-        d.set_response_appearance("yes", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def _cb(dialog, resp):
-            if resp == "yes":
-                on_confirm()
-
-        d.connect("response", _cb)
-        d.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Conflict"),
+            _("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Blocking and remove the number from Contacts?"),
+            [("cancel", _("Cancel"), None), ("yes", _("Yes, Block"), "destructive")],
+            lambda answer: on_confirm() if answer == "yes" else None)
 
     def _show_error(self, title, msg):
         """Report a failure the user can only acknowledge."""

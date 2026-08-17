@@ -18,10 +18,11 @@ import os
 import tempfile
 import shutil
 from gi.repository import Gtk, Adw, GLib
+from telephony.client.ui.widgets.common_widget import (present_sheet, on_sheet_closed,
+                                                      sheet_navigation)
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.constants import SHEET_CONTENT_WIDTH
 from telephony.client.ui.windows.import_wizard_window import ImportWizardWindow
 from telephony.client.utils.exporter_android_utils import export_android_sms, export_android_calls
 from telephony.client.utils.exporter_local_utils import (export_linux_chatty, export_linux_calls, export_linux_telephony)
@@ -77,16 +78,23 @@ class ImportExportDialog:
         self.nav_view.push(page)
 
     def present(self):
-        """Show the import and export flow in one navigable sheet."""
+        """Show the import and export flow in one navigable sheet.
+
+        The navigation is remembered so the flow can be reopened where
+        it was, but the sheet may have moved on to something else since,
+        and pushing onto a navigation that is no longer in the window
+        adds pages nobody will ever see.
+        """
+        showing = sheet_navigation(self.app_window.sheet_host.get_sheet())
+        if self.nav_view is not None and self.nav_view is not showing:
+            self.nav_view = None
+
         if self.nav_view is None:
             self.nav_view = Adw.NavigationView()
-            sheet = Adw.Dialog(title=_("Import and Export"))
-            sheet.set_content_width(SHEET_CONTENT_WIDTH)
-            sheet.set_content_height(FLOW_SHEET_HEIGHT)
-            sheet.set_child(self.nav_view)
-            sheet.connect("closed", self._on_flow_closed)
-            self._sheet = sheet
-            sheet.present(self.app_window)
+            self.nav_view.set_size_request(-1, FLOW_SHEET_HEIGHT)
+            self._sheet = self.app_window
+            present_sheet(self.app_window, self.nav_view)
+            on_sheet_closed(self.app_window, lambda: self._on_flow_closed(None))
 
         rows = []
         if self.mode_contacts:

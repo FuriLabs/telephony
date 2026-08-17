@@ -21,7 +21,7 @@ from gettext import gettext as _
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options)
+from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, present_alert_sheet)
 
 RING_TIME_VALUES = [5, 10, 15, 20, 25, 30]
 
@@ -384,27 +384,21 @@ class NetworkServicesWindow(Adw.NavigationPage):
 
     def _confirm_disable_forwarding(self):
         """Confirm and clear every forwarding rule."""
-        dialog = Adw.AlertDialog(heading=_("Disable All Forwarding"),
-                                 body=_("Turn off every call forwarding rule?"))
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("disable", _("Disable"))
-        dialog.set_response_appearance("disable", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_resp(_d, resp):
+        def on_resp(resp):
             if resp != "disable":
                 return
-
             def done(result):
                 if result and result[0]:
                     for prop, _key in FORWARDING_RULES:
                         self._apply_service_value("forwarding", prop, "")
                 else:
                     self._toast(_("Could not change the setting"))
-
             self._enqueue(lambda: self.ofono.disable_all_forwarding(), done)
-
-        dialog.connect("response", on_resp)
-        dialog.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Disable All Forwarding"),
+            _("Turn off every call forwarding rule?"),
+            [("cancel", _("Cancel"), None), ("disable", _("Disable"), "destructive")],
+            on_resp)
 
     def _on_call_waiting_toggled(self, row, _pspec):
         """Send the call waiting switch state to the network."""
@@ -499,24 +493,18 @@ class NetworkServicesWindow(Adw.NavigationPage):
             self._toast(_("Enter the barring password first"))
             return
 
-        dialog = Adw.AlertDialog(heading=_("Disable All Barrings"),
-                                 body=_("Turn off every call barring rule?"))
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("disable", _("Disable"))
-        dialog.set_response_appearance("disable", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def on_resp(_d, resp):
+        def on_resp(resp):
             if resp != "disable":
                 return
-
             def done(result):
                 if result and result[0]:
                     self._apply_service_value("barring", "VoiceOutgoing", "disabled")
                     self._apply_service_value("barring", "VoiceIncoming", "disabled")
                 else:
                     self._toast(self._barring_error(result))
-
             self._enqueue(lambda: self.ofono.disable_all_barrings(password), done)
-
-        dialog.connect("response", on_resp)
-        dialog.present(self)
+        present_alert_sheet(
+            self.get_root(), _("Disable All Barrings"),
+            _("Turn off every call barring rule?"),
+            [("cancel", _("Cancel"), None), ("disable", _("Disable"), "destructive")],
+            on_resp)

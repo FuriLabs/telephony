@@ -19,7 +19,7 @@ from gi.repository import Gtk, Gdk, GLib
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
-from telephony.client.ui.widgets.common_widget import present_choice_sheet, add_choice_row
+from telephony.client.ui.widgets.common_widget import present_choice_sheet, add_choice_row, present_sheet_page
 from telephony.client.ui.windows.camera_photo_window import CameraPhoto
 from telephony.client.ui.windows.camera_video_window import CameraVideo
 from telephony.client.ui.windows.sound_recorder_window import SoundRecorder
@@ -39,18 +39,18 @@ class ChatMediaController:
         """Show the attachment chooser sheet."""
         def build(group, sheet):
             add_choice_row(group, sheet, _("Take Photo"), self._open_camera,
-                           icon="camera-photo-symbolic")
+                           icon="camera-photo-symbolic", opens_flow=True)
             add_choice_row(group, sheet, _("Record Video"), self._open_video,
-                           icon="camera-video-symbolic")
+                           icon="camera-video-symbolic", opens_flow=True)
             add_choice_row(group, sheet, _("Record Audio"), self._open_audio_recorder,
-                           icon="audio-input-microphone-symbolic")
+                           icon="audio-input-microphone-symbolic", opens_flow=True)
             add_choice_row(group, sheet, _("Choose File"), self._open_file_chooser,
                            icon="folder-open-symbolic")
             if self._clipboard_has_media():
                 add_choice_row(group, sheet, _("Paste"), self.ingest_clipboard,
                                icon="edit-paste-symbolic")
             add_choice_row(group, sheet, _("Schedule"), self.chat_page._open_schedule_picker,
-                           icon="alarm-symbolic")
+                           icon="alarm-symbolic", opens_flow=True)
 
         present_choice_sheet(self.window, _("Select Attachment"), build)
 
@@ -110,7 +110,7 @@ class ChatMediaController:
         """Open photo camera modal."""
         try:
             cam = CameraPhoto(self.window, lambda path: self._on_media_captured(None, path))
-            cam.present(self.window)
+            present_sheet_page(self.window, cam)
         except Exception as e:
             logger.error(f"Failed to open camera: {e}")
             self._show_error(None, _("Could not start the camera."))
@@ -119,7 +119,7 @@ class ChatMediaController:
         """Open video camera modal."""
         try:
             cam = CameraVideo(self.window, lambda path: self._on_media_captured(None, path))
-            cam.present(self.window)
+            present_sheet_page(self.window, cam)
         except Exception as e:
             logger.error(f"Failed to open video camera: {e}")
             self._show_error(None, _("Could not start video recording."))
@@ -130,7 +130,7 @@ class ChatMediaController:
             max_bytes = self.chat_page._remaining_attachment_budget()
             rec = SoundRecorder(self.window, lambda path: self._on_media_captured(None, path),
                                 max_bytes=max_bytes)
-            rec.present(self.window)
+            present_sheet_page(self.window, rec)
         except Exception as e:
             logger.error(f"Failed to open audio recorder: {e}")
             self._show_error(None, _("Could not start audio recorder."))

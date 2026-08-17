@@ -25,9 +25,9 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.constants import (SHEET_CONTENT_WIDTH, CAPTURE_SHEET_HEIGHT, VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
+from telephony.shared.constants import (CAPTURE_SHEET_HEIGHT, VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
-from telephony.client.ui.widgets.common_widget import close_dialog
+from telephony.client.ui.widgets.common_widget import close_sheet_page
 
 RECORD_START_DELAY_MS = 500
 RECORD_RETRY_DELAY_MS = 1000
@@ -43,6 +43,7 @@ class CameraVideo(MediaCaptureWindow):
 
     def __init__(self, parent_window, on_attach_callback):
         super().__init__()
+        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
 
         registry = Gst.Registry.get()
         droidvdec = registry.lookup_feature("droidvdec")
@@ -52,8 +53,6 @@ class CameraVideo(MediaCaptureWindow):
 
         self.on_attach_callback = on_attach_callback
         self._attached = False
-        self.set_content_width(SHEET_CONTENT_WIDTH)
-        self.set_content_height(CAPTURE_SHEET_HEIGHT)
         self.set_title(_("Record Video"))
 
         self.output_path = None
@@ -76,7 +75,7 @@ class CameraVideo(MediaCaptureWindow):
         self.max_retries = MAX_RECORD_RETRIES
 
         self._setup_ui()
-        self.connect("closed", self._on_closed)
+        self.connect("hidden", self._on_closed)
 
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
 
@@ -515,11 +514,11 @@ class CameraVideo(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: close_dialog(self) or False)
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_cancel_clicked(self, btn):
         """Handle cancel button click."""
-        GLib.idle_add(lambda: close_dialog(self) or False)
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""

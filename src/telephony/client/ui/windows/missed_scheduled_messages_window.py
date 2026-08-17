@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Adw, GLib, Pango
+from gi.repository import Gtk, GLib, Pango
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 from telephony.shared.utils.datetime_utils import parse_timestamp
@@ -21,7 +21,7 @@ from telephony.client.ui.widgets.chat_bubbles_widget import ChatBubbleFactory
 from telephony.shared.utils.thread_utils import run_in_background
 import json
 import os
-from telephony.client.ui.widgets.common_widget import close_dialog
+from telephony.client.ui.widgets.common_widget import (present_alert_sheet, close_sheet_page)
 
 
 class MissedScheduledMessagesDialog:
@@ -79,10 +79,6 @@ class MissedScheduledMessagesDialog:
 
         display_name = contact_name if len(contact_name) < 30 else contact_name[:27] + "..."
         display_body = body if len(body) < 150 else body[:147] + "..."
-
-        d = Adw.AlertDialog(
-            heading=_("Scheduled ({current}/{total})").format(current=current_count, total=total_count)
-        )
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         main_box.set_margin_top(6)
@@ -158,7 +154,7 @@ class MissedScheduledMessagesDialog:
         btn_send.add_css_class("suggested-action")
 
         def _on_send_now(b):
-            GLib.idle_add(lambda: close_dialog(d) or False)
+            close_sheet_page(self.app_window)
             self.daemon.send_missed_message(mid)
             self.app_window.notify_success(_("Sending message to {number}...").format(number=number))
             GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
@@ -170,7 +166,7 @@ class MissedScheduledMessagesDialog:
         btn_remove.add_css_class("destructive-action")
 
         def _on_remove(b):
-            GLib.idle_add(lambda: close_dialog(d) or False)
+            close_sheet_page(self.app_window)
             run_in_background(self.daemon.delete_message, mid)
             self.app_window.notify_success(_("Message removed"))
 
@@ -180,6 +176,8 @@ class MissedScheduledMessagesDialog:
         btn_box.append(btn_remove)
 
         main_box.append(btn_box)
-        d.set_extra_child(main_box)
-        d.present(self.app_window)
+        present_alert_sheet(
+            self.app_window,
+            _("Scheduled ({current}/{total})").format(current=current_count, total=total_count),
+            None, [], lambda answer: None, extra_child=main_box)
 

@@ -24,8 +24,9 @@ from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.vcard_utils import unfold_vcard
-from telephony.client.ui.widgets.common_widget import close_dialog
-from telephony.shared.constants import CONTACT_SHEET_WIDTH, CONTACT_SHEET_HEIGHT
+from telephony.client.ui.widgets.common_widget import (present_sheet_page, on_sheet_closed,
+                                                      close_sheet_page)
+from telephony.shared.constants import CONTACT_SHEET_HEIGHT
 
 
 class DuplicateResolutionWindow(Adw.NavigationPage):
@@ -182,14 +183,10 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
         the completion itself, otherwise dismissing it would leave the
         duplicates banner claiming conflicts that were already handled.
         """
-        nav_view = Adw.NavigationView()
-        nav_view.add(self)
-        sheet = Adw.Dialog(title=self.get_title())
-        sheet.set_content_width(CONTACT_SHEET_WIDTH)
-        sheet.set_content_height(CONTACT_SHEET_HEIGHT)
-        sheet.set_child(nav_view)
-        sheet.connect("closed", lambda d: self._call_done())
-        sheet.present(parent)
+        self.set_size_request(-1, CONTACT_SHEET_HEIGHT)
+        window = parent.get_root()
+        present_sheet_page(window, self)
+        on_sheet_closed(window, self._call_done)
 
     def _leave(self):
         """Leave the page, however the resolution finished.
@@ -202,9 +199,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
         if nav and nav.get_visible_page() is self and nav.get_previous_page(self):
             nav.pop()
             return
-        dialog = self.get_ancestor(Adw.Dialog)
-        if dialog:
-            close_dialog(dialog)
+        close_sheet_page(self.get_root())
 
     def _call_done(self):
         """Invoke the completion callback, forwarding a pending editor save.

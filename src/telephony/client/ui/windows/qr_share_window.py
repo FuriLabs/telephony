@@ -22,13 +22,12 @@ from gi.repository import Gtk, Adw
 
 from telephony.shared.utils.log_utils import logger
 
-QR_DIALOG_WIDTH = 340
 QR_DIALOG_HEIGHT = 440
 QR_AREA_SIZE = 260
 QR_QUIET_ZONE_MODULES = 2
 
 
-class QrShareDialog(Adw.Dialog):
+class QrShareDialog(Adw.NavigationPage):
     """Show one contact as a QR code another phone can scan.
 
     The caller checks the matrix attribute before presenting: None
@@ -40,8 +39,7 @@ class QrShareDialog(Adw.Dialog):
         super().__init__(title=contact_name)
         self.matrix = self._build_matrix(vcard_text)
 
-        self.set_content_width(QR_DIALOG_WIDTH)
-        self.set_content_height(QR_DIALOG_HEIGHT)
+        self.set_size_request(-1, QR_DIALOG_HEIGHT)
 
         view = Adw.ToolbarView()
         view.add_top_bar(Adw.HeaderBar())

@@ -15,6 +15,7 @@
 
 from gi.repository import Adw, Gtk
 from gettext import gettext as _
+from telephony.client.ui.widgets.common_widget import stay_a_sheet
 
 APP_VERSION = "1.00"
 WEBSITE_URL = "https://github.com/FuriLabs/telephony"
@@ -37,4 +38,5 @@ class InfoPage:
             issue_url=ISSUE_URL,
             comments=_("Fast phone dialer and messaging client designed for FuriOS."),
         )
+        stay_a_sheet(dialog)
         dialog.present(parent_window)
