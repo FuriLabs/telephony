@@ -622,6 +622,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         self.totp_page.connect("hidden", self._on_totp_page_hidden)
         nav = self.get_ancestor(Adw.NavigationView)
         if nav:
+            self.totp_page.set_focusable(True)
             nav.push(self.totp_page)
 
     def _on_totp_page_hidden(self, page):

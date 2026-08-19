@@ -308,11 +308,20 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         """Build an activatable navigation row with a chevron."""
         return build_nav_row(title, subtitle, callback, destructive=destructive)
 
+    def _push_page(self, page):
+        """Push a page, which takes the focus rather than its contents.
+
+        A text field taking it brings the keyboard up with the page,
+        and a page is opened to be read before it is typed into.
+        """
+        page.set_focusable(True)
+        self.get_ancestor(Adw.NavigationView).push(page)
+
     def _on_data_management(self, btn):
         """Push the data management page."""
         from .data_management_window import DataManagementDialog
         dm = DataManagementDialog(self.parent_win.main_window)
-        self.get_ancestor(Adw.NavigationView).push(dm.build_page())
+        self._push_page(dm.build_page())
 
     def _open_action_window(self, mode):
         """Open the trusted action window after polkit authentication."""
@@ -321,7 +330,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                 self._show_toast(_("Authentication cancelled"), True)
                 return
             page = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
-            self.get_ancestor(Adw.NavigationView).push(page)
+            self._push_page(page)
 
         def failed(error):
             self._show_toast(_("Auth error: {e}").format(e=error), True)
