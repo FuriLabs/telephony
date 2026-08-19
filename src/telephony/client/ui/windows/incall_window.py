@@ -33,7 +33,7 @@ from telephony.client.ui.widgets.common_widget import (
 from telephony.client.managers.lockscreen_manager import LockScreenManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.utils.ofono_direct_utils import hangup_all_direct
-from telephony.shared.utils.system_utils import save_modem_logs, press_power_button, is_gsd_airplane_mode
+from telephony.shared.utils.system_utils import save_modem_logs, press_power_button
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.call_state_utils import (count_lines, conference_paths, held_single_paths, held_conference_paths)
 
@@ -1483,8 +1483,13 @@ class InCallWindow(Adw.Window):
         self._clean_reset()
         self._close_when_idle()
 
-    def _on_recovery_done(self, success):
-        """React to the recovery verdict while the page is showing."""
+    def _on_recovery_done(self, success, reason=""):
+        """React to the recovery verdict while the page is showing.
+
+        A refusal comes back with the reason for it, and saying it is
+        the whole point: a press that puts the button back exactly as
+        it was is indistinguishable from one that did nothing.
+        """
         if not self.in_error_mode and not self.in_recovery_mode:
             return
         self.btn_restart.set_label(_("Recover Modem"))
@@ -1493,21 +1498,22 @@ class InCallWindow(Adw.Window):
             if self.in_error_mode:
                 self._reset_from_error()
             return
+        if reason:
+            self.lbl_err_msg.set_text(reason)
+            self.btn_reboot.set_visible(False)
+            return
         if self.in_error_mode and self.is_locked:
             self.lock_manager.show_stuck_notification()
 
     def on_modem_recovery_click(self, btn):
         """Restart the modem stack from the recovery page.
 
-        Restarting cannot power on a radio that was switched off, so a
-        recovery asked for during airplane mode would only report a
-        failure over something that is not broken.
+        Whether a restart can help at all is the owner's to answer,
+        since it is the one watching the modem; a refusal comes back
+        with its reason and takes the place of the message here.
         """
         app = Gio.Application.get_default()
         if not app:
-            return
-        if is_gsd_airplane_mode():
-            self.lbl_err_msg.set_text(_("Airplane mode is on"))
             return
         if app.request_auto_recovery(self._on_recovery_done):
             self.btn_restart.set_sensitive(False)
