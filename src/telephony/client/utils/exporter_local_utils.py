@@ -265,7 +265,7 @@ def export_linux_calls(db_manager, dest_db_path):
 
             inbound = 1 if direction in ("incoming", "missed", "rejected") else 0
             answered = None
-            if direction == "incoming" or (direction == "outgoing" and duration > 0):
+            if direction in ("incoming", "outgoing"):
                 answered = _to_gom_iso(start_dt)
             end = _to_gom_iso(start_dt + timedelta(seconds=duration))
 
