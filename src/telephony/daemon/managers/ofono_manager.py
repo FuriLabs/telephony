@@ -839,8 +839,6 @@ class OfonoManager(GObject.Object):
                 status = "rejected" if (data.get("rejected") or reason == "local") else "missed"
         else:
             status = "outgoing" if data["answered"] else "cancelled"
-            if duration == 0:
-                status = "cancelled"
 
         num = data.get("number")
         if not num:
