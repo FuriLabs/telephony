@@ -663,7 +663,11 @@ class ContactEditor(Adw.NavigationPage):
 
     def on_delete(self, btn):
         """Handle contact deletion."""
-        self.main_window.confirm_action(_("Delete Contact"), _("Are you sure you want to delete this contact?"), self._do_delete)
+        self.main_window.confirm_action(
+            _("Delete Contact"),
+            _("{name} will be removed from your address book.").format(
+                name=self.contact_name or _("This contact")),
+            self._do_delete)
 
     def _do_delete(self):
         """Perform deletion."""

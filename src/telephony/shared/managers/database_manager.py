@@ -350,6 +350,32 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Clear Messages Error: {e}")
             return False
 
+    def count_rows(self, table):
+        """Count what a wipe would take; blocking, call from a worker.
+
+        Returns zero when the count cannot be read, since a question
+        about deleting nothing is better than one that cannot be asked.
+        """
+        connections = {
+            "history": self.conn_calls,
+            "messages": self.conn_messages,
+            "group_names": self.conn_messages,
+            "blocklist": self.conn_blocklist,
+        }
+        connection = connections.get(table)
+        if connection is None:
+            logger.error(f"[DB] No connection for counting {table}")
+            return 0
+        try:
+            with self.lock:
+                c = connection.cursor()
+                c.execute(f"SELECT COUNT(*) FROM {table}")
+                row = c.fetchone()
+                return row[0] if row else 0
+        except Exception as e:
+            logger.error(f"[DB] Count {table} error: {e}")
+            return 0
+
     def clear_group_names(self):
         """Delete all custom group names."""
         if self._refuse_write("clear_group_names"):

@@ -895,9 +895,12 @@ class MainWindow(Adw.Window):
                        destructive=True, needs_eds=True)
 
         add_action(_("Delete this call"),
-                   lambda: self.confirm_action(_("Delete Call"), _("Remove this call?"),
-                                               lambda: [close_sheet_page(self),
-                                                        self.daemon.delete_call_entry(item.id)]),
+                   lambda: self.confirm_action(
+                       _("Delete Call"),
+                       _("The call with {who} on {when} will be removed from your history.").format(
+                           who=item.name or item.number, when=item.full_ts),
+                       lambda: [close_sheet_page(self),
+                                self.daemon.delete_call_entry(item.id)]),
                    destructive=True, opens_flow=True)
 
         present_sheet_page(self, Adw.NavigationPage(title=_("Call Details"), child=toolbar))
