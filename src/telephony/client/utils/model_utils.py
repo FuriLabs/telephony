@@ -23,6 +23,82 @@ from telephony.client.utils.locale_utils import get_date_format, get_time_format
 from gettext import gettext as _
 
 
+INCOMING_KINDS = ("incoming", "missed", "rejected")
+OUTGOING_KINDS = ("outgoing", "cancelled")
+
+
+def call_direction_text(kind):
+    """Say which way the call went.
+
+    One column carries both the direction and how the call turned out,
+    so a call that was never answered reads as cancelled or missed
+    rather than as the direction it was.
+    """
+    if kind in INCOMING_KINDS:
+        return _("Incoming")
+    if kind in OUTGOING_KINDS:
+        return _("Outgoing")
+    return _("Unknown")
+
+
+def call_outcome_text(kind, reason=None):
+    """Say how the call turned out, which is the rest of that column.
+
+    An outgoing call that never connected is only given up on when the
+    giving up happened here. The same row is written when the other end
+    declined it or the network could not put it through, and the reason
+    is the only thing telling those apart, which is what the marks on
+    the history row already go by.
+    """
+    if kind == "cancelled":
+        if reason == "remote":
+            return _("Declined at the other end")
+        if reason == "network":
+            return _("The network could not connect it")
+        return _("Given up before it connected")
+
+    outcomes = {
+        "incoming": _("Answered"),
+        "outgoing": _("Answered"),
+        "missed": _("Not answered"),
+        "rejected": _("Declined here"),
+    }
+    return outcomes.get(kind, _("Unknown"))
+
+
+def call_ending_text(reason, kind=None):
+    """Say how a call ended, from the modem or from what is known here.
+
+    ofono reports one of local, remote or network, and says itself that
+    not every modem provides it. A call that was never answered says so
+    from what the history already knows, and a call that was answered
+    without a reason says plainly that nothing was reported, rather
+    than leaving the row out and looking like an oversight.
+
+    Remote is not the same as the person hanging up. The binder plugin
+    answers remote for a dozen network causes as well, no route, out of
+    order, preemption and barring among them, so this says the call
+    ended at the other end and leaves who did it alone.
+    """
+    endings = {
+        "local": _("Ended on this phone"),
+        "remote": _("Ended at the other end"),
+        "network": _("Dropped by the network"),
+    }
+    if reason in endings:
+        return endings[reason]
+
+    unanswered = {
+        "missed": _("Nobody answered here"),
+        "rejected": _("Declined on this phone"),
+        "cancelled": _("Hung up here before it connected"),
+    }
+    if kind in unanswered:
+        return unanswered[kind]
+
+    return _("The modem did not say")
+
+
 class CallItem(GObject.Object):
     """
     Model representing a single call history item.
