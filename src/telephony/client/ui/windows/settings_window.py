@@ -106,7 +106,7 @@ class SettingsWindow(Adw.Bin):
                                    icon="auth-sim-symbolic"))
         if self.mode_calls:
             grp_cats.add(self._nav_row(_("Favorites"), _("Speed dial slots"),
-                                       lambda: self.nav_view.push(
+                                       lambda: self._push_page(
                                            FavoritesListWindow(self, self.main_window.gsettings_mgr, self.eds)),
                                        icon="starred-symbolic"))
             grp_cats.add(self._nav_row(_("Emergency Calls"), _("Lockscreen button and numbers"),
@@ -289,6 +289,16 @@ class SettingsWindow(Adw.Bin):
             self.main_window.daemon.remove_blocked_number(entry["id"])
             GLib.timeout_add(300, lambda: self._reload_blocklist() or False)
 
+    def _push_page(self, page):
+        """Push a settings page, which takes the focus itself.
+
+        Otherwise the focus goes to whatever the page holds first, and
+        a text field taking it brings the keyboard up with the page.
+        Nothing is made unfocusable, so tapping a field still works.
+        """
+        page.set_focusable(True)
+        self.nav_view.push(page)
+
     def _push_category(self, title, build):
         """Push a settings category page built fresh from current state."""
         view = Adw.ToolbarView()
@@ -298,7 +308,7 @@ class SettingsWindow(Adw.Bin):
         scroll.set_child(page)
         view.set_content(scroll)
         build(page)
-        self.nav_view.push(Adw.NavigationPage(title=title, child=view))
+        self._push_page(Adw.NavigationPage(title=title, child=view))
 
     def _build_sim_page(self, page):
         """Build the SIM settings category page."""
@@ -694,11 +704,11 @@ class SettingsWindow(Adw.Bin):
 
     def _open_modem_settings(self, btn):
         """Push the advanced settings page."""
-        self.nav_view.push(AdvancedSettingsWindow(self))
+        self._push_page(AdvancedSettingsWindow(self))
 
     def _open_network_services(self, btn):
         """Push the network services page."""
-        self.nav_view.push(NetworkServicesWindow(self))
+        self._push_page(NetworkServicesWindow(self))
 
     def _show_addressbook_info(self, btn):
         """Show information about address book priority."""
@@ -716,12 +726,12 @@ class SettingsWindow(Adw.Bin):
 
     def _open_priority_window(self, kind):
         """Push the priority contacts page for one bypass list."""
-        self.nav_view.push(DndBypassContactsListWindow(
+        self._push_page(DndBypassContactsListWindow(
             self, self.main_window.gsettings_mgr, self.eds, kind=kind))
 
     def _open_custom_tone_window(self, mode):
         """Push the custom tone management page."""
-        self.nav_view.push(CustomToneListWindow(
+        self._push_page(CustomToneListWindow(
             self, self.main_window.gsettings_mgr, self.eds, mode=mode))
 
     def _build_unknown_callers_page(self, page):

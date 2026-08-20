@@ -152,7 +152,14 @@ def present_sheet_page(window, page, replace=False):
     A page going onto an open sheet asks for the height the sheet
     already has, so a short page does not shrink the sheet around it
     and let it spring back when the page is left.
+
+    The page takes the focus itself so it does not go to whatever the
+    page happens to hold first. A text field taking it brings the
+    keyboard with it, and a page is opened to be read before it is
+    typed into. Nothing is made unfocusable, so tapping a field still
+    works and the tab order is untouched.
     """
+    page.set_focusable(True)
     host = window.sheet_host
     nav = sheet_navigation(host.get_sheet()) if host.get_open() else None
     if nav is not None:

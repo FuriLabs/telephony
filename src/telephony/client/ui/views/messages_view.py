@@ -562,6 +562,7 @@ class MessagesView(Adw.Bin):
                 self.refresh_list()
 
         page.connect("hidden", on_pop)
+        page.set_focusable(True)
         self.nav_view.push(page)
 
         self.app_window.ofono.set_active_chat(target_number)

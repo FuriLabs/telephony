@@ -50,6 +50,15 @@ class ImportExportDialog:
         self.nav_view = None
         self._sheet = None
 
+    def _push_page(self, page):
+        """Push a page, which takes the focus rather than its contents.
+
+        A text field taking it brings the keyboard up with the page,
+        and a page is opened to be read before it is typed into.
+        """
+        page.set_focusable(True)
+        self.nav_view.push(page)
+
     def _show_choices(self, title, entries, description=None):
         """Show a step of the flow, as a page when a navigation hosts it.
 
@@ -75,7 +84,7 @@ class ImportExportDialog:
 
         page = Adw.NavigationPage(title=title)
         page.set_child(view)
-        self.nav_view.push(page)
+        self._push_page(page)
 
     def present(self):
         """Show the import and export flow in one navigable sheet.
@@ -214,7 +223,7 @@ class ImportExportDialog:
                     GLib.idle_add(lambda: self.app_window.notify_error(msg))
             run_in_background(task)
 
-        self.nav_view.push(ImportWizardWindow(self.app_window, "chatty", on_wizard_done))
+        self._push_page(ImportWizardWindow(self.app_window, "chatty", on_wizard_done))
 
     def ask_import_local_calls(self):
         def on_wizard_done(db_path, mms_path):
@@ -232,7 +241,7 @@ class ImportExportDialog:
                     GLib.idle_add(lambda: self.app_window.notify_error(msg))
             run_in_background(task)
 
-        self.nav_view.push(ImportWizardWindow(self.app_window, "calls", on_wizard_done))
+        self._push_page(ImportWizardWindow(self.app_window, "calls", on_wizard_done))
 
     def ask_import_android(self):
         """Show the Android import choices."""

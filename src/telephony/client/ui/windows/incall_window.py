@@ -423,6 +423,7 @@ class InCallWindow(Adw.Window):
         view.set_content(wrap)
         page = Adw.NavigationPage(title=title)
         page.set_child(view)
+        page.set_focusable(True)
         nav.push(page)
 
     def _build_caller_strip(self, target_path=None):
