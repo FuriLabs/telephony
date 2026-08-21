@@ -827,7 +827,7 @@ class ContactEditor(Adw.NavigationPage):
         conflicts_by_num = {}
 
         for norm_val, _lbl in phones_to_save:
-            if self.main_window.db.is_blocked(norm_val):
+            if self.main_window.db.is_blocked(norm_val, kind="any"):
                 blocked_conflict = norm_val
                 break
 

@@ -141,14 +141,6 @@ class SettingsWindow(Adw.Bin):
                                    lambda: self._open_modem_settings(None),
                                    icon="emblem-system-symbolic"))
 
-    def _blocklist_toggle_visibility(self):
-        """Which domain toggles this launcher shows; a contacts-only window shows both."""
-        show_calls = bool(self.main_window.show_calls_mode)
-        show_messages = bool(self.main_window.show_messages_mode)
-        if not show_calls and not show_messages:
-            return (True, True)
-        return (show_calls, show_messages)
-
     def _build_blocklist_page(self, page):
         """Build the blocklist category page."""
         self.grp_blocklist = Adw.PreferencesGroup(
@@ -168,16 +160,11 @@ class SettingsWindow(Adw.Bin):
             self.grp_blocklist.remove(row)
         self._blocklist_rows = []
 
-        show_calls, show_messages = self._blocklist_toggle_visibility()
         for entry in self.main_window.db.get_blocked_numbers():
-            relevant = ((entry["block_calls"] and show_calls) or
-                        (entry["block_messages"] and show_messages))
-            if not relevant:
-                continue
             row = Adw.ActionRow(title=entry["number"], subtitle=entry["note"] or "")
-            for flag, icon, shown in (("block_calls", "call-stop-symbolic", show_calls),
-                                      ("block_messages", "mail-unread-symbolic", show_messages)):
-                if entry[flag] and shown:
+            for flag, icon in (("block_calls", "call-stop-symbolic"),
+                               ("block_messages", "mail-unread-symbolic")):
+                if entry[flag]:
                     badge = Gtk.Image.new_from_icon_name(icon)
                     badge.set_pixel_size(14)
                     badge.set_valign(Gtk.Align.CENTER)
@@ -217,23 +204,19 @@ class SettingsWindow(Adw.Bin):
         if entry:
             entry_num.set_text(entry["number"])
             entry_note.set_text(entry["note"] or "")
-        show_calls, show_messages = self._blocklist_toggle_visibility()
-        sw_calls = None
-        sw_messages = None
-        if show_calls:
-            sw_calls = Adw.SwitchRow(title=_("Block Calls"),
-                                     active=entry["block_calls"] if entry else True)
-            sw_calls.add_prefix(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
-            group.add(sw_calls)
-        if show_messages:
-            sw_messages = Adw.SwitchRow(title=_("Block Messages"),
-                                        active=entry["block_messages"] if entry else True)
-            sw_messages.add_prefix(Gtk.Image.new_from_icon_name("mail-unread-symbolic"))
-            group.add(sw_messages)
+        sw_calls = Adw.SwitchRow(title=_("Block Calls"),
+                                 active=entry["block_calls"] if entry else True)
+        sw_calls.add_prefix(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
+        group.add(sw_calls)
+        sw_messages = Adw.SwitchRow(title=_("Block Messages"),
+                                    active=entry["block_messages"] if entry else True)
+        sw_messages.add_prefix(Gtk.Image.new_from_icon_name("mail-unread-symbolic"))
+        group.add(sw_messages)
         wire_blocklist_switch_locks(sw_calls, sw_messages)
         box.append(group)
 
-        btn = Gtk.Button(label=_("Block"), css_classes=["destructive-action", "pill"])
+        btn = Gtk.Button(label=_("Save") if entry else _("Block"),
+                         css_classes=["suggested-action" if entry else "destructive-action", "pill"])
         btn.set_size_request(-1, 44)
 
         def submit(_btn):
@@ -241,8 +224,8 @@ class SettingsWindow(Adw.Bin):
             if not number:
                 self.main_window.notify_error(_("Enter a number to block"))
                 return
-            block_calls = bool(sw_calls and sw_calls.get_active())
-            block_messages = bool(sw_messages and sw_messages.get_active())
+            block_calls = sw_calls.get_active()
+            block_messages = sw_messages.get_active()
 
             def done(ok):
                 if ok:
@@ -252,8 +235,6 @@ class SettingsWindow(Adw.Bin):
                     self.main_window.notify_error(_("Failed to save to blocklist."))
 
             if entry:
-                final_calls = block_calls if show_calls else entry["block_calls"]
-                final_messages = block_messages if show_messages else entry["block_messages"]
                 if self._blocked_under_another_entry(number, entry["id"]):
                     self.main_window.notify_error(
                         _("{number} is already on the blocklist.").format(number=number))
@@ -261,7 +242,7 @@ class SettingsWindow(Adw.Bin):
 
                 run_in_background(self.main_window.daemon.update_blocked_number,
                                   entry["id"], number, entry_note.get_text().strip(),
-                                  final_calls, final_messages, on_complete=done)
+                                  block_calls, block_messages, on_complete=done)
             else:
                 run_in_background(self.main_window.daemon.add_blocked_number,
                                   number, entry_note.get_text().strip(),
@@ -271,8 +252,9 @@ class SettingsWindow(Adw.Bin):
         btn.connect("clicked", submit)
         box.append(btn)
         view.set_content(box)
+        title = entry["number"] if entry else _("Block Number")
         present_sheet_page(self.get_root(),
-                           Adw.NavigationPage(title=_("Block Number"), child=view))
+                           Adw.NavigationPage(title=title, child=view))
 
     def _blocked_under_another_entry(self, number, bid):
         """Whether some other entry already holds this number.
@@ -287,22 +269,23 @@ class SettingsWindow(Adw.Bin):
         return False
 
     def _on_block_deleted(self, entry):
-        """Remove this launcher's block; the entry dies when nothing remains.
+        """Ask before deleting, then take the whole entry.
 
-        A slimmed launcher only takes away its own domain, so a number
-        also blocked elsewhere stays blocked there; the full and
-        contacts views own the whole entry and delete it outright.
+        The trash removes every domain at once now, so it asks first,
+        naming the number: a switch can be flipped back, a deleted
+        entry has to be retyped.
         """
-        show_calls, show_messages = self._blocklist_toggle_visibility()
-        keep_calls = entry["block_calls"] and not show_calls
-        keep_messages = entry["block_messages"] and not show_messages
-        if keep_calls or keep_messages:
-            run_in_background(self.main_window.daemon.set_blocked_number_flags,
-                              entry["id"], keep_calls, keep_messages,
-                              on_complete=lambda ok: self._reload_blocklist())
-        else:
+        def answered(answer):
+            if answer != "delete":
+                return
             self.main_window.daemon.remove_blocked_number(entry["id"])
             GLib.timeout_add(300, lambda: self._reload_blocklist() or False)
+
+        present_alert_sheet(
+            self.get_root(), entry["number"],
+            _("{number} will be removed from the blocklist.").format(number=entry["number"]),
+            [("cancel", _("Cancel"), None), ("delete", _("Delete"), "destructive")],
+            answered)
 
     def _push_page(self, page):
         """Push a settings page, which takes the focus itself.
