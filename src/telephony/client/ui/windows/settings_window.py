@@ -124,9 +124,13 @@ class SettingsWindow(Adw.Bin):
                                        lambda: self._push_category(_("Notifications"), self._build_notifications_page),
                                        icon="audio-volume-high-symbolic"))
         if self.mode_calls:
-            grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening and lookup"),
+            grp_cats.add(self._nav_row(_("Unknown Callers"), _("Screening"),
                                        lambda: self._push_category(_("Unknown Callers"), self._build_unknown_callers_page),
                                        icon="dialog-question-symbolic"))
+        if self.mode_calls or self.mode_messages:
+            grp_cats.add(self._nav_row(_("Number Lookup"), _("Search engine for the search buttons"),
+                                       lambda: self._push_category(_("Number Lookup"), self._build_lookup_page),
+                                       icon="system-search-symbolic"))
             grp_cats.add(self._nav_row(_("Network Services"), _("Forwarding, waiting and barring"),
                                        lambda: self._open_network_services(None),
                                        icon="network-cellular-signal-good-symbolic"))
@@ -750,9 +754,38 @@ class SettingsWindow(Adw.Bin):
         grp_uc.add(self.row_uc_action)
 
         self.sw_uc_search = Adw.SwitchRow(title=_(
-            "Add Search button to InCall window and Call History for unknown callers"))
+            "Search button for unknown callers during a call"))
         self.sw_uc_search.set_title_lines(0)
         grp_uc.add(self.sw_uc_search)
+
+        def _on_search_toggle(w, p):
+            self.main_window.gsettings_mgr.set_setting(
+                "unknown_callers_search", "true" if w.get_active() else "false")
+        self.sw_uc_search.connect("notify::active", _on_search_toggle)
+
+        uc_action = self.main_window.gsettings_mgr.get_setting(
+            "unknown_callers") or "none"
+        action_idx = next(
+            (i for i, (k, act_name) in enumerate(self.action_options) if k == uc_action), 0)
+        set_selector_options(self.row_uc_action,
+                                   [name for _key, name in self.action_options], action_idx)
+
+        self.sw_uc_search.set_active(self.main_window.gsettings_mgr.get_setting(
+            "unknown_callers_search") == "true")
+
+    def _build_lookup_page(self, page):
+        """Build the number lookup category page.
+
+        Its own category rather than a corner of Unknown Callers,
+        because the buttons it serves are in both apps while the
+        screening options are call things, and an engine choice hidden
+        behind a call switch was unreachable from the surfaces that
+        used it.
+        """
+        grp_lookup = Adw.PreferencesGroup()
+        grp_lookup.set_description(_(
+            "Used by the search buttons in calls, call history and group messages."))
+        page.add(grp_lookup)
 
         self.row_uc_engine = build_selector_row(
             _("Search Engine"), self._on_uc_engine_selected)
@@ -769,24 +802,8 @@ class SettingsWindow(Adw.Bin):
         btn_uc_info = self._info_button(self._show_custom_url_info)
         self.entry_uc_custom.add_suffix(btn_uc_info)
 
-        grp_uc.add(self.row_uc_engine)
-        grp_uc.add(self.entry_uc_custom)
-
-        def _on_search_toggle(w, p):
-            self.main_window.gsettings_mgr.set_setting(
-                "unknown_callers_search", "true" if w.get_active() else "false")
-            self._update_uc_ui()
-        self.sw_uc_search.connect("notify::active", _on_search_toggle)
-
-        uc_action = self.main_window.gsettings_mgr.get_setting(
-            "unknown_callers") or "none"
-        action_idx = next(
-            (i for i, (k, act_name) in enumerate(self.action_options) if k == uc_action), 0)
-        set_selector_options(self.row_uc_action,
-                                   [name for _key, name in self.action_options], action_idx)
-
-        self.sw_uc_search.set_active(self.main_window.gsettings_mgr.get_setting(
-            "unknown_callers_search") == "true")
+        grp_lookup.add(self.row_uc_engine)
+        grp_lookup.add(self.entry_uc_custom)
 
         engine = self.main_window.gsettings_mgr.get_setting(
             "unknown_callers_engine") or "duckduckgo"
@@ -830,13 +847,10 @@ class SettingsWindow(Adw.Bin):
             run_in_background(self.eds.set_default_addressbook, default['uid'])
 
     def _update_uc_ui(self):
-        search_active = self.sw_uc_search.get_active()
-        self.row_uc_engine.set_visible(search_active)
+        """Show the custom URL field only while the custom engine is chosen."""
         idx = self.row_uc_engine._selected_index
-        if search_active and idx >= 0 and self.engine_options[idx][0] == "custom":
-            self.entry_uc_custom.set_visible(True)
-        else:
-            self.entry_uc_custom.set_visible(False)
+        self.entry_uc_custom.set_visible(
+            idx >= 0 and self.engine_options[idx][0] == "custom")
 
     def _get_gsettings_emergency(self):
         """Get emergency button setting via Gio.Settings."""
