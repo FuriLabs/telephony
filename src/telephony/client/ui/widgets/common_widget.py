@@ -53,12 +53,23 @@ def install_sheet_host(window):
     host.set_modal(True)
     host.set_content(content)
     window.set_content(host)
+    window.sheet_toast_overlay = None
     return host
 
 
 def present_sheet(window, child):
-    """Show a widget as the window's bottom sheet."""
-    window.sheet_host.set_sheet(child)
+    """Show a widget as the window's bottom sheet.
+
+    The sheet content rides inside its own toast overlay, because the
+    window's overlay sits under the sheet and a toast raised there
+    while a sheet is open answers to nobody. The host itself is left
+    where it is; the sheet slot is just a widget and takes the wrapper
+    without complaint.
+    """
+    overlay = Adw.ToastOverlay()
+    overlay.set_child(child)
+    window.sheet_toast_overlay = overlay
+    window.sheet_host.set_sheet(overlay)
     window.sheet_host.set_open(True)
 
 

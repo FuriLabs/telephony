@@ -394,10 +394,13 @@ class MainWindow(Adw.Window):
     def _toast_target(self):
         """Return the overlay of the topmost surface.
 
-        A presented dialog is painted above the window content, so a
-        toast raised on the window's own overlay would sit hidden
-        underneath an open sheet.
+        An open sheet and a presented dialog are both painted above
+        the window content, so a toast raised on the window's own
+        overlay would sit hidden underneath them.
         """
+        if self.sheet_host.get_open() and self.sheet_toast_overlay is not None:
+            return self.sheet_toast_overlay
+
         dialog = self.get_visible_dialog()
         if dialog is not None:
             overlay = self._find_toast_overlay(dialog.get_child())
