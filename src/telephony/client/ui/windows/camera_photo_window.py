@@ -15,7 +15,6 @@
 
 import os
 import time
-import tempfile
 from gettext import gettext as _
 
 import gi
@@ -26,7 +25,7 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, CAPTURE_SHEET_HEIGHT)
+from telephony.shared.constants import VIEWFINDER_START_DELAY_MS
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 from telephony.client.ui.widgets.common_widget import close_sheet_page
 
@@ -43,7 +42,7 @@ class CameraPhoto(MediaCaptureWindow):
 
     def __init__(self, parent_window, on_attach_callback):
         super().__init__()
-        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
+        self.request_capture_height(parent_window)
         self.on_attach_callback = on_attach_callback
         self.set_title(_("Take Picture"))
 
@@ -86,9 +85,6 @@ class CameraPhoto(MediaCaptureWindow):
         header.set_show_end_title_buttons(False)
         content.append(header)
 
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_cancel_clicked(b) or False))
-        header.pack_start(btn_cancel)
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
@@ -98,7 +94,7 @@ class CameraPhoto(MediaCaptureWindow):
         self.page_capture = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         card_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        card_box.add_css_class("card")
+        card_box.add_css_class("preview-round")
         card_box.set_hexpand(True)
         card_box.set_vexpand(True)
         card_box.set_margin_top(10)
@@ -108,12 +104,14 @@ class CameraPhoto(MediaCaptureWindow):
         card_box.set_overflow(Gtk.Overflow.HIDDEN)
 
         self.viewfinder_widget = Gtk.Picture()
+        self.viewfinder_widget.add_css_class("preview-round")
+        self.viewfinder_widget.set_overflow(Gtk.Overflow.HIDDEN)
         self.viewfinder_widget.set_can_shrink(True)
         self.viewfinder_widget.set_hexpand(True)
         self.viewfinder_widget.set_vexpand(True)
         self.viewfinder_widget.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        card_box.append(self.viewfinder_widget)
+        card_box.append(self.letterbox(self.viewfinder_widget))
         self.page_capture.append(card_box)
 
         ctrl_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
@@ -134,7 +132,7 @@ class CameraPhoto(MediaCaptureWindow):
         self.page_review = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         review_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        review_card.add_css_class("card")
+        review_card.add_css_class("preview-round")
         review_card.set_hexpand(True)
         review_card.set_vexpand(True)
         review_card.set_margin_top(10)
@@ -144,12 +142,14 @@ class CameraPhoto(MediaCaptureWindow):
         review_card.set_overflow(Gtk.Overflow.HIDDEN)
 
         self.review_image = Gtk.Picture()
+        self.review_image.add_css_class("preview-round")
+        self.review_image.set_overflow(Gtk.Overflow.HIDDEN)
         self.review_image.set_can_shrink(True)
         self.review_image.set_hexpand(True)
         self.review_image.set_vexpand(True)
         self.review_image.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        review_card.append(self.review_image)
+        review_card.append(self.letterbox(self.review_image))
         self.page_review.append(review_card)
 
         act_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
@@ -194,6 +194,7 @@ class CameraPhoto(MediaCaptureWindow):
             if sink:
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
+                self.reveal_on_first_frame(self.viewfinder_widget)
 
             self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_viewfinder_message)
 
@@ -238,7 +239,7 @@ class CameraPhoto(MediaCaptureWindow):
 
     def _capture_frame(self):
         """Capture a single frame from the camera."""
-        self.temp_capture_path = os.path.join(tempfile.gettempdir(), f"cam_cap_{int(time.time())}.jpg")
+        self.temp_capture_path = os.path.join(self.capture_dir(), f"cam_cap_{int(time.time())}.jpg")
         self.frame_count = 0
         self._capture_taken = False
 
@@ -379,7 +380,7 @@ class CameraPhoto(MediaCaptureWindow):
             if w > MAX_IMAGE_DIMENSION or h > MAX_IMAGE_DIMENSION:
                 img.thumbnail((MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION))
 
-            output_path = os.path.join(tempfile.gettempdir(), f"photo_{int(time.time())}.jpg")
+            output_path = os.path.join(self.capture_dir(), f"photo_{int(time.time())}.jpg")
             img.save(output_path, "JPEG", quality=JPEG_QUALITY)
 
             if path != output_path:
@@ -413,10 +414,6 @@ class CameraPhoto(MediaCaptureWindow):
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
-
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
         GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_closed(self, _dialog):

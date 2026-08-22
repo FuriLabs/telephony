@@ -15,7 +15,6 @@
 
 import os
 import time
-import tempfile
 from gettext import gettext as _
 
 import gi
@@ -25,7 +24,7 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.constants import (CAPTURE_SHEET_HEIGHT, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
+from telephony.shared.constants import (PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow, _format_duration
 from telephony.client.ui.widgets.common_widget import close_sheet_page
 
@@ -48,7 +47,7 @@ class SoundRecorder(MediaCaptureWindow):
 
     def __init__(self, parent_window, on_attach_callback, max_bytes=MAX_MMS_AUDIO_BYTES):
         super().__init__()
-        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
+        self.request_capture_height(parent_window)
         self.on_attach_callback = on_attach_callback
         self.max_bytes = max_bytes
         self._attached = False
@@ -89,10 +88,6 @@ class SoundRecorder(MediaCaptureWindow):
         header.set_show_end_title_buttons(False)
         content.append(header)
 
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._on_cancel_clicked(b) or False))
-        header.pack_start(btn_cancel)
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(
@@ -194,7 +189,7 @@ class SoundRecorder(MediaCaptureWindow):
     def _start_recording(self):
         """Initialize and start the GStreamer recording pipeline."""
         self.output_path = os.path.join(
-            tempfile.gettempdir(), f"voice_{int(time.time())}.mp3")
+            self.capture_dir(), f"voice_{int(time.time())}.mp3")
 
         pipeline_str = (
             "autoaudiosrc ! audioconvert ! audioresample ! "
@@ -380,10 +375,6 @@ class SoundRecorder(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
-
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
         GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_closed(self, _dialog):
