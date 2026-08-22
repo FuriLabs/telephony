@@ -828,7 +828,52 @@ class MainWindow(Adw.Window):
         run_in_background(self.ofono.dial, number, on_complete=done, hide_id=hide_id)
 
     def show_call_details(self, item):
-        """Show the call details sheet for a history item."""
+        """Show the call details sheet for a history item.
+
+        The page rebuilds itself whenever it comes back into view,
+        because the flows it opens change what it says: saving the
+        number as a contact changes the name and which actions apply,
+        and blocking it swaps the block action for an unblock. A page
+        built once would come back telling the state before the flow.
+        """
+        page = Adw.NavigationPage(title=_("Call Details"))
+
+        def rebuild(*_args):
+            page.set_child(self._build_call_details(item))
+            return False
+
+        connections = [(self.eds, self.eds.connect('contacts-loaded',
+                                                   lambda *_a: GLib.idle_add(rebuild))),
+                       (self.db, self.db.connect('blocklist-updated',
+                                                 lambda *_a: GLib.idle_add(rebuild)))]
+
+        def on_hidden(p):
+            """Release the change subscriptions once the page leaves the stack.
+
+            Hidden also fires when another page merely covers this one,
+            where the subscriptions must survive: the covering flow is
+            exactly what changes the answers, and its pop is too early
+            for the mirrors, so the page listens for the data itself.
+
+            A popped page still has its parent while the signal runs
+            and loses it a moment later, so the check waits one idle;
+            asking at signal time answers kept for both fates.
+            """
+            def check():
+                if p.get_parent() is not None:
+                    return False
+                for obj, handler in connections:
+                    obj.disconnect(handler)
+                connections.clear()
+                return False
+            GLib.idle_add(check)
+
+        page.connect("showing", rebuild)
+        page.connect("hidden", on_hidden)
+        present_sheet_page(self, page)
+
+    def _build_call_details(self, item):
+        """Build the call details content from the current state."""
         toolbar = Adw.ToolbarView()
         toolbar.add_top_bar(Adw.HeaderBar())
         page = Adw.PreferencesPage()
@@ -836,7 +881,8 @@ class MainWindow(Adw.Window):
 
         grp_info = Adw.PreferencesGroup()
         page.add(grp_info)
-        rows = [(_("Number"), item.number), (_("Name"), item.name),
+        current_name = self.eds.get_contact_name(item.number) or item.name
+        rows = [(_("Number"), item.number), (_("Name"), current_name),
                 (_("Direction"), call_direction_text(item.direction)),
                 (_("Result"), call_outcome_text(item.direction, item.disconnect_reason)),
                 (_("Date"), item.full_ts), (_("Duration"), item.duration_str)]
@@ -892,11 +938,12 @@ class MainWindow(Adw.Window):
                                        lambda: self.notify_success(_("Unblocked")))
             add_action(_("Unblock Number"), _unblock, needs_eds=True, opens_flow=True)
         else:
-            lbl = _("Edit Contact") if item.is_saved else _("Add to Contacts")
+            is_saved = self.eds.get_contact_name(item.number) is not None
+            lbl = _("Edit Contact") if is_saved else _("Add to Contacts")
             add_action(lbl, lambda: self.present_edit_contact(number_preset=item.number),
                            needs_eds=True, opens_flow=True)
 
-            if not item.is_saved:
+            if not is_saved:
                 add_action(_("Add to Existing Contact"), lambda: self.on_add_to_existing(item),
                                needs_eds=True, opens_flow=True)
                 add_action(_("Search Number"), lambda: self.search_number_online(item.number))
@@ -918,7 +965,7 @@ class MainWindow(Adw.Window):
                                 self.daemon.delete_call_entry(item.id)]),
                    destructive=True, opens_flow=True)
 
-        present_sheet_page(self, Adw.NavigationPage(title=_("Call Details"), child=toolbar))
+        return toolbar
 
     def search_number_online(self, number):
         """Open the configured search engine for a phone number."""
