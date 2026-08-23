@@ -31,29 +31,29 @@ class NotificationService(GObject.Object):
         """Initialize the Notification Monitor."""
         super().__init__()
         self.connection = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-        self._subscribe()
+        self.subscribe()
 
-    def _subscribe(self):
+    def subscribe(self):
         """Subscribe to DBus signals."""
         self.connection.signal_subscribe(
             NOTIFY_DBUS_NAME, NOTIFY_INTERFACE, "ActionInvoked",
             NOTIFY_DBUS_PATH, None, Gio.DBusSignalFlags.NONE,
-            self._on_action_invoked, None
+            self.on_action_invoked, None
         )
         self.connection.signal_subscribe(
             NOTIFY_DBUS_NAME, NOTIFY_INTERFACE, "NotificationClosed",
             NOTIFY_DBUS_PATH, None, Gio.DBusSignalFlags.NONE,
-            self._on_notification_closed, None
+            self.on_notification_closed, None
         )
 
-    def _on_action_invoked(self, conn, sender, path, iface, signal, params, user_data):
+    def on_action_invoked(self, conn, sender, path, iface, signal, params, user_data):
         """Handle ActionInvoked signal."""
         args = params.unpack()
         nid = args[0]
         action_key = args[1]
         self.emit('action-invoked', nid, action_key)
 
-    def _on_notification_closed(self, conn, sender, path, iface, signal, params, user_data):
+    def on_notification_closed(self, conn, sender, path, iface, signal, params, user_data):
         """Handle NotificationClosed signal."""
         args = params.unpack()
         nid = args[0]

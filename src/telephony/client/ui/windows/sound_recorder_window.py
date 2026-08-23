@@ -25,7 +25,7 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.constants import (PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
-from telephony.client.ui.windows.media_window_base import MediaCaptureWindow, _format_duration
+from telephony.client.ui.windows.media_window_base import MediaCaptureWindow, format_duration
 from telephony.client.ui.widgets.common_widget import close_sheet_page
 
 MAX_RECORD_SECONDS = 120
@@ -33,7 +33,7 @@ RECORD_TIMER_INTERVAL_MS = 1000
 MAX_MMS_AUDIO_BYTES = 600 * 1024
 
 
-def _format_size_limit(size_bytes):
+def format_size_limit(size_bytes):
     """Format a byte limit as a short kB or MB label."""
     if size_bytes >= 1024 * 1024:
         mb = size_bytes / (1024 * 1024)
@@ -72,10 +72,10 @@ class SoundRecorder(MediaCaptureWindow):
         self.eos_timeout_id = None
         self.progress_timer_id = None
 
-        self._setup_ui()
-        self.connect("hidden", self._on_closed)
+        self.setup_ui()
+        self.connect("hidden", self.on_closed)
 
-    def _setup_ui(self):
+    def setup_ui(self):
         """Build the UI components."""
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
@@ -100,7 +100,7 @@ class SoundRecorder(MediaCaptureWindow):
         page_record.set_halign(Gtk.Align.CENTER)
         page_record.set_margin_bottom(40)
 
-        self.lbl_timer = Gtk.Label(label=self._recording_timer_text(0))
+        self.lbl_timer = Gtk.Label(label=self.recording_timer_text(0))
         self.lbl_timer.add_css_class("display-1")
         self.lbl_timer.add_css_class("numeric")
         page_record.append(self.lbl_timer)
@@ -117,7 +117,7 @@ class SoundRecorder(MediaCaptureWindow):
         self.btn_record.set_halign(Gtk.Align.CENTER)
         self.btn_record.set_valign(Gtk.Align.CENTER)
         self.btn_record.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._on_record_toggle(b) or False))
+            lambda: self.on_record_toggle(b) or False))
         page_record.append(self.btn_record)
 
         self.stack.add_named(page_record, "record")
@@ -132,7 +132,7 @@ class SoundRecorder(MediaCaptureWindow):
         icon.set_pixel_size(64)
         page_review.append(icon)
 
-        self.lbl_duration = Gtk.Label(label=_format_duration(0))
+        self.lbl_duration = Gtk.Label(label=format_duration(0))
         self.lbl_duration.add_css_class("title-2")
         self.lbl_duration.add_css_class("numeric")
         page_review.append(self.lbl_duration)
@@ -142,14 +142,14 @@ class SoundRecorder(MediaCaptureWindow):
         self.btn_play.add_css_class("suggested-action")
         self.btn_play.set_size_request(60, 60)
         self.btn_play.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._on_play_toggle(b) or False))
+            lambda: self.on_play_toggle(b) or False))
 
         box_play = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         box_play.set_halign(Gtk.Align.CENTER)
         box_play.append(self.btn_play)
         page_review.append(box_play)
 
-        self.lbl_progress = Gtk.Label(label=self._playback_progress_text(0, 0))
+        self.lbl_progress = Gtk.Label(label=self.playback_progress_text(0, 0))
         self.lbl_progress.add_css_class("numeric")
         self.lbl_progress.add_css_class("dim-label")
         page_review.append(self.lbl_progress)
@@ -166,27 +166,27 @@ class SoundRecorder(MediaCaptureWindow):
         btn_attach.add_css_class("pill")
         btn_attach.add_css_class("suggested-action")
         btn_attach.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._on_attach_clicked(b) or False))
+            lambda: self.on_attach_clicked(b) or False))
         actions_box.append(btn_attach)
 
         btn_retake = Gtk.Button(label=_("Retake"))
         btn_retake.add_css_class("pill")
         btn_retake.connect("clicked", lambda b: GLib.idle_add(
-            lambda: self._on_retake_clicked(b) or False))
+            lambda: self.on_retake_clicked(b) or False))
         actions_box.append(btn_retake)
 
         page_review.append(actions_box)
 
         self.stack.add_named(page_review, "review")
 
-    def _on_record_toggle(self, btn):
+    def on_record_toggle(self, btn):
         """Toggle recording state."""
         if self.is_recording:
-            self._stop_recording()
+            self.stop_recording()
         else:
-            self._start_recording()
+            self.start_recording()
 
-    def _start_recording(self):
+    def start_recording(self):
         """Initialize and start the GStreamer recording pipeline."""
         self.output_path = os.path.join(
             self.capture_dir(), f"voice_{int(time.time())}.mp3")
@@ -199,8 +199,8 @@ class SoundRecorder(MediaCaptureWindow):
         try:
             self.pipeline = Gst.parse_launch(pipeline_str)
 
-            self.bus, self.bus_handler_id = self._watch_bus(
-                self.pipeline, self._on_record_message)
+            self.bus, self.bus_handler_id = self.watch_bus(
+                self.pipeline, self.on_record_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             self.is_recording = True
@@ -208,21 +208,21 @@ class SoundRecorder(MediaCaptureWindow):
             self.record_elapsed = 0
             self.btn_record.set_icon_name("media-playback-stop-symbolic")
 
-            self.timer_id = self._schedule_timeout(
-                RECORD_TIMER_INTERVAL_MS, self._update_timer)
+            self.timer_id = self.schedule_timeout(
+                RECORD_TIMER_INTERVAL_MS, self.update_timer)
             logger.info("Recording started")
 
         except Exception as e:
             logger.error(f"Failed to start recording: {e}")
-            self._show_error(str(e))
+            self.show_error(str(e))
 
-    def _stop_recording(self):
+    def stop_recording(self):
         """Stop recording, letting the pipeline flush via EOS before finalizing."""
         was_recording = self.is_recording
         self.is_recording = False
 
         if self.timer_id:
-            self._cancel_timeout(self.timer_id)
+            self.cancel_timeout(self.timer_id)
             self.timer_id = None
 
         self.btn_record.set_icon_name("media-record-symbolic")
@@ -234,39 +234,39 @@ class SoundRecorder(MediaCaptureWindow):
             self.record_elapsed = int(time.time() - self.start_time)
 
         if self._closed:
-            self._finalize_recording()
+            self.finalize_recording()
             return
 
         logger.info("Stopping recording (sending EOS)...")
         self.btn_record.set_sensitive(False)
         self.pipeline.send_event(Gst.Event.new_eos())
-        self.eos_timeout_id = self._schedule_timeout(
-            EOS_TIMEOUT_MS, self._force_stop_recording)
+        self.eos_timeout_id = self.schedule_timeout(
+            EOS_TIMEOUT_MS, self.force_stop_recording)
 
-    def _force_stop_recording(self):
+    def force_stop_recording(self):
         """Force stop the recording pipeline if EOS times out."""
         logger.warning("Recording EOS timeout, forcing stop.")
         self.eos_timeout_id = None
-        self._finalize_recording()
+        self.finalize_recording()
         return False
 
-    def _on_record_message(self, bus, message):
+    def on_record_message(self, bus, message):
         """Handle recording pipeline bus messages."""
         t = message.type
         if t == Gst.MessageType.EOS:
             logger.info("Recording EOS received, finalizing file.")
-            self._finalize_recording()
+            self.finalize_recording()
         elif t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error(f"Recording error: {err} : {debug}")
-            self._finalize_recording()
+            self.finalize_recording()
             if not self._closed:
-                self._show_error(str(err))
+                self.show_error(str(err))
 
-    def _finalize_recording(self):
+    def finalize_recording(self):
         """Tear down the recording pipeline and show the review page."""
         if self.eos_timeout_id:
-            self._cancel_timeout(self.eos_timeout_id)
+            self.cancel_timeout(self.eos_timeout_id)
             self.eos_timeout_id = None
 
         if self.bus:
@@ -284,27 +284,27 @@ class SoundRecorder(MediaCaptureWindow):
             return
 
         self.btn_record.set_sensitive(True)
-        self.lbl_duration.set_label(_format_duration(self.record_elapsed))
+        self.lbl_duration.set_label(format_duration(self.record_elapsed))
         self.stack.set_visible_child_name("review")
 
         if self.output_path and os.path.exists(self.output_path):
             size = os.path.getsize(self.output_path)
             logger.info(f"Recording finished. Size: {size} bytes")
             if size > self.max_bytes:
-                limit_text = _format_size_limit(self.max_bytes)
-                self._show_error(_(
+                limit_text = format_size_limit(self.max_bytes)
+                self.show_error(_(
                     "Recording is too large for MMS (Max {size}). "
                     "Please retake shorter."
                 ).format(size=limit_text))
 
-    def _on_play_toggle(self, btn):
+    def on_play_toggle(self, btn):
         """Toggle playback state."""
         if self.is_playing:
-            self._stop_playback()
+            self.stop_playback()
         else:
-            self._start_playback()
+            self.start_playback()
 
-    def _start_playback(self):
+    def start_playback(self):
         """Start audio playback."""
         if not self.output_path or not os.path.exists(self.output_path):
             return
@@ -313,22 +313,22 @@ class SoundRecorder(MediaCaptureWindow):
             self.player = Gst.parse_launch(
                 f"playbin uri=file://{self.output_path}")
 
-            self.player_bus, self.player_bus_handler_id = self._watch_bus(
-                self.player, self._on_player_message)
+            self.player_bus, self.player_bus_handler_id = self.watch_bus(
+                self.player, self.on_player_message)
 
             self.player.set_state(Gst.State.PLAYING)
             self.is_playing = True
             self.btn_play.set_icon_name("media-playback-pause-symbolic")
 
-            self.progress_timer_id = self._schedule_timeout(
-                PLAYBACK_PROGRESS_INTERVAL_MS, self._update_playback_progress)
+            self.progress_timer_id = self.schedule_timeout(
+                PLAYBACK_PROGRESS_INTERVAL_MS, self.update_playback_progress)
         except Exception as e:
             logger.error(f"Playback failed: {e}")
 
-    def _stop_playback(self):
+    def stop_playback(self):
         """Stop audio playback and release playback resources."""
         if self.progress_timer_id:
-            self._cancel_timeout(self.progress_timer_id)
+            self.cancel_timeout(self.progress_timer_id)
             self.progress_timer_id = None
         if self.player_bus:
             if self.player_bus_handler_id:
@@ -341,22 +341,22 @@ class SoundRecorder(MediaCaptureWindow):
             self.player = None
         self.is_playing = False
         self.btn_play.set_icon_name("media-playback-start-symbolic")
-        self.lbl_progress.set_label(self._playback_progress_text(0, 0))
+        self.lbl_progress.set_label(self.playback_progress_text(0, 0))
         self.progress_bar.set_fraction(0.0)
 
-    def _on_player_message(self, bus, message):
+    def on_player_message(self, bus, message):
         """Handle GStreamer bus messages."""
         t = message.type
         if t == Gst.MessageType.EOS:
-            self._stop_playback()
+            self.stop_playback()
         elif t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error(f"Playback error: {err} : {debug}")
-            self._stop_playback()
+            self.stop_playback()
 
-    def _on_retake_clicked(self, btn):
+    def on_retake_clicked(self, btn):
         """Handle retake button click."""
-        self._stop_playback()
+        self.stop_playback()
         if self.output_path and os.path.exists(self.output_path):
             try:
                 os.remove(self.output_path)
@@ -365,27 +365,27 @@ class SoundRecorder(MediaCaptureWindow):
                     f"[SoundRecorder] Failed to remove temp file: {e}")
         self.output_path = None
         self.record_elapsed = 0
-        self.lbl_timer.set_label(self._recording_timer_text(0))
+        self.lbl_timer.set_label(self.recording_timer_text(0))
         self.stack.set_visible_child_name("record")
 
-    def _on_attach_clicked(self, btn):
+    def on_attach_clicked(self, btn):
         """Handle attach button click."""
-        self._stop_playback()
+        self.stop_playback()
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
         GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
-    def _on_closed(self, _dialog):
+    def on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""
         self._closed = True
-        self._cancel_tracked_timeouts()
-        self._stop_recording()
-        self._stop_playback()
-        self._discard_unattached_output()
+        self.cancel_tracked_timeouts()
+        self.stop_recording()
+        self.stop_playback()
+        self.discard_unattached_output()
 
-    def _discard_unattached_output(self):
+    def discard_unattached_output(self):
         """Delete the recorded file when the window closes without attaching."""
         if self._attached or not self.output_path:
             return

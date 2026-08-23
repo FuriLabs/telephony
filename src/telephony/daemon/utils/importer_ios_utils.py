@@ -24,7 +24,7 @@ from datetime import datetime
 from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.datetime_utils import format_timestamp
 
-from telephony.daemon.utils.importer_core_utils import _get_value
+from telephony.daemon.utils.importer_core_utils import get_value
 from telephony.shared.utils.phone_utils import normalize_number
 
 MAC_ABSOLUTE_EPOCH = 978307200
@@ -116,16 +116,16 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
             try:
                 row_dict = dict(row)
                 m_id = row_dict["ROWID"]
-                phone = _get_value(row_dict, ['handle_id_phone', 'id', 'account', 'sender'])
+                phone = get_value(row_dict, ['handle_id_phone', 'id', 'account', 'sender'])
                 if not phone:
                     continue
 
                 norm_number = normalize_number(str(phone), permissive=True)
-                text = _get_value(row_dict, ['text', 'body', 'message'], "")
+                text = get_value(row_dict, ['text', 'body', 'message'], "")
                 if text is None:
                     text = ""
-                is_from_me = _get_value(row_dict, ['is_from_me', 'type', 'direction'], 0)
-                date = _get_value(row_dict, ['date', 'time', 'timestamp'], 0)
+                is_from_me = get_value(row_dict, ['is_from_me', 'type', 'direction'], 0)
+                date = get_value(row_dict, ['date', 'time', 'timestamp'], 0)
 
                 dir_str = "outgoing" if is_from_me in (1, "1", True) else "incoming"
 
@@ -249,14 +249,14 @@ def import_ios_calls(db_manager, file_path):
         for row in rows:
             try:
                 row_dict = dict(row)
-                phone = _get_value(row_dict, ['ZADDRESS', 'address', 'target', 'number', 'phone'])
+                phone = get_value(row_dict, ['ZADDRESS', 'address', 'target', 'number', 'phone'])
                 if not phone:
                     continue
 
-                originated = _get_value(row_dict, ['ZORIGINATED', 'originated', 'direction'], 0)
-                answered = _get_value(row_dict, ['ZANSWERED', 'answered', 'status'], 1)
-                duration = _get_value(row_dict, ['ZDURATION', 'duration', 'length'], 0)
-                date = _get_value(row_dict, ['ZDATE', 'date', 'time', 'timestamp'], 0)
+                originated = get_value(row_dict, ['ZORIGINATED', 'originated', 'direction'], 0)
+                answered = get_value(row_dict, ['ZANSWERED', 'answered', 'status'], 1)
+                duration = get_value(row_dict, ['ZDURATION', 'duration', 'length'], 0)
+                date = get_value(row_dict, ['ZDATE', 'date', 'time', 'timestamp'], 0)
 
                 if originated in (1, "1", True):
                     dir_str = "outgoing"

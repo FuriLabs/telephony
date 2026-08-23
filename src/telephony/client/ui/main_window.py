@@ -99,7 +99,7 @@ class MainWindow(Adw.Window):
 
         self.banner = Adw.Banner()
         self.banner.set_revealed(False)
-        self.banner.connect("button-clicked", self._on_banner_action)
+        self.banner.connect("button-clicked", self.on_banner_action)
         self._banner_action = None
         self._banner_states = {}
         main_vbox.append(self.banner)
@@ -130,9 +130,9 @@ class MainWindow(Adw.Window):
         if self.show_contacts_mode:
             add_lazy_page("contacts", _("Contacts"), "system-users-symbolic")
 
-        self.stack.connect("notify::visible-child-name", self._on_stack_page_changed)
-        self._check_country_code()
-        self._ensure_view(self.stack.get_visible_child_name())
+        self.stack.connect("notify::visible-child-name", self.on_stack_page_changed)
+        self.check_country_code()
+        self.ensure_view(self.stack.get_visible_child_name())
 
         self.stack.set_vexpand(True)
         main_vbox.append(self.stack)
@@ -151,26 +151,26 @@ class MainWindow(Adw.Window):
 
         if self.ofono:
             for sig in ('call-added', 'call-removed', 'dial-availability-changed'):
-                self.signal_ids.append((self.ofono, self.ofono.connect(sig, self._refresh_calling_controls)))
-            self.signal_ids.append((self.ofono, self.ofono.connect('dial-availability-changed', self._on_capability_changed)))
-            self.signal_ids.append((self.ofono, self.ofono.connect('modem-interface-appeared', self._on_modem_interface_appeared)))
-            self._on_capability_changed()
+                self.signal_ids.append((self.ofono, self.ofono.connect(sig, self.refresh_calling_controls)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('dial-availability-changed', self.on_capability_changed)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('modem-interface-appeared', self.on_modem_interface_appeared)))
+            self.on_capability_changed()
 
         if self.msgs_page:
             self.signal_ids.append((self.db, self.db.connect('messages-updated', lambda *args: self.update_unread_badge())))
 
         if self.eds.is_ready:
             self.update_unread_badge()
-            self._update_sensitive_actions(True)
+            self.update_sensitive_actions(True)
         else:
-            self._update_sensitive_actions(False)
+            self.update_sensitive_actions(False)
             self.set_banner_state("syncing", _("Syncing contacts…"), priority=10)
 
         self.check_own_number()
         self.check_emergency_setup()
 
         self.connect("close-request", self.on_close_request)
-        self.connect("map", self._on_window_map)
+        self.connect("map", self.on_window_map)
         self._initial_check_done = False
 
         self.signal_ids.append((self.gsettings_mgr.gsettings, self.gsettings_mgr.gsettings.connect("changed::duplicate-resolver-enabled", self.on_duplicate_resolver_setting_changed)))
@@ -207,7 +207,7 @@ class MainWindow(Adw.Window):
         self.is_popup_active = False
         self.process_popup_queue()
 
-    def _on_window_map(self, *args):
+    def on_window_map(self, *args):
         """Handle window map event."""
         if not self._initial_check_done:
             self._initial_check_done = True
@@ -237,14 +237,14 @@ class MainWindow(Adw.Window):
             return
         self.set_banner_state("service", _("Telephony service is not running"),
                               button_label=_("Start"),
-                              action=self._start_service_from_banner,
+                              action=self.start_service_from_banner,
                               priority=30)
 
-    def _start_service_from_banner(self):
+    def start_service_from_banner(self):
         """Run the banner's start offer."""
-        self.app.start_service(self._on_daemon_retried)
+        self.app.start_service(self.on_daemon_retried)
 
-    def _on_daemon_retried(self, started):
+    def on_daemon_retried(self, started):
         """Report whether the service answered this time."""
         if started:
             self.notify_success(_("Telephony service started"))
@@ -286,16 +286,16 @@ class MainWindow(Adw.Window):
 
     def check_own_number(self):
         """Check if own number is set, warn if not."""
-        def _check():
+        def check():
             num = self.app.daemon_client.get_own_number()
             if not num:
                 num = self.gsettings_mgr.get_setting("own_number")
 
             if not num:
-                GLib.idle_add(lambda: self._show_setup_hint(_("Set your number in Settings")) or False)
-        run_in_background(_check)
+                GLib.idle_add(lambda: self.show_setup_hint(_("Set your number in Settings")) or False)
+        run_in_background(check)
 
-    def _check_country_code(self):
+    def check_country_code(self):
         """Give this window the country its numbers belong to.
 
         A stored number without a country code is read as belonging to
@@ -310,22 +310,22 @@ class MainWindow(Adw.Window):
             utils.set_custom_region(cc)
             return
 
-        def _task():
+        def task():
             region = self.app.daemon_client.detect_region()
             if region:
                 self.gsettings_mgr.set_setting("default_country_code", region)
                 utils.set_custom_region(region)
             else:
-                GLib.idle_add(lambda: self._show_setup_hint(_("Please set Default Country Code in Settings")) or False)
-        run_in_background(_task)
+                GLib.idle_add(lambda: self.show_setup_hint(_("Please set Default Country Code in Settings")) or False)
+        run_in_background(task)
 
-    def _on_modem_interface_appeared(self, _ofono, interface):
+    def on_modem_interface_appeared(self, _ofono, interface):
         """Retry region detection once network registration becomes available."""
         if interface != "org.ofono.NetworkRegistration":
             return
         if self.gsettings_mgr.get_setting("default_country_code"):
             return
-        self._check_country_code()
+        self.check_country_code()
 
     def check_emergency_setup(self):
         """Check if emergency numbers are configured."""
@@ -336,7 +336,7 @@ class MainWindow(Adw.Window):
             if self.gsettings_mgr.get_emergency_numbers():
                 return
 
-            GLib.idle_add(lambda: self._show_setup_hint(_("Setup Emergency Numbers in Settings")) or False)
+            GLib.idle_add(lambda: self.show_setup_hint(_("Setup Emergency Numbers in Settings")) or False)
         except Exception as e:
             logger.warning(f"[MainWindow] Emergency setup check warning: {e}")
 
@@ -370,21 +370,21 @@ class MainWindow(Adw.Window):
         """Open the about page from the menu."""
         InfoPage.show(self)
 
-    def _set_resolve_visible(self, visible):
+    def set_resolve_visible(self, visible):
         """Show or hide the duplicate resolution menu entry."""
         self._resolve_section.remove_all()
         if visible:
             self._resolve_section.append(_("Resolve Duplicates"), "menu.resolve-duplicates")
 
-    def _update_sensitive_actions(self, sensitive):
+    def update_sensitive_actions(self, sensitive):
         """Enable or disable actions based on readiness."""
         for name in ("settings", "reload-contacts", "import-export", "blocklist"):
             if name in self._menu_actions:
                 self._menu_actions[name].set_enabled(sensitive)
 
-    def _refresh_calling_controls(self, *args):
+    def refresh_calling_controls(self, *args):
         """Grey out call-starting controls while no new call can be placed."""
-        available = self.ofono.dialing_available() if self.ofono else True
+        available = self.ofono.is_dialing_available() if self.ofono else True
         if self.dialpad_view:
             self.dialpad_view.set_calling_enabled(available)
         if self.history_view:
@@ -392,7 +392,7 @@ class MainWindow(Adw.Window):
         if self.contacts_view:
             self.contacts_view.set_calling_enabled(available)
 
-    def _toast_target(self):
+    def toast_target(self):
         """Return the overlay of the topmost surface.
 
         An open sheet and a presented dialog are both painted above
@@ -404,12 +404,12 @@ class MainWindow(Adw.Window):
 
         dialog = self.get_visible_dialog()
         if dialog is not None:
-            overlay = self._find_toast_overlay(dialog.get_child())
+            overlay = self.find_toast_overlay(dialog.get_child())
             if overlay is not None:
                 return overlay
         return self.toast_overlay
 
-    def _find_toast_overlay(self, widget):
+    def find_toast_overlay(self, widget):
         """Find the first toast overlay inside a widget tree."""
         if widget is None:
             return None
@@ -417,7 +417,7 @@ class MainWindow(Adw.Window):
             return widget
         child = widget.get_first_child()
         while child is not None:
-            found = self._find_toast_overlay(child)
+            found = self.find_toast_overlay(child)
             if found is not None:
                 return found
             child = child.get_next_sibling()
@@ -432,14 +432,14 @@ class MainWindow(Adw.Window):
         """
         self._banner_states[key] = {"message": message, "button": button_label,
                                     "action": action, "priority": priority}
-        self._refresh_banner()
+        self.refresh_banner()
 
     def clear_banner_state(self, key):
         """Drop one state and fall back to whatever else still holds."""
         if self._banner_states.pop(key, None) is not None:
-            self._refresh_banner()
+            self.refresh_banner()
 
-    def _refresh_banner(self):
+    def refresh_banner(self):
         """Show the highest priority state, or nothing at all."""
         if not self._banner_states:
             self._banner_action = None
@@ -452,12 +452,12 @@ class MainWindow(Adw.Window):
         self._banner_action = state["action"]
         self.banner.set_revealed(True)
 
-    def _on_banner_action(self, _banner):
+    def on_banner_action(self, _banner):
         """Run whatever the banner offered."""
         if self._banner_action:
             GLib.idle_add(lambda: self._banner_action() or False)
 
-    def _show_toast(self, message, timeout=5, priority=None):
+    def show_toast(self, message, timeout=5, priority=None):
         """Show one toast on the topmost surface, replacing what it supersedes.
 
         Adwaita shows a single toast at a time and queues the rest, so a
@@ -475,13 +475,13 @@ class MainWindow(Adw.Window):
         toast.set_timeout(timeout)
         if priority is not None:
             toast.set_priority(priority)
-        toast.connect("dismissed", self._on_toast_dismissed, message)
+        toast.connect("dismissed", self.on_toast_dismissed, message)
         self._current_toast = toast
         self._current_message = message
-        self._toast_target().add_toast(toast)
+        self.toast_target().add_toast(toast)
         return toast
 
-    def _on_toast_dismissed(self, toast, message):
+    def on_toast_dismissed(self, toast, message):
         """Forget the toast that just went away."""
         if self._current_toast is toast:
             self._current_toast = None
@@ -490,17 +490,17 @@ class MainWindow(Adw.Window):
     def notify_error(self, message):
         """Report a refusal, ahead of anything already showing."""
         self.hide_loading()
-        self._show_toast(message, priority=Adw.ToastPriority.HIGH)
+        self.show_toast(message, priority=Adw.ToastPriority.HIGH)
 
     def notify_success(self, message):
         """Report a finished action the screen does not already show."""
         self.hide_loading()
-        self._show_toast(message)
+        self.show_toast(message)
 
     def notify_loading(self, message):
         """Show a persistent toast for a long running operation."""
         self.hide_loading()
-        self._loading_toast = self._show_toast(message, timeout=0)
+        self._loading_toast = self.show_toast(message, timeout=0)
 
     def hide_loading(self):
         """Dismiss the long running operation toast."""
@@ -510,7 +510,7 @@ class MainWindow(Adw.Window):
             self._current_toast = None
             self._current_message = None
 
-    def _show_setup_hint(self, message):
+    def show_setup_hint(self, message):
         """Show at most one settings hint per launch, with a shortcut."""
         if self._setup_hint_shown:
             return
@@ -530,29 +530,29 @@ class MainWindow(Adw.Window):
                 self.notify_success(_("Contacts refreshed"))
             else:
                 self.hide_loading()
-            self._update_sensitive_actions(True)
+            self.update_sensitive_actions(True)
 
     def update_unread_badge(self):
         """Update the unread messages badge number."""
         if self.msgs_page and self.db:
             if (self._unread_timer is not None) and self._unread_timer:
                 GLib.source_remove(self._unread_timer)
-            self._unread_timer = GLib.timeout_add(200, self._do_update_unread_badge)
+            self._unread_timer = GLib.timeout_add(200, self.do_update_unread_badge)
 
-    def _do_update_unread_badge(self):
+    def do_update_unread_badge(self):
         self._unread_timer = None
         if self.msgs_page and self.db:
-            def _fetch_unread():
+            def fetch_unread():
                 count = self.db.get_total_unread_count()
                 GLib.idle_add(lambda: self.msgs_page.set_badge_number(count) or False)
-            run_in_background(_fetch_unread)
+            run_in_background(fetch_unread)
         return False
 
     def on_ofono_status(self, manager, status, message):
         """Log ofono status changes; the recovery flow owns the surfacing."""
         logger.debug(f"[MainWindow] ofono status {status}: {message}")
 
-    def _on_capability_changed(self, *args):
+    def on_capability_changed(self, *args):
         """Say why calls cannot be placed, when the reason will last.
 
         Transient states stay off the banner: warming up and call
@@ -565,9 +565,9 @@ class MainWindow(Adw.Window):
         else:
             self.clear_banner_state("capability")
 
-    def _on_stack_page_changed(self, *args):
+    def on_stack_page_changed(self, *args):
         """Build the newly selected view lazily and refresh the chrome."""
-        self._ensure_view(self.stack.get_visible_child_name())
+        self.ensure_view(self.stack.get_visible_child_name())
         self.sync_chat_chrome()
 
     def sync_chat_chrome(self):
@@ -581,7 +581,7 @@ class MainWindow(Adw.Window):
                    and self.messages_view.in_chat())
         self.header.set_visible(not in_chat)
 
-    def _ensure_view(self, name):
+    def ensure_view(self, name):
         """Construct the view for a stack page on first use."""
         placeholder = self._view_pages.get(name)
         if placeholder is None or placeholder.get_child() is not None:
@@ -591,30 +591,30 @@ class MainWindow(Adw.Window):
         if name == "dialpad":
             self.dialpad_view = DialpadView(self)
             placeholder.set_child(self.dialpad_view)
-            self._refresh_calling_controls()
+            self.refresh_calling_controls()
         elif name == "history":
             self.history_view = HistoryView(self.db, self)
             placeholder.set_child(self.history_view)
-            self._refresh_calling_controls()
+            self.refresh_calling_controls()
         elif name == "messages":
             self.messages_view = MessagesView(self.db, self)
             placeholder.set_child(self.messages_view)
         elif name == "contacts":
             self.contacts_view = ContactsView(self.eds, self)
             placeholder.set_child(self.contacts_view)
-            self._refresh_calling_controls()
+            self.refresh_calling_controls()
 
     def open_chat_for_number(self, number):
         """Switch to messages view and open chat."""
         if self.show_messages_mode:
-            self._ensure_view("messages")
+            self.ensure_view("messages")
             self.stack.set_visible_child_name("messages")
             self.messages_view.open_chat(number, number)
 
     def open_dialpad_with_number(self, number):
         """Switch to dialpad and pre-fill number."""
         if self.show_calls_mode:
-            self._ensure_view("dialpad")
+            self.ensure_view("dialpad")
             self.stack.set_visible_child_name("dialpad")
             self.dialpad_view.entry.set_text(number)
             self.dialpad_view.entry.set_position(-1)
@@ -654,12 +654,12 @@ class MainWindow(Adw.Window):
 
     def confirm_action(self, title, body, on_confirm):
         """Show a confirmation dialog."""
-        def _cb(resp):
+        def cb(resp):
             if resp == "yes":
                 on_confirm()
         present_alert_sheet(self, title, body,
                             [("cancel", _("Cancel"), None), ("yes", _("Confirm"), "destructive")],
-                            _cb)
+                            cb)
 
     def on_settings_click(self, btn):
         """Open the settings sheet."""
@@ -669,7 +669,7 @@ class MainWindow(Adw.Window):
         """Handle toggle of duplicate resolver setting."""
         enabled = settings.get_boolean(key)
         if not enabled:
-            self._set_resolve_visible(False)
+            self.set_resolve_visible(False)
             self.pending_conflicts = []
             self.clear_banner_state("duplicates")
         else:
@@ -685,7 +685,7 @@ class MainWindow(Adw.Window):
         resolver_enabled = self.gsettings_mgr.gsettings.get_boolean("duplicate-resolver-enabled")
 
         if resolver_enabled and count > 0:
-            self._set_resolve_visible(True)
+            self.set_resolve_visible(True)
             if count == previous:
                 return
 
@@ -697,7 +697,7 @@ class MainWindow(Adw.Window):
             self.set_banner_state("duplicates", message, _("Resolve"),
                                   lambda: self.on_resolve_duplicates_clicked(None))
         else:
-            self._set_resolve_visible(False)
+            self.set_resolve_visible(False)
             self.clear_banner_state("duplicates")
 
     def on_resolve_duplicates_clicked(self, btn):
@@ -760,19 +760,19 @@ class MainWindow(Adw.Window):
             else:
                 def offer(books):
                     book_names = {book['uid']: book['name'] for book in (books or [])}
-                    self._choose_contact_to_edit(results, book_names)
+                    self.choose_contact_to_edit(results, book_names)
 
                 run_in_background(self.daemon.get_address_books, on_complete=offer)
                 return
 
-        self._open_contact_editor(contact_data, number_preset)
+        self.open_contact_editor(contact_data, number_preset)
 
-    def _open_contact_editor(self, contact_data, number_preset):
+    def open_contact_editor(self, contact_data, number_preset):
         """Show the editor for one contact."""
         present_sheet_page(self, ContactEditor(self.eds, self, contact_data,
                                                number_preset=number_preset))
 
-    def _choose_contact_to_edit(self, results, book_names):
+    def choose_contact_to_edit(self, results, book_names):
         """Ask which of the matching contacts to edit.
 
         The books are named by the owner rather than by this window: a
@@ -809,7 +809,7 @@ class MainWindow(Adw.Window):
         """Start a call."""
         self.set_focus(None)
 
-        if self.ofono and not self.ofono.dialing_available():
+        if self.ofono and not self.ofono.is_dialing_available():
             description = self.ofono.dial_description
             self.notify_error(description if description else _("Call Failed"))
             return
@@ -839,7 +839,7 @@ class MainWindow(Adw.Window):
         page = Adw.NavigationPage(title=_("Call Details"))
 
         def rebuild(*_args):
-            page.set_child(self._build_call_details(item))
+            page.set_child(self.build_call_details(item))
             return False
 
         connections = [(self.eds, self.eds.connect('contacts-loaded',
@@ -872,7 +872,7 @@ class MainWindow(Adw.Window):
         page.connect("hidden", on_hidden)
         present_sheet_page(self, page)
 
-    def _build_call_details(self, item):
+    def build_call_details(self, item):
         """Build the call details content from the current state."""
         toolbar = Adw.ToolbarView()
         toolbar.add_top_bar(Adw.HeaderBar())
@@ -933,10 +933,10 @@ class MainWindow(Adw.Window):
                 break
 
         if is_blocked_id:
-            def _unblock():
+            def unblock():
                 present_unblock_choice(self, self.daemon, blocked_entry, "calls",
                                        lambda: self.notify_success(_("Unblocked")))
-            add_action(_("Unblock Number"), _unblock, needs_eds=True, opens_flow=True)
+            add_action(_("Unblock Number"), unblock, needs_eds=True, opens_flow=True)
         else:
             is_saved = self.eds.get_contact_name(item.number) is not None
             lbl = _("Edit Contact") if is_saved else _("Add to Contacts")
@@ -993,7 +993,7 @@ class MainWindow(Adw.Window):
 
     def on_add_to_existing(self, item):
         """Handle adding number to an existing contact."""
-        def _cb(result):
+        def cb(result):
             uid, name = result
 
             def done(success):
@@ -1014,7 +1014,7 @@ class MainWindow(Adw.Window):
         picker = ContactPicker(
             self.eds,
             self,
-            _cb,
+            cb,
             title=_("Add Number"),
             action_label=_("Save"),
             allow_custom_number=False,

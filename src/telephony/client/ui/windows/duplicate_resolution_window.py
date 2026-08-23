@@ -52,7 +52,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
         if not self.eds.is_ready:
             logger.warning("[DuplicateResolutionWindow] Initialized while EDS is not ready!")
 
-        self.connect("hidden", lambda p: self._call_done())
+        self.connect("hidden", lambda p: self.call_done())
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
@@ -118,7 +118,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
             child = next_child
 
         if self.current_index >= len(self.conflicts):
-            self._leave()
+            self.leave()
             return
 
         self.update_status()
@@ -186,9 +186,9 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
         self.set_size_request(-1, CONTACT_SHEET_HEIGHT)
         window = parent.get_root()
         present_sheet_page(window, self)
-        on_sheet_closed(window, self._call_done)
+        on_sheet_closed(window, self.call_done)
 
-    def _leave(self):
+    def leave(self):
         """Leave the page, however the resolution finished.
 
         Pushed by the contact editor the page pops back to it, but
@@ -201,7 +201,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
             return
         close_sheet_page(self.get_root())
 
-    def _call_done(self):
+    def call_done(self):
         """Invoke the completion callback, forwarding a pending editor save.
 
         Every exit runs through the page being hidden, whether that is
@@ -218,7 +218,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
         else:
             self.on_done()
 
-    def _resolve_in_thread(self, target_contact, contacts, logic_func):
+    def resolve_in_thread(self, target_contact, contacts, logic_func):
         """
         Run the resolution logic in a background thread to keep UI responsive.
         """
@@ -230,11 +230,11 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
                 logic_func(target_contact, contacts)
             except Exception as e:
                 logger.error(f"Resolution error: {e}")
-            GLib.idle_add(self._on_resolve_complete)
+            GLib.idle_add(self.on_resolve_complete)
 
         run_in_background(task)
 
-    def _on_resolve_complete(self):
+    def on_resolve_complete(self):
         """Called on main thread when single resolution is done."""
         self.spinner.stop()
         self.stack.set_visible_child_name("main")
@@ -244,14 +244,14 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
     def resolve_keep(self, kept_contact):
         """User clicked 'Keep this'."""
         _number, contacts = self.conflicts[self.current_index]
-        self._resolve_in_thread(kept_contact, contacts, self._logic_keep_strict)
+        self.resolve_in_thread(kept_contact, contacts, self.logic_keep_strict)
 
     def resolve_merge(self, kept_contact):
         """User clicked 'Merge'."""
         _number, contacts = self.conflicts[self.current_index]
-        self._resolve_in_thread(kept_contact, contacts, self._logic_merge_smart)
+        self.resolve_in_thread(kept_contact, contacts, self.logic_merge_smart)
 
-    def _logic_keep_strict(self, kept_contact, contacts):
+    def logic_keep_strict(self, kept_contact, contacts):
         """
         Strict Keep: Delete all others. Do NOT merge data.
         Target contact remains untouched.
@@ -263,7 +263,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
 
         self.daemon.delete_contacts([o['uid'] for o in others if o['uid']])
 
-    def _logic_merge_smart(self, kept_contact, contacts):
+    def logic_merge_smart(self, kept_contact, contacts):
         """
         Smart Merge: Pull unique data from others into kept_contact, then delete others.
         Duplicates are only removed after the merged contact was saved successfully.
@@ -275,7 +275,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
             self.daemon.delete_contacts([o['uid'] for o in others if o['uid']])
             return
 
-        new_vcard = self._merge_contact_data(kept_contact, others)
+        new_vcard = self.merge_contact_data(kept_contact, others)
 
         if not self.daemon.save_contact(new_vcard, uid=kept_contact['uid'])[0]:
             logger.error(f"[DuplicateResolution] Merge save failed for {kept_contact['uid']}, keeping duplicates")
@@ -283,7 +283,7 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
 
         self.daemon.delete_contacts([o['uid'] for o in others if o['uid']])
 
-    def _merge_contact_data(self, target, others):
+    def merge_contact_data(self, target, others):
         """Merge data from others into target and return vCard string."""
         target_vcard = target.get('vcard', '')
         if not target_vcard and target['uid']:
@@ -338,9 +338,9 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
     def on_merge_all(self, btn):
         self.stack.set_visible_child_name("loading")
         self.spinner.start()
-        run_in_background(self._merge_all_thread)
+        run_in_background(self.merge_all_thread)
 
-    def _contact_score(self, contact):
+    def contact_score(self, contact):
         """Rank a contact for merge-all target selection."""
         return (
             1 if contact.get('uid') else 0,
@@ -349,23 +349,23 @@ class DuplicateResolutionWindow(Adw.NavigationPage):
             len(contact.get('name') or '')
         )
 
-    def _merge_all_thread(self):
+    def merge_all_thread(self):
         pending = self.conflicts[self.current_index:]
         total = len(pending)
 
         try:
             for processed, (_number, contacts) in enumerate(pending, start=1):
-                best = max(contacts, key=self._contact_score)
-                self._logic_merge_smart(best, contacts)
-                GLib.idle_add(self._update_progress, processed, total)
+                best = max(contacts, key=self.contact_score)
+                self.logic_merge_smart(best, contacts)
+                GLib.idle_add(self.update_progress, processed, total)
         except Exception as e:
             logger.error(f"Merge all error: {e}")
 
-        GLib.idle_add(self._finish_merge)
+        GLib.idle_add(self.finish_merge)
 
-    def _update_progress(self, current, total):
+    def update_progress(self, current, total):
         self.lbl_progress.set_text(_("Merging {current}/{total}...").format(current=current, total=total))
 
-    def _finish_merge(self):
+    def finish_merge(self):
         self.spinner.stop()
-        self._leave()
+        self.leave()

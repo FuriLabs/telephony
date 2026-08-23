@@ -116,7 +116,7 @@ class CallItem(GObject.Object):
         self.duration = duration
         self.full_ts = full_ts
         self.display_time = display_time
-        self.duration_str = self._fmt_dur(duration)
+        self.duration_str = self.fmt_dur(duration)
         self.is_saved = is_saved
         self.is_divider = is_divider
         self.label = label
@@ -125,7 +125,7 @@ class CallItem(GObject.Object):
         self.transferred = transferred
         self.disconnect_reason = disconnect_reason
 
-    def _fmt_dur(self, seconds):
+    def fmt_dur(self, seconds):
         """
         Format duration in seconds to a human-readable string.
         """

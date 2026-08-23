@@ -24,7 +24,7 @@ class SecretManager:
         """Initialize with the schema unbuilt; secrets are rarely touched."""
         self.secret_schema = None
 
-    def _secret(self):
+    def secret(self):
         """Return the Secret module and schema, importing on first use.
 
         Deferred because libsecret drags cairo along and a process only
@@ -43,7 +43,7 @@ class SecretManager:
     def get_secret(self, action_name):
         """Retrieves a secret from the keyring by action name."""
         try:
-            Secret, schema = self._secret()
+            Secret, schema = self.secret()
             return Secret.password_lookup_sync(schema, {"action": action_name}, None)
         except Exception as e:
             logger.error(f"[SecretManager] Error getting secret for {action_name}: {e}")
@@ -52,7 +52,7 @@ class SecretManager:
     def store_secret(self, action_name, secret_value):
         """Stores a secret in the keyring under the given action name."""
         try:
-            Secret, schema = self._secret()
+            Secret, schema = self.secret()
             Secret.password_store_sync(
                 schema,
                 {"action": action_name},
@@ -67,7 +67,7 @@ class SecretManager:
     def clear_secret(self, action_name):
         """Removes a secret from the keyring by action name."""
         try:
-            Secret, schema = self._secret()
+            Secret, schema = self.secret()
             Secret.password_clear_sync(schema, {"action": action_name}, None)
         except Exception as e:
             logger.error(f"[SecretManager] Error clearing secret for {action_name}: {e}")

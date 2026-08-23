@@ -127,27 +127,27 @@ class MmsManager(GObject.Object):
                 self.subs.append(self.bus.signal_subscribe(
                     "org.ofono.mms", "org.ofono.mms.Service", "MessageAdded",
                     None, None, Gio.DBusSignalFlags.NONE,
-                    self._on_message_added_raw, None
+                    self.on_message_added_raw, None
                 ))
 
             self.subs.append(self.bus.signal_subscribe(
                 "org.ofono.mms", "org.ofono.mms.Message", "PropertyChanged",
                 None, None, Gio.DBusSignalFlags.NONE,
-                self._on_message_prop_changed, None
+                self.on_message_prop_changed, None
             ))
 
             self.subs.append(self.bus.signal_subscribe(
                 "org.ofono.mms", "org.ofono.mms.Service", "MessageSendError",
                 None, None, Gio.DBusSignalFlags.NONE,
-                self._on_message_send_error, None
+                self.on_message_send_error, None
             ))
 
-            self._init_manager()
+            self.init_manager()
 
         except Exception as e:
             logger.error(f"[MMS] Bus Error: {e}")
 
-    def _init_manager(self):
+    def init_manager(self):
         """Initialize the DBus proxy to the ofono MMS manager."""
         try:
             self.manager_proxy = Gio.DBusProxy.new_sync(
@@ -159,14 +159,14 @@ class MmsManager(GObject.Object):
             if services:
                 self.service_path = services[0][0]
                 logger.debug("[MMS-LOG] MANAGER-INIT | MMS Service found and connected")
-                self._connect_service_proxy()
+                self.connect_service_proxy()
                 self.load_existing_messages()
             else:
                 logger.debug("[MMS-LOG] MANAGER-INIT | No MMS services found")
         except Exception as e:
             logger.debug(f"[MMS-LOG] INIT-FAILED | {e}")
 
-    def _connect_service_proxy(self):
+    def connect_service_proxy(self):
         """Connect to the specific MMS service proxy."""
         try:
             self.proxy = Gio.DBusProxy.new_sync(
@@ -200,20 +200,20 @@ class MmsManager(GObject.Object):
             ret = self.proxy.call_sync("GetMessages", None, Gio.DBusCallFlags.NONE, -1, None)
             messages = ret.unpack()[0]
             for msg_path, props in messages:
-                self._process_message_signal(msg_path, props)
+                self.process_message_signal(msg_path, props)
         except Exception as e:
             logger.debug(f"[MMS-LOG] HISTORY-ERROR | {e}")
 
-    def _on_message_added_raw(self, conn, sender, path, iface, signal, params, user_data):
+    def on_message_added_raw(self, conn, sender, path, iface, signal, params, user_data):
         """Handle raw DBus MessageAdded signal."""
         try:
             msg_path, props = params.unpack()
             logger.debug(f"[MMS-LOG] SIGNAL-RECV | New message signal at {msg_path}")
-            self._process_message_signal(msg_path, props)
+            self.process_message_signal(msg_path, props)
         except Exception as e:
             logger.debug(f"[MMS-LOG] SIGNAL-ERROR | {e}")
 
-    def _process_message_signal(self, msg_path, props):
+    def process_message_signal(self, msg_path, props):
         """Process a message signal, parsing properties and handling persistence."""
         try:
             if msg_path in self.processed_paths:
@@ -247,7 +247,7 @@ class MmsManager(GObject.Object):
                 if signature in self.seen_mms_signatures:
                     logger.debug(f"[MMS-LOG] DEDUP-SIG | Duplicate content ignored: {signature}")
                     self.processed_paths.add(msg_path)
-                    self._delete_message_from_daemon(msg_path)
+                    self.delete_message_from_daemon(msg_path)
                     return
 
                 self.seen_mms_signatures.append(signature)
@@ -258,8 +258,8 @@ class MmsManager(GObject.Object):
                 logger.debug("[MMS-LOG] MSG-PROCESS | Starting parse and store sequence")
 
                 def process():
-                    self._parse_and_store(msg_path, props)
-                    self._delete_message_from_daemon(msg_path)
+                    self.parse_and_store(msg_path, props)
+                    self.delete_message_from_daemon(msg_path)
 
                 run_in_background(process)
 
@@ -268,7 +268,7 @@ class MmsManager(GObject.Object):
         except Exception as e:
             logger.debug(f"[MMS-LOG] SIGNAL-PROC-ERR | {e}")
 
-    def _delete_message_from_daemon(self, msg_path):
+    def delete_message_from_daemon(self, msg_path):
         """Delete a message from the ofono daemon."""
         try:
             msg_proxy = Gio.DBusProxy.new_sync(
@@ -280,19 +280,19 @@ class MmsManager(GObject.Object):
         except Exception as e:
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
 
-    def _user_size_limit(self):
+    def user_size_limit(self):
         """Return the configured size limit in bytes, or None when unset."""
         limit = max_attachment_size(self.gsettings_mgr)
         return limit if limit != DEFAULT_MAX_ATTACHMENT_SIZE else None
 
     def get_max_attachment_size(self):
         """Return the attachment size budget from settings, else the default."""
-        return self._user_size_limit() or DEFAULT_MAX_ATTACHMENT_SIZE
+        return self.user_size_limit() or DEFAULT_MAX_ATTACHMENT_SIZE
 
     def send_mms(self, recipients, subject=None, body=None, attachment_paths=[]):
         """Send an MMS message."""
         if not self.proxy:
-            self._init_manager()
+            self.init_manager()
             if not self.proxy:
                 logger.error("[MMS] Cannot send: MMS service not ready")
                 return False
@@ -322,20 +322,20 @@ class MmsManager(GObject.Object):
                 logger.debug(f"[MMS-LOG] BODY-TEMP-FAIL | {e}")
 
         for path in attachment_paths:
-            ctype = self._detect_mime(path)
+            ctype = self.detect_mime(path)
             fmt_attachments.append((os.path.basename(path), ctype or "application/octet-stream", path))
 
         try:
             ret = self.proxy.call_sync("SendMessage",
                                        GLib.Variant("(asva(sss))", (list(recipients), GLib.Variant('s', ""), fmt_attachments)),
                                        Gio.DBusCallFlags.NONE, -1, None)
-            self._cleanup(temp_files)
+            self.cleanup(temp_files)
             msg_path = ret.unpack()[0]
             logger.debug(f"[MMS-LOG] SEND-SUCCESS | Handed off to mmsd as {msg_path}")
 
             return msg_path
         except Exception as e:
-            self._cleanup(temp_files)
+            self.cleanup(temp_files)
             logger.debug(f"[MMS-LOG] SEND-FAILED | {e}")
             return None
 
@@ -353,18 +353,18 @@ class MmsManager(GObject.Object):
                 self.inflight_mms_paths[path] = row_id
 
         if state is not None:
-            self._resolve_mms(row_id, state)
+            self.resolve_mms(row_id, state)
             return
 
-        GLib.timeout_add_seconds(MMS_RESOLVE_TIMEOUT_SECONDS, self._timeout_mms, row_id)
+        GLib.timeout_add_seconds(MMS_RESOLVE_TIMEOUT_SECONDS, self.timeout_mms, row_id)
 
-    def _resolve_mms(self, row_id, state):
+    def resolve_mms(self, row_id, state):
         """Write the final status for an in-flight MMS row."""
         status = "sent" if state == "sent" else "failed"
         logger.info(f"[MMS] Row {row_id} resolved: {status}")
         self.db.update_message_status(row_id, status)
 
-    def _timeout_mms(self, row_id):
+    def timeout_mms(self, row_id):
         """Fail an MMS row that never received a state signal."""
         with self.mms_send_lock:
             if row_id not in self.inflight_mms:
@@ -376,7 +376,7 @@ class MmsManager(GObject.Object):
         self.db.update_message_status(row_id, "failed")
         return False
 
-    def _on_message_prop_changed(self, conn, sender, path, iface, signal, params, user_data):
+    def on_message_prop_changed(self, conn, sender, path, iface, signal, params, user_data):
         """Resolve in-flight sends from mmsd message status changes."""
         try:
             name, value = params.unpack()
@@ -398,9 +398,9 @@ class MmsManager(GObject.Object):
                     self.unclaimed_mms_states.pop(next(iter(self.unclaimed_mms_states)))
 
         if row_id is not None:
-            self._resolve_mms(row_id, "sent")
+            self.resolve_mms(row_id, "sent")
 
-    def _on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
+    def on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
         """Fail the oldest in-flight MMS when the daemon reports a send error."""
         logger.warning(f"[MMS] MessageSendError from daemon: {params.unpack() if params else None}")
         row_id = None
@@ -411,9 +411,9 @@ class MmsManager(GObject.Object):
                 self.inflight_mms_paths.pop(msg_path, None)
 
         if row_id is not None:
-            self._resolve_mms(row_id, "failed")
+            self.resolve_mms(row_id, "failed")
 
-    def _cleanup(self, files):
+    def cleanup(self, files):
         """Clean up temporary files."""
         for tmp in files:
             if os.path.exists(tmp):
@@ -422,7 +422,7 @@ class MmsManager(GObject.Object):
                 except Exception as e:
                     logger.debug(f"[MMS-LOG] CLEANUP-FAIL | {e}")
 
-    def _parse_and_store(self, path, props):
+    def parse_and_store(self, path, props):
         """Parse message content and attachments, and store in database."""
         try:
             sender = props.get('Sender', None) or "Unknown"
@@ -431,7 +431,7 @@ class MmsManager(GObject.Object):
 
             if self.db and self.db.is_blocked(sender, kind="messages"):
                 logger.info(f"[MMS] Dropping message from blocked sender {sender}")
-                self._delete_message_from_daemon(path)
+                self.delete_message_from_daemon(path)
                 return
 
             recipients = props.get('Recipients', [])
@@ -456,16 +456,16 @@ class MmsManager(GObject.Object):
                     continue
 
                 mime, src_path = str(att[1]), att[2]
-                real_mime = self._detect_mime(src_path)
+                real_mime = self.detect_mime(src_path)
                 is_file_only = any(x in real_mime.lower() for x in ["vcard", "smil", "shellscript", "python", "javascript"])
 
                 if real_mime == "text/plain" and not is_file_only:
-                    content = self._read_text_safely(src_path)
+                    content = self.read_text_safely(src_path)
                     if content and not body_text:
                         body_text = content
                         logger.debug(f"[MMS] Body extracted ({len(content)} chars)")
                 elif "smil" not in real_mime.lower():
-                    dest = self._sanitize_and_store(src_path, mime)
+                    dest = self.sanitize_and_store(src_path, mime)
                     if dest:
                         final_atts.append(dest)
                         logger.debug(f"[MMS] Attachment saved: {real_mime} -> {os.path.basename(dest)}")
@@ -528,7 +528,7 @@ class MmsManager(GObject.Object):
         except Exception as e:
             logger.error(f"[MMS] Parse error: {e}")
 
-    def _read_text_safely(self, path):
+    def read_text_safely(self, path):
         """Safely read text content from a file."""
         try:
             if os.path.exists(path):
@@ -538,7 +538,7 @@ class MmsManager(GObject.Object):
             logger.debug(f"[MMS] Text read failed: {e}")
         return None
 
-    def _detect_mime(self, path):
+    def detect_mime(self, path):
         """Detect MIME type of a file using python-magic."""
         try:
             import magic
@@ -558,12 +558,12 @@ class MmsManager(GObject.Object):
             logger.debug(f"[MMS] MIME detection failed: {e}")
         return "application/octet-stream"
 
-    def _sanitize_and_store(self, src_path, mime_hint=None):
+    def sanitize_and_store(self, src_path, mime_hint=None):
         """Sanitize filename and store attachment in local storage."""
         try:
             if not os.path.exists(src_path):
                 return None
-            detected = self._detect_mime(src_path)
+            detected = self.detect_mime(src_path)
             final_mime = detected if detected != "application/octet-stream" else (mime_hint or detected)
 
             if not mimetypes.inited:

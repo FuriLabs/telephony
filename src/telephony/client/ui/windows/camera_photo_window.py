@@ -57,12 +57,12 @@ class CameraPhoto(MediaCaptureWindow):
         self.retry_count = 0
         self.max_retries = MAX_CAPTURE_RETRIES
 
-        self._setup_ui()
-        self.connect("hidden", self._on_closed)
+        self.setup_ui()
+        self.connect("hidden", self.on_closed)
 
-        self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
+        self.schedule_timeout(VIEWFINDER_START_DELAY_MS, self.start_viewfinder)
 
-    def _release_bus(self):
+    def release_bus(self):
         """Detach the signal watch from the current pipeline bus."""
         if not self.bus:
             return
@@ -72,7 +72,7 @@ class CameraPhoto(MediaCaptureWindow):
         self.bus = None
         self.bus_handler_id = None
 
-    def _setup_ui(self):
+    def setup_ui(self):
         """Build the UI components."""
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
@@ -123,7 +123,7 @@ class CameraPhoto(MediaCaptureWindow):
         self.btn_shutter.set_icon_name("camera-photo-symbolic")
         self.btn_shutter.set_size_request(80, 80)
         self.btn_shutter.add_css_class("shutter-button")
-        self.btn_shutter.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_shutter_clicked(b) or False))
+        self.btn_shutter.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_shutter_clicked(b) or False))
         ctrl_box.append(self.btn_shutter)
 
         self.page_capture.append(ctrl_box)
@@ -159,24 +159,24 @@ class CameraPhoto(MediaCaptureWindow):
 
         btn_retake = Gtk.Button(label=_("Retake"))
         btn_retake.add_css_class("pill")
-        btn_retake.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_retake_clicked(b) or False))
+        btn_retake.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_retake_clicked(b) or False))
         act_box.append(btn_retake)
 
         btn_attach = Gtk.Button(label=_("Attach Photo"))
         btn_attach.add_css_class("pill")
         btn_attach.add_css_class("suggested-action")
-        btn_attach.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_attach_clicked(b) or False))
+        btn_attach.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_attach_clicked(b) or False))
         act_box.append(btn_attach)
 
         self.page_review.append(act_box)
         self.stack.add_named(self.page_review, "review")
 
-    def _start_viewfinder(self):
+    def start_viewfinder(self):
         """Start the camera viewfinder pipeline."""
         if self._closed:
             return False
 
-        self._stop_pipeline()
+        self.stop_pipeline()
 
         try:
             f = Gst.ElementFactory.find("gtk4paintablesink")
@@ -196,48 +196,48 @@ class CameraPhoto(MediaCaptureWindow):
                 self.viewfinder_widget.set_paintable(paintable)
                 self.reveal_on_first_frame(self.viewfinder_widget)
 
-            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_viewfinder_message)
+            self.bus, self.bus_handler_id = self.watch_bus(self.pipeline, self.on_viewfinder_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             return False
 
         except Exception as e:
             logger.error(f"[Camera-Photo] Failed to start viewfinder: {e}")
-            self._show_error(_("Error: {e}").format(e=e))
+            self.show_error(_("Error: {e}").format(e=e))
             return False
 
-    def _on_viewfinder_message(self, bus, message):
+    def on_viewfinder_message(self, bus, message):
         """Handle viewfinder messages."""
         t = message.type
         if t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error(f"[Camera-Photo] Viewfinder error: {err} : {debug}")
 
-    def _stop_pipeline(self):
+    def stop_pipeline(self):
         """Stop the GStreamer pipeline."""
         self.viewfinder_widget.set_paintable(None)
-        self._release_bus()
+        self.release_bus()
         if self.pipeline:
             logger.debug("[Camera-Photo] Stopping pipeline...")
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline = None
 
-    def _on_shutter_clicked(self, btn):
+    def on_shutter_clicked(self, btn):
         """Handle shutter button click."""
         self.btn_shutter.set_sensitive(False)
-        self._stop_pipeline()
+        self.stop_pipeline()
         logger.info("[Camera-Photo] Viewfinder stopped, scheduling capture in 500ms...")
 
         self.retry_count = 0
-        self._schedule_timeout(CAPTURE_START_DELAY_MS, self._attempt_capture)
+        self.schedule_timeout(CAPTURE_START_DELAY_MS, self.attempt_capture)
 
-    def _attempt_capture(self):
+    def attempt_capture(self):
         """Attempt to start the capture pipeline."""
         logger.info(f"[Camera-Photo] Attempting capture (Try {self.retry_count + 1}/{self.max_retries})...")
-        self._capture_frame()
+        self.capture_frame()
         return False
 
-    def _capture_frame(self):
+    def capture_frame(self):
         """Capture a single frame from the camera."""
         self.temp_capture_path = os.path.join(self.capture_dir(), f"cam_cap_{int(time.time())}.jpg")
         self.frame_count = 0
@@ -253,18 +253,18 @@ class CameraPhoto(MediaCaptureWindow):
 
             sink = self.pipeline.get_by_name("sink")
             if sink:
-                sink.connect("new-sample", self._on_new_sample)
+                sink.connect("new-sample", self.on_new_sample)
 
-            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_capture_message)
+            self.bus, self.bus_handler_id = self.watch_bus(self.pipeline, self.on_capture_message)
 
             self.pipeline.set_state(Gst.State.PLAYING)
             logger.info("[Camera-Photo] Capture pipeline playing...")
 
         except Exception as e:
             logger.error(f"[Camera-Photo] Capture launch failed: {e}")
-            self._handle_capture_failure(str(e))
+            self.handle_capture_failure(str(e))
 
-    def _on_new_sample(self, sink):
+    def on_new_sample(self, sink):
         """Handle new sample from appsink."""
         sample = sink.emit("pull-sample")
         if not sample:
@@ -285,28 +285,28 @@ class CameraPhoto(MediaCaptureWindow):
             try:
                 with open(self.temp_capture_path, "wb") as f:
                     f.write(map_info.data)
-                GLib.idle_add(self._on_capture_done)
+                GLib.idle_add(self.on_capture_done)
             except Exception as e:
                 logger.error(f"[Camera-Photo] Failed to save sample: {e}")
-                GLib.idle_add(self._show_error, _("Error: {e}").format(e=e))
-                GLib.idle_add(self._restart_viewfinder_safe)
+                GLib.idle_add(self.show_error, _("Error: {e}").format(e=e))
+                GLib.idle_add(self.restart_viewfinder_safe)
             finally:
                 buf.unmap(map_info)
 
         return Gst.FlowReturn.OK
 
-    def _on_capture_message(self, bus, message):
+    def on_capture_message(self, bus, message):
         """Handle capture pipeline messages."""
         t = message.type
         if t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             msg = f"{err} : {debug}"
             logger.error(f"[Camera-Photo] Capture error: {msg}")
-            GLib.idle_add(self._handle_capture_failure, str(err))
+            GLib.idle_add(self.handle_capture_failure, str(err))
 
-    def _handle_capture_failure(self, error_msg):
+    def handle_capture_failure(self, error_msg):
         """Handle failure with retries."""
-        self._stop_pipeline()
+        self.stop_pipeline()
 
         if self._closed:
             return
@@ -314,37 +314,37 @@ class CameraPhoto(MediaCaptureWindow):
         self.retry_count += 1
         if self.retry_count < self.max_retries:
             logger.warning(f"[Camera-Photo] Capture failed, retrying in 1s... ({error_msg})")
-            self._schedule_timeout(CAPTURE_RETRY_DELAY_MS, self._attempt_capture)
+            self.schedule_timeout(CAPTURE_RETRY_DELAY_MS, self.attempt_capture)
         else:
             logger.error(f"[Camera-Photo] All retries failed. Last error: {error_msg}")
-            self._show_error(_("Error: {e}").format(e=error_msg))
-            self._restart_viewfinder_safe()
+            self.show_error(_("Error: {e}").format(e=error_msg))
+            self.restart_viewfinder_safe()
 
-    def _on_capture_done(self):
+    def on_capture_done(self):
         """Finalize capture and process the image off the main thread."""
         if self._closed:
             return False
 
-        self._stop_pipeline()
+        self.stop_pipeline()
 
         if not os.path.exists(self.temp_capture_path):
             self.btn_shutter.set_sensitive(True)
-            self._show_error(_("File not found."))
-            self._restart_viewfinder_safe()
+            self.show_error(_("File not found."))
+            self.restart_viewfinder_safe()
             return False
 
         run_in_background(
-            self._process_image,
+            self.process_image,
             self.temp_capture_path,
-            on_complete=self._on_image_processed,
-            on_error=self._on_image_process_error,
+            on_complete=self.on_image_processed,
+            on_error=self.on_image_process_error,
         )
         return False
 
-    def _on_image_processed(self, output_path):
+    def on_image_processed(self, output_path):
         """Apply the processed image to the review page."""
         if self._closed:
-            self._remove_file_quietly(output_path)
+            self.remove_file_quietly(output_path)
             return
 
         self.output_path = output_path
@@ -352,24 +352,24 @@ class CameraPhoto(MediaCaptureWindow):
         self.review_image.set_filename(self.output_path)
         self.stack.set_visible_child_name("review")
 
-    def _on_image_process_error(self, error):
+    def on_image_process_error(self, error):
         """Recover from an image processing failure."""
         logger.error(f"[Camera-Photo] Image processing task failed: {error}")
         if self._closed:
             return
 
         self.btn_shutter.set_sensitive(True)
-        self._show_error(_("Error: {e}").format(e=error))
-        self._restart_viewfinder_safe()
+        self.show_error(_("Error: {e}").format(e=error))
+        self.restart_viewfinder_safe()
 
-    def _restart_viewfinder_safe(self):
+    def restart_viewfinder_safe(self):
         """Restart viewfinder and reset UI state."""
         if self._closed:
             return
         self.btn_shutter.set_sensitive(True)
-        self._start_viewfinder()
+        self.start_viewfinder()
 
-    def _process_image(self, path):
+    def process_image(self, path):
         """Compress the captured image and return the final file path."""
         from PIL import Image
 
@@ -392,7 +392,7 @@ class CameraPhoto(MediaCaptureWindow):
 
         return output_path
 
-    def _remove_file_quietly(self, path):
+    def remove_file_quietly(self, path):
         """Delete a temp file, logging failures without raising."""
         if not path or not os.path.exists(path):
             return
@@ -401,24 +401,24 @@ class CameraPhoto(MediaCaptureWindow):
         except Exception as e:
             logger.warning(f"[Camera-Photo] Failed to remove temp file: {e}")
 
-    def _on_retake_clicked(self, btn):
+    def on_retake_clicked(self, btn):
         """Handle retake button click."""
-        self._remove_file_quietly(self.output_path)
+        self.remove_file_quietly(self.output_path)
         self.output_path = None
         self.stack.set_visible_child_name("capture")
-        self._start_viewfinder()
+        self.start_viewfinder()
 
-    def _on_attach_clicked(self, btn):
+    def on_attach_clicked(self, btn):
         """Handle attach button click."""
-        self._stop_pipeline()
+        self.stop_pipeline()
         if self.output_path and os.path.exists(self.output_path):
             if self.on_attach_callback:
                 self.on_attach_callback(self.output_path)
         GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
-    def _on_closed(self, _dialog):
+    def on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""
         self._closed = True
-        self._cancel_tracked_timeouts()
-        self._stop_pipeline()
-        self._remove_file_quietly(self.temp_capture_path)
+        self.cancel_tracked_timeouts()
+        self.stop_pipeline()
+        self.remove_file_quietly(self.temp_capture_path)

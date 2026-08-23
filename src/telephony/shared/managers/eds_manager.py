@@ -110,13 +110,13 @@ class EdsManager(GObject.Object):
         self.db_ref = db_manager
         self.gsettings_mgr = gsettings_mgr
         self.gsettings_mgr.gsettings.connect(
-            "changed::address-book-sources", self._on_sources_config_changed)
+            "changed::address-book-sources", self.on_sources_config_changed)
 
-        run_in_background(self._load_cache_initial)
+        run_in_background(self.load_cache_initial)
         if self.owns_live_views:
-            run_in_background(self._start_live_sources)
+            run_in_background(self.start_live_sources)
 
-    def _on_sources_config_changed(self, _settings, _key):
+    def on_sources_config_changed(self, _settings, _key):
         """Reload when another process rewrote the book configuration.
 
         dconf reports the change to every process; the one that wrote
@@ -130,9 +130,9 @@ class EdsManager(GObject.Object):
         logger.info("[EDS] Address book configuration changed elsewhere, reloading")
         self.reload()
 
-    def _load_cache_initial(self):
+    def load_cache_initial(self):
         """Load contacts from local DB before EDS connection."""
-        saved_config = self._saved_config_entries()
+        saved_config = self.saved_config_entries()
         if not saved_config:
             return
         saved_config.sort(key=lambda x: x.get('rank', 999))
@@ -141,15 +141,15 @@ class EdsManager(GObject.Object):
             with self.reload_lock:
                 for item in saved_config:
                     if item.get('enabled', True):
-                        self._load_from_local_db(item['uid'], item.get('rank', 0))
+                        self.load_from_local_db(item['uid'], item.get('rank', 0))
             if not self.owns_live_views:
-                self._rebuild_lookup_map()
+                self.rebuild_lookup_map()
                 self.is_ready = True
             GLib.idle_add(self.emit, 'contacts-loaded')
 
         run_in_background(load_sources_async)
 
-    def _saved_config_entries(self):
+    def saved_config_entries(self):
         """Return the saved book configuration as a list, empty when unset."""
         saved_json = self.gsettings_mgr.get_setting("address_book_sources") if self.gsettings_mgr else None
         if not saved_json:
@@ -160,19 +160,19 @@ class EdsManager(GObject.Object):
             logger.warning(f"[EDS] Saved config unreadable: {e}")
             return []
 
-    def _get_bus(self):
+    def get_bus(self):
         """Return the session bus connection, connecting on first use."""
         if self.bus is None:
             self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         return self.bus
 
-    def _registry_objects(self):
+    def registry_objects(self):
         """Read every address book source from the registry; blocking, call from a worker.
 
         Returns uid keyed dicts parsed from each source's keyfile Data
         property, and refreshes the path map the removal signal needs.
         """
-        reply = self._get_bus().call_sync(
+        reply = self.get_bus().call_sync(
             EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, OBJECT_MANAGER_IFACE,
             "GetManagedObjects", None,
             GLib.VariantType("(a{oa{sa{sv}}})"), Gio.DBusCallFlags.NONE,
@@ -187,7 +187,7 @@ class EdsManager(GObject.Object):
                 continue
             uid = props.get("UID", "")
             paths[path] = uid
-            parsed = self._parse_source_data(props.get("Data", ""))
+            parsed = self.parse_source_data(props.get("Data", ""))
             if parsed is None or not parsed['is_addressbook']:
                 continue
             books[uid] = {
@@ -205,7 +205,7 @@ class EdsManager(GObject.Object):
         self._registry_paths = paths
         return books
 
-    def _parse_source_data(self, data):
+    def parse_source_data(self, data):
         """Parse a source's keyfile Data property into plain fields."""
         parser = configparser.RawConfigParser(strict=False, interpolation=None)
         try:
@@ -225,22 +225,22 @@ class EdsManager(GObject.Object):
             'is_addressbook': parser.has_section("Address Book"),
         }
 
-    def _watch_registry(self):
+    def watch_registry(self):
         """Follow registry additions and removals; safe to call twice."""
         if self.registry_watched:
             return
         self.registry_watched = True
-        bus = self._get_bus()
+        bus = self.get_bus()
         self._registry_sub_ids.append(bus.signal_subscribe(
             EDS_SOURCES_BUS_NAME, OBJECT_MANAGER_IFACE, "InterfacesAdded",
             EDS_SOURCES_PATH, None, Gio.DBusSignalFlags.NONE,
-            self._on_registry_added))
+            self.on_registry_added))
         self._registry_sub_ids.append(bus.signal_subscribe(
             EDS_SOURCES_BUS_NAME, OBJECT_MANAGER_IFACE, "InterfacesRemoved",
             EDS_SOURCES_PATH, None, Gio.DBusSignalFlags.NONE,
-            self._on_registry_removed))
+            self.on_registry_removed))
 
-    def _on_registry_added(self, _conn, _sender, _path, _iface, _member, params):
+    def on_registry_added(self, _conn, _sender, _path, _iface, _member, params):
         """A source appeared somewhere in the system.
 
         An address book that shows up while the daemon runs — a sync
@@ -261,7 +261,7 @@ class EdsManager(GObject.Object):
         if not props:
             return
         uid = props.get("UID", "")
-        parsed = self._parse_source_data(props.get("Data", ""))
+        parsed = self.parse_source_data(props.get("Data", ""))
         if not uid or parsed is None or not parsed['is_addressbook']:
             return
         with self.sources_lock:
@@ -271,7 +271,7 @@ class EdsManager(GObject.Object):
         logger.info(f"[EDS] Address book {uid} appeared, discovering it")
         self.reload()
 
-    def _on_registry_removed(self, _conn, _sender, _path, _iface, _member, params):
+    def on_registry_removed(self, _conn, _sender, _path, _iface, _member, params):
         """Forget a book that was deleted elsewhere in the system.
 
         The registry reports the deletion to every process, but only the
@@ -296,9 +296,9 @@ class EdsManager(GObject.Object):
 
         def task():
             logger.info(f"[EDS] Address book {uid} was removed, dropping its contacts")
-            self._remove_source(uid)
+            self.remove_source(uid)
             GLib.idle_add(self.emit, 'contacts-loaded')
-            self._emit_books_changed_if_moved()
+            self.emit_books_changed_if_moved()
 
         run_in_background(task)
 
@@ -310,11 +310,11 @@ class EdsManager(GObject.Object):
         daemon drops its cache so the next read re-reads the registry.
         """
         if not self.owns_live_views and self.sources_provider:
-            self._start_sources_fetch()
+            self.start_sources_fetch()
             return
         self._sources_info_cache = None
 
-    def _book_lock(self, uid):
+    def book_lock(self, uid):
         """Return the lock that serializes opening and closing one book."""
         with self.books_lock:
             lock = self._book_locks.get(uid)
@@ -323,7 +323,7 @@ class EdsManager(GObject.Object):
                 self._book_locks[uid] = lock
             return lock
 
-    def _open_book(self, uid):
+    def open_book(self, uid):
         """Open a book through the factory; blocking, call from a worker.
 
         Returns the cached record when the book is already open; a
@@ -332,16 +332,16 @@ class EdsManager(GObject.Object):
         same book cannot each open it and leave one connection orphaned
         with its live view untracked.
         """
-        with self._book_lock(uid):
-            return self._open_book_locked(uid)
+        with self.book_lock(uid):
+            return self.open_book_locked(uid)
 
-    def _open_book_locked(self, uid):
+    def open_book_locked(self, uid):
         """Open one book; caller holds that book's lock."""
         with self.books_lock:
             record = self.books.get(uid)
         if record:
             return record
-        bus = self._get_bus()
+        bus = self.get_bus()
         reply = bus.call_sync(
             EDS_BOOK_BUS_NAME, EDS_FACTORY_PATH, EDS_FACTORY_IFACE,
             "OpenAddressBook", GLib.Variant("(s)", (uid,)),
@@ -359,7 +359,7 @@ class EdsManager(GObject.Object):
         logger.info(f"[EDS] Book open for {uid} at {book_path}")
         return record
 
-    def _book_call(self, uid, method, params, reply_type):
+    def book_call(self, uid, method, params, reply_type):
         """Call a method on a book, reopening once if its process died.
 
         Blocking, call from a worker. The factory parks books in
@@ -369,29 +369,29 @@ class EdsManager(GObject.Object):
         acted on must not run twice, or a create without a stated uid
         would duplicate the contact.
         """
-        record = self._open_book(uid)
+        record = self.open_book(uid)
         try:
-            return self._get_bus().call_sync(
+            return self.get_bus().call_sync(
                 record['bus_name'], record['path'], EDS_BOOK_IFACE,
                 method, params, reply_type, Gio.DBusCallFlags.NONE,
                 EDS_CALL_TIMEOUT_MS, None)
         except GLib.Error as e:
-            if not self._is_gone_error(e):
+            if not self.is_gone_error(e):
                 raise
             logger.warning(f"[EDS] {method} on {uid} lost its book, reopening: {e}")
-            with self._book_lock(uid):
+            with self.book_lock(uid):
                 current = None
                 with self.books_lock:
                     current = self.books.get(uid)
                 if current is record or current is None:
-                    self._close_book_locked(uid)
-                    current = self._open_book_locked(uid)
-            return self._get_bus().call_sync(
+                    self.close_book_locked(uid)
+                    current = self.open_book_locked(uid)
+            return self.get_bus().call_sync(
                 current['bus_name'], current['path'], EDS_BOOK_IFACE,
                 method, params, reply_type, Gio.DBusCallFlags.NONE,
                 EDS_CALL_TIMEOUT_MS, None)
 
-    def _is_gone_error(self, error):
+    def is_gone_error(self, error):
         """Return True when the error means the book's process is gone."""
         gone = ("org.freedesktop.DBus.Error.ServiceUnknown",
                 "org.freedesktop.DBus.Error.NameHasNoOwner",
@@ -402,18 +402,18 @@ class EdsManager(GObject.Object):
             logger.debug(f"[EDS] Error name lookup failed: {e}")
             return False
 
-    def _close_book(self, uid):
+    def close_book(self, uid):
         """Drop a book's view subscriptions and forget the record."""
-        with self._book_lock(uid):
-            self._close_book_locked(uid)
+        with self.book_lock(uid):
+            self.close_book_locked(uid)
 
-    def _close_book_locked(self, uid):
+    def close_book_locked(self, uid):
         """Close one book; caller holds that book's lock."""
         with self.books_lock:
             record = self.books.pop(uid, None)
         if not record:
             return
-        bus = self._get_bus()
+        bus = self.get_bus()
         for sub_id in record['sub_ids']:
             try:
                 bus.signal_unsubscribe(sub_id)
@@ -428,22 +428,22 @@ class EdsManager(GObject.Object):
             except Exception as e:
                 logger.debug(f"[EDS] View dispose error (ignorable): {e}")
 
-    def _start_view(self, uid):
+    def start_view(self, uid):
         """Open the live view and stream the book; blocking, call from a worker.
 
         The initial burst arrives as ObjectsAdded like any change, so
         one code path serves full sync and live updates alike.
         """
-        record = self._open_book(uid)
-        reply = self._book_call(uid, "GetView",
+        record = self.open_book(uid)
+        reply = self.book_call(uid, "GetView",
                                 GLib.Variant("(s)", (EDS_MATCH_ALL_QUERY,)),
                                 GLib.VariantType("(o)"))
         record['view_path'] = reply.unpack()[0]
 
-        bus = self._get_bus()
-        for member, handler in (("ObjectsAdded", self._on_view_added),
-                                ("ObjectsModified", self._on_view_modified),
-                                ("ObjectsRemoved", self._on_view_removed)):
+        bus = self.get_bus()
+        for member, handler in (("ObjectsAdded", self.on_view_added),
+                                ("ObjectsModified", self.on_view_modified),
+                                ("ObjectsRemoved", self.on_view_removed)):
             record['sub_ids'].append(bus.signal_subscribe(
                 record['bus_name'], EDS_VIEW_IFACE, member, record['view_path'],
                 None, Gio.DBusSignalFlags.NONE, partial(handler, source_uid=uid)))
@@ -459,7 +459,7 @@ class EdsManager(GObject.Object):
             Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None)
         logger.info(f"[EDS] Live view started for {uid}")
 
-    def _vcards_from(self, params, source_uid):
+    def vcards_from(self, params, source_uid):
         """Unpack the vcards from a view's object signal payload.
 
         The signal declares one array of strings, but the server packs
@@ -474,26 +474,26 @@ class EdsManager(GObject.Object):
             return []
         return [item for item in objects if VCARD_BEGIN in item.upper()]
 
-    def _on_view_added(self, _conn, _sender, _path, _iface, _member, params, source_uid):
+    def on_view_added(self, _conn, _sender, _path, _iface, _member, params, source_uid):
         """Route vcards streaming in from a wire view."""
-        vcards = self._vcards_from(params, source_uid)
-        run_in_background(self._handle_backend_update, vcards, source_uid)
+        vcards = self.vcards_from(params, source_uid)
+        run_in_background(self.handle_backend_update, vcards, source_uid)
 
-    def _on_view_modified(self, _conn, _sender, _path, _iface, _member, params, source_uid):
+    def on_view_modified(self, _conn, _sender, _path, _iface, _member, params, source_uid):
         """Route vcards modified on a wire view."""
-        vcards = self._vcards_from(params, source_uid)
-        run_in_background(self._handle_backend_update, vcards, source_uid)
+        vcards = self.vcards_from(params, source_uid)
+        run_in_background(self.handle_backend_update, vcards, source_uid)
 
-    def _on_view_removed(self, _conn, _sender, _path, _iface, _member, params, source_uid):
+    def on_view_removed(self, _conn, _sender, _path, _iface, _member, params, source_uid):
         """Route removed contact uids from a wire view."""
         try:
             uids = list(params.unpack()[0])
         except Exception as e:
             logger.error(f"[EDS] Bad removal payload for {source_uid}: {e}")
             return
-        self._on_objects_removed(uids, source_uid)
+        self.on_objects_removed(uids, source_uid)
 
-    def _start_live_sources(self):
+    def start_live_sources(self):
         """Bring up live contact monitoring; blocking, call from a worker.
 
         A saved configuration that carries book names opens the books
@@ -501,18 +501,18 @@ class EdsManager(GObject.Object):
         nameless configuration goes through discovery once and persists
         what it found, so the next start takes the direct path.
         """
-        self._watch_registry()
+        self.watch_registry()
         saved_config_json = self.gsettings_mgr.get_setting("address_book_sources") if self.gsettings_mgr else None
-        saved_config = self._saved_config_entries()
+        saved_config = self.saved_config_entries()
         enabled = [item for item in saved_config if item.get('enabled', True)]
 
         if enabled and all('name' in item for item in enabled):
             try:
                 with self.reload_lock:
                     for item in sorted(enabled, key=lambda x: x.get('rank', 999)):
-                        self._init_wire_source(item['uid'], item.get('rank', 0), item['name'])
+                        self.init_wire_source(item['uid'], item.get('rank', 0), item['name'])
                 self._applied_config_json = saved_config_json
-                self._rebuild_lookup_map()
+                self.rebuild_lookup_map()
                 self.is_ready = True
                 GLib.idle_add(self.emit, 'contacts-loaded')
                 with self.books_lock:
@@ -521,21 +521,21 @@ class EdsManager(GObject.Object):
                 return
             except Exception as e:
                 logger.warning(f"[EDS] Configured book setup failed, rediscovering: {e}")
-                self._teardown_books()
+                self.teardown_books()
 
         with self.reload_lock:
-            self._load_sources_config_locked()
+            self.load_sources_config_locked()
 
-    def _teardown_books(self):
+    def teardown_books(self):
         """Close every open book and forget the source table."""
         with self.books_lock:
             uids = list(self.books.keys())
         for uid in uids:
-            self._close_book(uid)
+            self.close_book(uid)
         with self.sources_lock:
             self.sources = {}
 
-    def _init_wire_source(self, uid, rank, name):
+    def init_wire_source(self, uid, rank, name):
         """Open one book, sweep deletions and start its live view.
 
         Blocking, call from a worker. The sweep compares the book's uid
@@ -544,20 +544,20 @@ class EdsManager(GObject.Object):
         mirror, which reads as a backend that is not ready rather than
         an emptied book.
         """
-        self._load_from_local_db(uid, rank)
-        self._open_book(uid)
-        comp_uids = [self._make_composite_uid(uid, real_uid) for real_uid in self._list_book_uids(uid)]
-        if comp_uids or not self._has_cached_contacts(uid):
+        self.load_from_local_db(uid, rank)
+        self.open_book(uid)
+        comp_uids = [self.make_composite_uid(uid, real_uid) for real_uid in self.list_book_uids(uid)]
+        if comp_uids or not self.has_cached_contacts(uid):
             self.db_ref.sync_deleted_contacts(uid, comp_uids)
         else:
             logger.warning(f"[EDS] Skipping empty deletion sweep for {uid}: backend may not be ready")
-        self._start_view(uid)
+        self.start_view(uid)
         with self.sources_lock:
             self.sources[uid] = {'uid': uid, 'name': name, 'rank': rank}
 
-    def _list_book_uids(self, uid):
+    def list_book_uids(self, uid):
         """Return every contact uid in a book; blocking, call from a worker."""
-        reply = self._book_call(uid, "GetContactListUids",
+        reply = self.book_call(uid, "GetContactListUids",
                                 GLib.Variant("(s)", (EDS_MATCH_ALL_QUERY,)),
                                 GLib.VariantType("(as)"))
         return list(reply.unpack()[0])
@@ -572,18 +572,18 @@ class EdsManager(GObject.Object):
                 with self.sources_lock:
                     uids = list(self.sources.keys())
                 for uid in uids:
-                    self._remove_source(uid)
+                    self.remove_source(uid)
                 self.invalidate_sources_info()
-                self._load_sources_config_locked()
+                self.load_sources_config_locked()
 
         run_in_background(task)
 
-    def _enabled_registry_books(self):
+    def enabled_registry_books(self):
         """Return enabled address book sources read from the registry."""
-        return {uid: info for uid, info in self._registry_objects().items()
+        return {uid: info for uid, info in self.registry_objects().items()
                 if info['enabled']}
 
-    def _load_sources_config_locked(self):
+    def load_sources_config_locked(self):
         """Discover books, merge the saved order and go live; caller holds reload_lock.
 
         Blocking, call from a worker. Books the configuration knows keep
@@ -592,11 +592,11 @@ class EdsManager(GObject.Object):
         persisted so the next start can skip discovery.
         """
         try:
-            self._watch_registry()
-            registry_books = self._enabled_registry_books()
-            default_uid = self._default_source_uid()
+            self.watch_registry()
+            registry_books = self.enabled_registry_books()
+            default_uid = self.default_source_uid()
 
-            saved_config = self._saved_config_entries()
+            saved_config = self.saved_config_entries()
             final_sources_list = []
             processed_uids = set()
             current_rank = 0
@@ -637,7 +637,7 @@ class EdsManager(GObject.Object):
             threads = []
             for item in final_sources_list:
                 if item['enabled']:
-                    t = threading.Thread(target=self._init_wire_source_safe, args=(item,), daemon=True)
+                    t = threading.Thread(target=self.init_wire_source_safe, args=(item,), daemon=True)
                     t.start()
                     threads.append(t)
             for t in threads:
@@ -646,20 +646,20 @@ class EdsManager(GObject.Object):
             enabled_uids = {item['uid'] for item in final_sources_list if item['enabled']}
             for uid in self.loaded_source_uids() - enabled_uids:
                 logger.info(f"[EDS] Dropping cached contacts of unavailable source {uid}")
-                self._remove_source(uid)
+                self.remove_source(uid)
 
-            self._rebuild_lookup_map()
+            self.rebuild_lookup_map()
             self.is_ready = True
             GLib.idle_add(self.emit, 'contacts-loaded')
-            self._emit_books_changed_if_moved()
+            self.emit_books_changed_if_moved()
 
         except Exception as e:
             logger.error(f"[EDS] Load Config Error: {e}")
 
-    def _init_wire_source_safe(self, item):
+    def init_wire_source_safe(self, item):
         """Thread entry for source init that can never propagate an exception."""
         try:
-            self._init_wire_source(item['uid'], item['rank'], item['name'])
+            self.init_wire_source(item['uid'], item['rank'], item['name'])
         except Exception as e:
             logger.error(f"[EDS] Source init failed for {item.get('uid')}: {e}")
 
@@ -680,7 +680,7 @@ class EdsManager(GObject.Object):
         except Exception as e:
             logger.error(f"[EDS] Save Config Error: {e}")
 
-    def _has_cached_contacts(self, source_uid):
+    def has_cached_contacts(self, source_uid):
         """Return True when the in-memory cache holds contacts for the source."""
         with self.cache_lock:
             return any(v.get('source_uid') == source_uid for v in self.cache.values())
@@ -690,7 +690,7 @@ class EdsManager(GObject.Object):
         with self.cache_lock:
             return set(self._cache_loaded_sources)
 
-    def _cache_entries_from_db(self, source_uid, rank):
+    def cache_entries_from_db(self, source_uid, rank):
         """Read one source out of the local mirror; blocking, call from a worker.
 
         Returns the cache and lookup entries the source holds, or None
@@ -724,7 +724,7 @@ class EdsManager(GObject.Object):
 
         return updates, lookup_updates
 
-    def _load_from_local_db(self, source_uid, rank):
+    def load_from_local_db(self, source_uid, rank):
         """Load contacts from local database cache for a specific source once."""
         with self.cache_lock:
             if source_uid in self._cache_loaded_sources:
@@ -733,7 +733,7 @@ class EdsManager(GObject.Object):
             self._cache_loaded_sources.add(source_uid)
             self._source_ranks[source_uid] = rank
 
-        entries = self._cache_entries_from_db(source_uid, rank)
+        entries = self.cache_entries_from_db(source_uid, rank)
         if entries is None:
             with self.cache_lock:
                 self._cache_loaded_sources.discard(source_uid)
@@ -760,13 +760,13 @@ class EdsManager(GObject.Object):
         """
         self.invalidate_sources_info()
         ranks = {item['uid']: item.get('rank', 0)
-                 for item in self._saved_config_entries()
+                 for item in self.saved_config_entries()
                  if item.get('enabled', True)}
         with self.reload_lock:
             cache = {}
             lookup_map = {}
             for source_uid, rank in ranks.items():
-                entries = self._cache_entries_from_db(source_uid, rank)
+                entries = self.cache_entries_from_db(source_uid, rank)
                 if entries is None:
                     logger.warning(f"[EDS] Keeping the previous contacts: {source_uid} could not be read")
                     return
@@ -784,16 +784,16 @@ class EdsManager(GObject.Object):
 
         GLib.idle_add(self.emit, 'contacts-loaded')
 
-    def _make_composite_uid(self, source_uid, real_uid):
+    def make_composite_uid(self, source_uid, real_uid):
         return f"{source_uid}:{real_uid}"
 
-    def _parse_composite_uid(self, composite_uid):
+    def parse_composite_uid(self, composite_uid):
         if ":" in composite_uid:
             parts = composite_uid.split(":", 1)
             return parts[0], parts[1]
         return None, composite_uid
 
-    def _books_signature(self):
+    def books_signature(self):
         """A hashable snapshot of the book set for change detection.
 
         Only the fields the settings list draws matter: which books
@@ -807,28 +807,28 @@ class EdsManager(GObject.Object):
             for item in self.get_sources_info()
         ))
 
-    def _emit_books_changed_if_moved(self):
+    def emit_books_changed_if_moved(self):
         """Emit address-books-changed only when the book set actually moved.
 
         Blocking, call from a worker: it reads the sources info to build
         the signature.
         """
-        signature = self._books_signature()
+        signature = self.books_signature()
         with self.books_lock:
             if signature == self._last_books_signature:
                 return
             self._last_books_signature = signature
         GLib.idle_add(self.emit, 'address-books-changed')
 
-    def _start_sources_fetch(self):
+    def start_sources_fetch(self):
         """Kick a one-at-a-time background refresh of the window's sources cache."""
         with self.books_lock:
             if self._sources_fetch_running:
                 return
             self._sources_fetch_running = True
-        run_in_background(self._fetch_sources_from_provider)
+        run_in_background(self.fetch_sources_from_provider)
 
-    def _fetch_sources_from_provider(self):
+    def fetch_sources_from_provider(self):
         """Fill the sources cache from the daemon; blocking, runs on a worker.
 
         A window learns the book list only here, so this is where a
@@ -844,7 +844,7 @@ class EdsManager(GObject.Object):
                 self._sources_fetch_running = False
         if provided is not None:
             self._sources_info_cache = [dict(item) for item in provided]
-            self._emit_books_changed_if_moved()
+            self.emit_books_changed_if_moved()
 
     def sources_info_async(self, on_ready):
         """Hand over the book list once there is a list to hand over.
@@ -860,7 +860,7 @@ class EdsManager(GObject.Object):
             return
 
         def task():
-            self._fetch_sources_from_provider()
+            self.fetch_sources_from_provider()
 
         def done(_result):
             on_ready(self.get_sources_info())
@@ -877,7 +877,7 @@ class EdsManager(GObject.Object):
         """
         if not self.owns_live_views:
             if self._sources_info_cache is None and self.sources_provider:
-                self._start_sources_fetch()
+                self.start_sources_fetch()
             if self._sources_info_cache is not None:
                 return [dict(item) for item in self._sources_info_cache]
             return []
@@ -886,9 +886,9 @@ class EdsManager(GObject.Object):
             return [dict(item) for item in self._sources_info_cache]
 
         try:
-            registry_books = self._enabled_registry_books()
-            default_uid = self._default_source_uid()
-            saved_config = self._saved_config_entries()
+            registry_books = self.enabled_registry_books()
+            default_uid = self.default_source_uid()
+            saved_config = self.saved_config_entries()
 
             result = []
             uids_processed = set()
@@ -900,7 +900,7 @@ class EdsManager(GObject.Object):
                 if not info:
                     continue
                 is_def = (uid == default_uid)
-                result.append(self._source_info_entry(info, current_rank,
+                result.append(self.source_info_entry(info, current_rank,
                                                       conf.get('enabled', True) or is_def,
                                                       is_def, registry_books))
                 uids_processed.add(uid)
@@ -909,7 +909,7 @@ class EdsManager(GObject.Object):
             for uid, info in registry_books.items():
                 if uid in uids_processed:
                     continue
-                result.append(self._source_info_entry(info, current_rank, True,
+                result.append(self.source_info_entry(info, current_rank, True,
                                                       uid == default_uid, registry_books))
                 current_rank += 1
 
@@ -920,7 +920,7 @@ class EdsManager(GObject.Object):
             logger.error(f"[EDS] Get Sources Info Error: {e}")
             return []
 
-    def _source_info_entry(self, info, rank, enabled, is_def, registry_books):
+    def source_info_entry(self, info, rank, enabled, is_def, registry_books):
         """Shape one registry book into the sources info dict the UI reads."""
         return {
             'uid': info['uid'],
@@ -931,10 +931,10 @@ class EdsManager(GObject.Object):
             'is_local': info['is_local'],
             'removable': info['removable'],
             'status': None if info['is_local'] else info['status'],
-            'account': self._account_name_for(info, registry_books),
+            'account': self.account_name_for(info, registry_books),
         }
 
-    def _account_name_for(self, info, registry_books):
+    def account_name_for(self, info, registry_books):
         """Return the owning account's display name for a remote book."""
         parent = info.get('parent') or ""
         if not parent or parent.endswith("-stable") or parent == "local":
@@ -944,7 +944,7 @@ class EdsManager(GObject.Object):
             return parsed['name']
         return ""
 
-    def _default_source_uid(self):
+    def default_source_uid(self):
         """Return the uid of the address book marked default.
 
         Evolution keeps the choice in its own settings schema; a system
@@ -971,7 +971,7 @@ class EdsManager(GObject.Object):
         settings.set_string(DEFAULT_BOOK_KEY, uid)
         self.invalidate_sources_info()
         if self.owns_live_views:
-            self._emit_books_changed_if_moved()
+            self.emit_books_changed_if_moved()
         return True
 
     def refresh_backends(self):
@@ -984,7 +984,7 @@ class EdsManager(GObject.Object):
             uids = list(self.sources.keys())
 
         try:
-            registry_books = self._registry_objects()
+            registry_books = self.registry_objects()
         except Exception as e:
             logger.error(f"[EDS] Registry read failed for refresh: {e}")
             return 0
@@ -995,7 +995,7 @@ class EdsManager(GObject.Object):
             if not info or info['is_local']:
                 continue
             try:
-                self._get_bus().call_sync(
+                self.get_bus().call_sync(
                     EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, EDS_SOURCE_MANAGER_IFACE,
                     "RefreshBackend", GLib.Variant("(s)", (uid,)),
                     GLib.VariantType("()"), Gio.DBusCallFlags.NONE,
@@ -1016,7 +1016,7 @@ class EdsManager(GObject.Object):
         uid = uuid.uuid4().hex
         keyfile = BOOK_KEYFILE_TEMPLATE.format(name=name)
         try:
-            self._get_bus().call_sync(
+            self.get_bus().call_sync(
                 EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, EDS_SOURCE_MANAGER_IFACE,
                 "CreateSources", GLib.Variant("(a{ss})", ({uid: keyfile},)),
                 GLib.VariantType("()"), Gio.DBusCallFlags.NONE,
@@ -1028,8 +1028,8 @@ class EdsManager(GObject.Object):
         deadline = time.monotonic() + CREATE_APPEAR_TIMEOUT_SECONDS
         while time.monotonic() < deadline:
             try:
-                if uid in self._registry_objects():
-                    config = self._saved_config_entries()
+                if uid in self.registry_objects():
+                    config = self.saved_config_entries()
                     next_rank = max((item.get('rank', 0) for item in config), default=-1) + 1
                     config.append({'uid': uid, 'name': name, 'enabled': True, 'rank': next_rank})
                     self.save_sources_config(config)
@@ -1057,17 +1057,17 @@ class EdsManager(GObject.Object):
         if not self.owns_live_views:
             run_in_background(self.reload_cache_from_db)
             return
-        run_in_background(self._update_sources_task, new_config_list,)
+        run_in_background(self.update_sources_task, new_config_list,)
 
-    def _update_sources_task(self, new_config_list):
+    def update_sources_task(self, new_config_list):
         """Apply a configuration update; blocking, call from a worker."""
         with self.reload_lock:
-            self._update_sources_task_locked(new_config_list)
+            self.update_sources_task_locked(new_config_list)
 
-    def _update_sources_task_locked(self, new_config_list):
+    def update_sources_task_locked(self, new_config_list):
         """Apply a configuration update; caller holds reload_lock."""
         try:
-            registry_books = self._enabled_registry_books()
+            registry_books = self.enabled_registry_books()
         except Exception as e:
             logger.error(f"[EDS] Registry read failed for config update: {e}")
             return
@@ -1102,13 +1102,13 @@ class EdsManager(GObject.Object):
             return
 
         for uid in to_disable:
-            self._remove_source(uid)
+            self.remove_source(uid)
 
         for uid, item in to_enable.items():
-            self._init_wire_source_safe(item)
+            self.init_wire_source_safe(item)
 
         if rank_changed or to_enable or to_disable:
-            self._rebuild_lookup_map()
+            self.rebuild_lookup_map()
             GLib.idle_add(self.emit, 'contacts-loaded')
 
     def delete_addressbook(self, source_uid):
@@ -1123,7 +1123,7 @@ class EdsManager(GObject.Object):
             return False
 
         try:
-            registry_books = self._registry_objects()
+            registry_books = self.registry_objects()
         except Exception as e:
             logger.error(f"[EDS] Registry read failed for delete: {e}")
             return False
@@ -1140,7 +1140,7 @@ class EdsManager(GObject.Object):
             return False
 
         try:
-            self._get_bus().call_sync(
+            self.get_bus().call_sync(
                 EDS_SOURCES_BUS_NAME, info['path'], EDS_SOURCE_REMOVABLE_IFACE,
                 "Remove", None, GLib.VariantType("()"),
                 Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None)
@@ -1149,11 +1149,11 @@ class EdsManager(GObject.Object):
             return False
 
         self.invalidate_sources_info()
-        new_config = [s for s in self._saved_config_entries() if s['uid'] != source_uid]
+        new_config = [s for s in self.saved_config_entries() if s['uid'] != source_uid]
         self.save_sources_config(new_config)
 
-        self._remove_source(source_uid)
-        self._rebuild_lookup_map()
+        self.remove_source(source_uid)
+        self.rebuild_lookup_map()
 
         try:
             with self.db_ref.lock:
@@ -1163,14 +1163,14 @@ class EdsManager(GObject.Object):
             logger.warning(f"[EDS] Failed to clear local db for source {source_uid}: {e}")
 
         GLib.idle_add(self.emit, 'contacts-loaded')
-        self._emit_books_changed_if_moved()
+        self.emit_books_changed_if_moved()
         return True
 
-    def _remove_source(self, uid):
+    def remove_source(self, uid):
         """Stop monitoring a source and remove its contacts from cache and lookup map."""
         with self.sources_lock:
             self.sources.pop(uid, None)
-        self._close_book(uid)
+        self.close_book(uid)
 
         with self.cache_lock:
             self._cache_loaded_sources.discard(uid)
@@ -1187,7 +1187,7 @@ class EdsManager(GObject.Object):
 
         logger.info(f"[EDS] Removed source: {uid}")
 
-    def _rebuild_lookup_map(self):
+    def rebuild_lookup_map(self):
         """Rebuild the phone number lookup map based on current cache and ranks."""
         with self.sources_lock:
             ranks = {uid: info.get('rank', 999) for uid, info in self.sources.items()}
@@ -1207,7 +1207,7 @@ class EdsManager(GObject.Object):
                                 self.lookup_map[norm] = []
                             self.lookup_map[norm].append((rank, contact['name'], source_uid, uid))
 
-    def _handle_backend_update(self, vcards, source_uid):
+    def handle_backend_update(self, vcards, source_uid):
         """Fold a batch of vcards from a view into cache, lookup and mirror."""
         with self.sources_lock:
             source_info = self.sources.get(source_uid)
@@ -1263,13 +1263,13 @@ class EdsManager(GObject.Object):
             self.db_ref.upsert_contacts_batch(db_batch, source_uid)
             GLib.idle_add(self.emit, 'contacts-loaded')
 
-    def _on_objects_removed(self, uids, source_uid):
+    def on_objects_removed(self, uids, source_uid):
         """Drop removed contacts from cache, lookup and mirror."""
         def task():
             removed_uids = []
             with self.cache_lock:
                 for real_uid in uids:
-                    uid = self._make_composite_uid(source_uid, real_uid)
+                    uid = self.make_composite_uid(source_uid, real_uid)
                     contact = self.cache.pop(uid, None)
                     for p in contact.get('phones', []) if contact else []:
                         norm = normalize_number(p[0])
@@ -1367,13 +1367,13 @@ class EdsManager(GObject.Object):
                 uids.add(item.get('uid'))
         return uids
 
-    def _is_andromeda_source(self, source_uid):
+    def is_andromeda_source(self, source_uid):
         """Return True when the source is the read-only Andromeda Contacts book."""
         with self.sources_lock:
             info = self.sources.get(source_uid)
         return bool(info) and info.get('name') == "Andromeda Contacts"
 
-    def _writable_book_uid(self, source_uid=None):
+    def writable_book_uid(self, source_uid=None):
         """Resolve which book a write lands in.
 
         A requested book is honored as requested: the factory opens any
@@ -1386,7 +1386,7 @@ class EdsManager(GObject.Object):
         if source_uid:
             return source_uid
 
-        default = self._default_source_uid()
+        default = self.default_source_uid()
         with self.sources_lock:
             if default and default in self.sources:
                 return default
@@ -1403,8 +1403,8 @@ class EdsManager(GObject.Object):
         elif source_uid:
             target = source_uid
         else:
-            target = self._default_source_uid()
-        if target and self._is_andromeda_source(target):
+            target = self.default_source_uid()
+        if target and self.is_andromeda_source(target):
             return (False, "read-only")
         ok = self.save_contact(vcard_string, uid=uid, source_uid=source_uid)
         return (ok, "" if ok else "write-failed")
@@ -1443,7 +1443,7 @@ class EdsManager(GObject.Object):
             target_uid = None
 
             if uid and isinstance(uid, str) and uid.strip():
-                s_uid, r_uid = self._parse_composite_uid(uid)
+                s_uid, r_uid = self.parse_composite_uid(uid)
                 if not s_uid:
                     s_uid = source_uid
                     r_uid = uid
@@ -1458,18 +1458,18 @@ class EdsManager(GObject.Object):
                     logger.error(f"[EDS] Save failed: Could not determine source for UID {uid}")
                     return False
 
-                if self._is_andromeda_source(s_uid):
+                if self.is_andromeda_source(s_uid):
                     logger.warning(f"[EDS] Refusing to modify Andromeda Contact {uid}")
                     return False
 
-                target_uid = self._writable_book_uid(s_uid)
+                target_uid = self.writable_book_uid(s_uid)
                 real_uid = r_uid
             else:
-                if source_uid and self._is_andromeda_source(source_uid):
+                if source_uid and self.is_andromeda_source(source_uid):
                     logger.warning("[EDS] Refusing to save new Andromeda Contact")
                     return False
 
-                target_uid = self._writable_book_uid(source_uid)
+                target_uid = self.writable_book_uid(source_uid)
 
             if not target_uid:
                 logger.error("[EDS] Save failed: No writable book found.")
@@ -1487,11 +1487,11 @@ class EdsManager(GObject.Object):
                 else:
                     lines.insert(end_index, uid_line)
                 final_vcard = "\n".join(lines)
-                self._book_call(target_uid, "ModifyContacts",
+                self.book_call(target_uid, "ModifyContacts",
                                 GLib.Variant("(asu)", ([final_vcard], 0)), None)
                 logger.info(f"[EDS] Modified: {real_uid}")
             else:
-                self._book_call(target_uid, "CreateContacts",
+                self.book_call(target_uid, "CreateContacts",
                                 GLib.Variant("(asu)", ([final_vcard], 0)), None)
                 logger.info("[EDS] Created new contact")
             return True
@@ -1505,7 +1505,7 @@ class EdsManager(GObject.Object):
             logger.error("[EDS] Delete failed: Invalid UID format")
             return False
 
-        s_uid, r_uid = self._parse_composite_uid(uid)
+        s_uid, r_uid = self.parse_composite_uid(uid)
 
         if not s_uid:
             with self.cache_lock:
@@ -1524,12 +1524,12 @@ class EdsManager(GObject.Object):
             logger.error(f"[EDS] Delete failed: Unknown source for {uid}")
             return False
 
-        if self._is_andromeda_source(s_uid):
+        if self.is_andromeda_source(s_uid):
             logger.warning(f"[EDS] Refusing to delete Andromeda Contact {uid}")
             return False
 
         try:
-            self._book_call(s_uid, "RemoveContacts",
+            self.book_call(s_uid, "RemoveContacts",
                             GLib.Variant("(asu)", ([r_uid], 0)), None)
             logger.info(f"[EDS] Deleted: {uid}")
             return True
@@ -1544,7 +1544,7 @@ class EdsManager(GObject.Object):
 
         uids_by_source = {}
         for uid in uids:
-            s_uid, r_uid = self._parse_composite_uid(uid)
+            s_uid, r_uid = self.parse_composite_uid(uid)
             if not s_uid:
                 with self.cache_lock:
                     cached = self.cache.get(uid)
@@ -1565,13 +1565,13 @@ class EdsManager(GObject.Object):
 
         success = True
         for s_uid, r_uids in uids_by_source.items():
-            if self._is_andromeda_source(s_uid):
+            if self.is_andromeda_source(s_uid):
                 logger.warning(f"[EDS] Refusing to batch delete Andromeda Contacts from {s_uid}")
                 success = False
                 continue
 
             try:
-                self._book_call(s_uid, "RemoveContacts",
+                self.book_call(s_uid, "RemoveContacts",
                                 GLib.Variant("(asu)", (r_uids, 0)), None)
                 logger.info(f"[EDS] Batch deleted {len(r_uids)} contacts from {s_uid}")
             except Exception as e:

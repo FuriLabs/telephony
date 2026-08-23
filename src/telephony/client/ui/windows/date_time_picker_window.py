@@ -24,7 +24,7 @@ BOTTOM_MARGIN = 24
 TIME_ENTRY_CHARS = 3
 
 
-def _format_value(value):
+def format_value(value):
     """Format a stepper value as a zero padded two digit string."""
     return f"{int(value):02d}"
 
@@ -39,7 +39,7 @@ class DateTimePicker:
         self.include_time = include_time
         self.callback = on_confirm
         self._entry_sync_guard = False
-        self._confirmed = False
+        self.confirmed = False
 
         self.selected_date = initial_date if initial_date else GLib.DateTime.new_now_local()
 
@@ -52,17 +52,17 @@ class DateTimePicker:
 
         btn_confirm = Gtk.Button(label=_("Confirm"))
         btn_confirm.add_css_class("suggested-action")
-        btn_confirm.connect("clicked", lambda x: GLib.idle_add(lambda: self._on_confirm() or False))
+        btn_confirm.connect("clicked", lambda x: GLib.idle_add(lambda: self.on_confirm() or False))
         header.pack_end(btn_confirm)
 
         self.toolbar.add_top_bar(header)
 
-        self._build_ui()
+        self.build_ui()
         self.window = self.parent.get_root()
         present_sheet_page(self.window,
                            Adw.NavigationPage(title=self.title, child=self.toolbar))
 
-    def _build_ui(self):
+    def build_ui(self):
         """Construct the picker UI."""
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         main_box.set_margin_top(CONTENT_MARGIN)
@@ -89,7 +89,7 @@ class DateTimePicker:
                 page_increment=6,
                 page_size=0
             )
-            time_row.append(self._build_stepper(_("Hour"), self.adj_hour))
+            time_row.append(self.build_stepper(_("Hour"), self.adj_hour))
 
             self.adj_min = Gtk.Adjustment(
                 value=self.selected_date.get_minute(),
@@ -99,13 +99,13 @@ class DateTimePicker:
                 page_increment=10,
                 page_size=0
             )
-            time_row.append(self._build_stepper(_("Minute"), self.adj_min))
+            time_row.append(self.build_stepper(_("Minute"), self.adj_min))
 
             main_box.append(time_row)
 
         self.toolbar.set_content(main_box)
 
-    def _build_stepper(self, title, adjustment):
+    def build_stepper(self, title, adjustment):
         """Build a touch stepper for one time unit.
 
         The step buttons never take focus, so the on screen keyboard
@@ -120,31 +120,31 @@ class DateTimePicker:
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, css_classes=["linked"])
 
         btn_down = Gtk.Button(icon_name="list-remove-symbolic", focus_on_click=False)
-        btn_down.connect("clicked", lambda b: self._step(adjustment, -adjustment.get_step_increment()))
+        btn_down.connect("clicked", lambda b: self.step(adjustment, -adjustment.get_step_increment()))
         row.append(btn_down)
 
         entry = Gtk.Entry(
-            text=_format_value(adjustment.get_value()),
+            text=format_value(adjustment.get_value()),
             xalign=0.5,
             width_chars=TIME_ENTRY_CHARS,
             max_width_chars=TIME_ENTRY_CHARS,
             input_purpose=Gtk.InputPurpose.DIGITS
         )
-        entry.connect("changed", self._on_entry_changed, adjustment)
+        entry.connect("changed", self.on_entry_changed, adjustment)
         focus_controller = Gtk.EventControllerFocus()
-        focus_controller.connect("leave", self._on_entry_unfocused, entry, adjustment)
+        focus_controller.connect("leave", self.on_entry_unfocused, entry, adjustment)
         entry.add_controller(focus_controller)
-        adjustment.connect("value-changed", self._on_value_changed, entry)
+        adjustment.connect("value-changed", self.on_value_changed, entry)
         row.append(entry)
 
         btn_up = Gtk.Button(icon_name="list-add-symbolic", focus_on_click=False)
-        btn_up.connect("clicked", lambda b: self._step(adjustment, adjustment.get_step_increment()))
+        btn_up.connect("clicked", lambda b: self.step(adjustment, adjustment.get_step_increment()))
         row.append(btn_up)
 
         box.append(row)
         return box
 
-    def _step(self, adjustment, delta):
+    def step(self, adjustment, delta):
         """Step a value, wrapping around at the bounds."""
         value = adjustment.get_value() + delta
         if value > adjustment.get_upper():
@@ -153,15 +153,15 @@ class DateTimePicker:
             value = adjustment.get_upper()
         adjustment.set_value(value)
 
-    def _on_value_changed(self, adjustment, entry):
+    def on_value_changed(self, adjustment, entry):
         """Reflect a stepped value in the entry."""
         if self._entry_sync_guard:
             return
         self._entry_sync_guard = True
-        entry.set_text(_format_value(adjustment.get_value()))
+        entry.set_text(format_value(adjustment.get_value()))
         self._entry_sync_guard = False
 
-    def _on_entry_changed(self, entry, adjustment):
+    def on_entry_changed(self, entry, adjustment):
         """Apply a typed value without reformatting while typing."""
         if self._entry_sync_guard:
             return
@@ -173,17 +173,17 @@ class DateTimePicker:
         adjustment.set_value(value)
         self._entry_sync_guard = False
 
-    def _on_entry_unfocused(self, controller, entry, adjustment):
+    def on_entry_unfocused(self, controller, entry, adjustment):
         """Normalize the entry text once typing is done."""
         self._entry_sync_guard = True
-        entry.set_text(_format_value(adjustment.get_value()))
+        entry.set_text(format_value(adjustment.get_value()))
         self._entry_sync_guard = False
 
-    def _on_confirm(self):
+    def on_confirm(self):
         """Apply the picked date once, then close the sheet."""
-        if self._confirmed:
+        if self.confirmed:
             return
-        self._confirmed = True
+        self.confirmed = True
         try:
             date = self.calendar_widget.get_date()
             y, m, d = date.get_year(), date.get_month(), date.get_day_of_month()

@@ -37,7 +37,7 @@ class QrShareDialog(Adw.NavigationPage):
     def __init__(self, contact_name, vcard_text):
         """Encode the vCard and build the dialog around it."""
         super().__init__(title=contact_name)
-        self.matrix = self._build_matrix(vcard_text)
+        self.matrix = self.build_matrix(vcard_text)
 
         self.set_size_request(-1, QR_DIALOG_HEIGHT)
 
@@ -49,7 +49,7 @@ class QrShareDialog(Adw.NavigationPage):
 
         area = Gtk.DrawingArea(content_width=QR_AREA_SIZE, content_height=QR_AREA_SIZE,
                                hexpand=True, vexpand=True)
-        area.set_draw_func(self._draw_qr)
+        area.set_draw_func(self.draw_qr)
         box.append(area)
 
         hint = Gtk.Label(label=_("Scan with any phone to add this contact"),
@@ -60,7 +60,7 @@ class QrShareDialog(Adw.NavigationPage):
         view.set_content(box)
         self.set_child(view)
 
-    def _build_matrix(self, vcard_text):
+    def build_matrix(self, vcard_text):
         """Encode the vCard; qrcode is imported only when a share happens."""
         try:
             import qrcode
@@ -73,7 +73,7 @@ class QrShareDialog(Adw.NavigationPage):
             logger.error(f"[QrShare] Encoding failed: {e}")
             return None
 
-    def _draw_qr(self, _area, cr, width, height):
+    def draw_qr(self, _area, cr, width, height):
         """Draw the module grid on white, which stays white in dark mode.
 
         Scanners need the printed contrast, so the panel is not themed.

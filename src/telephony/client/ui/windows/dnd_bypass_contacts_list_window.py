@@ -29,7 +29,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         self.grp_list = None
         self.search_token = 0
         self._source_map = {}
-        run_in_background(self._load_source_map)
+        run_in_background(self.load_source_map)
         self.kind = kind
         super().__init__(title=_("Notification Overrides"))
         self.gsettings_mgr = db
@@ -54,7 +54,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
 
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
-        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_save_clicked(b) or False))
+        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save_clicked(b) or False))
         header.pack_end(btn_save)
 
         view.add_top_bar(header)
@@ -75,7 +75,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         search_box.append(self.search_entry)
 
         self.search_timer = None
-        self.connect("unmap", self._on_unmap)
+        self.connect("unmap", self.on_unmap)
 
         main_box.append(search_box)
 
@@ -109,10 +109,10 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
 
         self.stack.set_visible_child_name("list")
 
-        self.search_entry.connect("search-changed", self._on_search_changed)
-        self.search_results_list.connect("row-activated", self._on_result_activated)
+        self.search_entry.connect("search-changed", self.on_search_changed)
+        self.search_results_list.connect("row-activated", self.on_result_activated)
 
-        self._refresh_list()
+        self.refresh_list()
 
     def close(self):
         """Pop this page once; repeat taps during the transition are ignored."""
@@ -120,7 +120,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         if nav and nav.get_visible_page() is self:
             nav.pop()
 
-    def _on_save_clicked(self, btn):
+    def on_save_clicked(self, btn):
         """Handle save button click."""
         if self.kind == "calls":
             self.gsettings_mgr.set_notification_override_dnd_bypass_contacts(self.local_contacts)
@@ -128,7 +128,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
             self.gsettings_mgr.set_notification_override_dnd_bypass_contacts_messages(self.local_contacts)
         GLib.idle_add(lambda: self.close() or False)
 
-    def _refresh_list(self):
+    def refresh_list(self):
         """Refresh the list of contacts."""
         if (self.grp_list is not None) and self.grp_list:
             self.page_list.remove(self.grp_list)
@@ -140,9 +140,9 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
             pass
 
         for c in self.local_contacts:
-            self._create_contact_row(c)
+            self.create_contact_row(c)
 
-    def _create_contact_row(self, contact_data):
+    def create_contact_row(self, contact_data):
         """Create a row for a contact."""
         name = contact_data.get("name", "Unknown")
         number = contact_data.get("number", "")
@@ -153,37 +153,37 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         btn_del.add_css_class("flat")
         btn_del.add_css_class("circular")
         btn_del.set_tooltip_text("Remove Contact")
-        btn_del.connect("clicked", lambda b: self._delete_contact(contact_data))
+        btn_del.connect("clicked", lambda b: self.delete_contact(contact_data))
 
         row.add_suffix(btn_del)
 
         self.grp_list.add(row)
 
-    def _delete_contact(self, contact_data):
+    def delete_contact(self, contact_data):
         """Delete a contact from the list."""
         target_num = normalize_number(contact_data.get("number", ""))
 
         self.local_contacts = [c for c in self.local_contacts if normalize_number(c.get("number", "")) != target_num]
 
-        GLib.idle_add(lambda: self._refresh_list())
+        GLib.idle_add(lambda: self.refresh_list())
         self.overlay.add_toast(Adw.Toast.new("Contact removed (Click Save to commit)"))
 
-    def _load_source_map(self):
+    def load_source_map(self):
         """Fetch the address book names once; blocking, call from a worker."""
         names = {}
         for source in self.eds.get_sources_info():
             names[source['uid']] = source['name']
         self._source_map = names
 
-    def _on_search_changed(self, entry):
+    def on_search_changed(self, entry):
         """Handle search text change."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
 
-        self.search_timer = GLib.timeout_add(200, self._perform_search)
+        self.search_timer = GLib.timeout_add(200, self.perform_search)
 
-    def _perform_search(self):
+    def perform_search(self):
         """Execute search."""
         self.search_timer = None
         query = self.search_entry.get_text().strip()
@@ -196,49 +196,49 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         self.search_token += 1
         current_token = self.search_token
 
-        def _bg_fetch():
+        def bg_fetch():
             contacts = self.eds.search_contacts(query, limit=30)
             return contacts
 
-        def _on_done(contacts):
+        def on_done(contacts):
             if self.search_token != current_token:
                 return False
-            self._build_search_results(contacts, query)
+            self.build_search_results(contacts, query)
             return False
 
-        def _bg_task():
-            res = _bg_fetch()
-            GLib.idle_add(lambda: _on_done(res))
+        def bg_task():
+            res = bg_fetch()
+            GLib.idle_add(lambda: on_done(res))
 
-        run_in_background(_bg_task)
+        run_in_background(bg_task)
         return False
 
-    def _is_result_added(self, normalized_number):
+    def is_result_added(self, normalized_number):
         """Return True when the normalized number is already in the local list."""
         for existing in self.local_contacts:
             if normalize_number(existing.get("number", "")) == normalized_number:
                 return True
         return False
 
-    def _on_unmap(self, widget):
+    def on_unmap(self, widget):
         """Cancel the pending search debounce timer."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
 
-    def _build_search_results(self, contacts, query):
+    def build_search_results(self, contacts, query):
         """Build search results UI."""
         populate_contact_search_results(
             self.search_results_list,
             contacts,
             self.eds,
-            is_added=self._is_result_added,
-            on_add=lambda row: self._on_result_activated(None, row),
+            is_added=self.is_result_added,
+            on_add=lambda row: self.on_result_activated(None, row),
             translate_label=translate_phone_label,
             unknown_name=_("Unknown"),
             source_map=self._source_map)
 
-    def _on_result_activated(self, listbox, row):
+    def on_result_activated(self, listbox, row):
         """Handle activation of a search result."""
         if not row.get_sensitive():
             return
@@ -258,12 +258,12 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         new_entry = {"name": name, "number": raw_number}
         self.local_contacts.insert(0, new_entry)
 
-        def _update_ui():
+        def update_ui():
             self.search_entry.set_text("")
             self.stack.set_visible_child_name("list")
-            self._refresh_list()
+            self.refresh_list()
             return False
 
-        GLib.idle_add(_update_ui)
+        GLib.idle_add(update_ui)
 
         self.overlay.add_toast(Adw.Toast.new("Contact added"))
