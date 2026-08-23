@@ -626,9 +626,17 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             nav.push(self.totp_page)
 
     def _on_totp_page_hidden(self, page):
-        """Forget the page once it leaves the navigation stack."""
-        if page.get_parent() is None:
-            self.totp_page = None
+        """Forget the page once it leaves the navigation stack.
+
+        A popped page still has its parent while the signal runs
+        and loses it a moment later, so the check waits one idle;
+        asking at signal time answers kept for both fates.
+        """
+        def check():
+            if page.get_parent() is None and self.totp_page is page:
+                self.totp_page = None
+            return False
+        GLib.idle_add(check)
 
     def _pop_totp_page(self):
         """Pop the TOTP page off the settings navigation."""
