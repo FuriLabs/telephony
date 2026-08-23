@@ -25,7 +25,6 @@ from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import MMS_SIZE_LIMIT_DEFAULT_KB
-from telephony.shared.utils.system_utils import is_gsd_airplane_mode
 from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, build_nav_row)
 
 
@@ -423,17 +422,15 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         The row does the work itself rather than sending the user to a
         screen that may not appear, because a press that shows nothing
-        is indistinguishable from one that did nothing. Restarting the
-        stack cannot power on a radio that was switched off, so that is
-        said instead of attempted.
+        is indistinguishable from one that did nothing.
+
+        Whether a restart is worth attempting is the owner's to answer,
+        since it is the one that watches the modem, and answering it
+        here as well is how this row came to miss the hardware switch
+        while the watchdog honoured it.
         """
         main_window = self.parent_win.main_window
         if self._recovery_running:
-            return
-
-        if is_gsd_airplane_mode():
-            self._describe_recovery_row(
-                _("Airplane mode is on. Turn it off to use the modem"))
             return
 
         app = main_window.get_application()
@@ -448,10 +445,13 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         if not app.request_auto_recovery(self._on_recovery_finished):
             self._on_recovery_finished(False)
 
-    def _on_recovery_finished(self, success):
+    def _on_recovery_finished(self, success, reason=""):
         """Report the outcome in the row the user pressed."""
         self._recovery_running = False
         self.recovery_spinner.set_visible(False)
         self.row_recovery.set_sensitive(True)
+        if reason:
+            self._describe_recovery_row(reason)
+            return
         self._describe_recovery_row(_("Calls and messages work again") if success
                                     else _("Recovery did not help. The modem still is not responding"))

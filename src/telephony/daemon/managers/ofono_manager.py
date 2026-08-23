@@ -112,6 +112,7 @@ class OfonoManager(GObject.Object):
         self._seen_interfaces = set()
         self._interfaces_known = False
         self.modem_online = None
+        self.modem_absent = False
         self._pending_dial = None
         self._pending_dial_timeout_id = 0
         self.clir_hidden = False
@@ -409,6 +410,20 @@ class OfonoManager(GObject.Object):
             return False
         return True
 
+    def set_modem_absent(self, absent):
+        """Record that this device has no modem to wait for.
+
+        The owner decides it, since telling a missing modem from a slow
+        one takes facts about the stack underneath that this class does
+        not read. Recorded here because the banners ask this class why
+        dialing is unavailable, and a modem that is not coming deserves
+        different words than one that is not ready yet.
+        """
+        if self.modem_absent == bool(absent):
+            return
+        self.modem_absent = bool(absent)
+        self.notify_dial_availability()
+
     def notify_dial_availability(self):
         """Announce the current dial availability on the main loop."""
         GLib.idle_add(self.emit, 'dial-availability-changed', self.dialing_available())
@@ -454,6 +469,8 @@ class OfonoManager(GObject.Object):
         the daemon runs in the user's session locale.
         """
         if not self.monitor.connected:
+            if self.modem_absent:
+                return (False, "no-modem", _("This device has no modem"))
             return (False, "no-modem", _("Modem not ready"))
         if self.modem_online is False:
             return (False, "airplane-mode", _("Airplane mode is on"))
@@ -619,7 +636,13 @@ class OfonoManager(GObject.Object):
         self.cs_handler_id = None
 
     def _on_modem_ready(self, monitor, path):
-        """Handle modem ready event."""
+        """Handle modem ready event.
+
+        A modem arriving settles the absence question for good: one
+        that disappears again later is a fault, not a device that
+        never had one.
+        """
+        self.modem_absent = False
         self._cleanup_state()
 
         self.modem_path = path

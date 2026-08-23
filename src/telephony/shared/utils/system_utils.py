@@ -216,6 +216,35 @@ def wait_for_ofono():
     logger.warning("[SystemUtils] ofono did not answer within the wait")
 
 
+def is_ofono_on_bus():
+    """Return True when ofono itself answers; blocking, call from a worker.
+
+    Not the same question as whether there is a modem: the unit sits in
+    start-pre waiting for a binder that a switched-off radio never
+    provides, so a name on the bus is what says ofono got that far.
+    """
+    try:
+        bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+        res = bus.call_sync(
+            "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+            "NameHasOwner", GLib.Variant("(s)", (OFONO_BUS_NAME,)),
+            GLib.VariantType("(b)"), Gio.DBusCallFlags.NONE, -1, None)
+        return bool(res.unpack()[0])
+    except Exception as e:
+        logger.debug(f"[SystemUtils] Could not ask for ofono on the bus: {e}")
+        return False
+
+
+def is_ril_running():
+    """Return True when the vendor RIL daemon is running; blocking, from a worker.
+
+    Only an explicit running counts. The property is unset until init
+    reaches the service, so an empty read means the question was asked
+    too early rather than that the device has no RIL.
+    """
+    return getprop("init.svc.vendor.ril-daemon-mtk") == "running"
+
+
 def restart_modemmanager():
     """Restart ModemManager; blocking, call from a worker.
 

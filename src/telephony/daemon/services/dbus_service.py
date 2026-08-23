@@ -373,6 +373,7 @@ DAEMON_INTERFACE_XML = """
     </method>
     <method name="RequestRecovery">
       <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="reason" direction="out"/>
     </method>
     <method name="ClearNotification">
       <arg type="s" name="number" direction="in"/>
@@ -570,11 +571,11 @@ class TelephonyDaemonDBus:
         """Run modem recovery for a window instance; the reply is the verdict."""
         state = {"resolved": False}
 
-        def resolve(success):
+        def resolve(success, reason=""):
             if state["resolved"]:
                 return
             state["resolved"] = True
-            invocation.return_value(GLib.Variant("(b)", (success,)))
+            invocation.return_value(GLib.Variant("(bs)", (bool(success), reason or "")))
 
         started = self.app.request_auto_recovery(on_done=resolve)
         if not started:

@@ -37,7 +37,8 @@ from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from telephony.shared.utils.region_utils import detect_region, set_custom_region
-from telephony.shared.utils.system_utils import (is_gsd_airplane_mode,
+from telephony.shared.utils.system_utils import (is_ofono_on_bus, is_ril_running,
+                                                  is_gsd_airplane_mode,
                                                  is_vendor_radio_disabled)
 from telephony.shared.constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
@@ -395,8 +396,8 @@ class TelephonyCore:
         if not self.ofono.modem_health_degraded():
             return False
 
-        run_in_background(self._radio_off_by_choice, on_complete=self._decide_modem_recovery,
-                          on_error=lambda error: self._decide_modem_recovery(False))
+        run_in_background(self._recovery_blocker, on_complete=self._decide_modem_recovery,
+                          on_error=lambda error: self._decide_modem_recovery(""))
         return False
 
     def _watch_airplane_mode(self):
@@ -425,7 +426,43 @@ class TelephonyCore:
         """Return True when the radio is off because it was asked to be; blocking, call from a worker."""
         return is_gsd_airplane_mode() or is_vendor_radio_disabled()
 
-    def _decide_modem_recovery(self, off_by_choice):
+    def _recovery_blocker(self):
+        """Say why a stack restart cannot help, or nothing; blocking, from a worker.
+
+        A switched-off radio is not a fault and a restart cannot power
+        it back on.
+
+        Neither is a device that has no modem to begin with, which a
+        wiped or never-written IMEI amounts to: ofono publishes no
+        modem at all without one, so there is no interface to read the
+        identity from and nothing to tell the two apart. What tells
+        them apart is everything underneath being healthy. ofono
+        answering on the bus and the RIL daemon running while ofono
+        still reports no modem means nothing is stuck, so there is
+        nothing a restart would unstick.
+
+        A modem that appeared earlier and went is a fault, so this only
+        speaks for one that was never there this boot.
+        """
+        if self._radio_off_by_choice():
+            return "radio-off"
+
+        if self._modem_was_healthy or self.ofono.monitor.connected:
+            return ""
+
+        if is_ofono_on_bus() and is_ril_running():
+            return "no-modem"
+
+        return ""
+
+    def _blocker_text(self, blocker):
+        """Put a refusal in words for whoever asked."""
+        if blocker == "radio-off":
+            return _("The radio is switched off. Turn it back on to use the modem.")
+        return _("This device reports no modem. Restarting cannot fix a modem "
+                 "that is missing or has no identity.")
+
+    def _decide_modem_recovery(self, blocker):
         """Recover the modem silently, or show the screen, or leave it alone.
 
         Reading the radio state runs off the main loop because asking
@@ -434,12 +471,24 @@ class TelephonyCore:
 
         Leaving a switched-off radio alone means the watchdog stops
         here, so the radio coming back on is what starts it again.
+
+        A device with no modem gets no screen at all. The recovery page
+        exists to offer a repair, and there is none to offer; on the
+        factory line it would land on top of the initial setup of every
+        device that has not had its IMEI written yet. The banner carries
+        the fact instead, and the settings row explains it when asked.
         """
-        if off_by_choice:
+        if blocker == "radio-off":
             logger.info("[App] Modem is unavailable because the radio is off, not offering recovery")
             return
 
         if not self.ofono.modem_health_degraded():
+            return
+
+        if blocker:
+            logger.warning("[App] No modem on a healthy stack; the banner says so, no screen")
+            self._modem_notified = True
+            self.ofono.set_modem_absent(True)
             return
 
         if self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true":
@@ -457,10 +506,10 @@ class TelephonyCore:
             return _("The modem is answering, but its radio is switched off.")
         return _("The modem is not working correctly.")
 
-    def _surface_modem_recovery(self, failed=False):
+    def _surface_modem_recovery(self, failed=False, message=None):
         """Show the recovery screen, or just a bare notification while locked."""
         self._modem_notified = True
-        self._publish_recovery_state(True, self._describe_modem_problem(), failed)
+        self._publish_recovery_state(True, message or self._describe_modem_problem(), failed)
 
         if self.sys_state.is_locked:
             self._recovery_pending_unlock = True
@@ -581,10 +630,29 @@ class TelephonyCore:
         )
 
     def request_auto_recovery(self, on_done=None):
-        """Restart the modem stack once, silently; False when already running."""
+        """Restart the modem stack once; False when a run is already going.
+
+        Every way of asking arrives here, the watchdog and the buttons
+        alike, so the radio is checked here rather than by each caller.
+        A stack restart cannot power on a radio that was switched off,
+        by the airplane switch or by the hardware one, and asking the
+        vendor property means a process, so the answer is read off the
+        main loop before anything is restarted.
+
+        Only a switched-off radio refuses outright, since a restart
+        genuinely cannot power a radio back on. The no-modem verdict is
+        reached by elimination and a RIL daemon that is alive but stuck
+        wears the same fingerprint, so an explicit request is the
+        escape hatch: the restart runs anyway, and the verdict only
+        chooses the words when it still produces no modem.
+
+        on_done hears (success, reason); the reason is empty when a
+        restart was attempted and simply did not help.
+        """
         if self._auto_recovery_running:
             return False
         self._auto_recovery_running = True
+        state = {"hopeless": ""}
 
         def verdict(success):
             self._auto_recovery_running = False
@@ -593,11 +661,17 @@ class TelephonyCore:
                 self._modem_notified = False
                 self.notification_manager.close_notification("modem_unavailable")
                 self._dismiss_recovery_surface()
+            elif state["hopeless"]:
+                logger.error("[App] Modem recovery changed nothing on a device reporting no modem")
+                self.ofono.set_modem_absent(True)
+                if on_done:
+                    on_done(False, self._blocker_text(state["hopeless"]))
+                return
             else:
                 logger.error("[App] Modem recovery failed")
                 self._surface_modem_recovery(failed=True)
             if on_done:
-                on_done(success)
+                on_done(success, "")
 
         def fired(_result):
             watch_recovery_result(self.ofono, verdict)
@@ -606,7 +680,18 @@ class TelephonyCore:
             logger.warning(f"[App] Modem recovery commands errored: {error}")
             watch_recovery_result(self.ofono, verdict)
 
-        run_in_background(execute_modem_recovery, on_complete=fired, on_error=failed)
+        def decided(blocker):
+            if blocker == "radio-off":
+                self._auto_recovery_running = False
+                logger.info("[App] Not restarting the modem stack: the radio is switched off")
+                if on_done:
+                    on_done(False, self._blocker_text(blocker))
+                return
+            state["hopeless"] = blocker
+            run_in_background(execute_modem_recovery, on_complete=fired, on_error=failed)
+
+        run_in_background(self._recovery_blocker, on_complete=decided,
+                          on_error=lambda error: decided(""))
         return True
 
     def open_modem_recovery(self):

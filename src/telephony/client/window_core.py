@@ -240,10 +240,10 @@ class WindowCore:
         return False
 
     def request_auto_recovery(self, on_done=None):
-        """Have the owner restart the modem stack; on_done hears the verdict."""
+        """Have the owner restart the modem stack; on_done hears (verdict, reason)."""
         def done(reply):
             if on_done:
-                on_done(bool(reply and reply[0]))
+                on_done(bool(reply and reply[0]), reply[1] if reply else "")
 
         self.daemon_client.request_recovery(done)
         return True
