@@ -70,14 +70,14 @@ class NetworkServicesWindow(Adw.NavigationPage):
         self.page = Adw.PreferencesPage()
         scroll.set_child(self.page)
 
-        self._build_forwarding_group()
-        self._build_calling_group()
-        self._build_barring_group()
+        self.build_forwarding_group()
+        self.build_calling_group()
+        self.build_barring_group()
 
-        self.connect("map", self._on_map)
-        self.connect("unmap", self._on_unmap)
+        self.connect("map", self.on_map)
+        self.connect("unmap", self.on_unmap)
 
-    def _info_button(self, title, body):
+    def info_button(self, title, body):
         """Build a group header info button opening an info sheet."""
         btn = Gtk.Button(icon_name="help-about-symbolic", valign=Gtk.Align.CENTER)
         btn.add_css_class("flat")
@@ -86,7 +86,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
             lambda: present_info_sheet(self, title, body) or False))
         return btn
 
-    def _build_forwarding_group(self):
+    def build_forwarding_group(self):
         """Build the call forwarding rules group."""
         self.grp_forwarding = Adw.PreferencesGroup(title=_("Call Forwarding"))
         body = _("Forwarding happens in the network before your phone is "
@@ -98,7 +98,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
                  "Enter numbers in international format, for example "
                  "+358401234567. Applying an empty number turns that rule "
                  "off.")
-        self.grp_forwarding.set_header_suffix(self._info_button(_("Call Forwarding"), body))
+        self.grp_forwarding.set_header_suffix(self.info_button(_("Call Forwarding"), body))
         self.page.add(self.grp_forwarding)
 
         labels = {
@@ -112,12 +112,12 @@ class NetworkServicesWindow(Adw.NavigationPage):
             row = Adw.EntryRow(title=labels[prop])
             row.set_input_purpose(Gtk.InputPurpose.PHONE)
             row.set_show_apply_button(True)
-            row.connect("apply", self._on_forwarding_apply, prop)
+            row.connect("apply", self.on_forwarding_apply, prop)
             row.set_sensitive(False)
             self.cf_rows[prop] = row
             self.grp_forwarding.add(row)
             if prop == "VoiceNoReply":
-                self.row_ring_time = build_selector_row(_("Ring Time"), self._on_ring_time_selected)
+                self.row_ring_time = build_selector_row(_("Ring Time"), self.on_ring_time_selected)
                 set_selector_options(self.row_ring_time, [
                     _("{count} seconds").format(count=v) for v in RING_TIME_VALUES], 2)
                 self.row_ring_time.set_sensitive(False)
@@ -126,21 +126,21 @@ class NetworkServicesWindow(Adw.NavigationPage):
         self.row_cf_disable = Adw.ActionRow(title=_("Disable All Forwarding"), activatable=True)
         self.row_cf_disable.add_css_class("error")
         self.row_cf_disable.connect("activated", lambda r: GLib.idle_add(
-            lambda: self._confirm_disable_forwarding() or False))
+            lambda: self.confirm_disable_forwarding() or False))
         self.row_cf_disable.set_sensitive(False)
         self.grp_forwarding.add(self.row_cf_disable)
 
-    def _build_calling_group(self):
+    def build_calling_group(self):
         """Build the call waiting and caller id group."""
         grp = Adw.PreferencesGroup()
         self.page.add(grp)
 
         self.sw_call_waiting = Adw.SwitchRow(title=_("Call Waiting"))
-        btn = self._info_button(_("Call Waiting"), _(
+        btn = self.info_button(_("Call Waiting"), _(
             "When enabled, a second incoming call beeps during an ongoing "
             "call instead of the caller getting a busy signal."))
         self.sw_call_waiting.add_suffix(btn)
-        self.sw_call_waiting.connect("notify::active", self._on_call_waiting_toggled)
+        self.sw_call_waiting.connect("notify::active", self.on_call_waiting_toggled)
         self.sw_call_waiting.set_sensitive(False)
         grp.add(self.sw_call_waiting)
 
@@ -149,9 +149,9 @@ class NetworkServicesWindow(Adw.NavigationPage):
             ("enabled", _("Hidden")),
             ("disabled", _("Shown")),
         ]
-        self.row_clir = build_selector_row(_("Hide Caller ID"), self._on_clir_selected)
+        self.row_clir = build_selector_row(_("Hide Caller ID"), self.on_clir_selected)
         set_selector_options(self.row_clir, [name for _k, name in self.clir_options], 0)
-        btn = self._info_button(_("Hide Caller ID"), _(
+        btn = self.info_button(_("Hide Caller ID"), _(
             "Choose whether people you call see your number. Network "
             "Default follows your subscription setting. Hiding can also be "
             "chosen for a single call from a contact's call menu."))
@@ -159,7 +159,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
         self.row_clir.set_sensitive(False)
         grp.add(self.row_clir)
 
-    def _build_barring_group(self):
+    def build_barring_group(self):
         """Build the call barring group."""
         self.grp_barring = Adw.PreferencesGroup(title=_("Call Barring"))
         body = _("Barring blocks whole classes of calls in the network.\n\n"
@@ -167,7 +167,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
                  "operator, often 0000 by default. Repeated wrong attempts "
                  "can lock barring at the network side, in which case only "
                  "your operator can unlock it.")
-        self.grp_barring.set_header_suffix(self._info_button(_("Call Barring"), body))
+        self.grp_barring.set_header_suffix(self.info_button(_("Call Barring"), body))
         self.page.add(self.grp_barring)
 
         self.barring_out_options = [
@@ -177,7 +177,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
             ("internationalnothome", _("Bar International Except Home")),
         ]
         self.row_barring_out = build_selector_row(
-            _("Outgoing Calls"), lambda i: self._on_barring_selected("VoiceOutgoing", i))
+            _("Outgoing Calls"), lambda i: self.on_barring_selected("VoiceOutgoing", i))
         set_selector_options(self.row_barring_out, [name for _k, name in self.barring_out_options], 0)
         self.row_barring_out.set_sensitive(False)
         self.grp_barring.add(self.row_barring_out)
@@ -188,7 +188,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
             ("whenroaming", _("Bar When Roaming")),
         ]
         self.row_barring_in = build_selector_row(
-            _("Incoming Calls"), lambda i: self._on_barring_selected("VoiceIncoming", i))
+            _("Incoming Calls"), lambda i: self.on_barring_selected("VoiceIncoming", i))
         set_selector_options(self.row_barring_in, [name for _k, name in self.barring_in_options], 0)
         self.row_barring_in.set_sensitive(False)
         self.grp_barring.add(self.row_barring_in)
@@ -204,7 +204,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
         row_apply = Adw.ActionRow(title=_("Change Barring Password"), activatable=True)
         row_apply.add_suffix(Gtk.Image.new_from_icon_name("object-select-symbolic"))
         row_apply.connect("activated", lambda r: GLib.idle_add(
-            lambda: self._on_change_password() or False))
+            lambda: self.on_change_password() or False))
         self.exp_change_pw.add_row(row_apply)
         self.exp_change_pw.set_sensitive(False)
         self.grp_barring.add(self.exp_change_pw)
@@ -212,34 +212,34 @@ class NetworkServicesWindow(Adw.NavigationPage):
         self.row_cb_disable = Adw.ActionRow(title=_("Disable All Barrings"), activatable=True)
         self.row_cb_disable.add_css_class("error")
         self.row_cb_disable.connect("activated", lambda r: GLib.idle_add(
-            lambda: self._confirm_disable_barrings() or False))
+            lambda: self.confirm_disable_barrings() or False))
         self.row_cb_disable.set_sensitive(False)
         self.grp_barring.add(self.row_cb_disable)
 
-    def _on_map(self, _widget):
+    def on_map(self, _widget):
         """Subscribe to service updates and start the first load."""
         if self.ofono and self._service_sig is None:
-            self._service_sig = self.ofono.connect("network-service-changed", self._on_service_changed)
+            self._service_sig = self.ofono.connect("network-service-changed", self.on_service_changed)
         if not self._loaded:
             self._loaded = True
-            self._load_all()
+            self.load_all()
 
-    def _on_unmap(self, _widget):
+    def on_unmap(self, _widget):
         """Drop the service subscription while off screen."""
         if self.ofono and self._service_sig is not None:
             self.ofono.disconnect(self._service_sig)
             self._service_sig = None
 
-    def _toast(self, message):
+    def toast(self, message):
         """Show a transient message on this page."""
         self.overlay.add_toast(Adw.Toast.new(message))
 
-    def _enqueue(self, task, on_done):
+    def enqueue(self, task, on_done):
         """Queue a blocking network operation; operations run one at a time."""
         self._ops.append((task, on_done))
-        self._pump_ops()
+        self.pump_ops()
 
-    def _pump_ops(self):
+    def pump_ops(self):
         """Start the next queued operation if none is running."""
         if self._op_running or not self._ops:
             return
@@ -249,74 +249,74 @@ class NetworkServicesWindow(Adw.NavigationPage):
         def done(result):
             self._op_running = False
             on_done(result)
-            self._pump_ops()
+            self.pump_ops()
 
         def failed(error):
             self._op_running = False
             logger.error(f"[NetworkServices] Operation failed: {error}")
             on_done(None)
-            self._pump_ops()
+            self.pump_ops()
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _load_all(self):
+    def load_all(self):
         """Query every available service from the network."""
         if not self.ofono:
-            self._toast(_("The modem is not working correctly."))
+            self.toast(_("The modem is not working correctly."))
             return
         if self.ofono.has_modem_interface("org.ofono.CallForwarding"):
-            self._enqueue(lambda: self.ofono.get_service_properties("forwarding"),
-                          self._on_forwarding_loaded)
+            self.enqueue(lambda: self.ofono.get_service_properties("forwarding"),
+                          self.on_forwarding_loaded)
         else:
             self.grp_forwarding.set_description(_("Not available on this network"))
         if self.ofono.has_modem_interface("org.ofono.CallSettings"):
-            self._enqueue(lambda: self.ofono.get_service_properties("settings"),
-                          self._on_settings_loaded)
+            self.enqueue(lambda: self.ofono.get_service_properties("settings"),
+                          self.on_settings_loaded)
         if self.ofono.has_modem_interface("org.ofono.CallBarring"):
-            self._enqueue(lambda: self.ofono.get_service_properties("barring"),
-                          self._on_barring_loaded)
+            self.enqueue(lambda: self.ofono.get_service_properties("barring"),
+                          self.on_barring_loaded)
         else:
             self.grp_barring.set_description(_("Not available on this network"))
 
-    def _on_forwarding_loaded(self, props):
+    def on_forwarding_loaded(self, props):
         """Populate the forwarding rows from the network reply."""
         if props is None:
             self.grp_forwarding.set_description(_("Could not read settings from the network"))
             return
         self.grp_forwarding.set_description(None)
         for prop, _key in FORWARDING_RULES:
-            self._apply_service_value("forwarding", prop, props.get(prop, ""))
+            self.apply_service_value("forwarding", prop, props.get(prop, ""))
             self.cf_rows[prop].set_sensitive(True)
-        self._apply_service_value("forwarding", "VoiceNoReplyTimeout", props.get("VoiceNoReplyTimeout", 20))
+        self.apply_service_value("forwarding", "VoiceNoReplyTimeout", props.get("VoiceNoReplyTimeout", 20))
         self.row_cf_disable.set_sensitive(True)
 
-    def _on_settings_loaded(self, props):
+    def on_settings_loaded(self, props):
         """Populate call waiting and caller id from the network reply."""
         if props is None:
             return
-        self._apply_service_value("settings", "VoiceCallWaiting", props.get("VoiceCallWaiting", "disabled"))
-        self._apply_service_value("settings", "HideCallerId", props.get("HideCallerId", "default"))
+        self.apply_service_value("settings", "VoiceCallWaiting", props.get("VoiceCallWaiting", "disabled"))
+        self.apply_service_value("settings", "HideCallerId", props.get("HideCallerId", "default"))
         self.sw_call_waiting.set_sensitive(True)
         self.row_clir.set_sensitive(True)
 
-    def _on_barring_loaded(self, props):
+    def on_barring_loaded(self, props):
         """Populate the barring selectors from the network reply."""
         if props is None:
             self.grp_barring.set_description(_("Could not read settings from the network"))
             return
         self.grp_barring.set_description(None)
-        self._apply_service_value("barring", "VoiceOutgoing", props.get("VoiceOutgoing", "disabled"))
-        self._apply_service_value("barring", "VoiceIncoming", props.get("VoiceIncoming", "disabled"))
+        self.apply_service_value("barring", "VoiceOutgoing", props.get("VoiceOutgoing", "disabled"))
+        self.apply_service_value("barring", "VoiceIncoming", props.get("VoiceIncoming", "disabled"))
         self.row_barring_out.set_sensitive(True)
         self.row_barring_in.set_sensitive(True)
         self.exp_change_pw.set_sensitive(True)
         self.row_cb_disable.set_sensitive(True)
 
-    def _on_service_changed(self, _mgr, service, name, value):
+    def on_service_changed(self, _mgr, service, name, value):
         """Reflect a confirmed network change in the UI."""
-        self._apply_service_value(service, name, value)
+        self.apply_service_value(service, name, value)
 
-    def _apply_service_value(self, service, name, value):
+    def apply_service_value(self, service, name, value):
         """Write one confirmed service value into its row."""
         self._known[(service, name)] = value
         self._syncing_ui = True
@@ -351,24 +351,24 @@ class NetworkServicesWindow(Adw.NavigationPage):
             self.row_barring_in.set_sensitive(True)
         self._syncing_ui = False
 
-    def _on_forwarding_apply(self, row, prop):
+    def on_forwarding_apply(self, row, prop):
         """Send an edited forwarding rule to the network."""
         number = row.get_text().strip()
         row.set_sensitive(False)
 
         def done(result):
             if result and result[0]:
-                self._apply_service_value("forwarding", prop, number)
+                self.apply_service_value("forwarding", prop, number)
                 if prop == "VoiceNoReply":
                     self.row_ring_time.set_sensitive(bool(number))
             else:
-                self._apply_service_value("forwarding", prop, self._known.get(("forwarding", prop), ""))
-                self._toast(_("Could not change the setting"))
+                self.apply_service_value("forwarding", prop, self._known.get(("forwarding", prop), ""))
+                self.toast(_("Could not change the setting"))
             row.set_sensitive(True)
 
-        self._enqueue(lambda: self.ofono.set_service_property("forwarding", prop, number), done)
+        self.enqueue(lambda: self.ofono.set_service_property("forwarding", prop, number), done)
 
-    def _on_ring_time_selected(self, idx):
+    def on_ring_time_selected(self, idx):
         """Send the picked no-reply ring time to the network."""
         if self._syncing_ui:
             return
@@ -377,12 +377,12 @@ class NetworkServicesWindow(Adw.NavigationPage):
         def done(result):
             if not (result and result[0]):
                 known = self._known.get(("forwarding", "VoiceNoReplyTimeout"), 20)
-                self._apply_service_value("forwarding", "VoiceNoReplyTimeout", known)
-                self._toast(_("Could not change the setting"))
+                self.apply_service_value("forwarding", "VoiceNoReplyTimeout", known)
+                self.toast(_("Could not change the setting"))
 
-        self._enqueue(lambda: self.ofono.set_service_property("forwarding", "VoiceNoReplyTimeout", int(seconds)), done)
+        self.enqueue(lambda: self.ofono.set_service_property("forwarding", "VoiceNoReplyTimeout", int(seconds)), done)
 
-    def _confirm_disable_forwarding(self):
+    def confirm_disable_forwarding(self):
         """Confirm and clear every forwarding rule."""
         def on_resp(resp):
             if resp != "disable":
@@ -390,17 +390,17 @@ class NetworkServicesWindow(Adw.NavigationPage):
             def done(result):
                 if result and result[0]:
                     for prop, _key in FORWARDING_RULES:
-                        self._apply_service_value("forwarding", prop, "")
+                        self.apply_service_value("forwarding", prop, "")
                 else:
-                    self._toast(_("Could not change the setting"))
-            self._enqueue(lambda: self.ofono.disable_all_forwarding(), done)
+                    self.toast(_("Could not change the setting"))
+            self.enqueue(lambda: self.ofono.disable_all_forwarding(), done)
         present_alert_sheet(
             self.get_root(), _("Disable All Forwarding"),
             _("Turn off every call forwarding rule?"),
             [("cancel", _("Cancel"), None), ("disable", _("Disable"), "destructive")],
             on_resp)
 
-    def _on_call_waiting_toggled(self, row, _pspec):
+    def on_call_waiting_toggled(self, row, _pspec):
         """Send the call waiting switch state to the network."""
         if self._syncing_ui:
             return
@@ -412,13 +412,13 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self._known[("settings", "VoiceCallWaiting")] = target
             else:
                 known = self._known.get(("settings", "VoiceCallWaiting"), "disabled")
-                self._apply_service_value("settings", "VoiceCallWaiting", known)
-                self._toast(_("Could not change the setting"))
+                self.apply_service_value("settings", "VoiceCallWaiting", known)
+                self.toast(_("Could not change the setting"))
             row.set_sensitive(True)
 
-        self._enqueue(lambda: self.ofono.set_service_property("settings", "VoiceCallWaiting", target), done)
+        self.enqueue(lambda: self.ofono.set_service_property("settings", "VoiceCallWaiting", target), done)
 
-    def _on_clir_selected(self, idx):
+    def on_clir_selected(self, idx):
         """Send the caller id preference to the network."""
         if self._syncing_ui:
             return
@@ -429,26 +429,26 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self._known[("settings", "HideCallerId")] = value
             else:
                 known = self._known.get(("settings", "HideCallerId"), "default")
-                self._apply_service_value("settings", "HideCallerId", known)
-                self._toast(_("Could not change the setting"))
+                self.apply_service_value("settings", "HideCallerId", known)
+                self.toast(_("Could not change the setting"))
 
-        self._enqueue(lambda: self.ofono.set_service_property("settings", "HideCallerId", value), done)
+        self.enqueue(lambda: self.ofono.set_service_property("settings", "HideCallerId", value), done)
 
-    def _barring_password(self):
+    def barring_password(self):
         """Read the barring password entry, empty when missing."""
         return self.entry_barring_pw.get_text().strip()
 
-    def _on_barring_selected(self, prop, idx):
+    def on_barring_selected(self, prop, idx):
         """Send a barring rule change to the network."""
         if self._syncing_ui:
             return
         options = self.barring_out_options if prop == "VoiceOutgoing" else self.barring_in_options
         value = options[idx][0]
-        password = self._barring_password()
+        password = self.barring_password()
         if not password:
-            self._toast(_("Enter the barring password first"))
+            self.toast(_("Enter the barring password first"))
             known = self._known.get(("barring", prop), "disabled")
-            self._apply_service_value("barring", prop, known)
+            self.apply_service_value("barring", prop, known)
             return
 
         def done(result):
@@ -456,41 +456,41 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self._known[("barring", prop)] = value
             else:
                 known = self._known.get(("barring", prop), "disabled")
-                self._apply_service_value("barring", prop, known)
-                self._toast(self._barring_error(result))
+                self.apply_service_value("barring", prop, known)
+                self.toast(self.barring_error(result))
 
-        self._enqueue(lambda: self.ofono.set_barring_property(prop, value, password), done)
+        self.enqueue(lambda: self.ofono.set_barring_property(prop, value, password), done)
 
-    def _barring_error(self, result):
+    def barring_error(self, result):
         """Map a barring failure to a readable message."""
         if result and result[1] and "IncorrectPassword" in result[1]:
             return _("Wrong barring password")
         return _("Could not change the setting")
 
-    def _on_change_password(self):
+    def on_change_password(self):
         """Change the network barring password."""
         old = self.entry_pw_old.get_text().strip()
         new = self.entry_pw_new.get_text().strip()
         if not old or not new:
-            self._toast(_("Enter the barring password first"))
+            self.toast(_("Enter the barring password first"))
             return
 
         def done(result):
             if result and result[0]:
-                self._toast(_("Barring password changed"))
+                self.toast(_("Barring password changed"))
                 self.entry_pw_old.set_text("")
                 self.entry_pw_new.set_text("")
                 self.exp_change_pw.set_expanded(False)
             else:
-                self._toast(self._barring_error(result))
+                self.toast(self.barring_error(result))
 
-        self._enqueue(lambda: self.ofono.change_barring_password(old, new), done)
+        self.enqueue(lambda: self.ofono.change_barring_password(old, new), done)
 
-    def _confirm_disable_barrings(self):
+    def confirm_disable_barrings(self):
         """Confirm and clear every barring rule."""
-        password = self._barring_password()
+        password = self.barring_password()
         if not password:
-            self._toast(_("Enter the barring password first"))
+            self.toast(_("Enter the barring password first"))
             return
 
         def on_resp(resp):
@@ -498,11 +498,11 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 return
             def done(result):
                 if result and result[0]:
-                    self._apply_service_value("barring", "VoiceOutgoing", "disabled")
-                    self._apply_service_value("barring", "VoiceIncoming", "disabled")
+                    self.apply_service_value("barring", "VoiceOutgoing", "disabled")
+                    self.apply_service_value("barring", "VoiceIncoming", "disabled")
                 else:
-                    self._toast(self._barring_error(result))
-            self._enqueue(lambda: self.ofono.disable_all_barrings(password), done)
+                    self.toast(self.barring_error(result))
+            self.enqueue(lambda: self.ofono.disable_all_barrings(password), done)
         present_alert_sheet(
             self.get_root(), _("Disable All Barrings"),
             _("Turn off every call barring rule?"),

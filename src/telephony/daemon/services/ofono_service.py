@@ -40,54 +40,54 @@ class OfonoService(GObject.Object):
             bus_type,
             "org.ofono",
             Gio.BusNameWatcherFlags.NONE,
-            self._on_name_appeared,
-            self._on_name_vanished
+            self.on_name_appeared,
+            self.on_name_vanished
         )
 
-    def _on_name_appeared(self, connection, name, _name_owner):
+    def on_name_appeared(self, connection, name, _name_owner):
         """Handle service appearance."""
         logger.info(f"[Monitor] Service {name} appeared.")
-        self._init_manager()
+        self.init_manager()
 
-    def _on_name_vanished(self, connection, name):
+    def on_name_vanished(self, connection, name):
         """Handle service disappearance."""
         logger.warning(f"[Monitor] Service {name} vanished.")
-        self._handle_disconnection("Ofono service stopped")
+        self.handle_disconnection("Ofono service stopped")
 
-    def _init_manager(self):
+    def init_manager(self):
         """Initialize the ofono manager proxy."""
         self.manager_proxy = Gio.DBusProxy.new_sync(
             self.bus, Gio.DBusProxyFlags.NONE, None,
             "org.ofono", "/", "org.ofono.Manager", None)
 
         if self.manager_proxy:
-            self.manager_proxy.connect("g-signal", self._on_manager_signal)
-            self._scan_modems()
+            self.manager_proxy.connect("g-signal", self.on_manager_signal)
+            self.scan_modems()
         else:
             self.emit('status-changed', 'error', "Could not get Manager proxy")
 
-    def _on_manager_signal(self, proxy, sender, signal, params):
+    def on_manager_signal(self, proxy, sender, signal, params):
         """Handle signals from the ofono manager."""
         if signal == "ModemAdded":
             path, props = params.unpack()
             logger.info(f"[Monitor] Signal: ModemAdded {path}")
-            self._handle_new_modem(path)
+            self.handle_new_modem(path)
         elif signal == "ModemRemoved":
             path = params.unpack()[0]
             logger.info(f"[Monitor] Signal: ModemRemoved {path}")
             if self.modem_path == path:
-                self._handle_disconnection("Modem removed")
+                self.handle_disconnection("Modem removed")
 
-    def _scan_modems(self):
+    def scan_modems(self):
         """Scan for existing modems."""
         result = self.manager_proxy.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
         modems = result.unpack()[0]
         if modems:
-            self._handle_new_modem(modems[0][0])
+            self.handle_new_modem(modems[0][0])
         else:
             self.emit('status-changed', 'searching', 'Waiting for modem...')
 
-    def _handle_new_modem(self, path):
+    def handle_new_modem(self, path):
         """Register a new modem path."""
         if self.modem_path != path:
             self.modem_path = path
@@ -96,7 +96,7 @@ class OfonoService(GObject.Object):
             self.emit('modem-ready', path)
             self.emit('status-changed', 'connected', 'Ready')
 
-    def _handle_disconnection(self, reason):
+    def handle_disconnection(self, reason):
         """Handle modem or service disconnection."""
         if self.connected or self.modem_path:
             logger.warning(f"[Monitor] Disconnected: {reason}")

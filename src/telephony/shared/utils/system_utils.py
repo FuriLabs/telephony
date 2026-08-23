@@ -25,7 +25,7 @@ DAEMON_WAIT_TRIES = 20
 DAEMON_WAIT_STEP_SECONDS = 0.5
 
 
-def _systemd_manager(bus_type):
+def systemd_manager(bus_type):
     """Return a proxy to a systemd manager; blocking, call from a worker."""
     bus = Gio.bus_get_sync(bus_type, None)
     return Gio.DBusProxy.new_sync(
@@ -37,9 +37,9 @@ def _systemd_manager(bus_type):
     )
 
 
-def _systemd_unit_action(method, service_name, bus_type):
+def systemd_unit_action(method, service_name, bus_type):
     """Ask a systemd manager to act on one unit; blocking, call from a worker."""
-    _systemd_manager(bus_type).call_sync(
+    systemd_manager(bus_type).call_sync(
         method,
         GLib.Variant("(ss)", (service_name, "replace")),
         Gio.DBusCallFlags.NONE,
@@ -51,7 +51,7 @@ def _systemd_unit_action(method, service_name, bus_type):
 def start_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
     """Start a systemd service; blocking, call from a worker."""
     try:
-        _systemd_unit_action("StartUnit", service_name, bus_type)
+        systemd_unit_action("StartUnit", service_name, bus_type)
         logger.info(f"Started service: {service_name}")
     except Exception as e:
         logger.error(f"Failed to start systemd service {service_name}: {e}")
@@ -60,7 +60,7 @@ def start_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
 def stop_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
     """Stop a systemd service; blocking, call from a worker."""
     try:
-        _systemd_unit_action("StopUnit", service_name, bus_type)
+        systemd_unit_action("StopUnit", service_name, bus_type)
         logger.info(f"Stopped service: {service_name}")
     except Exception as e:
         logger.error(f"Failed to stop systemd service {service_name}: {e}")
@@ -69,7 +69,7 @@ def stop_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
 def restart_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
     """Restart a systemd service; blocking, call from a worker."""
     try:
-        _systemd_unit_action("RestartUnit", service_name, bus_type)
+        systemd_unit_action("RestartUnit", service_name, bus_type)
         logger.info(f"Restarted service: {service_name}")
     except Exception as e:
         logger.error(f"Failed to restart systemd service {service_name}: {e}")
@@ -78,7 +78,7 @@ def restart_systemd_service(service_name, bus_type=Gio.BusType.SESSION):
 def is_systemd_service_active(service_name, bus_type=Gio.BusType.SESSION):
     """Return True while a systemd service is active; blocking, call from a worker."""
     try:
-        result = _systemd_manager(bus_type).call_sync(
+        result = systemd_manager(bus_type).call_sync(
             "GetUnit",
             GLib.Variant("(s)", (service_name,)),
             Gio.DBusCallFlags.NONE,

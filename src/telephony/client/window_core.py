@@ -58,9 +58,9 @@ class WindowCore:
         self.service_monitor = None
         self._last_presence = None
 
-        self._ensure_daemon_running()
+        self.ensure_daemon_running()
 
-    def _ensure_daemon_running(self):
+    def ensure_daemon_running(self):
         """Ask the bus for the owner when none answers.
 
         A window never takes the owner role itself, not even when the
@@ -75,10 +75,10 @@ class WindowCore:
             self.daemon_missing = True
             return
 
-        if self._daemon_name_owned(bus):
+        if self.is_daemon_name_owned(bus):
             return
 
-        self.daemon_missing = not self._start_daemon_service(bus)
+        self.daemon_missing = not self.start_daemon_service(bus)
         if self.daemon_missing:
             logger.error("[App] The telephony service could not be started")
 
@@ -90,13 +90,13 @@ class WindowCore:
         """
         def task():
             bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-            started = self._daemon_name_owned(bus) or self._start_daemon_service(bus)
+            started = self.is_daemon_name_owned(bus) or self.start_daemon_service(bus)
             self.daemon_missing = not started
             return started
 
         run_in_background(task, on_complete=on_done)
 
-    def _daemon_name_owned(self, bus):
+    def is_daemon_name_owned(self, bus):
         """Return True when a process already answers for the plain name."""
         try:
             res = bus.call_sync(
@@ -108,7 +108,7 @@ class WindowCore:
             logger.warning(f"[App] Could not check for a running daemon: {e}")
             return False
 
-    def _start_daemon_service(self, bus):
+    def start_daemon_service(self, bus):
         """Have the bus start the telephony service; blocking, bounded wait.
 
         The reply arrives once the service owns the name, so a window
@@ -143,17 +143,17 @@ class WindowCore:
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoMirror(self.gsettings_mgr, daemon_client=self.daemon_client)
 
-        self._follow_daemon_changes()
+        self.follow_daemon_changes()
 
         self.service_monitor = ServiceMonitor()
-        self.service_monitor.connect('unit-state-changed', self._publish_presence)
+        self.service_monitor.connect('unit-state-changed', self.publish_presence)
 
 
         Gio.bus_watch_name(Gio.BusType.SESSION, DAEMON_BUS_NAME,
                            Gio.BusNameWatcherFlags.NONE,
-                           self._on_daemon_appeared, self._on_daemon_vanished)
+                           self.on_daemon_appeared, self.on_daemon_vanished)
 
-    def _on_daemon_appeared(self, _bus, _name, _owner):
+    def on_daemon_appeared(self, _bus, _name, _owner):
         """Record that the service answers again.
 
         The bus re-resolves the signal subscriptions to the new owner
@@ -162,18 +162,18 @@ class WindowCore:
         if self.daemon_missing:
             logger.info("[App] The telephony service is back")
         self.daemon_missing = False
-        self._publish_presence()
+        self.publish_presence()
 
-    def _on_daemon_vanished(self, _bus, _name):
+    def on_daemon_vanished(self, _bus, _name):
         """Record that the service left the bus.
 
         Actions revive it through activation, and this flag
         keeps daemon_missing truthful for the windows that show it.
         """
         self.daemon_missing = True
-        self._publish_presence()
+        self.publish_presence()
 
-    def _publish_presence(self, *args):
+    def publish_presence(self, *args):
         """Tell the surfaces whether the service answers, and why not."""
         state = self.service_monitor.state if self.service_monitor else "unknown"
         snapshot = (not self.daemon_missing, state)
@@ -189,7 +189,7 @@ class WindowCore:
             return
         self.retry_daemon_start(on_done)
 
-    def _follow_daemon_changes(self):
+    def follow_daemon_changes(self):
         """Rebuild lists when the owner reports a change.
 
         The change arrives over the bus and is repeated on the local
@@ -198,13 +198,13 @@ class WindowCore:
         self.daemon_client.subscribe(
             "MessagesChanged",
             lambda *args: GLib.idle_add(
-                self._replay_change, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
+                self.replay_change, 'messages-updated', args[5].unpack()[0], args[5].unpack()[1]))
         self.daemon_client.subscribe(
             "BlocklistChanged",
-            lambda *args: GLib.idle_add(self._replay_change, 'blocklist-updated'))
+            lambda *args: GLib.idle_add(self.replay_change, 'blocklist-updated'))
         self.daemon_client.subscribe(
             "HistoryChanged",
-            lambda *args: GLib.idle_add(self._replay_change, 'history-updated'))
+            lambda *args: GLib.idle_add(self.replay_change, 'history-updated'))
         self.daemon_client.subscribe(
             "ContactsChanged",
             lambda *args: run_in_background(self.eds.reload_cache_from_db))
@@ -216,9 +216,9 @@ class WindowCore:
             self.daemon_client.subscribe(
                 "RecoveryStateChanged",
                 lambda *args: GLib.idle_add(self.ui.apply_recovery_state, *args[5].unpack()))
-            self._seed_recovery_state()
+            self.seed_recovery_state()
 
-    def _seed_recovery_state(self):
+    def seed_recovery_state(self):
         """Ask the owner what the modem is doing right now.
 
         This window can start after the state changed, and a signal
@@ -234,7 +234,7 @@ class WindowCore:
 
         run_in_background(task, on_complete=done)
 
-    def _replay_change(self, name, *args):
+    def replay_change(self, name, *args):
         """Repeat on the local managers what the owner reported."""
         self.db.emit(name, *args)
         return False

@@ -49,7 +49,7 @@ class DaemonApp(Gio.Application):
         self.hold()
         self.core.start()
         self.ofono = self.core.ofono
-        self.core.ofono.connect('call-added', self._on_global_call_added)
+        self.core.ofono.connect('call-added', self.on_global_call_added)
 
         action_open = Gio.SimpleAction.new("open-chat", GLib.VariantType.new("s"))
         action_open.connect("activate", self.on_action_open_chat)
@@ -83,7 +83,7 @@ class DaemonApp(Gio.Application):
         """
         logger.info("[Daemon] Activated; the service has no window to raise")
 
-    def any_window_active(self):
+    def is_any_window_active(self):
         """No window ever has focus in the service process."""
         return False
 
@@ -95,7 +95,7 @@ class DaemonApp(Gio.Application):
         """
         logger.debug("[Daemon] Recovery state is published, not drawn here")
 
-    def _on_global_call_added(self, _manager, path, _props):
+    def on_global_call_added(self, _manager, path, _props):
         """Bring up the call surface for every new call."""
         self.show_incall_ui()
 

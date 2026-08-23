@@ -71,7 +71,7 @@ class ContactsView(Adw.Bin):
         header.append(self.search)
 
         self.btn_scan = Gtk.Button(icon_name="camera-photo-symbolic")
-        self.btn_scan.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_qr_scan() or False))
+        self.btn_scan.connect("clicked", lambda b: GLib.idle_add(lambda: self.open_qr_scan() or False))
         header.append(self.btn_scan)
 
         self.btn_add = Gtk.Button(icon_name="list-add-symbolic")
@@ -119,7 +119,7 @@ class ContactsView(Adw.Bin):
 
         self.refresh()
 
-    def _update_source_map(self):
+    def update_source_map(self):
         """Update local map of source UIDs to names."""
         self.source_map = {}
         if (self.app_window and self.app_window.eds is not None):
@@ -129,11 +129,11 @@ class ContactsView(Adw.Bin):
 
     def on_map(self, *args):
         """Handle view being shown."""
-        self._update_source_map()
+        self.update_source_map()
         if self.app_window.eds.is_ready and not self._duplicates_checked:
             self.app_window.enqueue_popup(lambda cb: self.check_duplicates(cb))
 
-    def _update_add_button_sensitivity(self):
+    def update_add_button_sensitivity(self):
         """Update add button sensitivity based on EDS readiness and selected source.
 
         The scan button follows the add button because a scanned code
@@ -186,15 +186,15 @@ class ContactsView(Adw.Bin):
         would keep showing no address book until some unrelated contact
         change happened to rebuild them.
         """
-        self._update_source_map()
-        self._update_add_button_sensitivity()
+        self.update_source_map()
+        self.update_add_button_sensitivity()
         self.refresh()
         return False
 
     def on_contacts_loaded_signal(self, *args):
         """Handle contacts loaded signal."""
-        self._update_add_button_sensitivity()
-        self._update_source_map()
+        self.update_add_button_sensitivity()
+        self.update_source_map()
         self.refresh()
 
         if not self.app_window.eds.is_ready:
@@ -204,9 +204,9 @@ class ContactsView(Adw.Bin):
             self.app_window.enqueue_popup(lambda cb: self.check_duplicates(cb))
             return
 
-        self._schedule_duplicate_recheck()
+        self.schedule_duplicate_recheck()
 
-    def _schedule_duplicate_recheck(self):
+    def schedule_duplicate_recheck(self):
         """Count the duplicates again once the run of changes settles.
 
         Contacts can be merged in another window, and the banner here
@@ -214,9 +214,9 @@ class ContactsView(Adw.Bin):
         """
         if self._dup_timer:
             GLib.source_remove(self._dup_timer)
-        self._dup_timer = GLib.timeout_add(DUPLICATE_RECHECK_DELAY_MS, self._on_duplicate_recheck)
+        self._dup_timer = GLib.timeout_add(DUPLICATE_RECHECK_DELAY_MS, self.on_duplicate_recheck)
 
-    def _on_duplicate_recheck(self):
+    def on_duplicate_recheck(self):
         """Run the settled re-count."""
         self._dup_timer = None
         self.check_duplicates()
@@ -234,9 +234,9 @@ class ContactsView(Adw.Bin):
             return
 
         self._duplicates_checked = True
-        run_in_background(self._check_duplicates_thread, done_callback,)
+        run_in_background(self.check_duplicates_thread, done_callback,)
 
-    def _check_duplicates_thread(self, done_callback):
+    def check_duplicates_thread(self, done_callback):
         """Threaded logic for check_duplicates."""
         try:
             if not self.app_window.eds.get_sources_info():
@@ -314,11 +314,11 @@ class ContactsView(Adw.Bin):
             if done_callback:
                 GLib.idle_add(done_callback)
 
-    def _open_qr_scan(self):
+    def open_qr_scan(self):
         """Open the camera sheet that scans a contact QR code."""
-        present_sheet_page(self.app_window, QrScanDialog(self._on_qr_contact))
+        present_sheet_page(self.app_window, QrScanDialog(self.on_qr_contact))
 
-    def _on_qr_contact(self, vcard_text):
+    def on_qr_contact(self, vcard_text):
         """Open the editor prefilled with a scanned vCard; the user saves it."""
         name = ""
         for line in vcard_text.splitlines():
@@ -498,7 +498,7 @@ class ContactsView(Adw.Bin):
             self.search.set_text("")
             self.app_window.start_call(normalize_number(phones[0][0]))
         else:
-            self._show_picker(btn, phones, self.app_window.start_call)
+            self.show_picker(btn, phones, self.app_window.start_call)
 
     def on_call_right_click(self, gesture, _n_press, x, y):
         """Handle right click on call button."""
@@ -525,9 +525,9 @@ class ContactsView(Adw.Bin):
             self.search.set_text("")
             self.app_window.present_chat(normalize_number(phones[0][0]))
         else:
-            self._show_picker(btn, phones, self.app_window.present_chat)
+            self.show_picker(btn, phones, self.app_window.present_chat)
 
-    def _show_picker(self, parent_btn, phones, callback):
+    def show_picker(self, parent_btn, phones, callback):
         """Show the phone number choice sheet."""
         def build(group, sheet):
             for number, label in phones:
@@ -559,29 +559,29 @@ class ContactsView(Adw.Bin):
             return
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
         if is_at_bottom:
-            self._start_fetch()
+            self.start_fetch()
 
     def refresh(self, query="", on_done=None):
         """Reload contact list."""
         if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
-        self._refresh_timer = GLib.timeout_add(200, self._do_refresh, query, on_done)
+        self._refresh_timer = GLib.timeout_add(200, self.do_refresh, query, on_done)
 
-    def _do_refresh(self, query, on_done):
+    def do_refresh(self, query, on_done):
         self._refresh_timer = None
         self.load_token += 1
         self.page_offset = 0
         self.current_query = query
-        self._start_fetch(on_done)
+        self.start_fetch(on_done)
         return False
 
-    def _start_fetch(self, on_done=None):
+    def start_fetch(self, on_done=None):
         """Start fetching data in background."""
         current_token = self.load_token
         self.is_fetching = True
         self.spinner.set_visible(True)
 
-        def _bg_fetch():
+        def bg_fetch():
             rows = self.db.search_contacts(self.current_query, limit=self.page_limit + 1, offset=self.page_offset)
 
             has_more = False
@@ -593,7 +593,7 @@ class ContactsView(Adw.Bin):
             return rows
 
         DataLoader.load_data(
-            fetch_func=_bg_fetch,
+            fetch_func=bg_fetch,
             model_add_func=self.add_chunk,
             model=self.model,
             check_token_func=lambda: self.load_token == current_token,

@@ -162,9 +162,9 @@ class InCallWindow(Adw.Window):
         self._closing_paths = set()
         self.defer_present = True
 
-        self._setup_ui()
+        self.setup_ui()
 
-        self.connect('close-request', self._on_close_req)
+        self.connect('close-request', self.on_close_req)
 
         self.sys_state = SystemStateService()
         self.is_locked = self.sys_state.is_locked
@@ -172,14 +172,14 @@ class InCallWindow(Adw.Window):
         self.signal_ids = [
             (self.ofono, self.ofono.connect('call-removed', self.on_call_removed)),
             (self.ofono, self.ofono.connect('call-added', lambda *a: self.update_state())),
-            (self.ofono, self.ofono.connect('audio-changed', lambda *a: self._on_audio_changed())),
+            (self.ofono, self.ofono.connect('audio-changed', lambda *a: self.on_audio_changed())),
             (self.ofono, self.ofono.connect('call-changed', lambda *a: self.update_state())),
-            (self.sys_state, self.sys_state.connect("lock-state-changed", self._on_lock_changed)),
+            (self.sys_state, self.sys_state.connect("lock-state-changed", self.on_lock_changed)),
         ]
 
         self.update_state()
 
-    def _on_close_req(self, window):
+    def on_close_req(self, window):
         """Stay put during a call, go away once there is none.
 
         A call in progress keeps its window: losing it would leave the
@@ -191,10 +191,10 @@ class InCallWindow(Adw.Window):
         if self.in_recovery_mode or self.ofono.active_calls:
             return True
 
-        self._release_signals()
+        self.release_signals()
         return False
 
-    def _release_signals(self):
+    def release_signals(self):
         """Stop listening to what outlives this window.
 
         The modem mirror is owned by the process, not by the window,
@@ -208,7 +208,7 @@ class InCallWindow(Adw.Window):
         self.signal_ids.clear()
         self.fader.release()
 
-    def _proximity_tick(self):
+    def proximity_tick(self):
         """Timer callback for proximity sensor handling."""
         if self.in_error_mode or not self.active_path:
             self.fader.set_active(False)
@@ -221,7 +221,7 @@ class InCallWindow(Adw.Window):
         self.fader.set_active(should_blank)
         return True
 
-    def _setup_ui(self):
+    def setup_ui(self):
         """Build the in-call UI."""
         self.set_default_size(360, 600)
         self.add_css_class("incall-window")
@@ -262,22 +262,22 @@ class InCallWindow(Adw.Window):
         self.btn_search_unknown.set_visible(False)
         inc_box.append(self.btn_search_unknown)
 
-        inc_box.append(self._mk_action_pill("call-start-symbolic", _("Accept"),
+        inc_box.append(self.mk_action_pill("call-start-symbolic", _("Accept"),
                                             self.on_answer_click, style="stack-pill-green"))
-        self.pill_silence = self._mk_action_pill("audio-volume-muted-symbolic", _("Silence"),
+        self.pill_silence = self.mk_action_pill("audio-volume-muted-symbolic", _("Silence"),
                                                  self.on_silent_click)
         inc_box.append(self.pill_silence)
-        inc_box.append(self._mk_action_pill("mail-message-new-symbolic", _("Hangup and Send SMS"),
+        inc_box.append(self.mk_action_pill("mail-message-new-symbolic", _("Hangup and Send SMS"),
                                             self.on_reject_with_msg))
-        inc_box.append(self._mk_action_pill("call-stop-symbolic", _("Decline"),
+        inc_box.append(self.mk_action_pill("call-stop-symbolic", _("Decline"),
                                             self.on_hangup_click, style="stack-pill-red"))
         self.controls_stack.add_named(inc_box, "incoming")
 
         act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, valign=Gtk.Align.END, margin_bottom=20)
 
         self.route_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_start=40, margin_end=40)
-        self.btn_output, self.lbl_output_route, self.img_output_route = self._mk_selector_btn(route_icon("earpiece"), route_label("earpiece"), self.on_output_routing_click)
-        self.btn_input, self.lbl_input_route, self.img_input_route = self._mk_selector_btn(input_route_icon("mic"), input_route_label("mic"), self.on_input_routing_click)
+        self.btn_output, self.lbl_output_route, self.img_output_route = self.mk_selector_btn(route_icon("earpiece"), route_label("earpiece"), self.on_output_routing_click)
+        self.btn_input, self.lbl_input_route, self.img_input_route = self.mk_selector_btn(input_route_icon("mic"), input_route_label("mic"), self.on_input_routing_click)
         self.route_box.append(self.btn_output)
         self.route_box.append(self.btn_input)
 
@@ -308,10 +308,10 @@ class InCallWindow(Adw.Window):
         self.multiparty_box.set_visible(False)
 
         self.actions_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
-        mute_wrap, self.btn_mute = self._mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
-        pad_wrap, self.btn_pad = self._mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
-        hold_wrap, self.btn_hold = self._mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
-        add_wrap, self.btn_add_call = self._mk_labeled_btn("contact-new-symbolic", _("Add Call"), self.on_add_call_click)
+        mute_wrap, self.btn_mute = self.mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
+        pad_wrap, self.btn_pad = self.mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
+        hold_wrap, self.btn_hold = self.mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
+        add_wrap, self.btn_add_call = self.mk_labeled_btn("contact-new-symbolic", _("Add Call"), self.on_add_call_click)
         self.actions_row.append(mute_wrap)
         self.actions_row.append(pad_wrap)
         self.actions_row.append(hold_wrap)
@@ -327,15 +327,15 @@ class InCallWindow(Adw.Window):
         act_box.set_margin_end(18)
         act_box.set_spacing(10)
 
-        self.pill_audio = self._build_audio_pill()
+        self.pill_audio = self.build_audio_pill()
         act_box.append(self.pill_audio)
 
-        self.pill_keypad = self._build_stack_pill(
-            "input-dialpad-symbolic", _("Keypad"), self._open_keypad_sheet)
+        self.pill_keypad = self.build_stack_pill(
+            "input-dialpad-symbolic", _("Keypad"), self.open_keypad_sheet)
         act_box.append(self.pill_keypad)
 
         self._context_mode = "actions"
-        self.pill_context = self._build_context_pill()
+        self.pill_context = self.build_context_pill()
         act_box.append(self.pill_context)
 
         self.btn_hangup_act = DynamicHangupButton()
@@ -383,7 +383,7 @@ class InCallWindow(Adw.Window):
         self.err_content.append(self.btn_reboot)
         self.controls_stack.add_named(self.err_box, "error")
 
-    def _mk_action_pill(self, icon, label, on_click, style="stack-pill"):
+    def mk_action_pill(self, icon, label, on_click, style="stack-pill"):
         """Build one full-width action pill for the incoming screen."""
         classes = ["destructive-action", "pill"] if style == "stack-pill-red" else [style]
         b = Gtk.Button(css_classes=classes)
@@ -395,7 +395,7 @@ class InCallWindow(Adw.Window):
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: on_click(btn) or False))
         return b
 
-    def _present_call_sheet(self, title):
+    def present_call_sheet(self, title):
         """Show the window's sheet on a fresh navigation and return it.
 
         Every call sheet shares one geometry, like the settings flows,
@@ -407,7 +407,7 @@ class InCallWindow(Adw.Window):
         present_sheet(self, nav)
         return nav
 
-    def _push_sheet_page(self, nav, title, content, target_path=None):
+    def push_sheet_page(self, nav, title, content, target_path=None):
         """Push one page onto a call sheet's navigation.
 
         Every page carries the caller strip, because the sheet covers
@@ -417,7 +417,7 @@ class InCallWindow(Adw.Window):
         view = Adw.ToolbarView()
         view.add_top_bar(Adw.HeaderBar())
         wrap = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        wrap.append(self._build_caller_strip(target_path))
+        wrap.append(self.build_caller_strip(target_path))
         content.set_vexpand(True)
         wrap.append(content)
         view.set_content(wrap)
@@ -426,7 +426,7 @@ class InCallWindow(Adw.Window):
         page.set_focusable(True)
         nav.push(page)
 
-    def _build_caller_strip(self, target_path=None):
+    def build_caller_strip(self, target_path=None):
         """Build a live caller line mirroring the main screen's labels.
 
         The labels are property-bound to the window's own name, number
@@ -478,7 +478,7 @@ class InCallWindow(Adw.Window):
         strip.append(sub)
         return strip
 
-    def _rows_page(self, build):
+    def rows_page(self, build):
         """Build one preferences page whose group build fills with rows."""
         page = Adw.PreferencesPage()
         group = Adw.PreferencesGroup()
@@ -486,7 +486,7 @@ class InCallWindow(Adw.Window):
         page.add(group)
         return page
 
-    def _build_stack_pill(self, icon, label, on_click):
+    def build_stack_pill(self, icon, label, on_click):
         """Build one full-width pill row that opens a sheet."""
         b = Gtk.Button(css_classes=["stack-pill"])
         b.set_size_request(-1, PILL_HEIGHT)
@@ -499,7 +499,7 @@ class InCallWindow(Adw.Window):
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: on_click() or False))
         return b
 
-    def _build_audio_pill(self):
+    def build_audio_pill(self):
         """Build the split audio row: an output pill and an input pill.
 
         Both halves follow the pill grammar of the rest of the stack;
@@ -518,7 +518,7 @@ class InCallWindow(Adw.Window):
         mid.append(self.lbl_pill_out)
         center.set_center_widget(mid)
         self.pill_output.set_child(center)
-        self.pill_output.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_output_sheet() or False))
+        self.pill_output.connect("clicked", lambda btn: GLib.idle_add(lambda: self.open_output_sheet() or False))
         row.append(self.pill_output)
 
         self.pill_input = Gtk.Button(css_classes=["stack-pill"], hexpand=True)
@@ -532,12 +532,12 @@ class InCallWindow(Adw.Window):
         mid.append(self.lbl_pill_in)
         center.set_center_widget(mid)
         self.pill_input.set_child(center)
-        self.pill_input.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_input_sheet() or False))
+        self.pill_input.connect("clicked", lambda btn: GLib.idle_add(lambda: self.open_input_sheet() or False))
         row.append(self.pill_input)
 
         return row
 
-    def _build_context_pill(self):
+    def build_context_pill(self):
         """Build the contextual pill whose face follows the call mix."""
         b = Gtk.Button(css_classes=["stack-pill"])
         b.set_size_request(-1, PILL_HEIGHT)
@@ -551,10 +551,10 @@ class InCallWindow(Adw.Window):
         mid.append(self.lbl_pill_ctx_value)
         center.set_center_widget(mid)
         b.set_child(center)
-        b.connect("clicked", lambda btn: GLib.idle_add(lambda: self._open_context_sheet() or False))
+        b.connect("clicked", lambda btn: GLib.idle_add(lambda: self.open_context_sheet() or False))
         return b
 
-    def _refresh_pills(self):
+    def refresh_pills(self):
         """Mirror the daemon's audio truth and the call mix onto the pills."""
         audio = self.ofono.audio
         self.lbl_pill_out.set_text(route_label(audio.current_route))
@@ -590,33 +590,33 @@ class InCallWindow(Adw.Window):
             else:
                 self.lbl_pill_ctx_value.set_text("")
 
-    def _open_output_sheet(self):
+    def open_output_sheet(self):
         """Show the output routes on their own sheet."""
         def present(reply):
             outputs, _inputs = reply if reply else ([], [])
-            nav = self._present_call_sheet(_("Output"))
+            nav = self.present_call_sheet(_("Output"))
             page = Adw.PreferencesPage()
             group = Adw.PreferencesGroup()
             for route_id, available in outputs:
-                row = self._mk_route_row(route_icon(route_id), route_label(route_id),
+                row = self.mk_route_row(route_icon(route_id), route_label(route_id),
                                          route_id == self.current_route, available)
                 if row.get_sensitive():
                     row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
                         lambda: [close_sheet(self),
-                                 self._handle_output_selection(r_id)] and False))
+                                 self.handle_output_selection(r_id)] and False))
                 group.add(row)
             page.add(group)
-            self._push_sheet_page(nav, _("Output"), page)
+            self.push_sheet_page(nav, _("Output"), page)
 
         run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
-    def _open_input_sheet(self):
+    def open_input_sheet(self):
         """Show mute and the input routes on their own sheet."""
         def present(reply):
             _outputs, inputs = reply if reply else ([], [])
             audio = self.ofono.audio
 
-            nav = self._present_call_sheet(_("Input"))
+            nav = self.present_call_sheet(_("Input"))
             page = Adw.PreferencesPage()
 
             mute_group = Adw.PreferencesGroup()
@@ -632,7 +632,7 @@ class InCallWindow(Adw.Window):
 
             input_group = Adw.PreferencesGroup()
             for route_id, available in inputs:
-                row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
+                row = self.mk_route_row(input_route_icon(route_id), input_route_label(route_id),
                                          route_id == self.current_input_route, available)
                 if row.get_sensitive():
                     row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
@@ -642,13 +642,13 @@ class InCallWindow(Adw.Window):
                 input_group.add(row)
             page.add(input_group)
 
-            self._push_sheet_page(nav, _("Input"), page)
+            self.push_sheet_page(nav, _("Input"), page)
 
         run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
-    def _open_keypad_sheet(self):
+    def open_keypad_sheet(self):
         """Show the DTMF keypad as a bottom sheet with an echo line."""
-        nav = self._present_call_sheet(_("Keypad"))
+        nav = self.present_call_sheet(_("Keypad"))
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8,
                           margin_start=14, margin_end=14, margin_bottom=18)
         echo = Gtk.Label(label="", css_classes=["title-2"])
@@ -666,8 +666,8 @@ class InCallWindow(Adw.Window):
             grid.attach(key, i % 3, i // 3, 1, 1)
         content.append(grid)
 
-        speaker = self._mk_action_pill("audio-volume-high-symbolic", _("Turn to Speaker"),
-                                       lambda b: self._handle_output_selection("speaker"))
+        speaker = self.mk_action_pill("audio-volume-high-symbolic", _("Turn to Speaker"),
+                                       lambda b: self.handle_output_selection("speaker"))
         speaker.set_margin_top(6)
         speaker.set_visible(self.ofono.audio.current_route == "earpiece")
         content.append(speaker)
@@ -675,18 +675,18 @@ class InCallWindow(Adw.Window):
             lambda: speaker.set_visible(self.ofono.audio.current_route == "earpiece") or False))
         on_sheet_closed(self, lambda: self.ofono.disconnect(handler))
 
-        self._push_sheet_page(nav, _("Keypad"), content)
+        self.push_sheet_page(nav, _("Keypad"), content)
 
-    def _open_context_sheet(self):
+    def open_context_sheet(self):
         """Open the sheet the context pill currently stands for."""
         if self._context_mode == "conference":
-            self._open_participants_sheet()
+            self.open_participants_sheet()
         elif self._context_mode == "calls":
-            self._open_calls_sheet()
+            self.open_calls_sheet()
         else:
-            self._open_actions_sheet()
+            self.open_actions_sheet()
 
-    def _open_actions_sheet(self):
+    def open_actions_sheet(self):
         """Show hold and add-call for the single call."""
         calls = self.ofono.active_calls
         p_data = calls.get(self.active_path) or {}
@@ -704,10 +704,10 @@ class InCallWindow(Adw.Window):
                                  icon="contact-new-symbolic", opens_flow=True)
             add.set_sensitive(count_lines(calls) < 2 and p_data.get('state') in ('active', 'held'))
 
-        nav = self._present_call_sheet(_("Actions"))
-        self._push_sheet_page(nav, _("Actions"), self._rows_page(build))
+        nav = self.present_call_sheet(_("Actions"))
+        self.push_sheet_page(nav, _("Actions"), self.rows_page(build))
 
-    def _open_calls_sheet(self):
+    def open_calls_sheet(self):
         """Show swap, merge and transfer for the two-call mix."""
         calls = self.ofono.active_calls
         held_normal = held_single_paths(calls)
@@ -738,10 +738,10 @@ class InCallWindow(Adw.Window):
                                subtitle=_("Transfer connects {a} and {b} together and you leave the call").format(a=a, b=b_name),
                                icon="send-to-symbolic")
 
-        nav = self._present_call_sheet(_("Calls"))
-        self._push_sheet_page(nav, _("Calls"), self._rows_page(build))
+        nav = self.present_call_sheet(_("Calls"))
+        self.push_sheet_page(nav, _("Calls"), self.rows_page(build))
 
-    def _open_participants_sheet(self):
+    def open_participants_sheet(self):
         """Show every conference participant with split and hangup."""
         calls = self.ofono.active_calls
         conf = conference_paths(calls)
@@ -762,10 +762,10 @@ class InCallWindow(Adw.Window):
                 row.add_suffix(b_drop)
                 group.add(row)
 
-        nav = self._present_call_sheet(_("Participants"))
-        self._push_sheet_page(nav, _("Participants"), self._rows_page(build))
+        nav = self.present_call_sheet(_("Participants"))
+        self.push_sheet_page(nav, _("Participants"), self.rows_page(build))
 
-    def _mk_btn(self, icon, cb, cls=None):
+    def mk_btn(self, icon, cb, cls=None):
         """Helper to create a circular icon button."""
         b = Gtk.Button(icon_name=icon, css_classes=["circular"], width_request=70, height_request=70)
         if cls:
@@ -773,9 +773,9 @@ class InCallWindow(Adw.Window):
         b.connect("clicked", lambda btn: GLib.idle_add(lambda: cb(btn) or False))
         return b
 
-    def _mk_labeled_btn(self, icon, caption, cb, cls=None):
+    def mk_labeled_btn(self, icon, caption, cb, cls=None):
         """Create a circular icon button with a caption underneath."""
-        btn = self._mk_btn(icon, cb, cls)
+        btn = self.mk_btn(icon, cb, cls)
         btn.set_size_request(64, 64)
         btn.set_halign(Gtk.Align.CENTER)
 
@@ -788,7 +788,7 @@ class InCallWindow(Adw.Window):
         wrap.append(lbl)
         return wrap, btn
 
-    def _mk_selector_btn(self, icon, text, cb):
+    def mk_selector_btn(self, icon, text, cb):
         """Create a full-width route selector button showing the current choice."""
         btn = Gtk.Button(css_classes=["pill"])
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
@@ -808,29 +808,29 @@ class InCallWindow(Adw.Window):
         btn.connect("clicked", lambda b: GLib.idle_add(lambda: cb(b) or False))
         return btn, lbl, img
 
-    def _show_output_route(self, route_id):
+    def show_output_route(self, route_id):
         """Reflect the active output route on its selector button."""
         self.lbl_output_route.set_text(route_label(route_id))
         self.img_output_route.set_from_icon_name(route_icon(route_id))
 
-    def _show_input_route(self, route_id):
+    def show_input_route(self, route_id):
         """Reflect the active input route on its selector button."""
         self.lbl_input_route.set_text(input_route_label(route_id))
         self.img_input_route.set_from_icon_name(input_route_icon(route_id))
 
-    def _present_choice_sheet(self, title, build_rows):
+    def present_choice_sheet(self, title, build_rows):
         """Show one group of choice rows in the window's sheet."""
-        nav = self._present_call_sheet(title)
-        self._push_sheet_page(nav, title, self._rows_page(build_rows))
+        nav = self.present_call_sheet(title)
+        self.push_sheet_page(nav, title, self.rows_page(build_rows))
 
-    def _start_timers(self):
+    def start_timers(self):
         """Start timers only when call is active."""
         if self._timer_id is None:
-            self._timer_id = GLib.timeout_add(1000, self._update_timer)
+            self._timer_id = GLib.timeout_add(1000, self.update_timer)
         if self._proximity_timer_id is None:
-            self._proximity_timer_id = GLib.timeout_add(100, self._proximity_tick)
+            self._proximity_timer_id = GLib.timeout_add(100, self.proximity_tick)
 
-    def _stop_timers(self):
+    def stop_timers(self):
         """Stop timers when idle."""
         if self._timer_id:
             GLib.source_remove(self._timer_id)
@@ -873,7 +873,7 @@ class InCallWindow(Adw.Window):
         if self.in_error_mode:
             if not self.ofono.active_calls:
                 logger.info("[InCall] Stuck call released on its own, recovering from error state")
-                self._reset_from_error()
+                self.reset_from_error()
                 return
             if self.is_locked:
                 self.lock_manager.show_stuck_notification()
@@ -886,21 +886,21 @@ class InCallWindow(Adw.Window):
         if self.is_closing:
             if not calls:
                 self.is_closing = False
-                self._clean_reset()
+                self.clean_reset()
                 return
             if self._closing_paths & set(calls):
                 return
             logger.info("[InCall] New call arrived during hangup teardown, recovering")
-            self._recover_from_closing()
+            self.recover_from_closing()
 
         if not calls:
             if self.active_path is not None or self.is_muted or self.is_speaker:
-                self._clean_reset()
+                self.clean_reset()
             if self.is_visible():
                 self.set_visible(False)
             return
 
-        self._start_timers()
+        self.start_timers()
 
         if not self.defer_present:
             self.present()
@@ -939,7 +939,7 @@ class InCallWindow(Adw.Window):
         if len(calls) > 1 and has_incoming and not self.manual_hangup:
             for score, path, c_data in sorted_c:
                 if c_data['state'] == 'incoming':
-                    if not self.call_history[path].get('knocked', False) and not self._bg_call_is_silenced(path, c_data):
+                    if not self.call_history[path].get('knocked', False) and not self.bg_call_is_silenced(path, c_data):
                         self.audio.play_knock()
                         self.call_history[path]['knocked'] = True
                         self._next_knock_time = time.time() + KNOCK_REPEAT_SECONDS
@@ -981,13 +981,13 @@ class InCallWindow(Adw.Window):
         else:
             self.anon_chip.set_visible(bool(p_data.get('anonymous')))
             self.controls_stack.set_visible_child_name("active")
-            self._show_output_route(self.current_route)
-            self._toggle_blue(self.btn_mute, self.is_muted)
+            self.show_output_route(self.current_route)
+            self.toggle_blue(self.btn_mute, self.is_muted)
 
             can_hold = p_data['state'] in ['active', 'held']
             self.btn_hold.set_sensitive(can_hold)
 
-            self._toggle_blue(self.btn_hold, p_data['state'] == 'held')
+            self.toggle_blue(self.btn_hold, p_data['state'] == 'held')
             self.lbl_status.set_text(call_state_label(p_data['state']))
 
         conf_paths = conference_paths(calls)
@@ -998,13 +998,13 @@ class InCallWindow(Adw.Window):
             self.lbl_number.set_text(ngettext("{count} participant", "{count} participants",
                                               len(conf_paths)).format(count=len(conf_paths)))
 
-        self._update_multiparty_actions(calls, p_data, conf_paths)
+        self.update_multiparty_actions(calls, p_data, conf_paths)
 
         bg_list = [(x[1], x[2]) for x in sorted_c[1:] if x[1] not in conf_paths]
-        self._render_bg(bg_list, conf_paths, primary_in_conf)
-        self._refresh_pills()
+        self.render_bg(bg_list, conf_paths, primary_in_conf)
+        self.refresh_pills()
 
-    def _bg_call_is_silenced(self, path, c_data):
+    def bg_call_is_silenced(self, path, c_data):
         """Return True when a background incoming call must stay silent."""
         caller_norm = normalize_number(c_data['number'])
         override_volume = False
@@ -1025,7 +1025,7 @@ class InCallWindow(Adw.Window):
             is_silenced = True
         return is_silenced
 
-    def _maybe_repeat_knock(self):
+    def maybe_repeat_knock(self):
         """Repeat the call-waiting knock for eligible background calls."""
         now = time.time()
         if now < self._next_knock_time:
@@ -1035,18 +1035,18 @@ class InCallWindow(Adw.Window):
                 continue
             if path in self.ignored_calls:
                 continue
-            if self._bg_call_is_silenced(path, data):
+            if self.bg_call_is_silenced(path, data):
                 continue
             self.audio.play_knock()
             self._next_knock_time = now + KNOCK_REPEAT_SECONDS
             return
 
-    def _clean_reset(self):
+    def clean_reset(self):
         """Reset window state to idle."""
         self.main_box.remove_css_class("recovery-mode")
         self.info_box.set_visible(True)
         self.controls_stack.set_vexpand(False)
-        self._stop_timers()
+        self.stop_timers()
         self._next_knock_time = 0
         if self._hangup_verify_id:
             GLib.source_remove(self._hangup_verify_id)
@@ -1070,10 +1070,10 @@ class InCallWindow(Adw.Window):
         self.fader.set_active(False)
 
         self.current_input_route = "mic"
-        self._show_output_route("earpiece")
-        self._show_input_route("mic")
-        self._toggle_blue(self.btn_mute, False)
-        self._toggle_blue(self.btn_pad, False)
+        self.show_output_route("earpiece")
+        self.show_input_route("mic")
+        self.toggle_blue(self.btn_mute, False)
+        self.toggle_blue(self.btn_pad, False)
         self.pad_route_stack.set_transition_duration(0)
         self.pad_route_stack.set_visible_child_name("routes")
         self.pad_route_stack.set_transition_duration(PAD_MORPH_DURATION_MS)
@@ -1082,7 +1082,7 @@ class InCallWindow(Adw.Window):
         if self.is_visible():
             self.set_visible(False)
 
-    def _update_multiparty_actions(self, calls, p_data, conf_paths):
+    def update_multiparty_actions(self, calls, p_data, conf_paths):
         """Show the merge, join and transfer actions matching the call mix."""
         held_normal = held_single_paths(calls)
         held_conf = held_conference_paths(calls)
@@ -1114,7 +1114,7 @@ class InCallWindow(Adw.Window):
 
         self.btn_add_call.set_sensitive(count_lines(calls) < 2 and p_data['state'] in ('active', 'held'))
 
-    def _build_participants_card(self, conf_paths):
+    def build_participants_card(self, conf_paths):
         """Build the conference participants card with per leg actions."""
         card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, css_classes=["card"])
         title = Gtk.Label(label=_("Participants"), css_classes=["caption-heading"], halign=Gtk.Align.START)
@@ -1143,7 +1143,7 @@ class InCallWindow(Adw.Window):
         card.append(hint)
         return card
 
-    def _build_held_conference_card(self, count):
+    def build_held_conference_card(self, count):
         """Build the held conference summary card with swap."""
         card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, css_classes=["card"])
         lbl_title = create_truncated_label(
@@ -1166,20 +1166,20 @@ class InCallWindow(Adw.Window):
         """Join the active and held calls into one conference."""
         btn.set_sensitive(False)
         run_in_background(self.ofono.create_multiparty,
-                          on_complete=lambda result: self._on_multiparty_done(result, btn))
+                          on_complete=lambda result: self.on_multiparty_done(result, btn))
 
     def on_transfer_click(self, btn):
         """Connect the two calls to each other and leave."""
         btn.set_sensitive(False)
         run_in_background(self.ofono.transfer_call,
-                          on_complete=lambda result: self._on_multiparty_done(result, btn))
+                          on_complete=lambda result: self.on_multiparty_done(result, btn))
 
     def on_private_chat_click(self, path):
         """Split one participant out of the conference."""
         run_in_background(self.ofono.private_chat, path,
-                          on_complete=lambda result: self._on_multiparty_done(result, None))
+                          on_complete=lambda result: self.on_multiparty_done(result, None))
 
-    def _on_multiparty_done(self, result, btn):
+    def on_multiparty_done(self, result, btn):
         """Re-enable the action and report a refused network request."""
         if btn is not None:
             btn.set_sensitive(True)
@@ -1188,23 +1188,23 @@ class InCallWindow(Adw.Window):
 
     def on_add_call_click(self, btn):
         """Pick a contact or number and dial it as a second call."""
-        picker = ContactPicker(self.eds, self, self._on_add_call_picked,
+        picker = ContactPicker(self.eds, self, self.on_add_call_picked,
                                title=_("Add Call"), action_label=_("Call"))
         present_sheet_page(self, picker)
 
-    def _on_add_call_picked(self, number):
+    def on_add_call_picked(self, number):
         """Dial the picked number; ofono holds the current call itself."""
         if number:
             self.ofono.dial(number)
 
-    def _render_bg(self, bg_list, conf_paths, primary_in_conf):
+    def render_bg(self, bg_list, conf_paths, primary_in_conf):
         """Render background calls and the conference card."""
         while c := self.bg_calls_box.get_first_child():
             self.bg_calls_box.remove(c)
         if conf_paths and primary_in_conf:
-            self.bg_calls_box.append(self._build_participants_card(conf_paths))
+            self.bg_calls_box.append(self.build_participants_card(conf_paths))
         elif conf_paths:
-            self.bg_calls_box.append(self._build_held_conference_card(len(conf_paths)))
+            self.bg_calls_box.append(self.build_held_conference_card(len(conf_paths)))
         for path, data in bg_list:
             if path in self.ignored_calls:
                 continue
@@ -1252,7 +1252,7 @@ class InCallWindow(Adw.Window):
         self.ofono.daemon.silence_ring()
         self.update_state()
 
-    def _pick_quick_response(self, anchor, callback, target_path=None):
+    def pick_quick_response(self, anchor, callback, target_path=None):
         """Invoke callback with a quick response message, showing a picker when several exist.
 
         target_path names the call the message goes to when it is not
@@ -1272,14 +1272,14 @@ class InCallWindow(Adw.Window):
                 row = Adw.ActionRow(title=msg, activatable=True)
                 row.set_title_lines(2)
 
-                def _cb(row_widget, m=msg):
+                def cb(row_widget, m=msg):
                     close_sheet(self)
                     callback(m)
-                row.connect("activated", _cb)
+                row.connect("activated", cb)
                 group.add(row)
 
-        nav = self._present_call_sheet(_("Hangup and Send SMS"))
-        self._push_sheet_page(nav, _("Hangup and Send SMS"), self._rows_page(build),
+        nav = self.present_call_sheet(_("Hangup and Send SMS"))
+        self.push_sheet_page(nav, _("Hangup and Send SMS"), self.rows_page(build),
                               target_path=target_path)
 
     def on_ignore_with_sms(self, btn, path, number):
@@ -1290,7 +1290,7 @@ class InCallWindow(Adw.Window):
             self.ofono.daemon.silence_ring()
             self.update_state()
 
-        self._pick_quick_response(btn, do_ignore, target_path=path)
+        self.pick_quick_response(btn, do_ignore, target_path=path)
 
     def on_search_unknown_click(self, btn):
         """Open web browser to search for unknown number."""
@@ -1328,7 +1328,7 @@ class InCallWindow(Adw.Window):
     def on_hangup_click(self, btn):
         """Hangup the active call or all calls."""
         self.manual_hangup = True
-        self._start_closing_sequence()
+        self.start_closing_sequence()
         self.set_visible(False)
         if not self.service_present:
             run_in_background(hangup_all_direct)
@@ -1343,19 +1343,19 @@ class InCallWindow(Adw.Window):
         else:
             self.ofono.hangup_all()
 
-    def _start_closing_sequence(self):
+    def start_closing_sequence(self):
         """Start the call closing animation/logic."""
         self.is_closing = True
         self._closing_paths = set(self.ofono.active_calls.keys())
         self.ofono.daemon.silence_ring()
         if self._hangup_verify_id:
             GLib.source_remove(self._hangup_verify_id)
-        self._hangup_verify_id = GLib.timeout_add(HANGUP_VERIFY_DELAY_MS, self._verify_hangup_success)
+        self._hangup_verify_id = GLib.timeout_add(HANGUP_VERIFY_DELAY_MS, self.verify_hangup_success)
         if self._hangup_retry_id:
             GLib.source_remove(self._hangup_retry_id)
-        self._hangup_retry_id = GLib.timeout_add(HANGUP_RETRY_DELAY_MS, self._retry_hangup)
+        self._hangup_retry_id = GLib.timeout_add(HANGUP_RETRY_DELAY_MS, self.retry_hangup)
 
-    def _retry_hangup(self):
+    def retry_hangup(self):
         """Re-send the hangup for calls the modem has not confirmed released.
 
         The ofono binder plugin silently drops a hangup that arrives while
@@ -1373,7 +1373,7 @@ class InCallWindow(Adw.Window):
             self.ofono.hangup_call(path)
         return False
 
-    def _recover_from_closing(self):
+    def recover_from_closing(self):
         """Reset the closing state and re-process calls that arrived meanwhile."""
         if self._hangup_verify_id:
             GLib.source_remove(self._hangup_verify_id)
@@ -1383,20 +1383,20 @@ class InCallWindow(Adw.Window):
             self._hangup_retry_id = None
         self.is_closing = False
         self._closing_paths = set()
-        self._clean_reset()
+        self.clean_reset()
         if self.ofono.active_calls:
             self.update_state()
 
-    def _verify_hangup_success(self):
+    def verify_hangup_success(self):
         """Verify the hung-up calls are gone, otherwise trigger error state."""
         self._hangup_verify_id = None
         if self._closing_paths & set(self.ofono.active_calls):
-            self._enter_error_state()
+            self.enter_error_state()
             return False
-        self._recover_from_closing()
+        self.recover_from_closing()
         return False
 
-    def _enter_error_state(self):
+    def enter_error_state(self):
         """Show the recovery page when a call fails to disconnect."""
         self.audio.play_error_alert()
         self.present()
@@ -1417,7 +1417,7 @@ class InCallWindow(Adw.Window):
 
         app = Gio.Application.get_default()
         auto = self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
-        if auto and app and app.request_auto_recovery(self._on_recovery_done):
+        if auto and app and app.request_auto_recovery(self.on_recovery_done):
             self.btn_restart.set_sensitive(False)
             self.btn_restart.set_label(_("Recovering modem..."))
         else:
@@ -1480,10 +1480,10 @@ class InCallWindow(Adw.Window):
         if self.ofono.active_calls:
             self.update_state()
             return
-        self._clean_reset()
-        self._close_when_idle()
+        self.clean_reset()
+        self.close_when_idle()
 
-    def _on_recovery_done(self, success, reason=""):
+    def on_recovery_done(self, success, reason=""):
         """React to the recovery verdict while the page is showing.
 
         A refusal comes back with the reason for it, and saying it is
@@ -1496,7 +1496,7 @@ class InCallWindow(Adw.Window):
         self.btn_restart.set_sensitive(True)
         if success:
             if self.in_error_mode:
-                self._reset_from_error()
+                self.reset_from_error()
             return
         if reason:
             self.lbl_err_msg.set_text(reason)
@@ -1515,7 +1515,7 @@ class InCallWindow(Adw.Window):
         app = Gio.Application.get_default()
         if not app:
             return
-        if app.request_auto_recovery(self._on_recovery_done):
+        if app.request_auto_recovery(self.on_recovery_done):
             self.btn_restart.set_sensitive(False)
             self.btn_restart.set_label(_("Recovering modem..."))
 
@@ -1532,10 +1532,10 @@ class InCallWindow(Adw.Window):
 
         run_in_background(save_modem_logs, on_complete=done)
 
-    def _reset_from_error(self, *args):
+    def reset_from_error(self, *args):
         """Reset UI after error recovery."""
         self.in_error_mode = False
-        self._clean_reset()
+        self.clean_reset()
         return False
 
     def on_call_removed(self, m, p):
@@ -1543,22 +1543,22 @@ class InCallWindow(Adw.Window):
         if self.is_closing:
             if not (self._closing_paths & set(self.ofono.active_calls)):
                 logger.info("[InCall] Hangup confirmed by ofono, finishing teardown")
-                self._recover_from_closing()
-                self._close_when_idle()
+                self.recover_from_closing()
+                self.close_when_idle()
             return
         if self.in_error_mode:
             if not self.ofono.active_calls:
                 logger.info("[InCall] Stuck call released on its own, recovering from error state")
-                self._reset_from_error()
+                self.reset_from_error()
             return
         self.audio.play_hangup(feedback=False)
         self.fader.set_active(False)
         if p in self.ignored_calls:
             self.ignored_calls.remove(p)
         self.update_state()
-        self._close_when_idle()
+        self.close_when_idle()
 
-    def _close_when_idle(self):
+    def close_when_idle(self):
         """Close once the last call is gone, unless the modem needs the page.
 
         This window is its own process now, so a window left standing
@@ -1570,7 +1570,7 @@ class InCallWindow(Adw.Window):
         logger.info("[InCall] No calls left, closing")
         self.close()
 
-    def _mk_route_row(self, icon_name, name, selected, available):
+    def mk_route_row(self, icon_name, name, selected, available):
         """Build one selectable route row for a routing popover."""
         row = Adw.ActionRow(title=name)
         row.add_prefix(Gtk.Image.new_from_icon_name(icon_name))
@@ -1595,17 +1595,17 @@ class InCallWindow(Adw.Window):
 
             def build(group):
                 for route_id, available in outputs:
-                    row = self._mk_route_row(route_icon(route_id), route_label(route_id),
+                    row = self.mk_route_row(route_icon(route_id), route_label(route_id),
                                              route_id == self.current_route, available)
 
-                    def _cb_out(row_widget, r_id=route_id):
+                    def cb_out(row_widget, r_id=route_id):
                         close_sheet(self)
-                        self._handle_output_selection(r_id)
+                        self.handle_output_selection(r_id)
                     if row.get_sensitive():
-                        row.connect("activated", _cb_out)
+                        row.connect("activated", cb_out)
                     group.add(row)
 
-            self._present_choice_sheet(_("Output"), build)
+            self.present_choice_sheet(_("Output"), build)
 
         run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
@@ -1618,39 +1618,39 @@ class InCallWindow(Adw.Window):
 
             def build(group):
                 for route_id, available in inputs:
-                    row = self._mk_route_row(input_route_icon(route_id), input_route_label(route_id),
+                    row = self.mk_route_row(input_route_icon(route_id), input_route_label(route_id),
                                              route_id == self.current_input_route, available)
 
-                    def _cb_in(row_widget, r_id=route_id):
+                    def cb_in(row_widget, r_id=route_id):
                         close_sheet(self)
                         if self.is_muted:
                             self.on_mute_toggle(None)
                         self.ofono.daemon.set_input_route(r_id)
                     if row.get_sensitive():
-                        row.connect("activated", _cb_in)
+                        row.connect("activated", cb_in)
                     group.add(row)
 
-            self._present_choice_sheet(_("Input"), build)
+            self.present_choice_sheet(_("Input"), build)
 
         run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
 
-    def _handle_output_selection(self, route_id):
+    def handle_output_selection(self, route_id):
         """Send the route intent; the daemon's broadcast renders it."""
         self.ofono.daemon.set_audio_route(route_id)
         self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
-    def _on_audio_changed(self):
+    def on_audio_changed(self):
         """Render the daemon's applied audio state."""
         audio = self.ofono.audio
         self.is_muted = audio.mic_muted
         self.current_route = audio.current_route
         self.current_input_route = audio.current_input
         self.is_speaker = audio.current_route == "speaker"
-        self._toggle_blue(self.btn_mute, self.is_muted)
-        self._show_output_route(self.current_route)
-        self._show_input_route(self.current_input_route)
-        self._refresh_pills()
-        self._proximity_tick()
+        self.toggle_blue(self.btn_mute, self.is_muted)
+        self.show_output_route(self.current_route)
+        self.show_input_route(self.current_input_route)
+        self.refresh_pills()
+        self.proximity_tick()
 
     def on_mute_toggle(self, btn):
         """Toggle microphone mute; the daemon's broadcast renders it."""
@@ -1665,7 +1665,7 @@ class InCallWindow(Adw.Window):
         """Toggle the DTMF pad, morphing it over the audio selector rows."""
         self.dtmf_visible = not self.dtmf_visible
         self.pad_route_stack.set_visible_child_name("pad" if self.dtmf_visible else "routes")
-        self._toggle_blue(btn, self.dtmf_visible)
+        self.toggle_blue(btn, self.dtmf_visible)
 
     def on_reject_with_msg(self, btn):
         """Reject call and send a quick response SMS."""
@@ -1673,21 +1673,21 @@ class InCallWindow(Adw.Window):
             call = self.ofono.active_calls.get(self.active_path)
             if not call:
                 return
-            self._start_closing_sequence()
+            self.start_closing_sequence()
             self.set_visible(False)
             self.ofono.send_quick_response(call['number'], msg)
             self.ofono.hangup_call(self.active_path)
 
-        self._pick_quick_response(btn, do_reject)
+        self.pick_quick_response(btn, do_reject)
 
-    def _toggle_blue(self, btn, active):
+    def toggle_blue(self, btn, active):
         """Helper to toggle active button state style."""
         if active:
             btn.add_css_class("blue-active")
         else:
             btn.remove_css_class("blue-active")
 
-    def _update_timer(self):
+    def update_timer(self):
         """Update call duration timer."""
         if not self.is_visible():
             return True
@@ -1698,10 +1698,10 @@ class InCallWindow(Adw.Window):
                 self.lbl_status.set_text(f"{diff // 60:02}:{diff % 60:02}")
 
         if not self.is_closing and not self.in_error_mode:
-            self._maybe_repeat_knock()
+            self.maybe_repeat_knock()
 
         return True
 
-    def _on_lock_changed(self, monitor, is_locked):
+    def on_lock_changed(self, monitor, is_locked):
         self.is_locked = is_locked
         self.update_state()

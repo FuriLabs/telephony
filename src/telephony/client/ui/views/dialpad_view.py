@@ -90,7 +90,7 @@ class DialpadView(Adw.Bin):
         self.info_label.set_ellipsize(Pango.EllipsizeMode.END)
         box.append(self.info_label)
 
-        self.entry.connect("notify::text", lambda obj, pspec: self._update_info_label(obj, pspec))
+        self.entry.connect("notify::text", lambda obj, pspec: self.update_info_label(obj, pspec))
 
         box.append(self.entry)
 
@@ -193,11 +193,11 @@ class DialpadView(Adw.Bin):
         scrolled.set_vexpand(True)
         self.set_child(scrolled)
 
-    def _update_info_label(self, entry, param):
+    def update_info_label(self, entry, param):
         """Update the info label based on input."""
         if (self._lookup_timer is not None) and self._lookup_timer:
             GLib.source_remove(self._lookup_timer)
-        self._lookup_timer = GLib.timeout_add(200, self._perform_lookup)
+        self._lookup_timer = GLib.timeout_add(200, self.perform_lookup)
 
     def set_calling_enabled(self, enabled):
         """Enable or disable the two call buttons."""
@@ -210,7 +210,7 @@ class DialpadView(Adw.Bin):
             GLib.source_remove(self._lookup_timer)
             self._lookup_timer = None
 
-    def _favorite_for(self, text):
+    def favorite_for(self, text):
         """Return the speed dial contact a single digit stands for."""
         if len(text) != 1 or not text.isdigit():
             return None
@@ -219,12 +219,12 @@ class DialpadView(Adw.Bin):
                 return entry
         return None
 
-    def _perform_lookup(self):
+    def perform_lookup(self):
         """Perform contact lookup."""
         self._lookup_timer = None
         text = self.entry.get_text().strip()
 
-        favorite = self._favorite_for(text)
+        favorite = self.favorite_for(text)
         if favorite:
             self.info_label.set_text(_("{name} · Speed dial {slot}").format(
                 name=favorite.get("name") or favorite.get("number", ""),
@@ -246,7 +246,7 @@ class DialpadView(Adw.Bin):
             self.info_label.add_css_class("dim-label")
         return False
 
-    def _is_ussd(self, number):
+    def is_ussd(self, number):
         """Check if the number is a USSD code."""
         return (number.startswith("*") or number.startswith("#")) and number.endswith("#")
 
@@ -295,12 +295,12 @@ class DialpadView(Adw.Bin):
         if not number:
             return
 
-        favorite = self._favorite_for(number)
+        favorite = self.favorite_for(number)
         if favorite:
             self.app_window.start_call(favorite.get("number", ""))
             return
 
-        if self._is_ussd(number):
+        if self.is_ussd(number):
             self.app_window.handle_ussd(number)
         else:
             self.app_window.start_call(number)
@@ -311,12 +311,12 @@ class DialpadView(Adw.Bin):
         if not number:
             return
 
-        favorite = self._favorite_for(number)
+        favorite = self.favorite_for(number)
         if favorite:
             self.app_window.start_call(favorite.get("number", ""), hide_id=True)
             return
 
-        if self._is_ussd(number):
+        if self.is_ussd(number):
             self.app_window.handle_ussd(number)
         else:
             self.app_window.start_call(number, hide_id=True)

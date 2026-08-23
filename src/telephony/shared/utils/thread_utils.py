@@ -28,7 +28,7 @@ def run_in_background(task_func, *args, on_complete=None, on_error=None, **kwarg
     and whether it is worth mentioning. Anything else is nobody's, and
     is reported here so it is not lost.
     """
-    def _thread_wrapper():
+    def thread_wrapper():
         try:
             result = task_func(*args, **kwargs)
             if on_complete:
@@ -40,6 +40,6 @@ def run_in_background(task_func, *args, on_complete=None, on_error=None, **kwarg
             else:
                 logger.error(f"[ThreadUtils] Background task error: {e}")
 
-    thread = threading.Thread(target=_thread_wrapper, daemon=True)
+    thread = threading.Thread(target=thread_wrapper, daemon=True)
     thread.start()
     return thread

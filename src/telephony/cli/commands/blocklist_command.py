@@ -20,7 +20,7 @@ from gi.repository import GLib, Gio
 from telephony.cli.cli_utils import get_proxy
 
 
-def _domain_text(entry):
+def domain_text(entry):
     """Describe which domains an entry blocks."""
     calls = entry.get("block_calls", True)
     messages = entry.get("block_messages", True)
@@ -35,7 +35,7 @@ def cmd_blocklist_list(args):
     res = proxy.call_sync("GetBlocklist", None, Gio.DBusCallFlags.NONE, -1, None)
     data = json.loads(res.unpack()[0])
     for c in data:
-        print(f"ID: {c.get('id')} | Number: {c.get('number')} | Blocks: {_domain_text(c)} | Note: {c.get('note')}")
+        print(f"ID: {c.get('id')} | Number: {c.get('number')} | Blocks: {domain_text(c)} | Note: {c.get('note')}")
 
 
 def cmd_blocklist_add(args):

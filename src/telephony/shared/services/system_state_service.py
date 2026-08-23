@@ -50,9 +50,9 @@ class SystemStateService(GObject.Object):
         self.is_locked = False
         self.is_idle = False
 
-        self._init_monitor()
+        self.init_monitor()
 
-    def _init_monitor(self):
+    def init_monitor(self):
         try:
             self.sys_bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
             mgr = Gio.DBusProxy.new_sync(
@@ -83,7 +83,7 @@ class SystemStateService(GObject.Object):
                     "org.freedesktop.login1", target_path,
                     "org.freedesktop.login1.Session", None
                 )
-                self.session_proxy.connect("g-properties-changed", self._on_prop_changed)
+                self.session_proxy.connect("g-properties-changed", self.on_prop_changed)
 
                 lock_val = self.session_proxy.get_cached_property("LockedHint")
                 if lock_val:
@@ -98,7 +98,7 @@ class SystemStateService(GObject.Object):
         except Exception as e:
             logger.error(f"[SystemStateService] Init error: {e}")
 
-    def _on_prop_changed(self, proxy, changed_props, _invalidated_props):
+    def on_prop_changed(self, proxy, changed_props, _invalidated_props):
         props = changed_props.unpack()
         if "LockedHint" in props:
             val = props["LockedHint"]

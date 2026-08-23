@@ -28,7 +28,7 @@ OFONO_BUS = "org.ofono"
 DIRECT_CALL_TIMEOUT_MS = 10000
 
 
-def _first_modem_path(bus):
+def first_modem_path(bus):
     """Return the first modem's object path, or None; blocking."""
     res = bus.call_sync(
         OFONO_BUS, "/", "org.ofono.Manager", "GetModems",
@@ -44,7 +44,7 @@ def hangup_all_direct():
     """
     try:
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
-        modem_path = _first_modem_path(bus)
+        modem_path = first_modem_path(bus)
         if not modem_path:
             logger.error("[OfonoDirect] No modem for the direct hangup")
             return False

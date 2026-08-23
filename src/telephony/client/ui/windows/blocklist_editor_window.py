@@ -92,7 +92,7 @@ class BlocklistEditor(Adw.NavigationPage):
 
         if self.db.is_blocked(norm_num, kind="any"):
             logger.warning(f"[Blocklist] Block rejected: Number {norm_num} is already blocked.")
-            self._show_error(_("Duplicate"), _("This number is already blocked."))
+            self.show_error(_("Duplicate"), _("This number is already blocked."))
             return
 
         block_calls = bool(self.sw_calls and self.sw_calls.get_active())
@@ -101,11 +101,11 @@ class BlocklistEditor(Adw.NavigationPage):
         block_calls = self.sw_calls.get_active()
         block_messages = self.sw_messages.get_active()
 
-        def _start_block(done):
+        def start_block(done):
             run_in_background(self.daemon.add_blocked_number, norm_num, note,
                               block_calls, block_messages, on_complete=done)
 
-        def _confirmed():
+        def confirmed():
             """Leave first, then block.
 
             Answering the question is the end of the flow. Falling back
@@ -114,22 +114,22 @@ class BlocklistEditor(Adw.NavigationPage):
             and the write reports through a toast if it fails.
             """
             close_sheet_page(self.get_root())
-            _start_block(lambda ok: None if ok else
+            start_block(lambda ok: None if ok else
                          self.app_window.notify_error(_("Failed to save to blocklist.")))
 
         if self.eds.search_contacts(norm_num):
-            self._confirm_block_remove(raw_num, _confirmed)
+            self.confirm_block_remove(raw_num, confirmed)
             return
 
-        def _direct_done(success):
+        def direct_done(success):
             if success:
                 close_sheet_page(self.get_root())
             else:
-                self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+                self.show_error(_("Database Error"), _("Failed to save to blocklist."))
 
-        _start_block(_direct_done)
+        start_block(direct_done)
 
-    def _confirm_block_remove(self, _number_str, on_confirm):
+    def confirm_block_remove(self, _number_str, on_confirm):
         """Show confirmation to block and remove from contacts."""
         present_alert_sheet(
             self.get_root(), _("Conflict"),
@@ -137,6 +137,6 @@ class BlocklistEditor(Adw.NavigationPage):
             [("cancel", _("Cancel"), None), ("yes", _("Yes, Block"), "destructive")],
             lambda answer: on_confirm() if answer == "yes" else None)
 
-    def _show_error(self, title, msg):
+    def show_error(self, title, msg):
         """Report a failure the user can only acknowledge."""
         self.app_window.notify_error(msg)

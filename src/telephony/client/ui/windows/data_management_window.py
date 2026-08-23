@@ -65,7 +65,7 @@ class DataManagementDialog:
 
         return self.page
 
-    def _confirm_destructive(self, title, body, on_confirm):
+    def confirm_destructive(self, title, body, on_confirm):
         """Show destructive action confirmation."""
         present_alert_sheet(
             self.page.get_root(), title, body,
@@ -78,7 +78,7 @@ class DataManagementDialog:
             body = ngettext("This will delete {count} call. It cannot be undone.",
                             "This will delete {count} calls. It cannot be undone.",
                             count).format(count=count)
-            self._confirm_destructive(_("Delete Call History"), body, self._do_clear_history)
+            self.confirm_destructive(_("Delete Call History"), body, self.do_clear_history)
 
         run_in_background(self.db.count_rows, "history", on_complete=ask)
 
@@ -88,7 +88,7 @@ class DataManagementDialog:
             body = ngettext("This will delete {count} message and its attachments.",
                             "This will delete {count} messages and their attachments.",
                             count).format(count=count)
-            self._confirm_destructive(_("Delete All Messages"), body, self._do_clear_messages)
+            self.confirm_destructive(_("Delete All Messages"), body, self.do_clear_messages)
 
         run_in_background(self.db.count_rows, "messages", on_complete=ask)
 
@@ -98,7 +98,7 @@ class DataManagementDialog:
             body = ngettext("This will reset {count} custom group name.",
                             "This will reset {count} custom group names.",
                             count).format(count=count)
-            self._confirm_destructive(_("Delete Group Names"), body, self._do_clear_groups)
+            self.confirm_destructive(_("Delete Group Names"), body, self.do_clear_groups)
 
         run_in_background(self.db.count_rows, "group_names", on_complete=ask)
 
@@ -108,28 +108,28 @@ class DataManagementDialog:
             body = ngettext("This will unblock {count} number.",
                             "This will unblock {count} numbers.",
                             count).format(count=count)
-            self._confirm_destructive(_("Delete Blocklist"), body, self._do_clear_blocklist)
+            self.confirm_destructive(_("Delete Blocklist"), body, self.do_clear_blocklist)
 
         run_in_background(self.db.count_rows, "blocklist", on_complete=ask)
 
     def ask_clear_contacts(self):
         """Ask to clear contacts."""
-        self._prompt_delete_contacts_source(self._do_clear_contacts)
+        self.prompt_delete_contacts_source(self.do_clear_contacts)
 
     def ask_delete_addressbook(self):
         """Ask to delete an entire address book."""
-        self._prompt_delete_addressbook(self._do_delete_addressbook)
+        self.prompt_delete_addressbook(self.do_delete_addressbook)
 
     def ask_clear_everything(self):
         """Ask to clear everything."""
-        self._prompt_delete_contacts_source(self._do_clear_everything, everything=True)
+        self.prompt_delete_contacts_source(self.do_clear_everything, everything=True)
 
-    def _prompt_delete_addressbook(self, callback):
+    def prompt_delete_addressbook(self, callback):
         """Prompt user for which address book to permanently delete."""
         self.eds.sources_info_async(
-            lambda sources: self._choose_addressbook_to_delete(sources, callback))
+            lambda sources: self.choose_addressbook_to_delete(sources, callback))
 
-    def _choose_addressbook_to_delete(self, sources, callback):
+    def choose_addressbook_to_delete(self, sources, callback):
         """Offer the books now that the list is known."""
         protected_uids = ["system-address-book"]
         protected_names = ["Andromeda Contacts"]
@@ -137,13 +137,13 @@ class DataManagementDialog:
         enabled_sources = [s for s in sources if s['uid'] not in protected_uids and s['name'] not in protected_names]
 
         if not enabled_sources:
-            self._confirm_destructive(_("No deletable address books"), _("There are no custom address books that can be deleted."), lambda: None)
+            self.confirm_destructive(_("No deletable address books"), _("There are no custom address books that can be deleted."), lambda: None)
             return
 
         def build(group, window):
             for source in enabled_sources:
                 def chosen(uid=source['uid'], source_name=source['name']):
-                    self._confirm_destructive(
+                    self.confirm_destructive(
                         _("Delete Address Book"),
                         _("Are you sure you want to permanently delete the '{name}' address book?").format(name=source_name),
                         lambda: callback(uid))
@@ -154,12 +154,12 @@ class DataManagementDialog:
             self.page, _("Delete Address Book"), build,
             description=_("Which address book do you want to delete permanently? This wipes it from the system."))
 
-    def _prompt_delete_contacts_source(self, callback, everything=False):
+    def prompt_delete_contacts_source(self, callback, everything=False):
         """Prompt user for which address book to delete (or All)."""
         self.eds.sources_info_async(
-            lambda sources: self._choose_contacts_source_to_delete(sources, callback, everything))
+            lambda sources: self.choose_contacts_source_to_delete(sources, callback, everything))
 
-    def _choose_contacts_source_to_delete(self, sources, callback, everything):
+    def choose_contacts_source_to_delete(self, sources, callback, everything):
         """Offer the books now that the list is known."""
         enabled_sources = [s for s in sources if s['enabled']]
 
@@ -167,7 +167,7 @@ class DataManagementDialog:
         body = _("Wipe database, config files and contacts? App will reset.") if everything else _("Really delete everyone from your address book?")
 
         if not enabled_sources:
-            self._confirm_destructive(title, body, lambda: callback(None))
+            self.confirm_destructive(title, body, lambda: callback(None))
             return
 
         def build(group, window):
@@ -179,12 +179,12 @@ class DataManagementDialog:
 
         present_choice_sheet(self.page, title, build, description=body)
 
-    def _do_clear_history(self):
+    def do_clear_history(self):
         """Clear history action."""
         run_in_background(self.app_window.daemon.clear_call_history,
                           on_complete=lambda _r: self.app_window.notify_success(_("Call History Deleted")))
 
-    def _do_clear_messages(self):
+    def do_clear_messages(self):
         """Clear messages action."""
         self.app_window.notify_loading(_("Deleting messages..."))
 
@@ -195,17 +195,17 @@ class DataManagementDialog:
             GLib.idle_add(lambda: self.app_window.notify_success(_("Messages & Attachments Deleted")))
         run_in_background(task)
 
-    def _do_clear_groups(self):
+    def do_clear_groups(self):
         """Clear groups action."""
         run_in_background(self.app_window.daemon.clear_group_names,
                           on_complete=lambda _r: self.app_window.notify_success(_("Group Names Reset")))
 
-    def _do_clear_blocklist(self):
+    def do_clear_blocklist(self):
         """Clear blocklist action."""
         run_in_background(self.app_window.daemon.clear_blocklist,
                           on_complete=lambda _r: self.app_window.notify_success(_("Blocklist Cleared")))
 
-    def _do_clear_contacts(self, source_uid=None):
+    def do_clear_contacts(self, source_uid=None):
         """Clear contacts action."""
         self.app_window.notify_loading(_("Deleting contacts..."))
 
@@ -216,7 +216,7 @@ class DataManagementDialog:
             GLib.idle_add(lambda: self.app_window.notify_success(_("Contacts Deleted")))
         run_in_background(task)
 
-    def _do_delete_addressbook(self, source_uid):
+    def do_delete_addressbook(self, source_uid):
         """Delete entire address book action."""
         if not source_uid:
             return
@@ -232,7 +232,7 @@ class DataManagementDialog:
                 GLib.idle_add(lambda: self.app_window.notify_error(_("Failed to delete Address Book")))
         run_in_background(task)
 
-    def _do_clear_everything(self, source_uid=None):
+    def do_clear_everything(self, source_uid=None):
         """Clear everything action."""
         self.app_window.notify_loading(_("Wiping Database..."))
 

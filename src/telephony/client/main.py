@@ -59,7 +59,7 @@ def build_arg_parser():
     return parser
 
 
-def messaging_requested(argv):
+def is_messaging_requested(argv):
     """Return True when the arguments name a conversation to open."""
     if any(a.startswith("--open-chat") for a in argv):
         return True
@@ -105,7 +105,7 @@ def main():
         application_id = f"{APP_ID}.Contacts"
     elif opts.incall:
         application_id = INCALL_APP_ID
-    elif messaging_requested(sys.argv):
+    elif is_messaging_requested(sys.argv):
         application_id = f"{APP_ID}.Messages"
     elif call_requested(sys.argv):
         application_id = f"{APP_ID}.Calls"

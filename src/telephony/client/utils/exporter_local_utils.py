@@ -22,7 +22,7 @@ from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.datetime_utils import parse_timestamp
 
 
-def _dt_to_unix(ts_str):
+def dt_to_unix(ts_str):
     """Convert timestamp string to unix epoch."""
     return int(parse_timestamp(ts_str).timestamp())
 
@@ -195,7 +195,7 @@ def export_linux_chatty(db_manager, dest_db_path):
                       (f"telephony-{row_dict.get('id', count)}", thread_id, sender_id,
                        row_dict.get('body') or '', CHATTY_MESSAGE_TYPE_TEXT,
                        1 if direction == "incoming" else -1,
-                       _dt_to_unix(row_dict.get('timestamp', '')),
+                       dt_to_unix(row_dict.get('timestamp', '')),
                        CHATTY_STATUS_RECEIVED if direction == "incoming" else CHATTY_STATUS_SENT,
                        row_dict.get('subject')))
             c.execute("INSERT INTO mm_messages(message_id,account_id,protocol) VALUES (?,?,?)",
@@ -210,7 +210,7 @@ def export_linux_chatty(db_manager, dest_db_path):
         return False, str(e)
 
 
-def _to_gom_iso(dt):
+def to_gom_iso(dt):
     """Serialize a local naive datetime the way gom does: ISO 8601 in UTC."""
     return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -266,12 +266,12 @@ def export_linux_calls(db_manager, dest_db_path):
             inbound = 1 if direction in ("incoming", "missed", "rejected") else 0
             answered = None
             if direction in ("incoming", "outgoing"):
-                answered = _to_gom_iso(start_dt)
-            end = _to_gom_iso(start_dt + timedelta(seconds=duration))
+                answered = to_gom_iso(start_dt)
+            end = to_gom_iso(start_dt + timedelta(seconds=duration))
 
             c.execute('''INSERT INTO calls (target, inbound, start, answered, 'end', protocol)
                          VALUES (?, ?, ?, ?, ?, ?)''',
-                      (number, inbound, _to_gom_iso(start_dt), answered, end, "tel"))
+                      (number, inbound, to_gom_iso(start_dt), answered, end, "tel"))
             count += 1
 
         conn.commit()

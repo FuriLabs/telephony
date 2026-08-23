@@ -310,7 +310,7 @@ def present_choice_sheet(parent, title, build_rows, description=None):
     return window
 
 
-def _choice_row(group, label, callback, dismiss, subtitle=None, destructive=False, icon=None):
+def choice_row(group, label, callback, dismiss, subtitle=None, destructive=False, icon=None):
     """Add one activatable row that puts its own surface away and runs callback."""
     row = Adw.ActionRow(title=label, activatable=True)
     if subtitle:
@@ -335,7 +335,7 @@ def add_choice_row(group, window, label, callback, subtitle=None, destructive=Fa
     behind it and no way back.
     """
     dismiss = (lambda: None) if opens_flow else (lambda: close_sheet_page(window))
-    return _choice_row(group, label, callback, dismiss,
+    return choice_row(group, label, callback, dismiss,
                        subtitle=subtitle, destructive=destructive, icon=icon)
 
 
@@ -389,7 +389,7 @@ def set_selector_options(row, labels, selected_index):
         check.set_visible(i == selected_index)
         option.add_suffix(check)
         option.connect("activated", lambda r, i=i: GLib.idle_add(
-            lambda: _pick_selector_option(row, i) or False))
+            lambda: pick_selector_option(row, i) or False))
         row.add_row(option)
         row._option_rows.append(option)
         row._option_checks.append(check)
@@ -398,7 +398,7 @@ def set_selector_options(row, labels, selected_index):
         row.set_subtitle(labels[selected_index])
 
 
-def _pick_selector_option(row, index):
+def pick_selector_option(row, index):
     """Apply a tapped selector option and collapse the row."""
     row._selected_index = index
     row.set_subtitle(row._option_rows[index].get_title())
@@ -453,9 +453,9 @@ class EntryListGroup(Adw.PreferencesGroup):
     def set_entries(self, entries):
         """Replace the listed entries, rebuilding the rows."""
         self.entries = list(entries)
-        self._rebuild()
+        self.rebuild()
 
-    def _rebuild(self):
+    def rebuild(self):
         """Rebuild the add row and one expander per entry."""
         for row in self._rows:
             self.remove(row)
@@ -466,7 +466,7 @@ class EntryListGroup(Adw.PreferencesGroup):
             self.remove(self._empty_row)
             self._empty_row = None
 
-        self._add_row = self._build_add_row()
+        self._add_row = self.build_add_row()
         self.add(self._add_row)
 
         if not self.entries:
@@ -476,11 +476,11 @@ class EntryListGroup(Adw.PreferencesGroup):
             return
 
         for entry in self.entries:
-            row = self._build_entry_row(entry)
+            row = self.build_entry_row(entry)
             self.add(row)
             self._rows.append(row)
 
-    def _build_field_row(self, field, value=""):
+    def build_field_row(self, field, value=""):
         """Build one editable field row."""
         row = Adw.EntryRow(title=field["label"])
         row.set_text(value or "")
@@ -488,43 +488,43 @@ class EntryListGroup(Adw.PreferencesGroup):
             row.set_input_purpose(field["purpose"])
         return row
 
-    def _build_add_row(self):
+    def build_add_row(self):
         """Build the expander that adds a new entry."""
         expander = Adw.ExpanderRow(title=self.add_label)
         expander.add_prefix(Gtk.Image.new_from_icon_name("list-add-symbolic"))
 
         self._add_entries = {}
         for field in self.fields:
-            entry = self._build_field_row(field)
+            entry = self.build_field_row(field)
             self._add_entries[field["key"]] = entry
             expander.add_row(entry)
 
         action = Adw.ActionRow(title=self.add_label, activatable=True)
         action.add_css_class("accent")
-        action.connect("activated", lambda r: GLib.idle_add(lambda: self._commit_add(expander) or False))
+        action.connect("activated", lambda r: GLib.idle_add(lambda: self.commit_add(expander) or False))
         expander.add_row(action)
 
         def sync(*_args):
-            action.set_sensitive(self._values_complete(self._add_entries))
+            action.set_sensitive(self.values_complete(self._add_entries))
         for entry in self._add_entries.values():
             entry.connect("changed", sync)
         sync()
         return expander
 
-    def _values_complete(self, entries):
+    def values_complete(self, entries):
         """Return whether every required field has text."""
         for field in self.fields:
             if field.get("required") and not entries[field["key"]].get_text().strip():
                 return False
         return True
 
-    def _read_values(self, entries):
+    def read_values(self, entries):
         """Read the current field values."""
         return {key: entry.get_text().strip() for key, entry in entries.items()}
 
-    def _commit_add(self, expander):
+    def commit_add(self, expander):
         """Hand the typed values to the caller and reset on success."""
-        values = self._read_values(self._add_entries)
+        values = self.read_values(self._add_entries)
         ok, error = self.on_add(values)
         if not ok:
             if error and self.on_error:
@@ -534,7 +534,7 @@ class EntryListGroup(Adw.PreferencesGroup):
         for entry in self._add_entries.values():
             entry.set_text("")
 
-    def _build_entry_row(self, entry):
+    def build_entry_row(self, entry):
         """Build the expander for one existing entry."""
         primary = entry.get(self.fields[0]["key"], "")
         expander = Adw.ExpanderRow(title=primary or self.empty_label)
@@ -543,11 +543,11 @@ class EntryListGroup(Adw.PreferencesGroup):
 
         field_entries = {}
         for field in self.fields:
-            row = self._build_field_row(field, entry.get(field["key"], ""))
+            row = self.build_field_row(field, entry.get(field["key"], ""))
             if self.on_update:
                 row.set_show_apply_button(True)
                 row.connect("apply", lambda r, e=entry, fe=field_entries, ex=expander:
-                            GLib.idle_add(lambda: self._commit_update(e, fe, ex) or False))
+                            GLib.idle_add(lambda: self.commit_update(e, fe, ex) or False))
             else:
                 row.set_editable(False)
             field_entries[field["key"]] = row
@@ -559,10 +559,10 @@ class EntryListGroup(Adw.PreferencesGroup):
         expander.add_row(delete)
         return expander
 
-    def _commit_update(self, entry, field_entries, expander):
+    def commit_update(self, entry, field_entries, expander):
         """Hand edited values to the caller and refresh the row summary."""
-        values = self._read_values(field_entries)
-        if not self._values_complete(field_entries):
+        values = self.read_values(field_entries)
+        if not self.values_complete(field_entries):
             return
         ok, error = self.on_update(entry, values)
         if not ok:

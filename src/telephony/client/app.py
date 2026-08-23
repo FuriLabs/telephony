@@ -76,7 +76,7 @@ class App(Adw.Application):
         """Clear active notifications for a number."""
         self.core.clear_notification(number)
 
-    def _close_through_hook(self, *args):
+    def close_through_hook(self, *args):
         """Clear a main window's stacked sheets so one close closes everything."""
         window = next((a for a in args if isinstance(a, Gtk.Window)), None)
         if not isinstance(window, MainWindow):
@@ -95,7 +95,7 @@ class App(Adw.Application):
         Gtk.Application.do_startup(self)
         GLib.set_prgname(self.get_application_id())
 
-        GObject.add_emission_hook(Gtk.Window, "close-request", self._close_through_hook)
+        GObject.add_emission_hook(Gtk.Window, "close-request", self.close_through_hook)
 
         run_in_background(ensure_daemon_running)
 
@@ -104,8 +104,8 @@ class App(Adw.Application):
 
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
-        self._setup_css()
-        self._setup_icon_paths()
+        self.setup_css()
+        self.setup_icon_paths()
 
         self.core.start()
 
@@ -127,16 +127,16 @@ class App(Adw.Application):
         action_dial.connect("activate", self.on_action_dial)
         self.add_action(action_dial)
 
-    def _ensure_incall_window(self):
+    def ensure_incall_window(self):
         """Ensure the InCallWindow is initialized."""
         if self.incall is None:
             logger.info("Initializing InCallWindow (Lazy Load)")
             self.incall = InCallWindow(self.gsettings_mgr, self.ofono, self.eds, self.db)
             self.add_window(self.incall)
 
-            self.incall.connect("close-request", self._on_incall_closed)
+            self.incall.connect("close-request", self.on_incall_closed)
 
-    def _on_incall_closed(self, window):
+    def on_incall_closed(self, window):
         """Forget the call window once it is really gone.
 
         The window itself decides whether a close means stepping aside
@@ -146,7 +146,7 @@ class App(Adw.Application):
         self.incall = None
         return False
 
-    def any_window_active(self):
+    def is_any_window_active(self):
         """Return True when any application window currently has focus."""
         return any(win.is_active() for win in self.get_windows())
 
@@ -162,9 +162,9 @@ class App(Adw.Application):
         """Drop entry focus in all windows and order the on-screen keyboard away."""
         for win in self.get_windows():
             win.set_focus(None)
-        self._hide_osk()
+        self.hide_osk()
 
-    def _hide_osk(self):
+    def hide_osk(self):
         """Hide the Phosh on-screen keyboard via its D-Bus interface."""
         try:
             bus = self.get_dbus_connection() or Gio.bus_get_sync(Gio.BusType.SESSION, None)
@@ -175,7 +175,7 @@ class App(Adw.Application):
         except Exception as e:
             logger.debug(f"OSK hide request failed: {e}")
 
-    def _present_incall_window(self):
+    def present_incall_window(self):
         """Present the in-call window after the on-screen keyboard has dismissed."""
         if self.incall:
             self.incall.defer_present = False
@@ -193,10 +193,10 @@ class App(Adw.Application):
         window.
         """
         if self.owns_incall_ui:
-            self._ensure_incall_window()
+            self.ensure_incall_window()
             self.incall.defer_present = True
             self.release_keyboard_focus()
-            GLib.idle_add(self._present_incall_window)
+            GLib.idle_add(self.present_incall_window)
             return
 
         try:
@@ -217,7 +217,7 @@ class App(Adw.Application):
                 self.incall.exit_recovery_mode()
             return
 
-        self._ensure_incall_window()
+        self.ensure_incall_window()
         self.incall.enter_recovery_mode(message, failed=failed)
 
     def apply_service_presence(self, present, unit_state):
@@ -230,7 +230,7 @@ class App(Adw.Application):
         """Start the service by whichever path the unit state allows."""
         self.core.start_service(on_done)
 
-    def _setup_icon_paths(self):
+    def setup_icon_paths(self):
         """
         Ensure icon lookup works under the daemon's startup conditions.
         Re-registers libadwaita's internal resource icons, whose registration
@@ -244,14 +244,14 @@ class App(Adw.Application):
         except Exception as e:
             logger.warning(f"Icon path setup failed: {e}")
 
-    def _setup_css(self):
+    def setup_css(self):
         """Load and apply custom CSS."""
         provider = Gtk.CssProvider()
         css_file = Gio.File.new_for_path(os.path.join(os.path.dirname(__file__), 'style.css'))
         provider.load_from_file(css_file)
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-    def _launcher_modes(self):
+    def launcher_modes(self):
         """Return the (calls, messages, contacts) surfaces this launcher owns.
 
         A bare activation carries no arguments, so the application id is
@@ -275,11 +275,11 @@ class App(Adw.Application):
         logger.info("Application activated via DBus.")
 
         if self.owns_incall_ui:
-            self._ensure_incall_window()
-            self._present_incall_window()
+            self.ensure_incall_window()
+            self.present_incall_window()
             return
 
-        calls, messages, contacts = self._launcher_modes()
+        calls, messages, contacts = self.launcher_modes()
 
         for existing_win in self.get_windows():
             if not isinstance(existing_win, MainWindow):
