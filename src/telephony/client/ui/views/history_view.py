@@ -193,7 +193,7 @@ class HistoryView(Adw.Bin):
         self._dur_action.connect("activate", self._on_dur_action)
         self._filter_group.add_action(self._dur_action)
 
-        buckets = [(_("Any duration"), "any"), (_("Unanswered"), "0"), (_("1s - 60s"), "60s"), (_("1-3 mins"), "3m"), (_("3-10 mins"), "10m"), (_("> 15 mins"), "15m+")]
+        buckets = [(_("Any duration"), "any"), (_("Unanswered"), "0"), (_("1s - 60s"), "60s"), (_("1-3 mins"), "3m"), (_("3-10 mins"), "10m"), (_("> 10 mins"), "15m+")]
         self.btn_dur.set_menu_model(self._build_filter_menu("hist.duration", buckets))
 
     def setup_date_popover(self):
@@ -377,7 +377,7 @@ class HistoryView(Adw.Bin):
                     continue
                 elif b == "10m" and not (180 < d <= 600):
                     continue
-                elif b == "15m+" and d <= 900:
+                elif b == "15m+" and d <= 600:
                     continue
 
             full_ts_str = str(ts_str)
