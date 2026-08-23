@@ -212,7 +212,6 @@ class SettingsWindow(Adw.Bin):
         group.add(entry_note)
         if entry:
             entry_num.set_text(entry["number"])
-            entry_num.set_editable(False)
             entry_note.set_text(entry["note"] or "")
         show_calls, show_messages = self._blocklist_toggle_visibility()
         sw_calls = None
@@ -251,14 +250,14 @@ class SettingsWindow(Adw.Bin):
             if entry:
                 final_calls = block_calls if show_calls else entry["block_calls"]
                 final_messages = block_messages if show_messages else entry["block_messages"]
+                if self._blocked_under_another_entry(number, entry["id"]):
+                    self.main_window.notify_error(
+                        _("{number} is already on the blocklist.").format(number=number))
+                    return
 
-                def edit_task():
-                    self.main_window.daemon.add_blocked_number(
-                        number, entry_note.get_text().strip(), False, False)
-                    return self.main_window.daemon.set_blocked_number_flags(
-                        entry["id"], final_calls, final_messages)
-
-                run_in_background(edit_task, on_complete=done)
+                run_in_background(self.main_window.daemon.update_blocked_number,
+                                  entry["id"], number, entry_note.get_text().strip(),
+                                  final_calls, final_messages, on_complete=done)
             else:
                 run_in_background(self.main_window.daemon.add_blocked_number,
                                   number, entry_note.get_text().strip(),
@@ -270,6 +269,18 @@ class SettingsWindow(Adw.Bin):
         view.set_content(box)
         present_sheet_page(self.get_root(),
                            Adw.NavigationPage(title=_("Block Number"), child=view))
+
+    def _blocked_under_another_entry(self, number, bid):
+        """Whether some other entry already holds this number.
+
+        The daemon refuses the change anyway, but it can only answer
+        that something failed; asking here is what lets the sheet say
+        which number is in the way.
+        """
+        for other in self.main_window.db.get_blocked_numbers():
+            if other["id"] != bid and normalize_number(other["number"]) == number:
+                return True
+        return False
 
     def _on_block_deleted(self, entry):
         """Remove this launcher's block; the entry dies when nothing remains.
