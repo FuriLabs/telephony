@@ -893,7 +893,7 @@ class MainWindow(Adw.Window):
             if not item.is_saved:
                 add_action(_("Add to Existing Contact"), lambda: self.on_add_to_existing(item),
                                needs_eds=True, opens_flow=True)
-                add_action(_("Search Number"), lambda: self._search_number_online(item.number))
+                add_action(_("Search Number"), lambda: self.search_number_online(item.number))
 
         add_action(_("Send Message"), lambda: self.present_chat(item.number))
         add_action(_("Copy Number"), lambda: self.copy_to_clipboard(item.number))
@@ -914,7 +914,7 @@ class MainWindow(Adw.Window):
 
         present_sheet_page(self, Adw.NavigationPage(title=_("Call Details"), child=toolbar))
 
-    def _search_number_online(self, number):
+    def search_number_online(self, number):
         """Open the configured search engine for a phone number."""
         clean_num = number.replace("+", "")
         engine = self.gsettings_mgr.get_setting("unknown_callers_engine") or "duckduckgo"

@@ -210,6 +210,24 @@ class ChatPage(Gtk.Box):
 
         self.list_view = Gtk.ListView(model=self.selection, factory=factory)
         self.scrolled = Gtk.ScrolledWindow(child=self.list_view, vexpand=True)
+        dismiss = Gtk.GestureClick()
+        dismiss.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+
+        def _dismiss_top_panels(_gesture, _n_press, _x, _y):
+            """Close the details panel and the search bar on a tap in the chat.
+
+            They slide in from the header rather than floating over the
+            list, so nothing dismisses them for us; the tap is left
+            unclaimed and still does whatever it was aimed at.
+            """
+            if self.btn_menu.get_active():
+                self.btn_menu.set_active(False)
+            if self.btn_search.get_active() and not self.search_entry.get_text():
+                self.btn_search.set_active(False)
+
+        dismiss.connect("pressed", _dismiss_top_panels)
+        self.scrolled.add_controller(dismiss)
+
         self.scrolled.add_css_class("inverted-list")
 
         self.chat_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -696,17 +714,16 @@ class ChatPage(Gtk.Box):
         scrolled.set_max_content_height(350)
         scrolled.set_propagate_natural_height(True)
 
-        list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         block_buttons = {}
         dialing_ok = self.app_window.ofono.dialing_available() if self.app_window.ofono else True
 
         for rec in self.recipients:
-            hbox = Gtk.Box(spacing=12, css_classes=["card"])
-            hbox.set_margin_start(8)
-            hbox.set_margin_end(8)
-            hbox.set_margin_top(8)
-            hbox.set_margin_bottom(8)
+            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, css_classes=["card"])
+
+            inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            card.append(inner)
 
             name = self.app_window.eds.get_display_name(rec)
             if not name:
@@ -717,21 +734,19 @@ class ChatPage(Gtk.Box):
             elif name == "Unknown":
                 name = _("Unknown")
 
-            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
 
             lbl_name = Gtk.Label(label=name, xalign=0, css_classes=["body", "emphasized"])
             lbl_name.set_ellipsize(Pango.EllipsizeMode.END)
-            lbl_name.set_max_width_chars(15)
             vbox.append(lbl_name)
 
             lbl_num = Gtk.Label(label=rec, xalign=0, css_classes=["caption", "dim-label"])
             lbl_num.set_ellipsize(Pango.EllipsizeMode.END)
             vbox.append(lbl_num)
 
-            hbox.append(vbox)
-            hbox.append(Gtk.Box(hexpand=True))
+            inner.append(vbox)
 
-            actions_box = Gtk.Box(spacing=12)
+            actions_box = Gtk.Box(spacing=8, halign=Gtk.Align.START)
 
             is_saved = self.app_window.eds.get_contact_name(rec) is not None
             icon_edit = "document-edit-symbolic" if is_saved else "contact-new-symbolic"
@@ -756,6 +771,24 @@ class ChatPage(Gtk.Box):
             if can_call:
                 self._recipient_call_btns.append(b_call)
                 b_call.connect("clicked", lambda b, n=rec: GLib.idle_add(lambda: self.app_window.start_call(n) or False))
+
+            b_search = Gtk.Button(icon_name="system-search-symbolic", css_classes=["circular"])
+            b_search.set_valign(Gtk.Align.CENTER)
+            actions_box.append(b_search)
+
+            def _handle_search_click(n=rec):
+                self.btn_menu.set_active(False)
+                self.app_window.search_number_online(n)
+            b_search.connect("clicked", lambda b, n=rec: _handle_search_click(n))
+
+            b_copy = Gtk.Button(icon_name="edit-copy-symbolic", css_classes=["circular"])
+            b_copy.set_valign(Gtk.Align.CENTER)
+            actions_box.append(b_copy)
+
+            def _handle_copy_click(n=rec):
+                self.btn_menu.set_active(False)
+                self.app_window.copy_to_clipboard(n)
+            b_copy.connect("clicked", lambda b, n=rec: _handle_copy_click(n))
 
             b_blk = Gtk.Button(icon_name="action-unavailable-symbolic", css_classes=["circular", "destructive-action"])
             b_blk.set_valign(Gtk.Align.CENTER)
@@ -789,8 +822,8 @@ class ChatPage(Gtk.Box):
 
             b_blk.connect("clicked", lambda b, n=rec: _toggle_block(b, n))
 
-            hbox.append(actions_box)
-            list_box.append(hbox)
+            inner.append(actions_box)
+            list_box.append(card)
 
         def _fetch_block_states():
             return {num: self.db.is_blocked(num) for num in block_buttons}
