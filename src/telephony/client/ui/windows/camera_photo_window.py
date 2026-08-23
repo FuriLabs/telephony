@@ -26,6 +26,7 @@ from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import VIEWFINDER_START_DELAY_MS, VIEWFINDER_SINK_WIDTH
+from telephony.client.services.camera_portal import CameraPortal
 from telephony.client.services.flashlight_client import FlashlightClient
 
 PIPELINE_DRAIN_TIMEOUT_NS = 2 * Gst.SECOND
@@ -52,6 +53,7 @@ class CameraPhoto(MediaCaptureWindow):
         self.pipeline = None
         self.camera_device = 0
         self.light_on = False
+        self.portal = CameraPortal()
         self.flashlight = FlashlightClient()
         self.bus = None
         self.bus_handler_id = None
@@ -221,11 +223,28 @@ class CameraPhoto(MediaCaptureWindow):
         self.flashlight.set_off()
 
     def _start_viewfinder(self):
-        """Start the camera viewfinder pipeline."""
+        """Start the viewfinder once the camera portal has answered.
+
+        The portal handshake is asynchronous only the first time; once
+        the remote is open, the answer is immediate and a flip or a
+        retake builds its pipeline in the same breath.
+        """
         if self._closed:
             return False
 
         self._stop_pipeline()
+        self.portal.open(self._on_portal_ready)
+        return False
+
+    def _on_portal_ready(self, devices):
+        """Build the viewfinder pipeline on the portal's remote."""
+        if self._closed:
+            return
+        device = self.portal.device_for(self.camera_device)
+        fd = self.portal.pipeline_fd()
+        if not devices or device is None or fd < 0:
+            self._show_error(_("Error: {e}").format(e="camera unavailable"))
+            return
 
         try:
             f = Gst.ElementFactory.find("gtk4paintablesink")
@@ -233,8 +252,8 @@ class CameraPhoto(MediaCaptureWindow):
                 logger.warning("[Camera-Photo] gtk4paintablesink not found")
 
             pipeline_str = (
-                f"droidcamsrc camera_device={self.camera_device} mode=2 ! tee name=t "
-                f"t. ! queue ! videoconvert ! videoflip video-direction=auto ! videoscale ! video/x-raw,width={VIEWFINDER_SINK_WIDTH} ! gtk4paintablesink name=sink "
+                f"pipewiresrc fd={fd} target-object={device.serial} ! tee name=t "
+                f"t. ! queue leaky=downstream max-size-buffers=2 ! videorate drop-only=true ! video/x-raw,framerate=30/1 ! videoconvert ! videoflip video-direction=auto ! videoscale ! video/x-raw,width={VIEWFINDER_SINK_WIDTH},pixel-aspect-ratio=1/1 ! gtk4paintablesink name=sink "
                 f"t. ! valve name=snap drop=true ! queue ! videoconvert ! videoflip video-direction=auto ! jpegenc ! "
                 f"appsink name=photosink emit-signals=True max-buffers=1 drop=True async=false sync=false"
             )
@@ -276,13 +295,7 @@ class CameraPhoto(MediaCaptureWindow):
             self._show_error(_("Error: {e}").format(e=err))
 
     def _stop_pipeline(self):
-        """Stop the GStreamer pipeline.
-
-        The state change is waited out, because droidcamsrc closes an
-        Android camera session slowly, and building the next pipeline
-        while the old one still holds the device maps the buffer
-        queues of two cameras at once.
-        """
+        """Stop the GStreamer pipeline, waiting out the state change."""
         self.viewfinder_widget.set_paintable(None)
         self._release_bus()
         if self.pipeline:
@@ -387,6 +400,7 @@ class CameraPhoto(MediaCaptureWindow):
 
         self.output_path = output_path
         self.btn_shutter.set_sensitive(True)
+        self.btn_light.set_active(False)
         self.review_image.set_filename(self.output_path)
         self.stack.set_visible_child_name("review")
 
@@ -461,4 +475,5 @@ class CameraPhoto(MediaCaptureWindow):
         self._light_off()
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
+        self.portal.close()
         self._remove_file_quietly(self.temp_capture_path)
