@@ -1079,12 +1079,17 @@ class SettingsWindow(Adw.Bin):
 
     def _confirm_delete_addressbook(self, uid, name):
         """Confirm and delete a local address book."""
+        def answered(answer):
+            if answer != "delete":
+                return
+            run_in_background(self.main_window.daemon.delete_address_book, uid,
+                              on_complete=self._on_addressbook_deleted)
+
         present_alert_sheet(
             self.get_root(), _("Delete Address Book"),
             _("Are you sure you want to permanently delete the '{name}' address book?").format(name=name),
             [("cancel", _("Cancel"), None), ("delete", _("Delete"), "destructive")],
-            lambda answer: self.main_window.daemon.delete_address_book(
-                uid, callback=self._on_addressbook_deleted) if answer == "delete" else None)
+            answered)
 
     def _on_addressbook_deleted(self, success):
         """Refresh the sources list after an address book removal."""
