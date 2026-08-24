@@ -76,6 +76,11 @@ def present_alert_sheet(window, heading, body, responses, on_response, extra_chi
     it is left by the back arrow the flow already has. A question asked
     with nothing underneath has no arrow to offer, so it carries its
     own way out.
+
+    The sheet presentation ignores the natural height of a wrapped
+    label, so the scroll area asks for the measured height of the whole
+    box up to a cap, the same way the info sheets already must; a long
+    question otherwise renders as a stub with its buttons out of reach.
     """
     host = window.sheet_host
     showing = sheet_navigation(host.get_sheet()) if host.get_open() else None
@@ -102,15 +107,17 @@ def present_alert_sheet(window, heading, body, responses, on_response, extra_chi
 
     for response_id, label_text, appearance in responses:
         button = Gtk.Button(label=label_text)
-        button.add_css_class("pill")
         if appearance:
             button.add_css_class(f"{appearance}-action")
         button.connect("clicked", lambda _b, rid=response_id: GLib.idle_add(
             lambda: [close_sheet_page(window), on_response(rid)] and False))
         box.append(button)
 
-    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, vexpand=True)
+    scroll = Gtk.ScrolledWindow(propagate_natural_height=True, vexpand=True,
+                                max_content_height=INFO_SHEET_MAX_HEIGHT)
     scroll.set_child(box)
+    natural_height = box.measure(Gtk.Orientation.VERTICAL, SHEET_CONTENT_WIDTH)[1]
+    scroll.set_min_content_height(min(natural_height, INFO_SHEET_MAX_HEIGHT))
     toolbar.set_content(scroll)
 
     present_sheet_page(window, Adw.NavigationPage(title=heading, child=toolbar))
