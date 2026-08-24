@@ -47,13 +47,13 @@ def _normalize_number_cached(number, region, permissive=False):
             break
 
     if any(c.isalpha() for c in number_str):
-        logger.warning(f"[Utils] normalize_number: Input contains letters, returning as-is: {number_str}")
+        logger.debug(f"[Utils] normalize_number: Input contains letters, returning as-is: {number_str}")
         return number_str
 
     if not number_str.startswith("+"):
         clean_check = number_str.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
         if clean_check.isdigit() and len(clean_check) < 7:
-            logger.info(f"[Utils] normalize_number: Preserving short number: {clean_check}")
+            logger.debug(f"[Utils] normalize_number: Preserving short number: {clean_check}")
             return clean_check
 
     try:
@@ -65,22 +65,22 @@ def _normalize_number_cached(number, region, permissive=False):
                     logger.warning(f"[Utils] normalize_number: CC mismatch! Input: {number_str}, Parsed CC: {parsed.country_code}. Returning input.")
                     return clean_input
             return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
-        logger.warning(f"[Utils] normalize_number: Number parsed but not possible: {number_str}")
+        logger.debug(f"[Utils] normalize_number: Number parsed but not possible: {number_str}")
     except phonenumbers.NumberParseException as e:
-        logger.warning(f"[Utils] normalize_number: Lib parsing failed for '{number_str}': {e}")
+        logger.debug(f"[Utils] normalize_number: Lib parsing failed for '{number_str}': {e}")
 
     clean_s = number_str.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
 
     if clean_s.isdigit() and 2 <= len(clean_s) <= 6:
-        logger.warning(f"[Utils] normalize_number: Detected short code or local number, returning raw: {clean_s}")
+        logger.debug(f"[Utils] normalize_number: Detected short code or local number, returning raw: {clean_s}")
         return clean_s
 
     if permissive:
-        logger.warning(f"[Utils] normalize_number: Permissive mode enabled, returning original: {number_str}")
+        logger.debug(f"[Utils] normalize_number: Permissive mode enabled, returning original: {number_str}")
         return number_str
 
     final_clean = re.sub(r'[^0-9\+\*\#]', '', number_str)
-    logger.warning(f"[Utils] normalize_number: Fallback regex cleaning used on: {number_str} -> {final_clean}")
+    logger.debug(f"[Utils] normalize_number: Fallback regex cleaning used on: {number_str} -> {final_clean}")
     return final_clean
 
 
