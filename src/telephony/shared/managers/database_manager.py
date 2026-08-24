@@ -1282,13 +1282,21 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Unblock Error: {e}")
 
     def is_blocked(self, number, kind="calls"):
-        """Check whether a number is blocked for one domain: calls or messages."""
-        column = "block_calls" if kind == "calls" else "block_messages"
+        """Check whether a number is blocked: for calls, messages, or any at all.
+
+        Enforcement asks for its own domain; surfaces that only need to
+        know whether an entry exists ask for any, since an entry always
+        blocks at least one domain.
+        """
+        conditions = {"calls": "AND block_calls = 1",
+                      "messages": "AND block_messages = 1",
+                      "any": ""}
+        condition = conditions.get(kind, conditions["calls"])
         try:
             clean_num = normalize_number(number, permissive=False)
             with self.lock:
                 c = self.conn_blocklist.cursor()
-                c.execute(f"SELECT id FROM blocklist WHERE number = ? AND {column} = 1", (clean_num,))
+                c.execute(f"SELECT id FROM blocklist WHERE number = ? {condition}", (clean_num,))
                 return c.fetchone() is not None
         except Exception as e:
             logger.error(f"[DB] Block check error: {e}")

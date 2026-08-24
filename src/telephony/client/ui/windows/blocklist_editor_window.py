@@ -19,7 +19,7 @@ from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import (blocklist_domains_for,
+from telephony.client.ui.widgets.common_widget import (
                                                       wire_blocklist_switch_locks,
                                                       close_sheet_page, present_alert_sheet)
 
@@ -72,17 +72,12 @@ class BlocklistEditor(Adw.NavigationPage):
             self.entry_note.set_text(name_preset)
 
         grp.add(self.entry_note)
-        self.domain_calls, self.domain_messages = blocklist_domains_for(parent_window)
-        self.sw_calls = None
-        self.sw_messages = None
-        if self.domain_calls:
-            self.sw_calls = Adw.SwitchRow(title=_("Block Calls"), active=True)
-            self.sw_calls.add_prefix(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
-            grp.add(self.sw_calls)
-        if self.domain_messages:
-            self.sw_messages = Adw.SwitchRow(title=_("Block Messages"), active=True)
-            self.sw_messages.add_prefix(Gtk.Image.new_from_icon_name("mail-unread-symbolic"))
-            grp.add(self.sw_messages)
+        self.sw_calls = Adw.SwitchRow(title=_("Block Calls"), active=True)
+        self.sw_calls.add_prefix(Gtk.Image.new_from_icon_name("call-stop-symbolic"))
+        grp.add(self.sw_calls)
+        self.sw_messages = Adw.SwitchRow(title=_("Block Messages"), active=True)
+        self.sw_messages.add_prefix(Gtk.Image.new_from_icon_name("mail-unread-symbolic"))
+        grp.add(self.sw_messages)
         wire_blocklist_switch_locks(self.sw_calls, self.sw_messages)
 
     def on_save(self, btn):
@@ -95,7 +90,7 @@ class BlocklistEditor(Adw.NavigationPage):
 
         norm_num = normalize_number(raw_num)
 
-        if self.db.is_blocked(norm_num):
+        if self.db.is_blocked(norm_num, kind="any"):
             logger.warning(f"[Blocklist] Block rejected: Number {norm_num} is already blocked.")
             self._show_error(_("Duplicate"), _("This number is already blocked."))
             return
@@ -108,8 +103,8 @@ class BlocklistEditor(Adw.NavigationPage):
                 else:
                     self._show_error(_("Database Error"), _("Failed to save to blocklist."))
 
-            block_calls = bool(self.sw_calls and self.sw_calls.get_active())
-            block_messages = bool(self.sw_messages and self.sw_messages.get_active())
+            block_calls = self.sw_calls.get_active()
+            block_messages = self.sw_messages.get_active()
             run_in_background(self.daemon.add_blocked_number, norm_num, note,
                               block_calls, block_messages, on_complete=done)
 

@@ -43,7 +43,8 @@ from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add
                                                       build_info_sheet,
                                                       install_sheet_host, present_sheet,
                                                       present_sheet_page, close_sheet_page,
-                                                      present_alert_sheet)
+                                                      present_alert_sheet,
+                                                      present_unblock_choice)
 
 CAPABILITY_BANNER_REASONS = ("no-modem", "airplane-mode", "no-voice-service")
 
@@ -874,17 +875,19 @@ class MainWindow(Adw.Window):
 
         blocked_list = self.db.get_blocked_numbers()
         is_blocked_id = None
+        blocked_entry = None
         norm_item_num = normalize_number(item.number)
         for entry in blocked_list:
             if normalize_number(entry["number"]) == norm_item_num:
                 is_blocked_id = entry["id"]
+                blocked_entry = dict(entry)
                 break
 
         if is_blocked_id:
             def _unblock():
-                self.daemon.remove_blocked_number(is_blocked_id)
-                self.notify_success(_("Unblocked"))
-            add_action(_("Unblock Number"), _unblock, needs_eds=True)
+                present_unblock_choice(self, self.daemon, blocked_entry, "calls",
+                                       lambda: self.notify_success(_("Unblocked")))
+            add_action(_("Unblock Number"), _unblock, needs_eds=True, opens_flow=True)
         else:
             lbl = _("Edit Contact") if item.is_saved else _("Add to Contacts")
             add_action(lbl, lambda: self.present_edit_contact(number_preset=item.number),

@@ -16,6 +16,7 @@
 
 from telephony.shared.utils.mms_utils import max_attachment_size
 from telephony.shared.utils.thread_utils import run_in_background
+from telephony.client.ui.widgets.common_widget import present_unblock_choice
 from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
 from telephony.shared.utils.datetime_utils import parse_timestamp
 
@@ -800,25 +801,26 @@ class ChatPage(Gtk.Box):
             def _toggle_block(btn, number):
                 self.btn_menu.set_active(False)
 
-                def _do_toggle():
-                    if not self.db.is_blocked(number):
-                        return False
-                    blocked = self.db.get_blocked_numbers()
+                def _find_entry():
                     norm_rec = normalize_number(number)
-                    for entry in blocked:
+                    for entry in self.db.get_blocked_numbers():
                         if normalize_number(entry["number"]) == norm_rec:
-                            self.app_window.daemon.remove_blocked_number(entry["id"])
-                            break
-                    return True
+                            return dict(entry)
+                    return None
 
-                def _after_toggle(did_unblock, target_btn=btn):
-                    if did_unblock:
+                def _found(entry, target_btn=btn):
+                    if entry is None:
+                        self.app_window.present_blocklist_editor(number_preset=number)
+                        return
+
+                    def unblocked():
                         target_btn.set_icon_name("action-unavailable-symbolic")
                         self.app_window.notify_success(_("Unblocked"))
-                        return
-                    self.app_window.present_blocklist_editor(number_preset=number)
 
-                run_in_background(_do_toggle, on_complete=_after_toggle)
+                    present_unblock_choice(self.app_window, self.app_window.daemon,
+                                           entry, "messages", unblocked)
+
+                run_in_background(_find_entry, on_complete=_found)
 
             b_blk.connect("clicked", lambda b, n=rec: _toggle_block(b, n))
 
@@ -826,7 +828,7 @@ class ChatPage(Gtk.Box):
             list_box.append(card)
 
         def _fetch_block_states():
-            return {num: self.db.is_blocked(num) for num in block_buttons}
+            return {num: self.db.is_blocked(num, kind="any") for num in block_buttons}
 
         def _apply_block_states(states):
             for num, btn in block_buttons.items():

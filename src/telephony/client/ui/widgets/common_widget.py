@@ -116,6 +116,48 @@ def present_alert_sheet(window, heading, body, responses, on_response, extra_chi
     present_sheet_page(window, Adw.NavigationPage(title=heading, child=toolbar))
 
 
+def present_unblock_choice(window, daemon, entry, context, on_done):
+    """Ask how much of a block to lift, when lifting it all would surprise.
+
+    An entry usually blocks calls and messages both, so unblocking from
+    one context would quietly unblock the other. When the entry only
+    blocks this context's domain there is nothing to ask and it is
+    removed outright; otherwise the question offers lifting just this
+    domain or the whole entry, titled by the number so it is clear what
+    is asked about. on_done runs after either choice, not on walking
+    away.
+    """
+    own = entry["block_calls"] if context == "calls" else entry["block_messages"]
+    other = entry["block_messages"] if context == "calls" else entry["block_calls"]
+
+    if not other:
+        daemon.remove_blocked_number(entry["id"])
+        on_done()
+        return
+
+    responses = []
+    if own:
+        label = _("Unblock Calls Only") if context == "calls" else _("Unblock Messages Only")
+        responses.append(("own", label, None))
+    responses.append(("all", _("Unblock Everything"), None))
+    body = (_("This number is also blocked for messages.") if context == "calls"
+            else _("This number is also blocked for calls."))
+
+    def answered(answer):
+        if answer == "all":
+            daemon.remove_blocked_number(entry["id"])
+        elif answer == "own":
+            keep_calls = False if context == "calls" else bool(entry["block_calls"])
+            keep_messages = bool(entry["block_messages"]) if context == "calls" else False
+            run_in_background(daemon.set_blocked_number_flags,
+                              entry["id"], keep_calls, keep_messages)
+        else:
+            return
+        on_done()
+
+    present_alert_sheet(window, entry["number"], body, responses, answered)
+
+
 def sheet_navigation(widget):
     """Find the navigation a sheet keeps its pages in.
 
@@ -648,36 +690,12 @@ class DataLoader:
         run_in_background(task)
 
 
-def blocklist_domains_for(main_window):
-    """Which blocklist domains this launcher speaks for: (calls, messages).
-
-    A single-purpose launcher blocks only its own domain; the full
-    window and a contacts-only window speak for both.
-    """
-    calls = bool(main_window.show_calls_mode)
-    messages = bool(main_window.show_messages_mode)
-    if calls and not messages:
-        return (True, False)
-    if messages and not calls:
-        return (False, True)
-    return (True, True)
-
-
 def wire_blocklist_switch_locks(sw_calls, sw_messages):
     """Keep at least one blocklist switch on; the last block locks.
 
-    With both switches present either may turn off while the other
-    holds; the survivor locks with a hint until both are on again.
-    A lone switch is information, not a question: it stays locked and
-    points at the trash can, which owns removal.
+    Either switch may turn off while the other holds; the survivor
+    locks with a hint until both are on again.
     """
-    if sw_calls is None or sw_messages is None:
-        lone = sw_calls or sw_messages
-        if lone is not None:
-            lone.set_sensitive(False)
-            lone.set_subtitle(_("Remove the block with the trash can"))
-        return
-
     def sync(*_args):
         calls_on = sw_calls.get_active()
         messages_on = sw_messages.get_active()

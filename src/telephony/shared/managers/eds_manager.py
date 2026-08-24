@@ -1286,7 +1286,7 @@ class EdsManager(GObject.Object):
 
     def get_display_name(self, number):
         """Return the user-facing name for a number, honoring the blocklist."""
-        if self.db_ref and self.db_ref.is_blocked(number):
+        if self.db_ref and self.db_ref.is_blocked(number, kind="any"):
             return _("Blocked Number")
         return self.get_contact_name(number)
 

@@ -351,7 +351,7 @@ class MessagesView(Adw.Bin):
                 name = custom_name
         else:
             norm = normalize_number(target)
-            if self.db.is_blocked(norm):
+            if self.db.is_blocked(norm, kind="any"):
                 name = _("Blocked Number")
             else:
                 custom_name = self.db.get_group_name([target])
