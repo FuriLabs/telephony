@@ -95,24 +95,39 @@ class BlocklistEditor(Adw.NavigationPage):
             self._show_error(_("Duplicate"), _("This number is already blocked."))
             return
 
-        def _do_block():
-            def done(success):
-                if success:
-                    logger.info(f"[Blocklist] Added number: {norm_num}")
-                    close_sheet_page(self.get_root())
-                else:
-                    self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+        block_calls = bool(self.sw_calls and self.sw_calls.get_active())
+        block_messages = bool(self.sw_messages and self.sw_messages.get_active())
 
-            block_calls = self.sw_calls.get_active()
-            block_messages = self.sw_messages.get_active()
+        block_calls = self.sw_calls.get_active()
+        block_messages = self.sw_messages.get_active()
+
+        def _start_block(done):
             run_in_background(self.daemon.add_blocked_number, norm_num, note,
                               block_calls, block_messages, on_complete=done)
 
+        def _confirmed():
+            """Leave first, then block.
+
+            Answering the question is the end of the flow. Falling back
+            into the block sheet for however long the write takes reads
+            as the question not having worked, so the sheet goes first
+            and the write reports through a toast if it fails.
+            """
+            close_sheet_page(self.get_root())
+            _start_block(lambda ok: None if ok else
+                         self.app_window.notify_error(_("Failed to save to blocklist.")))
+
         if self.eds.search_contacts(norm_num):
-            self._confirm_block_remove(raw_num, _do_block)
+            self._confirm_block_remove(raw_num, _confirmed)
             return
 
-        _do_block()
+        def _direct_done(success):
+            if success:
+                close_sheet_page(self.get_root())
+            else:
+                self._show_error(_("Database Error"), _("Failed to save to blocklist."))
+
+        _start_block(_direct_done)
 
     def _confirm_block_remove(self, _number_str, on_confirm):
         """Show confirmation to block and remove from contacts."""
