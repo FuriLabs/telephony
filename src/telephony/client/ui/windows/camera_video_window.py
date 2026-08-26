@@ -15,7 +15,6 @@
 
 import os
 import time
-import tempfile
 from gettext import gettext as _
 
 import gi
@@ -25,7 +24,7 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.constants import (CAPTURE_SHEET_HEIGHT, VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
+from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 from telephony.client.ui.widgets.common_widget import close_sheet_page
 
@@ -43,7 +42,7 @@ class CameraVideo(MediaCaptureWindow):
 
     def __init__(self, parent_window, on_attach_callback):
         super().__init__()
-        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
+        self.request_capture_height(parent_window)
 
         registry = Gst.Registry.get()
         droidvdec = registry.lookup_feature("droidvdec")
@@ -92,9 +91,6 @@ class CameraVideo(MediaCaptureWindow):
         header.set_show_end_title_buttons(False)
         content.append(header)
 
-        btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_cancel_clicked(b) or False))
-        header.pack_start(btn_cancel)
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
@@ -104,7 +100,7 @@ class CameraVideo(MediaCaptureWindow):
         self.page_capture = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         card_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        card_box.add_css_class("card")
+        card_box.add_css_class("preview-round")
         card_box.set_hexpand(True)
         card_box.set_vexpand(True)
         card_box.set_margin_top(10)
@@ -114,12 +110,14 @@ class CameraVideo(MediaCaptureWindow):
         card_box.set_overflow(Gtk.Overflow.HIDDEN)
 
         self.viewfinder_widget = Gtk.Picture()
+        self.viewfinder_widget.add_css_class("preview-round")
+        self.viewfinder_widget.set_overflow(Gtk.Overflow.HIDDEN)
         self.viewfinder_widget.set_can_shrink(True)
         self.viewfinder_widget.set_hexpand(True)
         self.viewfinder_widget.set_vexpand(True)
         self.viewfinder_widget.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        card_box.append(self.viewfinder_widget)
+        card_box.append(self.letterbox(self.viewfinder_widget))
         self.page_capture.append(card_box)
 
         ctrl_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -148,7 +146,7 @@ class CameraVideo(MediaCaptureWindow):
         self.page_review = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         review_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        review_card.add_css_class("card")
+        review_card.add_css_class("preview-round")
         review_card.set_hexpand(True)
         review_card.set_vexpand(True)
         review_card.set_margin_top(10)
@@ -158,12 +156,14 @@ class CameraVideo(MediaCaptureWindow):
         review_card.set_overflow(Gtk.Overflow.HIDDEN)
 
         self.review_widget = Gtk.Picture()
+        self.review_widget.add_css_class("preview-round")
+        self.review_widget.set_overflow(Gtk.Overflow.HIDDEN)
         self.review_widget.set_can_shrink(True)
         self.review_widget.set_hexpand(True)
         self.review_widget.set_vexpand(True)
         self.review_widget.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        review_card.append(self.review_widget)
+        review_card.append(self.letterbox(self.review_widget))
         self.page_review.append(review_card)
 
         act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -228,6 +228,7 @@ class CameraVideo(MediaCaptureWindow):
             if sink:
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
+                self.reveal_on_first_frame(self.viewfinder_widget)
 
             self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_viewfinder_message)
 
@@ -280,7 +281,7 @@ class CameraVideo(MediaCaptureWindow):
 
     def _start_recording(self):
         """Initialize and start the GStreamer recording pipeline."""
-        self.output_path = os.path.join(tempfile.gettempdir(), f"video_{int(time.time())}.mkv")
+        self.output_path = os.path.join(self.capture_dir(), f"video_{int(time.time())}.mkv")
 
         pipeline_str = (
             f"matroskamux name=mux ! filesink location={self.output_path} "
@@ -299,6 +300,7 @@ class CameraVideo(MediaCaptureWindow):
             if sink:
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
+                self.reveal_on_first_frame(self.viewfinder_widget)
 
             self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_record_message)
 
@@ -444,6 +446,7 @@ class CameraVideo(MediaCaptureWindow):
 
             paintable = sink.get_property("paintable")
             self.review_widget.set_paintable(paintable)
+            self.reveal_on_first_frame(self.review_widget)
 
             self.player_bus, self.player_bus_handler_id = self._watch_bus(self.player, self._on_player_message)
 
@@ -471,15 +474,27 @@ class CameraVideo(MediaCaptureWindow):
         if self.player:
             self.player.set_state(Gst.State.NULL)
             self.player = None
+        self.review_widget.set_visible(False)
         self.btn_play.set_icon_name("media-playback-start-symbolic")
         self.lbl_progress.set_label(self._playback_progress_text(0, 0))
         self.progress_bar.set_fraction(0.0)
 
     def _on_player_message(self, bus, message):
-        """Handle playback messages."""
+        """Handle playback messages.
+
+        The end of the video is not the end of the player: tearing it
+        down leaves the picture holding a dead paintable, which paints
+        black. Rewound and paused it keeps the first frame up as a
+        poster, and play starts it again from the top.
+        """
         t = message.type
         if t == Gst.MessageType.EOS:
-            self._stop_playback()
+            self.player.seek_simple(Gst.Format.TIME, Gst.SeekFlags.FLUSH, 0)
+            self.player.set_state(Gst.State.PAUSED)
+            if self.progress_timer_id:
+                self._cancel_timeout(self.progress_timer_id)
+                self.progress_timer_id = None
+            self.btn_play.set_icon_name("media-playback-start-symbolic")
         elif t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error(f"[Camera-Video] Playback error: {err} : {debug}")
@@ -514,10 +529,6 @@ class CameraVideo(MediaCaptureWindow):
             if self.on_attach_callback:
                 self._attached = True
                 self.on_attach_callback(self.output_path)
-        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
-
-    def _on_cancel_clicked(self, btn):
-        """Handle cancel button click."""
         GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
     def _on_closed(self, _dialog):

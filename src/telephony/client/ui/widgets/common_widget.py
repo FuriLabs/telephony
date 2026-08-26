@@ -211,7 +211,10 @@ def present_sheet_page(window, page, replace=False):
 
     A page going onto an open sheet asks for the height the sheet
     already has, so a short page does not shrink the sheet around it
-    and let it spring back when the page is left.
+    and let it spring back when the page is left. A page that asks for
+    more keeps its own ask: a capture page opened from a small chooser
+    would otherwise start small and leap once its viewfinder starts
+    drawing.
 
     The page takes the focus itself so it does not go to whatever the
     page happens to hold first. A text field taking it brings the
@@ -223,7 +226,8 @@ def present_sheet_page(window, page, replace=False):
     host = window.sheet_host
     nav = sheet_navigation(host.get_sheet()) if host.get_open() else None
     if nav is not None:
-        page.set_size_request(-1, nav.get_height())
+        own_height = page.get_size_request()[1]
+        page.set_size_request(-1, max(nav.get_height(), own_height))
         if replace:
             nav.replace([page])
             return
