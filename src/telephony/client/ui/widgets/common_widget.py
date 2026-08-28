@@ -506,8 +506,14 @@ class EntryListGroup(Adw.PreferencesGroup):
 
         def sync(*_args):
             action.set_sensitive(self._values_complete(self._add_entries))
+
+        def commit_on_enter(_row):
+            if self._values_complete(self._add_entries):
+                GLib.idle_add(lambda: self._commit_add(expander) or False)
+
         for entry in self._add_entries.values():
             entry.connect("changed", sync)
+            entry.connect("entry-activated", commit_on_enter)
         sync()
         return expander
 
