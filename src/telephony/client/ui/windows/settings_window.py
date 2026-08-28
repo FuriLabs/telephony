@@ -883,9 +883,10 @@ class SettingsWindow(Adw.Bin):
             self.network_emerg_rows.append(row)
 
     def _persist_emergency_entries(self, entries):
-        """Write the configured emergency numbers and reload the list."""
+        """Write the emergency numbers and show exactly what was written."""
         self.main_window.gsettings_mgr.set_emergency_numbers(entries)
-        self._reload_emergency_numbers()
+        self.grp_emerg_list.set_entries(entries)
+        self._reload_network_emergency_rows()
 
     def _on_emergency_added(self, values):
         """Store a typed emergency contact."""
@@ -973,11 +974,11 @@ class SettingsWindow(Adw.Bin):
         self.grp_reject_list.set_entries([{"message": m} for m in messages])
 
     def _persist_reject_messages(self, messages):
-        """Write the decline messages and reload the list."""
+        """Write the decline messages and show exactly what was written."""
         self.main_window.gsettings_mgr.set_reject_call_messages(messages)
         self.main_window.gsettings_mgr.set_setting(
             "reject_call_message", messages[0] if messages else "")
-        self._reload_reject_messages()
+        self.grp_reject_list.set_entries([{"message": m} for m in messages])
 
     def _on_reject_added(self, values):
         """Store a typed decline message."""
