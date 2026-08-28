@@ -278,8 +278,8 @@ class SettingsWindow(Adw.Bin):
         def answered(answer):
             if answer != "delete":
                 return
-            self.main_window.daemon.remove_blocked_number(entry["id"])
-            GLib.timeout_add(300, lambda: self._reload_blocklist() or False)
+            self.main_window.daemon.remove_blocked_number(
+                entry["id"], callback=self._reload_blocklist)
 
         present_alert_sheet(
             self.get_root(), entry["number"],
