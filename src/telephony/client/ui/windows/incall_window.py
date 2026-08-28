@@ -1316,8 +1316,9 @@ class InCallWindow(Adw.Window):
             Gio.AppInfo.launch_default_for_uri(search_url, None)
 
     def on_silent_click(self, btn):
-        """Silences the ringer and hides the window."""
+        """Silence the ringer and put the window away until wanted again."""
         self.ofono.daemon.silence_ring()
+        self.defer_present = True
         self.set_visible(False)
 
     def on_answer_click(self, btn):
