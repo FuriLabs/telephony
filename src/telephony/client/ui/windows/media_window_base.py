@@ -20,7 +20,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gst', '1.0')
-from gi.repository import Gtk, Adw, Gst, GLib, Gsk, Graphene
+from gi.repository import Gtk, Adw, Gst, GLib, Gdk, Gsk, Graphene
 
 from telephony.shared.constants import CAPTURE_SHEET_HEIGHT
 from telephony.shared.utils.log_utils import logger
@@ -152,6 +152,16 @@ class MediaCaptureWindow(Adw.NavigationPage):
                 state["handler"] = None
 
         state["handler"] = paintable.connect("invalidate-contents", first_frame)
+
+    def light_icon_name(self):
+        """Pick the torch icon the theme can actually draw.
+
+        Adwaita ships no flashlight; the platform theme usually does.
+        """
+        theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+        if theme.has_icon("flashlight-symbolic"):
+            return "flashlight-symbolic"
+        return "display-brightness-symbolic"
 
     def letterbox(self, picture):
         """Keep a picture from dictating the size of its box.
