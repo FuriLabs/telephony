@@ -40,7 +40,7 @@ class ChatBubbleFactory:
     _texture_cache = {}
 
     @staticmethod
-    def _safe_run(func, error_msg="Action failed"):
+    def safe_run(func, error_msg="Action failed"):
         """Wrapper to execute a function safely with logging."""
         try:
             func()
@@ -48,7 +48,7 @@ class ChatBubbleFactory:
             logger.exception(f"{error_msg}: {e}")
 
     @staticmethod
-    def _create_bubble_widgets(is_incoming=True):
+    def create_bubble_widgets(is_incoming=True):
         """Create a bubble layout (either incoming or outgoing)."""
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         row.set_margin_top(2)
@@ -120,15 +120,15 @@ class ChatBubbleFactory:
         group = Gio.SimpleActionGroup()
         for key in ("copy", "copy-number", "add-contact", "reschedule", "forward", "unread", "delete"):
             action = Gio.SimpleAction.new(key, None)
-            action.connect("activate", lambda a, param, k=key: ChatBubbleFactory._safe_run(
-                lambda: ChatBubbleFactory._run_menu_action(widgets, k.replace("-", "_")), "Menu action failed"))
+            action.connect("activate", lambda a, param, k=key: ChatBubbleFactory.safe_run(
+                lambda: ChatBubbleFactory.run_menu_action(widgets, k.replace("-", "_")), "Menu action failed"))
             group.add_action(action)
         btn_menu.insert_action_group("bubble", group)
-        btn_menu.set_create_popup_func(lambda mb: ChatBubbleFactory._prepare_menu(widgets))
+        btn_menu.set_create_popup_func(lambda mb: ChatBubbleFactory.prepare_menu(widgets))
         return widgets
 
     @staticmethod
-    def _prepare_menu(w):
+    def prepare_menu(w):
         """Build the context menu model for the currently bound message."""
         ctx = w["menu_ctx"]
         if not ctx:
@@ -159,7 +159,7 @@ class ChatBubbleFactory:
         w["btn_menu"].set_menu_model(menu)
 
     @staticmethod
-    def _run_menu_action(w, action):
+    def run_menu_action(w, action):
         """Execute a context menu action against the currently bound message."""
         ctx = w["menu_ctx"]
         if not ctx:
@@ -202,10 +202,10 @@ class ChatBubbleFactory:
         div_box.append(div_lbl)
         stack.add_named(div_box, "divider")
 
-        in_widgets = ChatBubbleFactory._create_bubble_widgets(is_incoming=True)
+        in_widgets = ChatBubbleFactory.create_bubble_widgets(is_incoming=True)
         stack.add_named(in_widgets["root"], "incoming")
 
-        out_widgets = ChatBubbleFactory._create_bubble_widgets(is_incoming=False)
+        out_widgets = ChatBubbleFactory.create_bubble_widgets(is_incoming=False)
         stack.add_named(out_widgets["root"], "outgoing")
 
         list_item.set_child(stack)
@@ -237,7 +237,7 @@ class ChatBubbleFactory:
 
         if item.body:
             if not item.cached_markup:
-                item.cached_markup = ChatBubbleFactory._linkify(item.body)
+                item.cached_markup = ChatBubbleFactory.linkify(item.body)
             target_w["lbl_msg"].set_markup(item.cached_markup)
             target_w["lbl_msg"].set_visible(True)
         else:
@@ -268,7 +268,7 @@ class ChatBubbleFactory:
             m_box.set_visible(bool(processed_files))
             if processed_files:
                 def check_func(): return w.get("load_id") == current_id
-                ChatBubbleFactory._create_attachment_layout(m_box, processed_files, target_w["bubble"], check_func)
+                ChatBubbleFactory.create_attachment_layout(m_box, processed_files, target_w["bubble"], check_func)
 
             m_box.last_paths = new_paths_sig
 
@@ -349,7 +349,7 @@ class ChatBubbleFactory:
         }
 
     @staticmethod
-    def _resolve_icon_name(mime, path):
+    def resolve_icon_name(mime, path):
         """Resolve icon name from mime type."""
         if not mime:
             return "dialog-question-symbolic"
@@ -372,14 +372,14 @@ class ChatBubbleFactory:
         return "text-x-generic-symbolic"
 
     @staticmethod
-    def _create_single_attachment(meta, widget_ref, check_func):
+    def create_single_attachment(meta, widget_ref, check_func):
         """Create a single attachment widget (60px) with async loading."""
         real_path = meta["path"]
 
         btn = Gtk.Button()
         btn.set_has_frame(False)
         btn.add_css_class("attachment-btn")
-        btn.connect("clicked", lambda b: ChatBubbleFactory._on_attachment_clicked(b, real_path, widget_ref))
+        btn.connect("clicked", lambda b: ChatBubbleFactory.on_attachment_clicked(b, real_path, widget_ref))
 
         aspect = Gtk.AspectFrame(obey_child=False, ratio=1.0)
         aspect.set_size_request(60, 60)
@@ -406,14 +406,14 @@ class ChatBubbleFactory:
         stack.add_named(icon_box, "icon")
         stack.set_visible_child_name("icon")
 
-        ChatBubbleFactory._detect_and_load_async(real_path, icon, stack, check_func)
+        ChatBubbleFactory.detect_and_load_async(real_path, icon, stack, check_func)
 
         return btn
 
     @staticmethod
-    def _detect_and_load_async(path, icon_widget, stack_ref, check_func):
+    def detect_and_load_async(path, icon_widget, stack_ref, check_func):
         """Worker to detect mime and load thumbnail."""
-        def _bg_task():
+        def bg_task():
             if not os.path.exists(path):
                 return None, "dialog-error-symbolic", None
 
@@ -427,7 +427,7 @@ class ChatBubbleFactory:
             if not mime:
                 mime, _encoding = mimetypes.guess_type(path)
 
-            icon_name = ChatBubbleFactory._resolve_icon_name(mime, path)
+            icon_name = ChatBubbleFactory.resolve_icon_name(mime, path)
 
             thumb_path = None
             is_video = mime and mime.startswith('video/')
@@ -476,7 +476,7 @@ class ChatBubbleFactory:
 
             return thumb_path, icon_name, is_video
 
-        def _update_ui(thumb_path, icon_name, is_video):
+        def update_ui(thumb_path, icon_name, is_video):
             if not check_func():
                 return False
 
@@ -487,7 +487,7 @@ class ChatBubbleFactory:
                 pic = Gtk.Picture()
                 pic.set_content_fit(Gtk.ContentFit.COVER)
                 pic.set_can_shrink(True)
-                pic.set_paintable(ChatBubbleFactory._get_cached_texture(thumb_path))
+                pic.set_paintable(ChatBubbleFactory.get_cached_texture(thumb_path))
 
                 if is_video:
                     overlay = Gtk.Overlay()
@@ -509,10 +509,10 @@ class ChatBubbleFactory:
 
         cached = ChatBubbleFactory._thumb_meta_cache.get(path)
         if cached is not None:
-            GLib.idle_add(lambda: _update_ui(*cached))
+            GLib.idle_add(lambda: update_ui(*cached))
             return
 
-        def _on_done(f):
+        def on_done(f):
             if not check_func():
                 return
 
@@ -525,15 +525,15 @@ class ChatBubbleFactory:
                     while len(meta_cache) > 256:
                         meta_cache.pop(next(iter(meta_cache)))
 
-                GLib.idle_add(lambda: _update_ui(*res))
+                GLib.idle_add(lambda: update_ui(*res))
 
             except Exception as e:
                 logger.debug(f"Async detection done error: {e}")
 
-        ChatBubbleFactory._executor.submit(_bg_task).add_done_callback(_on_done)
+        ChatBubbleFactory._executor.submit(bg_task).add_done_callback(on_done)
 
     @staticmethod
-    def _get_cached_texture(thumb_path):
+    def get_cached_texture(thumb_path):
         """Return a texture for a thumbnail file, decoding it only once."""
         cache = ChatBubbleFactory._texture_cache
         tex = cache.get(thumb_path)
@@ -545,7 +545,7 @@ class ChatBubbleFactory:
         return tex
 
     @staticmethod
-    def _create_attachment_layout(container, files, widget_ref, check_func):
+    def create_attachment_layout(container, files, widget_ref, check_func):
         """
         Create a grid/row layout for attachments.
         Fixed size 60px, max 3 per row.
@@ -560,11 +560,11 @@ class ChatBubbleFactory:
             container.append(row_box)
 
             for meta in chunk:
-                widget = ChatBubbleFactory._create_single_attachment(meta, widget_ref, check_func)
+                widget = ChatBubbleFactory.create_single_attachment(meta, widget_ref, check_func)
                 row_box.append(widget)
 
     @staticmethod
-    def _on_attachment_clicked(btn, path, widget_ref):
+    def on_attachment_clicked(btn, path, widget_ref):
         """Show the attachment actions menu."""
         group = Gio.SimpleActionGroup()
         entries = (
@@ -574,7 +574,7 @@ class ChatBubbleFactory:
         )
         for key, callback in entries:
             action = Gio.SimpleAction.new(key, None)
-            action.connect("activate", lambda a, param, cb=callback: ChatBubbleFactory._safe_run(cb))
+            action.connect("activate", lambda a, param, cb=callback: ChatBubbleFactory.safe_run(cb))
             group.add_action(action)
 
         menu = Gio.Menu()
@@ -590,7 +590,7 @@ class ChatBubbleFactory:
         GLib.idle_add(lambda: pop.popup() or False)
 
     @staticmethod
-    def _get_root_window(widget):
+    def get_root_window(widget):
         """Helper to find the root Gtk.Window."""
         root = widget.get_root()
         if isinstance(root, Gtk.Window):
@@ -621,7 +621,7 @@ class ChatBubbleFactory:
             mt, _enc = mimetypes.guess_type(path)
             content_type = mt or "application/octet-stream"
 
-        parent = ChatBubbleFactory._get_root_window(widget_ref)
+        parent = ChatBubbleFactory.get_root_window(widget_ref)
         dialog = Gtk.AppChooserDialog(
             transient_for=parent,
             modal=True,
@@ -645,7 +645,7 @@ class ChatBubbleFactory:
     @staticmethod
     def on_save_as(src_path, widget_ref):
         """Save attachment as..."""
-        parent = ChatBubbleFactory._get_root_window(widget_ref)
+        parent = ChatBubbleFactory.get_root_window(widget_ref)
 
         dialog = Gtk.FileChooserNative(
             title=_("Save File As"),
@@ -669,7 +669,7 @@ class ChatBubbleFactory:
         dialog.show()
 
     @staticmethod
-    def _linkify(text):
+    def linkify(text):
         """Convert URLs and emails to links in text."""
         if not text:
             return ""

@@ -52,7 +52,7 @@ class CustomToneListWindow(Adw.NavigationPage):
 
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
-        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_save_clicked(b) or False))
+        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_save_clicked(b) or False))
         header.pack_end(btn_save)
 
         view.add_top_bar(header)
@@ -75,7 +75,7 @@ class CustomToneListWindow(Adw.NavigationPage):
         self.search_timer = None
         self.search_token = 0
         self._source_map = {}
-        run_in_background(self._load_source_map)
+        run_in_background(self.load_source_map)
 
         main_box.append(search_box)
 
@@ -110,32 +110,32 @@ class CustomToneListWindow(Adw.NavigationPage):
 
         self.stack.set_visible_child_name("list")
 
-        self.search_entry.connect("search-changed", self._on_search_changed)
-        self.search_results_list.connect("row-activated", self._on_result_activated)
+        self.search_entry.connect("search-changed", self.on_search_changed)
+        self.search_results_list.connect("row-activated", self.on_result_activated)
 
         self.eds_signals = []
         self.db_signals = []
-        self._connect_external_signals()
+        self.connect_external_signals()
 
-        self.connect("map", self._on_map)
-        self.connect("unmap", self._on_unmap)
+        self.connect("map", self.on_map)
+        self.connect("unmap", self.on_unmap)
 
-        self._refresh_list()
+        self.refresh_list()
 
-    def _connect_external_signals(self):
+    def connect_external_signals(self):
         """Connect the external refresh signals if not already connected."""
         if self.db_signals:
             return
         if self.app_window is not None:
-            sig_id = self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
+            sig_id = self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self.refresh_list))
             self.db_signals.append((self.app_window.db, sig_id))
 
-    def _on_map(self, widget):
+    def on_map(self, widget):
         """Reconnect external signals and catch up when shown again."""
-        self._connect_external_signals()
-        self._refresh_list()
+        self.connect_external_signals()
+        self.refresh_list()
 
-    def _on_unmap(self, widget):
+    def on_unmap(self, widget):
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
@@ -156,7 +156,7 @@ class CustomToneListWindow(Adw.NavigationPage):
         if nav and nav.get_visible_page() is self:
             nav.pop()
 
-    def _on_save_clicked(self, btn):
+    def on_save_clicked(self, btn):
         """Handle save button click."""
         if self.mode == "sms":
             self.gsettings_mgr.set_notification_override_sms_custom_tone_contacts(self.local_tones)
@@ -164,7 +164,7 @@ class CustomToneListWindow(Adw.NavigationPage):
             self.gsettings_mgr.set_notification_override_call_custom_contacts(self.local_tones)
         GLib.idle_add(lambda: self.close() or False)
 
-    def _refresh_list(self):
+    def refresh_list(self):
         """Refresh the list of configured tones."""
         if (self.grp_list is not None) and self.grp_list:
             self.page_list.remove(self.grp_list)
@@ -176,9 +176,9 @@ class CustomToneListWindow(Adw.NavigationPage):
             pass
 
         for c in self.local_tones:
-            self._create_tone_row(c)
+            self.create_tone_row(c)
 
-    def _create_tone_row(self, tone_data):
+    def create_tone_row(self, tone_data):
         """Create a row for a configured tone."""
         name = tone_data.get("name", _("Unknown"))
         number = tone_data.get("number", "")
@@ -194,45 +194,45 @@ class CustomToneListWindow(Adw.NavigationPage):
         btn_edit.add_css_class("flat")
         btn_edit.add_css_class("circular")
         btn_edit.set_tooltip_text(_("Edit"))
-        btn_edit.connect("clicked", lambda b: self._on_edit_tone(tone_data))
+        btn_edit.connect("clicked", lambda b: self.on_edit_tone(tone_data))
         row.add_suffix(btn_edit)
 
         btn_del = Gtk.Button(icon_name="user-trash-symbolic")
         btn_del.add_css_class("flat")
         btn_del.add_css_class("circular")
         btn_del.set_tooltip_text(_("Remove"))
-        btn_del.connect("clicked", lambda b: self._delete_tone(tone_data))
+        btn_del.connect("clicked", lambda b: self.delete_tone(tone_data))
 
         row.add_suffix(btn_del)
         self.grp_list.add(row)
 
-    def _on_edit_tone(self, tone_data):
+    def on_edit_tone(self, tone_data):
         """Edit an existing tone configuration."""
-        self._open_audio_picker(tone_data)
+        self.open_audio_picker(tone_data)
 
-    def _delete_tone(self, tone_data):
+    def delete_tone(self, tone_data):
         """Delete a tone configuration (defer file deletion)."""
         target_num = normalize_number(tone_data.get("number", ""))
         self.local_tones = [c for c in self.local_tones if normalize_number(c.get("number", "")) != target_num]
 
-        GLib.idle_add(lambda: self._refresh_list())
+        GLib.idle_add(lambda: self.refresh_list())
 
-    def _load_source_map(self):
+    def load_source_map(self):
         """Fetch the address book names once; blocking, call from a worker."""
         names = {}
         for source in self.eds.get_sources_info():
             names[source['uid']] = source['name']
         self._source_map = names
 
-    def _on_search_changed(self, entry):
+    def on_search_changed(self, entry):
         """Handle search text change."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
 
-        self.search_timer = GLib.timeout_add(200, self._perform_search)
+        self.search_timer = GLib.timeout_add(200, self.perform_search)
 
-    def _perform_search(self):
+    def perform_search(self):
         """Execute search."""
         self.search_timer = None
         query = self.search_entry.get_text().strip()
@@ -248,31 +248,31 @@ class CustomToneListWindow(Adw.NavigationPage):
         def done(contacts):
             if self.search_token != current_token:
                 return
-            self._build_search_results(contacts or [], query)
+            self.build_search_results(contacts or [], query)
 
         run_in_background(self.eds.search_contacts, query, on_complete=done)
         return False
 
-    def _is_result_added(self, normalized_number):
+    def is_result_added(self, normalized_number):
         """Return True when the normalized number already has a custom tone."""
         for existing in self.local_tones:
             if normalize_number(existing.get("number", "")) == normalized_number:
                 return True
         return False
 
-    def _build_search_results(self, contacts, query):
+    def build_search_results(self, contacts, query):
         """Build search results UI."""
         populate_contact_search_results(
             self.search_results_list,
             contacts,
             self.eds,
-            is_added=self._is_result_added,
-            on_add=lambda row: self._on_result_activated(None, row),
+            is_added=self.is_result_added,
+            on_add=lambda row: self.on_result_activated(None, row),
             translate_label=translate_phone_label,
             unknown_name=_("Unknown"),
             source_map=self._source_map)
 
-    def _on_result_activated(self, listbox, row):
+    def on_result_activated(self, listbox, row):
         """Handle activation of a search result."""
         if not row.get_sensitive():
             return
@@ -281,9 +281,9 @@ class CustomToneListWindow(Adw.NavigationPage):
         if data is None:
             return
 
-        self._open_audio_picker(data)
+        self.open_audio_picker(data)
 
-    def _open_audio_picker(self, contact_data):
+    def open_audio_picker(self, contact_data):
         """Open file picker to select custom tone."""
         dialog = Gtk.FileChooserNative(
             title=_("Select Tone for {name}").format(name=contact_data.get('name')),
@@ -307,13 +307,13 @@ class CustomToneListWindow(Adw.NavigationPage):
                 f = d.get_file()
                 path = f.get_path()
                 if path:
-                    self._process_selected_file(contact_data, path)
+                    self.process_selected_file(contact_data, path)
             GLib.idle_add(lambda: d.destroy() or False)
 
         dialog.connect("response", on_response)
         dialog.show()
 
-    def _process_selected_file(self, contact_data, src_path):
+    def process_selected_file(self, contact_data, src_path):
         """Copy selected file and add to configuration."""
         target_dir = os.path.expanduser("~/.local/share/telephony/sounds")
         if not os.path.exists(target_dir):
@@ -346,10 +346,10 @@ class CustomToneListWindow(Adw.NavigationPage):
 
         self.local_tones.insert(0, new_entry)
 
-        def _update_ui():
+        def update_ui():
             self.search_entry.set_text("")
             self.stack.set_visible_child_name("list")
-            self._refresh_list()
+            self.refresh_list()
             return False
 
-        GLib.idle_add(_update_ui)
+        GLib.idle_add(update_ui)

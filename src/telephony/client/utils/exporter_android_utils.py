@@ -23,7 +23,7 @@ from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.datetime_utils import parse_timestamp
 
 
-def _dt_to_android_ms(ts_str):
+def dt_to_android_ms(ts_str):
     """Convert a timestamp string to Android millisecond epoch string."""
     return str(int(parse_timestamp(ts_str).timestamp() * 1000))
 
@@ -63,7 +63,7 @@ def export_android_sms(db_manager, file_path):
                     msg_type_db = row_dict.get('type', 'sms')
                     attachments_json = row_dict.get('attachments', '[]')
 
-                    date_ms = _dt_to_android_ms(timestamp_str)
+                    date_ms = dt_to_android_ms(timestamp_str)
                     type_val = "2" if direction == "outgoing" else "1"
 
                     try:
@@ -172,7 +172,7 @@ def export_android_calls(db_manager, file_path):
                     duration = row_dict.get('duration', 0)
                     timestamp_str = row_dict.get('timestamp', '')
 
-                    date_ms = _dt_to_android_ms(timestamp_str)
+                    date_ms = dt_to_android_ms(timestamp_str)
 
                     type_val = "1"
                     if direction == "outgoing":

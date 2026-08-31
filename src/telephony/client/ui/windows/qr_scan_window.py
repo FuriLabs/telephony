@@ -53,7 +53,7 @@ class QrScanDialog(MediaCaptureWindow):
         self.bus = None
         self.bus_handler_id = None
         self.picture = None
-        self._found = False
+        self.found = False
         self._last_bad_toast = 0.0
 
         self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
@@ -97,24 +97,24 @@ class QrScanDialog(MediaCaptureWindow):
         hint.add_css_class("dim-label")
         content.append(hint)
 
-        self.connect("hidden", self._on_closed)
-        self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
+        self.connect("hidden", self.on_closed)
+        self.schedule_timeout(VIEWFINDER_START_DELAY_MS, self.start_viewfinder)
 
-    def _start_viewfinder(self):
+    def start_viewfinder(self):
         """Start the camera pipeline with the zbar decoder branch."""
         try:
             self.pipeline = Gst.parse_launch(SCAN_PIPELINE)
             sink = self.pipeline.get_by_name("sink")
             if sink:
                 self.picture.set_paintable(sink.get_property("paintable"))
-            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_message)
+            self.bus, self.bus_handler_id = self.watch_bus(self.pipeline, self.on_message)
             self.pipeline.set_state(Gst.State.PLAYING)
         except Exception as e:
             logger.error(f"[QrScan] Failed to start viewfinder: {e}")
             self.toast_overlay.add_toast(Adw.Toast.new(_("Error: {e}").format(e=e)))
         return False
 
-    def _on_message(self, _bus, message):
+    def on_message(self, _bus, message):
         """Watch the bus for zbar detections and pipeline errors."""
         if message.type == Gst.MessageType.ERROR:
             err, dbg = message.parse_error()
@@ -125,11 +125,11 @@ class QrScanDialog(MediaCaptureWindow):
         struct = message.get_structure()
         if not struct or struct.get_name() != "barcode":
             return
-        self._on_symbol(struct.get_string("symbol") or "")
+        self.on_symbol(struct.get_string("symbol") or "")
 
-    def _on_symbol(self, symbol):
+    def on_symbol(self, symbol):
         """Accept one contact code; other codes toast and scanning goes on."""
-        if self._found:
+        if self.found:
             return
 
         text = unfold_vcard(symbol.strip())
@@ -140,12 +140,12 @@ class QrScanDialog(MediaCaptureWindow):
                 self.toast_overlay.add_toast(Adw.Toast.new(_("This code is not a contact")))
             return
 
-        self._found = True
+        self.found = True
         callback = self.on_contact
         self.close()
         GLib.idle_add(lambda: callback(text) or False)
 
-    def _release_bus(self):
+    def release_bus(self):
         """Detach the signal watch from the current pipeline bus."""
         if not self.bus:
             return
@@ -155,14 +155,14 @@ class QrScanDialog(MediaCaptureWindow):
         self.bus = None
         self.bus_handler_id = None
 
-    def _stop_pipeline(self):
+    def stop_pipeline(self):
         """Stop the camera pipeline and release the bus watch."""
-        self._release_bus()
+        self.release_bus()
         if self.pipeline:
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline = None
 
-    def _on_closed(self, _dialog):
+    def on_closed(self, _dialog):
         """Tear the pipeline down whichever way the sheet goes away."""
-        self._cancel_tracked_timeouts()
-        self._stop_pipeline()
+        self.cancel_tracked_timeouts()
+        self.stop_pipeline()

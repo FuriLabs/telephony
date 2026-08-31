@@ -24,7 +24,7 @@ import xml.etree.ElementTree as ET
 
 from telephony.shared.utils.log_utils import logger
 
-from telephony.daemon.utils.importer_core_utils import _get_xml_value, _parse_generic_timestamp
+from telephony.daemon.utils.importer_core_utils import get_xml_value, parse_generic_timestamp
 from telephony.shared.utils.phone_utils import normalize_number
 
 
@@ -49,15 +49,15 @@ def import_android_sms(db_manager, file_path):
         count = 0
         for msg in root.findall('sms') + root.findall('mms'):
             try:
-                phone = _get_xml_value(msg, ['address', 'number', 'contact', 'target', 'phone'])
+                phone = get_xml_value(msg, ['address', 'number', 'contact', 'target', 'phone'])
                 if not phone:
                     continue
 
                 norm_number = normalize_number(str(phone), permissive=True)
-                msg_type = _get_xml_value(msg, ['type', 'msg_box', 'direction'])
+                msg_type = get_xml_value(msg, ['type', 'msg_box', 'direction'])
                 dir_str = "incoming" if msg_type in ("1", "incoming", 1) else "outgoing"
 
-                body = _get_xml_value(msg, ['body', 'text', 'content', 'message', 'msg'], '')
+                body = get_xml_value(msg, ['body', 'text', 'content', 'message', 'msg'], '')
 
                 if msg.tag == 'mms':
                     parts = msg.find('parts')
@@ -67,8 +67,8 @@ def import_android_sms(db_manager, file_path):
                             if ct == 'text/plain':
                                 body += part.get('text', '')
 
-                ts = _get_xml_value(msg, ['date', 'time', 'timestamp', 'created'])
-                time_str = _parse_generic_timestamp(ts)
+                ts = get_xml_value(msg, ['date', 'time', 'timestamp', 'created'])
+                time_str = parse_generic_timestamp(ts)
 
                 if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping android message: missing required details")
@@ -152,11 +152,11 @@ def import_android_calls(db_manager, file_path):
         count = 0
         for call in root.findall('call'):
             try:
-                phone = _get_xml_value(call, ['number', 'address', 'phone', 'contact', 'target'])
+                phone = get_xml_value(call, ['number', 'address', 'phone', 'contact', 'target'])
                 if not phone:
                     continue
 
-                call_type = _get_xml_value(call, ['type', 'direction', 'inbound'])
+                call_type = get_xml_value(call, ['type', 'direction', 'inbound'])
                 if call_type == "1":
                     dir_str = "incoming"
                 elif call_type == "2":
@@ -168,11 +168,11 @@ def import_android_calls(db_manager, file_path):
                 else:
                     dir_str = "incoming"
 
-                duration_str = _get_xml_value(call, ['duration', 'length'], "0")
+                duration_str = get_xml_value(call, ['duration', 'length'], "0")
                 duration = int(duration_str) if str(duration_str).isdigit() else 0
 
-                ts = _get_xml_value(call, ['date', 'time', 'timestamp', 'start'])
-                time_str = _parse_generic_timestamp(ts)
+                ts = get_xml_value(call, ['date', 'time', 'timestamp', 'start'])
+                time_str = parse_generic_timestamp(ts)
 
                 norm_number = normalize_number(str(phone))
                 if not norm_number or not time_str:

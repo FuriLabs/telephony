@@ -150,8 +150,8 @@ class OfonoManager(GObject.Object):
         self.is_volume_boosted = False
 
         self.monitor = OfonoService()
-        self.monitor.connect('status-changed', self._on_monitor_status)
-        self.monitor.connect('modem-ready', self._on_modem_ready)
+        self.monitor.connect('status-changed', self.on_monitor_status)
+        self.monitor.connect('modem-ready', self.on_modem_ready)
 
         self.location_manager = LocationManager()
         self.audio = TelephonyAudioManager()
@@ -161,12 +161,12 @@ class OfonoManager(GObject.Object):
         self.callback_manager = CallbackManager(self)
         self.relay_manager = RelayManager(self)
 
-    def voicemail_number(self):
+    def get_voicemail_number(self):
         """Return the user-set mailbox number, falling back to the SIM's."""
         custom = self.gsettings_mgr.get_setting("voicemail_number") if self.gsettings_mgr else ""
         return custom or self.voicemail_mailbox
 
-    def _apply_voicemail_props(self, props):
+    def apply_voicemail_props(self, props):
         """Apply MessageWaiting properties and announce changes.
 
         A message count of 255 is the carrier standard for a mailbox
@@ -199,7 +199,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.debug(f"[OfonoManager] MessageWaiting unpack failed: {e}")
             return
-        self._apply_voicemail_props({name: value})
+        self.apply_voicemail_props({name: value})
 
     def on_modem_signal(self, proxy, sender, signal, params):
         """Watch modem property changes for interfaces that appear late.
@@ -217,13 +217,13 @@ class OfonoManager(GObject.Object):
             logger.debug(f"[OfonoManager] Modem property unpack failed: {e}")
             return
         if name == "Online":
-            self._set_modem_online(value)
+            self.set_modem_online(value)
             return
         if name != "Interfaces":
             return
-        self._apply_modem_interfaces(value)
+        self.apply_modem_interfaces(value)
 
-    def _set_modem_online(self, online):
+    def set_modem_online(self, online):
         """Track the radio state; False while flight mode is enabled."""
         online = bool(online)
         if online == self.modem_online:
@@ -232,7 +232,7 @@ class OfonoManager(GObject.Object):
         logger.info(f"[OfonoManager] Modem online: {online}")
         self.notify_dial_availability()
 
-    def _apply_modem_interfaces(self, interfaces):
+    def apply_modem_interfaces(self, interfaces):
         """Fold the modem interface list into state and react to changes."""
         current = set(interfaces)
         added = current - self._seen_interfaces
@@ -247,38 +247,38 @@ class OfonoManager(GObject.Object):
             logger.warning(f"[OfonoManager] Modem interface vanished: {interface}")
 
         if "org.ofono.MessageWaiting" in added:
-            self._load_voicemail_state()
+            self.load_voicemail_state()
         if "org.ofono.NetworkRegistration" in added:
-            self._attach_netreg()
+            self.attach_netreg()
         if "org.ofono.NetworkRegistration" in removed:
-            self._set_network_status("")
+            self.set_network_status("")
         if "org.ofono.SimManager" in added:
-            self._attach_simmgr()
+            self.attach_simmgr()
 
         if added or removed:
             self.notify_dial_availability()
 
-    def _attach_netreg(self):
+    def attach_netreg(self):
         """Follow network registration once ofono exports the interface."""
         if self.netreg_proxy:
             return
-        self.netreg_proxy = self._get_proxy("org.ofono.NetworkRegistration")
+        self.netreg_proxy = self.get_proxy("org.ofono.NetworkRegistration")
         if not self.netreg_proxy:
             return
         self.netreg_handler_id = self.netreg_proxy.connect("g-signal", self.on_netreg_signal)
-        self._load_service_property(self.netreg_proxy, "Status", self._set_network_status)
+        self.load_service_property(self.netreg_proxy, "Status", self.set_network_status)
 
-    def _attach_simmgr(self):
+    def attach_simmgr(self):
         """Follow the SIM lock state once ofono exports the interface."""
         if self.simmgr_proxy:
             return
-        self.simmgr_proxy = self._get_proxy("org.ofono.SimManager")
+        self.simmgr_proxy = self.get_proxy("org.ofono.SimManager")
         if not self.simmgr_proxy:
             return
         self.simmgr_handler_id = self.simmgr_proxy.connect("g-signal", self.on_simmgr_signal)
-        self._load_service_property(self.simmgr_proxy, "PinRequired", self._set_pin_required)
+        self.load_service_property(self.simmgr_proxy, "PinRequired", self.set_pin_required)
 
-    def _load_service_property(self, proxy, name, setter):
+    def load_service_property(self, proxy, name, setter):
         """Read one property off the main thread and feed it to its setter."""
         def fetch():
             ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
@@ -289,10 +289,10 @@ class OfonoManager(GObject.Object):
                 setter(value)
 
         run_in_background(fetch, on_complete=apply,
-                          on_error=self._modem_went_away(f"property {name}"))
+                          on_error=self.modem_went_away(f"property {name}"))
 
     @staticmethod
-    def _modem_went_away(what):
+    def modem_went_away(what):
         """Return a handler that shrugs when the modem answers no more.
 
         A property read races the modem disappearing, and losing that
@@ -315,7 +315,7 @@ class OfonoManager(GObject.Object):
             logger.debug(f"[OfonoManager] NetworkRegistration unpack failed: {e}")
             return
         if name == "Status":
-            self._set_network_status(value)
+            self.set_network_status(value)
 
     def on_simmgr_signal(self, proxy, sender, signal, params):
         """Handle SimManager property changes."""
@@ -327,9 +327,9 @@ class OfonoManager(GObject.Object):
             logger.debug(f"[OfonoManager] SimManager unpack failed: {e}")
             return
         if name == "PinRequired":
-            self._set_pin_required(value)
+            self.set_pin_required(value)
 
-    def _set_network_status(self, status):
+    def set_network_status(self, status):
         """Track the registration status and announce changes."""
         status = str(status)
         if status == self.network_status:
@@ -338,7 +338,7 @@ class OfonoManager(GObject.Object):
         logger.info(f"[OfonoManager] Network status: {status or 'unknown'}")
         GLib.idle_add(self.emit, 'network-status-changed', status)
 
-    def _set_pin_required(self, pin_type):
+    def set_pin_required(self, pin_type):
         """Track the SIM lock requirement and announce changes."""
         pin_type = str(pin_type)
         if pin_type == self.pin_required:
@@ -357,7 +357,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.warning(f"[OfonoManager] Network registration nudge failed: {e}")
 
-    def _load_modem_interfaces(self):
+    def load_modem_interfaces(self):
         """Seed the interface list and radio state at modem-ready.
 
         Unlike the SIM-dependent interfaces, org.ofono.Modem exists for as
@@ -373,15 +373,15 @@ class OfonoManager(GObject.Object):
 
         def apply_seed(props):
             if not self._interfaces_known:
-                self._apply_modem_interfaces(props.get("Interfaces", []))
+                self.apply_modem_interfaces(props.get("Interfaces", []))
             online = props.get("Online")
             if online is not None and self.modem_online is None:
-                self._set_modem_online(online)
+                self.set_modem_online(online)
 
         run_in_background(fetch, on_complete=apply_seed,
-                          on_error=self._modem_went_away("the modem properties"))
+                          on_error=self.modem_went_away("the modem properties"))
 
-    def _load_voicemail_state(self):
+    def load_voicemail_state(self):
         """Fetch the initial MessageWaiting properties off the main thread."""
         proxy = self.mw_proxy
         if not proxy:
@@ -391,10 +391,10 @@ class OfonoManager(GObject.Object):
             ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
             return ret.unpack()[0]
 
-        run_in_background(fetch, on_complete=self._apply_voicemail_props,
-                          on_error=self._modem_went_away("the voicemail state"))
+        run_in_background(fetch, on_complete=self.apply_voicemail_props,
+                          on_error=self.modem_went_away("the voicemail state"))
 
-    def dialing_available(self):
+    def is_dialing_available(self):
         """Return True when a new outgoing call can be placed right now.
 
         Until the first interface read lands the state is unknown and stays
@@ -427,20 +427,20 @@ class OfonoManager(GObject.Object):
 
     def notify_dial_availability(self):
         """Announce the current dial availability on the main loop."""
-        GLib.idle_add(self.emit, 'dial-availability-changed', self.dialing_available())
+        GLib.idle_add(self.emit, 'dial-availability-changed', self.is_dialing_available())
 
-    def voice_interface_missing(self):
+    def is_voice_interface_missing(self):
         """Return True when the modem is known to lack VoiceCallManager."""
         return self._interfaces_known and "org.ofono.VoiceCallManager" not in self._seen_interfaces
 
-    def modem_health_degraded(self):
+    def is_modem_health_degraded(self):
         """Return True when no modem exists at all or its voice interface is gone.
 
         The no-modem case covers the unclean-shutdown boot where the RIL
         daemon never starts: ofono runs but never reports a modem, so
         there is no interface list to watch.
         """
-        return not self.monitor.connected or self.voice_interface_missing()
+        return not self.monitor.connected or self.is_voice_interface_missing()
 
     def set_active_chat(self, number):
         """Set the currently active chat to suppress notifications.
@@ -449,10 +449,10 @@ class OfonoManager(GObject.Object):
         window forwards the target to the daemon instead of keeping a
         flag no reception path ever reads.
         """
-        target = self._normalize_chat_target(number)
+        target = self.normalize_chat_target(number)
         self.active_chat_number = target if target else None
 
-    def _normalize_chat_target(self, number):
+    def normalize_chat_target(self, number):
         """Collapse a chat target to the comparable form reception uses."""
         if not number:
             return ""
@@ -475,7 +475,7 @@ class OfonoManager(GObject.Object):
             return (False, "no-modem", _("Modem not ready"))
         if self.modem_online is False:
             return (False, "airplane-mode", _("Airplane mode is on"))
-        if self.voice_interface_missing():
+        if self.is_voice_interface_missing():
             return (False, "no-voice-service", _("Modem not ready"))
         if self.active_calls:
             return (False, "in-call", _("Cannot dial while in another call"))
@@ -531,24 +531,24 @@ class OfonoManager(GObject.Object):
             logger.debug(f"[OfonoManager] Focus provider error: {e}")
             return False
 
-    def _on_monitor_status(self, monitor, status, msg):
+    def on_monitor_status(self, monitor, status, msg):
         """Handle monitor status changes."""
         if status == "offline" or status == "error":
             if len(self.active_calls) > 0:
                 logger.error("[OfonoManager] Modem lost during active call! Triggering RIL restart.")
                 run_in_background(restart_ril_modem)
 
-            self._cleanup_state()
+            self.cleanup_state()
 
         self.emit('connection-status', status, msg)
         self.notify_dial_availability()
 
-    def _cleanup_state(self):
+    def cleanup_state(self):
         """Clean up internal state and disconnect signals."""
         if self.active_calls:
             logger.warning("[OfonoManager] Modem lost. Clearing active calls.")
             for path in list(self.active_calls.keys()):
-                self._force_remove(path)
+                self.force_remove(path)
 
         if self.voice_proxy and self.voice_handler_id:
             try:
@@ -636,7 +636,7 @@ class OfonoManager(GObject.Object):
         self.cs_proxy = None
         self.cs_handler_id = None
 
-    def _on_modem_ready(self, monitor, path):
+    def on_modem_ready(self, monitor, path):
         """Handle modem ready event.
 
         A modem arriving settles the absence question for good: one
@@ -644,66 +644,66 @@ class OfonoManager(GObject.Object):
         never had one.
         """
         self.modem_absent = False
-        self._cleanup_state()
+        self.cleanup_state()
 
         self.modem_path = path
         self.bus = monitor.bus
         logger.info(f"[OfonoManager] Proxies ready for {path}")
 
-        self.voice_proxy = self._get_proxy("org.ofono.VoiceCallManager")
+        self.voice_proxy = self.get_proxy("org.ofono.VoiceCallManager")
         if self.voice_proxy:
             self.voice_handler_id = self.voice_proxy.connect("g-signal", self.on_voice_signal)
             if self._pending_dial is not None:
-                GLib.idle_add(self._flush_parked_dial)
+                GLib.idle_add(self.flush_parked_dial)
 
-        self.msg_proxy = self._get_proxy("org.ofono.MessageManager")
+        self.msg_proxy = self.get_proxy("org.ofono.MessageManager")
         if self.msg_proxy:
             self.msg_handler_id = self.msg_proxy.connect("g-signal", self.on_message_signal)
 
-        self.ussd_proxy = self._get_proxy("org.ofono.SupplementaryServices")
+        self.ussd_proxy = self.get_proxy("org.ofono.SupplementaryServices")
         if self.ussd_proxy:
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
 
-        self.cf_proxy = self._get_proxy("org.ofono.CallForwarding")
+        self.cf_proxy = self.get_proxy("org.ofono.CallForwarding")
         if self.cf_proxy:
             self.cf_handler_id = self.cf_proxy.connect("g-signal", self.on_call_forwarding_signal)
 
-        self.cb_proxy = self._get_proxy("org.ofono.CallBarring")
+        self.cb_proxy = self.get_proxy("org.ofono.CallBarring")
         if self.cb_proxy:
             self.cb_handler_id = self.cb_proxy.connect("g-signal", self.on_call_barring_signal)
 
-        self.cs_proxy = self._get_proxy("org.ofono.CallSettings")
+        self.cs_proxy = self.get_proxy("org.ofono.CallSettings")
         if self.cs_proxy:
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
         if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
             run_in_background(self.set_delivery_reports, True)
-        run_in_background(self._load_emergency_numbers)
+        run_in_background(self.load_emergency_numbers)
 
-        self.mw_proxy = self._get_proxy("org.ofono.MessageWaiting")
+        self.mw_proxy = self.get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
             self.mw_handler_id = self.mw_proxy.connect("g-signal", self.on_message_waiting_signal)
-            self._load_voicemail_state()
+            self.load_voicemail_state()
 
-        self.vol_proxy = self._get_proxy("org.ofono.CallVolume")
+        self.vol_proxy = self.get_proxy("org.ofono.CallVolume")
 
-        self.modem_proxy = self._get_proxy("org.ofono.Modem")
+        self.modem_proxy = self.get_proxy("org.ofono.Modem")
         if self.modem_proxy:
             self.modem_handler_id = self.modem_proxy.connect("g-signal", self.on_modem_signal)
-            self._load_modem_interfaces()
+            self.load_modem_interfaces()
 
         if self._sms_history_sub is None and self.bus:
             self._sms_history_sub = self.bus.signal_subscribe(
                 None, "org.ofono.SmsHistory", "StatusReport", None, None,
-                Gio.DBusSignalFlags.NONE, self._on_status_report, None)
+                Gio.DBusSignalFlags.NONE, self.on_status_report, None)
 
         if self._sms_state_sub is None and self.bus:
             self._sms_state_sub = self.bus.signal_subscribe(
                 None, "org.ofono.Message", "PropertyChanged", None, None,
-                Gio.DBusSignalFlags.NONE, self._on_sms_state_signal, None)
+                Gio.DBusSignalFlags.NONE, self.on_sms_state_signal, None)
 
-        self._sync_existing_calls()
+        self.sync_existing_calls()
 
-    def _get_proxy(self, interface, object_path=None):
+    def get_proxy(self, interface, object_path=None):
         """Create a DBus proxy for a given interface."""
         try:
             path = object_path if object_path else self.modem_path
@@ -719,10 +719,10 @@ class OfonoManager(GObject.Object):
         try:
             if signal == "CallAdded":
                 path, props = params.unpack()
-                self._add_call(path, props)
+                self.add_call(path, props)
             elif signal == "CallRemoved":
                 path = params.unpack()[0]
-                self._remove_call(path)
+                self.remove_call(path)
             elif signal == "PropertyChanged":
                 name, value = params.unpack()
                 if name == "EmergencyNumbers" and value:
@@ -730,7 +730,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"Voice signal error: {e}")
 
-    def _add_call(self, path, props):
+    def add_call(self, path, props):
         """Process a new call."""
         raw_number = props.get("LineIdentification", "Unknown")
         withheld = str(raw_number).lower() == "withheld"
@@ -759,20 +759,20 @@ class OfonoManager(GObject.Object):
                     logger.info(f"[OfonoManager] Automatically silencing unknown caller: {number}")
                     is_silenced = True
 
-            if is_silenced and self._is_priority_number(number):
+            if is_silenced and self.is_priority_number(number):
                 is_silenced = False
 
-            self._check_priority_call(number)
-            self._check_repeated_call_bypass(number)
+            self.check_priority_call(number)
+            self.check_repeated_call_bypass(number)
 
         if path in self.active_calls:
             if "LineIdentification" in props:
                 self.active_calls[path]["number"] = normalize_number(props["LineIdentification"])
             if "State" in props:
-                self._on_call_prop_changed(None, None, "PropertyChanged", GLib.Variant("(sv)", ("State", GLib.Variant("s", props["State"]))), path)
+                self.on_call_prop_changed(None, None, "PropertyChanged", GLib.Variant("(sv)", ("State", GLib.Variant("s", props["State"]))), path)
             return
 
-        call_proxy = self._get_proxy("org.ofono.VoiceCall", path)
+        call_proxy = self.get_proxy("org.ofono.VoiceCall", path)
 
         is_outgoing = state not in ("incoming", "waiting")
         self.active_calls[path] = {
@@ -794,11 +794,11 @@ class OfonoManager(GObject.Object):
             self._dial_hides_id = False
 
         if call_proxy:
-            call_proxy.connect("g-signal", self._on_call_prop_changed, path)
+            call_proxy.connect("g-signal", self.on_call_prop_changed, path)
 
         self.emit('call-added', path, self.active_calls[path])
 
-    def _on_call_prop_changed(self, proxy, sender, signal, params, path):
+    def on_call_prop_changed(self, proxy, sender, signal, params, path):
         """Handle property changes for a specific call."""
         if signal == "DisconnectReason":
             if path in self.active_calls:
@@ -832,11 +832,11 @@ class OfonoManager(GObject.Object):
                         self.active_calls[path]["was_conference"] = True
                     self.emit('call-changed', path, self.active_calls[path]["state"])
 
-    def _remove_call(self, path):
+    def remove_call(self, path):
         """Handle call removal."""
         if path in self.active_calls:
             data = self.active_calls.pop(path)
-            self._log_call(data)
+            self.log_call(data)
             self.emit('call-removed', path)
 
             if self.is_volume_boosted:
@@ -849,7 +849,7 @@ class OfonoManager(GObject.Object):
                 except Exception as e:
                     logger.warning(f"[OfonoManager] Dispose proxy failed: {e}")
 
-    def _log_call(self, data):
+    def log_call(self, data):
         """Log the call details to history."""
         duration = 0
         if data["answered"] and data["start"]:
@@ -884,7 +884,7 @@ class OfonoManager(GObject.Object):
         if signal == "NotificationReceived":
             self.emit('ussd-notification', params.unpack()[0])
 
-    def _check_priority_contact(self, sender):
+    def check_priority_contact(self, sender):
         """Check if sender is a priority contact and override volume."""
         try:
             priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts_messages()
@@ -900,7 +900,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[Priority] Check failed: {e}")
 
-    def _check_repeated_message_bypass(self, sender):
+    def check_repeated_message_bypass(self, sender):
         """Sound the tone when one sender writes three times inside a minute."""
         if not sender:
             return
@@ -927,7 +927,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[Priority] Repeated message check failed: {e}")
 
-    def _is_priority_number(self, number):
+    def is_priority_number(self, number):
         """Return whether a caller is on the DND-bypass list."""
         try:
             priority_list = self.gsettings_mgr.get_notification_override_dnd_bypass_contacts()
@@ -938,13 +938,13 @@ class OfonoManager(GObject.Object):
         return any(norm_num and normalize_number(p.get("number", "")) == norm_num
                    for p in priority_list)
 
-    def _check_priority_call(self, number):
+    def check_priority_call(self, number):
         """Check if caller is priority and override volume."""
         if len(self.active_calls) > 0:
             return
 
         try:
-            if self._is_priority_number(number):
+            if self.is_priority_number(number):
                 logger.info(f"[Priority] Call from {number} - forcing MAX volume")
                 self.audio.force_max_feedback()
                 self.is_volume_boosted = True
@@ -952,7 +952,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[Priority] Call Check failed: {e}")
 
-    def _check_repeated_call_bypass(self, number):
+    def check_repeated_call_bypass(self, number):
         """Check if repeated calls should bypass silent mode."""
         if not number:
             return
@@ -978,7 +978,7 @@ class OfonoManager(GObject.Object):
         except Exception as e:
             logger.error(f"[RepeatedCall] Check failed: {e}")
 
-    def _sync_existing_calls(self):
+    def sync_existing_calls(self):
         """Sync existing calls from the modem."""
         if not self.voice_proxy:
             return
@@ -986,7 +986,7 @@ class OfonoManager(GObject.Object):
             ret = self.voice_proxy.call_sync("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None)
             calls = ret.unpack()[0]
             for path, props in calls:
-                self._add_call(path, props)
+                self.add_call(path, props)
         except Exception as e:
             logger.error(f"Sync calls error: {e}")
 
@@ -994,10 +994,10 @@ class OfonoManager(GObject.Object):
         """Initiate an outgoing call; on_result hears (success, message) exactly once."""
 
         if self._interfaces_known and "org.ofono.VoiceCallManager" not in self._seen_interfaces:
-            return self._refuse_dial(_("Modem not ready"), on_result)
+            return self.refuse_dial(_("Modem not ready"), on_result)
 
         if not self.voice_proxy:
-            self._park_dial(number, hide_id, on_result)
+            self.park_dial(number, hide_id, on_result)
             return True
 
         if len(self.active_calls) > 0:
@@ -1006,16 +1006,16 @@ class OfonoManager(GObject.Object):
                 real_calls = ret.unpack()[0]
                 if len(real_calls) == 0:
                     for path in list(self.active_calls.keys()):
-                        self._force_remove(path)
+                        self.force_remove(path)
             except Exception as e:
                 logger.error(f"[OfonoManager] Sanity check failed: {e}")
 
         if count_lines(self.active_calls) >= 2:
-            return self._refuse_dial(_("Cannot dial while in another call"), on_result)
+            return self.refuse_dial(_("Cannot dial while in another call"), on_result)
 
         if not self.active_calls and self.audio.voice_profile_active:
             logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
-            return self._refuse_dial(_("Please wait, the previous call is still ending"), on_result)
+            return self.refuse_dial(_("Please wait, the previous call is still ending"), on_result)
 
         try:
             clean_num = normalize_number(number)
@@ -1028,33 +1028,33 @@ class OfonoManager(GObject.Object):
             self._dial_hides_id = bool(hide_id or (self.clir_hidden and clir == "default"))
             self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
-            return self._refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+            return self.refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
 
         if on_result is not None:
             on_result(True, "")
         return True
 
-    def _refuse_dial(self, message, on_result):
+    def refuse_dial(self, message, on_result):
         """Report one dial refusal to the local listeners and the asker."""
         self.emit('action-error', message)
         if on_result is not None:
             on_result(False, message)
         return False
 
-    def _park_dial(self, number, hide_id, on_result):
+    def park_dial(self, number, hide_id, on_result):
         """Hold a dial while the modem is still being discovered.
 
         A daemon revived by this very call has not found the modem yet, so
         refusing here would drop the first dial after every activation. The
         unknown phase stays optimistic; only concluded discovery refuses.
         """
-        self._cancel_parked_dial(_("Modem not ready"))
+        self.cancel_parked_dial(_("Modem not ready"))
         self._pending_dial = (number, hide_id, on_result)
         self._pending_dial_timeout_id = GLib.timeout_add_seconds(
-            PENDING_DIAL_TIMEOUT_SECONDS, self._on_parked_dial_timeout)
+            PENDING_DIAL_TIMEOUT_SECONDS, self.on_parked_dial_timeout)
         logger.info(f"[OfonoManager] Parked dial to {number} until the modem appears")
 
-    def _cancel_parked_dial(self, message):
+    def cancel_parked_dial(self, message):
         """Resolve and drop the parked dial, if any."""
         if self._pending_dial_timeout_id:
             GLib.source_remove(self._pending_dial_timeout_id)
@@ -1066,14 +1066,14 @@ class OfonoManager(GObject.Object):
         if on_result is not None:
             on_result(False, message)
 
-    def _on_parked_dial_timeout(self):
+    def on_parked_dial_timeout(self):
         """Give up on a parked dial the modem never came for."""
         self._pending_dial_timeout_id = 0
         self.emit('action-error', _("Modem not ready"))
-        self._cancel_parked_dial(_("Modem not ready"))
+        self.cancel_parked_dial(_("Modem not ready"))
         return GLib.SOURCE_REMOVE
 
-    def _flush_parked_dial(self):
+    def flush_parked_dial(self):
         """Re-run the parked dial now that the modem appeared."""
         if self._pending_dial is None:
             return GLib.SOURCE_REMOVE
@@ -1102,16 +1102,16 @@ class OfonoManager(GObject.Object):
 
         if other_dialing:
             self.hangup_call(other_dialing)
-            GLib.timeout_add(ANSWER_SWAP_DELAY_MS, lambda: self._execute_answer(target_path))
+            GLib.timeout_add(ANSWER_SWAP_DELAY_MS, lambda: self.execute_answer(target_path))
             return
 
         if other_active:
             self.swap_calls()
             return
 
-        self._execute_answer(target_path)
+        self.execute_answer(target_path)
 
-    def _execute_answer(self, path):
+    def execute_answer(self, path):
         """Internal helper to answer a call."""
         try:
             if path in self.active_calls:
@@ -1120,14 +1120,14 @@ class OfonoManager(GObject.Object):
                     proxy.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
                 return
 
-            call = self._get_proxy("org.ofono.VoiceCall", path)
+            call = self.get_proxy("org.ofono.VoiceCall", path)
             if call:
                 call.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
             logger.debug(f"[OfonoManager] Answer failed for {path}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                self._force_remove(path)
+                self.force_remove(path)
 
     def hangup_call(self, path):
         """Hangup a specific call; hanging up an unanswered ring is a rejection.
@@ -1148,7 +1148,7 @@ class OfonoManager(GObject.Object):
                     proxy.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
                     return
 
-            call = self._get_proxy("org.ofono.VoiceCall", path)
+            call = self.get_proxy("org.ofono.VoiceCall", path)
             if call:
                 call.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
         except Exception as e:
@@ -1156,7 +1156,7 @@ class OfonoManager(GObject.Object):
             logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
             err_str = str(e)
             if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                GLib.timeout_add(HANGUP_GRACE_MS, self._force_remove_if_left, path)
+                GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left, path)
 
     def hangup_all(self):
         """Hangup all active calls, which is as local as hanging up one.
@@ -1260,7 +1260,7 @@ class OfonoManager(GObject.Object):
             logger.error(f"[OfonoManager] Transfer failed: {e}")
             return (False, str(e))
 
-    def _load_emergency_numbers(self):
+    def load_emergency_numbers(self):
         """Seed the network emergency number list; blocking, call from a worker.
 
         The cached list deliberately survives modem loss, so a flaky
@@ -1303,12 +1303,12 @@ class OfonoManager(GObject.Object):
             logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
             return (False, str(e))
 
-    def _force_remove(self, path):
+    def force_remove(self, path):
         """Forcefully remove a call from the active list."""
         if path in self.active_calls:
-            self._remove_call(path)
+            self.remove_call(path)
 
-    def _force_remove_if_left(self, path):
+    def force_remove_if_left(self, path):
         """Drop a call the modem never reported gone.
 
         Asking this modem to hang up an answered call answers with an
@@ -1320,7 +1320,7 @@ class OfonoManager(GObject.Object):
         """
         if path in self.active_calls:
             logger.warning(f"[OfonoManager] {path} outlived the hangup, dropping it")
-            self._force_remove(path)
+            self.force_remove(path)
         return False
 
     def send_dtmf(self, tones):
@@ -1375,17 +1375,17 @@ class OfonoManager(GObject.Object):
         clean_num = normalize_number(number)
         try:
             ret = self.msg_proxy.call_sync("SendMessage", GLib.Variant("(ss)", (clean_num, text)), Gio.DBusCallFlags.NONE, 30000, None)
-            self._track_sms(row_id, ret.unpack()[0])
+            self.track_sms(row_id, ret.unpack()[0])
         except Exception as e:
             err = str(e)
             if any(x in err for x in ["Operation failed", "Timeout", "NoReply", "org.ofono.Error.Failed"]):
                 logger.warning(f"[OfonoManager] Ambiguous SMS send error, waiting for state signals: {e}")
-                self._track_sms(row_id, None)
+                self.track_sms(row_id, None)
             else:
                 logger.error(f"[OfonoManager] SMS send failed: {e}")
                 self.db.update_message_status(row_id, "failed")
 
-    def _track_sms(self, row_id, path):
+    def track_sms(self, row_id, path):
         """Register an in-flight SMS and arm its resolution timeout."""
         with self.send_lock:
             state = self.unclaimed_sms_states.pop(path, None) if path else None
@@ -1395,18 +1395,18 @@ class OfonoManager(GObject.Object):
                     self.inflight_sms_paths[path] = row_id
 
         if state is not None:
-            self._resolve_sms(row_id, state)
+            self.resolve_sms(row_id, state)
             return
 
-        GLib.timeout_add_seconds(SMS_RESOLVE_TIMEOUT_SECONDS, self._timeout_sms, row_id)
+        GLib.timeout_add_seconds(SMS_RESOLVE_TIMEOUT_SECONDS, self.timeout_sms, row_id)
 
-    def _resolve_sms(self, row_id, state):
+    def resolve_sms(self, row_id, state):
         """Write the final status for an in-flight SMS row."""
         status = "sent" if state == "sent" else "failed"
         logger.info(f"[OfonoManager] SMS row {row_id} resolved: {status}")
         self.db.update_message_status(row_id, status)
 
-    def _timeout_sms(self, row_id):
+    def timeout_sms(self, row_id):
         """Fail an SMS row that never received a state signal."""
         with self.send_lock:
             if row_id not in self.inflight_sms:
@@ -1419,7 +1419,7 @@ class OfonoManager(GObject.Object):
         self.db.update_message_status(row_id, "failed")
         return False
 
-    def _on_sms_state_signal(self, _conn, _sender, path, _iface, _signal, params, _data):
+    def on_sms_state_signal(self, _conn, _sender, path, _iface, _signal, params, _data):
         """Resolve in-flight sends from org.ofono.Message state changes."""
         try:
             name, value = params.unpack()
@@ -1450,9 +1450,9 @@ class OfonoManager(GObject.Object):
                 self.delivery_watch[path] = row_id
                 while len(self.delivery_watch) > DELIVERY_WATCH_LIMIT:
                     self.delivery_watch.pop(next(iter(self.delivery_watch)))
-            self._resolve_sms(row_id, value)
+            self.resolve_sms(row_id, value)
 
-    def _on_status_report(self, _conn, _sender, _path, _iface, _signal, params, _data):
+    def on_status_report(self, _conn, _sender, _path, _iface, _signal, params, _data):
         """Mark a message delivered when the network confirms it.
 
         Only a positive report is acted on: carriers and gateways often
@@ -1509,11 +1509,11 @@ class OfonoManager(GObject.Object):
             return None
 
 
-    def _service_proxy(self, service):
+    def service_proxy(self, service):
         """Map a supplementary service key to its D-Bus proxy."""
         return {"forwarding": self.cf_proxy, "barring": self.cb_proxy, "settings": self.cs_proxy}.get(service)
 
-    def _relay_service_signal(self, service, signal, params):
+    def relay_service_signal(self, service, signal, params):
         """Forward a supplementary service PropertyChanged to the UI."""
         if signal != "PropertyChanged":
             return
@@ -1524,15 +1524,15 @@ class OfonoManager(GObject.Object):
 
     def on_call_forwarding_signal(self, proxy, sender, signal, params):
         """Relay call forwarding property changes."""
-        self._relay_service_signal("forwarding", signal, params)
+        self.relay_service_signal("forwarding", signal, params)
 
     def on_call_barring_signal(self, proxy, sender, signal, params):
         """Relay call barring property changes."""
-        self._relay_service_signal("barring", signal, params)
+        self.relay_service_signal("barring", signal, params)
 
     def on_call_settings_signal(self, proxy, sender, signal, params):
         """Relay call settings property changes."""
-        self._relay_service_signal("settings", signal, params)
+        self.relay_service_signal("settings", signal, params)
 
     def has_modem_interface(self, interface):
         """Return whether the modem currently exports the interface."""
@@ -1544,7 +1544,7 @@ class OfonoManager(GObject.Object):
         Returns the property dict, or None when the network query failed.
         """
 
-        proxy = self._service_proxy(service)
+        proxy = self.service_proxy(service)
         if not proxy:
             logger.warning(f"[OfonoManager] {service} unavailable, no proxy")
             return None
@@ -1561,7 +1561,7 @@ class OfonoManager(GObject.Object):
         Returns (True, None) on success or (False, error text).
         """
 
-        proxy = self._service_proxy(service)
+        proxy = self.service_proxy(service)
         if not proxy:
             return (False, "no proxy")
         variant = GLib.Variant("q", value) if isinstance(value, int) else GLib.Variant("s", value)
@@ -1644,8 +1644,8 @@ class OfonoManager(GObject.Object):
                 GLib.timeout_add_seconds(EMERGENCY_FEEDBACK_RESTORE_SECONDS,
                                          lambda: self.audio.force_max_feedback(restore=True) or False)
             else:
-                self._check_priority_contact(msg_sender)
-                self._check_repeated_message_bypass(msg_sender)
+                self.check_priority_contact(msg_sender)
+                self.check_repeated_message_bypass(msg_sender)
 
             sent_time = props.get('SentTime', '')
             if not sent_time:
@@ -1661,7 +1661,7 @@ class OfonoManager(GObject.Object):
             if len(self.seen_sms_signatures) > SEEN_SIGNATURE_LIMIT:
                 self.seen_sms_signatures.pop(0)
 
-            self._check_secret_actions(msg_sender, body)
+            self.check_secret_actions(msg_sender, body)
 
             status = "unread"
             if self.active_chat_number and msg_sender == self.active_chat_number and self.is_app_focused():
@@ -1670,7 +1670,7 @@ class OfonoManager(GObject.Object):
             self.db.add_message(msg_sender, "incoming", body, status, sender=msg_sender)
             self.emit('incoming-message', msg_sender, body)
 
-    def _check_rate_limit(self, sender_clean, prefix):
+    def check_rate_limit(self, sender_clean, prefix):
         now = time.time()
         history = self.trusted_trigger_history.get(sender_clean, {'last_success': 0, 'last_warning': 0, 'last_attempt': 0})
 
@@ -1690,11 +1690,11 @@ class OfonoManager(GObject.Object):
 
         return False, history
 
-    def _mark_success(self, sender_clean, history):
+    def mark_success(self, sender_clean, history):
         history['last_success'] = time.time()
         self.trusted_trigger_history[sender_clean] = history
 
-    def _verify_totp(self, seed, code):
+    def verify_totp(self, seed, code):
         """Check a trusted-action code; pyotp is imported only when one arrives."""
         if not seed or not code:
             return False
@@ -1706,7 +1706,7 @@ class OfonoManager(GObject.Object):
             logger.error(f"[TrustedActions] TOTP verify error: {e}")
             return False
 
-    def _trusted_action_entries(self):
+    def trusted_action_entries(self):
         """Build the table describing every trusted SMS action.
 
         Each entry holds the log prefix, the TOTP seed getter, the trusted
@@ -1719,64 +1719,64 @@ class OfonoManager(GObject.Object):
                 "seed_getter": self.gsettings_mgr.get_trusted_sms_location_request_totp_seed,
                 "list_getter": self.gsettings_mgr.get_trusted_sms_location_request,
                 "expected_parts": 1,
-                "action": self._run_location_request_action,
+                "action": self.run_location_request_action,
             },
             {
                 "prefix": "TrustedCallback",
                 "seed_getter": self.gsettings_mgr.get_trusted_sms_silent_callback_totp_seed,
                 "list_getter": self.gsettings_mgr.get_trusted_sms_silent_callback,
                 "expected_parts": 1,
-                "action": self._run_silent_callback_action,
+                "action": self.run_silent_callback_action,
             },
             {
                 "prefix": "SMSRelay",
                 "seed_getter": self.gsettings_mgr.get_trusted_sms_relay_totp_seed,
                 "list_getter": self.gsettings_mgr.get_trusted_sms_relay,
                 "expected_parts": 3,
-                "action": self._run_relay_action,
+                "action": self.run_relay_action,
             },
             {
                 "prefix": "SMStmate",
                 "seed_getter": self.gsettings_mgr.get_trusted_sms_ssh_access_totp_seed,
                 "list_getter": self.gsettings_mgr.get_trusted_sms_ssh_access,
                 "expected_parts": 1,
-                "action": self._run_ssh_access_action,
+                "action": self.run_ssh_access_action,
             },
             {
                 "prefix": "LockDevice",
                 "seed_getter": self.gsettings_mgr.get_trusted_sms_lock_device_totp_seed,
                 "list_getter": self.gsettings_mgr.get_trusted_sms_lock_device,
                 "expected_parts": 4,
-                "action": self._run_lock_device_action,
+                "action": self.run_lock_device_action,
             },
         ]
 
-    def _run_location_request_action(self, sender_clean, parts):
+    def run_location_request_action(self, sender_clean, parts):
         """Execute the location request action."""
         logger.info(f"[FindMyTelephony] Trigger MATCH from {sender_clean}")
 
         self.location_manager.get_current_location(
-            callback=lambda lat, lon, acc: self._send_location_response(sender_clean, lat, lon, acc),
-            progress_callback=lambda msg: self._send_progress_sms(sender_clean, msg)
+            callback=lambda lat, lon, acc: self.send_location_response(sender_clean, lat, lon, acc),
+            progress_callback=lambda msg: self.send_progress_sms(sender_clean, msg)
         )
 
-    def _run_silent_callback_action(self, sender_clean, parts):
+    def run_silent_callback_action(self, sender_clean, parts):
         """Execute the silent callback action."""
         logger.info(f"[TrustedCallback] Trigger MATCH from {sender_clean}")
         self.callback_manager.execute_callback(sender_clean)
 
-    def _run_relay_action(self, sender_clean, parts):
+    def run_relay_action(self, sender_clean, parts):
         """Execute the SMS relay action."""
         target_number = parts[1]
         message = parts[2]
         self.relay_manager.execute_relay(sender_clean, target_number, message)
 
-    def _run_ssh_access_action(self, sender_clean, parts):
+    def run_ssh_access_action(self, sender_clean, parts):
         """Execute the tmate SSH access action."""
         logger.info(f"[SMStmate] Trigger MATCH from {sender_clean}")
         self.tmate_manager.start_session(sender_clean)
 
-    def _run_lock_device_action(self, sender_clean, parts):
+    def run_lock_device_action(self, sender_clean, parts):
         """Execute the lock device action."""
         current_pin = parts[1]
         new_pin = parts[2]
@@ -1784,7 +1784,7 @@ class OfonoManager(GObject.Object):
         logger.info(f"[LockDevice] Trigger MATCH from {sender_clean}")
         self.device_lock_manager.lock_device(current_pin, new_pin, sudo_pw)
 
-    def _check_secret_actions(self, sender, body):
+    def check_secret_actions(self, sender, body):
         """Check if message matches any secret action trigger."""
         sender_clean = normalize_number(sender)
         body_clean = body.strip()
@@ -1792,7 +1792,7 @@ class OfonoManager(GObject.Object):
         now = time.time()
         history = self.trusted_trigger_history.get(sender_clean, {'last_success': 0, 'last_warning': 0, 'last_attempt': 0})
 
-        entries = self._trusted_action_entries()
+        entries = self.trusted_action_entries()
         trusted_lists = {}
 
         is_trusted = False
@@ -1819,12 +1819,12 @@ class OfonoManager(GObject.Object):
                 return False
 
         for entry in entries:
-            if self._check_trusted_action(entry, sender_clean, body_clean, trusted=trusted_lists.get(entry["prefix"])):
+            if self.check_trusted_action(entry, sender_clean, body_clean, trusted=trusted_lists.get(entry["prefix"])):
                 return True
 
         return False
 
-    def _check_trusted_action(self, entry, sender_clean, body_clean, trusted=None):
+    def check_trusted_action(self, entry, sender_clean, body_clean, trusted=None):
         """Run one trusted SMS action check from the entry table.
 
         Verifies the sender, secret phrase, token count, TOTP code and rate
@@ -1853,21 +1853,21 @@ class OfonoManager(GObject.Object):
                     return False
 
                 parts = body_clean[len(t_msg):].strip().split(" ", maxsplit)
-                if len(parts) != expected_parts or not self._verify_totp(seed, parts[0]):
+                if len(parts) != expected_parts or not self.verify_totp(seed, parts[0]):
                     continue
 
-                limited, history = self._check_rate_limit(sender_clean, prefix)
+                limited, history = self.check_rate_limit(sender_clean, prefix)
                 if limited:
                     return True
 
-                self._mark_success(sender_clean, history)
+                self.mark_success(sender_clean, history)
                 entry["action"](sender_clean, parts)
                 return True
         except Exception as e:
             logger.error(f"[{prefix}] Check error: {e}")
         return False
 
-    def _send_progress_sms(self, number, message):
+    def send_progress_sms(self, number, message):
         """Send a progress update SMS."""
         if self.send_sms(number, message):
             try:
@@ -1875,7 +1875,7 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 logger.warning(f"[Trusted] Failed to save progress message: {e}")
 
-    def _send_location_response(self, number, lat, lon, accuracy=None):
+    def send_location_response(self, number, lat, lon, accuracy=None):
         """Send location back to trusted contact."""
         if lat is not None and lon is not None:
             link = f"{OPENSTREETMAP_URL}?mlat={lat}&mlon={lon}#map=16/{lat}/{lon}"

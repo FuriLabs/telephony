@@ -64,7 +64,7 @@ class TelephonyCore:
     A plain object with no toolkit imports. Everything that must reach
     a surface goes through the ui delegate, which the application
     object implements: show_incall_ui, apply_recovery_state,
-    any_window_active and
+    is_any_window_active and
     withdraw_number_notifications.
     """
 
@@ -104,12 +104,12 @@ class TelephonyCore:
 
     def start(self):
         """Wire the managers and background duties of the owner."""
-        self._setup_feedbackd()
+        self.setup_feedbackd()
 
         logger.info("Initializing services...")
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
-        self._apply_region()
+        self.apply_region()
         self.eds = EdsManager(owns_live_views=True)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=True)
         self.eds.set_db(self.db, self.gsettings_mgr)
@@ -118,7 +118,7 @@ class TelephonyCore:
         self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
         self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
 
-        self.ofono.set_focus_provider(self.ui.any_window_active)
+        self.ofono.set_focus_provider(self.ui.is_any_window_active)
 
         self.mms = MmsManager(self.db, self.eds, self.gsettings_mgr, self.notification_manager,
                               owns_reception=True)
@@ -129,23 +129,23 @@ class TelephonyCore:
         self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
-        self._announce_changes()
+        self.announce_changes()
 
         self.sys_state = SystemStateService()
-        self.sys_state.connect('lock-state-changed', self._on_lock_state_changed)
-        self._watch_airplane_mode()
-        self.ofono.connect('dial-availability-changed', self._watch_modem_health)
-        self.ofono.connect('connection-status', self._watch_modem_health)
-        self.ofono.connect('network-status-changed', self._watch_network_status)
-        self.ofono.connect('sim-pin-required-changed', self._watch_sim_pin)
-        GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self._watch_modem_health() or False)
+        self.sys_state.connect('lock-state-changed', self.on_lock_state_changed)
+        self.watch_airplane_mode()
+        self.ofono.connect('dial-availability-changed', self.watch_modem_health)
+        self.ofono.connect('connection-status', self.watch_modem_health)
+        self.ofono.connect('network-status-changed', self.watch_network_status)
+        self.ofono.connect('sim-pin-required-changed', self.watch_sim_pin)
+        GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self.watch_modem_health() or False)
         self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
         self.ofono.connect('voicemail-mailbox-changed', lambda *a: self.ensure_voicemail_contact())
         self.eds.connect('contacts-loaded', lambda *a: self.ensure_voicemail_contact())
         self.ofono.connect('incoming-message', self.on_incoming_message)
         self.ofono.connect('call-missed', self.on_call_missed)
-        self.ofono.connect('hangup-requested', self._on_hangup_requested)
-        self.ofono.connect('call-removed', self._on_call_removed_feedback)
+        self.ofono.connect('hangup-requested', self.on_hangup_requested)
+        self.ofono.connect('call-removed', self.on_call_removed_feedback)
         self.ofono.connect('notification-cleared', self.on_notification_cleared)
 
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
@@ -153,7 +153,7 @@ class TelephonyCore:
         run_in_background(self.db.fail_stale_sending)
 
 
-    def _apply_region(self):
+    def apply_region(self):
         """Give this process the country its numbers belong to.
 
         Numbers are read into the cache here, and one written without a
@@ -171,7 +171,7 @@ class TelephonyCore:
 
         run_in_background(task)
 
-    def _announce_changes(self):
+    def announce_changes(self):
         """Tell window instances when the stored data changed.
 
         They read the same database and address books but subscribe to
@@ -189,11 +189,11 @@ class TelephonyCore:
         self.eds.connect('address-books-changed', lambda *_args: self.dbus_daemon.emit_signal(
             "AddressBooksChanged", None))
 
-    def _on_hangup_requested(self, _manager):
+    def on_hangup_requested(self, _manager):
         """Remember that this side asked for a hangup, whichever surface did."""
         self._hangup_requested_at = time.monotonic()
 
-    def _on_call_removed_feedback(self, _manager, _path):
+    def on_call_removed_feedback(self, _manager, _path):
         """Sound the hangup tone when the other side ended the call.
 
         The tone lives in the daemon because the call window's process
@@ -207,7 +207,7 @@ class TelephonyCore:
             return
         self.ofono.audio.play_hangup()
 
-    def _setup_feedbackd(self):
+    def setup_feedbackd(self):
         """Setup feedbackd application profiles."""
         def task():
             source = Gio.SettingsSchemaSource.get_default()
@@ -248,7 +248,7 @@ class TelephonyCore:
 
         run_in_background(task)
 
-    def _chat_is_open(self, number):
+    def is_chat_open(self, number):
         """Return whether a window reports this chat open and focused.
 
         The windows keep SetActiveChat truthful on map, unmap and focus
@@ -276,7 +276,7 @@ class TelephonyCore:
         except Exception as e:
             logger.debug(f"Exception checking DND bypass: {e}")
 
-        if self._chat_is_open(number):
+        if self.is_chat_open(number):
             return
         if self.gsettings_mgr.is_conversation_muted(conversation_id(number)):
             logger.debug(f"[App] Muted conversation, no notification for {number}")
@@ -317,9 +317,9 @@ class TelephonyCore:
         else:
             chat_id = sender
 
-        GLib.timeout_add(MMS_NOTIFICATION_DELAY_MS, self._process_mms_notification, chat_id, body, attachments, sender)
+        GLib.timeout_add(MMS_NOTIFICATION_DELAY_MS, self.process_mms_notification, chat_id, body, attachments, sender)
 
-    def _process_mms_notification(self, chat_id, body, attachments, real_sender=None):
+    def process_mms_notification(self, chat_id, body, attachments, real_sender=None):
         """Process MMS notification logic."""
         preview_text = body if body else "[Picture Message]"
 
@@ -338,7 +338,7 @@ class TelephonyCore:
             except Exception as e:
                 logger.error(f"[Priority] Check failed in MMS: {e}")
 
-        if self._chat_is_open(chat_id):
+        if self.is_chat_open(chat_id):
             return False
         if self.gsettings_mgr.is_conversation_muted(conversation_id(chat_id)):
             logger.debug(f"[App] Muted conversation, no notification for {chat_id}")
@@ -348,7 +348,7 @@ class TelephonyCore:
 
         return False
 
-    def _get_custom_sms_tone(self, number):
+    def get_custom_sms_tone(self, number):
         """Check for a custom SMS tone for the given number."""
         tones = self.gsettings_mgr.get_notification_override_sms_custom_tone_contacts()
         try:
@@ -365,20 +365,20 @@ class TelephonyCore:
             logger.error(f"Get custom SMS tone error: {e}")
         return None
 
-    def _watch_modem_health(self, *args):
+    def watch_modem_health(self, *args):
         """Arm or clear the modem-unavailable watchdog from modem state.
 
         A modem that was healthy earlier gets a grace period since firmware
         asserts usually recover on their own; a modem that never appeared
         after boot gets none, there is nothing transient about it.
         """
-        missing = self.ofono.modem_health_degraded()
+        missing = self.ofono.is_modem_health_degraded()
 
         if missing:
             if self._modem_watch_timer is None and not self._modem_notified:
                 delay = MODEM_UNAVAILABLE_DELAY_SECONDS if self._modem_was_healthy else BOOT_UNAVAILABLE_DELAY_SECONDS
                 self._modem_watch_timer = GLib.timeout_add_seconds(
-                    delay, self._on_modem_unavailable)
+                    delay, self.on_modem_unavailable)
             return
 
         self._modem_was_healthy = True
@@ -388,19 +388,19 @@ class TelephonyCore:
         if self._modem_notified:
             self._modem_notified = False
             self.notification_manager.close_notification("modem_unavailable")
-            self._dismiss_recovery_surface()
+            self.dismiss_recovery_surface()
 
-    def _on_modem_unavailable(self):
+    def on_modem_unavailable(self):
         """Act on the dead modem, unless the radio is off on purpose."""
         self._modem_watch_timer = None
-        if not self.ofono.modem_health_degraded():
+        if not self.ofono.is_modem_health_degraded():
             return False
 
-        run_in_background(self._recovery_blocker, on_complete=self._decide_modem_recovery,
-                          on_error=lambda error: self._decide_modem_recovery(""))
+        run_in_background(self.recovery_refusal_reason, on_complete=self.decide_modem_recovery,
+                          on_error=lambda error: self.decide_modem_recovery(""))
         return False
 
-    def _watch_airplane_mode(self):
+    def watch_airplane_mode(self):
         """Notice the radio being switched back on.
 
         A modem that is gone reports nothing, so nothing would ask
@@ -414,19 +414,19 @@ class TelephonyCore:
                 "org.gnome.SettingsDaemon.Rfkill",
                 "org.freedesktop.DBus.Properties", "PropertiesChanged",
                 "/org/gnome/SettingsDaemon/Rfkill", None,
-                Gio.DBusSignalFlags.NONE, self._on_airplane_mode_changed, None)
+                Gio.DBusSignalFlags.NONE, self.on_airplane_mode_changed, None)
         except Exception as e:
             logger.debug(f"[App] Cannot watch the airplane switch: {e}")
 
-    def _on_airplane_mode_changed(self, *_args):
+    def on_airplane_mode_changed(self, *_args):
         """Rearm the modem watchdog when the airplane switch moves."""
-        self._watch_modem_health()
+        self.watch_modem_health()
 
-    def _radio_off_by_choice(self):
+    def is_radio_off_by_choice(self):
         """Return True when the radio is off because it was asked to be; blocking, call from a worker."""
         return is_gsd_airplane_mode() or is_vendor_radio_disabled()
 
-    def _recovery_blocker(self):
+    def recovery_refusal_reason(self):
         """Say why a stack restart cannot help, or nothing; blocking, from a worker.
 
         A switched-off radio is not a fault and a restart cannot power
@@ -444,7 +444,7 @@ class TelephonyCore:
         A modem that appeared earlier and went is a fault, so this only
         speaks for one that was never there this boot.
         """
-        if self._radio_off_by_choice():
+        if self.is_radio_off_by_choice():
             return "radio-off"
 
         if self._modem_was_healthy or self.ofono.monitor.connected:
@@ -455,14 +455,14 @@ class TelephonyCore:
 
         return ""
 
-    def _blocker_text(self, blocker):
+    def recovery_refusal_text(self, reason):
         """Put a refusal in words for whoever asked."""
-        if blocker == "radio-off":
+        if reason == "radio-off":
             return _("The radio is switched off. Turn it back on to use the modem.")
         return _("This device reports no modem. Restarting cannot fix a modem "
                  "that is missing or has no identity.")
 
-    def _decide_modem_recovery(self, blocker):
+    def decide_modem_recovery(self, reason):
         """Recover the modem silently, or show the screen, or leave it alone.
 
         Reading the radio state runs off the main loop because asking
@@ -478,14 +478,14 @@ class TelephonyCore:
         device that has not had its IMEI written yet. The banner carries
         the fact instead, and the settings row explains it when asked.
         """
-        if blocker == "radio-off":
+        if reason == "radio-off":
             logger.info("[App] Modem is unavailable because the radio is off, not offering recovery")
             return
 
-        if not self.ofono.modem_health_degraded():
+        if not self.ofono.is_modem_health_degraded():
             return
 
-        if blocker:
+        if reason:
             logger.warning("[App] No modem on a healthy stack; the banner says so, no screen")
             self._modem_notified = True
             self.ofono.set_modem_absent(True)
@@ -494,22 +494,22 @@ class TelephonyCore:
         if self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true":
             self.request_auto_recovery()
         else:
-            self._surface_modem_recovery()
+            self.surface_modem_recovery()
 
-    def _describe_modem_problem(self):
+    def describe_modem_problem(self):
         """Say which part stopped, since they are repaired the same way but do not look alike."""
         if not self.ofono.monitor.connected:
             return _("The modem service is not responding.")
-        if self.ofono.voice_interface_missing():
+        if self.ofono.is_voice_interface_missing():
             return _("The modem is answering, but it lost its calling service.")
         if self.ofono.modem_online is False:
             return _("The modem is answering, but its radio is switched off.")
         return _("The modem is not working correctly.")
 
-    def _surface_modem_recovery(self, failed=False, message=None):
+    def surface_modem_recovery(self, failed=False, message=None):
         """Show the recovery screen, or just a bare notification while locked."""
         self._modem_notified = True
-        self._publish_recovery_state(True, message or self._describe_modem_problem(), failed)
+        self.publish_recovery_state(True, message or self.describe_modem_problem(), failed)
 
         if self.sys_state.is_locked:
             self._recovery_pending_unlock = True
@@ -522,19 +522,19 @@ class TelephonyCore:
                 priority=2
             )
         else:
-            self._present_recovery_surface()
+            self.present_recovery_surface()
 
-    def _present_recovery_surface(self):
+    def present_recovery_surface(self):
         """Bring up the in-call window on its recovery page."""
         self._recovery_pending_unlock = False
         self.ui.show_incall_ui()
 
-    def _dismiss_recovery_surface(self):
+    def dismiss_recovery_surface(self):
         """Take the recovery page down once the modem works again."""
         self._recovery_pending_unlock = False
-        self._publish_recovery_state(False, "", False)
+        self.publish_recovery_state(False, "", False)
 
-    def _publish_recovery_state(self, active, message, failed):
+    def publish_recovery_state(self, active, message, failed):
         """Report the recovery state to whoever draws the call window.
 
         The modem is watched here but the recovery page belongs to the
@@ -551,29 +551,29 @@ class TelephonyCore:
             self.dbus_daemon.emit_signal(
                 "RecoveryStateChanged", GLib.Variant("(bsb)", (active, message, failed)))
 
-    def _on_lock_state_changed(self, _service, is_locked):
+    def on_lock_state_changed(self, _service, is_locked):
         """Show the pending recovery screen once the user unlocks."""
         if is_locked or not self._recovery_pending_unlock:
             return
         self.notification_manager.close_notification("modem_unavailable")
-        self._present_recovery_surface()
+        self.present_recovery_surface()
 
-    def _nudges_enabled(self):
+    def are_nudges_enabled(self):
         """Service nudges follow the automatic recovery preference."""
         return self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
 
-    def _cancel_timer(self, attr):
+    def cancel_timer(self, attr):
         """Cancel a named GLib timer attribute when armed."""
         timer_id = getattr(self, attr)
         if timer_id is not None:
             GLib.source_remove(timer_id)
             setattr(self, attr, None)
 
-    def _watch_network_status(self, _ofono, status):
+    def watch_network_status(self, _ofono, status):
         """Nudge a stalled registration, surface a persistent denial."""
         if status in ("registered", "roaming") or status == "":
-            self._cancel_timer("_net_nudge_timer")
-            self._cancel_timer("_denied_timer")
+            self.cancel_timer("_net_nudge_timer")
+            self.cancel_timer("_denied_timer")
             if self._denied_notified:
                 self._denied_notified = False
                 self.notification_manager.close_notification("network_denied")
@@ -581,13 +581,13 @@ class TelephonyCore:
 
         if status == "denied" and self._denied_timer is None and not self._denied_notified:
             self._denied_timer = GLib.timeout_add_seconds(
-                DENIED_NOTIFY_DELAY_SECONDS, self._on_denied_persisted)
+                DENIED_NOTIFY_DELAY_SECONDS, self.on_denied_persisted)
 
-        if self._net_nudge_timer is None and self._nudges_enabled():
+        if self._net_nudge_timer is None and self.are_nudges_enabled():
             self._net_nudge_timer = GLib.timeout_add_seconds(
-                NETWORK_NUDGE_DELAY_SECONDS, self._nudge_network)
+                NETWORK_NUDGE_DELAY_SECONDS, self.nudge_network)
 
-    def _nudge_network(self):
+    def nudge_network(self):
         """Fire one registration retry and keep the timer while still bad."""
         if self.ofono.network_status in ("registered", "roaming", ""):
             self._net_nudge_timer = None
@@ -596,7 +596,7 @@ class TelephonyCore:
         run_in_background(self.ofono.register_network)
         return True
 
-    def _on_denied_persisted(self):
+    def on_denied_persisted(self):
         """Tell the user about a lasting registration denial."""
         self._denied_timer = None
         if self.ofono.network_status != "denied":
@@ -611,7 +611,7 @@ class TelephonyCore:
         )
         return False
 
-    def _watch_sim_pin(self, _ofono, pin_type):
+    def watch_sim_pin(self, _ofono, pin_type):
         """Tell the user when the SIM waits for its PIN."""
         if pin_type in ("none", ""):
             if self._sim_pin_notified:
@@ -660,16 +660,16 @@ class TelephonyCore:
                 logger.info("[App] Modem recovery succeeded")
                 self._modem_notified = False
                 self.notification_manager.close_notification("modem_unavailable")
-                self._dismiss_recovery_surface()
+                self.dismiss_recovery_surface()
             elif state["hopeless"]:
                 logger.error("[App] Modem recovery changed nothing on a device reporting no modem")
                 self.ofono.set_modem_absent(True)
                 if on_done:
-                    on_done(False, self._blocker_text(state["hopeless"]))
+                    on_done(False, self.recovery_refusal_text(state["hopeless"]))
                 return
             else:
                 logger.error("[App] Modem recovery failed")
-                self._surface_modem_recovery(failed=True)
+                self.surface_modem_recovery(failed=True)
             if on_done:
                 on_done(success, "")
 
@@ -680,23 +680,23 @@ class TelephonyCore:
             logger.warning(f"[App] Modem recovery commands errored: {error}")
             watch_recovery_result(self.ofono, verdict)
 
-        def decided(blocker):
-            if blocker == "radio-off":
+        def decided(reason):
+            if reason == "radio-off":
                 self._auto_recovery_running = False
                 logger.info("[App] Not restarting the modem stack: the radio is switched off")
                 if on_done:
-                    on_done(False, self._blocker_text(blocker))
+                    on_done(False, self.recovery_refusal_text(reason))
                 return
-            state["hopeless"] = blocker
+            state["hopeless"] = reason
             run_in_background(execute_modem_recovery, on_complete=fired, on_error=failed)
 
-        run_in_background(self._recovery_blocker, on_complete=decided,
+        run_in_background(self.recovery_refusal_reason, on_complete=decided,
                           on_error=lambda error: decided(""))
         return True
 
     def open_modem_recovery(self):
         """Show the modem recovery screen with the current status."""
-        self._surface_modem_recovery()
+        self.surface_modem_recovery()
 
     def ensure_voicemail_contact(self):
         """Create a Voicemail contact for the mailbox number when missing.
@@ -710,7 +710,7 @@ class TelephonyCore:
         """
         if not self.ofono or not self.eds or not self.eds.is_ready:
             return
-        number = self.ofono.voicemail_number()
+        number = self.ofono.get_voicemail_number()
         if not number or self._vm_contact_busy:
             return
         if number == self._vm_contact_number:
@@ -756,7 +756,7 @@ class TelephonyCore:
             body = _("New voicemail")
 
         actions = {}
-        number = self.ofono.voicemail_number()
+        number = self.ofono.get_voicemail_number()
         if number:
             actions["default"] = f"app.dial-number('{number}')"
             actions[f"app.dial-number('{number}')"] = _("Call Back")
@@ -834,9 +834,9 @@ class TelephonyCore:
         if "," not in number and not any(c.isalpha() for c in str(number)):
             actions[f"app.dial-number('{number}')"] = _("Call")
 
-        custom_sound = self._get_custom_sms_tone(number)
+        custom_sound = self.get_custom_sms_tone(number)
         if not custom_sound and lookup_number:
-            custom_sound = self._get_custom_sms_tone(lookup_number)
+            custom_sound = self.get_custom_sms_tone(lookup_number)
 
         if custom_sound:
             logger.debug(f"[App] Broadcasting notification with custom sound: {custom_sound}")

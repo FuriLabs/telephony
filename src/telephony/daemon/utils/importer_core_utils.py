@@ -20,7 +20,7 @@ from datetime import datetime
 from telephony.shared.utils.log_utils import logger
 
 
-def _get_value(data, keys, default=None):
+def get_value(data, keys, default=None):
     """
     Attempts to retrieve a value from a dictionary or sqlite3.Row using a list of possible keys.
     Returns the first non-None value found, or the default if none are found.
@@ -37,7 +37,7 @@ def _get_value(data, keys, default=None):
     return default
 
 
-def _get_xml_value(element, keys, default=None):
+def get_xml_value(element, keys, default=None):
     """
     Attempts to retrieve an attribute from an XML element using a list of possible keys.
     Returns the first non-None value found, or the default if none are found.
@@ -51,19 +51,19 @@ def _get_xml_value(element, keys, default=None):
     return default
 
 
-def _get_chatty_db_path():
+def get_chatty_db_path():
     return os.path.expanduser("~/.purple/chatty/db/chatty-history.db")
 
 
-def _get_chatty_mms_path():
+def get_chatty_mms_path():
     return os.path.expanduser("~/.local/share/chatty/mms/")
 
 
-def _get_calls_db_path():
+def get_calls_db_path():
     return os.path.expanduser("~/.local/share/calls/records.db")
 
 
-def _parse_generic_timestamp(ts):
+def parse_generic_timestamp(ts):
     """
     Robust timestamp parser that handles variations such as:
     - String representations of ISO dates (e.g. '2022-01-01T12:00:00Z')

@@ -61,7 +61,7 @@ class MessagesView(Adw.Bin):
         self._is_programmatic_update = False
 
         self.signal_ids = []
-        self.signal_ids.append((self.db, self.db.connect('messages-updated', self._on_messages_updated)))
+        self.signal_ids.append((self.db, self.db.connect('messages-updated', self.on_messages_updated)))
         self.signal_ids.append((self.db, self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
         if self.app_window.eds:
             self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
@@ -71,13 +71,13 @@ class MessagesView(Adw.Bin):
         self.setup_list_page()
         self.active_filter = "all"
         self.nav_view.add(self.main_page)
-        self.nav_view.connect("notify::visible-page", self._on_visible_page_changed)
+        self.nav_view.connect("notify::visible-page", self.on_visible_page_changed)
 
     def in_chat(self):
         """Return True while a chat page is open on top of the list."""
         return self.nav_view.get_visible_page() is not self.main_page
 
-    def _on_visible_page_changed(self, *args):
+    def on_visible_page_changed(self, *args):
         """Tell the window to drop its own header while a chat is open."""
         self.app_window.sync_chat_chrome()
 
@@ -152,7 +152,7 @@ class MessagesView(Adw.Bin):
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", ConversationRowFactory.setup)
-        factory.connect("bind", self._on_bind_row)
+        factory.connect("bind", self.on_bind_row)
 
         self.list_view = Gtk.ListView(model=self.selection, factory=factory)
         self.list_view.set_single_click_activate(True)
@@ -190,20 +190,20 @@ class MessagesView(Adw.Bin):
         self.main_page.set_child(box)
         self.refresh_list()
 
-    def _on_filter_action(self, action, value):
+    def on_filter_action(self, action, value):
         """Apply the picked conversation filter."""
         action.set_state(value)
         self.active_filter = value.get_string()
-        self._update_filter_visuals()
+        self.update_filter_visuals()
         self.refresh_list()
 
-    def _reset_filter(self):
+    def reset_filter(self):
         """Return the conversation filter to showing everything."""
         self.active_filter = "all"
         self._filter_action.set_state(GLib.Variant("s", "all"))
-        self._update_filter_visuals()
+        self.update_filter_visuals()
 
-    def _update_filter_visuals(self):
+    def update_filter_visuals(self):
         """Update the filter button icon and state based on active filter."""
         icons = {
             "all": "view-more-symbolic",
@@ -227,7 +227,7 @@ class MessagesView(Adw.Bin):
         group = Gio.SimpleActionGroup()
         self._filter_action = Gio.SimpleAction.new_stateful(
             "filter", GLib.VariantType.new("s"), GLib.Variant("s", "all"))
-        self._filter_action.connect("activate", self._on_filter_action)
+        self._filter_action.connect("activate", self.on_filter_action)
         group.add_action(self._filter_action)
         self.insert_action_group("msgs", group)
 
@@ -263,9 +263,9 @@ class MessagesView(Adw.Bin):
             return
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
         if is_at_bottom:
-            self._start_fetch()
+            self.start_fetch()
 
-    def _on_messages_updated(self, _db, chat_id, change):
+    def on_messages_updated(self, _db, chat_id, change):
         """React to message database changes, updating single rows when possible."""
         if (not chat_id or change not in ("insert", "status")
                 or self.active_filter != "all" or self.search_entry.get_text().strip()):
@@ -275,9 +275,9 @@ class MessagesView(Adw.Bin):
         seq = self._row_update_seq.get(chat_id, 0) + 1
         self._row_update_seq[chat_id] = seq
         run_in_background(self.db.get_conversation_summary, chat_id,
-                          on_complete=lambda summary: self._apply_row_update(chat_id, summary, change, seq))
+                          on_complete=lambda summary: self.apply_row_update(chat_id, summary, change, seq))
 
-    def _apply_row_update(self, chat_id, summary, change, seq):
+    def apply_row_update(self, chat_id, summary, change, seq):
         """Update a single conversation row in place from a fresh summary."""
         if seq != self._row_update_seq.get(chat_id):
             return
@@ -311,10 +311,10 @@ class MessagesView(Adw.Bin):
         self.model.remove(idx)
         self.model.insert(target, new_item)
         if target == 0 and was_at_top:
-            GLib.idle_add(self._stick_to_top)
+            GLib.idle_add(self.stick_to_top)
 
 
-    def _stick_to_top(self):
+    def stick_to_top(self):
         """Keep the list pinned to the newest row after a top insert.
 
         The list view anchors scrolling by pixel offset, so a row moved
@@ -328,19 +328,19 @@ class MessagesView(Adw.Bin):
         """Trigger a reload of the conversation list."""
         if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
-        self._refresh_timer = GLib.timeout_add(200, self._do_refresh_list)
+        self._refresh_timer = GLib.timeout_add(200, self.do_refresh_list)
 
-    def _do_refresh_list(self):
+    def do_refresh_list(self):
         self._refresh_timer = None
         if self.active_chat_number and self.active_chat_page:
-            self._update_active_chat_title()
+            self.update_active_chat_title()
 
         self.load_token += 1
         self.page_offset = 0
-        self._start_fetch()
+        self.start_fetch()
         return False
 
-    def _update_active_chat_title(self):
+    def update_active_chat_title(self):
         """Update title of the active chat page based on current blocklist/contact status."""
         target = self.active_chat_number
         name = None
@@ -366,13 +366,13 @@ class MessagesView(Adw.Bin):
         if name and self.active_chat_page:
             self.active_chat_page.update_contact_details(name)
 
-    def _start_fetch(self):
+    def start_fetch(self):
         """Start fetching data in background."""
         current_token = self.load_token
         self.is_fetching = True
         self.spinner.set_visible(True)
 
-        def _bg_fetch():
+        def bg_fetch():
             limit = self.page_limit
             if self.page_offset == 0:
                 try:
@@ -380,17 +380,17 @@ class MessagesView(Adw.Bin):
                     limit = max(50, count + 10)
                 except Exception as e:
                     logger.warning(f"[MessagesView] Unread count error: {e}")
-            return self._fetch_and_process(self.page_offset, limit=limit)
+            return self.fetch_and_process(self.page_offset, limit=limit)
 
         DataLoader.load_data(
-            fetch_func=_bg_fetch,
+            fetch_func=bg_fetch,
             model_add_func=self.add_chunk,
             model=self.model,
             check_token_func=lambda: self.load_token == current_token,
             clear_on_first_chunk=(self.page_offset == 0)
         )
 
-    def _fetch_and_process(self, offset, limit=None):
+    def fetch_and_process(self, offset, limit=None):
         """Fetch rows from DB and process them."""
         current_limit = limit if limit is not None else self.page_limit
         raw_rows = self.db.get_conversations(limit=current_limit + 1, offset=offset, filter_type=self.active_filter)
@@ -477,13 +477,13 @@ class MessagesView(Adw.Bin):
 
         return False
 
-    def _muted_ids(self):
+    def muted_ids(self):
         """Return the muted conversation ids as a set."""
         return set(self.app_window.gsettings_mgr.get_muted_conversations())
 
-    def _on_bind_row(self, factory, list_item):
+    def on_bind_row(self, factory, list_item):
         """Bind row items to widgets."""
-        ConversationRowFactory.bind(factory, list_item, self._muted_ids())
+        ConversationRowFactory.bind(factory, list_item, self.muted_ids())
 
     def on_activate_conv(self, lv, pos):
         """Handle activation of a conversation row."""
@@ -492,8 +492,8 @@ class MessagesView(Adw.Bin):
 
     def close_active_chat(self):
         """Close the currently active chat page."""
-        self._reset_search_ui()
-        self._reset_filter()
+        self.reset_search_ui()
+        self.reset_filter()
         GLib.idle_add(lambda: self.nav_view.pop() or False)
 
     def open_chat(self, number_or_list, name=None, target_msg_id=None, prefill_text=None, prefill_attachments=None):
@@ -557,8 +557,8 @@ class MessagesView(Adw.Bin):
                 self.active_chat_number = None
                 self.active_chat_page = None
                 self.app_window.ofono.set_active_chat(None)
-                self._reset_search_ui()
-                self._reset_filter()
+                self.reset_search_ui()
+                self.reset_filter()
                 self.refresh_list()
 
         page.connect("hidden", on_pop)
@@ -588,7 +588,7 @@ class MessagesView(Adw.Bin):
         text = entry.get_text().strip()
         count = len(self.selected_recipients)
 
-        self._update_compose_button()
+        self.update_compose_button()
 
         if not text and count == 0:
             self.content_stack.set_visible_child_name("conversations")
@@ -609,7 +609,7 @@ class MessagesView(Adw.Bin):
             self.perform_message_search(query)
         return False
 
-    def _update_compose_button(self):
+    def update_compose_button(self):
         """Refresh the compose button label based on selection and existing threads."""
         count = len(self.selected_recipients)
         if count == 0:
@@ -636,7 +636,7 @@ class MessagesView(Adw.Bin):
             return
         recipients = list(self.selected_recipients)
 
-        self._reset_search_ui()
+        self.reset_search_ui()
 
         if len(recipients) == 1:
             self.open_chat(recipients[0], None)
@@ -645,9 +645,9 @@ class MessagesView(Adw.Bin):
 
     def on_cancel_clicked(self, btn):
         """Handle click on cancel button."""
-        self._reset_search_ui()
+        self.reset_search_ui()
 
-    def _reset_search_ui(self):
+    def reset_search_ui(self):
         """Reset the search UI state."""
         self._is_programmatic_update = True
         self.selected_recipients.clear()
@@ -658,7 +658,7 @@ class MessagesView(Adw.Bin):
         self.action_box.set_visible(False)
         self.toggle_box.set_visible(True)
 
-    def _toggle_selection(self, number, check_btn=None, clear_search=False):
+    def toggle_selection(self, number, check_btn=None, clear_search=False):
         """Toggle selection of a contact in search results."""
         if number in self.selected_recipients:
             self.selected_recipients.remove(number)
@@ -676,7 +676,7 @@ class MessagesView(Adw.Bin):
             self.search_entry.set_text("")
             self._is_programmatic_update = False
 
-        self._update_compose_button()
+        self.update_compose_button()
 
     def perform_contact_search(self, query):
         """Search for contacts matching the query."""
@@ -695,7 +695,7 @@ class MessagesView(Adw.Bin):
 
             chk = Gtk.CheckButton()
             chk.set_active(norm_query in self.selected_recipients)
-            chk.handler_id = chk.connect("toggled", lambda b: GLib.idle_add(lambda: self._toggle_selection(norm_query, b, clear_search=True) or False))
+            chk.handler_id = chk.connect("toggled", lambda b: GLib.idle_add(lambda: self.toggle_selection(norm_query, b, clear_search=True) or False))
             row_box.append(chk)
 
             lbl = Gtk.Label(label=_("Add Number: {number}").format(number=norm_query), xalign=0, hexpand=True, css_classes=["heading"])
@@ -705,21 +705,21 @@ class MessagesView(Adw.Bin):
             row = Gtk.ListBoxRow()
             row.set_child(row_box)
             ctrl = Gtk.GestureClick()
-            ctrl.connect("released", lambda c, n, x, y: GLib.idle_add(lambda: self._toggle_selection(norm_query, chk, clear_search=True) or False))
+            ctrl.connect("released", lambda c, n, x, y: GLib.idle_add(lambda: self.toggle_selection(norm_query, chk, clear_search=True) or False))
             row.add_controller(ctrl)
             manual_entry_row = row
 
-        def _bg_fetch():
+        def bg_fetch():
             res = self.app_window.eds.search_contacts(query, limit=30)
             s_map = {}
             if self.app_window.eds and (self.app_window.eds is not None):
                 sources = self.app_window.eds.get_sources_info()
                 for s in sources:
                     s_map[s['uid']] = s['name']
-            convs = self._search_conversations(query, res)
+            convs = self.search_conversations(query, res)
             return res, s_map, convs
 
-        def _on_done(results, source_map, conversations):
+        def on_done(results, source_map, conversations):
             if self.contact_search_token != current_token:
                 return False
 
@@ -735,7 +735,7 @@ class MessagesView(Adw.Bin):
                 row.set_activatable(True)
                 row.add_prefix(Gtk.Image.new_from_icon_name("chat-message-new-symbolic"))
                 row.connect("activated", lambda r, cid=conv_id: GLib.idle_add(
-                    lambda: [self._reset_search_ui(), self.open_chat(cid, None)] and False))
+                    lambda: [self.reset_search_ui(), self.open_chat(cid, None)] and False))
                 self.results_list.append(row)
 
             if not results and not conversations:
@@ -760,7 +760,7 @@ class MessagesView(Adw.Bin):
 
                     chk = Gtk.CheckButton()
                     chk.set_active(norm_num in self.selected_recipients)
-                    chk.handler_id = chk.connect("toggled", lambda b, n=norm_num: GLib.idle_add(lambda: self._toggle_selection(n, b) or False))
+                    chk.handler_id = chk.connect("toggled", lambda b, n=norm_num: GLib.idle_add(lambda: self.toggle_selection(n, b) or False))
                     box.append(chk)
 
                     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -782,18 +782,18 @@ class MessagesView(Adw.Bin):
                     row.set_child(box)
 
                     ctrl = Gtk.GestureClick()
-                    ctrl.connect("released", lambda c, n, x, y, b=chk, nm=norm_num: GLib.idle_add(lambda: self._toggle_selection(nm, b) or False))
+                    ctrl.connect("released", lambda c, n, x, y, b=chk, nm=norm_num: GLib.idle_add(lambda: self.toggle_selection(nm, b) or False))
                     row.add_controller(ctrl)
                     self.results_list.append(row)
             return False
 
-        def _bg_task():
-            res, s_map, convs = _bg_fetch()
-            GLib.idle_add(lambda: _on_done(res, s_map, convs))
+        def bg_task():
+            res, s_map, convs = bg_fetch()
+            GLib.idle_add(lambda: on_done(res, s_map, convs))
 
-        run_in_background(_bg_task)
+        run_in_background(bg_task)
 
-    def _search_conversations(self, query, contact_results):
+    def search_conversations(self, query, contact_results):
         """Find existing conversations matching the query by group name, number or member."""
         q = query.strip().lower()
         if not q:
@@ -841,12 +841,12 @@ class MessagesView(Adw.Bin):
         self.message_search_token = self.message_search_token + 1
         current_token = self.message_search_token
 
-        def _bg_fetch():
+        def bg_fetch():
             results = self.db.search_messages(query)
             contact_map = self.db.get_contacts_lookup_map()
             return results, contact_map
 
-        def _on_done(results, contact_map):
+        def on_done(results, contact_map):
             if self.message_search_token != current_token:
                 return False
 
@@ -888,8 +888,8 @@ class MessagesView(Adw.Bin):
                 self.results_list.append(row)
             return False
 
-        def _bg_task():
-            res, c_map = _bg_fetch()
-            GLib.idle_add(lambda: _on_done(res, c_map))
+        def bg_task():
+            res, c_map = bg_fetch()
+            GLib.idle_add(lambda: on_done(res, c_map))
 
-        run_in_background(_bg_task)
+        run_in_background(bg_task)

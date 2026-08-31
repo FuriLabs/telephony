@@ -105,11 +105,11 @@ class GSettingsManager:
 
     def get_favorites(self):
         """Return the speed dial entries."""
-        return self._get_json_setting("favorites", "Favorites")
+        return self.get_json_setting("favorites", "Favorites")
 
     def set_favorites(self, entries):
         """Persist the speed dial entries."""
-        self._set_json_setting("favorites", entries, "Favorites")
+        self.set_json_setting("favorites", entries, "Favorites")
 
     def get_muted_conversations(self):
         """Return the list of muted conversation ids."""
@@ -159,7 +159,7 @@ class GSettingsManager:
         except Exception as e:
             logger.error(f"[GSettings] Set Reject Messages Error: {e}")
 
-    def _get_json_setting(self, key, error_label):
+    def get_json_setting(self, key, error_label):
         """Load a JSON-encoded list setting, returning [] on absence or error."""
         try:
             val = self.get_setting(key)
@@ -169,7 +169,7 @@ class GSettingsManager:
             logger.error(f"[GSettings] Get {error_label} Error: {e}")
         return []
 
-    def _set_json_setting(self, key, value, error_label):
+    def set_json_setting(self, key, value, error_label):
         """Store a value as a JSON-encoded setting."""
         try:
             self.set_setting(key, json.dumps(value))
@@ -178,51 +178,51 @@ class GSettingsManager:
 
     def get_emergency_numbers(self):
         """Return the configured emergency numbers list."""
-        return self._get_json_setting("emergency_numbers", "Emergency Numbers")
+        return self.get_json_setting("emergency_numbers", "Emergency Numbers")
 
     def set_emergency_numbers(self, numbers_list):
         """Persist the emergency numbers list."""
-        self._set_json_setting("emergency_numbers", numbers_list, "Emergency Numbers")
+        self.set_json_setting("emergency_numbers", numbers_list, "Emergency Numbers")
 
     def get_trusted_sms_location_request(self):
         """Return the trusted location request contacts list."""
-        return self._get_json_setting("trusted_sms_location_request", "Location Request")
+        return self.get_json_setting("trusted_sms_location_request", "Location Request")
 
     def set_trusted_sms_location_request(self, contacts_list):
         """Persist the trusted location request contacts list."""
-        self._set_json_setting("trusted_sms_location_request", contacts_list, "Location Request")
+        self.set_json_setting("trusted_sms_location_request", contacts_list, "Location Request")
 
     def get_trusted_sms_silent_callback(self):
         """Return the trusted silent callback contacts list."""
-        return self._get_json_setting("trusted_sms_silent_callback", "Callback")
+        return self.get_json_setting("trusted_sms_silent_callback", "Callback")
 
     def set_trusted_sms_silent_callback(self, contacts_list):
         """Persist the trusted silent callback contacts list."""
-        self._set_json_setting("trusted_sms_silent_callback", contacts_list, "Callback")
+        self.set_json_setting("trusted_sms_silent_callback", contacts_list, "Callback")
 
     def get_trusted_sms_relay(self):
         """Return the trusted relay contacts list."""
-        return self._get_json_setting("trusted_sms_relay", "Relay")
+        return self.get_json_setting("trusted_sms_relay", "Relay")
 
     def set_trusted_sms_relay(self, contacts_list):
         """Persist the trusted relay contacts list."""
-        self._set_json_setting("trusted_sms_relay", contacts_list, "Relay")
+        self.set_json_setting("trusted_sms_relay", contacts_list, "Relay")
 
     def get_trusted_sms_ssh_access(self):
         """Return the trusted SSH access contacts list."""
-        return self._get_json_setting("trusted_sms_ssh_access", "SSH Access")
+        return self.get_json_setting("trusted_sms_ssh_access", "SSH Access")
 
     def set_trusted_sms_ssh_access(self, contacts_list):
         """Persist the trusted SSH access contacts list."""
-        self._set_json_setting("trusted_sms_ssh_access", contacts_list, "SSH Access")
+        self.set_json_setting("trusted_sms_ssh_access", contacts_list, "SSH Access")
 
     def get_trusted_sms_lock_device(self):
         """Return the trusted lock-device contacts list."""
-        return self._get_json_setting("trusted_sms_lock_device", "Lock Device")
+        return self.get_json_setting("trusted_sms_lock_device", "Lock Device")
 
     def set_trusted_sms_lock_device(self, contacts_list):
         """Persist the trusted lock-device contacts list."""
-        self._set_json_setting("trusted_sms_lock_device", contacts_list, "Lock Device")
+        self.set_json_setting("trusted_sms_lock_device", contacts_list, "Lock Device")
 
 
     def set_trusted_sms_location_request_enabled(self, val):
@@ -243,92 +243,92 @@ class GSettingsManager:
     def get_trusted_sms_location_request_enabled(self):
         return self.get_setting("trusted_sms_location_request_enabled") == "true"
 
-    def _get_totp_seed(self, action):
+    def get_totp_seed(self, action):
         """Fetch the stored TOTP seed for an action, returning "" when absent."""
         secret = self.secret_manager.get_secret(action)
         if not secret:
             return ""
         return secret
 
-    def _set_totp_seed(self, action, seed):
+    def set_totp_seed(self, action, seed):
         """Store the TOTP seed for an action."""
         self.secret_manager.store_secret(action, seed)
 
-    def _remove_totp_seed(self, action):
+    def remove_totp_seed(self, action):
         """Clear the stored TOTP seed for an action."""
         self.secret_manager.clear_secret(action)
 
     def get_trusted_sms_location_request_totp_seed(self):
         """Return the location request TOTP seed."""
-        return self._get_totp_seed("trusted_sms_location_request")
+        return self.get_totp_seed("trusted_sms_location_request")
 
     def set_trusted_sms_location_request_totp_seed(self, val):
         """Store the location request TOTP seed."""
-        self._set_totp_seed("trusted_sms_location_request", val)
+        self.set_totp_seed("trusted_sms_location_request", val)
 
     def remove_trusted_sms_location_request_totp_seed(self):
         """Clear the location request TOTP seed."""
-        self._remove_totp_seed("trusted_sms_location_request")
+        self.remove_totp_seed("trusted_sms_location_request")
 
     def get_trusted_sms_silent_callback_enabled(self):
         return self.get_setting("trusted_sms_silent_callback_enabled") == "true"
 
     def get_trusted_sms_silent_callback_totp_seed(self):
         """Return the silent callback TOTP seed."""
-        return self._get_totp_seed("trusted_sms_silent_callback")
+        return self.get_totp_seed("trusted_sms_silent_callback")
 
     def set_trusted_sms_silent_callback_totp_seed(self, val):
         """Store the silent callback TOTP seed."""
-        self._set_totp_seed("trusted_sms_silent_callback", val)
+        self.set_totp_seed("trusted_sms_silent_callback", val)
 
     def remove_trusted_sms_silent_callback_totp_seed(self):
         """Clear the silent callback TOTP seed."""
-        self._remove_totp_seed("trusted_sms_silent_callback")
+        self.remove_totp_seed("trusted_sms_silent_callback")
 
     def get_trusted_sms_relay_enabled(self):
         return self.get_setting("trusted_sms_relay_enabled") == "true"
 
     def get_trusted_sms_relay_totp_seed(self):
         """Return the relay TOTP seed."""
-        return self._get_totp_seed("trusted_sms_relay")
+        return self.get_totp_seed("trusted_sms_relay")
 
     def set_trusted_sms_relay_totp_seed(self, val):
         """Store the relay TOTP seed."""
-        self._set_totp_seed("trusted_sms_relay", val)
+        self.set_totp_seed("trusted_sms_relay", val)
 
     def remove_trusted_sms_relay_totp_seed(self):
         """Clear the relay TOTP seed."""
-        self._remove_totp_seed("trusted_sms_relay")
+        self.remove_totp_seed("trusted_sms_relay")
 
     def get_trusted_sms_ssh_access_enabled(self):
         return self.get_setting("trusted_sms_ssh_access_enabled") == "true"
 
     def get_trusted_sms_ssh_access_totp_seed(self):
         """Return the SSH access TOTP seed."""
-        return self._get_totp_seed("trusted_sms_ssh_access")
+        return self.get_totp_seed("trusted_sms_ssh_access")
 
     def set_trusted_sms_ssh_access_totp_seed(self, val):
         """Store the SSH access TOTP seed."""
-        self._set_totp_seed("trusted_sms_ssh_access", val)
+        self.set_totp_seed("trusted_sms_ssh_access", val)
 
     def remove_trusted_sms_ssh_access_totp_seed(self):
         """Clear the SSH access TOTP seed."""
-        self._remove_totp_seed("trusted_sms_ssh_access")
+        self.remove_totp_seed("trusted_sms_ssh_access")
 
     def get_trusted_sms_lock_device_enabled(self):
         return self.get_setting("trusted_sms_lock_device_enabled") == "true"
 
     def get_trusted_sms_lock_device_totp_seed(self):
         """Return the lock-device TOTP seed."""
-        return self._get_totp_seed("trusted_sms_lock_device")
+        return self.get_totp_seed("trusted_sms_lock_device")
 
     def set_trusted_sms_lock_device_totp_seed(self, val):
         """Store the lock-device TOTP seed."""
-        self._set_totp_seed("trusted_sms_lock_device", val)
+        self.set_totp_seed("trusted_sms_lock_device", val)
 
     def remove_trusted_sms_lock_device_totp_seed(self):
         """Clear the lock-device TOTP seed."""
-        self._remove_totp_seed("trusted_sms_lock_device")
+        self.remove_totp_seed("trusted_sms_lock_device")
 
     def generate_totp_seed(self):
         """Generates a random base32 TOTP seed."""
@@ -341,37 +341,37 @@ class GSettingsManager:
 
     def get_notification_override_dnd_bypass_contacts(self):
         """Return the contacts whose calls ring through DND."""
-        return self._get_json_setting("notification_override_dnd_bypass_contacts", "DND Bypass")
+        return self.get_json_setting("notification_override_dnd_bypass_contacts", "DND Bypass")
 
     def set_notification_override_dnd_bypass_contacts(self, contacts_list):
         """Persist the contacts whose calls ring through DND."""
-        self._set_json_setting("notification_override_dnd_bypass_contacts", contacts_list, "DND Bypass")
+        self.set_json_setting("notification_override_dnd_bypass_contacts", contacts_list, "DND Bypass")
 
     def get_notification_override_dnd_bypass_contacts_messages(self):
         """Return the contacts whose messages sound through DND."""
-        return self._get_json_setting("notification_override_dnd_bypass_contacts_messages", "DND Bypass")
+        return self.get_json_setting("notification_override_dnd_bypass_contacts_messages", "DND Bypass")
 
     def set_notification_override_dnd_bypass_contacts_messages(self, contacts_list):
         """Persist the contacts whose messages sound through DND."""
-        self._set_json_setting("notification_override_dnd_bypass_contacts_messages", contacts_list, "DND Bypass")
+        self.set_json_setting("notification_override_dnd_bypass_contacts_messages", contacts_list, "DND Bypass")
 
     def get_notification_override_sms_custom_tone_contacts(self):
         """Return the SMS custom tone contacts list."""
-        return self._get_json_setting("notification_override_sms_custom_tone_contacts", "SMS Custom Tones")
+        return self.get_json_setting("notification_override_sms_custom_tone_contacts", "SMS Custom Tones")
 
     def set_notification_override_sms_custom_tone_contacts(self, tones_list):
         """Persist the SMS custom tone contacts list."""
-        self._set_json_setting("notification_override_sms_custom_tone_contacts", tones_list, "SMS Custom Tones")
+        self.set_json_setting("notification_override_sms_custom_tone_contacts", tones_list, "SMS Custom Tones")
 
     def get_notification_override_call_custom_contacts(self):
         """Return the call custom tone contacts list."""
-        return self._get_json_setting("notification_override_call_custom_contacts", "Ring Custom Tones")
+        return self.get_json_setting("notification_override_call_custom_contacts", "Ring Custom Tones")
 
     def set_notification_override_call_custom_contacts(self, tones_list):
         """Persist the call custom tone contacts list."""
-        self._set_json_setting("notification_override_call_custom_contacts", tones_list, "Ring Custom Tones")
+        self.set_json_setting("notification_override_call_custom_contacts", tones_list, "Ring Custom Tones")
 
-    def _update_special_list(self, key, target_number, action, new_name=None):
+    def update_special_list(self, key, target_number, action, new_name=None):
         """Helper to update special lists (Trusted, Priority, Custom Tones)."""
         try:
             val = self.get_setting(key)
@@ -414,14 +414,14 @@ class GSettingsManager:
     def remove_from_special_lists(self, number):
         """Remove a number from every special list."""
         for k in SPECIAL_LIST_KEYS:
-            self._update_special_list(k, number, "remove")
+            self.update_special_list(k, number, "remove")
 
     def update_special_list_names(self, number, new_name):
         """Update the stored contact name for a number in every special list."""
         for k in SPECIAL_LIST_KEYS:
-            self._update_special_list(k, number, "update_name", new_name=new_name)
+            self.update_special_list(k, number, "update_name", new_name=new_name)
 
     def reset_special_list_names(self, number):
         """Reset the stored contact name to Unknown in every special list."""
         for k in SPECIAL_LIST_KEYS:
-            self._update_special_list(k, number, "reset_name")
+            self.update_special_list(k, number, "reset_name")

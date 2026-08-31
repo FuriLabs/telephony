@@ -57,7 +57,7 @@ class NotificationManager(GObject.Object):
                     None,
                     None,
                     Gio.DBusSignalFlags.NONE,
-                    self._on_action_invoked,
+                    self.on_action_invoked,
                     None
                 )
                 self.connection.signal_subscribe(
@@ -67,18 +67,18 @@ class NotificationManager(GObject.Object):
                     None,
                     None,
                     Gio.DBusSignalFlags.NONE,
-                    self._on_notification_closed,
+                    self.on_notification_closed,
                     None
                 )
             except Exception as e:
                 logger.error(f"Failed to subscribe to ActionInvoked: {e}")
 
-    def _on_notification_closed(self, conn, sender, path, iface, signal, params, user_data):
+    def on_notification_closed(self, conn, sender, path, iface, signal, params, user_data):
         """Handle notification close event."""
         nid, reason = params.unpack()
         self.emit('notification-closed', str(nid), reason)
 
-    def _on_action_invoked(self, conn, sender, path, iface, signal, params, user_data):
+    def on_action_invoked(self, conn, sender, path, iface, signal, params, user_data):
         """Handle notification action invocation."""
         nid, action_key = params.unpack()
 

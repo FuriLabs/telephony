@@ -31,9 +31,9 @@ class TmateManager:
 
     def start_session(self, target_number):
         """Starts a tmate session and SMSes the SSH link back to target_number."""
-        run_in_background(self._task, target_number,)
+        run_in_background(self.task, target_number,)
 
-    def _task(self, target_number):
+    def task(self, target_number):
         """Build the session on a worker; urllib stays out of the
         module scope so the idle daemon never maps ssl and libcrypto
         for a feature that almost never runs."""

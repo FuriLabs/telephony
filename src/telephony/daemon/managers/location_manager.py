@@ -61,16 +61,16 @@ class LocationManager(GObject.Object):
 
         self._request_timeout = timeout
 
-        if self._check_and_enable_location():
+        if self.check_and_enable_location():
             if self.progress_callback:
                 self.progress_callback(_("Initializing location services..."))
 
             logger.info(f"[Location] Warm-up required. Waiting {self.WARMUP_DELAY}s...")
-            GLib.timeout_add_seconds(self.WARMUP_DELAY, self._start_geoclue_client)
+            GLib.timeout_add_seconds(self.WARMUP_DELAY, self.start_geoclue_client)
         else:
-            self._start_geoclue_client()
+            self.start_geoclue_client()
 
-    def _check_and_enable_location(self):
+    def check_and_enable_location(self):
         """
         Ensures system location is enabled via GSettings.
         Returns True if we had to enable it (requiring warm-up), False otherwise.
@@ -80,7 +80,7 @@ class LocationManager(GObject.Object):
             return enable_location()
         return False
 
-    def _start_geoclue_client(self):
+    def start_geoclue_client(self):
         """Initiates the Geoclue connection.
 
         Geoclue is imported here rather than at module scope because it
@@ -99,21 +99,21 @@ class LocationManager(GObject.Object):
                 APP_ID,
                 Geoclue.AccuracyLevel.EXACT,
                 None,
-                self._on_simple_ready
+                self.on_simple_ready
             )
 
             self.timeout_source = GLib.timeout_add_seconds(
                 self._request_timeout,
-                self._on_timeout
+                self.on_timeout
             )
 
         except Exception as e:
             logger.error(f"[Location] Failed to start Geoclue client: {e}")
-            self._schedule_finish(None, None, None)
+            self.schedule_finish(None, None, None)
 
         return False
 
-    def _on_simple_ready(self, source, result):
+    def on_simple_ready(self, source, result):
         """Callback when Geoclue Simple client is ready."""
         if not self.is_fetching:
             return
@@ -125,7 +125,7 @@ class LocationManager(GObject.Object):
             simple = Geoclue.Simple.new_finish(result)
         except Exception as e:
             logger.error(f"[Location] Geoclue creation failed (likely race condition): {e}")
-            self._schedule_finish(None, None, None)
+            self.schedule_finish(None, None, None)
             return
 
         self.simple_client = simple
@@ -134,7 +134,7 @@ class LocationManager(GObject.Object):
         client = self.simple_client.get_client()
         if not client:
             logger.warning("[Location] Geoclue returned no client, finishing without a fix.")
-            self._schedule_finish(None, None, None)
+            self.schedule_finish(None, None, None)
             return
 
         logger.debug(f"[Location] Client Active: {client.props.active}")
@@ -146,29 +146,29 @@ class LocationManager(GObject.Object):
         is_good_enough = False
         if location and (location.props.latitude != 0 or location.props.longitude != 0):
             logger.info("[Location] Immediate location available.")
-            is_good_enough = self._process_location(location)
+            is_good_enough = self.process_location(location)
 
         if is_good_enough:
             return
 
         self.location_signal_id = self.simple_client.connect(
             "notify::location",
-            self._on_location_updated
+            self.on_location_updated
         )
 
         if self.progress_callback:
             self.progress_callback(_("Waiting for satellite fix..."))
 
-    def _on_location_updated(self, client, param):
+    def on_location_updated(self, client, param):
         """Handle location updates."""
         if not self.is_fetching:
             return
 
         location = client.get_location()
         logger.info("[Location] Location updated signal received.")
-        self._process_location(location)
+        self.process_location(location)
 
-    def _process_location(self, location):
+    def process_location(self, location):
         """Extract coordinates and notify callback."""
         try:
             lat = location.props.latitude
@@ -181,7 +181,7 @@ class LocationManager(GObject.Object):
                 self.best_location = location
 
             if accuracy <= self.accuracy_threshold:
-                self._schedule_finish(lat, lon, accuracy)
+                self.schedule_finish(lat, lon, accuracy)
                 return True
 
             return False
@@ -190,7 +190,7 @@ class LocationManager(GObject.Object):
             logger.error(f"[Location] Failed to read location properties: {e}")
             return False
 
-    def _on_timeout(self):
+    def on_timeout(self):
         """Handle timeout if no location found."""
         self.timeout_source = None
 
@@ -202,24 +202,24 @@ class LocationManager(GObject.Object):
                 lon = self.best_location.props.longitude
                 accuracy = self.best_location.props.accuracy
                 logger.info(f"[Location] Returning best location found: acc={accuracy}m")
-                self._schedule_finish(lat, lon, accuracy)
+                self.schedule_finish(lat, lon, accuracy)
             except Exception as e:
                 logger.error(f"[Location] Error processing best location: {e}")
-                self._schedule_finish(None, None, None)
+                self.schedule_finish(None, None, None)
         else:
-            self._schedule_finish(None, None, None)
+            self.schedule_finish(None, None, None)
 
         return False
 
-    def _schedule_finish(self, lat, lon, acc):
+    def schedule_finish(self, lat, lon, acc):
         """
         Schedules the result dispatch on the idle loop.
         This ensures we are OUT of any signal handlers or stack frames
         before we trigger callbacks or destroy objects.
         """
-        GLib.idle_add(self._dispatch_result, lat, lon, acc)
+        GLib.idle_add(self.dispatch_result, lat, lon, acc)
 
-    def _dispatch_result(self, lat, lon, acc):
+    def dispatch_result(self, lat, lon, acc):
         """Executes callback and cleanup safely on the main loop."""
         if self.active_callback:
             try:
@@ -227,10 +227,10 @@ class LocationManager(GObject.Object):
             except Exception as e:
                 logger.error(f"[Location] User callback raised exception: {e}")
 
-        self._cleanup()
+        self.cleanup()
         return False
 
-    def _cleanup(self):
+    def cleanup(self):
         """Reset state and stop client."""
         self.active_callback = None
         self.progress_callback = None
@@ -252,9 +252,9 @@ class LocationManager(GObject.Object):
 
             self.location_signal_id = None
 
-            def _destroy_client():
+            def destroy_client():
                 nonlocal client
                 client = None
                 return False
 
-            GLib.timeout_add(2000, _destroy_client)
+            GLib.timeout_add(2000, destroy_client)

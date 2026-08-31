@@ -110,10 +110,10 @@ class ChatPage(Gtk.Box):
         self.db_signals = []
         self.eds_signals = []
 
-        sig_id = self.db.connect('messages-updated', self._on_messages_updated)
+        sig_id = self.db.connect('messages-updated', self.on_messages_updated)
         self.db_signals.append((self.db, sig_id))
 
-        self._setup_ui()
+        self.setup_ui()
 
         if prefill_text:
             self.msg_buffer.set_text(prefill_text)
@@ -128,12 +128,12 @@ class ChatPage(Gtk.Box):
             if self.target_highlight_id:
                 self.load_context_for_message(self.target_highlight_id)
             else:
-                run_in_background(self._initial_load)
+                run_in_background(self.initial_load)
         else:
             self.store.insert(0, MessageItem(0, "divider", _("Draft to {count} recipients").format(count=len(self.recipients)), "", "", is_divider=True))
             self.content_stack.set_visible_child_name("chat")
 
-    def _setup_ui(self):
+    def setup_ui(self):
         """Setup the chat page UI components."""
         header = Adw.HeaderBar(show_start_title_buttons=True, show_end_title_buttons=True)
 
@@ -171,7 +171,7 @@ class ChatPage(Gtk.Box):
 
         self.details_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_DOWN)
         self._details_built = False
-        self.btn_menu.connect("toggled", self._ensure_details_panel)
+        self.btn_menu.connect("toggled", self.ensure_details_panel)
         self.btn_menu.bind_property("active", self.details_revealer, "reveal-child", GObject.BindingFlags.BIDIRECTIONAL)
         self.append(self.details_revealer)
 
@@ -184,28 +184,28 @@ class ChatPage(Gtk.Box):
         self.search_entry.connect("search-changed", self.on_search_changed)
         self.append(self.search_bar)
 
-        def _on_btn_search_toggled(btn):
+        def on_btn_search_toggled(btn):
             if btn.get_active() and self.btn_menu.get_active():
                 self.btn_menu.set_active(False)
-        self.btn_search.connect("toggled", _on_btn_search_toggled)
+        self.btn_search.connect("toggled", on_btn_search_toggled)
 
-        def _on_btn_menu_toggled(btn):
+        def on_btn_menu_toggled(btn):
             if btn.get_active() and self.btn_search.get_active():
                 self.btn_search.set_active(False)
             if btn.get_active():
-                self._refresh_recipient_call_buttons()
-        self.btn_menu.connect("toggled", _on_btn_menu_toggled)
+                self.refresh_recipient_call_buttons()
+        self.btn_menu.connect("toggled", on_btn_menu_toggled)
 
         self.store = Gio.ListStore(item_type=MessageItem)
 
-        self.filter = Gtk.CustomFilter.new(self._filter_func, None)
+        self.filter = Gtk.CustomFilter.new(self.filter_func, None)
         self.filter_model = Gtk.FilterListModel.new(self.store, self.filter)
 
         self.selection = Gtk.NoSelection(model=self.filter_model)
 
         factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", self._on_factory_setup)
-        factory.connect("bind", self._on_factory_bind)
+        factory.connect("setup", self.on_factory_setup)
+        factory.connect("bind", self.on_factory_bind)
         factory.connect("unbind", ChatBubbleFactory.unbind)
         factory.connect("teardown", ChatBubbleFactory.teardown)
 
@@ -214,7 +214,7 @@ class ChatPage(Gtk.Box):
         dismiss = Gtk.GestureClick()
         dismiss.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
 
-        def _dismiss_top_panels(_gesture, _n_press, _x, _y):
+        def dismiss_top_panels(_gesture, _n_press, _x, _y):
             """Close the details panel and the search bar on a tap in the chat.
 
             They slide in from the header rather than floating over the
@@ -226,7 +226,7 @@ class ChatPage(Gtk.Box):
             if self.btn_search.get_active() and not self.search_entry.get_text():
                 self.btn_search.set_active(False)
 
-        dismiss.connect("pressed", _dismiss_top_panels)
+        dismiss.connect("pressed", dismiss_top_panels)
         self.scrolled.add_controller(dismiss)
 
         self.scrolled.add_css_class("inverted-list")
@@ -290,7 +290,7 @@ class ChatPage(Gtk.Box):
         self.msg_view = Gtk.TextView(buffer=self.msg_buffer)
         self.msg_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         self.msg_view.set_accepts_tab(False)
-        self.msg_view.connect("paste-clipboard", self._on_paste_clipboard)
+        self.msg_view.connect("paste-clipboard", self.on_paste_clipboard)
 
         self.msg_scroll = Gtk.ScrolledWindow()
         self.msg_scroll.set_child(self.msg_view)
@@ -311,7 +311,7 @@ class ChatPage(Gtk.Box):
 
         key_controller = Gtk.EventControllerKey()
         key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        key_controller.connect("key-pressed", self._on_key_pressed)
+        key_controller.connect("key-pressed", self.on_key_pressed)
         self.msg_view.add_controller(key_controller)
 
         self.btn_send = Gtk.Button(icon_name="mail-send-symbolic", css_classes=["suggested-action", "btn-green", "circular"])
@@ -329,11 +329,11 @@ class ChatPage(Gtk.Box):
 
         self.append(input_box)
 
-    def _on_factory_setup(self, factory, list_item):
+    def on_factory_setup(self, factory, list_item):
         """Setup handler for list item factory."""
         ChatBubbleFactory.setup(factory, list_item)
 
-    def _on_factory_bind(self, factory, list_item):
+    def on_factory_bind(self, factory, list_item):
         """Bind handler for list item factory."""
         ChatBubbleFactory.bind(factory, list_item,
                                delete_callback=self.on_delete_message,
@@ -368,7 +368,7 @@ class ChatPage(Gtk.Box):
             except Exception as e:
                 logger.warning(f"Failed to parse scheduled timestamp: {e}")
 
-        def _on_picked(dt):
+        def on_picked(dt):
             now = GLib.DateTime.new_now_local()
             if dt.compare(now) <= 0:
                 self.app_window.notify_error(_("Scheduled time must be in the future"))
@@ -377,7 +377,7 @@ class ChatPage(Gtk.Box):
             ts_str = dt.format("%Y-%m-%d %H:%M:%S")
 
             def done(_result):
-                self._reload_chat()
+                self.reload_chat()
                 self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
 
             run_in_background(self.app_window.daemon.reschedule_message, item.id, ts_str,
@@ -388,20 +388,20 @@ class ChatPage(Gtk.Box):
             title=_("Re-Schedule Message"),
             include_time=True,
             initial_date=initial,
-            on_confirm=_on_picked
+            on_confirm=on_picked
         )
 
-    def _start_load_thread(self):
+    def start_load_thread(self):
         """Start thread to load older messages."""
         if self.is_fetching_older or not self.app_window.is_active():
             return False
 
         self.is_fetching_older = True
         self.loading_spinner.set_visible(True)
-        run_in_background(self._fetch_older_messages)
+        run_in_background(self.fetch_older_messages)
         return False
 
-    def _fetch_older_messages(self):
+    def fetch_older_messages(self):
         """Fetch older messages from DB."""
         try:
             offset = self.oldest_db_offset
@@ -414,17 +414,17 @@ class ChatPage(Gtk.Box):
                 msgs = msgs[:limit]
 
             msgs.sort(key=lambda x: x[3] if len(x) > 3 and x[3] else "")
-            GLib.idle_add(self._insert_older_messages, msgs, has_more)
+            GLib.idle_add(self.insert_older_messages, msgs, has_more)
         except Exception as e:
             logger.warning(f"[ChatPage] Fetch older messages failed: {e}")
-            GLib.idle_add(self._fetch_older_failed)
+            GLib.idle_add(self.fetch_older_failed)
 
-    def _fetch_older_failed(self):
+    def fetch_older_failed(self):
         self.is_fetching_older = False
         self.loading_spinner.set_visible(False)
         return False
 
-    def _insert_older_messages(self, msgs, has_more):
+    def insert_older_messages(self, msgs, has_more):
         """Insert loaded messages into the model."""
         self.full_history = msgs + self.full_history
         new_items = []
@@ -465,7 +465,7 @@ class ChatPage(Gtk.Box):
 
         return False
 
-    def _initial_load(self):
+    def initial_load(self):
         """Perform initial message load."""
         try:
             limit = max(50, self.initial_unread_count + 10)
@@ -484,12 +484,12 @@ class ChatPage(Gtk.Box):
                 msgs = msgs[:limit]
 
             msgs.sort(key=lambda x: x[3] if len(x) > 3 and x[3] else "")
-            GLib.idle_add(self._update_initial_ui, msgs, has_more, draft_msg)
+            GLib.idle_add(self.update_initial_ui, msgs, has_more, draft_msg)
         except Exception as e:
             logger.error(f"[ChatPage] Initial load failed: {e}")
             GLib.idle_add(lambda: self.content_stack.set_visible_child_name("chat"))
 
-    def _update_initial_ui(self, msgs, has_more, draft_msg=None):
+    def update_initial_ui(self, msgs, has_more, draft_msg=None):
         """Populate the model with initial messages."""
         self.full_history = msgs
         items = []
@@ -552,9 +552,9 @@ class ChatPage(Gtk.Box):
         elif has_unread and first_unread_index >= 0:
             final_idx = first_unread_index
 
-        self._finalize_loading(final_idx)
+        self.finalize_loading(final_idx)
 
-    def _finalize_loading(self, index):
+    def finalize_loading(self, index):
         """Finalize loading, scroll to position, and reveal."""
         self.content_stack.set_visible_child_name("chat")
 
@@ -566,7 +566,7 @@ class ChatPage(Gtk.Box):
 
             self.is_loading = False
             if self.app_window.is_active():
-                self._mark_read_debounced()
+                self.mark_read_debounced()
             else:
                 self._pending_initial_read = True
             return False
@@ -591,10 +591,10 @@ class ChatPage(Gtk.Box):
         self.search_token = self.search_token + 1
         current_token = self.search_token
 
-        def _fetch():
+        def fetch():
             return self.db.search_messages(query, chat_id=self.db_number, limit=100)
 
-        def _on_done(rows):
+        def on_done(rows):
             if self.search_token != current_token:
                 return False
 
@@ -626,18 +626,18 @@ class ChatPage(Gtk.Box):
 
                 self.search_results_list.append(row)
 
-        def _bg_task():
+        def bg_task():
             try:
-                rows = _fetch()
-                GLib.idle_add(_on_done, rows)
+                rows = fetch()
+                GLib.idle_add(on_done, rows)
             except Exception as e:
                 logger.warning(f"[ChatPage] Search failed: {e}")
 
-        run_in_background(_bg_task)
+        run_in_background(bg_task)
         self.search_timer = None
         return False
 
-    def _filter_func(self, item, user_data):
+    def filter_func(self, item, user_data):
         """Filter function for the list model."""
         return True
 
@@ -648,7 +648,7 @@ class ChatPage(Gtk.Box):
         else:
             self.msg_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
 
-    def _on_key_pressed(self, _controller, keyval, _keycode, state):
+    def on_key_pressed(self, _controller, keyval, _keycode, state):
         """Handle key presses (Shift+Enter for new line)."""
         if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_ISO_Enter):
             if state & Gdk.ModifierType.SHIFT_MASK:
@@ -658,25 +658,25 @@ class ChatPage(Gtk.Box):
             return False
         return False
 
-    def _ensure_details_panel(self, btn):
+    def ensure_details_panel(self, btn):
         """Build the details panel the first time the menu is opened."""
         if btn.get_active() and not self._details_built:
             self._details_built = True
             self.setup_details_panel()
 
-    def _conversation_id(self):
+    def conversation_id(self):
         """Return the stable id of this conversation."""
         return conversation_id(self.recipients if self.is_group else self.number)
 
-    def _on_mute_toggled(self, row, _pspec):
+    def on_mute_toggled(self, row, _pspec):
         """Persist the mute preference for this conversation."""
         muted = row.get_active()
-        self.app_window.gsettings_mgr.set_conversation_muted(self._conversation_id(), muted)
+        self.app_window.gsettings_mgr.set_conversation_muted(self.conversation_id(), muted)
         self.db.emit('messages-updated', "", "status")
 
-    def _refresh_recipient_call_buttons(self):
+    def refresh_recipient_call_buttons(self):
         """Sync recipient call buttons with the current dial availability."""
-        available = self.app_window.ofono.dialing_available() if self.app_window.ofono else True
+        available = self.app_window.ofono.is_dialing_available() if self.app_window.ofono else True
         for btn in self._recipient_call_btns:
             btn.set_sensitive(available)
 
@@ -702,8 +702,8 @@ class ChatPage(Gtk.Box):
         self.sw_mute = Adw.SwitchRow(title=_("Mute This Chat"))
         self.sw_mute.set_subtitle(_("Messages arrive without a notification"))
         self.sw_mute.set_active(self.app_window.gsettings_mgr.is_conversation_muted(
-            self._conversation_id()))
-        self.sw_mute.connect("notify::active", self._on_mute_toggled)
+            self.conversation_id()))
+        self.sw_mute.connect("notify::active", self.on_mute_toggled)
         grp_mute = Adw.PreferencesGroup()
         grp_mute.add(self.sw_mute)
         box.append(grp_mute)
@@ -718,7 +718,7 @@ class ChatPage(Gtk.Box):
         list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         block_buttons = {}
-        dialing_ok = self.app_window.ofono.dialing_available() if self.app_window.ofono else True
+        dialing_ok = self.app_window.ofono.is_dialing_available() if self.app_window.ofono else True
 
         for rec in self.recipients:
             card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, css_classes=["card"])
@@ -759,10 +759,10 @@ class ChatPage(Gtk.Box):
 
             actions_box.append(b_edit)
 
-            def _handle_edit_click(n=rec):
+            def handle_edit_click(n=rec):
                 self.btn_menu.set_active(False)
                 GLib.timeout_add(50, lambda: self.app_window.present_edit_contact(number_preset=n) or False)
-            b_edit.connect("clicked", lambda b, n=rec: _handle_edit_click(n))
+            b_edit.connect("clicked", lambda b, n=rec: handle_edit_click(n))
 
             can_call = not any(c.isalpha() for c in rec)
             b_call = Gtk.Button(icon_name="call-start-symbolic", css_classes=["circular", "call-btn"])
@@ -777,19 +777,19 @@ class ChatPage(Gtk.Box):
             b_search.set_valign(Gtk.Align.CENTER)
             actions_box.append(b_search)
 
-            def _handle_search_click(n=rec):
+            def handle_search_click(n=rec):
                 self.btn_menu.set_active(False)
                 self.app_window.search_number_online(n)
-            b_search.connect("clicked", lambda b, n=rec: _handle_search_click(n))
+            b_search.connect("clicked", lambda b, n=rec: handle_search_click(n))
 
             b_copy = Gtk.Button(icon_name="edit-copy-symbolic", css_classes=["circular"])
             b_copy.set_valign(Gtk.Align.CENTER)
             actions_box.append(b_copy)
 
-            def _handle_copy_click(n=rec):
+            def handle_copy_click(n=rec):
                 self.btn_menu.set_active(False)
                 self.app_window.copy_to_clipboard(n)
-            b_copy.connect("clicked", lambda b, n=rec: _handle_copy_click(n))
+            b_copy.connect("clicked", lambda b, n=rec: handle_copy_click(n))
 
             b_blk = Gtk.Button(icon_name="action-unavailable-symbolic", css_classes=["circular", "destructive-action"])
             b_blk.set_valign(Gtk.Align.CENTER)
@@ -798,17 +798,17 @@ class ChatPage(Gtk.Box):
             actions_box.append(b_blk)
             block_buttons[rec] = b_blk
 
-            def _toggle_block(btn, number):
+            def toggle_block(btn, number):
                 self.btn_menu.set_active(False)
 
-                def _find_entry():
+                def find_entry():
                     norm_rec = normalize_number(number)
                     for entry in self.db.get_blocked_numbers():
                         if normalize_number(entry["number"]) == norm_rec:
                             return dict(entry)
                     return None
 
-                def _found(entry, target_btn=btn):
+                def found(entry, target_btn=btn):
                     if entry is None:
                         self.app_window.present_blocklist_editor(number_preset=number)
                         return
@@ -820,23 +820,23 @@ class ChatPage(Gtk.Box):
                     present_unblock_choice(self.app_window, self.app_window.daemon,
                                            entry, "messages", unblocked)
 
-                run_in_background(_find_entry, on_complete=_found)
+                run_in_background(find_entry, on_complete=found)
 
-            b_blk.connect("clicked", lambda b, n=rec: _toggle_block(b, n))
+            b_blk.connect("clicked", lambda b, n=rec: toggle_block(b, n))
 
             inner.append(actions_box)
             list_box.append(card)
 
-        def _fetch_block_states():
+        def fetch_block_states():
             return {num: self.db.is_blocked(num, kind="any") for num in block_buttons}
 
-        def _apply_block_states(states):
+        def apply_block_states(states):
             for num, btn in block_buttons.items():
                 blocked_state = (states or {}).get(num, False)
                 btn.set_icon_name("changes-allow-symbolic" if blocked_state else "action-unavailable-symbolic")
                 btn.set_sensitive(self.app_window.eds.is_ready)
 
-        run_in_background(_fetch_block_states, on_complete=_apply_block_states)
+        run_in_background(fetch_block_states, on_complete=apply_block_states)
 
         scrolled.set_child(list_box)
         box.append(scrolled)
@@ -844,10 +844,10 @@ class ChatPage(Gtk.Box):
         box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
         b_del_all = Gtk.Button(label=_("Delete Conversation"), css_classes=["destructive-action"])
 
-        def _handle_del_all(btn):
+        def handle_del_all(btn):
             self.btn_menu.set_active(False)
             GLib.timeout_add(50, lambda: self.on_delete_conversation(btn) or False)
-        b_del_all.connect("clicked", lambda b: GLib.idle_add(lambda: _handle_del_all(b) or False))
+        b_del_all.connect("clicked", lambda b: GLib.idle_add(lambda: handle_del_all(b) or False))
         box.append(b_del_all)
 
         self.details_revealer.set_child(box)
@@ -871,13 +871,13 @@ class ChatPage(Gtk.Box):
 
         forward_text = _("Forwarded from {sender}:\n{body}").format(sender=sender_display, body=body) if body else _("Forwarded from {sender}").format(sender=sender_display)
 
-        def _on_pick(target):
+        def on_pick(target):
             self.messages_view.open_chat(target, prefill_text=forward_text, prefill_attachments=attachments)
 
         picker = ContactPicker(
             self.app_window.eds,
             self.app_window,
-            _on_pick,
+            on_pick,
             title=_("Forward To"),
             action_label=_("Forward"),
             allow_custom_number=True,
@@ -917,7 +917,7 @@ class ChatPage(Gtk.Box):
                     self.attachments.append(p)
             self.refresh_attachment_ui()
 
-    def _on_messages_updated(self, _db, chat_id, change):
+    def on_messages_updated(self, _db, chat_id, change):
         """React to database changes relevant to this conversation."""
         if chat_id and chat_id != self.db_number:
             return
@@ -925,15 +925,15 @@ class ChatPage(Gtk.Box):
             return
 
         if change == "insert":
-            self._append_new_messages()
+            self.append_new_messages()
         elif change == "status":
-            self._sync_message_statuses()
+            self.sync_message_statuses()
         elif change == "draft":
             return
         else:
-            self._reload_chat()
+            self.reload_chat()
 
-    def _newest_item_id(self):
+    def newest_item_id(self):
         """Return the id of the newest real message currently in the store."""
         for i in range(self.store.get_n_items()):
             item = self.store.get_item(i)
@@ -941,9 +941,9 @@ class ChatPage(Gtk.Box):
                 return item.id
         return 0
 
-    def _append_new_messages(self):
+    def append_new_messages(self):
         """Fetch rows newer than the current newest item and prepend them."""
-        newest_id = self._newest_item_id()
+        newest_id = self.newest_item_id()
 
         def fetch():
             return self.db.get_chat_messages(self.number, limit=20, offset=0)
@@ -972,11 +972,11 @@ class ChatPage(Gtk.Box):
 
             if self.v_adj.get_value() <= 20 and self.app_window.is_active():
                 self.scroll_to_bottom()
-                self._mark_read_debounced()
+                self.mark_read_debounced()
 
         run_in_background(fetch, on_complete=done)
 
-    def _sync_message_statuses(self):
+    def sync_message_statuses(self):
         """Refresh the status of recent items in place from the database."""
         def fetch():
             return self.db.get_chat_messages(self.number, limit=30, offset=0)
@@ -1007,17 +1007,17 @@ class ChatPage(Gtk.Box):
         """Resend a failed message."""
         self.app_window.daemon.retry_message(item.id)
 
-    def _reload_chat(self):
+    def reload_chat(self):
         """Reload the chat conversation."""
         if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
-        self._refresh_timer = GLib.timeout_add(200, self._do_reload_chat)
+        self._refresh_timer = GLib.timeout_add(200, self.do_reload_chat)
 
-    def _do_reload_chat(self):
+    def do_reload_chat(self):
         self._refresh_timer = None
         self.store.remove_all()
         self.content_stack.set_visible_child_name("loading")
-        run_in_background(self._initial_load)
+        run_in_background(self.initial_load)
         return False
 
     def update_contact_details(self, name):
@@ -1047,12 +1047,12 @@ class ChatPage(Gtk.Box):
 
         run_in_background(self.app_window.daemon.set_group_name, self.recipients, new_name, on_complete=done)
 
-    def _on_paste_clipboard(self, text_view):
+    def on_paste_clipboard(self, text_view):
         """Divert file and image pastes into the attachment pipeline."""
         if self.media_controller.ingest_clipboard():
             text_view.stop_emission_by_name("paste-clipboard")
 
-    def _remaining_attachment_budget(self):
+    def remaining_attachment_budget(self):
         """Return how many bytes of MMS attachment budget are still available."""
         budget = max_attachment_size(self.app_window.gsettings_mgr)
         used = sum(os.path.getsize(p) for p in self.attachments if os.path.exists(p))
@@ -1063,7 +1063,7 @@ class ChatPage(Gtk.Box):
         if not path or path in self.attachments:
             return
 
-        remaining = self._remaining_attachment_budget()
+        remaining = self.remaining_attachment_budget()
         mime, _encoding = mimetypes.guess_type(path)
         try:
             oversized = os.path.getsize(path) > remaining
@@ -1077,9 +1077,9 @@ class ChatPage(Gtk.Box):
             self.app_window.notify_loading(_("Compressing video..."))
 
         run_in_background(self.app_window.daemon.prepare_attachment, path, remaining,
-                          on_complete=lambda reply: self._on_attachment_prepared(reply, path))
+                          on_complete=lambda reply: self.on_attachment_prepared(reply, path))
 
-    def _on_attachment_prepared(self, reply, source_path):
+    def on_attachment_prepared(self, reply, source_path):
         """Add the stored attachment, or say why it could not be."""
         self.app_window.hide_loading()
         if reply is None:
@@ -1087,7 +1087,7 @@ class ChatPage(Gtk.Box):
             return
         stored_path, code = reply
         if stored_path:
-            self._append_attachment(stored_path)
+            self.append_attachment(stored_path)
             if "/tmp/" in source_path:
                 try:
                     os.remove(source_path)
@@ -1101,7 +1101,7 @@ class ChatPage(Gtk.Box):
         }
         self.app_window.notify_error(errors.get(code, _("Failed to prepare attachment.")))
 
-    def _append_attachment(self, path):
+    def append_attachment(self, path):
         """Add a processed attachment and refresh the chip area."""
         if path not in self.attachments:
             self.attachments.append(path)
@@ -1142,12 +1142,12 @@ class ChatPage(Gtk.Box):
         """Load messages around a specific message ID."""
         self.is_jumping = True
 
-        def _fetch_context():
+        def fetch_context():
             msgs = self.db.get_chat_messages_around(msg_id, limit_before=50, limit_after=None)
             newer_count = self.db.get_message_offset(msg_id)
             return msgs, newer_count
 
-        def _update_ui(msgs, newer_count):
+        def update_ui(msgs, newer_count):
             self.store.remove_all()
 
             self.full_history = list(msgs)
@@ -1210,16 +1210,16 @@ class ChatPage(Gtk.Box):
 
             GLib.timeout_add(300, reveal)
 
-        def _bg():
+        def bg():
             try:
-                msgs, newer_count = _fetch_context()
-                GLib.idle_add(_update_ui, msgs, newer_count)
+                msgs, newer_count = fetch_context()
+                GLib.idle_add(update_ui, msgs, newer_count)
             except Exception as e:
                 logger.warning(f"[ChatPage] Load context failed: {e}")
 
-        run_in_background(_bg)
+        run_in_background(bg)
 
-    def _open_schedule_picker(self):
+    def open_schedule_picker(self):
         """Open datetime picker for scheduling."""
         buffer = self.msg_view.get_buffer()
         start, end = buffer.get_bounds()
@@ -1230,7 +1230,7 @@ class ChatPage(Gtk.Box):
             self.app_window.notify_error(_("Nothing to schedule"))
             return
 
-        def _on_picked(dt):
+        def on_picked(dt):
             now = GLib.DateTime.new_now_local()
             if dt.compare(now) <= 0:
                 self.app_window.notify_error(_("Scheduled time must be in the future"))
@@ -1243,7 +1243,7 @@ class ChatPage(Gtk.Box):
             parent=self.app_window,
             title=_("Schedule Message"),
             include_time=True,
-            on_confirm=_on_picked
+            on_confirm=on_picked
         )
 
     def on_send(self, *args, scheduled_timestamp=None):
@@ -1294,7 +1294,7 @@ class ChatPage(Gtk.Box):
 
         if is_near_older and not self.all_messages_loaded:
             if not self.is_fetching_older:
-                self._start_load_thread()
+                self.start_load_thread()
 
         self.check_read_status()
 
@@ -1303,15 +1303,15 @@ class ChatPage(Gtk.Box):
         adj = self.v_adj
         is_at_bottom = adj.get_value() <= 20
         if is_at_bottom and self.app_window.is_active():
-            self._mark_read_debounced()
+            self.mark_read_debounced()
 
-    def _mark_read_debounced(self):
+    def mark_read_debounced(self):
         """Trigger mark read with debounce."""
         if (self._read_timer is not None) and self._read_timer:
             GLib.source_remove(self._read_timer)
-        self._read_timer = GLib.timeout_add(200, self._do_mark_read)
+        self._read_timer = GLib.timeout_add(200, self.do_mark_read)
 
-    def _do_mark_read(self):
+    def do_mark_read(self):
         """Perform mark read logic."""
         self.app_window.daemon.mark_thread_read(self.db_number)
         self.messages_view.check_and_clear_notification(self.db_number)
@@ -1322,13 +1322,13 @@ class ChatPage(Gtk.Box):
 
     def on_window_focus_changed(self, window, param):
         """Handle window focus change."""
-        self._report_active_chat()
+        self.report_active_chat()
         if not window.is_active():
             return
 
         if self._pending_initial_read:
             self._pending_initial_read = False
-            self._mark_read_debounced()
+            self.mark_read_debounced()
         else:
             self.check_read_status()
 
@@ -1364,14 +1364,14 @@ class ChatPage(Gtk.Box):
 
     def scroll_to_bottom(self):
         """Scroll to the bottom of the list."""
-        def _do():
+        def do():
             n = self.store.get_n_items()
             if n > 0:
                 self.list_view.scroll_to(0, Gtk.ListScrollFlags.NONE, None)
             return False
-        GLib.idle_add(_do)
+        GLib.idle_add(do)
 
-    def _report_active_chat(self):
+    def report_active_chat(self):
         """Tell the daemon whether this chat is open and focused.
 
         The daemon mutes notifications only for the reported chat, so
@@ -1387,7 +1387,7 @@ class ChatPage(Gtk.Box):
     def on_map(self, widget):
         """Reconnect listeners dropped on unmap and catch up missed changes."""
         self._draft_saved = False
-        self._report_active_chat()
+        self.report_active_chat()
 
         if self.app_window and self.focus_handler_id is None:
             self.focus_handler_id = self.app_window.connect("notify::is-active", lambda obj, pspec: self.on_window_focus_changed(obj, pspec))
@@ -1395,18 +1395,18 @@ class ChatPage(Gtk.Box):
         if self.db_signals:
             return
 
-        sig_id = self.db.connect('messages-updated', self._on_messages_updated)
+        sig_id = self.db.connect('messages-updated', self.on_messages_updated)
         self.db_signals.append((self.db, sig_id))
 
         if not self.is_loading:
-            self._append_new_messages()
-            self._sync_message_statuses()
+            self.append_new_messages()
+            self.sync_message_statuses()
 
     def on_unmap(self, widget):
         """Cleanup on widget unmap."""
-        self._report_active_chat()
+        self.report_active_chat()
         if not self._draft_saved:
-            self._save_draft()
+            self.save_draft()
 
         for timer_attr in ("_read_timer", "_refresh_timer", "search_timer"):
             timer_id = getattr(self, timer_attr)
@@ -1432,7 +1432,7 @@ class ChatPage(Gtk.Box):
                 obj.disconnect(sig_id)
         self.eds_signals.clear()
 
-    def _save_draft(self):
+    def save_draft(self):
         """Replace any stored draft with the current composer content."""
         if not self.msg_view.get_editable():
             return

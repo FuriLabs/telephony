@@ -30,7 +30,7 @@ from telephony.shared.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 MISSED_MESSAGE_BUFFER_MINUTES = 14400
 
 
-def _to_variant(value):
+def to_variant(value):
     """Wrap a plain python value as the matching GLib.Variant."""
     if isinstance(value, bool):
         return GLib.Variant("b", value)
@@ -491,49 +491,49 @@ class TelephonyDaemonDBus:
         self.reg_id = self.bus.register_object(
             DAEMON_OBJECT_PATH,
             self.interface_info,
-            self._handle_method_call,
+            self.handle_method_call,
             None, None
         )
         logger.info(f"TelephonyDaemonDBus registered on Session Bus at {DAEMON_OBJECT_PATH} (id {self.reg_id})")
 
         if self.ofono:
-            self.ofono.connect('call-added', self._on_call_added)
-            self.ofono.connect('call-changed', self._on_call_changed)
-            self.ofono.connect('call-removed', self._on_call_removed)
-            self.ofono.connect('incoming-message', self._on_incoming_message)
-            self.ofono.connect('dial-availability-changed', self._on_dial_availability_changed)
-            self.ofono.connect('connection-status', self._on_modem_presence_changed)
-            self.ofono.connect('modem-interface-appeared', self._on_modem_presence_changed)
-            self.ofono.connect('voicemail-changed', self._on_voicemail_changed)
-            self.ofono.connect('ussd-notification', self._on_ussd_received)
-            self.ofono.connect('network-service-changed', self._on_network_service_changed)
+            self.ofono.connect('call-added', self.on_call_added)
+            self.ofono.connect('call-changed', self.on_call_changed)
+            self.ofono.connect('call-removed', self.on_call_removed)
+            self.ofono.connect('incoming-message', self.on_incoming_message)
+            self.ofono.connect('dial-availability-changed', self.on_dial_availability_changed)
+            self.ofono.connect('connection-status', self.on_modem_presence_changed)
+            self.ofono.connect('modem-interface-appeared', self.on_modem_presence_changed)
+            self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
+            self.ofono.connect('ussd-notification', self.on_ussd_received)
+            self.ofono.connect('network-service-changed', self.on_network_service_changed)
 
         if self.app and self.app.call_audio:
             self.app.call_audio.connect('audio-state-applied',
-                                        lambda *_args: self._emit_audio_route())
+                                        lambda *_args: self.emit_audio_route())
 
-    def _on_call_added(self, manager, path, props):
+    def on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
         self.emit_signal("IncomingCall", GLib.Variant("(ss)", (path, number)))
 
-    def _on_call_changed(self, manager, path, state):
+    def on_call_changed(self, manager, path, state):
         self.emit_signal("CallChanged", GLib.Variant("(ss)", (path, state)))
 
-    def _on_call_removed(self, manager, path):
+    def on_call_removed(self, manager, path):
         self.emit_signal("CallRemoved", GLib.Variant("(s)", (path,)))
 
-    def _on_incoming_message(self, manager, number, body):
+    def on_incoming_message(self, manager, number, body):
         self.emit_signal("IncomingSms", GLib.Variant("(ss)", (number, body)))
 
-    def _on_dial_availability_changed(self, _manager, _available):
-        self._emit_capability()
+    def on_dial_availability_changed(self, _manager, _available):
+        self.emit_capability()
 
-    def _emit_capability(self):
+    def emit_capability(self):
         """Broadcast whether calls can be placed and why not."""
         can_dial, reason, description = self.ofono.capability_state()
         self.emit_signal("CapabilityChanged", GLib.Variant("(bss)", (can_dial, reason, description)))
 
-    def _on_modem_presence_changed(self, _manager, *_args):
+    def on_modem_presence_changed(self, _manager, *_args):
         """Broadcast the modem snapshot; presence also moves capability."""
         state = self.ofono.modem_state()
         packed = {
@@ -543,15 +543,15 @@ class TelephonyDaemonDBus:
             "emergency_numbers": GLib.Variant("as", state["emergency_numbers"]),
         }
         self.emit_signal("ModemStateChanged", GLib.Variant("(a{sv})", (packed,)))
-        self._emit_capability()
+        self.emit_capability()
 
-    def _on_voicemail_changed(self, _manager, waiting, count):
+    def on_voicemail_changed(self, _manager, waiting, count):
         self.emit_signal("VoicemailChanged", GLib.Variant("(bi)", (waiting, count)))
 
-    def _on_ussd_received(self, _manager, text):
+    def on_ussd_received(self, _manager, text):
         self.emit_signal("UssdReceived", GLib.Variant("(s)", (text,)))
 
-    def _emit_audio_route(self):
+    def emit_audio_route(self):
         """Broadcast the applied in-call audio route."""
         audio = self.ofono.audio
         packed = {
@@ -562,20 +562,20 @@ class TelephonyDaemonDBus:
         }
         self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
 
-    def _on_network_service_changed(self, _manager, service, name, value):
+    def on_network_service_changed(self, _manager, service, name, value):
         self.emit_signal("NetworkServiceChanged", GLib.Variant("(sss)", (service, name, str(value))))
 
-    def _handle_getownnumber(self, parameters, invocation):
+    def handle_getownnumber(self, parameters, invocation):
         """Read the subscriber's own number for a window instance."""
         run_in_background(get_own_number,
                           on_complete=lambda num: invocation.return_value(GLib.Variant("(s)", (num or "",))))
 
-    def _handle_detectregion(self, parameters, invocation):
+    def handle_detectregion(self, parameters, invocation):
         """Detect the network region for a window instance."""
         run_in_background(detect_region,
                           on_complete=lambda region: invocation.return_value(GLib.Variant("(s)", (region or "",))))
 
-    def _handle_requestrecovery(self, parameters, invocation):
+    def handle_requestrecovery(self, parameters, invocation):
         """Run modem recovery for a window instance; the reply is the verdict."""
         state = {"resolved": False}
 
@@ -589,13 +589,13 @@ class TelephonyDaemonDBus:
         if not started:
             resolve(False)
 
-    def _handle_clearnotification(self, parameters, invocation):
+    def handle_clearnotification(self, parameters, invocation):
         """Withdraw the notifications a window says the user has seen."""
         number = parameters.unpack()[0]
         self.app.clear_notification(number)
         invocation.return_value(None)
 
-    def _handle_prepareattachment(self, parameters, invocation):
+    def handle_prepareattachment(self, parameters, invocation):
         """Store an attachment and make it fit the caller's byte budget."""
         source_path, max_bytes = parameters.unpack()
 
@@ -612,7 +612,7 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _handle_sendussd(self, params, invocation):
+    def handle_sendussd(self, params, invocation):
         """Run a USSD request for a window instance and hand back the reply."""
         command = params.unpack()[0]
 
@@ -625,7 +625,7 @@ class TelephonyDaemonDBus:
 
         run_in_background(self.ofono.send_ussd, command, on_complete=done, on_error=failed)
 
-    def _handle_callaction(self, params, invocation):
+    def handle_callaction(self, params, invocation):
         """Run a call control action a window instance asked for."""
         action, argument = params.unpack()
         actions = {
@@ -648,7 +648,7 @@ class TelephonyDaemonDBus:
 
         run_in_background(handler, on_complete=done, on_error=failed)
 
-    def _handle_getnetworkproperties(self, params, invocation):
+    def handle_getnetworkproperties(self, params, invocation):
         """Read a supplementary service for a window instance."""
         service = params.unpack()[0]
 
@@ -663,7 +663,7 @@ class TelephonyDaemonDBus:
         run_in_background(self.ofono.get_service_properties, service,
                           on_complete=done, on_error=failed)
 
-    def _handle_setnetworkproperty(self, params, invocation):
+    def handle_setnetworkproperty(self, params, invocation):
         """Change a supplementary service for a window instance."""
         service, name, value, password = params.unpack()
 
@@ -682,7 +682,7 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _handle_getrecoverystate(self, parameters, invocation):
+    def handle_getrecoverystate(self, parameters, invocation):
         """Report the recovery state to a call window that just started.
 
         The window can start after the state changed, so the signal
@@ -691,7 +691,7 @@ class TelephonyDaemonDBus:
         active, message, failed = self.app.recovery_state
         invocation.return_value(GLib.Variant("(bsb)", (active, message, failed)))
 
-    def _handle_gettelephonystate(self, parameters, invocation):
+    def handle_gettelephonystate(self, parameters, invocation):
         """Assemble the full snapshot a client seeds its mirror from.
 
         Everything the signals report incrementally is here in one read,
@@ -701,7 +701,7 @@ class TelephonyDaemonDBus:
         modem = self.ofono.modem_state()
         audio = self.ofono.audio
         recovery_active, recovery_message, recovery_failed = self.app.recovery_state
-        calls = {path: GLib.Variant("a{sv}", {k: _to_variant(v) for k, v in props.items()})
+        calls = {path: GLib.Variant("a{sv}", {k: to_variant(v) for k, v in props.items()})
                  for path, props in self.ofono.calls_snapshot().items()}
         state = {
             "calls": GLib.Variant("a{sv}", calls),
@@ -725,39 +725,39 @@ class TelephonyDaemonDBus:
         }
         invocation.return_value(GLib.Variant("(a{sv})", (state,)))
 
-    def _handle_setactivechat(self, parameters, invocation):
+    def handle_setactivechat(self, parameters, invocation):
         """Handle SetActiveChat command; an empty number clears it."""
         number = parameters.unpack()[0]
         self.ofono.set_active_chat(number if number else None)
         invocation.return_value(None)
 
-    def _reply_ss_result(self, invocation, result):
+    def reply_ss_result(self, invocation, result):
         """Answer a supplementary-service request with its worker result."""
         ok, error = result if result else (False, "no reply")
         invocation.return_value(GLib.Variant("(bs)", (ok, error or "")))
 
-    def _handle_disableallforwarding(self, parameters, invocation):
+    def handle_disableallforwarding(self, parameters, invocation):
         """Handle DisableAllForwarding command."""
         run_in_background(self.ofono.disable_all_forwarding,
-                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+                          on_complete=lambda result: self.reply_ss_result(invocation, result))
 
-    def _handle_disableallbarrings(self, parameters, invocation):
+    def handle_disableallbarrings(self, parameters, invocation):
         """Handle DisableAllBarrings command."""
         password = parameters.unpack()[0]
         run_in_background(self.ofono.disable_all_barrings, password,
-                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+                          on_complete=lambda result: self.reply_ss_result(invocation, result))
 
-    def _handle_changebarringpassword(self, parameters, invocation):
+    def handle_changebarringpassword(self, parameters, invocation):
         """Handle ChangeBarringPassword command."""
         old, new = parameters.unpack()
         run_in_background(self.ofono.change_barring_password, old, new,
-                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+                          on_complete=lambda result: self.reply_ss_result(invocation, result))
 
-    def _handle_importsimcontacts(self, parameters, invocation):
+    def handle_importsimcontacts(self, parameters, invocation):
         """Read the SIM phonebook and import its vcards for a window instance."""
         source_uid = parameters.unpack()[0]
 
-        if self._is_protected_source(source_uid, "[DBus] Refusing SIM import to {name}"):
+        if self.is_protected_source(source_uid, "[DBus] Refusing SIM import to {name}"):
             invocation.return_value(GLib.Variant("(is)", (-1, "protected-book")))
             return
 
@@ -799,95 +799,95 @@ class TelephonyDaemonDBus:
             parameters
         )
 
-    def _handle_method_call(self, connection, sender, object_path, interface_name, method_name, parameters, invocation):
+    def handle_method_call(self, connection, sender, object_path, interface_name, method_name, parameters, invocation):
         """Route incoming D-Bus method calls to the appropriate handler."""
         handlers = {
-            "Dial": self._handle_dial,
-            "Answer": self._handle_answer,
-            "Hangup": self._handle_hangup,
-            "HangupAll": self._handle_hangupall,
-            "SwapCalls": self._handle_swapcalls,
-            "MuteMic": self._handle_mutemic,
-            "UnmuteMic": self._handle_unmutemic,
-            "SetSpeakerphone": self._handle_setspeakerphone,
-            "SendDtmf": self._handle_senddtmf,
-            "DeclineWithSms": self._handle_declinewithsms,
-            "ScheduleSms": self._handle_schedulesms,
-            "ScheduleMms": self._handle_schedulemms,
-            "SendSms": self._handle_sendsms,
-            "SendUssd": self._handle_sendussd,
-            "CallAction": self._handle_callaction,
-            "GetNetworkProperties": self._handle_getnetworkproperties,
-            "SetNetworkProperty": self._handle_setnetworkproperty,
-            "GetRecoveryState": self._handle_getrecoverystate,
-            "GetTelephonyState": self._handle_gettelephonystate,
-            "SetActiveChat": self._handle_setactivechat,
-            "ImportSimContacts": self._handle_importsimcontacts,
-            "DisableAllForwarding": self._handle_disableallforwarding,
-            "DisableAllBarrings": self._handle_disableallbarrings,
-            "ChangeBarringPassword": self._handle_changebarringpassword,
-            "GetOwnNumber": self._handle_getownnumber,
-            "DetectRegion": self._handle_detectregion,
-            "RequestRecovery": self._handle_requestrecovery,
-            "ClearNotification": self._handle_clearnotification,
-            "PrepareAttachment": self._handle_prepareattachment,
-            "SilenceRing": self._handle_silencering,
-            "SetAudioRoute": self._handle_setaudioroute,
-            "SetInputRoute": self._handle_setinputroute,
-            "SetDeliveryReports": self._handle_setdeliveryreports,
-            "GetAudioRoutes": self._handle_getaudioroutes,
-            "DeleteMessage": self._handle_deletemessage,
-            "DeleteConversation": self._handle_deleteconversation,
-            "MarkThreadAsRead": self._handle_markthreadasread,
-            "MarkConversationUnread": self._handle_markconversationunread,
-            "SaveDraft": self._handle_savedraft,
-            "RescheduleMessage": self._handle_reschedulemessage,
-            "RetryMessage": self._handle_retrymessage,
-            "SendTrackedSms": self._handle_sendtrackedsms,
-            "DeleteCallHistoryEntry": self._handle_deletecallhistoryentry,
-            "UpdateHistoryNames": self._handle_updatehistorynames,
-            "ClearMessages": self._handle_clearmessages,
-            "SetGroupName": self._handle_setgroupname,
-            "ClearGroupNames": self._handle_cleargroupnames,
-            "ClearBlocklist": self._handle_clearblocklist,
-            "ClearContacts": self._handle_clearcontacts,
+            "Dial": self.handle_dial,
+            "Answer": self.handle_answer,
+            "Hangup": self.handle_hangup,
+            "HangupAll": self.handle_hangupall,
+            "SwapCalls": self.handle_swapcalls,
+            "MuteMic": self.handle_mutemic,
+            "UnmuteMic": self.handle_unmutemic,
+            "SetSpeakerphone": self.handle_setspeakerphone,
+            "SendDtmf": self.handle_senddtmf,
+            "DeclineWithSms": self.handle_declinewithsms,
+            "ScheduleSms": self.handle_schedulesms,
+            "ScheduleMms": self.handle_schedulemms,
+            "SendSms": self.handle_sendsms,
+            "SendUssd": self.handle_sendussd,
+            "CallAction": self.handle_callaction,
+            "GetNetworkProperties": self.handle_getnetworkproperties,
+            "SetNetworkProperty": self.handle_setnetworkproperty,
+            "GetRecoveryState": self.handle_getrecoverystate,
+            "GetTelephonyState": self.handle_gettelephonystate,
+            "SetActiveChat": self.handle_setactivechat,
+            "ImportSimContacts": self.handle_importsimcontacts,
+            "DisableAllForwarding": self.handle_disableallforwarding,
+            "DisableAllBarrings": self.handle_disableallbarrings,
+            "ChangeBarringPassword": self.handle_changebarringpassword,
+            "GetOwnNumber": self.handle_getownnumber,
+            "DetectRegion": self.handle_detectregion,
+            "RequestRecovery": self.handle_requestrecovery,
+            "ClearNotification": self.handle_clearnotification,
+            "PrepareAttachment": self.handle_prepareattachment,
+            "SilenceRing": self.handle_silencering,
+            "SetAudioRoute": self.handle_setaudioroute,
+            "SetInputRoute": self.handle_setinputroute,
+            "SetDeliveryReports": self.handle_setdeliveryreports,
+            "GetAudioRoutes": self.handle_getaudioroutes,
+            "DeleteMessage": self.handle_deletemessage,
+            "DeleteConversation": self.handle_deleteconversation,
+            "MarkThreadAsRead": self.handle_markthreadasread,
+            "MarkConversationUnread": self.handle_markconversationunread,
+            "SaveDraft": self.handle_savedraft,
+            "RescheduleMessage": self.handle_reschedulemessage,
+            "RetryMessage": self.handle_retrymessage,
+            "SendTrackedSms": self.handle_sendtrackedsms,
+            "DeleteCallHistoryEntry": self.handle_deletecallhistoryentry,
+            "UpdateHistoryNames": self.handle_updatehistorynames,
+            "ClearMessages": self.handle_clearmessages,
+            "SetGroupName": self.handle_setgroupname,
+            "ClearGroupNames": self.handle_cleargroupnames,
+            "ClearBlocklist": self.handle_clearblocklist,
+            "ClearContacts": self.handle_clearcontacts,
 
-            "ClearEverything": self._handle_cleareverything,
-            "DeleteAddressBook": self._handle_deleteaddressbook,
-            "CreateAddressBook": self._handle_createaddressbook,
-            "ImportChatty": self._handle_importchatty,
-            "ImportLocalCalls": self._handle_importlocalcalls,
-            "ImportAndroidSms": self._handle_importandroidsms,
-            "ImportAndroidCalls": self._handle_importandroidcalls,
-            "ImportIosSms": self._handle_importiossms,
-            "ImportIosCalls": self._handle_importioscalls,
-            "ClearCallHistory": self._handle_clearcallhistory,
-            "GetCallHistory": self._handle_getcallhistory,
-            "GetConversations": self._handle_getconversations,
-            "GetMessages": self._handle_getmessages,
-            "GetContacts": self._handle_getcontacts,
-            "GetActiveCalls": self._handle_getactivecalls,
-            "SendMms": self._handle_sendmms,
-            "GetSetting": self._handle_getsetting,
-            "SetSetting": self._handle_setsetting,
-            "GetBlocklist": self._handle_getblocklist,
-            "AddBlockedNumber": self._handle_addblockednumber,
-            "SetBlockedNumberFlags": self._handle_setblockednumberflags,
-            "UpdateBlockedNumber": self._handle_updateblockednumber,
-            "ImportBlocklist": self._handle_importblocklist,
-            "RemoveBlockedNumber": self._handle_removeblockednumber,
-            "GetMissedMessages": self._handle_getmissedmessages,
-            "SendMissedMessage": self._handle_sendmissedmessage,
-            "GetAddressBooks": self._handle_getaddressbooks,
-            "SetAddressBookPriority": self._handle_setaddressbookpriority,
-            "ImportContacts": self._handle_importcontacts,
-            "ExportContacts": self._handle_exportcontacts,
-            "AddContact": self._handle_addcontact,
-            "SaveContact": self._handle_savecontact,
-            "DeleteContact": self._handle_deletecontact,
-            "DeleteContacts": self._handle_deletecontacts,
-            "RefreshContacts": self._handle_refreshcontacts,
-            "ModifyContact": self._handle_modifycontact,
+            "ClearEverything": self.handle_cleareverything,
+            "DeleteAddressBook": self.handle_deleteaddressbook,
+            "CreateAddressBook": self.handle_createaddressbook,
+            "ImportChatty": self.handle_importchatty,
+            "ImportLocalCalls": self.handle_importlocalcalls,
+            "ImportAndroidSms": self.handle_importandroidsms,
+            "ImportAndroidCalls": self.handle_importandroidcalls,
+            "ImportIosSms": self.handle_importiossms,
+            "ImportIosCalls": self.handle_importioscalls,
+            "ClearCallHistory": self.handle_clearcallhistory,
+            "GetCallHistory": self.handle_getcallhistory,
+            "GetConversations": self.handle_getconversations,
+            "GetMessages": self.handle_getmessages,
+            "GetContacts": self.handle_getcontacts,
+            "GetActiveCalls": self.handle_getactivecalls,
+            "SendMms": self.handle_sendmms,
+            "GetSetting": self.handle_getsetting,
+            "SetSetting": self.handle_setsetting,
+            "GetBlocklist": self.handle_getblocklist,
+            "AddBlockedNumber": self.handle_addblockednumber,
+            "SetBlockedNumberFlags": self.handle_setblockednumberflags,
+            "UpdateBlockedNumber": self.handle_updateblockednumber,
+            "ImportBlocklist": self.handle_importblocklist,
+            "RemoveBlockedNumber": self.handle_removeblockednumber,
+            "GetMissedMessages": self.handle_getmissedmessages,
+            "SendMissedMessage": self.handle_sendmissedmessage,
+            "GetAddressBooks": self.handle_getaddressbooks,
+            "SetAddressBookPriority": self.handle_setaddressbookpriority,
+            "ImportContacts": self.handle_importcontacts,
+            "ExportContacts": self.handle_exportcontacts,
+            "AddContact": self.handle_addcontact,
+            "SaveContact": self.handle_savecontact,
+            "DeleteContact": self.handle_deletecontact,
+            "DeleteContacts": self.handle_deletecontacts,
+            "RefreshContacts": self.handle_refreshcontacts,
+            "ModifyContact": self.handle_modifycontact,
         }
         handler = handlers.get(method_name)
         if handler:
@@ -901,7 +901,7 @@ class TelephonyDaemonDBus:
             logger.warning(f"[DBusService] Unhandled method: {method_name}")
             invocation.return_dbus_error("org.freedesktop.DBus.Error.UnknownMethod", f"Method {method_name} is not implemented")
 
-    def _handle_dial(self, parameters, invocation):
+    def handle_dial(self, parameters, invocation):
         """Handle Dial command; the reply waits for the real outcome."""
         number, hide_id = parameters.unpack()
         state = {"resolved": False}
@@ -921,7 +921,7 @@ class TelephonyDaemonDBus:
 
         GLib.idle_add(do_dial)
 
-    def _handle_answer(self, parameters, invocation):
+    def handle_answer(self, parameters, invocation):
         """Handle Answer command."""
         call_path = parameters.unpack()[0]
         if self.ofono:
@@ -934,7 +934,7 @@ class TelephonyDaemonDBus:
                 self.ofono.answer_call(call_path)
         invocation.return_value(None)
 
-    def _handle_hangup(self, parameters, invocation):
+    def handle_hangup(self, parameters, invocation):
         """Handle Hangup command."""
         call_path = parameters.unpack()[0]
         if self.ofono:
@@ -946,58 +946,58 @@ class TelephonyDaemonDBus:
                 self.ofono.hangup_call(call_path)
         invocation.return_value(None)
 
-    def _handle_hangupall(self, parameters, invocation):
+    def handle_hangupall(self, parameters, invocation):
         """Handle HangupAll command."""
         if self.ofono:
             self.ofono.hangup_all()
         invocation.return_value(None)
 
-    def _handle_swapcalls(self, parameters, invocation):
+    def handle_swapcalls(self, parameters, invocation):
         """Handle SwapCalls command."""
         if self.ofono:
             self.ofono.swap_calls()
         invocation.return_value(None)
 
-    def _handle_mutemic(self, parameters, invocation):
+    def handle_mutemic(self, parameters, invocation):
         """Handle MuteMic command."""
         self.app.call_audio.set_mic_muted(True)
         invocation.return_value(None)
 
-    def _handle_unmutemic(self, parameters, invocation):
+    def handle_unmutemic(self, parameters, invocation):
         """Handle UnmuteMic command."""
         self.app.call_audio.set_mic_muted(False)
         invocation.return_value(None)
 
-    def _handle_setspeakerphone(self, parameters, invocation):
+    def handle_setspeakerphone(self, parameters, invocation):
         """Handle SetSpeakerphone command."""
         enable = parameters.unpack()[0]
         self.app.call_audio.set_route("speaker" if enable else "earpiece")
         invocation.return_value(None)
 
-    def _handle_silencering(self, parameters, invocation):
+    def handle_silencering(self, parameters, invocation):
         """Handle SilenceRing command."""
         self.app.call_audio.silence_ring()
         invocation.return_value(None)
 
-    def _handle_setaudioroute(self, parameters, invocation):
+    def handle_setaudioroute(self, parameters, invocation):
         """Handle SetAudioRoute command."""
         route = parameters.unpack()[0]
         self.app.call_audio.set_route(route)
         invocation.return_value(None)
 
-    def _handle_setinputroute(self, parameters, invocation):
+    def handle_setinputroute(self, parameters, invocation):
         """Handle SetInputRoute command."""
         route = parameters.unpack()[0]
         self.app.call_audio.set_input(route)
         invocation.return_value(None)
 
-    def _handle_setdeliveryreports(self, parameters, invocation):
+    def handle_setdeliveryreports(self, parameters, invocation):
         """Ask the network for SMS delivery reports for a window instance."""
         enabled = parameters.unpack()[0]
         run_in_background(self.ofono.set_delivery_reports, enabled,
-                          on_complete=lambda result: self._reply_ss_result(invocation, result))
+                          on_complete=lambda result: self.reply_ss_result(invocation, result))
 
-    def _handle_getaudioroutes(self, parameters, invocation):
+    def handle_getaudioroutes(self, parameters, invocation):
         """List the selectable output and input routes for a window."""
         def fetch():
             outputs = [(r['id'], bool(r.get('available', True)))
@@ -1016,14 +1016,14 @@ class TelephonyDaemonDBus:
 
         run_in_background(fetch, on_complete=done, on_error=failed)
 
-    def _handle_senddtmf(self, parameters, invocation):
+    def handle_senddtmf(self, parameters, invocation):
         """Handle SendDtmf command."""
         tones = parameters.unpack()[0]
         if self.ofono:
             self.ofono.send_dtmf(tones)
         invocation.return_value(None)
 
-    def _handle_declinewithsms(self, parameters, invocation):
+    def handle_declinewithsms(self, parameters, invocation):
         """Handle DeclineWithSms command."""
         call_path, sms_text = parameters.unpack()
         if self.ofono:
@@ -1039,7 +1039,7 @@ class TelephonyDaemonDBus:
                     self.ofono.send_quick_response(number, sms_text)
         invocation.return_value(None)
 
-    def _normalize_schedule_timestamp(self, ts):
+    def normalize_schedule_timestamp(self, ts):
         """Return the timestamp in the scheduler's format, or None when invalid."""
         for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
             try:
@@ -1048,18 +1048,18 @@ class TelephonyDaemonDBus:
                 logger.debug(f"[DBus] Schedule timestamp {ts} does not match {fmt}: {e}")
         return None
 
-    def _handle_schedulesms(self, parameters, invocation):
+    def handle_schedulesms(self, parameters, invocation):
         """Handle ScheduleSms command."""
         number, text, scheduled_timestamp = parameters.unpack()
         success = False
-        scheduled_timestamp = self._normalize_schedule_timestamp(scheduled_timestamp)
+        scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.app and self.app.scheduler:
             row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _handle_schedulemms(self, parameters, invocation):
+    def handle_schedulemms(self, parameters, invocation):
         """Handle ScheduleMms command."""
         number, text, attachments_json, scheduled_timestamp = parameters.unpack()
         attachments = []
@@ -1070,14 +1070,14 @@ class TelephonyDaemonDBus:
             logger.warning(f"Failed to parse attachments: {e}")
 
         success = False
-        scheduled_timestamp = self._normalize_schedule_timestamp(scheduled_timestamp)
+        scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.app and self.app.scheduler:
             row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _handle_sendsms(self, parameters, invocation):
+    def handle_sendsms(self, parameters, invocation):
         """Handle SendSms command."""
         number, text = parameters.unpack()
         success = False
@@ -1088,7 +1088,7 @@ class TelephonyDaemonDBus:
                 self.db.update_message_schedule(row_id, status="sent", timestamp=None)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _handle_deletemessage(self, parameters, invocation):
+    def handle_deletemessage(self, parameters, invocation):
         """Handle DeleteMessage command."""
         msg_id = parameters.unpack()[0]
         if self.db:
@@ -1097,7 +1097,7 @@ class TelephonyDaemonDBus:
             self.app.scheduler.remove_cron(msg_id)
         invocation.return_value(None)
 
-    def _handle_deleteconversation(self, parameters, invocation):
+    def handle_deleteconversation(self, parameters, invocation):
         """Handle DeleteConversation command."""
         number = parameters.unpack()[0]
         if self.db:
@@ -1106,23 +1106,23 @@ class TelephonyDaemonDBus:
             self.app.scheduler.schedule_next_run()
         invocation.return_value(None)
 
-    def _handle_markthreadasread(self, parameters, invocation):
+    def handle_markthreadasread(self, parameters, invocation):
         """Handle MarkThreadAsRead command."""
         number = parameters.unpack()[0]
         if self.db:
             self.db.mark_conversation_read(number)
         invocation.return_value(None)
 
-    def _handle_markconversationunread(self, parameters, invocation):
+    def handle_markconversationunread(self, parameters, invocation):
         """Handle MarkConversationUnread command."""
         number, msg_id = parameters.unpack()
         if not self.db:
             invocation.return_value(None)
             return
-        self._run_task_then_reply(
+        self.run_task_then_reply(
             invocation, lambda: self.db.mark_conversation_unread_from_message(number, msg_id))
 
-    def _handle_savedraft(self, parameters, invocation):
+    def handle_savedraft(self, parameters, invocation):
         """Replace the stored draft for a conversation.
 
         An empty text with no attachments just clears the draft, which
@@ -1145,13 +1145,13 @@ class TelephonyDaemonDBus:
         if not self.db:
             invocation.return_value(None)
             return
-        self._run_task_then_reply(invocation, task)
+        self.run_task_then_reply(invocation, task)
 
-    def _handle_reschedulemessage(self, parameters, invocation):
+    def handle_reschedulemessage(self, parameters, invocation):
         """Handle RescheduleMessage command."""
         msg_id, scheduled_timestamp = parameters.unpack()
         success = False
-        scheduled_timestamp = self._normalize_schedule_timestamp(scheduled_timestamp)
+        scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.db:
             success = bool(self.db.update_message_schedule(
                 msg_id, status="scheduled", timestamp=scheduled_timestamp))
@@ -1159,7 +1159,7 @@ class TelephonyDaemonDBus:
                 self.app.scheduler.add_cron(msg_id, scheduled_timestamp)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _handle_retrymessage(self, parameters, invocation):
+    def handle_retrymessage(self, parameters, invocation):
         """Resend a failed message for a window instance, keeping its row."""
         msg_id = parameters.unpack()[0]
 
@@ -1192,9 +1192,9 @@ class TelephonyDaemonDBus:
         if not self.db:
             invocation.return_value(None)
             return
-        self._run_task_then_reply(invocation, task)
+        self.run_task_then_reply(invocation, task)
 
-    def _handle_sendtrackedsms(self, parameters, invocation):
+    def handle_sendtrackedsms(self, parameters, invocation):
         """Record an SMS and send it with delivery tracking for a window."""
         number, text = parameters.unpack()
 
@@ -1211,14 +1211,14 @@ class TelephonyDaemonDBus:
         run_in_background(self.ofono.send_quick_response, number, text,
                           on_complete=done, on_error=failed)
 
-    def _handle_deletecallhistoryentry(self, parameters, invocation):
+    def handle_deletecallhistoryentry(self, parameters, invocation):
         """Handle DeleteCallHistoryEntry command."""
         call_id = parameters.unpack()[0]
         if self.db:
             self.db.delete_call_by_id(call_id)
         invocation.return_value(None)
 
-    def _handle_updatehistorynames(self, parameters, invocation):
+    def handle_updatehistorynames(self, parameters, invocation):
         """Handle UpdateHistoryNames command."""
         numbers_json, new_name = parameters.unpack()
         numbers = []
@@ -1231,16 +1231,16 @@ class TelephonyDaemonDBus:
         if not numbers or not self.db:
             invocation.return_value(None)
             return
-        self._run_task_then_reply(
+        self.run_task_then_reply(
             invocation, lambda: self.db.update_history_names(numbers, new_name=new_name or None))
 
-    def _handle_clearmessages(self, parameters, invocation):
+    def handle_clearmessages(self, parameters, invocation):
         """Handle ClearMessages command."""
         if self.db:
             self.db.clear_messages()
         invocation.return_value(None)
 
-    def _handle_setgroupname(self, parameters, invocation):
+    def handle_setgroupname(self, parameters, invocation):
         """Handle SetGroupName command."""
         recipients, new_name = parameters.unpack()
         success = False
@@ -1250,19 +1250,19 @@ class TelephonyDaemonDBus:
                 success = bool(self.db.set_group_name(recipients_list, new_name))
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _handle_cleargroupnames(self, parameters, invocation):
+    def handle_cleargroupnames(self, parameters, invocation):
         """Handle ClearGroupNames command."""
         if self.db:
             self.db.clear_group_names()
         invocation.return_value(None)
 
-    def _handle_clearblocklist(self, parameters, invocation):
+    def handle_clearblocklist(self, parameters, invocation):
         """Handle ClearBlocklist command."""
         if self.db:
             self.db.clear_blocklist()
         invocation.return_value(None)
 
-    def _is_protected_source(self, source_uid, log_template):
+    def is_protected_source(self, source_uid, log_template):
         """Return True when the source must not be modified via CLI.
 
         Protection is by name: Andromeda Contacts keeps its uid per
@@ -1280,7 +1280,7 @@ class TelephonyDaemonDBus:
                 return True
         return False
 
-    def _is_protected_contact_source(self, source_uid):
+    def is_protected_contact_source(self, source_uid):
         """Return True when a contact's source is protected, without logging.
 
         The loaded sources answer first; a book that appeared after they
@@ -1296,39 +1296,39 @@ class TelephonyDaemonDBus:
                 return item.get('name') == "Andromeda Contacts"
         return False
 
-    def _is_protected_contact(self, contact, uid, verb):
+    def is_protected_contact(self, contact, uid, verb):
         """Return True when the contact lives in a protected source.
 
         Logs the exact per-verb refusal warning used by the CLI handlers.
         """
-        if self._is_protected_contact_source(contact.get('source_uid')):
+        if self.is_protected_contact_source(contact.get('source_uid')):
             logger.warning(f"[DBus] Refusing to {verb} Andromeda Contact {uid} via CLI")
             return True
         return False
 
-    def _delete_unprotected_contacts(self):
+    def delete_unprotected_contacts(self):
         """Delete every cached contact that is not in a protected source."""
         with self.eds.cache_lock:
             cached_items = list(self.eds.cache.items())
 
         uids_to_delete = []
         for uid, contact in cached_items:
-            if not self._is_protected_contact_source(contact.get('source_uid')):
+            if not self.is_protected_contact_source(contact.get('source_uid')):
                 uids_to_delete.append(uid)
 
         for uid in uids_to_delete:
             self.eds.delete_contact(uid)
 
-    def _clear_contacts_task(self, source_uid, is_protected):
+    def clear_contacts_task(self, source_uid, is_protected):
         """Delete contacts per the source filter; runs on a worker thread."""
         if not self.eds:
             return
         if not source_uid:
-            self._delete_unprotected_contacts()
+            self.delete_unprotected_contacts()
         elif not is_protected:
             self.eds.delete_all_contacts(source_uid=source_uid)
 
-    def _run_task_then_reply(self, invocation, task):
+    def run_task_then_reply(self, invocation, task):
         """Run task off the main thread, then reply to the invocation."""
         def done(_result):
             invocation.return_value(None)
@@ -1339,21 +1339,21 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _handle_clearcontacts(self, parameters, invocation):
+    def handle_clearcontacts(self, parameters, invocation):
         """Handle ClearContacts command."""
         source_uid = parameters.unpack()[0]
-        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
-        self._run_task_then_reply(invocation, lambda: self._clear_contacts_task(source_uid, is_protected))
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
+        self.run_task_then_reply(invocation, lambda: self.clear_contacts_task(source_uid, is_protected))
 
-    def _handle_cleareverything(self, parameters, invocation):
+    def handle_cleareverything(self, parameters, invocation):
         """Handle ClearEverything command."""
         source_uid = parameters.unpack()[0]
-        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to clear {name} via CLI")
 
         def task():
             if self.db:
                 self.db.clear_everything()
-            self._clear_contacts_task(source_uid, is_protected)
+            self.clear_contacts_task(source_uid, is_protected)
             try:
                 cfg = os.path.join(GLib.get_user_config_dir(), "telephony.json")
                 if os.path.exists(cfg):
@@ -1361,9 +1361,9 @@ class TelephonyDaemonDBus:
             except Exception as e:
                 logger.warning(f"[DBus] Config removal failed: {e}")
 
-        self._run_task_then_reply(invocation, task)
+        self.run_task_then_reply(invocation, task)
 
-    def _handle_createaddressbook(self, parameters, invocation):
+    def handle_createaddressbook(self, parameters, invocation):
         """Handle CreateAddressBook command."""
         name = parameters.unpack()[0]
 
@@ -1381,18 +1381,18 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _handle_deleteaddressbook(self, parameters, invocation):
+    def handle_deleteaddressbook(self, parameters, invocation):
         """Handle DeleteAddressBook command."""
         source_uid = parameters.unpack()[0]
         success = False
 
-        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to delete {name}")
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to delete {name}")
 
         if not is_protected and self.eds:
             success = self.eds.delete_addressbook(source_uid)
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _run_import(self, invocation, task):
+    def run_import(self, invocation, task):
         """Run an importer off the main thread and reply with its result."""
         def done(result):
             success, msg = result
@@ -1407,50 +1407,50 @@ class TelephonyDaemonDBus:
             return
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def _handle_importchatty(self, parameters, invocation):
+    def handle_importchatty(self, parameters, invocation):
         """Handle ImportChatty command."""
         from telephony.daemon.utils.importer_local_utils import import_local_chatty
         db_path, mms_path = parameters.unpack()
-        self._run_import(invocation, lambda: import_local_chatty(self.db, db_path or None, mms_path or None))
+        self.run_import(invocation, lambda: import_local_chatty(self.db, db_path or None, mms_path or None))
 
-    def _handle_importlocalcalls(self, parameters, invocation):
+    def handle_importlocalcalls(self, parameters, invocation):
         """Handle ImportLocalCalls command."""
         from telephony.daemon.utils.importer_local_utils import import_local_calls
         db_path = parameters.unpack()[0]
-        self._run_import(invocation, lambda: import_local_calls(self.db, db_path or None))
+        self.run_import(invocation, lambda: import_local_calls(self.db, db_path or None))
 
-    def _handle_importandroidsms(self, parameters, invocation):
+    def handle_importandroidsms(self, parameters, invocation):
         """Handle ImportAndroidSms command."""
         from telephony.daemon.utils.importer_android_utils import import_android_sms
         file_path = parameters.unpack()[0]
-        self._run_import(invocation, lambda: import_android_sms(self.db, file_path))
+        self.run_import(invocation, lambda: import_android_sms(self.db, file_path))
 
-    def _handle_importandroidcalls(self, parameters, invocation):
+    def handle_importandroidcalls(self, parameters, invocation):
         """Handle ImportAndroidCalls command."""
         from telephony.daemon.utils.importer_android_utils import import_android_calls
         file_path = parameters.unpack()[0]
-        self._run_import(invocation, lambda: import_android_calls(self.db, file_path))
+        self.run_import(invocation, lambda: import_android_calls(self.db, file_path))
 
-    def _handle_importiossms(self, parameters, invocation):
+    def handle_importiossms(self, parameters, invocation):
         """Handle ImportIosSms command."""
         from telephony.daemon.utils.importer_ios_utils import import_ios_sms
         file_path, manifest_path, backup_dir = parameters.unpack()
-        self._run_import(invocation, lambda: import_ios_sms(
+        self.run_import(invocation, lambda: import_ios_sms(
             self.db, file_path, manifest_path or None, backup_dir or None))
 
-    def _handle_importioscalls(self, parameters, invocation):
+    def handle_importioscalls(self, parameters, invocation):
         """Handle ImportIosCalls command."""
         from telephony.daemon.utils.importer_ios_utils import import_ios_calls
         file_path = parameters.unpack()[0]
-        self._run_import(invocation, lambda: import_ios_calls(self.db, file_path))
+        self.run_import(invocation, lambda: import_ios_calls(self.db, file_path))
 
-    def _handle_clearcallhistory(self, parameters, invocation):
+    def handle_clearcallhistory(self, parameters, invocation):
         """Handle ClearCallHistory command."""
         if self.db:
             self.db.clear_history()
         invocation.return_value(None)
 
-    def _handle_getcallhistory(self, parameters, invocation):
+    def handle_getcallhistory(self, parameters, invocation):
         """Handle GetCallHistory command."""
         limit = parameters.unpack()[0]
         rows = self.db.get_history(limit=limit) if self.db else []
@@ -1458,28 +1458,28 @@ class TelephonyDaemonDBus:
                  "transferred": bool(r["transferred"])} for r in rows]
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
-    def _handle_getconversations(self, parameters, invocation):
+    def handle_getconversations(self, parameters, invocation):
         """Handle GetConversations command."""
         limit = parameters.unpack()[0]
         rows = self.db.get_conversations(limit=limit) if self.db else []
         data = [{"id": r[4], "number": r[0], "direction": "unknown", "body": r[1], "timestamp": r[2], "unread_count": r[3]} for r in rows]
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
-    def _handle_getmessages(self, parameters, invocation):
+    def handle_getmessages(self, parameters, invocation):
         """Handle GetMessages command."""
         number, limit = parameters.unpack()
         rows = self.db.get_chat_messages(number, limit=limit) if self.db else []
         data = [{"id": r[0], "direction": r[1], "body": r[2], "status": r[4], "timestamp": r[3]} for r in rows]
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
-    def _handle_getcontacts(self, parameters, invocation):
+    def handle_getcontacts(self, parameters, invocation):
         """Handle GetContacts command."""
         query = parameters.unpack()[0]
         rows = self.db.search_contacts(query) if self.db else []
         data = [{"uid": r[0], "name": f"{r[1]} {r[2]}".strip(), "numbers": [p[0] for p in r[3]] if r[3] else []} for r in rows]
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
-    def _handle_getactivecalls(self, parameters, invocation):
+    def handle_getactivecalls(self, parameters, invocation):
         """Handle GetActiveCalls command."""
         calls = []
         if self.ofono:
@@ -1487,7 +1487,7 @@ class TelephonyDaemonDBus:
                 calls.append({"path": path, "number": data.get("number"), "state": data.get("state"), "direction": data.get("direction")})
         invocation.return_value(GLib.Variant("(s)", (json.dumps(calls, cls=DateTimeEncoder),)))
 
-    def _handle_sendmms(self, parameters, invocation):
+    def handle_sendmms(self, parameters, invocation):
         """Handle SendMms command."""
         number, text, attachments_json = parameters.unpack()
         attachments = []
@@ -1505,7 +1505,7 @@ class TelephonyDaemonDBus:
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
-    def _handle_getsetting(self, parameters, invocation):
+    def handle_getsetting(self, parameters, invocation):
         """Handle GetSetting command."""
         key = parameters.unpack()[0]
         value = ""
@@ -1518,7 +1518,7 @@ class TelephonyDaemonDBus:
                     value = str(val)
         invocation.return_value(GLib.Variant("(s)", (value,)))
 
-    def _handle_setsetting(self, parameters, invocation):
+    def handle_setsetting(self, parameters, invocation):
         """Handle SetSetting command."""
         key, value = parameters.unpack()
         key = key.replace("_", "-")
@@ -1547,12 +1547,12 @@ class TelephonyDaemonDBus:
 
         invocation.return_value(None)
 
-    def _handle_getblocklist(self, parameters, invocation):
+    def handle_getblocklist(self, parameters, invocation):
         """Handle GetBlocklist command."""
         rows = self.db.get_blocked_numbers() if self.db else []
         invocation.return_value(GLib.Variant("(s)", (json.dumps(rows),)))
 
-    def _handle_addblockednumber(self, parameters, invocation):
+    def handle_addblockednumber(self, parameters, invocation):
         """Handle AddBlockedNumber command."""
         number, note, block_calls, block_messages = parameters.unpack()
 
@@ -1569,13 +1569,13 @@ class TelephonyDaemonDBus:
         run_in_background(self.db.block_number, number, note, block_calls, block_messages,
                           on_complete=done, on_error=failed)
 
-    def _handle_setblockednumberflags(self, parameters, invocation):
+    def handle_setblockednumberflags(self, parameters, invocation):
         """Handle SetBlockedNumberFlags command."""
         bid, block_calls, block_messages = parameters.unpack()
         ok = self.db.set_blocked_flags(bid, block_calls, block_messages) if self.db else False
         invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
 
-    def _handle_updateblockednumber(self, parameters, invocation):
+    def handle_updateblockednumber(self, parameters, invocation):
         """Handle UpdateBlockedNumber command."""
         bid, number, note, block_calls, block_messages = parameters.unpack()
 
@@ -1592,7 +1592,7 @@ class TelephonyDaemonDBus:
         run_in_background(self.db.update_blocked_number, bid, number, note,
                           block_calls, block_messages, on_complete=done, on_error=failed)
 
-    def _handle_importblocklist(self, parameters, invocation):
+    def handle_importblocklist(self, parameters, invocation):
         """Handle ImportBlocklist command."""
         added = 0
         updated = 0
@@ -1607,7 +1607,7 @@ class TelephonyDaemonDBus:
                 logger.error(f"[DBus] Blocklist import unreadable: {e}")
         invocation.return_value(GLib.Variant("(uu)", (added, updated)))
 
-    def _handle_removeblockednumber(self, parameters, invocation):
+    def handle_removeblockednumber(self, parameters, invocation):
         """Handle RemoveBlockedNumber command."""
         bid = parameters.unpack()[0]
         if self.db:
@@ -1617,7 +1617,7 @@ class TelephonyDaemonDBus:
                 logger.debug(f"ValueError in unblock_number: {e}")
         invocation.return_value(None)
 
-    def _handle_getmissedmessages(self, parameters, invocation):
+    def handle_getmissedmessages(self, parameters, invocation):
         """Handle GetMissedMessages command."""
         data = []
         if self.app and self.app.scheduler:
@@ -1628,26 +1628,26 @@ class TelephonyDaemonDBus:
             logger.debug("[DBus] Cannot get missed messages: scheduler not available")
         invocation.return_value(GLib.Variant("(s)", (json.dumps(data, cls=DateTimeEncoder),)))
 
-    def _handle_sendmissedmessage(self, parameters, invocation):
+    def handle_sendmissedmessage(self, parameters, invocation):
         """Handle SendMissedMessage command."""
         msg_id = parameters.unpack()[0]
         if self.app and self.app.scheduler:
             missed = self.app.scheduler.get_missed_messages(buffer_minutes=MISSED_MESSAGE_BUFFER_MINUTES)
             target = next((m for m in missed if m[0] == msg_id), None)
             if target:
-                self.app.scheduler._process_message(target)
+                self.app.scheduler.process_message(target)
         else:
             logger.debug("[DBus] Cannot send missed message: scheduler not available")
         invocation.return_value(None)
 
-    def _handle_getaddressbooks(self, parameters, invocation):
+    def handle_getaddressbooks(self, parameters, invocation):
         """Handle GetAddressBooks command."""
         sources = []
         if self.eds:
             sources = self.eds.get_sources_info()
         invocation.return_value(GLib.Variant("(s)", (json.dumps(sources),)))
 
-    def _handle_setaddressbookpriority(self, parameters, invocation):
+    def handle_setaddressbookpriority(self, parameters, invocation):
         """Handle SetAddressBookPriority command."""
         uid_list_json = parameters.unpack()[0]
         if self.eds:
@@ -1665,12 +1665,12 @@ class TelephonyDaemonDBus:
                 logger.error(f"Failed to parse addressbook priorities: {e}")
         invocation.return_value(None)
 
-    def _handle_importcontacts(self, parameters, invocation):
+    def handle_importcontacts(self, parameters, invocation):
         """Handle ImportContacts command."""
         vcard_data, source_uid = parameters.unpack()
         count = 0
 
-        is_protected = self._is_protected_source(source_uid, "[DBus] Refusing to import to {name} via CLI")
+        is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to import to {name} via CLI")
 
         if not is_protected and self.eds:
             vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
@@ -1679,7 +1679,7 @@ class TelephonyDaemonDBus:
                     count += 1
         invocation.return_value(GLib.Variant("(i)", (count,)))
 
-    def _handle_exportcontacts(self, parameters, invocation):
+    def handle_exportcontacts(self, parameters, invocation):
         """Handle ExportContacts command."""
         source_uid = parameters.unpack()[0]
 
@@ -1698,7 +1698,7 @@ class TelephonyDaemonDBus:
 
         run_in_background(fetch, on_complete=done, on_error=failed)
 
-    def _handle_addcontact(self, parameters, invocation):
+    def handle_addcontact(self, parameters, invocation):
         """Handle AddContact command."""
         name, number = parameters.unpack()
         if self.eds:
@@ -1707,18 +1707,18 @@ class TelephonyDaemonDBus:
             self.eds.save_contact(vcard_data)
         invocation.return_value(None)
 
-    def _handle_savecontact(self, parameters, invocation):
+    def handle_savecontact(self, parameters, invocation):
         """Write a full vCard to a book, refusing the read-only sync book."""
         vcard, uid, source_uid = parameters.unpack()
 
         if uid:
             with self.eds.cache_lock:
                 contact = self.eds.cache.get(uid)
-            if contact and self._is_protected_contact_source(contact.get('source_uid')):
+            if contact and self.is_protected_contact_source(contact.get('source_uid')):
                 logger.warning(f"[DBus] Refusing to modify protected contact {uid}")
                 invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
                 return
-        if source_uid and self._is_protected_contact_source(source_uid):
+        if source_uid and self.is_protected_contact_source(source_uid):
             logger.warning(f"[DBus] Refusing to write into protected source {source_uid}")
             invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
             return
@@ -1737,7 +1737,7 @@ class TelephonyDaemonDBus:
         run_in_background(self.eds.save_contact_with_reason, vcard, uid or None, source_uid or None,
                           on_complete=done, on_error=failed)
 
-    def _handle_deletecontacts(self, parameters, invocation):
+    def handle_deletecontacts(self, parameters, invocation):
         """Delete a batch of contacts, skipping the protected ones."""
         uids_json = parameters.unpack()[0]
         uids = []
@@ -1751,16 +1751,16 @@ class TelephonyDaemonDBus:
             for uid in uids:
                 with self.eds.cache_lock:
                     contact = self.eds.cache.get(uid)
-                if contact and self._is_protected_contact(contact, uid, "delete"):
+                if contact and self.is_protected_contact(contact, uid, "delete"):
                     continue
                 self.eds.delete_contact(uid)
 
         if not uids or not self.eds:
             invocation.return_value(None)
             return
-        self._run_task_then_reply(invocation, task)
+        self.run_task_then_reply(invocation, task)
 
-    def _handle_refreshcontacts(self, parameters, invocation):
+    def handle_refreshcontacts(self, parameters, invocation):
         """Ask every refresh-capable backend to re-sync with its remote."""
         def done(count):
             invocation.return_value(GLib.Variant("(i)", (int(count or 0),)))
@@ -1774,25 +1774,25 @@ class TelephonyDaemonDBus:
             return
         run_in_background(self.eds.refresh_backends, on_complete=done, on_error=failed)
 
-    def _handle_deletecontact(self, parameters, invocation):
+    def handle_deletecontact(self, parameters, invocation):
         """Handle DeleteContact command."""
         uid = parameters.unpack()[0]
         if self.eds:
             with self.eds.cache_lock:
                 contact = self.eds.cache.get(uid)
-            if contact and self._is_protected_contact(contact, uid, "delete"):
+            if contact and self.is_protected_contact(contact, uid, "delete"):
                 invocation.return_value(None)
                 return
             self.eds.delete_contact(uid)
         invocation.return_value(None)
 
-    def _handle_modifycontact(self, parameters, invocation):
+    def handle_modifycontact(self, parameters, invocation):
         """Handle ModifyContact command."""
         uid, name, number = parameters.unpack()
         if self.eds:
             with self.eds.cache_lock:
                 contact = self.eds.cache.get(uid)
-            if contact and self._is_protected_contact(contact, uid, "modify"):
+            if contact and self.is_protected_contact(contact, uid, "modify"):
                 invocation.return_value(None)
                 return
             vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
