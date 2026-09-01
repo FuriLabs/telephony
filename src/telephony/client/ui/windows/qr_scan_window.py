@@ -26,6 +26,7 @@ from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.vcard_utils import unfold_vcard
 from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, CAPTURE_SHEET_HEIGHT)
+from telephony.client.ui.widgets.common_widget import close_sheet_page
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 
 SCAN_PIPELINE = (
@@ -70,7 +71,7 @@ class QrScanDialog(MediaCaptureWindow):
         content.append(header)
 
         btn_cancel = Gtk.Button(label=_("Cancel"))
-        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: self.close() or False))
+        btn_cancel.connect("clicked", lambda b: GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False))
         header.pack_start(btn_cancel)
 
         card_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -142,7 +143,7 @@ class QrScanDialog(MediaCaptureWindow):
 
         self._found = True
         callback = self.on_contact
-        self.close()
+        close_sheet_page(self.get_root())
         GLib.idle_add(lambda: callback(text) or False)
 
     def _release_bus(self):
