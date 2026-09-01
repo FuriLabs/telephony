@@ -25,14 +25,14 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.shared.constants import VIEWFINDER_START_DELAY_MS
+from telephony.shared.constants import VIEWFINDER_START_DELAY_MS, VIEWFINDER_SINK_WIDTH
+from telephony.client.services.flashlight_client import FlashlightClient
+
+PIPELINE_DRAIN_TIMEOUT_NS = 2 * Gst.SECOND
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 from telephony.client.ui.widgets.common_widget import close_sheet_page
 
-CAPTURE_START_DELAY_MS = 500
-CAPTURE_RETRY_DELAY_MS = 1000
-MAX_CAPTURE_RETRIES = 3
-WARMUP_FRAME_COUNT = 20
+SNAP_TIMEOUT_MS = 4000
 MAX_IMAGE_DIMENSION = 800
 JPEG_QUALITY = 80
 
@@ -50,12 +50,15 @@ class CameraPhoto(MediaCaptureWindow):
         self.temp_capture_path = None
 
         self.pipeline = None
+        self.camera_device = 0
+        self.light_on = False
+        self.flashlight = FlashlightClient()
         self.bus = None
         self.bus_handler_id = None
         self.toast_overlay = None
 
-        self.retry_count = 0
-        self.max_retries = MAX_CAPTURE_RETRIES
+        self._capture_taken = False
+        self._snap_timeout_id = None
 
         self._setup_ui()
         self.connect("hidden", self._on_closed)
@@ -111,10 +114,12 @@ class CameraPhoto(MediaCaptureWindow):
         self.viewfinder_widget.set_vexpand(True)
         self.viewfinder_widget.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        card_box.append(self.letterbox(self.viewfinder_widget))
+        self.preview_card = card_box
+        self.viewfinder_holder = self.letterbox(self.viewfinder_widget)
+        card_box.append(self.viewfinder_holder)
         self.page_capture.append(card_box)
 
-        ctrl_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        ctrl_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=30)
         ctrl_box.set_halign(Gtk.Align.CENTER)
         ctrl_box.set_margin_top(20)
         ctrl_box.set_margin_bottom(20)
@@ -125,6 +130,18 @@ class CameraPhoto(MediaCaptureWindow):
         self.btn_shutter.add_css_class("shutter-button")
         self.btn_shutter.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_shutter_clicked(b) or False))
         ctrl_box.append(self.btn_shutter)
+
+        self.btn_light = Gtk.ToggleButton(icon_name=self.light_icon_name(), css_classes=["circular"])
+        self.btn_light.set_size_request(48, 48)
+        self.btn_light.set_valign(Gtk.Align.CENTER)
+        self.btn_light.connect("toggled", lambda b: GLib.idle_add(lambda: self._on_light_toggled(b) or False))
+        ctrl_box.prepend(self.btn_light)
+
+        self.btn_flip = Gtk.Button(icon_name="camera-switch-symbolic", css_classes=["circular"])
+        self.btn_flip.set_size_request(48, 48)
+        self.btn_flip.set_valign(Gtk.Align.CENTER)
+        self.btn_flip.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_flip_camera() or False))
+        ctrl_box.append(self.btn_flip)
 
         self.page_capture.append(ctrl_box)
         self.stack.add_named(self.page_capture, "capture")
@@ -171,6 +188,38 @@ class CameraPhoto(MediaCaptureWindow):
         self.page_review.append(act_box)
         self.stack.add_named(self.page_review, "review")
 
+    def _on_flip_camera(self):
+        """Switch between the back and the front camera.
+
+        The devices are the Android convention, zero for the back and
+        one for the front, and switching restarts the viewfinder since
+        the source cannot change camera while it runs. Only the back
+        camera has a light, so the torch goes out on the way and its
+        button sits disabled on the front, keeping the row still.
+        """
+        self.btn_flip.set_sensitive(False)
+        self.btn_light.set_active(False)
+        self.camera_device = 1 - self.camera_device
+        self.btn_light.set_sensitive(self.camera_device == 0)
+        self._start_viewfinder()
+
+    def _on_light_toggled(self, btn):
+        """Drive the torch; the back camera's is the only light."""
+        self.light_on = btn.get_active()
+        if self.light_on:
+            btn.add_css_class("suggested-action")
+        else:
+            btn.remove_css_class("suggested-action")
+        if self.light_on:
+            self.flashlight.set_on()
+        else:
+            self.flashlight.set_off()
+
+    def _light_off(self):
+        """Put the torch out; safe from any exit path."""
+        self.btn_light.set_active(False)
+        self.flashlight.set_off()
+
     def _start_viewfinder(self):
         """Start the camera viewfinder pipeline."""
         if self._closed:
@@ -184,7 +233,10 @@ class CameraPhoto(MediaCaptureWindow):
                 logger.warning("[Camera-Photo] gtk4paintablesink not found")
 
             pipeline_str = (
-                "droidcamsrc camera_device=0 mode=2 ! videoconvert ! videoflip video-direction=auto ! gtk4paintablesink name=sink"
+                f"droidcamsrc camera_device={self.camera_device} mode=2 ! tee name=t "
+                f"t. ! queue ! videoconvert ! videoflip video-direction=auto ! videoscale ! video/x-raw,width={VIEWFINDER_SINK_WIDTH} ! gtk4paintablesink name=sink "
+                f"t. ! valve name=snap drop=true ! queue ! videoconvert ! videoflip video-direction=auto ! jpegenc ! "
+                f"appsink name=photosink emit-signals=True max-buffers=1 drop=True async=false sync=false"
             )
             logger.info(f"[Camera-Photo] Starting viewfinder: {pipeline_str}")
 
@@ -195,6 +247,10 @@ class CameraPhoto(MediaCaptureWindow):
                 paintable = sink.get_property("paintable")
                 self.viewfinder_widget.set_paintable(paintable)
                 self.reveal_on_first_frame(self.viewfinder_widget)
+
+            photosink = self.pipeline.get_by_name("photosink")
+            if photosink:
+                photosink.connect("new-sample", self._on_snap_sample)
 
             self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_viewfinder_message)
 
@@ -209,76 +265,82 @@ class CameraPhoto(MediaCaptureWindow):
     def _on_viewfinder_message(self, bus, message):
         """Handle viewfinder messages."""
         t = message.type
+        if (t == Gst.MessageType.STATE_CHANGED and message.src == self.pipeline
+                and message.parse_state_changed()[1] == Gst.State.PLAYING):
+            self.btn_flip.set_sensitive(True)
         if t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error(f"[Camera-Photo] Viewfinder error: {err} : {debug}")
+            self.btn_flip.set_sensitive(True)
+            self._stop_pipeline()
+            self._show_error(_("Error: {e}").format(e=err))
 
     def _stop_pipeline(self):
-        """Stop the GStreamer pipeline."""
+        """Stop the GStreamer pipeline.
+
+        The state change is waited out, because droidcamsrc closes an
+        Android camera session slowly, and building the next pipeline
+        while the old one still holds the device maps the buffer
+        queues of two cameras at once.
+        """
         self.viewfinder_widget.set_paintable(None)
         self._release_bus()
         if self.pipeline:
             logger.debug("[Camera-Photo] Stopping pipeline...")
             self.pipeline.set_state(Gst.State.NULL)
+            self.pipeline.get_state(PIPELINE_DRAIN_TIMEOUT_NS)
             self.pipeline = None
 
     def _on_shutter_clicked(self, btn):
-        """Handle shutter button click."""
+        """Take the picture from the running stream.
+
+        The viewfinder pipeline carries a second, full-resolution
+        branch behind a closed valve, marked async so the pipeline
+        does not wait for a preroll buffer the closed valve will never
+        deliver, which froze the whole graph on its first frame.
+        Taking a picture is opening the valve for one frame rather
+        than tearing the camera down,
+        opening a capture pipeline, warming it up and tearing that
+        down too, which is where the seconds went. The valve costs
+        nothing while closed and the camera never blinks.
+        """
         self.btn_shutter.set_sensitive(False)
-        self._stop_pipeline()
-        logger.info("[Camera-Photo] Viewfinder stopped, scheduling capture in 500ms...")
+        self.temp_capture_path = os.path.join(self.capture_dir(), f"cam_cap_{int(time.time())}.jpg")
+        self._capture_taken = False
+        self._snap_timeout_id = self._schedule_timeout(SNAP_TIMEOUT_MS, self._on_snap_timeout)
+        valve = self.pipeline.get_by_name("snap") if self.pipeline else None
+        if valve is None:
+            self._show_error(_("Error: {e}").format(e="no capture branch"))
+            self.btn_shutter.set_sensitive(True)
+            return
+        valve.set_property("drop", False)
 
-        self.retry_count = 0
-        self._schedule_timeout(CAPTURE_START_DELAY_MS, self._attempt_capture)
-
-    def _attempt_capture(self):
-        """Attempt to start the capture pipeline."""
-        logger.info(f"[Camera-Photo] Attempting capture (Try {self.retry_count + 1}/{self.max_retries})...")
-        self._capture_frame()
+    def _on_snap_timeout(self):
+        """Give up on a frame that never came."""
+        self._snap_timeout_id = None
+        if self._capture_taken or self._closed:
+            return False
+        self._capture_taken = True
+        valve = self.pipeline.get_by_name("snap") if self.pipeline else None
+        if valve is not None:
+            valve.set_property("drop", True)
+        self.btn_shutter.set_sensitive(True)
+        self._show_error(_("Error: {e}").format(e="no frame"))
         return False
 
-    def _capture_frame(self):
-        """Capture a single frame from the camera."""
-        self.temp_capture_path = os.path.join(self.capture_dir(), f"cam_cap_{int(time.time())}.jpg")
-        self.frame_count = 0
-        self._capture_taken = False
-
-        pipeline_str = (
-            "droidcamsrc camera_device=0 mode=2 ! videoconvert ! videoflip video-direction=auto ! jpegenc ! "
-            "appsink name=sink emit-signals=True max-buffers=1 drop=False"
-        )
-
-        try:
-            self.pipeline = Gst.parse_launch(pipeline_str)
-
-            sink = self.pipeline.get_by_name("sink")
-            if sink:
-                sink.connect("new-sample", self._on_new_sample)
-
-            self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_capture_message)
-
-            self.pipeline.set_state(Gst.State.PLAYING)
-            logger.info("[Camera-Photo] Capture pipeline playing...")
-
-        except Exception as e:
-            logger.error(f"[Camera-Photo] Capture launch failed: {e}")
-            self._handle_capture_failure(str(e))
-
-    def _on_new_sample(self, sink):
-        """Handle new sample from appsink."""
+    def _on_snap_sample(self, sink):
+        """Keep the first frame through the valve, then close it."""
         sample = sink.emit("pull-sample")
         if not sample:
             return Gst.FlowReturn.ERROR
-
-        self.frame_count += 1
-        if self.frame_count < WARMUP_FRAME_COUNT:
-            return Gst.FlowReturn.OK
-
         if self._capture_taken:
             return Gst.FlowReturn.OK
         self._capture_taken = True
 
-        logger.info("[Camera-Photo] Got sample from appsink")
+        valve = self.pipeline.get_by_name("snap") if self.pipeline else None
+        if valve is not None:
+            valve.set_property("drop", True)
+
         buf = sample.get_buffer()
         result, map_info = buf.map(Gst.MapFlags.READ)
         if result:
@@ -289,43 +351,19 @@ class CameraPhoto(MediaCaptureWindow):
             except Exception as e:
                 logger.error(f"[Camera-Photo] Failed to save sample: {e}")
                 GLib.idle_add(self._show_error, _("Error: {e}").format(e=e))
-                GLib.idle_add(self._restart_viewfinder_safe)
             finally:
                 buf.unmap(map_info)
 
         return Gst.FlowReturn.OK
 
-    def _on_capture_message(self, bus, message):
-        """Handle capture pipeline messages."""
-        t = message.type
-        if t == Gst.MessageType.ERROR:
-            err, debug = message.parse_error()
-            msg = f"{err} : {debug}"
-            logger.error(f"[Camera-Photo] Capture error: {msg}")
-            GLib.idle_add(self._handle_capture_failure, str(err))
-
-    def _handle_capture_failure(self, error_msg):
-        """Handle failure with retries."""
-        self._stop_pipeline()
-
-        if self._closed:
-            return
-
-        self.retry_count += 1
-        if self.retry_count < self.max_retries:
-            logger.warning(f"[Camera-Photo] Capture failed, retrying in 1s... ({error_msg})")
-            self._schedule_timeout(CAPTURE_RETRY_DELAY_MS, self._attempt_capture)
-        else:
-            logger.error(f"[Camera-Photo] All retries failed. Last error: {error_msg}")
-            self._show_error(_("Error: {e}").format(e=error_msg))
-            self._restart_viewfinder_safe()
-
     def _on_capture_done(self):
-        """Finalize capture and process the image off the main thread."""
+        """Process the image; the viewfinder keeps running behind it."""
         if self._closed:
             return False
 
-        self._stop_pipeline()
+        if self._snap_timeout_id:
+            self._cancel_timeout(self._snap_timeout_id)
+            self._snap_timeout_id = None
 
         if not os.path.exists(self.temp_capture_path):
             self.btn_shutter.set_sensitive(True)
@@ -402,11 +440,12 @@ class CameraPhoto(MediaCaptureWindow):
             logger.warning(f"[Camera-Photo] Failed to remove temp file: {e}")
 
     def _on_retake_clicked(self, btn):
-        """Handle retake button click."""
+        """Return to the viewfinder, which never stopped running."""
         self._remove_file_quietly(self.output_path)
         self.output_path = None
         self.stack.set_visible_child_name("capture")
-        self._start_viewfinder()
+        if self.pipeline is None:
+            self._start_viewfinder()
 
     def _on_attach_clicked(self, btn):
         """Handle attach button click."""
@@ -419,6 +458,7 @@ class CameraPhoto(MediaCaptureWindow):
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""
         self._closed = True
+        self._light_off()
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
         self._remove_file_quietly(self.temp_capture_path)

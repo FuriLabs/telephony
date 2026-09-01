@@ -24,7 +24,10 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH)
+from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, PLAYBACK_PROGRESS_INTERVAL_MS, EOS_TIMEOUT_MS, PROGRESS_BAR_WIDTH, VIEWFINDER_SINK_WIDTH)
+from telephony.client.services.flashlight_client import FlashlightClient
+
+PIPELINE_DRAIN_TIMEOUT_NS = 2 * Gst.SECOND
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 from telephony.client.ui.widgets.common_widget import close_sheet_page
 
@@ -64,6 +67,9 @@ class CameraVideo(MediaCaptureWindow):
         self.player_bus = None
         self.player_bus_handler_id = None
         self.is_recording = False
+        self.camera_device = 0
+        self.light_on = False
+        self.flashlight = FlashlightClient()
         self.start_time = 0
         self.timer_id = None
         self.eos_timeout_id = None
@@ -117,7 +123,9 @@ class CameraVideo(MediaCaptureWindow):
         self.viewfinder_widget.set_vexpand(True)
         self.viewfinder_widget.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        card_box.append(self.letterbox(self.viewfinder_widget))
+        self.preview_card = card_box
+        self.viewfinder_holder = self.letterbox(self.viewfinder_widget)
+        card_box.append(self.viewfinder_holder)
         self.page_capture.append(card_box)
 
         ctrl_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -130,6 +138,9 @@ class CameraVideo(MediaCaptureWindow):
         self.lbl_timer.add_css_class("numeric")
         ctrl_box.append(self.lbl_timer)
 
+        record_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=30)
+        record_row.set_halign(Gtk.Align.CENTER)
+
         self.btn_record = Gtk.Button()
         self.btn_record.set_icon_name("media-record-symbolic")
         self.btn_record.set_size_request(80, 80)
@@ -138,7 +149,20 @@ class CameraVideo(MediaCaptureWindow):
         self.btn_record.set_halign(Gtk.Align.CENTER)
         self.btn_record.set_valign(Gtk.Align.CENTER)
         self.btn_record.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_record_toggle(b) or False))
-        ctrl_box.append(self.btn_record)
+        record_row.append(self.btn_record)
+
+        self.btn_light = Gtk.ToggleButton(icon_name=self.light_icon_name(), css_classes=["circular"])
+        self.btn_light.set_size_request(48, 48)
+        self.btn_light.set_valign(Gtk.Align.CENTER)
+        self.btn_light.connect("toggled", lambda b: GLib.idle_add(lambda: self._on_light_toggled(b) or False))
+        record_row.prepend(self.btn_light)
+
+        self.btn_flip = Gtk.Button(icon_name="camera-switch-symbolic", css_classes=["circular"])
+        self.btn_flip.set_size_request(48, 48)
+        self.btn_flip.set_valign(Gtk.Align.CENTER)
+        self.btn_flip.connect("clicked", lambda b: GLib.idle_add(lambda: self._on_flip_camera() or False))
+        record_row.append(self.btn_flip)
+        ctrl_box.append(record_row)
 
         self.page_capture.append(ctrl_box)
         self.stack.add_named(self.page_capture, "capture")
@@ -209,6 +233,38 @@ class CameraVideo(MediaCaptureWindow):
         self.page_review.append(act_box)
         self.stack.add_named(self.page_review, "review")
 
+    def _on_flip_camera(self):
+        """Switch between the back and the front camera.
+
+        Only between takes: the source cannot change camera while it
+        runs, and restarting the pipeline mid-recording would end the
+        take, so a recording keeps the camera it started with.
+        """
+        if self.is_recording:
+            return
+        self.btn_flip.set_sensitive(False)
+        self.btn_light.set_active(False)
+        self.camera_device = 1 - self.camera_device
+        self.btn_light.set_sensitive(self.camera_device == 0)
+        self._start_viewfinder()
+
+    def _on_light_toggled(self, btn):
+        """Drive the torch; the back camera's is the only light."""
+        self.light_on = btn.get_active()
+        if self.light_on:
+            btn.add_css_class("suggested-action")
+        else:
+            btn.remove_css_class("suggested-action")
+        if self.light_on:
+            self.flashlight.set_on()
+        else:
+            self.flashlight.set_off()
+
+    def _light_off(self):
+        """Put the torch out; safe from any exit path."""
+        self.btn_light.set_active(False)
+        self.flashlight.set_off()
+
     def _start_viewfinder(self):
         """Start the camera viewfinder pipeline."""
         if self._closed:
@@ -218,7 +274,7 @@ class CameraVideo(MediaCaptureWindow):
 
         try:
             pipeline_str = (
-                "droidcamsrc camera_device=0 mode=2 ! videoconvert ! videoflip video-direction=auto ! gtk4paintablesink name=sink"
+                f"droidcamsrc camera_device={self.camera_device} mode=2 ! videoconvert ! videoflip video-direction=auto ! videoscale ! video/x-raw,width={VIEWFINDER_SINK_WIDTH} ! gtk4paintablesink name=sink"
             )
             logger.info(f"[Camera-Video] Starting viewfinder: {pipeline_str}")
 
@@ -242,12 +298,24 @@ class CameraVideo(MediaCaptureWindow):
     def _on_viewfinder_message(self, bus, message):
         """Handle viewfinder messages."""
         t = message.type
+        if (t == Gst.MessageType.STATE_CHANGED and message.src == self.pipeline
+                and message.parse_state_changed()[1] == Gst.State.PLAYING):
+            self.btn_flip.set_sensitive(True)
         if t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error(f"[Camera-Video] Viewfinder error: {err} : {debug}")
+            self.btn_flip.set_sensitive(True)
+            self._stop_pipeline()
+            self._show_error(_("Error: {e}").format(e=err))
 
     def _stop_pipeline(self):
-        """Stop the GStreamer pipeline and release its bus watch."""
+        """Stop the GStreamer pipeline and release its bus watch.
+
+        The state change is waited out, because droidcamsrc closes an
+        Android camera session slowly, and building the next pipeline
+        while the old one still holds the device maps the buffer
+        queues of two cameras at once.
+        """
         self.viewfinder_widget.set_paintable(None)
         if self.bus:
             if self.bus_handler_id:
@@ -258,6 +326,7 @@ class CameraVideo(MediaCaptureWindow):
         if self.pipeline:
             logger.debug("[Camera-Video] Stopping pipeline...")
             self.pipeline.set_state(Gst.State.NULL)
+            self.pipeline.get_state(PIPELINE_DRAIN_TIMEOUT_NS)
             self.pipeline = None
         if self.timer_id:
             self._cancel_timeout(self.timer_id)
@@ -285,8 +354,8 @@ class CameraVideo(MediaCaptureWindow):
 
         pipeline_str = (
             f"matroskamux name=mux ! filesink location={self.output_path} "
-            f"droidcamsrc camera_device=0 mode=2 ! tee name=t "
-            f"t. ! queue ! videoconvert ! videoflip video-direction=auto ! gtk4paintablesink name=sink "
+            f"droidcamsrc camera_device={self.camera_device} mode=2 ! tee name=t "
+            f"t. ! queue ! videoconvert ! videoflip video-direction=auto ! videoscale ! video/x-raw,width={VIEWFINDER_SINK_WIDTH} ! gtk4paintablesink name=sink "
             f"t. ! queue name=record_queue ! videoconvert ! videoflip video-direction=auto ! videoscale ! videoconvert ! "
             f"jpegenc ! mux. "
             f"autoaudiosrc ! queue name=audio_queue ! audioconvert ! droidaenc ! mux."
@@ -306,6 +375,7 @@ class CameraVideo(MediaCaptureWindow):
 
             self.pipeline.set_state(Gst.State.PLAYING)
             self.is_recording = True
+            self.btn_flip.set_sensitive(False)
             self.start_time = time.time()
             self.btn_record.set_icon_name("media-playback-stop-symbolic")
             self.btn_record.set_sensitive(True)
@@ -320,6 +390,7 @@ class CameraVideo(MediaCaptureWindow):
         """Handle failure with retries."""
         self._stop_pipeline()
         self.is_recording = False
+        self.btn_flip.set_sensitive(True)
 
         if self._closed:
             return
@@ -338,6 +409,7 @@ class CameraVideo(MediaCaptureWindow):
     def _stop_recording(self):
         """Stop the recording pipeline by sending EOS to the file branch."""
         self.is_recording = False
+        self.btn_flip.set_sensitive(True)
         self.btn_record.set_icon_name("media-record-symbolic")
         self.btn_record.set_sensitive(False)
 
@@ -486,9 +558,18 @@ class CameraVideo(MediaCaptureWindow):
         down leaves the picture holding a dead paintable, which paints
         black. Rewound and paused it keeps the first frame up as a
         poster, and play starts it again from the top.
+
+        The bar is finished by hand first, because it follows a timer
+        that last fired up to half a second before the end and would
+        otherwise stand a few percent short of done forever.
         """
         t = message.type
         if t == Gst.MessageType.EOS:
+            ok_dur, duration = self.player.query_duration(Gst.Format.TIME)
+            if ok_dur and duration > 0:
+                seconds = duration // Gst.SECOND
+                self.lbl_progress.set_label(self._playback_progress_text(seconds, seconds))
+                self.progress_bar.set_fraction(1.0)
             self.player.seek_simple(Gst.Format.TIME, Gst.SeekFlags.FLUSH, 0)
             self.player.set_state(Gst.State.PAUSED)
             if self.progress_timer_id:
@@ -534,6 +615,7 @@ class CameraVideo(MediaCaptureWindow):
     def _on_closed(self, _dialog):
         """Tear down capture state when the sheet closes."""
         self._closed = True
+        self._light_off()
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
         self._stop_playback()
