@@ -316,7 +316,7 @@ class ContactsView(Adw.Bin):
 
     def _open_qr_scan(self):
         """Open the camera sheet that scans a contact QR code."""
-        present_sheet_page(self.app_window, QrScanDialog(self._on_qr_contact))
+        present_sheet_page(self.app_window, QrScanDialog(self.app_window, self._on_qr_contact))
 
     def _on_qr_contact(self, vcard_text):
         """Open the editor prefilled with a scanned vCard; the user saves it."""

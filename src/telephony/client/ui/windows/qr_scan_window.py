@@ -25,14 +25,15 @@ from gi.repository import Gtk, Adw, Gst, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.vcard_utils import unfold_vcard
-from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, CAPTURE_SHEET_HEIGHT)
+from telephony.shared.constants import VIEWFINDER_START_DELAY_MS
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 
+PREVIEW_WIDTH = 540
 SCAN_PIPELINE = (
     "droidcamsrc camera_device=0 mode=2 ! videoconvert ! "
     "videoflip video-direction=auto ! tee name=split "
-    "split. ! queue ! gtk4paintablesink name=sink "
-    "split. ! queue leaky=downstream max-size-buffers=1 ! videoconvert ! zbar ! fakesink sync=false"
+    f"split. ! queue leaky=downstream max-size-buffers=2 ! videoscale ! video/x-raw,width={PREVIEW_WIDTH},pixel-aspect-ratio=1/1 ! gtk4paintablesink name=sink "
+    f"split. ! queue leaky=downstream max-size-buffers=1 ! videoscale ! video/x-raw,width={PREVIEW_WIDTH} ! videoconvert ! zbar ! fakesink sync=false"
 )
 BAD_CODE_TOAST_INTERVAL_SECONDS = 3
 
@@ -45,9 +46,10 @@ class QrScanDialog(MediaCaptureWindow):
     handed to on_contact; anything else toasts and scanning continues.
     """
 
-    def __init__(self, on_contact):
+    def __init__(self, parent_window, on_contact):
         """Build the viewfinder sheet; the pipeline starts shortly after."""
         super().__init__(title=_("Scan contact"))
+        self.request_capture_height(parent_window)
         self.on_contact = on_contact
         self.pipeline = None
         self.bus = None
@@ -55,8 +57,6 @@ class QrScanDialog(MediaCaptureWindow):
         self.picture = None
         self._found = False
         self._last_bad_toast = 0.0
-
-        self.set_size_request(-1, CAPTURE_SHEET_HEIGHT)
 
         self.toast_overlay = Adw.ToastOverlay()
         self.set_child(self.toast_overlay)
@@ -74,7 +74,7 @@ class QrScanDialog(MediaCaptureWindow):
         header.pack_start(btn_cancel)
 
         card_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        card_box.add_css_class("card")
+        card_box.add_css_class("preview-round")
         card_box.set_hexpand(True)
         card_box.set_vexpand(True)
         card_box.set_margin_top(10)
@@ -84,11 +84,13 @@ class QrScanDialog(MediaCaptureWindow):
         card_box.set_overflow(Gtk.Overflow.HIDDEN)
 
         self.picture = Gtk.Picture()
+        self.picture.add_css_class("preview-round")
+        self.picture.set_overflow(Gtk.Overflow.HIDDEN)
         self.picture.set_can_shrink(True)
         self.picture.set_hexpand(True)
         self.picture.set_vexpand(True)
         self.picture.set_content_fit(Gtk.ContentFit.CONTAIN)
-        card_box.append(self.picture)
+        card_box.append(self.letterbox(self.picture))
         content.append(card_box)
 
         hint = Gtk.Label(label=_("Point the camera at a contact QR code"),
@@ -107,6 +109,7 @@ class QrScanDialog(MediaCaptureWindow):
             sink = self.pipeline.get_by_name("sink")
             if sink:
                 self.picture.set_paintable(sink.get_property("paintable"))
+                self.reveal_on_first_frame(self.picture)
             self.bus, self.bus_handler_id = self._watch_bus(self.pipeline, self._on_message)
             self.pipeline.set_state(Gst.State.PLAYING)
         except Exception as e:
