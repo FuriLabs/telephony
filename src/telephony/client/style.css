@@ -66,6 +66,11 @@ entry.dial-number-entry text {
     background: transparent;
 }
 
+/* Partial contact matches use native rows, with favorites highlighted first. */
+.dial-contact-list { margin: 6px 0; }
+.dial-contact-list row > box.header { min-height: 46px; }
+.dial-contact-list row.favorite { background-color: alpha(@accent_bg_color, 0.1); }
+
 /* General utility classes for layouts: Compact buttons, dimming secondary text, tiny fonts for timestamps, blue accents, and pill-shaped borders. */
 .compact-btn { padding-top: 0px; padding-bottom: 0px; min-height: 20px; }
 .dim-label { opacity: 0.7; font-size: 0.9em; }
