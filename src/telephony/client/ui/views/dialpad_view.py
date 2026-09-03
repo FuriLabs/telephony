@@ -68,13 +68,18 @@ class DialpadView(Adw.Bin):
         super().__init__()
         self.app_window = app_window
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        box.set_valign(Gtk.Align.CENTER)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        box.set_valign(Gtk.Align.FILL)
         box.set_halign(Gtk.Align.FILL)
-        box.set_margin_top(10)
-        box.set_margin_bottom(10)
+        box.set_margin_bottom(4)
         box.set_margin_start(DIALPAD_SIDE_MARGIN)
         box.set_margin_end(DIALPAD_SIDE_MARGIN)
+
+        number_section = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=4,
+        )
+        number_section.set_valign(Gtk.Align.START)
 
         self.entry = Gtk.Entry()
         self.entry.set_placeholder_text(_("Enter number"))
@@ -88,11 +93,16 @@ class DialpadView(Adw.Bin):
         self.info_label.add_css_class("caption")
         self.info_label.add_css_class("dim-label")
         self.info_label.set_ellipsize(Pango.EllipsizeMode.END)
-        box.append(self.info_label)
 
         self.entry.connect("notify::text", lambda obj, pspec: self._update_info_label(obj, pspec))
 
-        box.append(self.entry)
+        number_section.append(self.entry)
+        number_section.append(self.info_label)
+        box.append(number_section)
+
+        spacer = Gtk.Box()
+        spacer.set_vexpand(True)
+        box.append(spacer)
 
         grid = Gtk.Grid(row_spacing=DIALPAD_ROW_SPACING,
                         column_spacing=DIALPAD_COLUMN_SPACING)
@@ -101,6 +111,7 @@ class DialpadView(Adw.Bin):
 
         keys = DialpadKeys(grid)
         keys.set_hexpand(True)
+        keys.set_valign(Gtk.Align.END)
         box.append(keys)
 
         for i, digit in enumerate(BUTTONS_LAYOUT):
@@ -187,6 +198,7 @@ class DialpadView(Adw.Bin):
         grid.attach(norm_btn, 2, 5, 1, 1)
 
         clamp = Adw.Clamp(maximum_size=DIALPAD_MAX_WIDTH)
+        clamp.set_vexpand(True)
         clamp.set_child(box)
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_child(clamp)
