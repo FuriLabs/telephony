@@ -1351,19 +1351,18 @@ class EdsManager(GObject.Object):
         return self.db_ref.search_contacts_db(query, limit=limit, offset=offset)
 
     def read_only_source_uids(self):
-        """Return the uids of books that refuse writes; blocking, call from a worker.
+        """Return the uids of books the app refuses to write to.
 
-        A window with a deferred backend has no registry names in
-        self.sources, so this falls back to the sources info the
-        daemon provides, which always carries the names.
+        Online books are read-only here: a network backend cannot be
+        edited reliably from the phone, least of all while it is
+        disconnected, so the app never offers them as a save target.
+        Andromeda stays read-only by name. The rich per-source info
+        carries is_local, so it decides both; self.sources holds only
+        names and cannot, so the info is the source of truth.
         """
         uids = set()
-        with self.sources_lock:
-            named = {uid: info.get('name') for uid, info in self.sources.items() if info.get('name')}
-        if named:
-            return {uid for uid, name in named.items() if name == "Andromeda Contacts"}
         for item in self.get_sources_info():
-            if item.get('name') == "Andromeda Contacts":
+            if item.get('name') == "Andromeda Contacts" or item.get('is_local') is False:
                 uids.add(item.get('uid'))
         return uids
 
