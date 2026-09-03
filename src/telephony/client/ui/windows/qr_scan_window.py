@@ -26,12 +26,13 @@ from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.vcard_utils import unfold_vcard
 from telephony.shared.constants import (VIEWFINDER_START_DELAY_MS, CAPTURE_SHEET_HEIGHT)
+from telephony.client.services.camera_portal import CameraPortal, BACK_CAMERA
 from telephony.client.ui.windows.media_window_base import MediaCaptureWindow
 
-SCAN_PIPELINE = (
-    "droidcamsrc camera_device=0 mode=2 ! videoconvert ! "
+SCAN_PIPELINE_TEMPLATE = (
+    "pipewiresrc fd={fd} target-object={serial} ! videoconvert ! "
     "videoflip video-direction=auto ! tee name=split "
-    "split. ! queue ! gtk4paintablesink name=sink "
+    "split. ! queue leaky=downstream max-size-buffers=2 ! videorate drop-only=true ! video/x-raw,framerate=30/1 ! gtk4paintablesink name=sink "
     "split. ! queue leaky=downstream max-size-buffers=1 ! videoconvert ! zbar ! fakesink sync=false"
 )
 BAD_CODE_TOAST_INTERVAL_SECONDS = 3
@@ -49,6 +50,7 @@ class QrScanDialog(MediaCaptureWindow):
         """Build the viewfinder sheet; the pipeline starts shortly after."""
         super().__init__(title=_("Scan contact"))
         self.on_contact = on_contact
+        self.portal = CameraPortal()
         self.pipeline = None
         self.bus = None
         self.bus_handler_id = None
@@ -101,9 +103,23 @@ class QrScanDialog(MediaCaptureWindow):
         self._schedule_timeout(VIEWFINDER_START_DELAY_MS, self._start_viewfinder)
 
     def _start_viewfinder(self):
-        """Start the camera pipeline with the zbar decoder branch."""
+        """Ask the camera portal for the back camera, then scan."""
+        self.portal.open(self._on_portal_ready)
+        return False
+
+    def _on_portal_ready(self, devices):
+        """Start the zbar pipeline on the portal's remote."""
+        if self._closed:
+            return
+        device = self.portal.device_for(BACK_CAMERA)
+        fd = self.portal.pipeline_fd()
+        if not devices or device is None or fd < 0:
+            self.toast_overlay.add_toast(
+                Adw.Toast.new(_("Error: {e}").format(e="camera unavailable")))
+            return
         try:
-            self.pipeline = Gst.parse_launch(SCAN_PIPELINE)
+            self.pipeline = Gst.parse_launch(
+                SCAN_PIPELINE_TEMPLATE.format(fd=fd, serial=device.serial))
             sink = self.pipeline.get_by_name("sink")
             if sink:
                 self.picture.set_paintable(sink.get_property("paintable"))
@@ -112,7 +128,6 @@ class QrScanDialog(MediaCaptureWindow):
         except Exception as e:
             logger.error(f"[QrScan] Failed to start viewfinder: {e}")
             self.toast_overlay.add_toast(Adw.Toast.new(_("Error: {e}").format(e=e)))
-        return False
 
     def _on_message(self, _bus, message):
         """Watch the bus for zbar detections and pipeline errors."""
@@ -164,5 +179,7 @@ class QrScanDialog(MediaCaptureWindow):
 
     def _on_closed(self, _dialog):
         """Tear the pipeline down whichever way the sheet goes away."""
+        self._closed = True
         self._cancel_tracked_timeouts()
         self._stop_pipeline()
+        self.portal.close()
