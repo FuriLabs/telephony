@@ -82,9 +82,10 @@ class DialpadView(Adw.Bin):
         number_section.set_valign(Gtk.Align.START)
 
         self.entry = Gtk.Entry()
-        self.entry.set_placeholder_text(_("Enter number"))
+        self.entry.set_placeholder_text(_("Enter Number"))
         self.entry.set_alignment(0.5)
         self.entry.add_css_class("title-1")
+        self.entry.add_css_class("dial-number-entry")
         self.entry.set_can_focus(True)
         self.entry.set_editable(True)
         self.entry.set_property("im-module", "none")
