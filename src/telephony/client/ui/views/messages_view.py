@@ -19,6 +19,7 @@ from gi.repository import Gtk, Adw, Gio, GLib, Pango
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
+from telephony.shared.constants import SCROLL_SETTLE_MS
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.utils.contact_display_utils import resolve_contact_name
 from telephony.client.utils.locale_utils import get_date_format
@@ -56,6 +57,7 @@ class MessagesView(Adw.Bin):
         self.page_offset = 0
         self.is_fetching = False
         self.last_fetch_has_more = False
+        self.scroll_settle_id = None
 
         self.selected_recipients = set()
         self._is_programmatic_update = False
@@ -84,7 +86,7 @@ class MessagesView(Adw.Bin):
     def cleanup(self):
         """Cleanup resources before destruction."""
         self.load_token += 1
-        for timer_attr in ("search_timer", "_refresh_timer"):
+        for timer_attr in ("search_timer", "_refresh_timer", "_scroll_settle_id"):
             timer_id = getattr(self, timer_attr)
             if timer_id:
                 GLib.source_remove(timer_id)
@@ -258,12 +260,25 @@ class MessagesView(Adw.Bin):
         return number
 
     def on_scroll_changed(self, adj):
-        """Handle scroll position change."""
+        """Fetch the next page only once fast scrolling settles.
+
+        Fetching mid-fling splices the model while the list is moving,
+        which makes it re-measure row heights and jump under the finger.
+        """
         if self.is_fetching or not self.last_fetch_has_more:
             return
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
-        if is_at_bottom:
-            self.start_fetch()
+        if not is_at_bottom:
+            return
+        if self.scroll_settle_id is not None:
+            GLib.source_remove(self.scroll_settle_id)
+        self.scroll_settle_id = GLib.timeout_add(SCROLL_SETTLE_MS, self.fetch_after_settle)
+
+    def fetch_after_settle(self):
+        """Fetch the page once the fling has come to rest."""
+        self.scroll_settle_id = None
+        self.start_fetch()
+        return False
 
     def on_messages_updated(self, _db, chat_id, change):
         """React to message database changes, updating single rows when possible."""
