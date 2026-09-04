@@ -216,9 +216,13 @@ class DaemonClient:
                           GLib.VariantType("(uu)"))
         return tuple(reply) if reply else (0, 0)
 
-    def remove_blocked_number(self, bid):
-        """Unblock a blocklist entry without waiting for the reply."""
-        self.call_async("RemoveBlockedNumber", GLib.Variant("(s)", (str(bid),)))
+    def remove_blocked_number(self, bid, callback=None):
+        """Unblock a blocklist entry; the callback hears the reply land."""
+        if callback is None:
+            self.call_async("RemoveBlockedNumber", GLib.Variant("(s)", (str(bid),)))
+            return
+        self.call_with_reply("RemoveBlockedNumber", GLib.Variant("(s)", (str(bid),)),
+                             lambda _reply: callback())
 
     def delete_call_entry(self, call_id):
         """Delete one call history row without waiting for the reply."""
