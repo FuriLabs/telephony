@@ -43,6 +43,34 @@ transition: all 0.1s ease-in-out;
 .dialpad-delete { background-color: alpha(#c01c28, 0.75); color: #ffffff; }
 .dialpad-delete:active { background-color: alpha(#c01c28, 0.9); transform: scale(0.95); }
 
+/* Dialed number display: remains a real editable entry for keyboard input,
+   selection and paste, but reads visually as the dialer's number display. */
+entry.dial-number-entry,
+entry.dial-number-entry:hover,
+entry.dial-number-entry:focus,
+entry.dial-number-entry:focus-within {
+    background: transparent;
+    background-image: none;
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: inset 0 -1px transparent;
+    outline: none;
+    padding: 6px 0;
+    min-height: 48px;
+}
+entry.dial-number-entry:focus,
+entry.dial-number-entry:focus-within {
+    box-shadow: inset 0 -1px alpha(@accent_color, 0.65);
+}
+entry.dial-number-entry text {
+    background: transparent;
+}
+
+/* Partial contact matches use native rows, with favorites highlighted first. */
+.dial-contact-list { margin: 6px 0; }
+.dial-contact-list row > box.header { min-height: 46px; }
+.dial-contact-list row.favorite { background-color: alpha(@accent_bg_color, 0.1); }
+
 /* General utility classes for layouts: Compact buttons, dimming secondary text, tiny fonts for timestamps, blue accents, and pill-shaped borders. */
 .compact-btn { padding-top: 0px; padding-bottom: 0px; min-height: 20px; }
 .dim-label { opacity: 0.7; font-size: 0.9em; }

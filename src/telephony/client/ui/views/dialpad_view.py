@@ -13,10 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Adw, Gdk, GLib, Pango
+from gi.repository import Gtk, Adw, Gdk, GLib
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
+from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number
 
 BUTTONS_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
@@ -24,6 +25,10 @@ BUTTONS_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
 DIALPAD_COLUMNS = 3
 DIALPAD_ROWS = 6
 DIALPAD_MAX_WIDTH = 560
+DIAL_MATCH_LIMIT = 5
+DIAL_MATCH_QUERY_LIMIT = 20
+DIAL_MATCH_MIN_CHARS = 3
+DIAL_MATCH_DEBOUNCE_MS = 200
 DIALPAD_SIDE_MARGIN = 12
 DIALPAD_COLUMN_SPACING = 12
 DIALPAD_ROW_SPACING = 10
@@ -64,35 +69,56 @@ class DialpadView(Adw.Bin):
 
     def __init__(self, app_window):
         self._lookup_timer = None
+        self._lookup_generation = 0
         """Initialize the DialpadView."""
         super().__init__()
         self.app_window = app_window
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        box.set_valign(Gtk.Align.CENTER)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        box.set_valign(Gtk.Align.FILL)
         box.set_halign(Gtk.Align.FILL)
-        box.set_margin_top(10)
-        box.set_margin_bottom(10)
+        box.set_margin_bottom(4)
         box.set_margin_start(DIALPAD_SIDE_MARGIN)
         box.set_margin_end(DIALPAD_SIDE_MARGIN)
 
+        number_section = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=4,
+        )
+        number_section.set_valign(Gtk.Align.START)
+
         self.entry = Gtk.Entry()
-        self.entry.set_placeholder_text(_("Enter number"))
+        self.entry.set_placeholder_text(_("Enter Number"))
         self.entry.set_alignment(0.5)
         self.entry.add_css_class("title-1")
+        self.entry.add_css_class("dial-number-entry")
         self.entry.set_can_focus(True)
         self.entry.set_editable(True)
         self.entry.set_property("im-module", "none")
 
-        self.info_label = Gtk.Label(label="")
-        self.info_label.add_css_class("caption")
-        self.info_label.add_css_class("dim-label")
-        self.info_label.set_ellipsize(Pango.EllipsizeMode.END)
-        box.append(self.info_label)
+        self.match_list = Gtk.ListBox()
+        self.match_list.add_css_class("boxed-list")
+        self.match_list.add_css_class("dial-contact-list")
+        self.match_list.set_selection_mode(Gtk.SelectionMode.NONE)
+        self.match_list.set_valign(Gtk.Align.CENTER)
+        self.match_list.set_visible(False)
 
-        self.entry.connect("notify::text", lambda obj, pspec: self._update_info_label(obj, pspec))
+        match_clamp = Adw.Clamp(maximum_size=DIALPAD_MAX_WIDTH)
+        match_clamp.set_hexpand(True)
+        match_clamp.set_vexpand(True)
+        match_clamp.set_child(self.match_list)
 
-        box.append(self.entry)
+        match_scroller = Gtk.ScrolledWindow()
+        match_scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        match_scroller.set_vexpand(True)
+        match_scroller.set_child(match_clamp)
+
+        self.entry.connect("notify::text", self._schedule_contact_lookup)
+
+        number_section.append(self.entry)
+        box.append(number_section)
+
+        box.append(match_scroller)
 
         grid = Gtk.Grid(row_spacing=DIALPAD_ROW_SPACING,
                         column_spacing=DIALPAD_COLUMN_SPACING)
@@ -101,6 +127,7 @@ class DialpadView(Adw.Bin):
 
         keys = DialpadKeys(grid)
         keys.set_hexpand(True)
+        keys.set_valign(Gtk.Align.END)
         box.append(keys)
 
         for i, digit in enumerate(BUTTONS_LAYOUT):
@@ -187,17 +214,21 @@ class DialpadView(Adw.Bin):
         grid.attach(norm_btn, 2, 5, 1, 1)
 
         clamp = Adw.Clamp(maximum_size=DIALPAD_MAX_WIDTH)
+        clamp.set_vexpand(True)
         clamp.set_child(box)
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_child(clamp)
         scrolled.set_vexpand(True)
         self.set_child(scrolled)
 
-    def _update_info_label(self, entry, param):
-        """Update the info label based on input."""
+    def _schedule_contact_lookup(self, _entry, _param):
+        """Debounce contact matching after the dialed number changes."""
         if (self._lookup_timer is not None) and self._lookup_timer:
             GLib.source_remove(self._lookup_timer)
-        self._lookup_timer = GLib.timeout_add(200, self._perform_lookup)
+        self._lookup_generation += 1
+        generation = self._lookup_generation
+        self._lookup_timer = GLib.timeout_add(
+            DIAL_MATCH_DEBOUNCE_MS, self._start_contact_lookup, generation)
 
     def set_calling_enabled(self, enabled):
         """Enable or disable the two call buttons."""
@@ -206,6 +237,7 @@ class DialpadView(Adw.Bin):
 
     def cleanup(self):
         """Cancel the pending contact lookup timer."""
+        self._lookup_generation += 1
         if self._lookup_timer:
             GLib.source_remove(self._lookup_timer)
             self._lookup_timer = None
@@ -219,31 +251,222 @@ class DialpadView(Adw.Bin):
                 return entry
         return None
 
-    def _perform_lookup(self):
-        """Perform contact lookup."""
+    def _clear_match_rows(self):
+        """Remove every row currently displayed in the match list."""
+        row = self.match_list.get_first_child()
+        while row is not None:
+            next_row = row.get_next_sibling()
+            self.match_list.remove(row)
+            row = next_row
+
+    def _show_contact_matches(self, matches, show_empty=False):
+        """Render the bounded contact result set as native list rows."""
+        self._clear_match_rows()
+
+        if not matches and show_empty:
+            row = Adw.ActionRow()
+            row.set_use_markup(False)
+            row.set_title(_("No matching contacts"))
+            row.set_activatable(False)
+            row.add_css_class("dim-label")
+            row.add_prefix(Gtk.Image.new_from_icon_name("user-not-tracked-symbolic"))
+            self.match_list.append(row)
+
+        for match in matches:
+            details = [match["number"]]
+            if match["speed_slot"] is not None:
+                details.append(
+                    _("Speed dial {slot}").format(slot=match["speed_slot"]))
+
+            row = Adw.ActionRow()
+            row.set_use_markup(False)
+            row.set_title_lines(1)
+            row.set_title(match["name"])
+            row.set_subtitle(" · ".join(
+                part for part in details if part))
+            row.set_activatable(True)
+            row.set_tooltip_text(match["name"])
+            row.match_number = match["number"]
+            row.connect("activated", self._on_match_activated)
+
+            if match["favorite"]:
+                star = Gtk.Image.new_from_icon_name("starred-symbolic")
+                star.add_css_class("accent")
+                row.add_suffix(star)
+                row.add_css_class("favorite")
+
+            self.match_list.append(row)
+
+        self.match_list.set_visible(bool(matches) or show_empty)
+
+    def _on_match_activated(self, row):
+        """Fill the dial entry with the selected contact's full number."""
+        number = row.match_number
+        if not number:
+            return
+        self.entry.set_text(number)
+        self.entry.set_position(-1)
+        self.entry.grab_focus()
+
+    @staticmethod
+    def _phone_values(phones):
+        """Return plain phone numbers from the contact tuple representation."""
+        values = []
+        for phone in phones:
+            if isinstance(phone, (list, tuple)):
+                number = phone[0] if phone else ""
+            elif isinstance(phone, dict):
+                number = phone.get("number", "")
+            else:
+                number = phone
+            if number:
+                values.append(str(number))
+        return values
+
+    @staticmethod
+    def _compact_number(number):
+        """Strip visual phone punctuation for partial-number comparisons."""
+        return "".join(c for c in str(number).casefold()
+                       if c.isalnum() or c in "+*#")
+
+    @classmethod
+    def _favorite_matches_query(cls, favorite, query, query_norm):
+        """Return whether a saved favorite partially matches the query."""
+        name = str(favorite.get("name", "")).casefold()
+        number = favorite.get("number", "")
+        query_text = query.casefold()
+        query_compact = cls._compact_number(query)
+        number_compact = cls._compact_number(number)
+        number_norm = normalize_number(number)
+        return bool(
+            (query_text and query_text in name) or
+            (query_compact and query_compact in number_compact) or
+            (query_norm and query_norm in number_norm)
+        )
+
+    def _find_contact_matches(self, query, favorites):
+        """Search, deduplicate and rank partial contacts off the GTK thread."""
+        favorite_numbers = {}
+        for favorite in favorites:
+            number = favorite.get("number", "")
+            norm = normalize_number(number)
+            if not norm:
+                continue
+            current = favorite_numbers.get(norm)
+            if current is None or self._slot_rank(favorite) < self._slot_rank(current):
+                favorite_numbers[norm] = favorite
+
+        query_compact = self._compact_number(query)
+        query_norm = normalize_number(query)
+        rows = self.app_window.eds.search_contacts(
+            query, limit=DIAL_MATCH_QUERY_LIMIT)
+
+        matches = []
+        seen_numbers = set()
+        for favorite in favorites:
+            number = str(favorite.get("number", ""))
+            norm = normalize_number(number)
+            dedupe_key = norm or self._compact_number(number)
+            if (not dedupe_key or dedupe_key in seen_numbers or
+                    not self._favorite_matches_query(
+                        favorite, query, query_norm)):
+                continue
+            seen_numbers.add(dedupe_key)
+            matches.append({
+                "name": favorite.get("name") or number or _("Unknown"),
+                "number": number,
+                "favorite": True,
+                "speed_slot": favorite.get("slot"),
+            })
+
+        for contact in rows:
+            numbers = self._phone_values(contact[3] if len(contact) > 3 else [])
+            if not numbers:
+                continue
+
+            def phone_rank(number):
+                norm = normalize_number(number)
+                compact = self._compact_number(number)
+                partial = ((query_compact and query_compact in compact) or
+                           (query_norm and query_norm in norm))
+                return (not partial, norm not in favorite_numbers)
+
+            number = min(numbers, key=phone_rank)
+            norm = normalize_number(number)
+            dedupe_key = norm or self._compact_number(number)
+            if not dedupe_key or dedupe_key in seen_numbers:
+                continue
+            seen_numbers.add(dedupe_key)
+
+            first = contact[1] if len(contact) > 1 else ""
+            last = contact[2] if len(contact) > 2 else ""
+            name = " ".join(part for part in (first, last) if part).strip()
+            speed_favorite = favorite_numbers.get(norm)
+            contact_favorite = bool(contact[5]) if len(contact) > 5 else False
+            speed_slot = speed_favorite.get("slot") if speed_favorite else None
+            matches.append({
+                "name": name or _("Unknown"),
+                "number": number,
+                "favorite": bool(speed_favorite or contact_favorite),
+                "speed_slot": speed_slot,
+            })
+
+        matches.sort(key=lambda match: (
+            not match["favorite"],
+            self._slot_rank(match),
+            match["name"].casefold(),
+            match["number"],
+        ))
+        return matches[:DIAL_MATCH_LIMIT]
+
+    @staticmethod
+    def _slot_rank(entry):
+        """Sort speed-dial slots numerically, after entries with real slots."""
+        slot = entry.get("speed_slot", entry.get("slot"))
+        try:
+            return int(slot)
+        except (TypeError, ValueError):
+            return 999
+
+    def _apply_contact_matches(self, generation, query, matches):
+        """Ignore stale background results and show the current query's rows."""
+        if (generation != self._lookup_generation or
+                query != self.entry.get_text().strip()):
+            return
+        self._show_contact_matches(matches, show_empty=True)
+
+    def _start_contact_lookup(self, generation):
+        """Resolve a speed-dial digit or start a partial contact search."""
         self._lookup_timer = None
-        text = self.entry.get_text().strip()
+        query = self.entry.get_text().strip()
 
-        favorite = self._favorite_for(text)
+        if generation != self._lookup_generation:
+            return False
+
+        favorite = self._favorite_for(query)
         if favorite:
-            self.info_label.set_text(_("{name} · Speed dial {slot}").format(
-                name=favorite.get("name") or favorite.get("number", ""),
-                slot=favorite.get("slot")))
-            self.info_label.remove_css_class("dim-label")
+            self._show_contact_matches([{
+                "name": favorite.get("name") or favorite.get("number", ""),
+                "number": favorite.get("number", ""),
+                "favorite": True,
+                "speed_slot": favorite.get("slot"),
+            }])
             return False
 
-        if len(text) < 3:
-            self.info_label.set_text("")
-            self.info_label.add_css_class("dim-label")
+        if len(query) < DIAL_MATCH_MIN_CHARS:
+            self._show_contact_matches([])
             return False
 
-        name = self.app_window.eds.get_contact_name(text)
-        if name:
-            self.info_label.set_text(name)
-            self.info_label.remove_css_class("dim-label")
-        else:
-            self.info_label.set_text(_("Unknown"))
-            self.info_label.add_css_class("dim-label")
+        favorites = list(self.app_window.gsettings_mgr.get_favorites())
+        run_in_background(
+            self._find_contact_matches,
+            query,
+            favorites,
+            on_complete=lambda matches: self._apply_contact_matches(
+                generation, query, matches),
+            on_error=lambda error: logger.warning(
+                f"[Dialpad] Contact lookup failed: {error}"),
+        )
         return False
 
     def _is_ussd(self, number):
