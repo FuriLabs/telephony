@@ -54,9 +54,9 @@ class CallFeedback:
         self.is_near = False
         self.proximity_claimed = False
         self.sensor_proxy = None
-        self._init_sensor_proxy()
+        self.init_sensor_proxy()
 
-    def _init_sensor_proxy(self):
+    def init_sensor_proxy(self):
         """Initialize the DBus proxy for the sensor daemon."""
         try:
             self.sensor_proxy = Gio.DBusProxy.new_for_bus_sync(
@@ -64,7 +64,7 @@ class CallFeedback:
                 "net.hadess.SensorProxy", "/net/hadess/SensorProxy",
                 "net.hadess.SensorProxy", None
             )
-            self.sensor_proxy.connect("g-properties-changed", self._on_sensor_changed)
+            self.sensor_proxy.connect("g-properties-changed", self.on_sensor_changed)
 
             res = self.sensor_proxy.get_connection().call_sync(
                 self.sensor_proxy.get_name(),
@@ -86,7 +86,7 @@ class CallFeedback:
         except Exception as e:
             logger.error(f"[Hardware] SensorProxy Error: {e}")
 
-    def _on_sensor_changed(self, proxy, changed, _invalidated):
+    def on_sensor_changed(self, proxy, changed, _invalidated):
         """Handle sensor property changes."""
         try:
             unpacked = changed.unpack()
@@ -99,11 +99,11 @@ class CallFeedback:
     def update_hardware_state(self, is_earpiece_active):
         """Claim the proximity sensor while the earpiece is at the ear."""
         if is_earpiece_active and not self.proximity_claimed:
-            self._set_claim(True)
+            self.set_claim(True)
         elif not is_earpiece_active and self.proximity_claimed:
-            self._set_claim(False)
+            self.set_claim(False)
 
-    def _set_claim(self, claim):
+    def set_claim(self, claim):
         """Claim or release the proximity sensor."""
         if not self.sensor_proxy:
             return
@@ -132,7 +132,7 @@ class CallFeedback:
         call, while the sensor cleanup is owed either way.
         """
         if self.proximity_claimed:
-            self._set_claim(False)
+            self.set_claim(False)
 
         if feedback and self.lfb_available:
             try:
@@ -150,7 +150,7 @@ class CallFeedback:
             self.last_knock_time = now
             try:
                 if self.knock_pipeline:
-                    self._teardown_knock_pipeline()
+                    self.teardown_knock_pipeline()
 
                 Gst = get_gst()
                 self.knock_pipeline = Gst.ElementFactory.make("playbin", "knock_player")
@@ -160,8 +160,8 @@ class CallFeedback:
                 self.knock_bus = self.knock_pipeline.get_bus()
                 self.knock_bus.add_signal_watch()
                 self.knock_bus_handlers = [
-                    self.knock_bus.connect("message::eos", self._on_knock_eos),
-                    self.knock_bus.connect("message::error", self._on_knock_error),
+                    self.knock_bus.connect("message::eos", self.on_knock_eos),
+                    self.knock_bus.connect("message::error", self.on_knock_error),
                 ]
 
             except Exception as e:
@@ -169,7 +169,7 @@ class CallFeedback:
         except Exception as e:
             logger.error(f"[Feedback] Play knock error: {e}")
 
-    def _teardown_knock_pipeline(self):
+    def teardown_knock_pipeline(self):
         """Release the knock pipeline and its bus watch."""
         if self.knock_bus:
             for handler_id in self.knock_bus_handlers:
@@ -188,18 +188,18 @@ class CallFeedback:
             self.knock_pipeline.set_state(get_gst().State.NULL)
             self.knock_pipeline = None
 
-    def _on_knock_eos(self, bus, msg):
+    def on_knock_eos(self, bus, msg):
         """Handle End-Of-Stream for knock player."""
         try:
-            self._teardown_knock_pipeline()
+            self.teardown_knock_pipeline()
         except Exception as e:
             logger.error(f"[Feedback] Knock EOS error: {e}")
 
-    def _on_knock_error(self, bus, msg):
+    def on_knock_error(self, bus, msg):
         """Handle error for knock player."""
         try:
             err, debug = msg.parse_error()
             logger.error(f"[Feedback] Knock pipeline error: {err} - {debug}")
-            self._teardown_knock_pipeline()
+            self.teardown_knock_pipeline()
         except Exception as e:
             logger.error(f"[Feedback] Knock error handler failed: {e}")

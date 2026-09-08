@@ -36,14 +36,14 @@ class EmergencyService(GObject.Object):
 
         self.sys_state = SystemStateService()
         self.is_locked = self.sys_state.is_locked
-        self.sys_state.connect("lock-state-changed", self._on_lock_changed)
+        self.sys_state.connect("lock-state-changed", self.on_lock_changed)
 
         self.feature_enabled = True
         self.settings = None
 
-        self._init_settings_monitor()
+        self.init_settings_monitor()
 
-    def _init_settings_monitor(self):
+    def init_settings_monitor(self):
         """Initialize GSettings monitor."""
         source = Gio.SettingsSchemaSource.get_default()
         if not source:
@@ -56,7 +56,7 @@ class EmergencyService(GObject.Object):
                 return
 
             self.settings = Gio.Settings.new("sm.puri.phosh.emergency-calls")
-            self.settings.connect("changed::enabled", self._on_settings_changed)
+            self.settings.connect("changed::enabled", self.on_settings_changed)
         except Exception as e:
             logger.warning(f"[EmergencyService] Failed to init settings monitor: {e}")
 
@@ -69,13 +69,13 @@ class EmergencyService(GObject.Object):
                 logger.warning(f"[EmergencyService] Failed to get feature enabled: {e}")
         return True
 
-    def _on_settings_changed(self, settings, key):
+    def on_settings_changed(self, settings, key):
         """Handle settings change."""
         try:
             self.emit('feature-enabled-changed', settings.get_boolean("enabled"))
         except Exception as e:
             logger.warning(f"[EmergencyService] Settings changed error: {e}")
 
-    def _on_lock_changed(self, monitor, is_locked):
+    def on_lock_changed(self, monitor, is_locked):
         self.is_locked = is_locked
         GLib.idle_add(self.emit, 'lock-state-changed', self.is_locked)

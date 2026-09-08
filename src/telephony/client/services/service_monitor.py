@@ -52,20 +52,20 @@ class ServiceMonitor(GObject.Object):
             return
 
         self.bus.call(SYSTEMD_BUS, SYSTEMD_PATH, SYSTEMD_MANAGER_IFACE, "Subscribe",
-                      None, None, Gio.DBusCallFlags.NONE, -1, None, self._on_subscribed)
+                      None, None, Gio.DBusCallFlags.NONE, -1, None, self.on_subscribed)
         self.bus.signal_subscribe(
             SYSTEMD_BUS, PROPERTIES_IFACE, "PropertiesChanged", UNIT_PATH,
-            None, Gio.DBusSignalFlags.NONE, self._on_unit_properties, None)
-        self._read_state()
+            None, Gio.DBusSignalFlags.NONE, self.on_unit_properties, None)
+        self.read_state()
 
-    def _on_subscribed(self, bus, result):
+    def on_subscribed(self, bus, result):
         """Log when systemd refuses the change subscription."""
         try:
             bus.call_finish(result)
         except Exception as e:
             logger.warning(f"[ServiceMonitor] systemd subscribe failed: {e}")
 
-    def _read_state(self):
+    def read_state(self):
         """Seed the unit state; the signal covers everything after."""
         def fetch():
             res = self.bus.call_sync(
@@ -76,17 +76,17 @@ class ServiceMonitor(GObject.Object):
 
         def apply(props):
             if props:
-                self._apply_props(props)
+                self.apply_props(props)
 
         run_in_background(fetch, on_complete=apply,
                           on_error=lambda e: logger.debug(f"[ServiceMonitor] Unit read failed: {e}"))
 
-    def _on_unit_properties(self, *args):
+    def on_unit_properties(self, *args):
         iface, changed, _invalidated = args[5].unpack()
         if iface == SYSTEMD_UNIT_IFACE and changed:
-            self._apply_props(changed)
+            self.apply_props(changed)
 
-    def _apply_props(self, props):
+    def apply_props(self, props):
         """Fold systemd's two state fields into one answer for the UI."""
         self._active_state = props.get("ActiveState", self._active_state)
         self._sub_state = props.get("SubState", self._sub_state)

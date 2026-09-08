@@ -25,7 +25,7 @@ from datetime import datetime
 from telephony.shared.utils.log_utils import logger
 
 from telephony.shared.utils.datetime_utils import format_timestamp
-from telephony.daemon.utils.importer_core_utils import (_get_chatty_db_path, _get_value, _get_chatty_mms_path, _get_calls_db_path, _parse_generic_timestamp)
+from telephony.daemon.utils.importer_core_utils import (get_chatty_db_path, get_value, get_chatty_mms_path, get_calls_db_path, parse_generic_timestamp)
 from telephony.shared.utils.phone_utils import normalize_number
 
 CHATTY_MM_SELF_USER = "invalid-0000000000000000"
@@ -35,7 +35,7 @@ CHATTY_STATUS_DRAFT = 1
 CHATTY_THREAD_GROUP = 1
 
 
-def _copy_attachments(db_manager, source_paths, prefix):
+def copy_attachments(db_manager, source_paths, prefix):
     """Copy attachment files into our own data dir so they survive Chatty removal."""
     copied = []
     att_dir = os.path.join(db_manager.get_data_dir(), "attachments")
@@ -54,7 +54,7 @@ def _copy_attachments(db_manager, source_paths, prefix):
     return copied
 
 
-def _read_chatty_history(c, tables, chatty_data_dir):
+def read_chatty_history(c, tables, chatty_data_dir):
     """Read messages from a modern Chatty (>= 0.4) history database.
 
     The number never lives in the messages table: 1:1 threads carry it in
@@ -120,7 +120,7 @@ def _read_chatty_history(c, tables, chatty_data_dir):
                 'number': number,
                 'direction': dir_str,
                 'body': row['body'] or "",
-                'time_str': _parse_generic_timestamp(row['time']),
+                'time_str': parse_generic_timestamp(row['time']),
                 'attachments': attachments.get(row['id'], []),
                 'sender': sender,
                 'is_group': is_group,
@@ -131,7 +131,7 @@ def _read_chatty_history(c, tables, chatty_data_dir):
     return messages
 
 
-def _read_chatty_flat(c, tables, mms_dir):
+def read_chatty_flat(c, tables, mms_dir):
     """Fallback reader for old flat single-table message databases."""
     target_table = None
     for t in ['messages', 'chat', 'chatty_messages', 'sms']:
@@ -147,7 +147,7 @@ def _read_chatty_flat(c, tables, mms_dir):
     for row in c.fetchall():
         try:
             row_dict = dict(row)
-            phone = _get_value(row_dict, ['phone', 'number', 'address', 'target', 'remote_number', 'contact', 'who'])
+            phone = get_value(row_dict, ['phone', 'number', 'address', 'target', 'remote_number', 'contact', 'who'])
             if not phone:
                 continue
 
@@ -155,10 +155,10 @@ def _read_chatty_flat(c, tables, mms_dir):
             if not norm_number:
                 continue
 
-            uid = _get_value(row_dict, ['uid', 'id', 'message_id'])
-            text = _get_value(row_dict, ['text', 'body', 'message', 'msg', 'content'], "")
-            time_val = _get_value(row_dict, ['time', 'date', 'timestamp', 'created', 'created_at'])
-            direction = _get_value(row_dict, ['direction', 'type', 'is_from_me', 'inbound'])
+            uid = get_value(row_dict, ['uid', 'id', 'message_id'])
+            text = get_value(row_dict, ['text', 'body', 'message', 'msg', 'content'], "")
+            time_val = get_value(row_dict, ['time', 'date', 'timestamp', 'created', 'created_at'])
+            direction = get_value(row_dict, ['direction', 'type', 'is_from_me', 'inbound'])
             dir_str = "incoming" if direction in (1, "1", True, "incoming") else "outgoing"
 
             attachments = []
@@ -174,7 +174,7 @@ def _read_chatty_flat(c, tables, mms_dir):
                 'number': norm_number,
                 'direction': dir_str,
                 'body': str(text),
-                'time_str': _parse_generic_timestamp(time_val),
+                'time_str': parse_generic_timestamp(time_val),
                 'attachments': attachments,
                 'sender': "Me" if dir_str == "outgoing" else norm_number,
                 'is_group': False,
@@ -187,11 +187,11 @@ def _read_chatty_flat(c, tables, mms_dir):
 
 def import_local_chatty(db_manager, db_path=None, mms_dir=None):
     """Import messages from a Chatty database."""
-    db_path = db_path if db_path is not None else _get_chatty_db_path()
+    db_path = db_path if db_path is not None else get_chatty_db_path()
     if not os.path.exists(db_path):
         return False, _("Chatty database not found.")
 
-    mms_dir = mms_dir if mms_dir is not None else _get_chatty_mms_path()
+    mms_dir = mms_dir if mms_dir is not None else get_chatty_mms_path()
     chatty_data_dir = os.path.dirname(os.path.normpath(mms_dir))
     count = 0
 
@@ -205,9 +205,9 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
             tables = {row['name'] for row in c.fetchall()}
 
             if 'threads' in tables and 'messages' in tables:
-                messages = _read_chatty_history(c, tables, chatty_data_dir)
+                messages = read_chatty_history(c, tables, chatty_data_dir)
             else:
-                messages = _read_chatty_flat(c, tables, mms_dir)
+                messages = read_chatty_flat(c, tables, mms_dir)
 
             if messages is None:
                 conn.close()
@@ -232,7 +232,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
 
             existing_messages.add(sig)
 
-            attachments = _copy_attachments(db_manager, msg['attachments'], msg['prefix'])
+            attachments = copy_attachments(db_manager, msg['attachments'], msg['prefix'])
             if not msg['body'] and not attachments:
                 continue
 
@@ -258,7 +258,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
         return False, str(e)
 
 
-def _parse_gom_datetime(value):
+def parse_gom_datetime(value):
     """Parse a GOM-serialized datetime (ISO 8601 UTC text) to local naive datetime.
 
     gnome-calls stores start/answered/end through gom, which writes
@@ -278,7 +278,7 @@ def _parse_gom_datetime(value):
 
 def import_local_calls(db_manager, db_path=None):
     """Import call history from a Calls database."""
-    db_path = db_path if db_path is not None else _get_calls_db_path()
+    db_path = db_path if db_path is not None else get_calls_db_path()
     if not os.path.exists(db_path):
         return False, _("Calls database not found.")
 
@@ -322,14 +322,14 @@ def import_local_calls(db_manager, db_path=None):
         for row in rows:
             try:
                 row_dict = dict(row)
-                target = _get_value(row_dict, ['target', 'number', 'phone', 'address', 'remote_number'])
+                target = get_value(row_dict, ['target', 'number', 'phone', 'address', 'remote_number'])
                 if not target:
                     continue
 
                 if is_gnome_calls:
-                    start_dt = _parse_gom_datetime(row_dict.get('start'))
-                    answered_dt = _parse_gom_datetime(row_dict.get('answered'))
-                    end_dt = _parse_gom_datetime(row_dict.get('end'))
+                    start_dt = parse_gom_datetime(row_dict.get('start'))
+                    answered_dt = parse_gom_datetime(row_dict.get('answered'))
+                    end_dt = parse_gom_datetime(row_dict.get('end'))
                     inbound = row_dict.get('inbound') in (1, "1", True)
 
                     duration = 0
@@ -343,16 +343,16 @@ def import_local_calls(db_manager, db_path=None):
 
                     time_str = format_timestamp(start_dt) if start_dt else format_timestamp()
                 else:
-                    duration = _get_value(row_dict, ['duration', 'length'], 0)
-                    inbound = _get_value(row_dict, ['inbound', 'direction', 'type', 'is_incoming'])
-                    start_time = _get_value(row_dict, ['time', 'start', 'date', 'timestamp', 'created', 'started_at'])
+                    duration = get_value(row_dict, ['duration', 'length'], 0)
+                    inbound = get_value(row_dict, ['inbound', 'direction', 'type', 'is_incoming'])
+                    start_time = get_value(row_dict, ['time', 'start', 'date', 'timestamp', 'created', 'started_at'])
 
                     dir_str = "incoming" if inbound in (1, "1", True, "incoming") else "outgoing"
 
                     if dir_str == "incoming" and duration in (0, "0"):
                         dir_str = "missed"
 
-                    time_str = _parse_generic_timestamp(start_time)
+                    time_str = parse_generic_timestamp(start_time)
                 norm_number = normalize_number(str(target))
                 if not norm_number or not time_str:
                     logger.warning("[Importer] Skipping local call: missing required details")

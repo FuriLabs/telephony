@@ -52,16 +52,16 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         scroll.set_child(self.content_box)
         self.overlay.set_child(scroll)
 
-        self._build_ui()
+        self.build_ui()
 
-    def _show_toast(self, message, is_error=False):
+    def show_toast(self, message, is_error=False):
         """Display a toast message."""
         toast = Adw.Toast.new(message)
         if is_error:
             toast.set_priority(Adw.ToastPriority.HIGH)
         self.overlay.add_toast(toast)
 
-    def _build_ui(self):
+    def build_ui(self):
         """Construct the settings UI."""
         self.page = Adw.PreferencesPage()
         self.page.set_description(
@@ -74,28 +74,28 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         self.page.add(grp_actions)
         grp_actions.set_visible(self.parent_win.mode_messages)
 
-        grp_actions.add(self._nav_row(_("Find my Telephony"), _("Location by trusted SMS"),
-                                      lambda: self._open_action_window("trusted_sms_location_request")))
-        grp_actions.add(self._nav_row(_("Trusted Callback"), _("Silent callback trigger"),
-                                      lambda: self._open_action_window("trusted_sms_silent_callback")))
-        grp_actions.add(self._nav_row(_("SMS Relay"), _("Forward messages"),
-                                      lambda: self._open_action_window("trusted_sms_relay")))
-        grp_actions.add(self._nav_row(_("SMS tmate"), _("Remote shell access"),
-                                      lambda: self._open_action_window("trusted_sms_ssh_access")))
-        grp_actions.add(self._nav_row(_("Lock Device"), _("Lock by trusted SMS"),
-                                      lambda: self._open_action_window("trusted_sms_lock_device"),
+        grp_actions.add(self.nav_row(_("Find my Telephony"), _("Location by trusted SMS"),
+                                      lambda: self.open_action_window("trusted_sms_location_request")))
+        grp_actions.add(self.nav_row(_("Trusted Callback"), _("Silent callback trigger"),
+                                      lambda: self.open_action_window("trusted_sms_silent_callback")))
+        grp_actions.add(self.nav_row(_("SMS Relay"), _("Forward messages"),
+                                      lambda: self.open_action_window("trusted_sms_relay")))
+        grp_actions.add(self.nav_row(_("SMS tmate"), _("Remote shell access"),
+                                      lambda: self.open_action_window("trusted_sms_ssh_access")))
+        grp_actions.add(self.nav_row(_("Lock Device"), _("Lock by trusted SMS"),
+                                      lambda: self.open_action_window("trusted_sms_lock_device"),
                                       destructive=True))
 
         grp_calls = Adw.PreferencesGroup(title=_("Experimental Call Features"))
         self.page.add(grp_calls)
         grp_calls.set_visible(self.parent_win.mode_calls)
 
-        grp_calls.add(self._experimental_row(
+        grp_calls.add(self.experimental_row(
             _("Allow Conference Calls"), "allow_conference_calls",
-            self._show_conference_info))
-        grp_calls.add(self._experimental_row(
+            self.show_conference_info))
+        grp_calls.add(self.experimental_row(
             _("Allow Call Transfer"), "allow_call_transfer",
-            self._show_transfer_info))
+            self.show_transfer_info))
 
         grp_restart = Adw.PreferencesGroup()
         self.page.add(grp_restart)
@@ -103,18 +103,18 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         row_auto = Adw.SwitchRow(title=_("Automatic Modem Recovery"))
         row_auto.set_active(self.parent_win.main_window.gsettings_mgr.get_setting("automatic_modem_recovery") == "true")
-        row_auto.connect("notify::active", self._on_auto_recovery_toggled)
-        btn_auto_info = self._info_button(self._show_auto_recovery_info)
+        row_auto.connect("notify::active", self.on_auto_recovery_toggled)
+        btn_auto_info = self.info_button(self.show_auto_recovery_info)
         row_auto.add_suffix(btn_auto_info)
         grp_restart.add(row_auto)
 
         self.row_recovery = Adw.ActionRow(title=_("Modem Recovery"), activatable=True)
         self.row_recovery.add_css_class("error")
-        self.row_recovery.connect("activated", lambda r: self._on_modem_recovery(None))
+        self.row_recovery.connect("activated", lambda r: self.on_modem_recovery(None))
         self.recovery_spinner = Adw.Spinner()
         self.recovery_spinner.set_visible(False)
         self.row_recovery.add_suffix(self.recovery_spinner)
-        self._describe_recovery_row()
+        self.describe_recovery_row()
         grp_restart.add(self.row_recovery)
 
         grp_messaging = Adw.PreferencesGroup(title=_("Messaging"))
@@ -124,26 +124,26 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         self.mms_limit_values = ["100", "300", "600", "900", "1024", "2048", "3072", "4096", "5120"]
         mms_limit_labels = ["100 kB", "300 kB", "600 kB", "900 kB", "1 MB", "2 MB", "3 MB", "4 MB", "5 MB"]
         self.row_mms_limit = build_selector_row(
-            _("MMS Size Limit"), self._on_mms_limit_selected)
+            _("MMS Size Limit"), self.on_mms_limit_selected)
         saved_limit = self.parent_win.main_window.gsettings_mgr.get_setting("mms_size_limit")
         if saved_limit not in self.mms_limit_values:
             saved_limit = MMS_SIZE_LIMIT_DEFAULT_KB
         set_selector_options(self.row_mms_limit, mms_limit_labels,
                              self.mms_limit_values.index(saved_limit))
-        btn_info_mms = self._info_button(self._show_mms_size_info)
+        btn_info_mms = self.info_button(self.show_mms_size_info)
         grp_messaging.set_header_suffix(btn_info_mms)
         grp_messaging.add(self.row_mms_limit)
 
         grp_data = Adw.PreferencesGroup()
         self.page.add(grp_data)
 
-        grp_data.add(self._nav_row(_("Data Management"), _("Export, import and reset"),
-                                   lambda: self._on_data_management(None),
+        grp_data.add(self.nav_row(_("Data Management"), _("Export, import and reset"),
+                                   lambda: self.on_data_management(None),
                                    destructive=True))
 
-        self._init_desktop_toggles(self.page)
+        self.init_desktop_toggles(self.page)
 
-    def _init_desktop_toggles(self, page):
+    def init_desktop_toggles(self, page):
         """Initialize desktop shortcut toggles."""
         grp_dt = Adw.PreferencesGroup(title=_("Desktop Shortcuts"))
         page.add(grp_dt)
@@ -160,20 +160,20 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         for name, filename, autostart_key in shortcuts:
             row = Adw.SwitchRow(title=name)
 
-            is_visible = self._is_desktop_file_visible(filename)
+            is_visible = self.is_desktop_file_visible(filename)
 
             row.set_active(is_visible)
             handler_id = row.connect("notify::active", lambda w, p, f=filename,
-                                     k=autostart_key: self._toggle_desktop_file(w, f, k, w.get_active()))
+                                     k=autostart_key: self.toggle_desktop_file(w, f, k, w.get_active()))
             grp_dt.add(row)
             self.dt_toggles.append((row, filename, handler_id, autostart_key))
 
-        self._update_autostart_ui_state()
+        self.update_autostart_ui_state()
 
-    def _is_desktop_file_visible(self, filename):
+    def is_desktop_file_visible(self, filename):
         """Check if desktop file is visible by looking at home and system files."""
-        user_path = os.path.join(self._get_user_desktop_dir(), filename)
-        sys_path = self._get_system_desktop_path(filename)
+        user_path = os.path.join(self.get_user_desktop_dir(), filename)
+        sys_path = self.get_system_desktop_path(filename)
 
         target_path = user_path if os.path.exists(user_path) else sys_path
 
@@ -190,7 +190,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         return True
 
-    def _update_autostart_ui_state(self):
+    def update_autostart_ui_state(self):
         """Update the full toggle based on the others."""
         full_row = None
         others_all_active = True
@@ -210,11 +210,11 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             else:
                 full_row.set_sensitive(True)
 
-    def _get_user_desktop_dir(self):
+    def get_user_desktop_dir(self):
         """Get user applications directory."""
         return os.path.expanduser("~/.local/share/applications")
 
-    def _get_system_desktop_path(self, filename):
+    def get_system_desktop_path(self, filename):
         """Find system desktop file."""
         paths = [
             "/usr/share/applications",
@@ -226,17 +226,17 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                 return full
         return None
 
-    def _toggle_desktop_file(self, row, filename, autostart_key, visible):
+    def toggle_desktop_file(self, row, filename, autostart_key, visible):
         """Toggle desktop file visibility asynchronously using pkexec."""
-        self._update_autostart_ui_state()
+        self.update_autostart_ui_state()
 
-        if visible == self._is_desktop_file_visible(filename):
+        if visible == self.is_desktop_file_visible(filename):
             return
 
-        def _task():
+        def task():
             try:
                 user_path = os.path.join(
-                    self._get_user_desktop_dir(), filename)
+                    self.get_user_desktop_dir(), filename)
                 if os.path.exists(user_path):
                     try:
                         os.remove(user_path)
@@ -244,11 +244,11 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                         logger.warning(
                             f"[Settings] Remove user desktop file warning: {e}")
 
-                sys_path = self._get_system_desktop_path(filename)
+                sys_path = self.get_system_desktop_path(filename)
                 if not sys_path:
                     logger.warning(
                         f"[Settings] No system desktop file found for {filename}")
-                    GLib.idle_add(self._revert_toggle, row, not visible)
+                    GLib.idle_add(self.revert_toggle, row, not visible)
                     return
 
                 if visible:
@@ -272,16 +272,16 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                 else:
                     logger.warning(
                         f"[Settings] pkexec failed or was cancelled (exit code {res.returncode})")
-                    GLib.idle_add(self._revert_toggle, row, not visible)
+                    GLib.idle_add(self.revert_toggle, row, not visible)
 
             except Exception as e:
                 logger.error(
                     f"[SettingsWindow] Toggle desktop file error: {e}")
-                GLib.idle_add(self._revert_toggle, row, not visible)
+                GLib.idle_add(self.revert_toggle, row, not visible)
 
-        run_in_background(_task)
+        run_in_background(task)
 
-    def _revert_toggle(self, row, original_state):
+    def revert_toggle(self, row, original_state):
         """Revert a desktop toggle switch if pkexec fails."""
         handler_id = None
         for r, fname, hid, _ignored in self.dt_toggles:
@@ -295,7 +295,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         else:
             row.set_active(original_state)
 
-    def _info_button(self, handler):
+    def info_button(self, handler):
         """Build the round info button that opens an explanation sheet."""
         button = Gtk.Button(icon_name="help-about-symbolic", valign=Gtk.Align.CENTER)
         button.add_css_class("flat")
@@ -303,11 +303,11 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         button.connect("clicked", lambda b: GLib.idle_add(lambda: handler(b) or False))
         return button
 
-    def _nav_row(self, title, subtitle, callback, destructive=False):
+    def nav_row(self, title, subtitle, callback, destructive=False):
         """Build an activatable navigation row with a chevron."""
         return build_nav_row(title, subtitle, callback, destructive=destructive)
 
-    def _push_page(self, page):
+    def push_page(self, page):
         """Push a page, which takes the focus rather than its contents.
 
         A text field taking it brings the keyboard up with the page,
@@ -316,28 +316,28 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         page.set_focusable(True)
         self.get_ancestor(Adw.NavigationView).push(page)
 
-    def _on_data_management(self, btn):
+    def on_data_management(self, btn):
         """Push the data management page."""
         from .data_management_window import DataManagementDialog
         dm = DataManagementDialog(self.parent_win.main_window)
-        self._push_page(dm.build_page())
+        self.push_page(dm.build_page())
 
-    def _open_action_window(self, mode):
+    def open_action_window(self, mode):
         """Open the trusted action window after polkit authentication."""
         def done(returncode):
             if returncode != 0:
-                self._show_toast(_("Authentication cancelled"), True)
+                self.show_toast(_("Authentication cancelled"), True)
                 return
             page = TrustedActionsListWindow(self, self.parent_win.main_window.gsettings_mgr, self.parent_win.eds, mode=mode)
-            self._push_page(page)
+            self.push_page(page)
 
         def failed(error):
-            self._show_toast(_("Auth error: {e}").format(e=error), True)
+            self.show_toast(_("Auth error: {e}").format(e=error), True)
 
         run_in_background(lambda: subprocess.run(["pkexec", "true"]).returncode,
                           on_complete=done, on_error=failed)
 
-    def _show_mms_size_info(self, btn):
+    def show_mms_size_info(self, btn):
         """Show information about the MMS size limit."""
         body_text = _("Carriers limit how large a multimedia message can be. "
                       "Images and videos you attach are automatically compressed "
@@ -348,13 +348,13 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
 
         present_info_sheet(self, _("MMS Size Limit"), body_text)
 
-    def _on_mms_limit_selected(self, idx):
+    def on_mms_limit_selected(self, idx):
         """Persist the selected MMS size limit."""
         if idx < 0 or idx >= len(self.mms_limit_values):
             return
         self.parent_win.main_window.gsettings_mgr.set_setting("mms_size_limit", self.mms_limit_values[idx])
 
-    def _experimental_row(self, title, setting_key, info_handler):
+    def experimental_row(self, title, setting_key, info_handler):
         """Build a switch for a feature the carrier may not support."""
         row = Adw.SwitchRow(title=title)
         row.set_active(self.parent_win.main_window.gsettings_mgr.get_setting(setting_key) == "true")
@@ -367,7 +367,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         row.add_suffix(btn_info)
         return row
 
-    def _show_conference_info(self, btn):
+    def show_conference_info(self, btn):
         """Explain how far conference calls can be trusted."""
         present_info_sheet(self, _("Allow Conference Calls"), _(
             "Merging calls into a conference is up to the carrier, and in "
@@ -376,7 +376,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             "cannot be officially supported, so leave it off if you would "
             "rather your calls behaved predictably."))
 
-    def _show_transfer_info(self, btn):
+    def show_transfer_info(self, btn):
         """Explain how far call transfer can be trusted."""
         present_info_sheet(self, _("Allow Call Transfer"), _(
             "Transferring two calls to each other needs a service the "
@@ -386,11 +386,11 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             "supported, so leave it off if you would rather your calls "
             "behaved predictably."))
 
-    def _on_auto_recovery_toggled(self, row, _param):
+    def on_auto_recovery_toggled(self, row, _param):
         """Persist the automatic recovery preference immediately."""
         self.parent_win.main_window.gsettings_mgr.set_setting("automatic_modem_recovery", row.get_active())
 
-    def _show_auto_recovery_info(self, btn):
+    def show_auto_recovery_info(self, btn):
         """Explain what automatic modem recovery does."""
         body = _("When the modem stops responding, the phone quietly restarts "
                  "the modem stack by itself and you only hear about it if that "
@@ -399,7 +399,7 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
                  "run the restart yourself.")
         present_info_sheet(self, _("Automatic Modem Recovery"), body)
 
-    def _describe_recovery_row(self, subtitle=None):
+    def describe_recovery_row(self, subtitle=None):
         """Say what the row would do, or what it just did.
 
         A working modem has nothing to repair, so the row says that and
@@ -411,13 +411,13 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             return
 
         ofono = self.parent_win.main_window.ofono
-        working = bool(ofono and ofono.dialing_available())
+        working = bool(ofono and ofono.is_dialing_available())
         self.row_recovery.set_subtitle(
             _("The modem is working") if working
             else _("Restart the modem, which takes about 30 seconds"))
         self.row_recovery.set_sensitive(not working)
 
-    def _on_modem_recovery(self, btn):
+    def on_modem_recovery(self, btn):
         """Repair the modem from here, and say what came of it.
 
         The row does the work itself rather than sending the user to a
@@ -440,18 +440,18 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
         self._recovery_running = True
         self.row_recovery.set_sensitive(False)
         self.recovery_spinner.set_visible(True)
-        self._describe_recovery_row(_("Restarting the modem…"))
+        self.describe_recovery_row(_("Restarting the modem…"))
 
-        if not app.request_auto_recovery(self._on_recovery_finished):
-            self._on_recovery_finished(False)
+        if not app.request_auto_recovery(self.on_recovery_finished):
+            self.on_recovery_finished(False)
 
-    def _on_recovery_finished(self, success, reason=""):
+    def on_recovery_finished(self, success, reason=""):
         """Report the outcome in the row the user pressed."""
         self._recovery_running = False
         self.recovery_spinner.set_visible(False)
         self.row_recovery.set_sensitive(True)
         if reason:
-            self._describe_recovery_row(reason)
+            self.describe_recovery_row(reason)
             return
-        self._describe_recovery_row(_("Calls and messages work again") if success
+        self.describe_recovery_row(_("Calls and messages work again") if success
                                     else _("Recovery did not help. The modem still is not responding"))

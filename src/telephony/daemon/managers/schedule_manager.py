@@ -56,18 +56,18 @@ class ScheduleManager:
         self._scan_running = True
 
         def scan():
-            self._check_and_send_pending()
+            self.check_and_send_pending()
             return self.db.get_next_scheduled_timestamp()
 
-        run_in_background(scan, on_complete=self._arm_next_timer, on_error=self._on_scan_error)
+        run_in_background(scan, on_complete=self.arm_next_timer, on_error=self.on_scan_error)
 
-    def _on_scan_error(self, error):
+    def on_scan_error(self, error):
         """Re-arm the scheduler after a failed scan."""
         self._scan_running = False
         logger.error(f"[ScheduleManager] Scheduled send scan failed, retrying in 60s: {error}")
-        self._timer_id = GLib.timeout_add_seconds(60, self._on_timeout_run)
+        self._timer_id = GLib.timeout_add_seconds(60, self.on_timeout_run)
 
-    def _arm_next_timer(self, next_ts_str):
+    def arm_next_timer(self, next_ts_str):
         """Arm the wakeup timer for the next scheduled message; main thread."""
         self._scan_running = False
         if self._rescan_queued:
@@ -97,19 +97,19 @@ class ScheduleManager:
                 seconds_until = 0.5
 
             logger.info(f"[ScheduleManager] Next message at {next_ts_str}. Sleeping for {seconds_until:.2f}s")
-            self._timer_id = GLib.timeout_add(int(seconds_until * 1000), self._on_timeout_run)
+            self._timer_id = GLib.timeout_add(int(seconds_until * 1000), self.on_timeout_run)
 
         except Exception as e:
             logger.error(f"[ScheduleManager] Date parse error for {next_ts_str}, retrying in 60s: {e}")
-            self._timer_id = GLib.timeout_add_seconds(60, self._on_timeout_run)
+            self._timer_id = GLib.timeout_add_seconds(60, self.on_timeout_run)
 
-    def _on_timeout_run(self):
+    def on_timeout_run(self):
         """Callback for the GLib timer."""
         self._timer_id = None
         self.schedule_next_run()
         return False
 
-    def _check_and_send_pending(self):
+    def check_and_send_pending(self):
         """Check for messages that are due within the recent window and send them."""
         count = 0
         if not self.ofono or not self.ofono.msg_proxy:
@@ -127,12 +127,12 @@ class ScheduleManager:
         if due_messages:
             logger.info(f"[ScheduleManager] Found {len(due_messages)} due messages.")
             for msg in due_messages:
-                self._process_message(msg)
+                self.process_message(msg)
                 count += 1
 
         return count
 
-    def _process_message(self, msg):
+    def process_message(self, msg):
         """Send a single message."""
         mid, number, body, subject, attachments_json, scheduled_ts = msg
         logger.info(f"[ScheduleManager] Sending scheduled message {mid} to {number}")

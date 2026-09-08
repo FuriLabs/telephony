@@ -54,7 +54,7 @@ class HistoryView(Adw.Bin):
         self.signal_ids = []
         if self.app_window.ofono:
             self.signal_ids.append((self.app_window.ofono,
-                                    self.app_window.ofono.connect('voicemail-changed', self._sync_voicemail_row)))
+                                    self.app_window.ofono.connect('voicemail-changed', self.sync_voicemail_row)))
         self.signal_ids.append((self.db, self.db.connect('history-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))))
         self.signal_ids.append((self.db, self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_data()))))
         if self.app_window.eds:
@@ -97,7 +97,7 @@ class HistoryView(Adw.Bin):
 
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", self.row_factory.setup)
-        factory.connect("bind", self._on_bind_row)
+        factory.connect("bind", self.on_bind_row)
         factory.connect("unbind", self.row_factory.unbind)
         factory.connect("teardown", self.row_factory.teardown)
 
@@ -175,9 +175,9 @@ class HistoryView(Adw.Bin):
         self.btn_search.connect("clicked", lambda b: GLib.idle_add(lambda: self.toggle_search_mode(True) or False))
         self.filter_box.append(self.btn_search)
 
-        self._update_visuals()
+        self.update_visuals()
 
-    def _build_filter_menu(self, action_name, options):
+    def build_filter_menu(self, action_name, options):
         """Build a menu of radio entries bound to a stateful action."""
         menu = Gio.Menu()
         for lbl, val in options:
@@ -190,43 +190,43 @@ class HistoryView(Adw.Bin):
         """Set up the duration filter menu with checkable entries."""
         self._dur_action = Gio.SimpleAction.new_stateful(
             "duration", GLib.VariantType.new("s"), GLib.Variant("s", self.active_bucket))
-        self._dur_action.connect("activate", self._on_dur_action)
+        self._dur_action.connect("activate", self.on_dur_action)
         self._filter_group.add_action(self._dur_action)
 
         buckets = [(_("Any duration"), "any"), (_("Unanswered"), "0"), (_("1s - 60s"), "60s"), (_("1-3 mins"), "3m"), (_("3-10 mins"), "10m"), (_("> 10 mins"), "15m+")]
-        self.btn_dur.set_menu_model(self._build_filter_menu("hist.duration", buckets))
+        self.btn_dur.set_menu_model(self.build_filter_menu("hist.duration", buckets))
 
     def setup_date_popover(self):
         """Set up the date filter menu with checkable entries."""
         self._date_action = Gio.SimpleAction.new_stateful(
             "date", GLib.VariantType.new("s"), GLib.Variant("s", self.active_date_bucket))
-        self._date_action.connect("activate", self._on_date_action)
+        self._date_action.connect("activate", self.on_date_action)
         self._filter_group.add_action(self._date_action)
 
         opts = [(_("Any date"), "any"), (_("Today"), "today"), (_("Last 3 days"), "3days"), (_("Last 14 days"), "14days"), (_("Last 30 days"), "30days"), (_("Last 60 days"), "60days")]
-        self.btn_date.set_menu_model(self._build_filter_menu("hist.date", opts))
+        self.btn_date.set_menu_model(self.build_filter_menu("hist.date", opts))
 
     def on_type_click(self, btn, val):
         """Handle call type filter change."""
         self.active_type = val
-        self._update_visuals()
+        self.update_visuals()
         self.refresh_data()
 
-    def _on_dur_action(self, action, value):
+    def on_dur_action(self, action, value):
         """Apply the picked duration filter."""
         action.set_state(value)
         self.active_bucket = value.get_string()
-        self._update_visuals()
+        self.update_visuals()
         self.refresh_data()
 
-    def _on_date_action(self, action, value):
+    def on_date_action(self, action, value):
         """Apply the picked date filter."""
         action.set_state(value)
         self.active_date_bucket = value.get_string()
-        self._update_visuals()
+        self.update_visuals()
         self.refresh_data()
 
-    def _update_visuals(self):
+    def update_visuals(self):
         """Update filter button styles."""
         def set_style_main(btn, active):
             if active:
@@ -248,9 +248,9 @@ class HistoryView(Adw.Bin):
             return
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
         if is_at_bottom:
-            self._start_fetch()
+            self.start_fetch()
 
-    def _sync_voicemail_row(self, *args):
+    def sync_voicemail_row(self, *args):
         """Keep the pinned voicemail row at the top of the list in sync."""
         ofono = self.app_window.ofono
         has_row = (self.model.get_n_items() > 0
@@ -275,22 +275,22 @@ class HistoryView(Adw.Bin):
         """Reload the history data."""
         if (self._refresh_timer is not None) and self._refresh_timer:
             GLib.source_remove(self._refresh_timer)
-        self._refresh_timer = GLib.timeout_add(200, self._do_refresh_data)
+        self._refresh_timer = GLib.timeout_add(200, self.do_refresh_data)
 
-    def _do_refresh_data(self):
+    def do_refresh_data(self):
         self._refresh_timer = None
         self.load_token += 1
         self.page_offset = 0
-        self._start_fetch()
+        self.start_fetch()
         return False
 
-    def _start_fetch(self):
+    def start_fetch(self):
         """Start fetching data in background."""
         current_token = self.load_token
         self.is_fetching = True
         self.spinner.set_visible(True)
         DataLoader.load_data(
-            fetch_func=lambda: self._fetch_and_process(self.page_offset),
+            fetch_func=lambda: self.fetch_and_process(self.page_offset),
             model_add_func=self.add_chunk,
             model=self.model,
             check_token_func=lambda: self.load_token == current_token,
@@ -315,15 +315,15 @@ class HistoryView(Adw.Bin):
         self.search_query = text
         if (self.search_timer is not None) and self.search_timer:
             GLib.source_remove(self.search_timer)
-        self.search_timer = GLib.timeout_add(200, self._trigger_search)
+        self.search_timer = GLib.timeout_add(200, self.trigger_search)
 
-    def _trigger_search(self):
+    def trigger_search(self):
         """Trigger the data refresh for search."""
         self.refresh_data()
         self.search_timer = None
         return False
 
-    def _fetch_and_process(self, offset):
+    def fetch_and_process(self, offset):
         """Fetch rows from DB and process them."""
         if self.is_search_mode and self.search_query:
             raw_rows = self.db.search_history(self.search_query, limit=self.page_limit + 1, offset=offset)
@@ -460,7 +460,7 @@ class HistoryView(Adw.Bin):
         if new_call_items:
             model.splice(model.get_n_items(), 0, new_call_items)
 
-        self._sync_voicemail_row()
+        self.sync_voicemail_row()
 
         self.page_offset += real_items_count
 
@@ -489,6 +489,6 @@ class HistoryView(Adw.Bin):
         if self.model:
             self.model.remove_all()
 
-    def _on_bind_row(self, factory, list_item):
+    def on_bind_row(self, factory, list_item):
         """Bind row items to widgets."""
         self.row_factory.bind(factory, list_item)

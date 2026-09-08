@@ -79,46 +79,46 @@ class OfonoMirror(GObject.Object):
         self._reseed_id = 0
 
         for signal_name, handler in (
-                ("IncomingCall", self._on_sig_call_added),
-                ("CallChanged", self._on_sig_call_changed),
-                ("CallRemoved", self._on_sig_call_removed),
-                ("CapabilityChanged", self._on_sig_capability),
-                ("ModemStateChanged", self._on_sig_modem_state),
-                ("VoicemailChanged", self._on_sig_voicemail),
-                ("AudioRouteChanged", self._on_sig_audio),
-                ("UssdReceived", self._on_sig_ussd),
-                ("NetworkServiceChanged", self._on_sig_network_service)):
+                ("IncomingCall", self.on_sig_call_added),
+                ("CallChanged", self.on_sig_call_changed),
+                ("CallRemoved", self.on_sig_call_removed),
+                ("CapabilityChanged", self.on_sig_capability),
+                ("ModemStateChanged", self.on_sig_modem_state),
+                ("VoicemailChanged", self.on_sig_voicemail),
+                ("AudioRouteChanged", self.on_sig_audio),
+                ("UssdReceived", self.on_sig_ussd),
+                ("NetworkServiceChanged", self.on_sig_network_service)):
             self.daemon.subscribe(signal_name, handler)
 
         self._watch_id = Gio.bus_watch_name(
             Gio.BusType.SESSION, DAEMON_BUS_NAME, Gio.BusNameWatcherFlags.NONE,
-            self._on_owner_appeared, self._on_owner_vanished)
+            self.on_owner_appeared, self.on_owner_vanished)
 
-    def _on_owner_appeared(self, _connection, _name, _owner):
+    def on_owner_appeared(self, _connection, _name, _owner):
         """Seed, and re-seed after every daemon restart."""
-        self._schedule_reseed()
+        self.schedule_reseed()
 
-    def _on_owner_vanished(self, _connection, _name):
+    def on_owner_vanished(self, _connection, _name):
         """A gone owner cannot place calls; say so until it returns.
 
         Call state is left alone: calls live in ofonod and may still be
         ringing, and the re-seed on return reconciles what really
         happened.
         """
-        self._apply_capability(False, "service-down", _("Telephony service is not running"))
+        self.apply_capability(False, "service-down", _("Telephony service is not running"))
 
-    def _schedule_reseed(self):
+    def schedule_reseed(self):
         """Coalesce state reads; one snapshot answers a burst of events."""
         if self._reseed_id:
             return
-        self._reseed_id = GLib.timeout_add(RESEED_DEBOUNCE_MS, self._start_reseed)
+        self._reseed_id = GLib.timeout_add(RESEED_DEBOUNCE_MS, self.start_reseed)
 
-    def _start_reseed(self):
+    def start_reseed(self):
         self._reseed_id = 0
-        run_in_background(self.daemon.get_telephony_state, on_complete=self._apply_state)
+        run_in_background(self.daemon.get_telephony_state, on_complete=self.apply_state)
         return GLib.SOURCE_REMOVE
 
-    def _apply_state(self, state):
+    def apply_state(self, state):
         """Rebuild the mirror from one snapshot, telling listeners what moved."""
         if state is None:
             return
@@ -134,10 +134,10 @@ class OfonoMirror(GObject.Object):
             if path not in calls:
                 self.emit('call-removed', path)
 
-        self._apply_capability(state.get("can_dial", False),
+        self.apply_capability(state.get("can_dial", False),
                                state.get("dial_reason", ""),
                                state.get("dial_description", ""))
-        self._apply_modem_state(state.get("modem_present", False),
+        self.apply_modem_state(state.get("modem_present", False),
                                 state.get("modem_online", False),
                                 state.get("interfaces", []),
                                 state.get("emergency_numbers", []))
@@ -149,16 +149,16 @@ class OfonoMirror(GObject.Object):
             self.voicemail_count = count
             self.emit('voicemail-changed', waiting, count)
         self.voicemail_mailbox = state.get("voicemail_mailbox", "")
-        self._apply_audio_state(state)
+        self.apply_audio_state(state)
 
-    def _apply_capability(self, can_dial, reason, description):
+    def apply_capability(self, can_dial, reason, description):
         self.can_dial = can_dial
         self.dial_reason = reason
         self.dial_description = description
         self.audio.voice_profile_active = (reason == "call-ending")
         self.emit('dial-availability-changed', can_dial)
 
-    def _apply_modem_state(self, present, online, interfaces, emergency_numbers):
+    def apply_modem_state(self, present, online, interfaces, emergency_numbers):
         self.network_emergency_numbers = set(emergency_numbers)
         new_interfaces = set(interfaces)
         added = new_interfaces - self.interfaces
@@ -172,58 +172,58 @@ class OfonoMirror(GObject.Object):
             self.emit('connection-status',
                       "connected" if present else "disconnected", "")
 
-    def _on_sig_call_added(self, *args):
-        self._schedule_reseed()
+    def on_sig_call_added(self, *args):
+        self.schedule_reseed()
 
-    def _on_sig_call_changed(self, *args):
+    def on_sig_call_changed(self, *args):
         path, state = args[5].unpack()
         if path in self.active_calls:
             self.active_calls[path]['state'] = state
         self.emit('call-changed', path, state)
-        self._schedule_reseed()
+        self.schedule_reseed()
 
-    def _on_sig_call_removed(self, *args):
+    def on_sig_call_removed(self, *args):
         path = args[5].unpack()[0]
         if self.active_calls.pop(path, None) is not None:
             self.emit('call-removed', path)
-        self._schedule_reseed()
+        self.schedule_reseed()
 
-    def _on_sig_capability(self, *args):
-        self._apply_capability(*args[5].unpack())
+    def on_sig_capability(self, *args):
+        self.apply_capability(*args[5].unpack())
 
-    def _on_sig_modem_state(self, *args):
+    def on_sig_modem_state(self, *args):
         state = args[5].unpack()[0]
-        self._apply_modem_state(state.get("present", False),
+        self.apply_modem_state(state.get("present", False),
                                 state.get("online", False),
                                 state.get("interfaces", []),
                                 state.get("emergency_numbers", []))
 
-    def _on_sig_voicemail(self, *args):
+    def on_sig_voicemail(self, *args):
         waiting, count = args[5].unpack()
         self.voicemail_waiting = waiting
         self.voicemail_count = count
         self.emit('voicemail-changed', waiting, count)
-        self._schedule_reseed()
+        self.schedule_reseed()
 
-    def _on_sig_audio(self, *args):
+    def on_sig_audio(self, *args):
         state = args[5].unpack()[0]
-        self._apply_audio_state(state)
+        self.apply_audio_state(state)
 
-    def _apply_audio_state(self, state):
+    def apply_audio_state(self, state):
         self.audio.current_route = state.get("route") or ("speaker" if state.get("speaker") else "earpiece")
         self.audio.current_input = state.get("input") or "mic"
         self.audio.mic_muted = bool(state.get("mic_muted"))
         self.emit('audio-changed')
 
-    def _on_sig_ussd(self, *args):
+    def on_sig_ussd(self, *args):
         self.emit('ussd-notification', args[5].unpack()[0])
 
-    def _on_sig_network_service(self, *args):
+    def on_sig_network_service(self, *args):
         service, name, value = args[5].unpack()
         self.emit('network-service-changed', service, name,
-                  self._restore_service_value(name, value))
+                  self.restore_service_value(name, value))
 
-    def dialing_available(self):
+    def is_dialing_available(self):
         """Return the daemon's verdict on placing a new call."""
         return self.can_dial
 
@@ -233,10 +233,10 @@ class OfonoMirror(GObject.Object):
 
     def dial(self, number, hide_id=False, on_result=None):
         """Ask the owner to place a call; refusals surface as action-error."""
-        self.daemon.dial(number, hide_id, self._on_remote_dial_done)
+        self.daemon.dial(number, hide_id, self.on_remote_dial_done)
         return True
 
-    def _on_remote_dial_done(self, reply):
+    def on_remote_dial_done(self, reply):
         """Surface a dial the daemon refused or never heard."""
         if reply is None:
             self.emit('action-error', _("Telephony service is not running"))
@@ -306,9 +306,9 @@ class OfonoMirror(GObject.Object):
 
     def set_active_chat(self, number):
         """Tell the owner which chat is open so its alerts stay quiet."""
-        self.daemon.set_active_chat(self._normalize_chat_target(number))
+        self.daemon.set_active_chat(self.normalize_chat_target(number))
 
-    def _normalize_chat_target(self, number):
+    def normalize_chat_target(self, number):
         """Collapse a chat target to the comparable form reception uses."""
         if not number:
             return ""
@@ -324,9 +324,9 @@ class OfonoMirror(GObject.Object):
                                  GLib.VariantType("(a{sv})"))
         if reply is None:
             return None
-        return {k: self._restore_service_value(k, v) for k, v in reply[0].items()}
+        return {k: self.restore_service_value(k, v) for k, v in reply[0].items()}
 
-    def _restore_service_value(self, name, packed):
+    def restore_service_value(self, name, packed):
         """Turn a relayed property back into the type the UI expects."""
         text = packed if isinstance(packed, str) else str(packed)
         if name.endswith("Timeout"):
@@ -338,13 +338,13 @@ class OfonoMirror(GObject.Object):
 
     def set_service_property(self, service, name, value):
         """Set a supplementary service property; blocking, call from a worker."""
-        return self._ask_network_write(service, name, value, "")
+        return self.ask_network_write(service, name, value, "")
 
     def set_barring_property(self, name, value, password):
         """Set a call barring rule; blocking, call from a worker."""
-        return self._ask_network_write("barring", name, value, password)
+        return self.ask_network_write("barring", name, value, password)
 
-    def _ask_network_write(self, service, name, value, password):
+    def ask_network_write(self, service, name, value, password):
         """Have the owner change a supplementary service."""
         reply = self.daemon.call(
             "SetNetworkProperty",

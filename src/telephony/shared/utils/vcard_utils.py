@@ -36,7 +36,7 @@ def unfold_vcard(vcard_str):
     return re.sub(r'=\r?\n', '', unfolded)
 
 
-def _decode_quoted_printable(key_part, value):
+def decode_quoted_printable(key_part, value):
     """Decode a value the exporter escaped, leaving anything else alone.
 
     Phones that wrote vcards before UTF-8 was safe to put on a wire
@@ -60,7 +60,7 @@ def _decode_quoted_printable(key_part, value):
         return value
 
 
-def _get_phone_label(meta):
+def get_phone_label(meta):
     """Derive a phone label from a TEL line's parameter part."""
     meta = meta.upper()
     for token, label in (("WORK", "Work"), ("HOME", "Home"), ("FAX", "Fax"),
@@ -70,7 +70,7 @@ def _get_phone_label(meta):
     return "Mobile"
 
 
-def _get_email_label(meta):
+def get_email_label(meta):
     """Derive an email label from an EMAIL line's parameter part or TYPE param."""
     meta = meta.upper()
     if "WORK" in meta:
@@ -93,7 +93,7 @@ def extract_e164_number(key_part, default):
     return default
 
 
-def _number_from_value(value):
+def number_from_value(value):
     """Return the dialable part of a stored TEL value.
 
     Newer address books write the number as a uri rather than as
@@ -107,7 +107,7 @@ def _number_from_value(value):
     return value.split(";", 1)[0].strip()
 
 
-def _parse_tel_line(line):
+def parse_tel_line(line):
     """Parse a TEL vcard line into a (number, label) tuple, or None.
 
     The stored number wins whenever it already carries a country code,
@@ -121,7 +121,7 @@ def _parse_tel_line(line):
         return None
 
     key_part = parts[0].strip()
-    number = _number_from_value(_decode_quoted_printable(key_part, parts[1].strip()))
+    number = number_from_value(decode_quoted_printable(key_part, parts[1].strip()))
 
     if not number.startswith("+") and "X-EVOLUTION-E164" in key_part.upper():
         number = extract_e164_number(key_part, number)
@@ -129,10 +129,10 @@ def _parse_tel_line(line):
     if number == "UNKNOWN":
         return None
 
-    return normalize_number(number), _get_phone_label(key_part)
+    return normalize_number(number), get_phone_label(key_part)
 
 
-def _build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fav):
+def build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fav):
     """Assemble the final contact dict with search index and vcard hash."""
     search_phones = []
     for p in phones:
@@ -150,7 +150,7 @@ def _build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fa
     }
 
 
-def _property_key(key_part):
+def property_key(key_part):
     """Return a vcard property name stripped of its group and parameters.
 
     Exports commonly group related lines as item1.TEL / item1.FN; the
@@ -169,10 +169,10 @@ def is_property(line, name):
     the group prefix is stripped before the comparison.
     """
     head = line.split(":", 1)[0]
-    return _property_key(head) == name.upper()
+    return property_key(head) == name.upper()
 
 
-def _unescape_value(value):
+def unescape_value(value):
     """Decode vcard text escaping: backslashed comma, semicolon, newline."""
     out = []
     i = 0
@@ -220,19 +220,19 @@ def parse_vcard_string(vcard_str, source_uid, real_uid=None):
             continue
 
         key_part = parts[0].strip()
-        value_part = _decode_quoted_printable(key_part, parts[1].strip())
-        main_key = _property_key(key_part)
+        value_part = decode_quoted_printable(key_part, parts[1].strip())
+        main_key = property_key(key_part)
 
         if main_key == "FN":
-            name = _unescape_value(value_part)
+            name = unescape_value(value_part)
         elif main_key == "TEL":
-            parsed = _parse_tel_line(line)
+            parsed = parse_tel_line(line)
             if parsed:
                 phones.append(parsed)
         elif main_key == "EMAIL":
-            emails.append((value_part, _get_email_label(key_part)))
+            emails.append((value_part, get_email_label(key_part)))
         elif main_key == "X-FOLKS-FAVOURITE":
             if value_part.lower() == "true":
                 is_fav = True
 
-    return _build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fav)
+    return build_contact_dict(source_uid, real_uid, name, phones, emails, vcard, is_fav)
