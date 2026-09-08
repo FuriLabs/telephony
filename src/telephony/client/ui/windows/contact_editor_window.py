@@ -659,7 +659,7 @@ class ContactEditor(Adw.NavigationPage):
         if dialog.matrix is None:
             self.toast_overlay.add_toast(Adw.Toast.new(_("Could not create the QR code")))
             return
-        dialog.present(self)
+        present_sheet_page(self.get_root(), dialog)
 
     def on_delete(self, btn):
         """Handle contact deletion."""
