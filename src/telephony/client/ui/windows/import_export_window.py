@@ -45,12 +45,12 @@ class ImportExportDialog:
         self.mode_messages = bool(app_window.show_messages_mode)
         self.mode_contacts = bool(app_window.show_contacts_mode)
 
-    def _on_flow_closed(self, _dialog):
+    def on_flow_closed(self, _dialog):
         """Forget the flow once its sheet goes away."""
         self.nav_view = None
         self._sheet = None
 
-    def _push_page(self, page):
+    def push_page(self, page):
         """Push a page, which takes the focus rather than its contents.
 
         A text field taking it brings the keyboard up with the page,
@@ -59,7 +59,7 @@ class ImportExportDialog:
         page.set_focusable(True)
         self.nav_view.push(page)
 
-    def _show_choices(self, title, entries, description=None):
+    def show_choices(self, title, entries, description=None):
         """Show a step of the flow, as a page when a navigation hosts it.
 
         Inside settings the steps are pushed pages, so the back button
@@ -84,7 +84,7 @@ class ImportExportDialog:
 
         page = Adw.NavigationPage(title=title)
         page.set_child(view)
-        self._push_page(page)
+        self.push_page(page)
 
     def present(self):
         """Show the import and export flow in one navigable sheet.
@@ -103,7 +103,7 @@ class ImportExportDialog:
             self.nav_view.set_size_request(-1, FLOW_SHEET_HEIGHT)
             self._sheet = self.app_window
             present_sheet(self.app_window, self.nav_view)
-            on_sheet_closed(self.app_window, lambda: self._on_flow_closed(None))
+            on_sheet_closed(self.app_window, lambda: self.on_flow_closed(None))
 
         rows = []
         if self.mode_contacts:
@@ -126,7 +126,7 @@ class ImportExportDialog:
             rows.append((export_title, self.ask_export_data, None))
         rows.append((_("Export Blocklist"), self.on_export_blocklist, None))
         rows.append((_("Import Blocklist"), self.on_import_blocklist, None))
-        self._show_choices(_("Import and Export"), rows)
+        self.show_choices(_("Import and Export"), rows)
 
     def on_export_blocklist(self):
         """Save the blocklist as a JSON file."""
@@ -134,7 +134,7 @@ class ImportExportDialog:
                                        action=Gtk.FileChooserAction.SAVE)
         dialog.set_current_name("blocklist.json")
 
-        def _on_resp(d, r):
+        def on_resp(d, r):
             if r == Gtk.ResponseType.ACCEPT:
                 path = d.get_file().get_path()
 
@@ -151,7 +151,7 @@ class ImportExportDialog:
                     on_error=lambda e: self.app_window.notify_error(_("Export failed.")))
             GLib.idle_add(lambda: d.destroy() or False)
 
-        dialog.connect("response", _on_resp)
+        dialog.connect("response", on_resp)
         dialog.show()
 
     def on_import_blocklist(self):
@@ -159,7 +159,7 @@ class ImportExportDialog:
         dialog = Gtk.FileChooserNative(title=_("Select File"), transient_for=self.app_window,
                                        action=Gtk.FileChooserAction.OPEN)
 
-        def _on_resp(d, r):
+        def on_resp(d, r):
             if r == Gtk.ResponseType.ACCEPT:
                 path = d.get_file().get_path()
 
@@ -179,14 +179,14 @@ class ImportExportDialog:
                                   on_error=lambda e: self.app_window.notify_error(_("Import failed.")))
             GLib.idle_add(lambda: d.destroy() or False)
 
-        dialog.connect("response", _on_resp)
+        dialog.connect("response", on_resp)
         dialog.show()
 
     def ask_import_sim(self):
         """Ask where the SIM contacts should land before reading them."""
-        self._prompt_target_book(self._import_sim_to)
+        self.prompt_target_book(self.import_sim_to)
 
-    def _import_sim_to(self, source_uid):
+    def import_sim_to(self, source_uid):
         """Import contacts from the SIM phonebook through the daemon."""
         self.app_window.notify_loading(_("Importing contacts from SIM..."))
 
@@ -223,7 +223,7 @@ class ImportExportDialog:
                     GLib.idle_add(lambda: self.app_window.notify_error(msg))
             run_in_background(task)
 
-        self._push_page(ImportWizardWindow(self.app_window, "chatty", on_wizard_done))
+        self.push_page(ImportWizardWindow(self.app_window, "chatty", on_wizard_done))
 
     def ask_import_local_calls(self):
         def on_wizard_done(db_path, mms_path):
@@ -241,30 +241,30 @@ class ImportExportDialog:
                     GLib.idle_add(lambda: self.app_window.notify_error(msg))
             run_in_background(task)
 
-        self._push_page(ImportWizardWindow(self.app_window, "calls", on_wizard_done))
+        self.push_page(ImportWizardWindow(self.app_window, "calls", on_wizard_done))
 
     def ask_import_android(self):
         """Show the Android import choices."""
         rows = []
         if self.mode_messages:
-            rows.append((_("Select SMS/MMS file"), lambda: self._open_file_chooser("android_sms"), None))
+            rows.append((_("Select SMS/MMS file"), lambda: self.open_file_chooser("android_sms"), None))
         if self.mode_calls:
-            rows.append((_("Select Call history file"), lambda: self._open_file_chooser("android_calls"), None))
-        self._show_choices(_("Import From Android"), rows)
+            rows.append((_("Select Call history file"), lambda: self.open_file_chooser("android_calls"), None))
+        self.show_choices(_("Import From Android"), rows)
 
     def ask_import_ios(self):
         """Show the iOS import choices."""
-        rows = [(_("Direct USB Import (Recommended)"), self._start_ios_usb_import, None)]
+        rows = [(_("Direct USB Import (Recommended)"), self.start_ios_usb_import, None)]
         if self.mode_messages:
-            rows.append((_("Select SMS/MMS file"), lambda: self._open_file_chooser("ios_sms"), None))
+            rows.append((_("Select SMS/MMS file"), lambda: self.open_file_chooser("ios_sms"), None))
         if self.mode_calls:
-            rows.append((_("Select Call history file"), lambda: self._open_file_chooser("ios_calls"), None))
-        self._show_choices(_("Import From iOS"), rows)
+            rows.append((_("Select Call history file"), lambda: self.open_file_chooser("ios_calls"), None))
+        self.show_choices(_("Import From iOS"), rows)
 
-    def _start_ios_usb_import(self):
-        run_in_background(IOSBackupExtractor.check_connection, on_complete=self._on_ios_connection_checked)
+    def start_ios_usb_import(self):
+        run_in_background(IOSBackupExtractor.check_connection, on_complete=self.on_ios_connection_checked)
 
-    def _on_ios_connection_checked(self, result):
+    def on_ios_connection_checked(self, result):
         """Continue the USB import once the device probe finishes."""
         connected, trusted, _detail = result if result else (False, False, "")
         if not connected:
@@ -310,7 +310,7 @@ class ImportExportDialog:
 
         run_in_background(task)
 
-    def _open_file_chooser(self, file_type):
+    def open_file_chooser(self, file_type):
         action = Gtk.FileChooserAction.OPEN
         dialog = Gtk.FileChooserNative(title=_("Select File"), transient_for=self.app_window, action=action)
         if "xml" in file_type or "android" in file_type:
@@ -319,16 +319,16 @@ class ImportExportDialog:
             filter_ext.add_pattern("*.xml")
             dialog.add_filter(filter_ext)
 
-        def _on_resp(d, r):
+        def on_resp(d, r):
             if r == Gtk.ResponseType.ACCEPT:
                 f = d.get_file()
-                self._run_import_task(file_type, f.get_path())
+                self.run_import_task(file_type, f.get_path())
             GLib.idle_add(lambda: d.destroy() or False)
 
-        dialog.connect("response", _on_resp)
+        dialog.connect("response", on_resp)
         dialog.show()
 
-    def _run_import_task(self, import_type, file_path):
+    def run_import_task(self, import_type, file_path):
         self.app_window.notify_loading(_("Importing..."))
 
         def task():
@@ -354,14 +354,14 @@ class ImportExportDialog:
 
     def ask_export_data(self):
         """Show the export destination choices."""
-        self._show_choices(_("Export Data"), [
-            (_("Linux - Chatty/Calls"), lambda: self._show_export_type_chooser("linux_chatty_calls"), None),
-            (_("Linux - Telephony"), lambda: self._show_export_type_chooser("linux_telephony"), None),
-            (_("Android"), lambda: self._show_export_type_chooser("android"), None),
-            (_("iOS"), lambda: self._show_export_type_chooser("ios"), None),
+        self.show_choices(_("Export Data"), [
+            (_("Linux - Chatty/Calls"), lambda: self.show_export_type_chooser("linux_chatty_calls"), None),
+            (_("Linux - Telephony"), lambda: self.show_export_type_chooser("linux_telephony"), None),
+            (_("Android"), lambda: self.show_export_type_chooser("android"), None),
+            (_("iOS"), lambda: self.show_export_type_chooser("ios"), None),
         ])
 
-    def _show_export_type_chooser(self, dest_format):
+    def show_export_type_chooser(self, dest_format):
         """Show the export content choices for a destination format."""
         description = None
         if dest_format == "ios":
@@ -369,15 +369,15 @@ class ImportExportDialog:
 
         rows = []
         if self.mode_messages:
-            rows.append((_("Messages (SMS/MMS)"), lambda: self._open_export_file_chooser(dest_format, "sms"), None))
+            rows.append((_("Messages (SMS/MMS)"), lambda: self.open_export_file_chooser(dest_format, "sms"), None))
         if self.mode_calls:
-            rows.append((_("Call History"), lambda: self._open_export_file_chooser(dest_format, "calls"), None))
+            rows.append((_("Call History"), lambda: self.open_export_file_chooser(dest_format, "calls"), None))
         if len(rows) == 1:
             rows[0][1]()
             return
-        self._show_choices(_("Export to {fmt}").format(fmt=dest_format), rows, description=description)
+        self.show_choices(_("Export to {fmt}").format(fmt=dest_format), rows, description=description)
 
-    def _open_export_file_chooser(self, dest_format, export_type):
+    def open_export_file_chooser(self, dest_format, export_type):
         dialog = Gtk.FileChooserNative(title=_("Export File"), transient_for=self.app_window, action=Gtk.FileChooserAction.SAVE)
 
         default_name = f"export_{export_type}"
@@ -394,16 +394,16 @@ class ImportExportDialog:
 
         dialog.set_current_name(default_name)
 
-        def _on_resp(d, r):
+        def on_resp(d, r):
             if r == Gtk.ResponseType.ACCEPT:
                 f = d.get_file()
-                self._run_export_task(dest_format, export_type, f.get_path())
+                self.run_export_task(dest_format, export_type, f.get_path())
             GLib.idle_add(lambda: d.destroy() or False)
 
-        dialog.connect("response", _on_resp)
+        dialog.connect("response", on_resp)
         dialog.show()
 
-    def _run_export_task(self, dest_format, export_type, file_path):
+    def run_export_task(self, dest_format, export_type, file_path):
         self.app_window.notify_loading(_("Exporting..."))
 
         def task():
@@ -450,14 +450,14 @@ class ImportExportDialog:
         """Handle import dialog response."""
         if response == Gtk.ResponseType.ACCEPT:
             f = dialog.get_file()
-            self._prompt_import_source(f.get_path())
+            self.prompt_import_source(f.get_path())
         GLib.idle_add(lambda: dialog.destroy() or False)
 
-    def _prompt_import_source(self, path):
+    def prompt_import_source(self, path):
         """Prompt user for target address book."""
-        self._prompt_target_book(lambda uid: self._start_import(path, uid))
+        self.prompt_target_book(lambda uid: self.start_import(path, uid))
 
-    def _prompt_target_book(self, on_chosen):
+    def prompt_target_book(self, on_chosen):
         """Ask which address book an import should write to.
 
         The choice is skipped when there is nothing to choose, the
@@ -466,9 +466,9 @@ class ImportExportDialog:
         the write anyway.
         """
         self.app_window.eds.sources_info_async(
-            lambda sources: self._choose_target_book(sources, on_chosen))
+            lambda sources: self.choose_target_book(sources, on_chosen))
 
-    def _choose_target_book(self, sources, on_chosen):
+    def choose_target_book(self, sources, on_chosen):
         """Ask for the book now that the list is known."""
         read_only_uids = self.app_window.eds.read_only_source_uids()
         enabled_sources = [s for s in sources if s['enabled'] and s['uid'] not in read_only_uids]
@@ -483,17 +483,17 @@ class ImportExportDialog:
 
         enabled_sources.sort(key=lambda s: not s.get('is_system_default'))
 
-        self._show_choices(_("Select Address Book"), [
+        self.show_choices(_("Select Address Book"), [
             (source['name'], (lambda uid=source['uid']: on_chosen(uid)),
              _("Default") if source.get('is_system_default') else None)
             for source in enabled_sources
         ], description=_("Where do you want to import contacts?"))
 
-    def _start_import(self, path, source_uid):
+    def start_import(self, path, source_uid):
         self.app_window.notify_loading(_("Importing..."))
-        run_in_background(self._import_task, path, source_uid)
+        run_in_background(self.import_task, path, source_uid)
 
-    def _import_task(self, path, source_uid=None):
+    def import_task(self, path, source_uid=None):
         """Background import task."""
         try:
             with open(path, 'r', encoding='utf-8') as f:
@@ -508,13 +508,13 @@ class ImportExportDialog:
 
     def on_export_all_clicked(self, btn=None):
         """Handle Export Click."""
-        self._prompt_export_source()
+        self.prompt_export_source()
 
-    def _prompt_export_source(self):
+    def prompt_export_source(self):
         """Prompt user for which address book to export (or All)."""
-        self.app_window.eds.sources_info_async(self._choose_export_source)
+        self.app_window.eds.sources_info_async(self.choose_export_source)
 
-    def _choose_export_source(self, sources):
+    def choose_export_source(self, sources):
         """Offer the books now that the list is known."""
         enabled_sources = [s for s in sources if s['enabled']]
 
@@ -524,34 +524,34 @@ class ImportExportDialog:
 
         enabled_sources.sort(key=lambda s: not s.get('is_system_default'))
 
-        self._show_choices(_("Export Contacts"), [
-            (_("Export All Address Books"), lambda: self._show_export_file_chooser(None), None)
+        self.show_choices(_("Export Contacts"), [
+            (_("Export All Address Books"), lambda: self.show_export_file_chooser(None), None)
         ] + [
-            (source['name'], (lambda uid=source['uid']: self._show_export_file_chooser(uid)),
+            (source['name'], (lambda uid=source['uid']: self.show_export_file_chooser(uid)),
              _("Default") if source.get('is_system_default') else None)
             for source in enabled_sources
         ], description=_("Which address book do you want to export?"))
 
-    def _show_export_file_chooser(self, source_uid):
+    def show_export_file_chooser(self, source_uid):
         """Show file chooser for export location."""
         dialog = Gtk.FileChooserNative(title=_("Export Contacts"), transient_for=self.app_window, action=Gtk.FileChooserAction.SAVE)
         name_suffix = "all" if not source_uid else "filtered"
         dialog.set_current_name(f"contacts_backup_{name_suffix}.vcf")
 
-        def _on_resp(d, r):
+        def on_resp(d, r):
             self.on_export_file_response(d, r, source_uid)
 
-        dialog.connect("response", _on_resp)
+        dialog.connect("response", on_resp)
         dialog.show()
 
     def on_export_file_response(self, dialog, response, source_uid):
         """Handle export file selection response."""
         if response == Gtk.ResponseType.ACCEPT:
             f = dialog.get_file()
-            run_in_background(self._export_all_task, f.get_path(), source_uid)
+            run_in_background(self.export_all_task, f.get_path(), source_uid)
         GLib.idle_add(lambda: dialog.destroy() or False)
 
-    def _export_all_task(self, path, source_uid=None):
+    def export_all_task(self, path, source_uid=None):
         """Background export task."""
         try:
             vcards = self.app_window.db.get_all_vcards(source_uid)

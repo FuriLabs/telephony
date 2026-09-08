@@ -27,11 +27,11 @@ def normalize_number(number, permissive=False):
     """
     Normalize a phone number to E164 format.
     """
-    return _normalize_number_cached(number, get_system_region(), permissive)
+    return normalize_number_cached(number, get_system_region(), permissive)
 
 
 @lru_cache(maxsize=4096)
-def _normalize_number_cached(number, region, permissive=False):
+def normalize_number_cached(number, region, permissive=False):
     """
     Internal cached implementation of normalize_number.
     """

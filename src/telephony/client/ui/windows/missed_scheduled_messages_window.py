@@ -40,7 +40,7 @@ class MissedScheduledMessagesDialog:
                 if done_callback:
                     done_callback()
                 return
-            self._process_missed_message_queue(missed, 0, done_callback)
+            self.process_missed_message_queue(missed, 0, done_callback)
 
         def failed(error):
             logger.error(f"[MissedScheduled] Check missed messages error: {error}")
@@ -50,7 +50,7 @@ class MissedScheduledMessagesDialog:
         run_in_background(self.daemon.get_missed_messages,
                           on_complete=done, on_error=failed)
 
-    def _process_missed_message_queue(self, messages, index, done_callback):
+    def process_missed_message_queue(self, messages, index, done_callback):
         """Recursively show dialogs for missed messages."""
         if index >= len(messages):
             if done_callback:
@@ -110,7 +110,7 @@ class MissedScheduledMessagesDialog:
         lbl_msg.set_ellipsize(Pango.EllipsizeMode.END)
 
         if display_body:
-            final_body = ChatBubbleFactory._linkify(display_body)
+            final_body = ChatBubbleFactory.linkify(display_body)
             lbl_msg.set_markup(final_body)
             lbl_msg.set_visible(True)
         else:
@@ -131,7 +131,7 @@ class MissedScheduledMessagesDialog:
 
                 if processed_files:
                     media_box.set_visible(True)
-                    ChatBubbleFactory._create_attachment_layout(media_box, processed_files, bubble_box, lambda: True)
+                    ChatBubbleFactory.create_attachment_layout(media_box, processed_files, bubble_box, lambda: True)
             except Exception as ex:
                 logger.error(f"[MissedScheduled] Attachment processing error: {ex}")
 
@@ -153,26 +153,26 @@ class MissedScheduledMessagesDialog:
         btn_send = Gtk.Button(label=_("Send Now"))
         btn_send.add_css_class("suggested-action")
 
-        def _on_send_now(b):
+        def on_send_now(b):
             close_sheet_page(self.app_window)
             self.daemon.send_missed_message(mid)
             self.app_window.notify_success(_("Sending message to {number}...").format(number=number))
-            GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
+            GLib.idle_add(lambda: self.process_missed_message_queue(messages, index + 1, done_callback))
 
-        btn_send.connect("clicked", lambda b: GLib.idle_add(lambda: _on_send_now(b) or False))
+        btn_send.connect("clicked", lambda b: GLib.idle_add(lambda: on_send_now(b) or False))
         btn_box.append(btn_send)
 
         btn_remove = Gtk.Button(label=_("Remove"))
         btn_remove.add_css_class("destructive-action")
 
-        def _on_remove(b):
+        def on_remove(b):
             close_sheet_page(self.app_window)
             run_in_background(self.daemon.delete_message, mid)
             self.app_window.notify_success(_("Message removed"))
 
-            GLib.idle_add(lambda: self._process_missed_message_queue(messages, index + 1, done_callback))
+            GLib.idle_add(lambda: self.process_missed_message_queue(messages, index + 1, done_callback))
 
-        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: _on_remove(b) or False))
+        btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: on_remove(b) or False))
         btn_box.append(btn_remove)
 
         main_box.append(btn_box)

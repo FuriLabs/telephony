@@ -83,5 +83,5 @@ def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECON
     state["handler"] = ofono.connect('dial-availability-changed', on_availability)
     state["timer"] = GLib.timeout_add_seconds(timeout_seconds, on_timeout)
 
-    if ofono.dialing_available() and ofono.modem_online is True:
+    if ofono.is_dialing_available() and ofono.modem_online is True:
         finish(True)

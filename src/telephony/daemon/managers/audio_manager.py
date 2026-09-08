@@ -81,7 +81,7 @@ class TelephonyAudioManager:
 
 
     @contextmanager
-    def _pulse(self):
+    def pulse(self):
         """Yield the shared pulsectl connection under a lock.
 
         The connection is created on first use and reused afterwards; when an
@@ -92,15 +92,15 @@ class TelephonyAudioManager:
         import pulsectl
         with self._pulse_lock:
             if self._pulse_conn is None or not self._pulse_conn.connected:
-                self._close_pulse()
+                self.close_pulse()
                 self._pulse_conn = pulsectl.Pulse('telephony-audio')
             try:
                 yield self._pulse_conn
             except pulsectl.PulseError:
-                self._close_pulse()
+                self.close_pulse()
                 raise
 
-    def _close_pulse(self):
+    def close_pulse(self):
         """Close the shared pulsectl connection if one exists."""
         if self._pulse_conn is None:
             return
@@ -110,7 +110,7 @@ class TelephonyAudioManager:
             logger.debug(f"[Audio] Pulse close error (ignorable): {e}")
         self._pulse_conn = None
 
-    def _lookup_sink(self, pulse, name):
+    def lookup_sink(self, pulse, name):
         """Return the named sink or None when it is absent."""
         import pulsectl
         try:
@@ -119,7 +119,7 @@ class TelephonyAudioManager:
             logger.debug(f"[Audio] Sink {name} not present")
             return None
 
-    def _lookup_source(self, pulse, name):
+    def lookup_source(self, pulse, name):
         """Return the named source or None when it is absent."""
         import pulsectl
         try:
@@ -189,7 +189,7 @@ class TelephonyAudioManager:
                 logger.error(f"[Audio] Profile change callback failed: {e}")
         profile_name = "voicecall" if enable else "default"
         try:
-            with self._pulse() as pulse:
+            with self.pulse() as pulse:
                 cards = pulse.card_list()
                 target_card = None
                 for c in cards:
@@ -205,7 +205,7 @@ class TelephonyAudioManager:
         except Exception as e:
             logger.error(f"[Audio] Set profile failed: {e}")
 
-    def _pick_route_port(self, sink, mode):
+    def pick_route_port(self, sink, mode):
         """Map a route id to the sink port to activate, or None when absent."""
         if mode == "earpiece":
             return "output-earpiece"
@@ -225,13 +225,13 @@ class TelephonyAudioManager:
         changes and the droid card module parks by itself around those.
         """
         try:
-            with self._pulse() as pulse:
-                sink = self._lookup_sink(pulse, "sink.primary_output")
+            with self.pulse() as pulse:
+                sink = self.lookup_sink(pulse, "sink.primary_output")
                 if not sink:
                     logger.warning("[Audio] sink.primary_output not found")
                     return
 
-                port_name = self._pick_route_port(sink, mode)
+                port_name = self.pick_route_port(sink, mode)
                 if not port_name:
                     logger.info(f"[Audio] No port for output route: {mode}")
                     return
@@ -250,9 +250,9 @@ class TelephonyAudioManager:
     def initial_call_route(self):
         """Return the route a new call should start on."""
         try:
-            with self._pulse() as pulse:
-                sink = self._lookup_sink(pulse, "sink.primary_output")
-                if sink and self._pick_route_port(sink, "wired"):
+            with self.pulse() as pulse:
+                sink = self.lookup_sink(pulse, "sink.primary_output")
+                if sink and self.pick_route_port(sink, "wired"):
                     return "wired"
         except Exception as e:
             logger.debug(f"[Audio] Initial route probe failed: {e}")
@@ -262,8 +262,8 @@ class TelephonyAudioManager:
         """Map the primary sink's active port to a route id, or None when parked."""
         name = None
         try:
-            with self._pulse() as pulse:
-                sink = self._lookup_sink(pulse, "sink.primary_output")
+            with self.pulse() as pulse:
+                sink = self.lookup_sink(pulse, "sink.primary_output")
                 if sink and sink.port_active:
                     name = sink.port_active.name
         except Exception as e:
@@ -285,8 +285,8 @@ class TelephonyAudioManager:
         """
         level = max(0.0, min(1.0, level))
         try:
-            with self._pulse() as pulse:
-                sink = self._lookup_sink(pulse, "sink.primary_output")
+            with self.pulse() as pulse:
+                sink = self.lookup_sink(pulse, "sink.primary_output")
                 if not sink:
                     logger.warning("[Audio] sink.primary_output not found for call volume")
                     return
@@ -299,8 +299,8 @@ class TelephonyAudioManager:
     def ensure_sink_unmuted(self):
         """Clear any mute that module-device-restore re-applied on a port change."""
         try:
-            with self._pulse() as pulse:
-                sink = self._lookup_sink(pulse, "sink.primary_output")
+            with self.pulse() as pulse:
+                sink = self.lookup_sink(pulse, "sink.primary_output")
                 if sink and sink.mute:
                     pulse.sink_mute(sink.index, False)
                     logger.info("[Audio] Cleared restored sink mute")
@@ -312,12 +312,12 @@ class TelephonyAudioManager:
         has_bt = False
         has_wired = False
         try:
-            with self._pulse() as pulse:
+            with self.pulse() as pulse:
                 for c in pulse.card_list():
                     if "bluez" in c.name:
                         has_bt = True
                         break
-                sink = self._lookup_sink(pulse, "sink.primary_output")
+                sink = self.lookup_sink(pulse, "sink.primary_output")
                 if sink:
                     for p in sink.port_list:
                         if "wired_headphone" in p.name or "headset" in p.name:
@@ -339,12 +339,12 @@ class TelephonyAudioManager:
         has_bt = False
         has_wired = False
         try:
-            with self._pulse() as pulse:
+            with self.pulse() as pulse:
                 for c in pulse.card_list():
                     if "bluez" in c.name:
                         has_bt = True
                         break
-                sink = self._lookup_sink(pulse, "sink.primary_output")
+                sink = self.lookup_sink(pulse, "sink.primary_output")
                 if sink:
                     for p in sink.port_list:
                         if "headset" in p.name and getattr(p, 'available', None) != 'no':
@@ -359,25 +359,25 @@ class TelephonyAudioManager:
             {"id": "bluetooth", "name": "Bluetooth Mic", "icon": "bluetooth-active-symbolic", "available": has_bt},
         ]
 
-    def _get_call_sink(self, pulse, preferred_name=None):
+    def get_call_sink(self, pulse, preferred_name=None):
         """Return the sink used for call audio, preferring the droid primary output."""
         for name in (preferred_name, "sink.primary_output"):
             if not name:
                 continue
-            sink = self._lookup_sink(pulse, name)
+            sink = self.lookup_sink(pulse, name)
             if sink:
                 return sink
 
         info = pulse.server_info()
-        return self._lookup_sink(pulse, info.default_sink_name)
+        return self.lookup_sink(pulse, info.default_sink_name)
 
     def save_media_state(self):
         """Snapshot the media volume and active port once before a call."""
         if self._pre_call_vol is not None:
             return
         try:
-            with self._pulse() as pulse:
-                sink = self._get_call_sink(pulse)
+            with self.pulse() as pulse:
+                sink = self.get_call_sink(pulse)
                 if not sink:
                     logger.warning("[Audio] No sink found to save media state")
                     return
@@ -389,7 +389,7 @@ class TelephonyAudioManager:
         except Exception as e:
             logger.error(f"[Audio] Save media state failed: {e}")
 
-    def _pick_media_port(self, sink):
+    def pick_media_port(self, sink):
         """
         Choose the output port to return to after the last call ends.
         The earpiece is never a media port, so a stale earpiece snapshot
@@ -416,10 +416,10 @@ class TelephonyAudioManager:
         if self._pre_call_vol is None:
             return
         try:
-            with self._pulse() as pulse:
-                sink = self._get_call_sink(pulse, self._pre_call_sink_name)
+            with self.pulse() as pulse:
+                sink = self.get_call_sink(pulse, self._pre_call_sink_name)
                 if sink:
-                    target_port = self._pick_media_port(sink)
+                    target_port = self.pick_media_port(sink)
                     if target_port:
                         try:
                             pulse.sink_port_set(sink.index, target_port)
@@ -442,11 +442,11 @@ class TelephonyAudioManager:
             return
 
         try:
-            with self._pulse() as pulse:
+            with self.pulse() as pulse:
                 info = pulse.server_info()
                 default_source_name = info.default_source_name
 
-                source = self._lookup_source(pulse, default_source_name)
+                source = self.lookup_source(pulse, default_source_name)
                 if source:
                     pulse.source_mute(source.index, muted)
                     self._last_mute_state = muted
@@ -470,18 +470,18 @@ class TelephonyAudioManager:
                     set_feedbackd_profile(self._pre_max_fb_profile)
                     self._pre_max_fb_profile = None
 
-                with self._pulse() as pulse:
+                with self.pulse() as pulse:
                     target_sink_name = self._pre_max_sink_name
                     sink = None
                     if target_sink_name:
                         try:
-                            sink = self._lookup_sink(pulse, target_sink_name)
+                            sink = self.lookup_sink(pulse, target_sink_name)
                         except Exception:
                             logger.warning(f"[Audio] Saved sink {target_sink_name} not found, trying default.")
 
                     if not sink:
                         info = pulse.server_info()
-                        sink = self._lookup_sink(pulse, info.default_sink_name)
+                        sink = self.lookup_sink(pulse, info.default_sink_name)
 
                     if sink:
                         if self._pre_max_mute is not None:
@@ -510,9 +510,9 @@ class TelephonyAudioManager:
             set_feedbackd_profile("full")
 
         try:
-            with self._pulse() as pulse:
+            with self.pulse() as pulse:
                 info = pulse.server_info()
-                sink = self._lookup_sink(pulse, info.default_sink_name)
+                sink = self.lookup_sink(pulse, info.default_sink_name)
 
                 if sink:
                     if self._pre_max_sink_name is None:

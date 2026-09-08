@@ -46,7 +46,7 @@ class ContactEditor(Adw.NavigationPage):
         self._saving_in_progress = False
         self._destroyed = False
         super().__init__(title=_("Contact Details"))
-        self.connect("hidden", self._on_closed)
+        self.connect("hidden", self.on_closed)
         self.eds = eds_manager
         self.main_window = main_window
         self.uid = contact_data['uid'] if contact_data else None
@@ -81,13 +81,13 @@ class ContactEditor(Adw.NavigationPage):
 
         if self._vcard_loading:
             run_in_background(self.eds.get_contact_vcard, self.uid,
-                              on_complete=self._on_vcard_loaded, on_error=self._on_vcard_load_failed)
+                              on_complete=self.on_vcard_loaded, on_error=self.on_vcard_load_failed)
 
-    def _on_closed(self, _dialog):
+    def on_closed(self, _dialog):
         """Remember that the dialog is closing so async callbacks bail out."""
         self._destroyed = True
 
-    def _on_vcard_loaded(self, vcard):
+    def on_vcard_loaded(self, vcard):
         """Apply the asynchronously fetched vCard and rebuild the view."""
         self._vcard_loading = False
         if self._destroyed:
@@ -97,7 +97,7 @@ class ContactEditor(Adw.NavigationPage):
         if self.mode == "VIEW":
             self.refresh_ui()
 
-    def _on_vcard_load_failed(self, error):
+    def on_vcard_load_failed(self, error):
         """Re-enable the view controls after a failed vCard fetch."""
         logger.error(f"[ContactEditor] vCard load failed: {error}")
         self._vcard_loading = False
@@ -106,7 +106,7 @@ class ContactEditor(Adw.NavigationPage):
         if self.mode == "VIEW":
             self.refresh_ui()
 
-    def _clean_vcard_str(self, text):
+    def clean_vcard_str(self, text):
         """Clean up vCard text field (unescape)."""
         if not text:
             return ""
@@ -163,15 +163,15 @@ class ContactEditor(Adw.NavigationPage):
         page = Adw.PreferencesPage()
         view.set_content(page)
 
-        current_phones = self._extract_phones_with_labels()
-        current_emails = self._extract_emails_with_labels()
+        current_phones = self.extract_phones_with_labels()
+        current_emails = self.extract_emails_with_labels()
 
         grp_id = Adw.PreferencesGroup(title=_("Identity"))
 
         if self.mode == "EDIT":
             self.row_fav = Adw.ActionRow(title=_("Favorite"))
             self.switch_fav = Gtk.Switch(valign=Gtk.Align.CENTER)
-            is_fav = self._extract_field("X-FOLKS-FAVOURITE")
+            is_fav = self.extract_field("X-FOLKS-FAVOURITE")
             self.switch_fav.set_active(is_fav and is_fav.lower() == "true")
             self.row_fav.add_suffix(self.switch_fav)
             grp_id.add(self.row_fav)
@@ -182,19 +182,19 @@ class ContactEditor(Adw.NavigationPage):
 
             grp_id.add(self.entry_fn)
         else:
-            is_fav_val = self._extract_field("X-FOLKS-FAVOURITE")
+            is_fav_val = self.extract_field("X-FOLKS-FAVOURITE")
             is_fav = bool(is_fav_val and is_fav_val.lower() == "true")
             if self.contact_name:
-                row_name = self._create_view_row(_("Name"), self.contact_name)
+                row_name = self.create_view_row(_("Name"), self.contact_name)
                 if is_fav:
                     row_name.add_suffix(Gtk.Image.new_from_icon_name("starred-symbolic"))
                 grp_id.add(row_name)
             elif is_fav:
-                grp_id.add(self._create_view_row(_("Favorite"), _("Yes")))
+                grp_id.add(self.create_view_row(_("Favorite"), _("Yes")))
 
         page.add(grp_id)
 
-        self._add_address_books_group(page)
+        self.add_address_books_group(page)
 
         self.grp_phones = Adw.PreferencesGroup(title=_("Phone Numbers"))
         if self.mode == "EDIT":
@@ -208,13 +208,13 @@ class ContactEditor(Adw.NavigationPage):
                 phones = [("", "Mobile")]
 
             for p_num, p_label in phones:
-                self._add_phone_row(p_num, p_label)
+                self.add_phone_row(p_num, p_label)
 
-            self.grp_phones.set_header_suffix(self._group_add_button(_("Add Number"), lambda: self._add_phone_row("", "Mobile")))
+            self.grp_phones.set_header_suffix(self.group_add_button(_("Add Number"), lambda: self.add_phone_row("", "Mobile")))
         else:
             if current_phones:
                 for num, lbl in current_phones:
-                    self.grp_phones.add(self._phone_view_row(num, lbl))
+                    self.grp_phones.add(self.phone_view_row(num, lbl))
             else:
                 self.grp_phones.set_visible(False)
         page.add(self.grp_phones)
@@ -225,13 +225,13 @@ class ContactEditor(Adw.NavigationPage):
 
             emails = current_emails if current_emails else [("", "Home")]
             for e_addr, e_label in emails:
-                self._add_email_row(e_addr, e_label)
+                self.add_email_row(e_addr, e_label)
 
-            self.grp_emails.set_header_suffix(self._group_add_button(_("Add Email"), lambda: self._add_email_row("", "Home")))
+            self.grp_emails.set_header_suffix(self.group_add_button(_("Add Email"), lambda: self.add_email_row("", "Home")))
         else:
             if current_emails:
                 for addr, lbl in current_emails:
-                    self.grp_emails.add(self._email_view_row(addr, lbl))
+                    self.grp_emails.add(self.email_view_row(addr, lbl))
             else:
                 self.grp_emails.set_visible(False)
         page.add(self.grp_emails)
@@ -250,7 +250,7 @@ class ContactEditor(Adw.NavigationPage):
         self.adv_entries = {}
 
         for key, lbl in text_fields:
-            val = self._extract_field(key)
+            val = self.extract_field(key)
             if self.mode == "EDIT":
                 row = Adw.EntryRow(title=lbl)
                 if val:
@@ -261,25 +261,25 @@ class ContactEditor(Adw.NavigationPage):
                 self.adv_entries[key] = row
             else:
                 if val:
-                    exp_adv.add_row(self._create_view_row(lbl, val))
+                    exp_adv.add_row(self.create_view_row(lbl, val))
                     has_adv_data = True
 
-        bday_val = self._extract_field("BDAY")
-        anniv_val = self._extract_field("ANNIVERSARY")
+        bday_val = self.extract_field("BDAY")
+        anniv_val = self.extract_field("ANNIVERSARY")
 
         if self.mode == "EDIT":
-            self.bday_row = self._create_date_editor(_("Birthday"), bday_val)
-            self.anniv_row = self._create_date_editor(_("Anniversary"), anniv_val)
+            self.bday_row = self.create_date_editor(_("Birthday"), bday_val)
+            self.anniv_row = self.create_date_editor(_("Anniversary"), anniv_val)
             exp_adv.add_row(self.bday_row)
             exp_adv.add_row(self.anniv_row)
             if bday_val or anniv_val:
                 has_adv_data = True
         else:
             if bday_val:
-                exp_adv.add_row(self._create_view_row(_("Birthday"), bday_val))
+                exp_adv.add_row(self.create_view_row(_("Birthday"), bday_val))
                 has_adv_data = True
             if anniv_val:
-                exp_adv.add_row(self._create_view_row(_("Anniversary"), anniv_val))
+                exp_adv.add_row(self.create_view_row(_("Anniversary"), anniv_val))
                 has_adv_data = True
 
         exp_adv.set_expanded(has_adv_data and self.mode == "EDIT")
@@ -290,7 +290,7 @@ class ContactEditor(Adw.NavigationPage):
         if self.uid:
             grp_share = Adw.PreferencesGroup()
             row_qr = Adw.ActionRow(title=_("Share as QR code"), activatable=True)
-            row_qr.connect("activated", lambda r: GLib.idle_add(lambda: self._share_qr() or False))
+            row_qr.connect("activated", lambda r: GLib.idle_add(lambda: self.share_qr() or False))
             grp_share.add(row_qr)
             page.add(grp_share)
 
@@ -306,7 +306,7 @@ class ContactEditor(Adw.NavigationPage):
 
         self.toast_overlay.set_child(view)
 
-    def _add_address_books_group(self, page):
+    def add_address_books_group(self, page):
         grp = Adw.PreferencesGroup(title=_("Address Books"))
         page.add(grp)
 
@@ -347,7 +347,7 @@ class ContactEditor(Adw.NavigationPage):
                 grp.add(row)
                 self.source_toggles[s['uid']] = row
 
-    def _create_date_editor(self, title, current_val):
+    def create_date_editor(self, title, current_val):
         """Create a date editor row; the caller adds it to its container."""
         row = Adw.ActionRow(title=title)
 
@@ -386,14 +386,14 @@ class ContactEditor(Adw.NavigationPage):
             except Exception as e:
                 logger.warning(f"Failed to parse {title}: {e}")
 
-        btn_edit.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_date_picker(title, row, lbl_date) or False))
+        btn_edit.connect("clicked", lambda b: GLib.idle_add(lambda: self.open_date_picker(title, row, lbl_date) or False))
         btn_clear.connect("clicked", lambda b: GLib.idle_add(lambda: [setattr(row, '_selected_date', None), lbl_date.set_label(_("Select Date")), lbl_date.add_css_class("dim-label")] and False))
 
         return row
 
-    def _open_date_picker(self, title, row, lbl_widget):
+    def open_date_picker(self, title, row, lbl_widget):
         """Open the DateTimePicker dialog."""
-        def _on_picked(date):
+        def on_picked(date):
             row._selected_date = date
             lbl_widget.set_label(date.format("%Y-%m-%d"))
             lbl_widget.remove_css_class("dim-label")
@@ -405,10 +405,10 @@ class ContactEditor(Adw.NavigationPage):
             title=_("Select {title}").format(title=title),
             initial_date=row._selected_date,
             include_time=False,
-            on_confirm=_on_picked
+            on_confirm=on_picked
         )
 
-    def _create_view_row(self, title, value, copy_text=None):
+    def create_view_row(self, title, value, copy_text=None):
         """Create a read-only row for viewing data.
 
         Copies the value by default; copy_text overrides it for rows
@@ -418,11 +418,11 @@ class ContactEditor(Adw.NavigationPage):
         value = copy_text if copy_text is not None else value
         btn_copy = Gtk.Button(icon_name="edit-copy-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat", "circular"])
         btn_copy.set_tooltip_text(_("Copy {title}").format(title=title))
-        btn_copy.connect("clicked", lambda b: GLib.idle_add(lambda: self._copy_to_clipboard(value) or False))
+        btn_copy.connect("clicked", lambda b: GLib.idle_add(lambda: self.copy_to_clipboard(value) or False))
         row.add_suffix(btn_copy)
         return row
 
-    def _copy_to_clipboard(self, text):
+    def copy_to_clipboard(self, text):
         """Copy text to clipboard."""
         clipboard = Gdk.Display.get_default().get_clipboard()
         clipboard.set(text)
@@ -443,23 +443,23 @@ class ContactEditor(Adw.NavigationPage):
         else:
             GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
 
-    def _add_phone_row(self, text="", label="Mobile"):
+    def add_phone_row(self, text="", label="Mobile"):
         """Add a phone number entry row."""
         label_keys = ["Mobile", "Work", "Home", "Fax", "Other"]
         display_labels = [_("Mobile"), _("Work"), _("Home"), _("Fax"), _("Other")]
-        self._add_field_row(self.grp_phones, self.phone_entries,
+        self.add_field_row(self.grp_phones, self.phone_entries,
                             label_keys, display_labels, label, text,
                             _("Phone"), Gtk.InputPurpose.PHONE)
 
-    def _add_email_row(self, text="", label="Home"):
+    def add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
         label_keys = ["Home", "Work", "Other"]
         display_labels = [_("Home"), _("Work"), _("Other")]
-        self._add_field_row(self.grp_emails, self.email_entries,
+        self.add_field_row(self.grp_emails, self.email_entries,
                             label_keys, display_labels, label, text,
                             _("Email"), Gtk.InputPurpose.EMAIL)
 
-    def _add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose):
+    def add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose):
         """Add a full width entry row and its type expander for one value.
 
         The entry keeps the whole row for typing; the type lives in an
@@ -500,53 +500,53 @@ class ContactEditor(Adw.NavigationPage):
         group.add(type_row)
         entries_list.append((row, type_row))
 
-    def _group_add_button(self, tooltip, callback):
+    def group_add_button(self, tooltip, callback):
         """Build the header add button for a preferences group."""
         btn = Gtk.Button(icon_name="list-add-symbolic", css_classes=["flat"], valign=Gtk.Align.CENTER)
         btn.set_tooltip_text(tooltip)
         btn.connect("clicked", lambda b: GLib.idle_add(lambda: callback() or False))
         return btn
 
-    def _phone_view_row(self, number, label):
+    def phone_view_row(self, number, label):
         """Read-only phone row with message and call shortcuts."""
-        row = self._create_view_row(number, translate_phone_label(label), copy_text=number)
+        row = self.create_view_row(number, translate_phone_label(label), copy_text=number)
 
         btn_msg = Gtk.Button(icon_name="mail-message-new-symbolic", valign=Gtk.Align.CENTER)
         btn_msg.add_css_class("circular")
         btn_msg.add_css_class("secondary-btn")
         btn_msg.set_size_request(34, 34)
-        btn_msg.connect("clicked", lambda b: GLib.idle_add(lambda: self._message_number(number) or False))
+        btn_msg.connect("clicked", lambda b: GLib.idle_add(lambda: self.message_number(number) or False))
 
         btn_call = Gtk.Button(icon_name="call-start-symbolic", valign=Gtk.Align.CENTER)
         btn_call.add_css_class("circular")
         btn_call.add_css_class("call-btn-small")
         btn_call.set_size_request(34, 34)
-        btn_call.set_sensitive(bool(self.main_window.ofono and self.main_window.ofono.dialing_available()))
-        btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self._call_number(number) or False))
+        btn_call.set_sensitive(bool(self.main_window.ofono and self.main_window.ofono.is_dialing_available()))
+        btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self.call_number(number) or False))
 
         row.add_suffix(btn_msg)
         row.add_suffix(btn_call)
         return row
 
-    def _email_view_row(self, address, label):
+    def email_view_row(self, address, label):
         """Read-only email row with a mail client shortcut."""
-        row = self._create_view_row(address, translate_phone_label(label), copy_text=address)
+        row = self.create_view_row(address, translate_phone_label(label), copy_text=address)
         btn_mail = Gtk.Button(icon_name="mail-send-symbolic", valign=Gtk.Align.CENTER, css_classes=["flat", "circular"])
-        btn_mail.connect("clicked", lambda b: GLib.idle_add(lambda: self._open_mailto(address) or False))
+        btn_mail.connect("clicked", lambda b: GLib.idle_add(lambda: self.open_mailto(address) or False))
         row.add_suffix(btn_mail)
         return row
 
-    def _message_number(self, number):
+    def message_number(self, number):
         """Open a chat for the number, leaving the modal editor first."""
         close_sheet_page(self.get_root())
         self.main_window.present_chat(normalize_number(number))
 
-    def _call_number(self, number):
+    def call_number(self, number):
         """Start a call to the number, leaving the modal editor first."""
         close_sheet_page(self.get_root())
         self.main_window.start_call(number)
 
-    def _open_mailto(self, address):
+    def open_mailto(self, address):
         """Open the default mail client for the address."""
         try:
             Gio.AppInfo.launch_default_for_uri(f"mailto:{address}", None)
@@ -554,7 +554,7 @@ class ContactEditor(Adw.NavigationPage):
             logger.warning(f"[ContactEditor] Could not open mail client: {e}")
             self.toast_overlay.add_toast(Adw.Toast.new(_("No email app available")))
 
-    def _extract_phones_with_labels(self):
+    def extract_phones_with_labels(self):
         """Parse phone numbers from vCard data."""
         if not self.vcard_cache:
             return []
@@ -566,7 +566,7 @@ class ContactEditor(Adw.NavigationPage):
             if line.startswith("TEL"):
                 parts = line.split(":", 1)
                 if len(parts) > 1:
-                    raw_number = self._clean_vcard_str(parts[1])
+                    raw_number = self.clean_vcard_str(parts[1])
                     meta = parts[0].upper()
 
                     if "X-EVOLUTION-E164" in meta:
@@ -585,7 +585,7 @@ class ContactEditor(Adw.NavigationPage):
                     res.append((number, label))
         return res
 
-    def _extract_emails_with_labels(self):
+    def extract_emails_with_labels(self):
         """Parse emails from vCard data."""
         if not self.vcard_cache:
             return []
@@ -595,7 +595,7 @@ class ContactEditor(Adw.NavigationPage):
             if line.startswith("EMAIL"):
                 parts = line.split(":", 1)
                 if len(parts) > 1:
-                    email = self._clean_vcard_str(parts[1])
+                    email = self.clean_vcard_str(parts[1])
                     meta = parts[0].upper()
                     label = "Home"
                     if "WORK" in meta:
@@ -607,7 +607,7 @@ class ContactEditor(Adw.NavigationPage):
                     res.append((email, label))
         return res
 
-    def _extract_field(self, key):
+    def extract_field(self, key):
         """Extract a generic vCard field."""
         if not self.vcard_cache:
             return ""
@@ -616,7 +616,7 @@ class ContactEditor(Adw.NavigationPage):
             if line.startswith(f"{key}:") or line.startswith(f"{key};"):
                 try:
                     raw_val = line.split(":", 1)[1].replace(";", " ")
-                    return self._clean_vcard_str(raw_val)
+                    return self.clean_vcard_str(raw_val)
                 except Exception as e:
                     logger.debug(f"[ContactEditor] Field extract error: {e}")
                     return ""
@@ -641,18 +641,18 @@ class ContactEditor(Adw.NavigationPage):
                 logger.error(e)
         GLib.idle_add(lambda: dialog.destroy() or False)
 
-    def _share_qr(self):
+    def share_qr(self):
         """Show this contact as a QR code built from its saved details.
 
         The payload is rebuilt slim from the parsed fields so the photo
         and other bulky properties never enter the code.
         """
-        name = self.contact_name or self._extract_field("FN") or ""
+        name = self.contact_name or self.extract_field("FN") or ""
         lines = ["BEGIN:VCARD", "VERSION:3.0", f"FN:{name}"]
         lines.extend(f"TEL;TYPE={label}:{number}"
-                     for number, label in self._extract_phones_with_labels())
+                     for number, label in self.extract_phones_with_labels())
         lines.extend(f"EMAIL;TYPE={label}:{address}"
-                     for address, label in self._extract_emails_with_labels())
+                     for address, label in self.extract_emails_with_labels())
         lines.append("END:VCARD")
 
         dialog = QrShareDialog(name, "\n".join(lines))
@@ -667,9 +667,9 @@ class ContactEditor(Adw.NavigationPage):
             _("Delete Contact"),
             _("{name} will be removed from your address book.").format(
                 name=self.contact_name or _("This contact")),
-            self._do_delete)
+            self.do_delete)
 
-    def _do_delete(self):
+    def do_delete(self):
         """Perform deletion."""
         if not self.uid:
             GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
@@ -696,7 +696,7 @@ class ContactEditor(Adw.NavigationPage):
 
         run_in_background(task, on_complete=done)
 
-    def _generate_vcard_from_ui(self, phones_to_save):
+    def generate_vcard_from_ui(self, phones_to_save):
         """Generate VCard string from UI fields."""
         preserved_lines = []
         if self.vcard_cache:
@@ -754,9 +754,9 @@ class ContactEditor(Adw.NavigationPage):
         lines.append("END:VCARD")
         return "\n".join(lines)
 
-    def _get_current_contact_data(self, phones_to_save):
+    def get_current_contact_data(self, phones_to_save):
         """Construct a contact dictionary from UI."""
-        vcard = self._generate_vcard_from_ui(phones_to_save)
+        vcard = self.generate_vcard_from_ui(phones_to_save)
 
         emails = []
         label_options_email = ["Home", "Work", "Other"]
@@ -805,15 +805,15 @@ class ContactEditor(Adw.NavigationPage):
                     selected_sources.append(def_uid)
 
             if force:
-                self._proceed_with_save(phones_to_save, selected_sources)
+                self.proceed_with_save(phones_to_save, selected_sources)
                 return
 
             resolver_enabled = self.main_window.gsettings_mgr.gsettings.get_boolean("duplicate-resolver-enabled")
 
             run_in_background(
-                self._run_save_prechecks, phones_to_save, selected_sources, resolver_enabled,
-                on_complete=lambda result: self._on_prechecks_done(result, phones_to_save, selected_sources),
-                on_error=self._on_precheck_failed
+                self.run_save_prechecks, phones_to_save, selected_sources, resolver_enabled,
+                on_complete=lambda result: self.on_prechecks_done(result, phones_to_save, selected_sources),
+                on_error=self.on_precheck_failed
             )
         except Exception as e:
             self._saving_in_progress = False
@@ -821,7 +821,7 @@ class ContactEditor(Adw.NavigationPage):
                 self.btn_save.set_sensitive(True)
             logger.error(f"[ContactEditor] On save error: {e}")
 
-    def _run_save_prechecks(self, phones_to_save, selected_sources, resolver_enabled):
+    def run_save_prechecks(self, phones_to_save, selected_sources, resolver_enabled):
         """Scan the blocklist and the contact cache for conflicts off the main thread."""
         blocked_conflict = None
         conflicts_by_num = {}
@@ -844,7 +844,7 @@ class ContactEditor(Adw.NavigationPage):
 
         return blocked_conflict, conflicts_by_num
 
-    def _on_prechecks_done(self, result, phones_to_save, selected_sources):
+    def on_prechecks_done(self, result, phones_to_save, selected_sources):
         """Continue the save flow on the main thread after background checks."""
         if self._destroyed:
             self._saving_in_progress = False
@@ -855,11 +855,11 @@ class ContactEditor(Adw.NavigationPage):
 
             if blocked_conflict:
                 self._saving_in_progress = False
-                self._confirm_unblock_add(blocked_conflict, lambda: self._unblock_and_resave(blocked_conflict))
+                self.confirm_unblock_add(blocked_conflict, lambda: self.unblock_and_resave(blocked_conflict))
                 return
 
             if conflicts_by_num:
-                new_data = self._get_current_contact_data(phones_to_save)
+                new_data = self.get_current_contact_data(phones_to_save)
 
                 conflicts = []
                 for num, uids in conflicts_by_num.items():
@@ -882,14 +882,14 @@ class ContactEditor(Adw.NavigationPage):
                     present_sheet_page(self.get_root(), page)
                     return
 
-            self._proceed_with_save(phones_to_save, selected_sources)
+            self.proceed_with_save(phones_to_save, selected_sources)
         except Exception as e:
             self._saving_in_progress = False
             if (self.btn_save is not None):
                 self.btn_save.set_sensitive(True)
             logger.error(f"[ContactEditor] On save error: {e}")
 
-    def _on_precheck_failed(self, error):
+    def on_precheck_failed(self, error):
         """Release the save guard after failed background pre-checks."""
         self._saving_in_progress = False
         logger.error(f"[ContactEditor] Save pre-check failed: {error}")
@@ -897,7 +897,7 @@ class ContactEditor(Adw.NavigationPage):
             return
         self.toast_overlay.add_toast(Adw.Toast.new(_("Failed to save contact")))
 
-    def _unblock_and_resave(self, blocked_conflict):
+    def unblock_and_resave(self, blocked_conflict):
         """Remove the conflicting blocklist entry, then retry the save."""
         def task():
             blocked_list = self.main_window.db.get_blocked_numbers()
@@ -908,7 +908,7 @@ class ContactEditor(Adw.NavigationPage):
 
         run_in_background(task, on_complete=lambda _result: self.on_save(self.btn_save, force=True))
 
-    def _proceed_with_save(self, phones_to_save, selected_sources):
+    def proceed_with_save(self, phones_to_save, selected_sources):
         """Kick off the actual contact write after all pre-checks passed."""
         try:
             self.btn_save.set_sensitive(False)
@@ -916,7 +916,7 @@ class ContactEditor(Adw.NavigationPage):
             if self.main_window.contacts_view:
                 self.main_window.contacts_view.search.set_text("")
 
-            final_vcard = self._generate_vcard_from_ui(phones_to_save)
+            final_vcard = self.generate_vcard_from_ui(phones_to_save)
             fn = self.entry_fn.get_text().strip() or "Unknown"
 
             original_source = None
@@ -924,10 +924,10 @@ class ContactEditor(Adw.NavigationPage):
                 original_source = self.uid.split(':', 1)[0]
 
             run_in_background(
-                self._write_contact, final_vcard, phones_to_save,
+                self.write_contact, final_vcard, phones_to_save,
                 selected_sources, original_source,
-                on_complete=lambda new_phones: self._on_save_finished(fn, new_phones),
-                on_error=lambda error: self._on_save_failed(error, fn, final_vcard)
+                on_complete=lambda new_phones: self.on_save_finished(fn, new_phones),
+                on_error=lambda error: self.on_save_failed(error, fn, final_vcard)
             )
             self._saving_in_progress = False
             close_sheet_page(self.get_root())
@@ -936,7 +936,7 @@ class ContactEditor(Adw.NavigationPage):
             self.btn_save.set_sensitive(True)
             logger.error(f"[ContactEditor] On save error: {e}")
 
-    def _write_contact(self, final_vcard, phones_to_save, selected_sources, original_source):
+    def write_contact(self, final_vcard, phones_to_save, selected_sources, original_source):
         """Write the contact to the selected address books off the main thread."""
         if not selected_sources:
             raise RuntimeError("No address book selected for the contact")
@@ -962,12 +962,12 @@ class ContactEditor(Adw.NavigationPage):
                 new_phones.add(n)
         return new_phones
 
-    def _on_save_finished(self, fn, new_phones):
+    def on_save_finished(self, fn, new_phones):
         """Update special lists and close the editor after a successful save."""
         try:
             old_phones = set()
             if self.vcard_cache:
-                for p, _lbl in self._extract_phones_with_labels():
+                for p, _lbl in self.extract_phones_with_labels():
                     n = normalize_number(p)
                     if n:
                         old_phones.add(n)
@@ -982,7 +982,7 @@ class ContactEditor(Adw.NavigationPage):
             logger.error(f"[ContactEditor] Special list update error: {ex}")
 
 
-    def _on_save_failed(self, error, fn, final_vcard):
+    def on_save_failed(self, error, fn, final_vcard):
         """Reopen the editor with the attempted data after a failed save."""
         logger.error(f"[ContactEditor] Save failed: {error}")
         try:
@@ -998,17 +998,17 @@ class ContactEditor(Adw.NavigationPage):
             logger.error(f"[ContactEditor] Could not reopen editor after failure: {e}")
             self.main_window.notify_error(_("Failed to save contact"))
 
-    def _confirm_unblock_add(self, _number_str, on_confirm):
+    def confirm_unblock_add(self, _number_str, on_confirm):
         """Show confirmation to unblock and add to contacts."""
-        def _cb(resp):
+        def cb(resp):
             if resp == "yes":
                 on_confirm()
         present_alert_sheet(
             self.get_root(), _("Conflict"),
             _("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Unblocking and add the number to Contacts?"),
             [("cancel", _("Cancel"), None), ("yes", _("Yes, Add to Contacts"), "suggested")],
-            _cb)
+            cb)
 
-    def _show_error(self, title, msg):
+    def show_error(self, title, msg):
         """Report a failure on this sheet, where the user is looking."""
         self.toast_overlay.add_toast(Adw.Toast.new(msg))

@@ -44,7 +44,7 @@ class FavoritesListWindow(Adw.NavigationPage):
         self.app_window = parent.main_window
         self.search_timer = None
         self._source_map = {}
-        run_in_background(self._load_source_map)
+        run_in_background(self.load_source_map)
         self._pending_contact = None
 
         view = Adw.ToolbarView()
@@ -94,31 +94,31 @@ class FavoritesListWindow(Adw.NavigationPage):
         self.stack.add_named(scroll_search, "search")
         self.stack.set_visible_child_name("list")
 
-        self.search_entry.connect("search-changed", self._on_search_changed)
-        self.search_results_list.connect("row-activated", self._on_result_activated)
-        self.connect("map", lambda w: self._refresh_list())
-        self.connect("unmap", self._on_unmap)
+        self.search_entry.connect("search-changed", self.on_search_changed)
+        self.search_results_list.connect("row-activated", self.on_result_activated)
+        self.connect("map", lambda w: self.refresh_list())
+        self.connect("unmap", self.on_unmap)
 
-        self._refresh_list()
+        self.refresh_list()
 
-    def _on_unmap(self, _widget):
+    def on_unmap(self, _widget):
         """Cancel the pending search debounce timer."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
 
-    def _favorites(self):
+    def favorites(self):
         """Return the configured speed dial entries."""
         return self.gsettings_mgr.get_favorites()
 
-    def _refresh_list(self):
+    def refresh_list(self):
         """Rebuild the slot list from the stored favorites."""
         if self.grp_list is not None:
             self.page_list.remove(self.grp_list)
         self.grp_list = Adw.PreferencesGroup(title=_("Speed Dial"))
         self.page_list.add(self.grp_list)
 
-        favorites = {entry.get("slot"): entry for entry in self._favorites()}
+        favorites = {entry.get("slot"): entry for entry in self.favorites()}
         for slot in SPEED_DIAL_SLOTS:
             entry = favorites.get(slot)
             row = Adw.ActionRow(title=str(slot))
@@ -129,26 +129,26 @@ class FavoritesListWindow(Adw.NavigationPage):
                 btn_clear.add_css_class("flat")
                 btn_clear.add_css_class("circular")
                 btn_clear.connect("clicked", lambda b, s=slot: GLib.idle_add(
-                    lambda: self._clear_slot(s) or False))
+                    lambda: self.clear_slot(s) or False))
                 row.add_suffix(btn_clear)
             else:
                 row.set_subtitle(_("Empty"))
             self.grp_list.add(row)
 
-    def _clear_slot(self, slot):
+    def clear_slot(self, slot):
         """Remove the contact assigned to one slot."""
-        remaining = [e for e in self._favorites() if e.get("slot") != slot]
+        remaining = [e for e in self.favorites() if e.get("slot") != slot]
         self.gsettings_mgr.set_favorites(remaining)
-        self._refresh_list()
+        self.refresh_list()
 
-    def _load_source_map(self):
+    def load_source_map(self):
         """Fetch the address book names once; blocking, call from a worker."""
         names = {}
         for source in self.eds.get_sources_info():
             names[source['uid']] = source['name']
         self._source_map = names
 
-    def _on_search_changed(self, entry):
+    def on_search_changed(self, entry):
         """Debounce the contact search."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
@@ -156,9 +156,9 @@ class FavoritesListWindow(Adw.NavigationPage):
         if not query:
             self.stack.set_visible_child_name("list")
             return
-        self.search_timer = GLib.timeout_add(SEARCH_DEBOUNCE_MS, self._run_search, query)
+        self.search_timer = GLib.timeout_add(SEARCH_DEBOUNCE_MS, self.run_search, query)
 
-    def _run_search(self, query):
+    def run_search(self, query):
         """Search the address books for contacts to assign."""
         self.search_timer = None
         self.stack.set_visible_child_name("search")
@@ -167,7 +167,7 @@ class FavoritesListWindow(Adw.NavigationPage):
             populate_contact_search_results(
                 self.search_results_list, results, self.eds,
                 is_added=lambda number: False,
-                on_add=self._on_result_activated_row,
+                on_add=self.on_result_activated_row,
                 translate_label=translate_phone_label,
                 unknown_name=_("Unknown"),
                 source_map=self._source_map)
@@ -175,12 +175,12 @@ class FavoritesListWindow(Adw.NavigationPage):
         run_in_background(self.eds.search_contacts, query, on_complete=done)
         return False
 
-    def _on_result_activated(self, _listbox, row):
+    def on_result_activated(self, _listbox, row):
         """Handle activation of a search result row."""
         if row.get_sensitive():
-            self._on_result_activated_row(row)
+            self.on_result_activated_row(row)
 
-    def _on_result_activated_row(self, row):
+    def on_result_activated_row(self, row):
         """Ask which slot the picked contact should occupy."""
         data = getattr(row, "contact_data", None)
         if data is None:
@@ -188,31 +188,31 @@ class FavoritesListWindow(Adw.NavigationPage):
         self._pending_contact = data
 
         def build(group, sheet):
-            favorites = {entry.get("slot"): entry for entry in self._favorites()}
+            favorites = {entry.get("slot"): entry for entry in self.favorites()}
             for slot in SPEED_DIAL_SLOTS:
                 taken = favorites.get(slot)
                 subtitle = taken.get("name") if taken else _("Empty")
                 add_choice_row(group, sheet, str(slot),
-                               lambda s=slot: self._assign_slot(s), subtitle=subtitle)
+                               lambda s=slot: self.assign_slot(s), subtitle=subtitle)
 
         present_choice_sheet(self, _("Speed Dial"), build,
                              description=_("Choose a slot for {name}").format(
                                  name=data.get("name") or _("Unknown")))
 
-    def _assign_slot(self, slot):
+    def assign_slot(self, slot):
         """Store the pending contact in the chosen slot."""
         data = self._pending_contact
         self._pending_contact = None
         if not data:
             return
-        entries = [e for e in self._favorites() if e.get("slot") != slot]
+        entries = [e for e in self.favorites() if e.get("slot") != slot]
         entries.append({"slot": slot, "name": data.get("name", ""), "number": data.get("number", "")})
         entries.sort(key=lambda e: e.get("slot", 0))
         self.gsettings_mgr.set_favorites(entries)
         logger.info(f"[Favorites] Slot {slot} assigned")
         self.search_entry.set_text("")
         self.stack.set_visible_child_name("list")
-        self._refresh_list()
+        self.refresh_list()
         self.overlay.add_toast(Adw.Toast.new(
             _("{name} added to slot {slot}").format(
                 name=data.get("name") or _("Unknown"), slot=slot)))

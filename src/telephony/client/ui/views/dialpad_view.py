@@ -113,7 +113,7 @@ class DialpadView(Adw.Bin):
         match_scroller.set_vexpand(True)
         match_scroller.set_child(match_clamp)
 
-        self.entry.connect("notify::text", self._schedule_contact_lookup)
+        self.entry.connect("notify::text", self.schedule_contact_lookup)
 
         number_section.append(self.entry)
         box.append(number_section)
@@ -221,14 +221,14 @@ class DialpadView(Adw.Bin):
         scrolled.set_vexpand(True)
         self.set_child(scrolled)
 
-    def _schedule_contact_lookup(self, _entry, _param):
+    def schedule_contact_lookup(self, _entry, _param):
         """Debounce contact matching after the dialed number changes."""
         if (self._lookup_timer is not None) and self._lookup_timer:
             GLib.source_remove(self._lookup_timer)
         self._lookup_generation += 1
         generation = self._lookup_generation
         self._lookup_timer = GLib.timeout_add(
-            DIAL_MATCH_DEBOUNCE_MS, self._start_contact_lookup, generation)
+            DIAL_MATCH_DEBOUNCE_MS, self.start_contact_lookup, generation)
 
     def set_calling_enabled(self, enabled):
         """Enable or disable the two call buttons."""
@@ -242,7 +242,7 @@ class DialpadView(Adw.Bin):
             GLib.source_remove(self._lookup_timer)
             self._lookup_timer = None
 
-    def _favorite_for(self, text):
+    def favorite_for(self, text):
         """Return the speed dial contact a single digit stands for."""
         if len(text) != 1 or not text.isdigit():
             return None
@@ -251,7 +251,7 @@ class DialpadView(Adw.Bin):
                 return entry
         return None
 
-    def _clear_match_rows(self):
+    def clear_match_rows(self):
         """Remove every row currently displayed in the match list."""
         row = self.match_list.get_first_child()
         while row is not None:
@@ -259,9 +259,9 @@ class DialpadView(Adw.Bin):
             self.match_list.remove(row)
             row = next_row
 
-    def _show_contact_matches(self, matches, show_empty=False):
+    def show_contact_matches(self, matches, show_empty=False):
         """Render the bounded contact result set as native list rows."""
-        self._clear_match_rows()
+        self.clear_match_rows()
 
         if not matches and show_empty:
             row = Adw.ActionRow()
@@ -287,7 +287,7 @@ class DialpadView(Adw.Bin):
             row.set_activatable(True)
             row.set_tooltip_text(match["name"])
             row.match_number = match["number"]
-            row.connect("activated", self._on_match_activated)
+            row.connect("activated", self.on_match_activated)
 
             if match["favorite"]:
                 star = Gtk.Image.new_from_icon_name("starred-symbolic")
@@ -299,7 +299,7 @@ class DialpadView(Adw.Bin):
 
         self.match_list.set_visible(bool(matches) or show_empty)
 
-    def _on_match_activated(self, row):
+    def on_match_activated(self, row):
         """Fill the dial entry with the selected contact's full number."""
         number = row.match_number
         if not number:
@@ -309,7 +309,7 @@ class DialpadView(Adw.Bin):
         self.entry.grab_focus()
 
     @staticmethod
-    def _phone_values(phones):
+    def phone_values(phones):
         """Return plain phone numbers from the contact tuple representation."""
         values = []
         for phone in phones:
@@ -324,19 +324,19 @@ class DialpadView(Adw.Bin):
         return values
 
     @staticmethod
-    def _compact_number(number):
+    def compact_number(number):
         """Strip visual phone punctuation for partial-number comparisons."""
         return "".join(c for c in str(number).casefold()
                        if c.isalnum() or c in "+*#")
 
     @classmethod
-    def _favorite_matches_query(cls, favorite, query, query_norm):
+    def favorite_matches_query(cls, favorite, query, query_norm):
         """Return whether a saved favorite partially matches the query."""
         name = str(favorite.get("name", "")).casefold()
         number = favorite.get("number", "")
         query_text = query.casefold()
-        query_compact = cls._compact_number(query)
-        number_compact = cls._compact_number(number)
+        query_compact = cls.compact_number(query)
+        number_compact = cls.compact_number(number)
         number_norm = normalize_number(number)
         return bool(
             (query_text and query_text in name) or
@@ -344,7 +344,7 @@ class DialpadView(Adw.Bin):
             (query_norm and query_norm in number_norm)
         )
 
-    def _find_contact_matches(self, query, favorites):
+    def find_contact_matches(self, query, favorites):
         """Search, deduplicate and rank partial contacts off the GTK thread."""
         favorite_numbers = {}
         for favorite in favorites:
@@ -353,10 +353,10 @@ class DialpadView(Adw.Bin):
             if not norm:
                 continue
             current = favorite_numbers.get(norm)
-            if current is None or self._slot_rank(favorite) < self._slot_rank(current):
+            if current is None or self.slot_rank(favorite) < self.slot_rank(current):
                 favorite_numbers[norm] = favorite
 
-        query_compact = self._compact_number(query)
+        query_compact = self.compact_number(query)
         query_norm = normalize_number(query)
         rows = self.app_window.eds.search_contacts(
             query, limit=DIAL_MATCH_QUERY_LIMIT)
@@ -366,9 +366,9 @@ class DialpadView(Adw.Bin):
         for favorite in favorites:
             number = str(favorite.get("number", ""))
             norm = normalize_number(number)
-            dedupe_key = norm or self._compact_number(number)
+            dedupe_key = norm or self.compact_number(number)
             if (not dedupe_key or dedupe_key in seen_numbers or
-                    not self._favorite_matches_query(
+                    not self.favorite_matches_query(
                         favorite, query, query_norm)):
                 continue
             seen_numbers.add(dedupe_key)
@@ -380,20 +380,20 @@ class DialpadView(Adw.Bin):
             })
 
         for contact in rows:
-            numbers = self._phone_values(contact[3] if len(contact) > 3 else [])
+            numbers = self.phone_values(contact[3] if len(contact) > 3 else [])
             if not numbers:
                 continue
 
             def phone_rank(number):
                 norm = normalize_number(number)
-                compact = self._compact_number(number)
+                compact = self.compact_number(number)
                 partial = ((query_compact and query_compact in compact) or
                            (query_norm and query_norm in norm))
                 return (not partial, norm not in favorite_numbers)
 
             number = min(numbers, key=phone_rank)
             norm = normalize_number(number)
-            dedupe_key = norm or self._compact_number(number)
+            dedupe_key = norm or self.compact_number(number)
             if not dedupe_key or dedupe_key in seen_numbers:
                 continue
             seen_numbers.add(dedupe_key)
@@ -413,14 +413,14 @@ class DialpadView(Adw.Bin):
 
         matches.sort(key=lambda match: (
             not match["favorite"],
-            self._slot_rank(match),
+            self.slot_rank(match),
             match["name"].casefold(),
             match["number"],
         ))
         return matches[:DIAL_MATCH_LIMIT]
 
     @staticmethod
-    def _slot_rank(entry):
+    def slot_rank(entry):
         """Sort speed-dial slots numerically, after entries with real slots."""
         slot = entry.get("speed_slot", entry.get("slot"))
         try:
@@ -428,14 +428,14 @@ class DialpadView(Adw.Bin):
         except (TypeError, ValueError):
             return 999
 
-    def _apply_contact_matches(self, generation, query, matches):
+    def apply_contact_matches(self, generation, query, matches):
         """Ignore stale background results and show the current query's rows."""
         if (generation != self._lookup_generation or
                 query != self.entry.get_text().strip()):
             return
-        self._show_contact_matches(matches, show_empty=True)
+        self.show_contact_matches(matches, show_empty=True)
 
-    def _start_contact_lookup(self, generation):
+    def start_contact_lookup(self, generation):
         """Resolve a speed-dial digit or start a partial contact search."""
         self._lookup_timer = None
         query = self.entry.get_text().strip()
@@ -443,9 +443,9 @@ class DialpadView(Adw.Bin):
         if generation != self._lookup_generation:
             return False
 
-        favorite = self._favorite_for(query)
+        favorite = self.favorite_for(query)
         if favorite:
-            self._show_contact_matches([{
+            self.show_contact_matches([{
                 "name": favorite.get("name") or favorite.get("number", ""),
                 "number": favorite.get("number", ""),
                 "favorite": True,
@@ -454,22 +454,22 @@ class DialpadView(Adw.Bin):
             return False
 
         if len(query) < DIAL_MATCH_MIN_CHARS:
-            self._show_contact_matches([])
+            self.show_contact_matches([])
             return False
 
         favorites = list(self.app_window.gsettings_mgr.get_favorites())
         run_in_background(
-            self._find_contact_matches,
+            self.find_contact_matches,
             query,
             favorites,
-            on_complete=lambda matches: self._apply_contact_matches(
+            on_complete=lambda matches: self.apply_contact_matches(
                 generation, query, matches),
             on_error=lambda error: logger.warning(
                 f"[Dialpad] Contact lookup failed: {error}"),
         )
         return False
 
-    def _is_ussd(self, number):
+    def is_ussd(self, number):
         """Check if the number is a USSD code."""
         return (number.startswith("*") or number.startswith("#")) and number.endswith("#")
 
@@ -518,12 +518,12 @@ class DialpadView(Adw.Bin):
         if not number:
             return
 
-        favorite = self._favorite_for(number)
+        favorite = self.favorite_for(number)
         if favorite:
             self.app_window.start_call(favorite.get("number", ""))
             return
 
-        if self._is_ussd(number):
+        if self.is_ussd(number):
             self.app_window.handle_ussd(number)
         else:
             self.app_window.start_call(number)
@@ -534,12 +534,12 @@ class DialpadView(Adw.Bin):
         if not number:
             return
 
-        favorite = self._favorite_for(number)
+        favorite = self.favorite_for(number)
         if favorite:
             self.app_window.start_call(favorite.get("number", ""), hide_id=True)
             return
 
-        if self._is_ussd(number):
+        if self.is_ussd(number):
             self.app_window.handle_ussd(number)
         else:
             self.app_window.start_call(number, hide_id=True)

@@ -26,9 +26,9 @@ class DeviceLockManager:
 
     def lock_device(self, current_pin, new_pin, sudo_pw):
         """Initiates the device lock sequence asynchronously."""
-        run_in_background(self._task, current_pin, new_pin, sudo_pw)
+        run_in_background(self.task, current_pin, new_pin, sudo_pw)
 
-    def _task(self, current_pin, new_pin, sudo_pw):
+    def task(self, current_pin, new_pin, sudo_pw):
         try:
             logger.warning("[DeviceLock] Initiating device lock sequence!")
 

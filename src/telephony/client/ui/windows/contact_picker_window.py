@@ -38,9 +38,9 @@ class ContactPicker(Adw.NavigationPage):
         self.set_size_request(-1, 500)
         self.load_token = 0
         self.search_timer = None
-        self.connect("unmap", self._on_unmap)
+        self.connect("unmap", self.on_unmap)
         self.source_map = {}
-        self._update_source_map()
+        self.update_source_map()
 
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
@@ -111,7 +111,7 @@ class ContactPicker(Adw.NavigationPage):
             GLib.source_remove(self.search_timer)
         self.search_timer = GLib.timeout_add(200, self.do_search_debounced)
 
-    def _on_unmap(self, widget):
+    def on_unmap(self, widget):
         """Cancel the pending search debounce timer."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
@@ -124,7 +124,7 @@ class ContactPicker(Adw.NavigationPage):
         self.search_timer = None
         return False
 
-    def _update_source_map(self):
+    def update_source_map(self):
         """Update local map of source UIDs to names."""
         self.source_map = {}
         if self.eds:
@@ -136,7 +136,7 @@ class ContactPicker(Adw.NavigationPage):
         """Reload contacts."""
         self.load_token += 1
         curr = self.load_token
-        self._update_source_map()
+        self.update_source_map()
         DataLoader.load_data(
             fetch_func=lambda: self.eds.search_contacts(query),
             model_add_func=self.add_chunk,

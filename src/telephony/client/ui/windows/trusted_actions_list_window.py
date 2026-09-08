@@ -121,7 +121,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             btn_save = Gtk.Button(label=_("Save"))
             btn_save.add_css_class("suggested-action")
             btn_save.connect("clicked", lambda b: GLib.idle_add(
-                lambda: self._on_save_clicked(b) or False))
+                lambda: self.on_save_clicked(b) or False))
             header.pack_end(btn_save)
 
             view.add_top_bar(header)
@@ -163,7 +163,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             self.search_timer = None
             self.search_token = 0
             self._source_map = {}
-            run_in_background(self._load_source_map)
+            run_in_background(self.load_source_map)
 
             self.content_box.append(search_box)
 
@@ -206,9 +206,9 @@ class TrustedActionsListWindow(Adw.NavigationPage):
                 self.totp_btn = Gtk.Button()
                 self.totp_btn.add_css_class("suggested-action")
                 self.totp_btn.set_margin_bottom(8)
-                self.totp_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self._show_totp_setup() or False))
+                self.totp_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.show_totp_setup() or False))
                 self.totp_grp.add(self.totp_btn)
-                self._update_totp_button_label()
+                self.update_totp_button_label()
 
             self.grp_list = Adw.PreferencesGroup()
             self.page_list.add(self.grp_list)
@@ -228,64 +228,64 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             self.stack.set_visible_child_name("list")
 
             self.search_entry.connect(
-                "search-changed", self._on_search_changed)
+                "search-changed", self.on_search_changed)
             self.search_results_list.connect(
-                "row-activated", self._on_result_activated)
+                "row-activated", self.on_result_activated)
 
             self.eds_signals = []
             self.db_signals = []
-            self._connect_external_signals()
+            self.connect_external_signals()
 
-            self.connect("map", self._on_map)
-            self.connect("unmap", self._on_unmap)
+            self.connect("map", self.on_map)
+            self.connect("unmap", self.on_unmap)
 
-            self._refresh_list()
+            self.refresh_list()
 
             enabled_getter = self.get_enabled_func
             if enabled_getter:
                 self.enable_switch.set_active(enabled_getter())
-                self._update_visibility()
+                self.update_visibility()
 
-            self.enable_switch.connect("notify::active", self._on_enable_switch_toggled)
+            self.enable_switch.connect("notify::active", self.on_enable_switch_toggled)
 
-            self._connect_gsettings_signal()
+            self.connect_gsettings_signal()
 
         except Exception as e:
             logger.error(f"[TrustedActionsListWindow] Init error: {e}")
 
-    def _connect_external_signals(self):
+    def connect_external_signals(self):
         """Connect the external refresh signals if not already connected."""
         if self.db_signals:
             return
         if self.app_window is not None:
             sig_id = self.app_window.db.connect(
-                'blocklist-updated', lambda *args: GLib.idle_add(self._refresh_list))
+                'blocklist-updated', lambda *args: GLib.idle_add(self.refresh_list))
             self.db_signals.append((self.app_window.db, sig_id))
 
-    def _connect_gsettings_signal(self):
+    def connect_gsettings_signal(self):
         """Connect the gsettings listener if not already connected."""
         if self.gsettings_handler_id is not None:
             return
-        self.gsettings_handler_id = self.gsettings_mgr.gsettings.connect("changed", self._on_gsettings_changed)
+        self.gsettings_handler_id = self.gsettings_mgr.gsettings.connect("changed", self.on_gsettings_changed)
 
-    def _on_map(self, widget):
+    def on_map(self, widget):
         """Reconnect external signals and catch up when shown again."""
-        self._connect_external_signals()
-        self._connect_gsettings_signal()
-        self._refresh_list()
+        self.connect_external_signals()
+        self.connect_gsettings_signal()
+        self.refresh_list()
 
-    def _on_enable_switch_toggled(self, switch, gparam):
+    def on_enable_switch_toggled(self, switch, gparam):
         is_active = switch.get_active()
         setter = self.set_enabled_func
         if setter:
             setter(is_active)
-        self._update_visibility()
+        self.update_visibility()
 
-    def _update_visibility(self):
+    def update_visibility(self):
         is_active = self.enable_switch.get_active()
         self.content_box.set_visible(is_active)
 
-    def _on_gsettings_changed(self, settings, key):
+    def on_gsettings_changed(self, settings, key):
         expected_key = self.mode.replace("_", "-") + "-enabled"
         if key == expected_key:
             enabled_getter = self.get_enabled_func
@@ -294,7 +294,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
                 if self.enable_switch.get_active() != is_active:
                     self.enable_switch.set_active(is_active)
 
-    def _update_totp_button_label(self):
+    def update_totp_button_label(self):
         if not (self.totp_btn is not None):
             return
 
@@ -304,7 +304,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         else:
             self.totp_btn.set_label(_("Setup TOTP"))
 
-    def _on_unmap(self, widget):
+    def on_unmap(self, widget):
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
@@ -329,13 +329,13 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         if nav and nav.get_visible_page() is self:
             nav.pop()
 
-    def _on_save_clicked(self, btn):
+    def on_save_clicked(self, btn):
         """Handle save button click."""
         if self.set_contacts_func:
             self.set_contacts_func(self.local_contacts)
         GLib.idle_add(lambda: self.close() or False)
 
-    def _refresh_list(self):
+    def refresh_list(self):
         """Refresh the list of contacts."""
         if (self.grp_list is not None) and self.grp_list:
             self.page_list.remove(self.grp_list)
@@ -347,9 +347,9 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             pass
 
         for c in self.local_contacts:
-            self._create_contact_row(c)
+            self.create_contact_row(c)
 
-    def _create_contact_row(self, contact_data):
+    def create_contact_row(self, contact_data):
         """Create a row for a contact."""
         name = contact_data.get("name", _("Unknown"))
         number = contact_data.get("number", "")
@@ -383,7 +383,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         entry.set_text(secret)
         entry.set_hexpand(True)
 
-        entry.connect("changed", lambda e: self._on_secret_changed(
+        entry.connect("changed", lambda e: self.on_secret_changed(
             contact_data, e.get_text()))
 
         action_box.append(entry)
@@ -393,7 +393,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         btn_del.add_css_class("circular")
         btn_del.set_tooltip_text(_("Remove Contact"))
         btn_del.connect(
-            "clicked", lambda b: self._delete_contact(contact_data))
+            "clicked", lambda b: self.delete_contact(contact_data))
 
         action_box.append(btn_del)
 
@@ -402,37 +402,37 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         row.set_child(main_box)
         self.grp_list.add(row)
 
-    def _on_secret_changed(self, contact_data, new_secret):
+    def on_secret_changed(self, contact_data, new_secret):
         """Handle secret text change."""
         contact_data["secret"] = new_secret
 
-    def _delete_contact(self, contact_data):
+    def delete_contact(self, contact_data):
         """Delete a contact from the list."""
         target_num = normalize_number(contact_data.get("number", ""))
 
         self.local_contacts = [c for c in self.local_contacts if normalize_number(
             c.get("number", "")) != target_num]
 
-        GLib.idle_add(lambda: self._refresh_list())
+        GLib.idle_add(lambda: self.refresh_list())
         self.overlay.add_toast(Adw.Toast.new(
             _("Contact removed (Click Save to commit)")))
 
-    def _load_source_map(self):
+    def load_source_map(self):
         """Fetch the address book names once; blocking, call from a worker."""
         names = {}
         for source in self.eds.get_sources_info():
             names[source['uid']] = source['name']
         self._source_map = names
 
-    def _on_search_changed(self, entry):
+    def on_search_changed(self, entry):
         """Handle search text change."""
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
 
-        self.search_timer = GLib.timeout_add(200, self._perform_search)
+        self.search_timer = GLib.timeout_add(200, self.perform_search)
 
-    def _perform_search(self):
+    def perform_search(self):
         """Execute search."""
         self.search_timer = None
         query = self.search_entry.get_text().strip()
@@ -445,43 +445,43 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         self.search_token += 1
         current_token = self.search_token
 
-        def _bg_fetch():
+        def bg_fetch():
             contacts = self.eds.search_contacts(query, limit=30)
             return contacts
 
-        def _on_done(contacts):
+        def on_done(contacts):
             if self.search_token != current_token:
                 return False
-            self._build_search_results(contacts, query)
+            self.build_search_results(contacts, query)
             return False
 
-        def _bg_task():
-            res = _bg_fetch()
-            GLib.idle_add(lambda: _on_done(res))
+        def bg_task():
+            res = bg_fetch()
+            GLib.idle_add(lambda: on_done(res))
 
-        run_in_background(_bg_task)
+        run_in_background(bg_task)
         return False
 
-    def _is_result_added(self, normalized_number):
+    def is_result_added(self, normalized_number):
         """Return True when the normalized number is already in the local list."""
         for existing in self.local_contacts:
             if normalize_number(existing.get("number", "")) == normalized_number:
                 return True
         return False
 
-    def _build_search_results(self, contacts, query):
+    def build_search_results(self, contacts, query):
         """Build search results UI."""
         populate_contact_search_results(
             self.search_results_list,
             contacts,
             self.eds,
-            is_added=self._is_result_added,
-            on_add=lambda row: self._on_result_activated(None, row),
+            is_added=self.is_result_added,
+            on_add=lambda row: self.on_result_activated(None, row),
             translate_label=translate_phone_label,
             unknown_name=_("Unknown"),
             source_map=self._source_map)
 
-    def _on_result_activated(self, listbox, row):
+    def on_result_activated(self, listbox, row):
         """Handle activation of a search result."""
         if not row.get_sensitive():
             return
@@ -502,17 +502,17 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         new_entry = {"name": name, "number": raw_number, "secret": ""}
         self.local_contacts.insert(0, new_entry)
 
-        def _update_ui():
+        def update_ui():
             self.search_entry.set_text("")
             self.stack.set_visible_child_name("list")
-            self._refresh_list()
+            self.refresh_list()
             return False
 
-        GLib.idle_add(_update_ui)
+        GLib.idle_add(update_ui)
 
         self.overlay.add_toast(Adw.Toast.new(_("Contact added")))
 
-    def _show_totp_setup(self):
+    def show_totp_setup(self):
         """Show the TOTP setup dialog."""
         seed_getter = self.get_seed_func
         if not seed_getter:
@@ -522,9 +522,9 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         if not seed:
             seed = self.gsettings_mgr.generate_totp_seed()
 
-        self._open_totp_dialog(seed)
+        self.open_totp_dialog(seed)
 
-    def _open_totp_dialog(self, seed):
+    def open_totp_dialog(self, seed):
         action_name = self.mode.replace("trusted_sms_", "").replace("_", " ").title()
         uri = self.gsettings_mgr.get_totp_uri(seed, action_name)
 
@@ -535,14 +535,14 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         btn_save = Gtk.Button(label=_("Save"))
         btn_save.add_css_class("suggested-action")
 
-        def _on_save_wrapper(b):
+        def on_save_wrapper(b):
             if self.set_seed_func:
                 self.set_seed_func(seed)
-            self._update_totp_button_label()
-            self._pop_totp_page()
+            self.update_totp_button_label()
+            self.pop_totp_page()
             return False
 
-        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: _on_save_wrapper(b)))
+        btn_save.connect("clicked", lambda b: GLib.idle_add(lambda: on_save_wrapper(b)))
         header.pack_end(btn_save)
         view.add_top_bar(header)
 
@@ -593,24 +593,24 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         btn_copy = Gtk.Button(label=_("Copy TOTP key"))
         btn_copy.add_css_class("suggested-action")
 
-        def _copy_seed(b):
+        def copy_seed(b):
             clipboard = self.get_display().get_clipboard()
             clipboard.set(seed)
             overlay.add_toast(Adw.Toast.new(_("Copied to clipboard")))
 
-        btn_copy.connect("clicked", _copy_seed)
+        btn_copy.connect("clicked", copy_seed)
         content_box.append(btn_copy)
 
         btn_regen = Gtk.Button(label=_("Regenerate"))
         btn_regen.add_css_class("destructive-action")
-        btn_regen.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_regen() or False))
+        btn_regen.connect("clicked", lambda b: GLib.idle_add(lambda: self.confirm_regen() or False))
         content_box.append(btn_regen)
 
         secret = self.gsettings_mgr.secret_manager.get_secret(self.mode)
         if secret:
             btn_remove = Gtk.Button(label=_("Remove current TOTP"))
             btn_remove.add_css_class("destructive-action")
-            btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: self._confirm_remove() or False))
+            btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: self.confirm_remove() or False))
             content_box.append(btn_remove)
 
         if self.totp_page is not None:
@@ -619,13 +619,13 @@ class TrustedActionsListWindow(Adw.NavigationPage):
 
         self.totp_page = Adw.NavigationPage(title=_("TOTP Setup"))
         self.totp_page.set_child(view)
-        self.totp_page.connect("hidden", self._on_totp_page_hidden)
+        self.totp_page.connect("hidden", self.on_totp_page_hidden)
         nav = self.get_ancestor(Adw.NavigationView)
         if nav:
             self.totp_page.set_focusable(True)
             nav.push(self.totp_page)
 
-    def _on_totp_page_hidden(self, page):
+    def on_totp_page_hidden(self, page):
         """Forget the page once it leaves the navigation stack.
 
         A popped page still has its parent while the signal runs
@@ -638,32 +638,32 @@ class TrustedActionsListWindow(Adw.NavigationPage):
             return False
         GLib.idle_add(check)
 
-    def _pop_totp_page(self):
+    def pop_totp_page(self):
         """Pop the TOTP page off the settings navigation."""
         nav = self.get_ancestor(Adw.NavigationView)
         if nav and self.totp_page is not None and nav.get_visible_page() is self.totp_page:
             nav.pop()
         self.totp_page = None
 
-    def _confirm_remove(self):
+    def confirm_remove(self):
         def on_response(response):
             if response == "remove":
                 remover = self.remove_seed_func
                 if remover:
                     remover()
-                self._update_totp_button_label()
-                self._pop_totp_page()
+                self.update_totp_button_label()
+                self.pop_totp_page()
         present_alert_sheet(
             self.get_root(), _("Remove TOTP Key?"),
             _("Are you sure you want to remove the TOTP key? This action will disable TOTP verification for this feature."),
             [("cancel", _("Cancel"), None), ("remove", _("Yes"), "destructive")],
             on_response)
 
-    def _confirm_regen(self):
+    def confirm_regen(self):
         def on_response(response):
             if response == "regenerate":
                 new_seed = self.gsettings_mgr.generate_totp_seed()
-                GLib.idle_add(lambda: self._open_totp_dialog(new_seed) or False)
+                GLib.idle_add(lambda: self.open_totp_dialog(new_seed) or False)
         present_alert_sheet(
             self.get_root(), _("Regenerate Code?"),
             _("This will invalidate the current code in your contact's authenticator app. Are you sure?"),

@@ -50,63 +50,63 @@ class EmergencyManager:
         self._revert_timer_id = None
 
         self.monitor = EmergencyService()
-        self.monitor.connect('lock-state-changed', self._on_lock_state_changed)
-        self.monitor.connect('feature-enabled-changed', self._on_feature_enabled_changed)
+        self.monitor.connect('lock-state-changed', self.on_lock_state_changed)
+        self.monitor.connect('feature-enabled-changed', self.on_feature_enabled_changed)
 
         if self.notification_manager:
-            self.notification_manager.connect('action-invoked', self._on_action_invoked_signal)
-            self.notification_manager.connect('notification-closed', self._on_notification_closed_signal)
+            self.notification_manager.connect('action-invoked', self.on_action_invoked_signal)
+            self.notification_manager.connect('notification-closed', self.on_notification_closed_signal)
 
-        self.ofono.connect('call-added', self._on_call_status_changed)
-        self.ofono.connect('call-removed', self._on_call_status_changed)
+        self.ofono.connect('call-added', self.on_call_status_changed)
+        self.ofono.connect('call-removed', self.on_call_status_changed)
 
         self.is_locked = self.monitor.is_locked
         self.feature_enabled = self.monitor.get_feature_enabled()
 
-        self._evaluate_state()
+        self.evaluate_state()
 
-    def _on_feature_enabled_changed(self, monitor, enabled):
+    def on_feature_enabled_changed(self, monitor, enabled):
         """Handle feature enabled change."""
         self.feature_enabled = enabled
-        self._evaluate_state()
+        self.evaluate_state()
 
-    def _on_lock_state_changed(self, monitor, is_locked):
+    def on_lock_state_changed(self, monitor, is_locked):
         """Handle lock state change."""
         self.is_locked = is_locked
-        self._evaluate_state()
+        self.evaluate_state()
 
-    def _on_call_status_changed(self, *args):
+    def on_call_status_changed(self, *args):
         """Handle call status change."""
         has_calls = len(self.ofono.active_calls) > 0
         if has_calls != self.calls_active:
             self.calls_active = has_calls
-            self._evaluate_state()
+            self.evaluate_state()
 
-    def _evaluate_state(self):
+    def evaluate_state(self):
         """Determine and transition to the correct state."""
         if self.calls_active or not self.feature_enabled:
-            self._clear_all()
+            self.clear_all()
             self.current_state = "IDLE"
             return
 
         if not self.is_locked:
             if self.current_state != "IDLE":
-                self._clear_all()
+                self.clear_all()
                 self.current_state = "IDLE"
             return
 
         if self.is_locked:
             if self.current_state == "IDLE":
-                self._show_guardian()
+                self.show_guardian()
             elif self.current_state == "GUARDIAN":
                 if not self.active_notifications and self.respawn_id is None:
-                    self._show_guardian()
+                    self.show_guardian()
 
-    def _load_numbers(self):
+    def load_numbers(self):
         """Load configured emergency numbers merged with the network list."""
         return self.ofono.get_emergency_numbers()
 
-    def _show_guardian(self):
+    def show_guardian(self):
         """Show the initial guardian notification."""
         if self.calls_active:
             return
@@ -114,29 +114,29 @@ class EmergencyManager:
             GLib.source_remove(self.respawn_id)
             self.respawn_id = None
 
-        self._clear_all()
+        self.clear_all()
         self.current_state = "GUARDIAN"
-        self._send_notif(
+        self.send_notif(
             "guardian", _("Emergency Mode"), _("Emergency calls only."),
             "io.furios.Telephony.Emergency", ["app.emergency_menu::", _("Start Emergency Process")]
         )
 
-    def _show_selection(self):
+    def show_selection(self):
         """Show the list of emergency numbers."""
         if self.calls_active:
             return
-        self._clear_all()
+        self.clear_all()
         self.current_state = "SELECTION"
 
-        numbers = self._load_numbers()
+        numbers = self.load_numbers()
 
-        self._send_notif(
+        self.send_notif(
             "back_btn", _("Cancel"), _("Return to Lockscreen"),
             "io.furios.Telephony.Emergency", ["app.emergency_cancel::", _("Back")]
         )
 
         if not numbers:
-            self._send_notif("error", _("No Numbers Configured"), _("Set numbers in Settings."), "dialog-error-symbolic", [])
+            self.send_notif("error", _("No Numbers Configured"), _("Set numbers in Settings."), "dialog-error-symbolic", [])
             return
 
         for item in numbers:
@@ -146,47 +146,47 @@ class EmergencyManager:
                 continue
 
             action_id = f"app.emergency_dial::{number}::{name}"
-            self._send_notif(
+            self.send_notif(
                 f"contact_{number}", name, _("Call {number}").format(number=number),
                 "io.furios.Telephony.Emergency", [action_id, f"🟢 {name}"]
             )
 
-        self._arm_revert_timer(SELECTION_REVERT_MS, "SELECTION")
+        self.arm_revert_timer(SELECTION_REVERT_MS, "SELECTION")
 
-    def _show_confirmation(self, number, name):
+    def show_confirmation(self, number, name):
         """Show confirmation dialog before dialing."""
         if self.calls_active:
             return
-        self._clear_all()
+        self.clear_all()
         self.current_state = "CONFIRM"
 
-        self._send_notif(
+        self.send_notif(
             "confirm", _("Confirm Emergency Call"), _("Call {name}?").format(name=name),
             "io.furios.Telephony.Emergency",
             [f"app.emergency_confirm::{number}", _("🟢 Yes, Call"), "app.emergency_cancel::", _("🔴 No, Return")]
         )
 
-        self._arm_revert_timer(CONFIRM_REVERT_MS, "CONFIRM")
+        self.arm_revert_timer(CONFIRM_REVERT_MS, "CONFIRM")
 
-    def _arm_revert_timer(self, interval_ms, state):
+    def arm_revert_timer(self, interval_ms, state):
         """Arm the revert timer, replacing any pending one."""
         if self._revert_timer_id:
             GLib.source_remove(self._revert_timer_id)
-        self._revert_timer_id = GLib.timeout_add(interval_ms, self._run_revert, state)
+        self._revert_timer_id = GLib.timeout_add(interval_ms, self.run_revert, state)
 
-    def _run_revert(self, originating_state):
+    def run_revert(self, originating_state):
         """Run the revert timer callback once."""
         self._revert_timer_id = None
-        self._timeout_revert(originating_state)
+        self.timeout_revert(originating_state)
         return False
 
-    def _timeout_revert(self, originating_state):
+    def timeout_revert(self, originating_state):
         """Revert to guardian state on timeout."""
         if self.current_state == originating_state and self.is_locked and not self.calls_active:
-            self._show_guardian()
+            self.show_guardian()
         return False
 
-    def _send_notif(self, internal_id, title, body, icon, actions):
+    def send_notif(self, internal_id, title, body, icon, actions):
         """Send a notification."""
         lockscreen_whitelist = actions[0::2]
         hints = {
@@ -216,7 +216,7 @@ class EmergencyManager:
         except Exception as e:
             logger.error(f"[Emergency] Notify Failed: {e}")
 
-    def _clear_all(self):
+    def clear_all(self):
         """Clear all active notifications."""
         for nid in self.active_notifications.values():
             try:
@@ -228,7 +228,7 @@ class EmergencyManager:
                 logger.warning(f"[Emergency] Clear Notif Warning: {e}")
         self.active_notifications.clear()
 
-    def _on_action_invoked_signal(self, manager, nid, action_key):
+    def on_action_invoked_signal(self, manager, nid, action_key):
         """Handle notification action invoked signal."""
         action_payload = f"{nid}::{action_key}"
         parts = action_payload.split("::")
@@ -245,24 +245,24 @@ class EmergencyManager:
         key = action_parts[0]
 
         if key == "app.emergency_menu":
-            self._show_selection()
+            self.show_selection()
         elif key == "app.emergency_cancel":
             if self.current_state == "SELECTION":
-                self._show_guardian()
+                self.show_guardian()
             else:
-                self._show_selection()
+                self.show_selection()
         elif key == "app.emergency_dial":
             if len(action_parts) >= 3:
-                self._show_confirmation(action_parts[1], action_parts[2])
+                self.show_confirmation(action_parts[1], action_parts[2])
         elif key == "app.emergency_confirm":
             if len(action_parts) >= 2:
                 number = action_parts[1]
                 logger.info(f"[Emergency] DIALING {number}")
-                self._clear_all()
+                self.clear_all()
                 self.current_state = "IDLE"
                 self.ofono.dial(number)
 
-    def _on_notification_closed_signal(self, monitor, nid, reason):
+    def on_notification_closed_signal(self, monitor, nid, reason):
         """Handle notification closed signal."""
         keys_to_remove = [k for k, v in self.active_notifications.items() if v == nid]
         for k in keys_to_remove:
@@ -278,10 +278,10 @@ class EmergencyManager:
                 should_respawn = True
 
         if should_respawn and self.respawn_id is None:
-            self.respawn_id = GLib.timeout_add(1000, self._scheduled_respawn)
+            self.respawn_id = GLib.timeout_add(1000, self.scheduled_respawn)
 
-    def _scheduled_respawn(self):
+    def scheduled_respawn(self):
         """Respawn the guardian notification."""
         self.respawn_id = None
-        self._evaluate_state()
+        self.evaluate_state()
         return False
