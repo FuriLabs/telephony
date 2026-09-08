@@ -1553,7 +1553,8 @@ class InCallWindow(Adw.Window):
                 self.reset_from_error()
             return
         self.audio.play_hangup(feedback=False)
-        self.fader.set_active(False)
+        if not self.ofono.active_calls:
+            self.fader.set_active(False)
         if p in self.ignored_calls:
             self.ignored_calls.remove(p)
         self.update_state()
