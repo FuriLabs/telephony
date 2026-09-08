@@ -39,6 +39,8 @@ from telephony.client.ui.widgets.chat_bubbles_widget import ChatBubbleFactory
 
 LOAD_MORE_BATCH = 50
 MAX_MESSAGES_IN_MEMORY = 200
+SCROLL_HOLD_MS = 150
+LOAD_OLDER_SETTLE_MS = 120
 RECENT_DUPLICATE_SCAN_ITEMS = 8
 
 
@@ -94,11 +96,14 @@ class ChatPage(Gtk.Box):
         self.is_jumping = False
         self.is_fetching_older = False
         self.all_messages_loaded = False
+        self.older_settle_id = None
+        self.scroll_hold_id = None
+        self.scroll_hold_value_id = None
+        self.scroll_hold_timer = None
         self.target_highlight_id = target_id
         self.has_active_divider = False
         self._pending_initial_read = False
 
-        self.full_history = []
         self.newest_db_offset = 0
         self.oldest_db_offset = 0
 
@@ -237,9 +242,13 @@ class ChatPage(Gtk.Box):
         self.loading_spinner.set_margin_top(12)
         self.loading_spinner.set_margin_bottom(12)
         self.loading_spinner.set_halign(Gtk.Align.CENTER)
+        self.loading_spinner.set_valign(Gtk.Align.START)
+        self.loading_spinner.set_can_target(False)
         self.loading_spinner.set_visible(False)
-        self.chat_vbox.append(self.loading_spinner)
-        self.chat_vbox.append(self.scrolled)
+        spinner_overlay = Gtk.Overlay()
+        spinner_overlay.set_child(self.scrolled)
+        spinner_overlay.add_overlay(self.loading_spinner)
+        self.chat_vbox.append(spinner_overlay)
 
         self.content_stack = Gtk.Stack()
         self.content_stack.add_named(Gtk.Box(), "loading")
@@ -424,9 +433,63 @@ class ChatPage(Gtk.Box):
         self.loading_spinner.set_visible(False)
         return False
 
+    def hold_scroll_across_load(self, anchor_value):
+        """Keep the reader where they were when a batch of older messages lands.
+
+        Adding a batch changes the list's estimate of its own height and the
+        scroll position rides that estimate, so the content slides under a
+        finger that is not even touching it. On a five thousand message
+        thread the slide measured six hundred pixels, and it arrives one or
+        two frames after the height moves, so the value is watched as well as
+        the height. The position is put back inside the same frame, which
+        shows nothing rather than showing the slide and undoing it.
+        """
+        self.release_scroll_hold()
+
+        def on_estimate_changed(_adj):
+            if self.is_jumping or self.is_loading:
+                return
+            if abs(self.v_adj.get_value() - anchor_value) > 0.5:
+                self.v_adj.set_value(anchor_value)
+
+        self.scroll_hold_id = self.v_adj.connect("changed", on_estimate_changed)
+        self.scroll_hold_value_id = self.v_adj.connect("value-changed", on_estimate_changed)
+        self.scroll_hold_timer = GLib.timeout_add(SCROLL_HOLD_MS, self.scroll_hold_expired)
+
+    def scroll_hold_expired(self):
+        """Let the hold lapse; the new rows have been measured."""
+        self.scroll_hold_timer = None
+        self.drop_scroll_hold_handlers()
+        return False
+
+    def release_scroll_hold(self):
+        """Cancel the hold from anywhere, its timer included."""
+        if self.scroll_hold_timer is not None:
+            GLib.source_remove(self.scroll_hold_timer)
+            self.scroll_hold_timer = None
+        self.drop_scroll_hold_handlers()
+
+    def drop_scroll_hold_handlers(self):
+        """Disconnect both watchers, so no stale anchor can outlive the hold."""
+        if self.scroll_hold_id is not None:
+            self.v_adj.disconnect(self.scroll_hold_id)
+            self.scroll_hold_id = None
+        if self.scroll_hold_value_id is not None:
+            self.v_adj.disconnect(self.scroll_hold_value_id)
+            self.scroll_hold_value_id = None
+
     def insert_older_messages(self, msgs, has_more):
-        """Insert loaded messages into the model."""
-        self.full_history = msgs + self.full_history
+        """Insert loaded messages into the model.
+
+        A batch that was already being read when a jump or a reload took over
+        belongs to a store that no longer exists, so it is dropped rather than
+        appended to someone else's history.
+        """
+        if self.is_jumping or self.is_loading:
+            self.is_fetching_older = False
+            self.loading_spinner.set_visible(False)
+            return False
+
         new_items = []
 
         msgs_reversed = list(reversed(msgs))
@@ -446,16 +509,12 @@ class ChatPage(Gtk.Box):
                 self.all_messages_loaded = True
             return False
 
+        anchor_value = self.v_adj.get_value()
         n_items = self.store.get_n_items()
         self.store.splice(n_items, 0, new_items)
+        self.hold_scroll_across_load(anchor_value)
 
-        self.oldest_db_offset += len(new_items)
-
-        new_total = self.store.get_n_items()
-        if new_total > MAX_MESSAGES_IN_MEMORY:
-            remove_count = new_total - MAX_MESSAGES_IN_MEMORY
-            self.store.splice(0, remove_count, [])
-            self.newest_db_offset += remove_count
+        self.oldest_db_offset = self.newest_db_offset + self.store.get_n_items()
 
         self.is_fetching_older = False
         self.loading_spinner.set_visible(False)
@@ -491,7 +550,6 @@ class ChatPage(Gtk.Box):
 
     def update_initial_ui(self, msgs, has_more, draft_msg=None):
         """Populate the model with initial messages."""
-        self.full_history = msgs
         items = []
 
         if draft_msg:
@@ -1141,6 +1199,8 @@ class ChatPage(Gtk.Box):
     def load_context_for_message(self, msg_id):
         """Load messages around a specific message ID."""
         self.is_jumping = True
+        self.release_scroll_hold()
+        self.cancel_older_settle()
 
         def fetch_context():
             msgs = self.db.get_chat_messages_around(msg_id, limit_before=50, limit_after=None)
@@ -1150,7 +1210,6 @@ class ChatPage(Gtk.Box):
         def update_ui(msgs, newer_count):
             self.store.remove_all()
 
-            self.full_history = list(msgs)
 
             items = []
 
@@ -1286,24 +1345,67 @@ class ChatPage(Gtk.Box):
         run_in_background(prepare, on_complete=done)
 
     def on_scroll_changed(self, adj):
-        """Handle scroll position change to mark read or fetch older."""
+        """Load older messages once fast scrolling settles; mark read at once.
+
+        Loading mid-fling splices a batch of variable-height bubbles onto the
+        store while the list is moving, which makes it re-measure and jump.
+        The load is armed on a short settle timer, reset on every scroll
+        event, so a fast fling loads once it comes to rest, not repeatedly.
+        """
         if self.is_loading or self.is_jumping:
             return
 
         is_near_older = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
 
-        if is_near_older and not self.all_messages_loaded:
-            if not self.is_fetching_older:
-                self.start_load_thread()
+        if is_near_older and not self.all_messages_loaded and not self.is_fetching_older:
+            if self.older_settle_id is not None:
+                GLib.source_remove(self.older_settle_id)
+            self.older_settle_id = GLib.timeout_add(LOAD_OLDER_SETTLE_MS, self.load_older_after_settle)
 
         self.check_read_status()
+
+    def cancel_older_settle(self):
+        """Forget a pending older load; something else now owns the store."""
+        if self.older_settle_id is not None:
+            GLib.source_remove(self.older_settle_id)
+            self.older_settle_id = None
+
+    def load_older_after_settle(self):
+        """Start the older-message load once the fling has come to rest."""
+        self.older_settle_id = None
+        if self.is_loading or self.is_jumping:
+            return False
+        if not self.is_fetching_older and not self.all_messages_loaded:
+            self.start_load_thread()
+        return False
 
     def check_read_status(self):
         """Check if bottom is reached and mark read."""
         adj = self.v_adj
         is_at_bottom = adj.get_value() <= 20
-        if is_at_bottom and self.app_window.is_active():
-            self.mark_read_debounced()
+        if is_at_bottom:
+            self.trim_oldest_overflow()
+            if self.app_window.is_active():
+                self.mark_read_debounced()
+
+    def trim_oldest_overflow(self):
+        """Drop the oldest loaded messages once the reader is back at newest.
+
+        Older messages are loaded while the reader scrolls up through history
+        and kept there, so the list never re-measures under the finger. They
+        can only be trimmed without moving anything visible once the reader
+        is back at the newest end, where the overflow sits off screen at the
+        far, older side. The dropped messages are simply reloaded if the
+        reader scrolls up again.
+        """
+        if self.is_loading or self.is_jumping or self.is_fetching_older:
+            return
+        overflow = self.store.get_n_items() - MAX_MESSAGES_IN_MEMORY
+        if overflow <= 0:
+            return
+        self.store.splice(MAX_MESSAGES_IN_MEMORY, overflow, [])
+        self.oldest_db_offset = self.newest_db_offset + self.store.get_n_items()
+        self.all_messages_loaded = False
 
     def mark_read_debounced(self):
         """Trigger mark read with debounce."""
@@ -1364,6 +1466,8 @@ class ChatPage(Gtk.Box):
 
     def scroll_to_bottom(self):
         """Scroll to the bottom of the list."""
+        self.release_scroll_hold()
+
         def do():
             n = self.store.get_n_items()
             if n > 0:
@@ -1408,7 +1512,8 @@ class ChatPage(Gtk.Box):
         if not self._draft_saved:
             self.save_draft()
 
-        for timer_attr in ("_read_timer", "_refresh_timer", "search_timer"):
+        self.release_scroll_hold()
+        for timer_attr in ("_read_timer", "_refresh_timer", "search_timer", "older_settle_id"):
             timer_id = getattr(self, timer_attr)
             if timer_id:
                 GLib.source_remove(timer_id)
