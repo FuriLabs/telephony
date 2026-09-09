@@ -1056,22 +1056,27 @@ class TelephonyDaemonDBus:
         """Apply the delivery report preference to both SMS and MMS."""
         enabled = parameters.unpack()[0]
 
-        def apply_delivery_reports():
-            errors = []
-
-            sms_ok, sms_error = self.ofono.set_delivery_reports(enabled)
-            if not sms_ok:
-                errors.append(f"SMS: {sms_error or 'failed'}")
-
-            if self.app and self.app.mms:
-                mms_ok, mms_error = self.app.mms.set_delivery_reports(enabled)
-                if not mms_ok:
-                    errors.append(f"MMS: {mms_error or 'failed'}")
-
+        def verdict(errors):
             return (not errors, '; '.join(errors) if errors else None)
 
-        run_in_background(apply_delivery_reports,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        def sms_done(sms_result):
+            sms_ok, sms_error = sms_result if sms_result else (False, "failed")
+            errors = [] if sms_ok else [f"SMS: {sms_error or 'failed'}"]
+
+            if not (self.app and self.app.mms):
+                self.reply_ss_result(invocation, verdict(errors))
+                return
+
+            def mms_done(mms_result):
+                mms_ok, mms_error = mms_result if mms_result else (False, "failed")
+                if not mms_ok:
+                    errors.append(f"MMS: {mms_error or 'failed'}")
+                self.reply_ss_result(invocation, verdict(errors))
+
+            run_in_background(lambda: self.app.mms.set_delivery_reports(enabled),
+                              on_complete=mms_done)
+
+        self.ofono.set_delivery_reports(enabled, sms_done)
 
     def handle_getaudioroutes(self, parameters, invocation):
         """List the selectable output and input routes for a window."""
