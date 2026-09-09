@@ -52,6 +52,9 @@ OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 REPEATED_MESSAGES_BYPASS_COUNT = 3
 REPEATED_MESSAGES_WINDOW_SECONDS = 60
 
+SMS_SEND_TIMEOUT_MS = 30000
+
+
 class OfonoManager(GObject.Object):
     """
     Manages voice calls, SMS, and USSD via ofono.
@@ -278,18 +281,30 @@ class OfonoManager(GObject.Object):
         self.simmgr_handler_id = self.simmgr_proxy.connect("g-signal", self.on_simmgr_signal)
         self.load_service_property(self.simmgr_proxy, "PinRequired", self.set_pin_required)
 
-    def load_service_property(self, proxy, name, setter):
-        """Read one property off the main thread and feed it to its setter."""
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0].get(name)
+    def read_properties(self, proxy, what, apply):
+        """Read one object's properties and hand them to apply.
 
-        def apply(value):
+        Every seed read races the modem disappearing, so they all shrug
+        the same way when it does.
+        """
+        def done(source, result, _data):
+            try:
+                props = source.call_finish(result).unpack()[0]
+            except GLib.Error as e:
+                self.modem_went_away(what)(e)
+                return
+            apply(props)
+
+        proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None, done, None)
+
+    def load_service_property(self, proxy, name, setter):
+        """Read one property and feed it to its setter."""
+        def apply(props):
+            value = props.get(name)
             if value is not None:
                 setter(value)
 
-        run_in_background(fetch, on_complete=apply,
-                          on_error=self.modem_went_away(f"property {name}"))
+        self.read_properties(proxy, f"property {name}", apply)
 
     @staticmethod
     def modem_went_away(what):
@@ -367,10 +382,6 @@ class OfonoManager(GObject.Object):
         if not proxy:
             return
 
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0]
-
         def apply_seed(props):
             if not self._interfaces_known:
                 self.apply_modem_interfaces(props.get("Interfaces", []))
@@ -378,8 +389,7 @@ class OfonoManager(GObject.Object):
             if online is not None and self.modem_online is None:
                 self.set_modem_online(online)
 
-        run_in_background(fetch, on_complete=apply_seed,
-                          on_error=self.modem_went_away("the modem properties"))
+        self.read_properties(proxy, "the modem properties", apply_seed)
 
     def load_voicemail_state(self):
         """Fetch the initial MessageWaiting properties off the main thread."""
@@ -387,12 +397,7 @@ class OfonoManager(GObject.Object):
         if not proxy:
             return
 
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0]
-
-        run_in_background(fetch, on_complete=self.apply_voicemail_props,
-                          on_error=self.modem_went_away("the voicemail state"))
+        self.read_properties(proxy, "the voicemail state", self.apply_voicemail_props)
 
     def is_dialing_available(self):
         """Return True when a new outgoing call can be placed right now.
@@ -676,8 +681,8 @@ class OfonoManager(GObject.Object):
         if self.cs_proxy:
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
         if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
-            run_in_background(self.set_delivery_reports, True)
-        run_in_background(self.load_emergency_numbers)
+            self.set_delivery_reports(True)
+        self.load_emergency_numbers()
 
         self.mw_proxy = self.get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
@@ -1261,20 +1266,25 @@ class OfonoManager(GObject.Object):
             return (False, str(e))
 
     def load_emergency_numbers(self):
-        """Seed the network emergency number list; blocking, call from a worker.
+        """Seed the network emergency number list.
 
         The cached list deliberately survives modem loss, so a flaky
         modem can only ever add numbers, never remove them.
         """
         if not self.voice_proxy:
             return
-        try:
-            res = self.voice_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            numbers = res.unpack()[0].get("EmergencyNumbers", [])
+
+        def seeded(proxy, result, _data):
+            try:
+                numbers = proxy.call_finish(result).unpack()[0].get("EmergencyNumbers", [])
+            except GLib.Error as e:
+                logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
+                return
             if numbers:
                 self.network_emergency_numbers = set(numbers)
-        except Exception as e:
-            logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
+
+        self.voice_proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None,
+                              seeded, None)
 
     def get_emergency_numbers(self):
         """Return configured emergency entries merged with the network list."""
@@ -1287,21 +1297,31 @@ class OfonoManager(GObject.Object):
                 entries.append({"name": number, "number": number})
         return entries
 
-    def set_delivery_reports(self, enabled):
-        """Ask the network for SMS delivery reports; blocking, call from a worker.
+    def set_delivery_reports(self, enabled, on_result=None):
+        """Ask the network for SMS delivery reports.
 
-        Returns (True, None) on success or (False, error text).
+        on_result hears (True, None) or (False, error text); the modem
+        seed asks for none, since nothing is waiting on the answer.
         """
+        def answer(ok, error):
+            if on_result:
+                on_result((ok, error))
+
         if not self.msg_proxy:
-            return (False, "no proxy")
-        try:
-            self.msg_proxy.call_sync("SetProperty",
-                                     GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
-                                     Gio.DBusCallFlags.NONE, -1, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
-            return (False, str(e))
+            answer(False, "no proxy")
+            return
+
+        def done(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+                answer(True, None)
+            except GLib.Error as e:
+                logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
+                answer(False, str(e))
+
+        self.msg_proxy.call("SetProperty",
+                            GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                            Gio.DBusCallFlags.NONE, -1, None, done, None)
 
     def force_remove(self, path):
         """Forcefully remove a call from the active list."""
@@ -1373,17 +1393,22 @@ class OfonoManager(GObject.Object):
             return
 
         clean_num = normalize_number(number)
-        try:
-            ret = self.msg_proxy.call_sync("SendMessage", GLib.Variant("(ss)", (clean_num, text)), Gio.DBusCallFlags.NONE, 30000, None)
-            self.track_sms(row_id, ret.unpack()[0])
-        except Exception as e:
-            err = str(e)
+
+        def sent(proxy, result, _data):
+            try:
+                self.track_sms(row_id, proxy.call_finish(result).unpack()[0])
+                return
+            except GLib.Error as e:
+                err = str(e)
             if any(x in err for x in ["Operation failed", "Timeout", "NoReply", "org.ofono.Error.Failed"]):
-                logger.warning(f"[OfonoManager] Ambiguous SMS send error, waiting for state signals: {e}")
+                logger.warning(f"[OfonoManager] Ambiguous SMS send error, waiting for state signals: {err}")
                 self.track_sms(row_id, None)
             else:
-                logger.error(f"[OfonoManager] SMS send failed: {e}")
+                logger.error(f"[OfonoManager] SMS send failed: {err}")
                 self.db.update_message_status(row_id, "failed")
+
+        self.msg_proxy.call("SendMessage", GLib.Variant("(ss)", (clean_num, text)),
+                            Gio.DBusCallFlags.NONE, SMS_SEND_TIMEOUT_MS, None, sent, None)
 
     def track_sms(self, row_id, path):
         """Register an in-flight SMS and arm its resolution timeout."""
@@ -1488,7 +1513,7 @@ class OfonoManager(GObject.Object):
         if row_id is None:
             return False
 
-        run_in_background(self.send_sms_tracked, number, text, row_id)
+        self.send_sms_tracked(number, text, row_id)
         return True
 
     def send_ussd(self, command):

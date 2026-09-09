@@ -994,8 +994,8 @@ class TelephonyDaemonDBus:
     def handle_setdeliveryreports(self, parameters, invocation):
         """Ask the network for SMS delivery reports for a window instance."""
         enabled = parameters.unpack()[0]
-        run_in_background(self.ofono.set_delivery_reports, enabled,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.set_delivery_reports(
+            enabled, lambda result: self.reply_ss_result(invocation, result))
 
     def handle_getaudioroutes(self, parameters, invocation):
         """List the selectable output and input routes for a window."""
