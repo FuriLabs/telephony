@@ -308,29 +308,31 @@ class RingbackManager(GObject.Object):
         self.stop_ringback()
 
     def pause_mpris_players(self):
-        """Pause media players off the main thread."""
-        run_in_background(self.pause_mpris_players_task)
-
-    def pause_mpris_players_task(self):
-        """Pause any active media players via DBus; runs on a worker thread."""
-        try:
-            proxy = Gio.DBusProxy.new_sync(
-                self.session_bus, Gio.DBusProxyFlags.NONE, None,
-                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", None)
-            names = proxy.call_sync("ListNames", None, Gio.DBusCallFlags.NONE, -1, None).unpack()[0]
+        """Pause whatever is playing so the ringback is heard."""
+        def listed(bus, result, _data):
+            try:
+                names = bus.call_finish(result).unpack()[0]
+            except GLib.Error as e:
+                logger.warning(f"[RingbackManager] Pause MPRIS warning: {e}")
+                return
             for name in names:
                 if name.startswith("org.mpris.MediaPlayer2"):
                     self.send_pause(name)
-        except Exception as e:
-            logger.warning(f"[RingbackManager] Pause MPRIS warning: {e}")
+
+        self.session_bus.call(
+            "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus",
+            "ListNames", None, GLib.VariantType("(as)"), Gio.DBusCallFlags.NONE,
+            -1, None, listed, None)
 
     def send_pause(self, bus_name):
-        """Send pause command to a specific MPRIS player."""
-        try:
-            player = Gio.DBusProxy.new_sync(
-                self.session_bus, Gio.DBusProxyFlags.NONE, None,
-                bus_name, "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player", None)
-            player.call_sync("Pause", None, Gio.DBusCallFlags.NONE, -1, None)
-            logger.info(f"[RingbackManager] Paused player: {bus_name}")
-        except Exception as e:
-            logger.warning(f"[RingbackManager] Pause player {bus_name} failed: {e}")
+        """Ask one player to pause; a player that refuses is left alone."""
+        def paused(bus, result, _data):
+            try:
+                bus.call_finish(result)
+                logger.info(f"[RingbackManager] Paused player: {bus_name}")
+            except GLib.Error as e:
+                logger.warning(f"[RingbackManager] Pause player {bus_name} failed: {e}")
+
+        self.session_bus.call(
+            bus_name, "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player",
+            "Pause", None, None, Gio.DBusCallFlags.NONE, -1, None, paused, None)
