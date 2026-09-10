@@ -74,6 +74,7 @@ class OfonoManager(GObject.Object):
         'notification-cleared': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
+        'emergency-numbers-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     def __init__(self, db_manager, gsettings_mgr=None):
@@ -714,6 +715,16 @@ class OfonoManager(GObject.Object):
             logger.error(f"Proxy Init Error ({interface}): {e}")
             return None
 
+    def set_network_emergency_numbers(self, numbers):
+        """Store network emergency numbers and announce changes."""
+        numbers = set(numbers or [])
+        if not numbers or numbers == self.network_emergency_numbers:
+            return False
+
+        self.network_emergency_numbers = numbers
+        self.emit('emergency-numbers-changed')
+        return False
+
     def on_voice_signal(self, proxy, sender, signal, params):
         """Handle signals from the VoiceCallManager."""
         try:
@@ -726,7 +737,7 @@ class OfonoManager(GObject.Object):
             elif signal == "PropertyChanged":
                 name, value = params.unpack()
                 if name == "EmergencyNumbers" and value:
-                    self.network_emergency_numbers = set(value)
+                    self.set_network_emergency_numbers(value)
         except Exception as e:
             logger.error(f"Voice signal error: {e}")
 
@@ -1272,7 +1283,7 @@ class OfonoManager(GObject.Object):
             res = self.voice_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
             numbers = res.unpack()[0].get("EmergencyNumbers", [])
             if numbers:
-                self.network_emergency_numbers = set(numbers)
+                GLib.idle_add(self.set_network_emergency_numbers, numbers)
         except Exception as e:
             logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
 
