@@ -27,7 +27,6 @@ from telephony.shared.utils.region_utils import detect_region
 from telephony.daemon.utils.attachment_utils import prepare_attachment, own_attachments
 from telephony.shared.constants import DAEMON_OBJECT_PATH, DAEMON_INTERFACE
 
-MISSED_MESSAGE_BUFFER_MINUTES = 14400
 
 
 def to_variant(value):
@@ -1632,7 +1631,7 @@ class TelephonyDaemonDBus:
         """Handle SendMissedMessage command."""
         msg_id = parameters.unpack()[0]
         if self.app and self.app.scheduler:
-            missed = self.app.scheduler.get_missed_messages(buffer_minutes=MISSED_MESSAGE_BUFFER_MINUTES)
+            missed = self.app.scheduler.get_missed_messages()
             target = next((m for m in missed if m[0] == msg_id), None)
             if target:
                 self.app.scheduler.process_message(target)
