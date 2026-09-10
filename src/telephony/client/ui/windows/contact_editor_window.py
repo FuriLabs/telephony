@@ -119,14 +119,11 @@ class ContactEditor(Adw.NavigationPage):
         header = Adw.HeaderBar(show_end_title_buttons=False, show_start_title_buttons=False)
         view.add_top_bar(header)
 
-        is_andromeda = False
+        is_read_only_source = False
         if self.uid:
             current_source = self.uid.split(':', 1)[0] if ':' in self.uid else None
-            sources = self.eds.get_sources_info()
-            for s in sources:
-                if s['uid'] == current_source and s['name'] == "Andromeda Contacts":
-                    is_andromeda = True
-                    break
+            if current_source in self.eds.read_only_source_uids():
+                is_read_only_source = True
 
         if self.mode == "VIEW":
             header.set_show_end_title_buttons(True)
@@ -135,7 +132,7 @@ class ContactEditor(Adw.NavigationPage):
             btn_edit.add_css_class("suggested-action")
             btn_edit.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_edit_mode_click(b) or False))
 
-            if not is_andromeda:
+            if not is_read_only_source:
                 header.pack_end(btn_edit)
 
             if not self.eds.is_ready or self._vcard_loading:
@@ -294,7 +291,7 @@ class ContactEditor(Adw.NavigationPage):
             grp_share.add(row_qr)
             page.add(grp_share)
 
-        if self.uid and not is_andromeda:
+        if self.uid and not is_read_only_source:
             grp_danger = Adw.PreferencesGroup()
             row_del = Adw.ActionRow(title=_("Delete Contact"), activatable=True)
             row_del.add_css_class("error")
@@ -331,8 +328,9 @@ class ContactEditor(Adw.NavigationPage):
         else:
             default_source = next((s['uid'] for s in enabled if s['is_system_default']), None)
 
+            read_only_uids = self.eds.read_only_source_uids()
             for s in enabled:
-                if not self.uid and s['name'] == "Andromeda Contacts":
+                if not self.uid and s['uid'] in read_only_uids:
                     continue
                 row = Adw.SwitchRow(title=s['name'])
                 is_active = False
