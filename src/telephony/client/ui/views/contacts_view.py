@@ -20,6 +20,7 @@ from gi.repository import Gtk, Adw, Gio, GLib, Pango
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
+from telephony.shared.constants import SCROLL_SETTLE_MS
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.ui.widgets.common_widget import (DataLoader, translate_phone_label, present_choice_sheet, add_choice_row, present_sheet_page)
 from telephony.client.ui.windows.qr_scan_window import QrScanDialog
@@ -47,6 +48,7 @@ class ContactsView(Adw.Bin):
         self.page_offset = 0
         self.page_limit = 50
         self.is_fetching = False
+        self.scroll_settle_id = None
         self.current_query = ""
 
         self.calling_enabled = True
@@ -172,6 +174,10 @@ class ContactsView(Adw.Bin):
         if self.search_timer:
             GLib.source_remove(self.search_timer)
             self.search_timer = None
+
+        if self.scroll_settle_id:
+            GLib.source_remove(self.scroll_settle_id)
+            self.scroll_settle_id = None
 
         for obj, sig_id in self.signal_ids:
             if obj.handler_is_connected(sig_id):
@@ -554,12 +560,28 @@ class ContactsView(Adw.Bin):
         self.edit_contact(None, item)
 
     def on_scroll_changed(self, adj):
-        """Handle scroll position change."""
+        """Fetch more only once the fling settles.
+
+        Splicing a chunk mid-scroll re-estimates the list's height and
+        jerks the content under a moving finger. Nearing the bottom
+        arms a short timer that each further scroll resets, so the
+        splice lands only after the scroll has stopped.
+        """
         if self.is_fetching:
             return
         is_at_bottom = (adj.get_value() + adj.get_page_size()) >= (adj.get_upper() - 800)
-        if is_at_bottom:
+        if not is_at_bottom:
+            return
+        if self.scroll_settle_id:
+            GLib.source_remove(self.scroll_settle_id)
+        self.scroll_settle_id = GLib.timeout_add(SCROLL_SETTLE_MS, self.fetch_after_settle)
+
+    def fetch_after_settle(self):
+        """Fetch the next page now that scrolling has stopped."""
+        self.scroll_settle_id = None
+        if not self.is_fetching:
             self.start_fetch()
+        return False
 
     def refresh(self, query="", on_done=None):
         """Reload contact list."""
