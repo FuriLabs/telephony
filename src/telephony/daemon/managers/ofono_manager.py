@@ -75,6 +75,7 @@ class OfonoManager(GObject.Object):
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
         'emergency-numbers-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'ims-state-changed': (GObject.SignalFlags.RUN_FIRST, None, (bool, bool, bool)),
     }
 
     def __init__(self, db_manager, gsettings_mgr=None):
@@ -125,6 +126,11 @@ class OfonoManager(GObject.Object):
         self.netreg_handler_id = None
         self.simmgr_proxy = None
         self.simmgr_handler_id = None
+        self.ims_proxy = None
+        self.ims_handler_id = None
+        self.ims_registered = False
+        self.ims_voice_capable = False
+        self.ims_sms_capable = False
         self.network_status = ""
         self.pin_required = ""
         self.voicemail_waiting = False
@@ -255,6 +261,10 @@ class OfonoManager(GObject.Object):
             self.set_network_status("")
         if "org.ofono.SimManager" in added:
             self.attach_simmgr()
+        if "org.ofono.IpMultimediaSystem" in added:
+            self.attach_ims()
+        if "org.ofono.IpMultimediaSystem" in removed:
+            self.detach_ims()
 
         if added or removed:
             self.notify_dial_availability()
@@ -278,6 +288,71 @@ class OfonoManager(GObject.Object):
             return
         self.simmgr_handler_id = self.simmgr_proxy.connect("g-signal", self.on_simmgr_signal)
         self.load_service_property(self.simmgr_proxy, "PinRequired", self.set_pin_required)
+
+    def attach_ims(self):
+        """Follow IMS registration and capabilities once ofono exports the interface."""
+        if self.ims_proxy:
+            return
+        self.ims_proxy = self.get_proxy("org.ofono.IpMultimediaSystem")
+        if not self.ims_proxy:
+            return
+        self.ims_handler_id = self.ims_proxy.connect("g-signal", self.on_ims_signal)
+        self.load_ims_state()
+
+    def detach_ims(self):
+        """Drop the IMS proxy and clear the cached IMS state."""
+        if self.ims_proxy and self.ims_handler_id:
+            try:
+                self.ims_proxy.disconnect(self.ims_handler_id)
+            except Exception as e:
+                logger.warning(f"[OfonoManager] IMS disconnect warning: {e}")
+        if self.ims_proxy:
+            self.ims_proxy.run_dispose()
+        self.ims_proxy = None
+        self.ims_handler_id = None
+        self.apply_ims_props({"Registered": False, "VoiceCapable": False, "SmsCapable": False})
+
+    def load_ims_state(self):
+        """Fetch the initial IMS registration and capability state off the main thread."""
+        proxy = self.ims_proxy
+        if not proxy:
+            return
+
+        def fetch():
+            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
+            return ret.unpack()[0]
+
+        run_in_background(fetch, on_complete=self.apply_ims_props,
+                          on_error=self.modem_went_away("the IMS state"))
+
+    def apply_ims_props(self, props):
+        """Apply IpMultimediaSystem properties and announce meaningful changes."""
+        registered = bool(props.get("Registered", self.ims_registered))
+        voice_capable = bool(props.get("VoiceCapable", self.ims_voice_capable))
+        sms_capable = bool(props.get("SmsCapable", self.ims_sms_capable))
+
+        if (registered == self.ims_registered and
+                voice_capable == self.ims_voice_capable and
+                sms_capable == self.ims_sms_capable):
+            return
+
+        self.ims_registered = registered
+        self.ims_voice_capable = voice_capable
+        self.ims_sms_capable = sms_capable
+        logger.info(f"[OfonoManager] IMS state: registered={registered}, voice={voice_capable}, sms={sms_capable}")
+        GLib.idle_add(self.emit, 'ims-state-changed', registered, voice_capable, sms_capable)
+
+    def on_ims_signal(self, proxy, sender, signal, params):
+        """Handle IpMultimediaSystem property changes."""
+        if signal != "PropertyChanged":
+            return
+        try:
+            name, value = params.unpack()
+        except Exception as e:
+            logger.debug(f"[OfonoManager] IMS property unpack failed: {e}")
+            return
+        if name in ("Registered", "VoiceCapable", "SmsCapable"):
+            self.apply_ims_props({name: value})
 
     def load_service_property(self, proxy, name, setter):
         """Read one property off the main thread and feed it to its setter."""
@@ -493,6 +568,9 @@ class OfonoManager(GObject.Object):
             "online": bool(self.modem_online),
             "interfaces": sorted(self._seen_interfaces),
             "emergency_numbers": sorted(self.network_emergency_numbers),
+            "ims_registered": bool(self.ims_registered),
+            "ims_voice_capable": bool(self.ims_voice_capable),
+            "ims_sms_capable": bool(self.ims_sms_capable),
         }
 
     def calls_snapshot(self):
@@ -577,6 +655,8 @@ class OfonoManager(GObject.Object):
                 self.modem_proxy.disconnect(self.modem_handler_id)
             except Exception as e:
                 logger.warning(f"[OfonoManager] Modem disconnect warning: {e}")
+        self.detach_ims()
+
         for proxy, handler_id, label in ((self.netreg_proxy, self.netreg_handler_id, "NetworkRegistration"),
                                          (self.simmgr_proxy, self.simmgr_handler_id, "SimManager"),
                                          (self.cf_proxy, self.cf_handler_id, "CallForwarding"),
@@ -790,7 +870,7 @@ class OfonoManager(GObject.Object):
             "number": number,
             "state": state,
             "start": time.time() if state == "active" else None,
-            "direction": "incoming" if state == "incoming" else "outgoing",
+            "direction": "incoming" if state in ("incoming", "waiting") else "outgoing",
             "answered": (state == "active"),
             "proxy": call_proxy,
             "silenced": is_silenced,
