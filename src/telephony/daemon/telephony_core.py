@@ -22,6 +22,7 @@ from gi.repository import Gio, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.daemon.services.dbus_service import TelephonyDaemonDBus
+from telephony.daemon.services.gnome_calls_dbus_service import GnomeCallsDBusService
 from telephony.shared.services.system_state_service import SystemStateService
 from telephony.daemon.managers.modem_recovery_manager import (execute_modem_recovery, watch_recovery_result)
 from telephony.shared.managers.database_manager import DatabaseManager
@@ -83,6 +84,7 @@ class TelephonyCore:
         self.ringback = None
         self.scheduler = None
         self.dbus_daemon = None
+        self.gnome_calls_dbus = None
         self.sys_state = None
         self.call_audio = None
 
@@ -129,6 +131,7 @@ class TelephonyCore:
         self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
+        self.gnome_calls_dbus = GnomeCallsDBusService(self.db, self.ofono, self.gsettings_mgr, self.call_audio)
         self.announce_changes()
 
         self.sys_state = SystemStateService()
@@ -151,7 +154,6 @@ class TelephonyCore:
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
-
 
     def apply_region(self):
         """Give this process the country its numbers belong to.
