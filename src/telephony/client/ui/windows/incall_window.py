@@ -136,7 +136,7 @@ class InCallWindow(Adw.Window):
         self.audio = CallFeedback()
         self.fader = ProximityFader()
 
-        self.lock_manager = LockScreenManager(self.ofono, self.eds, self.audio, self)
+        self.lock_manager = LockScreenManager(self)
 
         self.active_path = None
         self.is_speaker = False
@@ -881,8 +881,6 @@ class InCallWindow(Adw.Window):
 
         calls = self.ofono.active_calls
 
-        self.lock_manager.sync_notifications(calls, self.call_history, self.ignored_calls)
-
         if self.is_closing:
             if not calls:
                 self.is_closing = False
@@ -904,8 +902,6 @@ class InCallWindow(Adw.Window):
 
         if not self.defer_present:
             self.present()
-        if not self.is_locked:
-            self.lock_manager.clear_all()
 
         self.btn_hangup_act.update_mode(len(calls))
 
@@ -1639,7 +1635,6 @@ class InCallWindow(Adw.Window):
     def handle_output_selection(self, route_id):
         """Send the route intent; the daemon's broadcast renders it."""
         self.ofono.daemon.set_audio_route(route_id)
-        self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
     def on_audio_changed(self):
         """Render the daemon's applied audio state."""
@@ -1657,7 +1652,6 @@ class InCallWindow(Adw.Window):
     def on_mute_toggle(self, btn):
         """Toggle microphone mute; the daemon's broadcast renders it."""
         self.ofono.daemon.set_mic_muted(not self.is_muted)
-        self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
     def on_hold_toggle(self, btn):
         """Toggle call hold."""
