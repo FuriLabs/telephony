@@ -111,14 +111,21 @@ class FavoritesListWindow(Adw.NavigationPage):
         """Return the configured speed dial entries."""
         return self.gsettings_mgr.get_favorites()
 
-    def refresh_list(self):
-        """Rebuild the slot list from the stored favorites."""
+    def refresh_list(self, entries=None):
+        """Rebuild the slot list, from entries when the caller has them.
+
+        The daemon owns the dconf write, so a caller that has just saved
+        a list cannot read it back yet: the write is still on its way
+        there and the read answers from this process's own copy. Such a
+        caller hands over what it wrote instead.
+        """
         if self.grp_list is not None:
             self.page_list.remove(self.grp_list)
         self.grp_list = Adw.PreferencesGroup(title=_("Speed Dial"))
         self.page_list.add(self.grp_list)
 
-        favorites = {entry.get("slot"): entry for entry in self.favorites()}
+        shown = self.favorites() if entries is None else entries
+        favorites = {entry.get("slot"): entry for entry in shown}
         for slot in SPEED_DIAL_SLOTS:
             entry = favorites.get(slot)
             row = Adw.ActionRow(title=str(slot))
@@ -139,7 +146,7 @@ class FavoritesListWindow(Adw.NavigationPage):
         """Remove the contact assigned to one slot."""
         remaining = [e for e in self.favorites() if e.get("slot") != slot]
         self.gsettings_mgr.set_favorites(remaining)
-        self.refresh_list()
+        self.refresh_list(remaining)
 
     def load_source_map(self):
         """Fetch the address book names once; blocking, call from a worker."""
@@ -212,7 +219,7 @@ class FavoritesListWindow(Adw.NavigationPage):
         logger.info(f"[Favorites] Slot {slot} assigned")
         self.search_entry.set_text("")
         self.stack.set_visible_child_name("list")
-        self.refresh_list()
+        self.refresh_list(entries)
         self.overlay.add_toast(Adw.Toast.new(
             _("{name} added to slot {slot}").format(
                 name=data.get("name") or _("Unknown"), slot=slot)))
