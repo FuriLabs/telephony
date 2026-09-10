@@ -95,6 +95,7 @@ class ChatPage(Gtk.Box):
         self.is_loading = True
         self.is_jumping = False
         self.is_fetching_older = False
+        self.is_fetching_newer = False
         self.all_messages_loaded = False
         self.older_settle_id = None
         self.scroll_hold_id = None
@@ -1203,7 +1204,8 @@ class ChatPage(Gtk.Box):
         self.cancel_older_settle()
 
         def fetch_context():
-            msgs = self.db.get_chat_messages_around(msg_id, limit_before=50, limit_after=None)
+            msgs = self.db.get_chat_messages_around(msg_id, limit_before=LOAD_MORE_BATCH,
+                                                   limit_after=LOAD_MORE_BATCH)
             newer_count = self.db.get_message_offset(msg_id)
             return msgs, newer_count
 
@@ -1379,14 +1381,69 @@ class ChatPage(Gtk.Box):
             self.start_load_thread()
         return False
 
+    def load_newer_messages(self):
+        """Fetch the messages a jumped-to window left above it.
+
+        Jumping to a search result loads a window around that message
+        instead of everything newer than it, so walking back down asks
+        the database for the rest a batch at a time.
+        """
+        if self.is_fetching_newer or self.newest_db_offset <= 0:
+            return
+        if self.is_loading or self.is_jumping:
+            return
+        self.is_fetching_newer = True
+        offset = max(0, self.newest_db_offset - LOAD_MORE_BATCH)
+        limit = self.newest_db_offset - offset
+
+        def fetch():
+            return self.db.get_chat_messages(self.number, limit=limit, offset=offset)
+
+        run_in_background(fetch, on_complete=self.insert_newer_messages,
+                          on_error=self.fetch_newer_failed)
+
+    def fetch_newer_failed(self, error):
+        """Let the reader try again; the batch simply did not arrive."""
+        logger.warning(f"[ChatPage] Fetch newer messages failed: {error}")
+        self.is_fetching_newer = False
+        return False
+
+    def insert_newer_messages(self, msgs):
+        """Put a batch of newer messages back on the newest end."""
+        self.is_fetching_newer = False
+        if self.is_jumping or self.is_loading:
+            return False
+        if not msgs:
+            self.newest_db_offset = 0
+            return False
+
+        items = []
+        for m in msgs:
+            items.append(MessageItem(m[0], m[1], m[2], m[3], m[4],
+                                     subject=m[5] if len(m) > 5 else None,
+                                     attachments=m[6] if len(m) > 6 else [],
+                                     sender=m[7] if len(m) > 7 else "Unknown",
+                                     scheduled_timestamp=m[8] if len(m) > 8 else None))
+
+        anchor_value = self.v_adj.get_value()
+        self.store.splice(0, 0, items)
+        self.hold_scroll_across_load(anchor_value)
+        self.newest_db_offset = max(0, self.newest_db_offset - len(items))
+        self.oldest_db_offset = self.newest_db_offset + self.store.get_n_items()
+        return False
+
     def check_read_status(self):
         """Check if bottom is reached and mark read."""
         adj = self.v_adj
         is_at_bottom = adj.get_value() <= 20
-        if is_at_bottom:
-            self.trim_oldest_overflow()
-            if self.app_window.is_active():
-                self.mark_read_debounced()
+        if not is_at_bottom:
+            return
+        if self.newest_db_offset > 0:
+            self.load_newer_messages()
+            return
+        self.trim_oldest_overflow()
+        if self.app_window.is_active():
+            self.mark_read_debounced()
 
     def trim_oldest_overflow(self):
         """Drop the oldest loaded messages once the reader is back at newest.
