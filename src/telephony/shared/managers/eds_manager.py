@@ -34,6 +34,7 @@ EDS_SOURCES_PATH = "/org/gnome/evolution/dataserver/SourceManager"
 EDS_SOURCE_MANAGER_IFACE = "org.gnome.evolution.dataserver.SourceManager"
 EDS_SOURCE_IFACE = "org.gnome.evolution.dataserver.Source"
 EDS_SOURCE_WRITABLE_IFACE = "org.gnome.evolution.dataserver.Source.Writable"
+EDS_STATUS_CONNECTED = "connected"
 EDS_SOURCE_REMOVABLE_IFACE = "org.gnome.evolution.dataserver.Source.Removable"
 EDS_BOOK_BUS_NAME = "org.gnome.evolution.dataserver.AddressBook10"
 EDS_FACTORY_PATH = "/org/gnome/evolution/dataserver/AddressBookFactory"
@@ -1353,16 +1354,24 @@ class EdsManager(GObject.Object):
     def read_only_source_uids(self):
         """Return the uids of books the app refuses to write to.
 
-        Online books are read-only here: a network backend cannot be
-        edited reliably from the phone, least of all while it is
-        disconnected, so the app never offers them as a save target.
-        Andromeda stays read-only by name. The rich per-source info
-        carries is_local, so it decides both; self.sources holds only
-        names and cannot, so the info is the source of truth.
+        An online book is refused only while its backend says it is not
+        connected: a write that cannot reach the server is lost, while a
+        healthy account is edited like any other. A book that publishes
+        no status at all is left editable, since nothing is known to be
+        wrong with it. Andromeda stays read-only by name.
+
+        The status strings are lowercase and one contains the other, so
+        connected is matched exactly rather than searched for.
         """
         uids = set()
         for item in self.get_sources_info():
-            if item.get('name') == "Andromeda Contacts" or item.get('is_local') is False:
+            if item.get('name') == "Andromeda Contacts":
+                uids.add(item.get('uid'))
+                continue
+            if item.get('is_local'):
+                continue
+            status = (item.get('status') or "").strip().lower()
+            if status and status != EDS_STATUS_CONNECTED:
                 uids.add(item.get('uid'))
         return uids
 
