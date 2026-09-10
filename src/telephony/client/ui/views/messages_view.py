@@ -62,9 +62,13 @@ class MessagesView(Adw.Bin):
         self.selected_recipients = set()
         self._is_programmatic_update = False
 
+        self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+
         self.signal_ids = []
         self.signal_ids.append((self.db, self.db.connect('messages-updated', self.on_messages_updated)))
         self.signal_ids.append((self.db, self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
+        gsettings = self.app_window.gsettings_mgr.gsettings
+        self.signal_ids.append((gsettings, gsettings.connect('changed::muted_conversations', self.on_muted_changed)))
         if self.app_window.eds:
             self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
 
@@ -492,13 +496,19 @@ class MessagesView(Adw.Bin):
 
         return False
 
-    def muted_ids(self):
-        """Return the muted conversation ids as a set."""
-        return set(self.app_window.gsettings_mgr.get_muted_conversations())
+    def on_muted_changed(self, _settings, _key):
+        """Refresh the cached muted set and repaint the rows once it changes.
+
+        The bind runs for every row that scrolls into view, so reading the
+        setting there turned a fast fling into a stream of settings reads.
+        The set is cached instead and only re-read when the setting moves.
+        """
+        self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+        self.refresh_list()
 
     def on_bind_row(self, factory, list_item):
         """Bind row items to widgets."""
-        ConversationRowFactory.bind(factory, list_item, self.muted_ids())
+        ConversationRowFactory.bind(factory, list_item, self.muted_ids)
 
     def on_activate_conv(self, lv, pos):
         """Handle activation of a conversation row."""
