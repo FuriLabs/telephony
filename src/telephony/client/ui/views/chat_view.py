@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from telephony.shared.utils.mms_utils import max_attachment_size
+from telephony.client.utils.mms_utils import max_attachment_size
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.widgets.common_widget import present_unblock_choice
 from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
