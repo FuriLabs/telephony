@@ -33,7 +33,7 @@ FLOW_SHEET_HEIGHT = 560
 
 
 class ImportExportDialog:
-    """Dialog and logic for ETL style Import/Export."""
+    """Import and export flow hosted in the application's navigation sheet."""
 
     def __init__(self, app_window, nav_view=None):
         self.app_window = app_window
@@ -51,11 +51,7 @@ class ImportExportDialog:
         self._sheet = None
 
     def push_page(self, page):
-        """Push a page, which takes the focus rather than its contents.
-
-        A text field taking it brings the keyboard up with the page,
-        and a page is opened to be read before it is typed into.
-        """
+        """Push a flow page and give the page itself initial focus."""
         page.set_focusable(True)
         self.nav_view.push(page)
 
@@ -87,13 +83,7 @@ class ImportExportDialog:
         self.push_page(page)
 
     def present(self):
-        """Show the import and export flow in one navigable sheet.
-
-        The navigation is remembered so the flow can be reopened where
-        it was, but the sheet may have moved on to something else since,
-        and pushing onto a navigation that is no longer in the window
-        adds pages nobody will ever see.
-        """
+        """Show or resume the import/export flow in the window's sheet."""
         showing = sheet_navigation(self.app_window.sheet_host.get_sheet())
         if self.nav_view is not None and self.nav_view is not showing:
             self.nav_view = None
@@ -502,7 +492,7 @@ class ImportExportDialog:
             GLib.idle_add(self.app_window.hide_loading)
             GLib.idle_add(lambda: self.app_window.notify_success(_("Imported {count} contacts").format(count=count)))
         except Exception as e:
-            logger.error(f"[MainWindow] Import failed: {e}")
+            logger.error(f"[ImportExportWindow] Import failed: {e}")
             GLib.idle_add(self.app_window.hide_loading)
             GLib.idle_add(lambda e=e: self.app_window.notify_error(_("Import failed: {e}").format(e=str(e))))
 
@@ -571,5 +561,5 @@ class ImportExportDialog:
 
             GLib.idle_add(lambda: self.app_window.notify_success(_("Exported {count} contacts").format(count=len(vcards))))
         except Exception as e:
-            logger.error(f"[MainWindow] Export error: {e}")
+            logger.error(f"[ImportExportWindow] Export error: {e}")
             GLib.idle_add(lambda e=e: self.app_window.notify_error(_("Export error: {e}").format(e=e)))
