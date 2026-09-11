@@ -90,7 +90,7 @@ class OfonoMirror(GObject.Object):
                 ("NetworkServiceChanged", self.on_sig_network_service)):
             self.daemon.subscribe(signal_name, handler)
 
-        self._watch_id = Gio.bus_watch_name(
+        Gio.bus_watch_name(
             Gio.BusType.SESSION, DAEMON_BUS_NAME, Gio.BusNameWatcherFlags.NONE,
             self.on_owner_appeared, self.on_owner_vanished)
 
