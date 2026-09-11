@@ -24,17 +24,15 @@ RECOVERY_TIMEOUT_SECONDS = 30
 
 
 def execute_modem_recovery():
-    """Restart the whole modem stack; blocking, call from a worker thread.
+    """Restart the modem stack; blocking, call from a worker thread.
 
-    Restarting the RIL daemon and then ofono restores every known failure
-    the stack can recover from without a reboot, so there is no ladder of
-    gentler steps anymore.
+    Restart the RIL daemon first, then oFono, wait for oFono to reappear for
+    the bounded period implemented by wait_for_ofono(), and finally
+    restart ModemManager so it reconnects to the refreshed telephony stack.
 
-    ModemManager reaches the modem through ofono, and roughly one time in
-    ten it stays wedged on the old one even after ofono is healthy again,
-    which leaves mobile data down on a phone whose calls work. It is
-    restarted last and only once ofono answers, since one restarted
-    against a modem that is not back yet is a restart spent on nothing.
+    The wait is best-effort, wait_for_ofono() logs a timeout and returns,
+    so ModemManager is restarted even when oFono has not acquired its bus
+    name before the wait expires.
     """
     logger.warning("[ModemRecovery] Restarting RIL daemon and ofono")
     restart_ril_modem()
@@ -47,14 +45,14 @@ def execute_modem_recovery():
 def watch_recovery_result(ofono, on_done, timeout_seconds=RECOVERY_TIMEOUT_SECONDS):
     """Report recovery success or failure to on_done(bool); call on the main loop.
 
-    The verdict comes from the modem itself: the dial-availability signal
-    the ofono manager emits once the restarted stack republishes its voice
-    interface, with a timeout as the failure path. No polling.
+    Recovery succeeds when dial availability is restored and the modem has
+    explicitly reported that it is online. The availability signal drives the
+    check, with one immediate check for an already-restored modem and a timeout
+    as the failure path.
 
-    A modem that has come back but has not said whether its radio is on
-    does not count. Its interfaces reappear before anything reads that,
-    so accepting the first word would report a repaired modem while it
-    still cannot place a call.
+    Requiring modem_online is True avoids treating the reappearance of the
+    voice interface alone as a successful recovery while radio state is still
+    unknown or off.
     """
     state = {"handler": None, "timer": None, "done": False}
 
