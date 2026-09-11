@@ -98,7 +98,6 @@ class TelephonyCore:
         self._recovery_pending_unlock = False
         self._net_nudge_timer = None
         self._denied_timer = None
-        self._airplane_sub = None
         self._sim_pin_notified = False
         self._denied_notified = False
 
@@ -411,7 +410,7 @@ class TelephonyCore:
         """
         try:
             bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-            self._airplane_sub = bus.signal_subscribe(
+            bus.signal_subscribe(
                 "org.gnome.SettingsDaemon.Rfkill",
                 "org.freedesktop.DBus.Properties", "PropertiesChanged",
                 "/org/gnome/SettingsDaemon/Rfkill", None,
