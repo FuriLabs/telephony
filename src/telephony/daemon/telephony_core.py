@@ -31,7 +31,6 @@ from telephony.shared.managers.gsettings_manager import GSettingsManager
 from telephony.daemon.managers.ofono_manager import OfonoManager
 from telephony.daemon.managers.mms_manager import MmsManager
 from telephony.shared.managers.eds_manager import EdsManager
-from telephony.daemon.managers.emergency_manager import EmergencyManager
 from telephony.daemon.managers.ringback_manager import RingbackManager
 from telephony.daemon.managers.notification_manager import NotificationManager
 from telephony.daemon.managers.call_audio_manager import CallAudioManager
@@ -81,7 +80,6 @@ class TelephonyCore:
         self.db = None
         self.ofono = None
         self.mms = None
-        self.emergency = None
         self.ringback = None
         self.scheduler = None
         self.dbus_daemon = None
@@ -119,7 +117,6 @@ class TelephonyCore:
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoManager(self.db, self.gsettings_mgr)
 
-        self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
         self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
 
         self.ofono.set_focus_provider(self.ui.is_any_window_active)
