@@ -30,21 +30,11 @@ _CLOSING_DIALOGS = weakref.WeakSet()
 
 
 def install_sheet_host(window):
-    """Give a window the bottom sheet its flows are shown in.
+    """Install the window's shared bottom-sheet host.
 
-    Adwaita's sheet is a widget that lives in the window rather than
-    something presented onto it, so the window keeps one and shows
-    whatever is asked for in it. It spans the window by itself, which
-    a sheet made out of a dialog does not, and a dialog offers nothing
-    to ask for it with.
-
-    One per window is the design rather than a limit: a flow opened
-    from inside a sheet pushes a page on the navigation already there
-    instead of opening a second sheet over the first.
-
-    The window lets go of what it is showing before the sheet is given
-    it. A widget has one parent, so handing it over while the window
-    still holds it fails and leaves the window with nothing in it.
+    The existing window content becomes the host's main content. Nested
+    flows reuse the same sheet and navigation rather than opening another
+    sheet on top of it.
     """
     content = window.get_content()
     window.set_content(None)
@@ -58,13 +48,10 @@ def install_sheet_host(window):
 
 
 def present_sheet(window, child):
-    """Show a widget as the window's bottom sheet.
+    """Show a widget in the window's bottom sheet.
 
-    The sheet content rides inside its own toast overlay, because the
-    window's overlay sits under the sheet and a toast raised there
-    while a sheet is open answers to nobody. The host itself is left
-    where it is; the sheet slot is just a widget and takes the wrapper
-    without complaint.
+    Keep a toast overlay inside the sheet so notifications from the active
+    flow render above the sheet content.
     """
     overlay = Adw.ToastOverlay()
     overlay.set_child(child)
@@ -76,22 +63,10 @@ def present_sheet(window, child):
 def present_alert_sheet(window, heading, body, responses, on_response, extra_child=None):
     """Ask a question in the window's sheet.
 
-    responses are (id, label, appearance) with appearance one of None,
-    "suggested" or "destructive". The answer reaches on_response only
-    when a button is pressed: leaving by the back arrow is the same as
-    saying no, which is what every caller of this already treated an
-    untouched question as.
-
-    A question asked on top of a flow keeps that flow's height, so the
-    sheet does not shrink to the question and grow back afterwards, and
-    it is left by the back arrow the flow already has. A question asked
-    with nothing underneath has no arrow to offer, so it carries its
-    own way out.
-
-    The sheet presentation ignores the natural height of a wrapped
-    label, so the scroll area asks for the measured height of the whole
-    box up to a cap, the same way the info sheets already must; a long
-    question otherwise renders as a stub with its buttons out of reach.
+    ``responses`` contains ``(id, label, appearance)`` tuples, where
+    appearance is ``None``, ``suggested`` or ``destructive``. If another
+    flow is open, the alert is pushed onto its navigation; otherwise it
+    gets an explicit Cancel button. Long content remains scrollable.
     """
     host = window.sheet_host
     showing = sheet_navigation(host.get_sheet()) if host.get_open() else None
@@ -135,15 +110,10 @@ def present_alert_sheet(window, heading, body, responses, on_response, extra_chi
 
 
 def present_unblock_choice(window, daemon, entry, context, on_done):
-    """Ask how much of a block to lift, when lifting it all would surprise.
+    """Ask whether to unblock the current domain or the whole entry.
 
-    An entry usually blocks calls and messages both, so unblocking from
-    one context would quietly unblock the other. When the entry only
-    blocks this context's domain there is nothing to ask and it is
-    removed outright; otherwise the question offers lifting just this
-    domain or the whole entry, titled by the number so it is clear what
-    is asked about. on_done runs after either choice, not on walking
-    away.
+    If the other domain is not blocked, remove the entry directly.
+    ``on_done`` runs only after an unblock choice is applied.
     """
     own = entry["block_calls"] if context == "calls" else entry["block_messages"]
     other = entry["block_messages"] if context == "calls" else entry["block_calls"]
@@ -177,13 +147,7 @@ def present_unblock_choice(window, daemon, entry, context, on_done):
 
 
 def sheet_navigation(widget):
-    """Find the navigation a sheet keeps its pages in.
-
-    A flow does not have to be a navigation itself to hold one: the
-    settings sheet is a bin around a toast overlay around its own
-    navigation, and pages opened from inside it belong on that one
-    rather than on a fresh one that would replace the flow.
-    """
+    """Return the NavigationView nested inside a sheet widget, if any."""
     if widget is None:
         return None
     if isinstance(widget, Adw.NavigationView):
@@ -199,28 +163,12 @@ def sheet_navigation(widget):
 
 
 def present_sheet_page(window, page, replace=False):
-    """Show a page in the window's sheet, pushing it onto whatever is there.
+    """Push or replace a page in the window's shared sheet navigation.
 
-    A window has one sheet, so a flow opened from inside another one
-    goes on top of it as a page and back walks out of it. That is what
-    a sheet on top of a sheet was standing in for.
-
-    Replacing is for what arrives on its own rather than by asking: a
-    second answer to a network request takes the place of the first
-    instead of burying it.
-
-    A page going onto an open sheet asks for the height the sheet
-    already has, so a short page does not shrink the sheet around it
-    and let it spring back when the page is left. A page that asks for
-    more keeps its own ask: a capture page opened from a small chooser
-    would otherwise start small and leap once its viewfinder starts
-    drawing.
-
-    The page takes the focus itself so it does not go to whatever the
-    page happens to hold first. A text field taking it brings the
-    keyboard with it, and a page is opened to be read before it is
-    typed into. Nothing is made unfocusable, so tapping a field still
-    works and the tab order is untouched.
+    Nested flows reuse the existing NavigationView. Shorter pages keep the
+    current sheet height while taller pages may request more space. The page
+    itself receives initial focus so text fields do not open the keyboard
+    until selected.
     """
     page.set_focusable(True)
     host = window.sheet_host
@@ -251,11 +199,7 @@ def close_sheet_page(window):
 
 
 def on_sheet_closed(window, callback):
-    """Run callback once, when the window's sheet is taken down.
-
-    A sheet is a widget rather than a dialog, so it reports going away
-    by its open state changing rather than by closing.
-    """
+    """Run callback once when the window's bottom sheet closes."""
     state = {"id": None}
 
     def watch(host, _param):
@@ -273,17 +217,7 @@ def close_sheet(window):
 
 
 def stay_a_sheet(dialog):
-    """Keep a dialog at the bottom of the screen rather than floating.
-
-    Adwaita decides between a sheet and a floating dialog from how wide
-    the window is, and window width is display scale: the same phone is
-    360 points across at 300 per cent and 540 at 200, so lowering the
-    scale turned every dialog into a box in the middle of the screen.
-
-    What still comes through here is what a dialog is for: the alerts,
-    which stack over whatever is showing and answer with a response.
-    The flows are sheets in their own right and go to the window's.
-    """
+    """Force an Adw.Dialog to use bottom-sheet presentation."""
     dialog.set_presentation_mode(Adw.DialogPresentationMode.BOTTOM_SHEET)
 
 
@@ -327,25 +261,14 @@ def choice_row(group, label, callback, dismiss, subtitle=None, destructive=False
 
 def add_choice_row(group, window, label, callback, subtitle=None, destructive=False,
                    icon=None, opens_flow=False):
-    """Add one activatable row that leaves its flow and runs its callback.
-
-    A row that opens another flow keeps the one it is in, so the new
-    flow arrives on top of it and back walks out the way the user came.
-    Taking the choice away first leaves whatever it opens with nothing
-    behind it and no way back.
-    """
+    """Add a choice row, closing its page unless it opens a nested flow."""
     dismiss = (lambda: None) if opens_flow else (lambda: close_sheet_page(window))
     return choice_row(group, label, callback, dismiss,
                        subtitle=subtitle, destructive=destructive, icon=icon)
 
 
 def build_info_sheet(title, text, selectable=False):
-    """Build the page holding a titled block of explanatory text.
-
-    The sheet presentation ignores the natural height of a wrapped
-    label, so the scroll area asks for the measured text height up to
-    a cap, otherwise long texts render as a short scrolling stub.
-    """
+    """Build a capped, scrollable sheet page containing explanatory text."""
     toolbar = Adw.ToolbarView()
     toolbar.add_top_bar(Adw.HeaderBar(show_end_title_buttons=False))
 
