@@ -21,8 +21,6 @@ import tempfile
 import threading
 import time
 from telephony.shared.utils.log_utils import logger
-from telephony.shared.utils.mms_utils import max_attachment_size
-from telephony.shared.constants import DEFAULT_MAX_ATTACHMENT_SIZE
 from gi.repository import Gio, GLib, GObject
 
 from telephony.shared.utils.phone_utils import get_own_number, normalize_number
@@ -280,16 +278,7 @@ class MmsManager(GObject.Object):
         except Exception as e:
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
 
-    def user_size_limit(self):
-        """Return the configured size limit in bytes, or None when unset."""
-        limit = max_attachment_size(self.gsettings_mgr)
-        return limit if limit != DEFAULT_MAX_ATTACHMENT_SIZE else None
-
-    def get_max_attachment_size(self):
-        """Return the attachment size budget from settings, else the default."""
-        return self.user_size_limit() or DEFAULT_MAX_ATTACHMENT_SIZE
-
-    def send_mms(self, recipients, subject=None, body=None, attachment_paths=[]):
+    def send_mms(self, recipients, body=None, attachment_paths=[]):
         """Send an MMS message."""
         if not self.proxy:
             self.init_manager()
@@ -518,7 +507,6 @@ class MmsManager(GObject.Object):
                     direction="incoming",
                     body=body_text,
                     status=status,
-                    subject=None,
                     attachments=final_atts,
                     sender=sender
                 )

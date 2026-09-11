@@ -1054,7 +1054,7 @@ class TelephonyDaemonDBus:
         success = False
         scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.app and self.app.scheduler:
-            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
+            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
@@ -1072,7 +1072,7 @@ class TelephonyDaemonDBus:
         success = False
         scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.app and self.app.scheduler:
-            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
+            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
@@ -1082,7 +1082,7 @@ class TelephonyDaemonDBus:
         number, text = parameters.unpack()
         success = False
         if self.ofono:
-            row_id = self.db.add_message(number, 'outgoing', text, status='draft', subject=None, attachments=[], sender="Me")
+            row_id = self.db.add_message(number, 'outgoing', text, status='draft', attachments=[], sender="Me")
             success = self.ofono.send_sms(number, text)
             if success:
                 self.db.update_message_schedule(row_id, status="sent", timestamp=None)
@@ -1140,7 +1140,7 @@ class TelephonyDaemonDBus:
             self.db.delete_drafts(number)
             if text or attachments:
                 self.db.add_message(number, 'outgoing', text, status='draft',
-                                    subject=None, attachments=attachments, sender="Me")
+                                    attachments=attachments, sender="Me")
 
         if not self.db:
             invocation.return_value(None)
@@ -1500,7 +1500,7 @@ class TelephonyDaemonDBus:
         success = False
         if self.app and self.app.mms:
             numbers = [n.strip() for n in number.split(',') if n.strip()]
-            row_id = self.db.add_message(number, 'outgoing', text, status='sending', subject=None, attachments=attachments, sender="Me")
+            row_id = self.db.add_message(number, 'outgoing', text, status='sending', attachments=attachments, sender="Me")
             self.app.mms.send_mms_tracked(numbers, text, attachments, row_id)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
