@@ -116,7 +116,6 @@ class CameraPhoto(MediaCaptureWindow):
         self.viewfinder_widget.set_vexpand(True)
         self.viewfinder_widget.set_content_fit(Gtk.ContentFit.CONTAIN)
 
-        self.preview_card = card_box
         self.viewfinder_holder = self.letterbox(self.viewfinder_widget)
         card_box.append(self.viewfinder_holder)
         self.page_capture.append(card_box)

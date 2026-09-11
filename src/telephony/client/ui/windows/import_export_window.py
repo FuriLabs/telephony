@@ -40,7 +40,6 @@ class ImportExportDialog:
         self.db = app_window.db
         self.eds = app_window.eds
         self.nav_view = nav_view
-        self._sheet = None
         self.mode_calls = bool(app_window.show_calls_mode)
         self.mode_messages = bool(app_window.show_messages_mode)
         self.mode_contacts = bool(app_window.show_contacts_mode)
@@ -48,7 +47,6 @@ class ImportExportDialog:
     def on_flow_closed(self, _dialog):
         """Forget the flow once its sheet goes away."""
         self.nav_view = None
-        self._sheet = None
 
     def push_page(self, page):
         """Push a flow page and give the page itself initial focus."""
@@ -91,7 +89,6 @@ class ImportExportDialog:
         if self.nav_view is None:
             self.nav_view = Adw.NavigationView()
             self.nav_view.set_size_request(-1, FLOW_SHEET_HEIGHT)
-            self._sheet = self.app_window
             present_sheet(self.app_window, self.nav_view)
             on_sheet_closed(self.app_window, lambda: self.on_flow_closed(None))
 

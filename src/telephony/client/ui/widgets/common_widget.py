@@ -13,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import weakref
-
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number
 
@@ -25,8 +23,6 @@ from telephony.shared.constants import SHEET_CONTENT_WIDTH, ALERT_SHEET_SPACING,
 
 LIST_CHUNK_SIZE = 20
 INFO_SHEET_MAX_HEIGHT = 520
-
-_CLOSING_DIALOGS = weakref.WeakSet()
 
 
 def install_sheet_host(window):

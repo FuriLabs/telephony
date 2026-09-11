@@ -41,7 +41,6 @@ LOAD_MORE_BATCH = 50
 MAX_MESSAGES_IN_MEMORY = 200
 SCROLL_HOLD_MS = 150
 LOAD_OLDER_SETTLE_MS = 120
-RECENT_DUPLICATE_SCAN_ITEMS = 8
 
 
 class ChatPage(Gtk.Box):
@@ -69,18 +68,15 @@ class ChatPage(Gtk.Box):
             self.is_group = True
             self.recipients = sorted([normalize_number(n.strip()) for n in number_or_list.split(',')])
             self.number = ",".join(self.recipients)
-            self.history_enabled = True
         elif isinstance(number_or_list, list):
             self.is_group = True
             self.recipients = sorted([normalize_number(n) for n in number_or_list])
             self.number = ",".join(self.recipients)
-            self.history_enabled = True
         else:
             self.is_group = False
             norm = normalize_number(number_or_list)
             self.recipients = [norm]
             self.number = norm
-            self.history_enabled = True
 
         if not contact_name and any(c.isalpha() for c in self.number):
             self.contact_name = _("Unknown")
@@ -102,7 +98,6 @@ class ChatPage(Gtk.Box):
         self.scroll_hold_value_id = None
         self.scroll_hold_timer = None
         self.target_highlight_id = target_id
-        self.has_active_divider = False
         self._pending_initial_read = False
 
         self.newest_db_offset = 0
@@ -130,14 +125,10 @@ class ChatPage(Gtk.Box):
                     self.attachments.append(p)
             self.refresh_attachment_ui()
 
-        if self.history_enabled:
-            if self.target_highlight_id:
-                self.load_context_for_message(self.target_highlight_id)
-            else:
-                run_in_background(self.initial_load)
+        if self.target_highlight_id:
+            self.load_context_for_message(self.target_highlight_id)
         else:
-            self.store.insert(0, MessageItem(0, "divider", _("Draft to {count} recipients").format(count=len(self.recipients)), "", "", is_divider=True))
-            self.content_stack.set_visible_child_name("chat")
+            run_in_background(self.initial_load)
 
     def setup_ui(self):
         """Setup the chat page UI components."""
@@ -581,7 +572,6 @@ class ChatPage(Gtk.Box):
                 has_unread = True
                 items.append(MessageItem(0, "divider", _("— New Messages —"), "", "", is_divider=True))
                 first_unread_index = len(items) - 1
-                self.has_active_divider = True
 
             subject = m[5] if len(m) > 5 else None
             att = m[6] if len(m) > 6 else []
@@ -1205,7 +1195,7 @@ class ChatPage(Gtk.Box):
 
         def fetch_context():
             msgs = self.db.get_chat_messages_around(msg_id, limit_before=LOAD_MORE_BATCH,
-                                                   limit_after=LOAD_MORE_BATCH)
+                                                    limit_after=LOAD_MORE_BATCH)
             newer_count = self.db.get_message_offset(msg_id)
             return msgs, newer_count
 
@@ -1475,7 +1465,6 @@ class ChatPage(Gtk.Box):
         self.app_window.daemon.mark_thread_read(self.db_number)
         self.messages_view.check_and_clear_notification(self.db_number)
 
-        self.has_active_divider = False
         self._read_timer = None
         return False
 

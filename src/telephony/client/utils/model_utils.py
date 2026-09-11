@@ -104,7 +104,7 @@ class CallItem(GObject.Object):
     Model representing a single call history item.
     """
 
-    def __init__(self, call_id, number, name, direction, duration, full_ts, display_time, is_saved, is_divider=False, label=None, anonymous=False, multiparty=False, transferred=False, disconnect_reason=None):
+    def __init__(self, call_id, number, name, direction, duration, full_ts, display_time, is_divider=False, label=None, anonymous=False, multiparty=False, transferred=False, disconnect_reason=None):
         """
         Initialize the call item.
         """
@@ -113,11 +113,9 @@ class CallItem(GObject.Object):
         self.number = number
         self.name = name
         self.direction = direction
-        self.duration = duration
         self.full_ts = full_ts
         self.display_time = display_time
         self.duration_str = self.fmt_dur(duration)
-        self.is_saved = is_saved
         self.is_divider = is_divider
         self.label = label
         self.anonymous = anonymous
@@ -149,7 +147,7 @@ class ContactItem(GObject.Object):
     Model representing a contact.
     """
 
-    def __init__(self, uid, first_name, last_name, phone, email, is_favorite=False, source_uid=None):
+    def __init__(self, uid, first_name, last_name, phone, is_favorite=False, source_uid=None):
         """
         Initialize the contact item.
         """
@@ -158,7 +156,6 @@ class ContactItem(GObject.Object):
         self.first_name = first_name or ""
         self.last_name = last_name or ""
         self.phone = phone or ""
-        self.email = email or ""
         self.is_favorite = is_favorite
         self.source_uid = source_uid
 
@@ -177,7 +174,7 @@ class ConversationItem(GObject.Object):
     Model representing a conversation thread.
     """
 
-    def __init__(self, number, name, last_msg, timestamp, unread_count, status=None, is_load_more=False):
+    def __init__(self, number, name, last_msg, timestamp, unread_count, status=None):
         """
         Initialize the conversation item.
         """
@@ -188,7 +185,6 @@ class ConversationItem(GObject.Object):
         self.timestamp = timestamp
         self.unread_count = unread_count
         self.status = status
-        self.is_load_more = is_load_more
 
         try:
             if timestamp:

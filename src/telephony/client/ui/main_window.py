@@ -180,7 +180,6 @@ class MainWindow(Adw.Window):
         self.pending_conflicts = []
         self._duplicate_count = 0
 
-        self.blocklist_view = None
 
     def enqueue_popup(self, start_func):
         """Enqueue a popup/dialog task to ensure they don't overlap."""

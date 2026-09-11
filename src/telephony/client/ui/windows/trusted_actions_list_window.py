@@ -199,16 +199,15 @@ class TrustedActionsListWindow(Adw.NavigationPage):
 
             self.page_list = Adw.PreferencesPage()
 
-            if True:
-                self.totp_grp = Adw.PreferencesGroup()
-                self.page_list.add(self.totp_grp)
+            self.totp_grp = Adw.PreferencesGroup()
+            self.page_list.add(self.totp_grp)
 
-                self.totp_btn = Gtk.Button()
-                self.totp_btn.add_css_class("suggested-action")
-                self.totp_btn.set_margin_bottom(8)
-                self.totp_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.show_totp_setup() or False))
-                self.totp_grp.add(self.totp_btn)
-                self.update_totp_button_label()
+            self.totp_btn = Gtk.Button()
+            self.totp_btn.add_css_class("suggested-action")
+            self.totp_btn.set_margin_bottom(8)
+            self.totp_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.show_totp_setup() or False))
+            self.totp_grp.add(self.totp_btn)
+            self.update_totp_button_label()
 
             self.grp_list = Adw.PreferencesGroup()
             self.page_list.add(self.grp_list)
