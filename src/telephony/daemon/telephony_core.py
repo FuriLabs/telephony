@@ -22,6 +22,7 @@ from gi.repository import Gio, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.daemon.services.dbus_service import TelephonyDaemonDBus
+from telephony.daemon.services.callaudiod_dbus_service import CallAudiodDBusService
 from telephony.daemon.services.gnome_calls_dbus_service import GnomeCallsDBusService
 from telephony.shared.services.system_state_service import SystemStateService
 from telephony.daemon.managers.modem_recovery_manager import (execute_modem_recovery, watch_recovery_result)
@@ -85,6 +86,7 @@ class TelephonyCore:
         self.scheduler = None
         self.dbus_daemon = None
         self.gnome_calls_dbus = None
+        self.callaudiod_dbus = None
         self.sys_state = None
         self.call_audio = None
 
@@ -129,6 +131,7 @@ class TelephonyCore:
         self.mms.connect('message-received', self.on_mms_received)
 
         self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
+        self.callaudiod_dbus = CallAudiodDBusService(self.ofono, self.call_audio)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
         self.gnome_calls_dbus = GnomeCallsDBusService(self.db, self.ofono, self.gsettings_mgr, self.call_audio)
