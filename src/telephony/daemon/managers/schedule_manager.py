@@ -178,10 +178,7 @@ class ScheduleManager:
         self.schedule_next_run()
 
     def get_missed_messages(self, buffer_minutes=5):
-        """
-        Check for messages that are 'scheduled' but past due.
-        This is used by MainWindow on startup to alert user.
-        """
+        """Return scheduled messages that are overdue beyond the grace period."""
         now = datetime.now()
         cutoff_time = now - timedelta(minutes=buffer_minutes)
         cutoff_str = cutoff_time.strftime(DATE_FORMAT)
