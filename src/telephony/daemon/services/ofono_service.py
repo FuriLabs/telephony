@@ -15,6 +15,7 @@
 
 from gi.repository import Gio, GObject
 from telephony.shared.utils.log_utils import logger
+from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem, is_hfp_modem
 
 
 class OfonoService(GObject.Object):
@@ -71,7 +72,7 @@ class OfonoService(GObject.Object):
         if signal == "ModemAdded":
             path, props = params.unpack()
             logger.info(f"[Monitor] Signal: ModemAdded {path}")
-            self.handle_new_modem(path)
+            self.handle_new_modem(path, props)
         elif signal == "ModemRemoved":
             path = params.unpack()[0]
             logger.info(f"[Monitor] Signal: ModemRemoved {path}")
@@ -79,16 +80,22 @@ class OfonoService(GObject.Object):
                 self.handle_disconnection("Modem removed")
 
     def scan_modems(self):
-        """Scan for existing modems."""
+        """Scan for the first existing non-HFP modem."""
         result = self.manager_proxy.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
         modems = result.unpack()[0]
-        if modems:
-            self.handle_new_modem(modems[0][0])
+        modem = get_first_non_hfp_modem(modems)
+        if modem:
+            path, props = modem
+            self.handle_new_modem(path, props)
         else:
             self.emit('status-changed', 'searching', 'Waiting for modem...')
 
-    def handle_new_modem(self, path):
-        """Register a new modem path."""
+    def handle_new_modem(self, path, props=None):
+        """Register a new non-HFP modem path."""
+        if is_hfp_modem(path, props):
+            logger.debug(f"[Monitor] Ignoring HFP modem: {path}")
+            return
+
         if self.modem_path != path:
             self.modem_path = path
             self.connected = True

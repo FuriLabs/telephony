@@ -136,9 +136,6 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         self.grp_list = Adw.PreferencesGroup()
         self.page_list.add(self.grp_list)
 
-        if not self.local_contacts:
-            pass
-
         for c in self.local_contacts:
             self.create_contact_row(c)
 
@@ -243,7 +240,10 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         if not row.get_sensitive():
             return
 
-        data = getattr(row, "contact_data", None)
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
         if data is None:
             return
         name = data.get("name")

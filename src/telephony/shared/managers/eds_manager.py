@@ -1648,19 +1648,6 @@ class EdsManager(GObject.Object):
 
         return "\n".join(new_lines)
 
-    def add_number_to_contact(self, uid, number, label="Mobile"):
-        """Add a phone number to an existing contact; blocking, call from a worker.
-
-        Daemon-side path: builds the vcard and writes it. Windows build
-        the vcard with build_number_added_vcard and save through the
-        daemon instead.
-        """
-        logger.info(f"[EDS] Adding number {number} to contact {uid}")
-        final_vcard = self.build_number_added_vcard(uid, number, label)
-        if not final_vcard:
-            return False
-        return self.save_contact(final_vcard, uid=uid)
-
     def remove_number_from_contact(self, uid, number):
         """Remove a phone number from an existing contact; blocking, call from a worker."""
         logger.info(f"[EDS] Removing number {number} from contact {uid}")

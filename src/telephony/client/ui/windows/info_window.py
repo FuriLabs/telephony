@@ -30,7 +30,7 @@ class InfoPage:
         """Create and present the about dialog."""
         dialog = Adw.AboutDialog(
             application_name="Telephony",
-            application_icon="io.furios.Telephony",
+            application_icon="io.furios.Telephony.Calls",
             developer_name="alaraajavamma",
             version=APP_VERSION,
             license_type=Gtk.License.GPL_3_0,

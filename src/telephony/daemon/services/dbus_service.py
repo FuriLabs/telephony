@@ -435,14 +435,31 @@ DAEMON_INTERFACE_XML = """
     <signal name="UssdReceived">
       <arg type="s" name="text"/>
     </signal>
+    <signal name="UssdRequestReceived">
+      <arg type="s" name="text"/>
+    </signal>
+    <signal name="UssdStateChanged">
+      <arg type="s" name="state"/>
+    </signal>
     <signal name="RecoveryStateChanged">
       <arg type="b" name="active"/>
       <arg type="s" name="message"/>
       <arg type="b" name="failed"/>
     </signal>
-    <method name="SendUssd">
+    <method name="StartUssd">
       <arg type="s" name="command" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
       <arg type="s" name="response" direction="out"/>
+      <arg type="s" name="state" direction="out"/>
+    </method>
+    <method name="RespondUssd">
+      <arg type="s" name="response" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="network_response" direction="out"/>
+      <arg type="s" name="state" direction="out"/>
+    </method>
+    <method name="CancelUssd">
+      <arg type="b" name="success" direction="out"/>
     </method>
     <method name="CallAction">
       <arg type="s" name="action" direction="in"/>
@@ -506,6 +523,8 @@ class TelephonyDaemonDBus:
             self.ofono.connect('modem-interface-appeared', self.on_modem_presence_changed)
             self.ofono.connect('voicemail-changed', self.on_voicemail_changed)
             self.ofono.connect('ussd-notification', self.on_ussd_received)
+            self.ofono.connect('ussd-request', self.on_ussd_request_received)
+            self.ofono.connect('ussd-state-changed', self.on_ussd_state_changed)
             self.ofono.connect('network-service-changed', self.on_network_service_changed)
 
         if self.app and self.app.call_audio:
@@ -550,6 +569,12 @@ class TelephonyDaemonDBus:
 
     def on_ussd_received(self, _manager, text):
         self.emit_signal("UssdReceived", GLib.Variant("(s)", (text,)))
+
+    def on_ussd_request_received(self, _manager, text):
+        self.emit_signal("UssdRequestReceived", GLib.Variant("(s)", (text,)))
+
+    def on_ussd_state_changed(self, _manager, state):
+        self.emit_signal("UssdStateChanged", GLib.Variant("(s)", (state,)))
 
     def emit_audio_route(self):
         """Broadcast the applied in-call audio route."""
@@ -612,18 +637,51 @@ class TelephonyDaemonDBus:
 
         run_in_background(task, on_complete=done, on_error=failed)
 
-    def handle_sendussd(self, params, invocation):
-        """Run a USSD request for a window instance and hand back the reply."""
+    def handle_startussd(self, params, invocation):
+        """Start a USSD session and return its text and current state."""
         command = params.unpack()[0]
 
-        def done(response):
-            invocation.return_value(GLib.Variant("(s)", (response or "",)))
+        def done(result):
+            if not result:
+                invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
+                return
+            response, state = result
+            invocation.return_value(GLib.Variant("(bss)", (True, response or "", state or "idle")))
 
         def failed(error):
-            logger.error(f"[Daemon] USSD request failed: {error}")
-            invocation.return_value(GLib.Variant("(s)", ("",)))
+            logger.error(f"[Daemon] USSD start failed: {error}")
+            invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
 
-        run_in_background(self.ofono.send_ussd, command, on_complete=done, on_error=failed)
+        run_in_background(self.ofono.start_ussd, command, on_complete=done, on_error=failed)
+
+    def handle_respondussd(self, params, invocation):
+        """Send a response inside an interactive USSD session."""
+        response = params.unpack()[0]
+
+        def done(result):
+            if not result:
+                invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
+                return
+            network_response, state = result
+            invocation.return_value(GLib.Variant(
+                "(bss)", (True, network_response or "", state or "idle")))
+
+        def failed(error):
+            logger.error(f"[Daemon] USSD response failed: {error}")
+            invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
+
+        run_in_background(self.ofono.respond_ussd, response, on_complete=done, on_error=failed)
+
+    def handle_cancelussd(self, _params, invocation):
+        """Cancel the current USSD session."""
+        def done(success):
+            invocation.return_value(GLib.Variant("(b)", (bool(success),)))
+
+        def failed(error):
+            logger.debug(f"[Daemon] USSD cancel failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (False,)))
+
+        run_in_background(self.ofono.cancel_ussd, on_complete=done, on_error=failed)
 
     def handle_callaction(self, params, invocation):
         """Run a call control action a window instance asked for."""
@@ -715,6 +773,8 @@ class TelephonyDaemonDBus:
             "voicemail_waiting": GLib.Variant("b", self.ofono.voicemail_waiting),
             "voicemail_count": GLib.Variant("i", self.ofono.voicemail_count),
             "voicemail_mailbox": GLib.Variant("s", self.ofono.voicemail_mailbox),
+            "ussd_state": GLib.Variant("s", self.ofono.ussd_state or "idle"),
+            "ussd_text": GLib.Variant("s", self.ofono.ussd_text or ""),
             "speaker": GLib.Variant("b", audio.current_route == "speaker"),
             "mic_muted": GLib.Variant("b", audio.mic_muted),
             "route": GLib.Variant("s", audio.current_route),
@@ -815,7 +875,9 @@ class TelephonyDaemonDBus:
             "ScheduleSms": self.handle_schedulesms,
             "ScheduleMms": self.handle_schedulemms,
             "SendSms": self.handle_sendsms,
-            "SendUssd": self.handle_sendussd,
+            "StartUssd": self.handle_startussd,
+            "RespondUssd": self.handle_respondussd,
+            "CancelUssd": self.handle_cancelussd,
             "CallAction": self.handle_callaction,
             "GetNetworkProperties": self.handle_getnetworkproperties,
             "SetNetworkProperty": self.handle_setnetworkproperty,
@@ -1054,7 +1116,7 @@ class TelephonyDaemonDBus:
         success = False
         scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.app and self.app.scheduler:
-            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
+            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', attachments=[], sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
@@ -1072,7 +1134,7 @@ class TelephonyDaemonDBus:
         success = False
         scheduled_timestamp = self.normalize_schedule_timestamp(scheduled_timestamp)
         if scheduled_timestamp and self.app and self.app.scheduler:
-            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', subject=None, attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
+            row_id = self.db.add_message(number, 'outgoing', text, status='scheduled', attachments=attachments, sender="Me", scheduled_timestamp=scheduled_timestamp)
             self.app.scheduler.add_cron(row_id, scheduled_timestamp)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))
@@ -1082,7 +1144,7 @@ class TelephonyDaemonDBus:
         number, text = parameters.unpack()
         success = False
         if self.ofono:
-            row_id = self.db.add_message(number, 'outgoing', text, status='draft', subject=None, attachments=[], sender="Me")
+            row_id = self.db.add_message(number, 'outgoing', text, status='draft', attachments=[], sender="Me")
             success = self.ofono.send_sms(number, text)
             if success:
                 self.db.update_message_schedule(row_id, status="sent", timestamp=None)
@@ -1140,7 +1202,7 @@ class TelephonyDaemonDBus:
             self.db.delete_drafts(number)
             if text or attachments:
                 self.db.add_message(number, 'outgoing', text, status='draft',
-                                    subject=None, attachments=attachments, sender="Me")
+                                    attachments=attachments, sender="Me")
 
         if not self.db:
             invocation.return_value(None)
@@ -1500,7 +1562,7 @@ class TelephonyDaemonDBus:
         success = False
         if self.app and self.app.mms:
             numbers = [n.strip() for n in number.split(',') if n.strip()]
-            row_id = self.db.add_message(number, 'outgoing', text, status='sending', subject=None, attachments=attachments, sender="Me")
+            row_id = self.db.add_message(number, 'outgoing', text, status='sending', attachments=attachments, sender="Me")
             self.app.mms.send_mms_tracked(numbers, text, attachments, row_id)
             success = True
         invocation.return_value(GLib.Variant("(b)", (success,)))

@@ -61,6 +61,11 @@ class CallAudioManager(GObject.Object):
     def on_calls_changed(self, *_args):
         self.refresh()
 
+    @property
+    def voice_profile_active(self):
+        """Return whether call audio is using the voice profile."""
+        return self._profile_on
+
     def refresh(self):
         """Steer ring and profile to match what the calls are doing."""
         calls = self.ofono.active_calls

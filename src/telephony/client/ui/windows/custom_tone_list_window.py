@@ -172,9 +172,6 @@ class CustomToneListWindow(Adw.NavigationPage):
         self.grp_list = Adw.PreferencesGroup()
         self.page_list.add(self.grp_list)
 
-        if not self.local_tones:
-            pass
-
         for c in self.local_tones:
             self.create_tone_row(c)
 
@@ -277,7 +274,10 @@ class CustomToneListWindow(Adw.NavigationPage):
         if not row.get_sensitive():
             return
 
-        data = getattr(row, "contact_data", None)
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
         if data is None:
             return
 

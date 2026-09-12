@@ -22,6 +22,8 @@ from gi.repository import Gio, GLib
 from telephony.shared.utils.log_utils import logger
 
 from telephony.daemon.services.dbus_service import TelephonyDaemonDBus
+from telephony.daemon.services.callaudiod_dbus_service import CallAudiodDBusService
+from telephony.daemon.services.gnome_calls_dbus_service import GnomeCallsDBusService
 from telephony.shared.services.system_state_service import SystemStateService
 from telephony.daemon.managers.modem_recovery_manager import (execute_modem_recovery, watch_recovery_result)
 from telephony.shared.managers.database_manager import DatabaseManager
@@ -29,7 +31,6 @@ from telephony.shared.managers.gsettings_manager import GSettingsManager
 from telephony.daemon.managers.ofono_manager import OfonoManager
 from telephony.daemon.managers.mms_manager import MmsManager
 from telephony.shared.managers.eds_manager import EdsManager
-from telephony.daemon.managers.emergency_manager import EmergencyManager
 from telephony.daemon.managers.ringback_manager import RingbackManager
 from telephony.daemon.managers.notification_manager import NotificationManager
 from telephony.daemon.managers.call_audio_manager import CallAudioManager
@@ -56,16 +57,14 @@ HANGUP_FEEDBACK_SUPPRESS_SECONDS = 5
 
 
 class TelephonyCore:
-    """Owns every manager and background duty of the telephony service.
+    """Own every manager and background duty of the telephony service.
 
-    This is the daemon's core and nothing else's: it holds the modem,
-    the stores, reception, scheduling and the D-Bus service, with no
-    window-role branches — window processes run WindowCore instead.
-    A plain object with no toolkit imports. Everything that must reach
-    a surface goes through the ui delegate, which the application
-    object implements: show_incall_ui, apply_recovery_state,
-    any_window_active and
-    withdraw_number_notifications.
+    The daemon owns modem state, storage, reception, scheduling and its
+    D-Bus services. Window processes use WindowCore instead. The ui
+    delegate is limited to service-process integration that cannot live
+    in this plain core object: show_incall_ui, is_any_window_active and
+    withdraw_number_notifications. Recovery state is published over
+    D-Bus for the in-call process rather than applied through the delegate.
     """
 
     def __init__(self, ui):
@@ -79,10 +78,11 @@ class TelephonyCore:
         self.db = None
         self.ofono = None
         self.mms = None
-        self.emergency = None
         self.ringback = None
         self.scheduler = None
         self.dbus_daemon = None
+        self.gnome_calls_dbus = None
+        self.callaudiod_dbus = None
         self.sys_state = None
         self.call_audio = None
 
@@ -98,7 +98,6 @@ class TelephonyCore:
         self._recovery_pending_unlock = False
         self._net_nudge_timer = None
         self._denied_timer = None
-        self._airplane_sub = None
         self._sim_pin_notified = False
         self._denied_notified = False
 
@@ -115,7 +114,6 @@ class TelephonyCore:
         self.eds.set_db(self.db, self.gsettings_mgr)
         self.ofono = OfonoManager(self.db, self.gsettings_mgr)
 
-        self.emergency = EmergencyManager(self.ofono, self.db, self.gsettings_mgr, self.notification_manager)
         self.ringback = RingbackManager(self.ofono, self.gsettings_mgr)
 
         self.ofono.set_focus_provider(self.ui.is_any_window_active)
@@ -127,8 +125,10 @@ class TelephonyCore:
         self.mms.connect('message-received', self.on_mms_received)
 
         self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
+        self.callaudiod_dbus = CallAudiodDBusService(self.ofono, self.call_audio)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)
+        self.gnome_calls_dbus = GnomeCallsDBusService(self.db, self.ofono, self.gsettings_mgr, self.call_audio)
         self.announce_changes()
 
         self.sys_state = SystemStateService()
@@ -151,7 +151,6 @@ class TelephonyCore:
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
-
 
     def apply_region(self):
         """Give this process the country its numbers belong to.
@@ -368,9 +367,10 @@ class TelephonyCore:
     def watch_modem_health(self, *args):
         """Arm or clear the modem-unavailable watchdog from modem state.
 
-        A modem that was healthy earlier gets a grace period since firmware
-        asserts usually recover on their own; a modem that never appeared
-        after boot gets none, there is nothing transient about it.
+        Use separate delays for a modem that disappeared after working and
+        one that has not appeared during this boot. The constants currently
+        use the same delay, but keeping the cases separate allows either
+        policy to be adjusted without changing the watchdog logic.
         """
         missing = self.ofono.is_modem_health_degraded()
 
@@ -410,7 +410,7 @@ class TelephonyCore:
         """
         try:
             bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-            self._airplane_sub = bus.signal_subscribe(
+            bus.signal_subscribe(
                 "org.gnome.SettingsDaemon.Rfkill",
                 "org.freedesktop.DBus.Properties", "PropertiesChanged",
                 "/org/gnome/SettingsDaemon/Rfkill", None,
@@ -427,22 +427,17 @@ class TelephonyCore:
         return is_gsd_airplane_mode() or is_vendor_radio_disabled()
 
     def recovery_refusal_reason(self):
-        """Say why a stack restart cannot help, or nothing; blocking, from a worker.
+        """Return a reason to avoid automatic recovery, or an empty string.
 
-        A switched-off radio is not a fault and a restart cannot power
-        it back on.
+        A switched-off radio is intentional state, so restarting the stack
+        is not useful until the radio is enabled again.
 
-        Neither is a device that has no modem to begin with, which a
-        wiped or never-written IMEI amounts to: ofono publishes no
-        modem at all without one, so there is no interface to read the
-        identity from and nothing to tell the two apart. What tells
-        them apart is everything underneath being healthy. ofono
-        answering on the bus and the RIL daemon running while ofono
-        still reports no modem means nothing is stuck, so there is
-        nothing a restart would unstick.
-
-        A modem that appeared earlier and went is a fault, so this only
-        speaks for one that was never there this boot.
+        For a modem that has never appeared during this boot, an active
+        oFono bus name together with a running RIL process and no published
+        modem is classified as no-modem. This is only a heuristic since it does
+        not prove a provisioning problem or prove that the lower layers are
+        healthy. Explicit recovery requests are therefore still allowed to
+        restart the stack.
         """
         if self.is_radio_off_by_choice():
             return "radio-off"
@@ -463,20 +458,16 @@ class TelephonyCore:
                  "that is missing or has no identity.")
 
     def decide_modem_recovery(self, blocker):
-        """Recover the modem silently, or show the screen, or leave it alone.
+        """Recover the modem silently, show the screen, or leave it alone.
 
-        Reading the radio state runs off the main loop because asking
-        the vendor property means a process, and the answer is only
-        needed on the rare path where the modem already looks dead.
+        Reading the radio state runs off the main loop because querying the
+        vendor property may block. A deliberately switched-off radio is left
+        alone until the airplane/radio state changes and rearms the watchdog.
 
-        Leaving a switched-off radio alone means the watchdog stops
-        here, so the radio coming back on is what starts it again.
-
-        A device with no modem gets no screen at all. The recovery page
-        exists to offer a repair, and there is none to offer; on the
-        factory line it would land on top of the initial setup of every
-        device that has not had its IMEI written yet. The banner carries
-        the fact instead, and the settings row explains it when asked.
+        The no-modem blocker is a heuristic used only for a modem that has
+        never appeared during this boot. It suppresses automatic recovery and
+        marks the modem absent, but it is not a hard refusal, an explicit
+        recovery request can still restart the stack.
         """
         if blocker == "radio-off":
             logger.info("[App] Modem is unavailable because the radio is off, not offering recovery")
@@ -535,16 +526,11 @@ class TelephonyCore:
         self.publish_recovery_state(False, "", False)
 
     def publish_recovery_state(self, active, message, failed):
-        """Report the recovery state to whoever draws the call window.
+        """Publish recovery state for the in-call process over D-Bus.
 
-        The modem is watched here but the recovery page belongs to the
-        call window, which runs as its own process, so this reports the
-        state instead of reaching into the window.
-
-        Reporting is all it does. Bringing the window up was decided
-        here as well, before the caller had decided whether the user
-        should see anything, which is how a locked phone was told to
-        show a screen and send a notification instead of it.
+        The daemon owns modem recovery state, while the recovery page is
+        rendered by the separate in-call process. Window presentation is
+        handled separately by present_recovery_surface().
         """
         self.recovery_state = (active, message, failed)
         if self.dbus_daemon:
@@ -562,18 +548,17 @@ class TelephonyCore:
         """Service nudges follow the automatic recovery preference."""
         return self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
 
-    def cancel_timer(self, attr):
-        """Cancel a named GLib timer attribute when armed."""
-        timer_id = getattr(self, attr)
+    def cancel_timer(self, timer_id):
+        """Cancel a GLib timer when armed and return the cleared value."""
         if timer_id is not None:
             GLib.source_remove(timer_id)
-            setattr(self, attr, None)
+        return None
 
     def watch_network_status(self, _ofono, status):
         """Nudge a stalled registration, surface a persistent denial."""
         if status in ("registered", "roaming") or status == "":
-            self.cancel_timer("_net_nudge_timer")
-            self.cancel_timer("_denied_timer")
+            self._net_nudge_timer = self.cancel_timer(self._net_nudge_timer)
+            self._denied_timer = self.cancel_timer(self._denied_timer)
             if self._denied_notified:
                 self._denied_notified = False
                 self.notification_manager.close_notification("network_denied")
@@ -632,22 +617,17 @@ class TelephonyCore:
     def request_auto_recovery(self, on_done=None):
         """Restart the modem stack once; False when a run is already going.
 
-        Every way of asking arrives here, the watchdog and the buttons
-        alike, so the radio is checked here rather than by each caller.
-        A stack restart cannot power on a radio that was switched off,
-        by the airplane switch or by the hardware one, and asking the
-        vendor property means a process, so the answer is read off the
-        main loop before anything is restarted.
+        All recovery requests pass through this method so the radio state is
+        checked in one place. A deliberately switched-off radio is the only
+        hard refusal because restarting the software stack does not enable it.
 
-        Only a switched-off radio refuses outright, since a restart
-        genuinely cannot power a radio back on. The no-modem verdict is
-        reached by elimination and a RIL daemon that is alive but stuck
-        wears the same fingerprint, so an explicit request is the
-        escape hatch: the restart runs anyway, and the verdict only
-        chooses the words when it still produces no modem.
+        A no-modem result is only a heuristic. A running RIL process can
+        still be stuck, so an explicit recovery request is allowed to restart
+        the stack anyway. If no modem appears afterward, the heuristic is used
+        only to choose the more specific failure message.
 
-        on_done hears (success, reason); the reason is empty when a
-        restart was attempted and simply did not help.
+        on_done receives (success, reason). reason is empty when a restart
+        was attempted and simply did not restore the modem.
         """
         if self._auto_recovery_running:
             return False
