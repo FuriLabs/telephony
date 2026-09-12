@@ -73,6 +73,8 @@ class OfonoManager(GObject.Object):
         'sim-pin-required-changed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'notification-cleared': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'ussd-request': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'ussd-state-changed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
         'emergency-numbers-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'ims-state-changed': (GObject.SignalFlags.RUN_FIRST, None, (bool, bool, bool)),
@@ -108,6 +110,8 @@ class OfonoManager(GObject.Object):
         self.voice_handler_id = None
         self.msg_handler_id = None
         self.ussd_handler_id = None
+        self.ussd_state = "idle"
+        self.ussd_text = ""
         self.mw_proxy = None
         self.mw_handler_id = None
         self.modem_proxy = None
@@ -679,6 +683,10 @@ class OfonoManager(GObject.Object):
         self.voice_handler_id = None
         self.msg_handler_id = None
         self.ussd_handler_id = None
+        self.ussd_text = ""
+        if self.ussd_state != "idle":
+            self.ussd_state = "idle"
+            GLib.idle_add(self.emit, 'ussd-state-changed', "idle")
         self.mw_handler_id = None
         self.modem_handler_id = None
         self._seen_interfaces = set()
@@ -744,6 +752,7 @@ class OfonoManager(GObject.Object):
         self.ussd_proxy = self.get_proxy("org.ofono.SupplementaryServices")
         if self.ussd_proxy:
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
+            run_in_background(self.get_ussd_state, on_complete=self.apply_ussd_state)
 
         self.cf_proxy = self.get_proxy("org.ofono.CallForwarding")
         if self.cf_proxy:
@@ -971,9 +980,57 @@ class OfonoManager(GObject.Object):
             self.emit('call-missed', num)
 
     def on_ussd_signal(self, proxy, sender, signal, params):
-        """Handle USSD signals."""
+        """Handle USSD notifications, requests and session-state changes."""
         if signal == "NotificationReceived":
-            self.emit('ussd-notification', params.unpack()[0])
+            text = params.unpack()[0]
+            self.ussd_text = text or ""
+            self.emit('ussd-notification', text)
+            return
+
+        if signal == "RequestReceived":
+            text = params.unpack()[0]
+            self.ussd_text = text or ""
+            self.apply_ussd_state("user-response")
+            self.emit('ussd-request', text)
+            return
+
+        if signal != "PropertyChanged":
+            return
+
+        name, value = params.unpack()
+        if name != "State":
+            return
+
+        if isinstance(value, GLib.Variant):
+            value = value.unpack()
+        self.apply_ussd_state(str(value or "idle"))
+
+    def apply_ussd_state(self, state):
+        """Store and announce an oFono USSD session state."""
+        state = str(state or "idle")
+        if state == "idle":
+            self.ussd_text = ""
+        if state == self.ussd_state:
+            return
+        self.ussd_state = state
+        self.emit('ussd-state-changed', state)
+
+    def get_ussd_state(self):
+        """Return the current oFono USSD session state; blocking."""
+        if not self.ussd_proxy:
+            return "idle"
+        try:
+            result = self.ussd_proxy.call_sync(
+                "GetProperties", None, Gio.DBusCallFlags.NONE,
+                SS_REQUEST_TIMEOUT_MS, None)
+            props = result.unpack()[0] if result else {}
+            state = props.get("State", "idle")
+            if isinstance(state, GLib.Variant):
+                state = state.unpack()
+            return str(state or "idle")
+        except Exception as e:
+            logger.debug(f"[OfonoManager] Could not read USSD state: {e}")
+            return self.ussd_state or "idle"
 
     def check_priority_contact(self, sender):
         """Check if sender is a priority contact and override volume."""
@@ -1582,23 +1639,92 @@ class OfonoManager(GObject.Object):
         run_in_background(self.send_sms_tracked, number, text, row_id)
         return True
 
-    def send_ussd(self, command):
-        """Send a USSD command; blocking, call from a worker.
+    def start_ussd(self, command):
+        """Start a USSD session and return (text, state); blocking.
 
-        Returns the network response text, or None when the request
-        could not be made, so failures never masquerade as responses.
+        oFono returns a result type and a variant payload from Initiate().
+        For ordinary USSD the payload is the network text. The session may
+        remain open afterward with State set to user-response.
         """
-
         if not self.ussd_proxy:
             logger.warning("[OfonoManager] USSD unavailable, no proxy")
             return None
+
         try:
-            res = self.ussd_proxy.call_sync("Initiate", GLib.Variant("(s)", (command,)), Gio.DBusCallFlags.NONE, -1, None)
-            return res.unpack()[0]
+            result = self.ussd_proxy.call_sync(
+                "Initiate",
+                GLib.Variant("(s)", (command,)),
+                Gio.DBusCallFlags.NONE,
+                SS_REQUEST_TIMEOUT_MS,
+                None,
+            )
+            result_type, payload = result.unpack()
+            if isinstance(payload, GLib.Variant):
+                payload = payload.unpack()
+
+            if result_type == "USSD":
+                text = str(payload) if payload is not None else ""
+            else:
+                text = str(payload) if payload is not None else str(result_type or "")
+
+            state = self.get_ussd_state()
+            self.ussd_text = text or ""
+            GLib.idle_add(self.apply_ussd_state, state)
+            logger.debug(
+                f"[OfonoManager] USSD initiate type={result_type}, state={state}, "
+                f"payload={payload!r}"
+            )
+            return text, state
         except Exception as e:
             logger.error(f"[OfonoManager] USSD request failed: {e}")
             return None
 
+    def respond_ussd(self, response):
+        """Reply to an interactive USSD session; blocking.
+
+        Returns (text, state). If the network presents another menu,
+        state remains user-response and the returned text is that menu.
+        """
+        if not self.ussd_proxy:
+            logger.warning("[OfonoManager] USSD unavailable, no proxy")
+            return None
+
+        try:
+            result = self.ussd_proxy.call_sync(
+                "Respond",
+                GLib.Variant("(s)", (response,)),
+                Gio.DBusCallFlags.NONE,
+                SS_REQUEST_TIMEOUT_MS,
+                None,
+            )
+            values = result.unpack() if result else ()
+            text = str(values[0]) if values else ""
+            state = self.get_ussd_state()
+            self.ussd_text = text or ""
+            GLib.idle_add(self.apply_ussd_state, state)
+            logger.debug(
+                f"[OfonoManager] USSD response state={state}, payload={text!r}"
+            )
+            return text, state
+        except Exception as e:
+            logger.error(f"[OfonoManager] USSD response failed: {e}")
+            return None
+
+    def cancel_ussd(self):
+        """Cancel the active USSD session; blocking."""
+        if not self.ussd_proxy:
+            return False
+
+        try:
+            self.ussd_proxy.call_sync(
+                "Cancel", None, Gio.DBusCallFlags.NONE,
+                SS_REQUEST_TIMEOUT_MS, None)
+            self.ussd_text = ""
+            GLib.idle_add(self.apply_ussd_state, "idle")
+            return True
+        except Exception as e:
+            logger.debug(f"[OfonoManager] USSD cancel failed: {e}")
+            return False
 
     def service_proxy(self, service):
         """Map a supplementary service key to its D-Bus proxy."""
