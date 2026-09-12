@@ -16,7 +16,7 @@
 
 from telephony.client.utils.mms_utils import max_attachment_size
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import present_unblock_choice
+from telephony.client.ui.widgets.common_widget import present_unblock_choice, present_sheet_page
 from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
 from telephony.shared.utils.datetime_utils import parse_timestamp
 
@@ -932,7 +932,7 @@ class ChatPage(Gtk.Box):
             allow_custom_number=True,
             return_contact_uid=False
         )
-        picker.present(self.app_window)
+        present_sheet_page(self.app_window, picker)
 
     def on_delete_message(self, item_id):
         """Handle individual message deletion."""
