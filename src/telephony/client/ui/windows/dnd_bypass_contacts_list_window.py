@@ -136,9 +136,6 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         self.grp_list = Adw.PreferencesGroup()
         self.page_list.add(self.grp_list)
 
-        if not self.local_contacts:
-            pass
-
         for c in self.local_contacts:
             self.create_contact_row(c)
 

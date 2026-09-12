@@ -172,9 +172,6 @@ class CustomToneListWindow(Adw.NavigationPage):
         self.grp_list = Adw.PreferencesGroup()
         self.page_list.add(self.grp_list)
 
-        if not self.local_tones:
-            pass
-
         for c in self.local_tones:
             self.create_tone_row(c)
 
