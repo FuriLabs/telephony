@@ -73,6 +73,11 @@ class DialpadView(Adw.Bin):
         """Initialize the DialpadView."""
         super().__init__()
         self.app_window = app_window
+        self._calling_enabled = (
+            self.app_window.ofono.is_dialing_available()
+            if self.app_window.ofono
+            else True
+        )
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box.set_valign(Gtk.Align.FILL)
@@ -113,7 +118,7 @@ class DialpadView(Adw.Bin):
         match_scroller.set_vexpand(True)
         match_scroller.set_child(match_clamp)
 
-        self.entry.connect("notify::text", self.schedule_contact_lookup)
+        self.entry.connect("notify::text", self.on_entry_text_changed)
 
         number_section.append(self.entry)
         box.append(number_section)
@@ -220,6 +225,38 @@ class DialpadView(Adw.Bin):
         scrolled.set_child(clamp)
         scrolled.set_vexpand(True)
         self.set_child(scrolled)
+        self.update_call_button_sensitivity()
+
+    @staticmethod
+    def normalize_dial_string(text):
+        """Remove visual phone formatting while preserving dial characters."""
+        return "".join(c for c in (text or "").strip() if c not in " -().")
+
+    def is_valid_dial_string(self, text):
+        """Return whether text can safely be sent to oFono as a dial string."""
+        compact = self.normalize_dial_string(text)
+        if not compact:
+            return False
+
+        if compact.startswith("+"):
+            compact = compact[1:]
+
+        if not compact or "+" in compact:
+            return False
+
+        return all(c in "0123456789*#" for c in compact)
+
+    def on_entry_text_changed(self, entry, param):
+        """Refresh contact matches and call-button sensitivity."""
+        self.schedule_contact_lookup(entry, param)
+        self.update_call_button_sensitivity()
+
+    def update_call_button_sensitivity(self):
+        """Enable call actions only for a valid dial string and usable modem."""
+        valid = self.is_valid_dial_string(self.entry.get_text())
+        sensitive = self._calling_enabled and valid
+        self.anon_btn.set_sensitive(sensitive)
+        self.norm_btn.set_sensitive(sensitive)
 
     def schedule_contact_lookup(self, _entry, _param):
         """Debounce contact matching after the dialed number changes."""
@@ -231,9 +268,9 @@ class DialpadView(Adw.Bin):
             DIAL_MATCH_DEBOUNCE_MS, self.start_contact_lookup, generation)
 
     def set_calling_enabled(self, enabled):
-        """Enable or disable the two call buttons."""
-        self.anon_btn.set_sensitive(enabled)
-        self.norm_btn.set_sensitive(enabled)
+        """Record modem call availability and refresh the call actions."""
+        self._calling_enabled = bool(enabled)
+        self.update_call_button_sensitivity()
 
     def cleanup(self):
         """Cancel the pending contact lookup timer."""
@@ -329,14 +366,13 @@ class DialpadView(Adw.Bin):
         return "".join(c for c in str(number).casefold()
                        if c.isalnum() or c in "+*#")
 
-    @classmethod
-    def favorite_matches_query(cls, favorite, query, query_norm):
+    def favorite_matches_query(self, favorite, query, query_norm):
         """Return whether a saved favorite partially matches the query."""
         name = str(favorite.get("name", "")).casefold()
         number = favorite.get("number", "")
         query_text = query.casefold()
-        query_compact = cls.compact_number(query)
-        number_compact = cls.compact_number(number)
+        query_compact = self.compact_number(query)
+        number_compact = self.compact_number(number)
         number_norm = normalize_number(number)
         return bool(
             (query_text and query_text in name) or
@@ -514,9 +550,11 @@ class DialpadView(Adw.Bin):
 
     def on_call_clicked(self, btn):
         """Handle call button click."""
-        number = self.entry.get_text().strip()
-        if not number:
+        raw_number = self.entry.get_text().strip()
+        if not self.is_valid_dial_string(raw_number):
+            logger.debug(f"[Dialpad] Refusing invalid dial string: {raw_number!r}")
             return
+        number = self.normalize_dial_string(raw_number)
 
         favorite = self.favorite_for(number)
         if favorite:
@@ -530,9 +568,11 @@ class DialpadView(Adw.Bin):
 
     def on_anon_call_clicked(self, btn):
         """Handle anonymous call button click."""
-        number = self.entry.get_text().strip()
-        if not number:
+        raw_number = self.entry.get_text().strip()
+        if not self.is_valid_dial_string(raw_number):
+            logger.debug(f"[Dialpad] Refusing invalid dial string: {raw_number!r}")
             return
+        number = self.normalize_dial_string(raw_number)
 
         favorite = self.favorite_for(number)
         if favorite:
