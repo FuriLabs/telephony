@@ -18,6 +18,7 @@ import locale
 
 from gi.repository import Gio
 from telephony.shared.utils.log_utils import logger
+from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem
 
 MCC_TO_REGION = {
     "244": "FI", "202": "GR", "204": "NL", "206": "BE", "208": "FR", "212": "MC", "213": "AD", "214": "ES",
@@ -98,8 +99,9 @@ def detect_region():
         result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
         modems = result.unpack()[0]
 
-        if modems:
-            modem_path = modems[0][0]
+        modem = get_first_non_hfp_modem(modems)
+        if modem:
+            modem_path, _props = modem
 
         if modem_path:
             net_proxy = Gio.DBusProxy.new_sync(
