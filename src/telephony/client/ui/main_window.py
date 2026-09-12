@@ -72,14 +72,13 @@ class MainWindow(Adw.Window):
         self.show_contacts_mode = show_contacts
 
         self.set_title("Telephony")
-        self.set_icon_name("io.furios.Telephony")
+        self.set_icon_name("io.furios.Telephony.Calls")
         self.set_default_size(360, 600)
         self.eds = eds_manager
         self.db = db_manager
         self.ofono = ofono_manager
         self.gsettings_mgr = gsettings_mgr
         self.daemon = self.app.daemon_client
-
 
         self.toast_overlay = Adw.ToastOverlay()
         self.set_content(self.toast_overlay)
