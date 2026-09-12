@@ -608,10 +608,10 @@ class ChatPage(Gtk.Box):
         self.content_stack.set_visible_child_name("chat")
 
         def reveal():
-            if self.store.get_n_items() > index:
-                self.list_view.scroll_to(index, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT, None)
-            else:
-                self.list_view.scroll_to(0, Gtk.ListScrollFlags.NONE, None)
+            n_items = self.selection.get_n_items()
+            if n_items > 0:
+                target = index if 0 <= index < n_items else 0
+                self.list_view.scroll_to(target, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT, None)
 
             self.is_loading = False
             if self.app_window.is_active():
@@ -1246,7 +1246,8 @@ class ChatPage(Gtk.Box):
                 self.content_stack.set_visible_child_name("chat")
 
                 def scroll_after_visible():
-                    if target_index >= 0:
+                    n_items = self.selection.get_n_items()
+                    if 0 <= target_index < n_items:
                         self.list_view.scroll_to(target_index, Gtk.ListScrollFlags.FOCUS | Gtk.ListScrollFlags.SELECT, None)
 
                     def end_jump():
@@ -1515,8 +1516,7 @@ class ChatPage(Gtk.Box):
         self.release_scroll_hold()
 
         def do():
-            n = self.store.get_n_items()
-            if n > 0:
+            if self.selection.get_n_items() > 0:
                 self.list_view.scroll_to(0, Gtk.ListScrollFlags.NONE, None)
             return False
         GLib.idle_add(do)
