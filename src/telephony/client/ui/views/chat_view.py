@@ -1559,11 +1559,13 @@ class ChatPage(Gtk.Box):
             self.save_draft()
 
         self.release_scroll_hold()
-        for timer_attr in ("_read_timer", "_refresh_timer", "search_timer", "older_settle_id"):
-            timer_id = getattr(self, timer_attr)
+        for timer_id in (self._read_timer, self._refresh_timer, self.search_timer, self.older_settle_id):
             if timer_id:
                 GLib.source_remove(timer_id)
-                setattr(self, timer_attr, None)
+        self._read_timer = None
+        self._refresh_timer = None
+        self.search_timer = None
+        self.older_settle_id = None
 
         if self.app_window and (self.focus_handler_id is not None):
             if self.app_window.handler_is_connected(self.focus_handler_id):

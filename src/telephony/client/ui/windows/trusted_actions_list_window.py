@@ -84,11 +84,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
                 self.set_seed_func = self.gsettings_mgr.set_trusted_sms_lock_device_totp_seed
                 self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_lock_device_totp_seed
 
-            parent_win = getattr(parent, 'parent_win', None)
-            if parent_win is not None:
-                self.app_window = parent_win.main_window
-            else:
-                self.app_window = getattr(parent, 'main_window', None)
+            self.app_window = parent.parent_win.main_window
 
             title = _("Set \"Find my Telephony\"")
             if mode == "trusted_sms_silent_callback":
@@ -485,7 +481,10 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         if not row.get_sensitive():
             return
 
-        data = getattr(row, "contact_data", None)
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
         if data is None:
             return
         name = data.get("name")

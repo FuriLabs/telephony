@@ -384,8 +384,14 @@ class ContactEditor(Adw.NavigationPage):
             except Exception as e:
                 logger.warning(f"Failed to parse {title}: {e}")
 
+        def clear_date():
+            row._selected_date = None
+            lbl_date.set_label(_("Select Date"))
+            lbl_date.add_css_class("dim-label")
+            return False
+
         btn_edit.connect("clicked", lambda b: GLib.idle_add(lambda: self.open_date_picker(title, row, lbl_date) or False))
-        btn_clear.connect("clicked", lambda b: GLib.idle_add(lambda: [setattr(row, '_selected_date', None), lbl_date.set_label(_("Select Date")), lbl_date.add_css_class("dim-label")] and False))
+        btn_clear.connect("clicked", lambda b: GLib.idle_add(clear_date))
 
         return row
 

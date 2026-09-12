@@ -214,9 +214,17 @@ class TelephonyAudioManager:
         if mode == "wired":
             for name in ("output-wired_headset", "output-wired_headphone"):
                 for p in sink.port_list:
-                    if p.name == name and getattr(p, 'available', None) != 'no':
+                    if p.name == name and self.is_port_available(p):
                         return name
         return None
+
+    @staticmethod
+    def is_port_available(port):
+        """Treat ports without an availability field as usable."""
+        try:
+            return port.available != 'no'
+        except AttributeError:
+            return True
 
     def set_audio_route(self, mode="earpiece"):
         """
@@ -321,7 +329,7 @@ class TelephonyAudioManager:
                 if sink:
                     for p in sink.port_list:
                         if "wired_headphone" in p.name or "headset" in p.name:
-                            if getattr(p, 'available', None) != 'no':
+                            if self.is_port_available(p):
                                 has_wired = True
                                 break
         except Exception as e:
@@ -347,7 +355,7 @@ class TelephonyAudioManager:
                 sink = self.lookup_sink(pulse, "sink.primary_output")
                 if sink:
                     for p in sink.port_list:
-                        if "headset" in p.name and getattr(p, 'available', None) != 'no':
+                        if "headset" in p.name and self.is_port_available(p):
                             has_wired = True
                             break
         except Exception as e:
@@ -395,7 +403,7 @@ class TelephonyAudioManager:
         The earpiece is never a media port, so a stale earpiece snapshot
         cannot leave media playing through it after a call.
         """
-        usable = [p.name for p in sink.port_list if getattr(p, 'available', None) != 'no']
+        usable = [p.name for p in sink.port_list if self.is_port_available(p)]
 
         blocked = ("output-parking", "output-earpiece")
         if self._pre_call_port and self._pre_call_port not in blocked and self._pre_call_port in usable:

@@ -243,7 +243,10 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         if not row.get_sensitive():
             return
 
-        data = getattr(row, "contact_data", None)
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
         if data is None:
             return
         name = data.get("name")

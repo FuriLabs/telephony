@@ -468,11 +468,11 @@ class HistoryView(Adw.Bin):
     def cleanup(self):
         """Cleanup resources before destruction."""
         self.load_token += 1
-        for timer_attr in ("search_timer", "_refresh_timer"):
-            timer_id = getattr(self, timer_attr)
+        for timer_id in (self.search_timer, self._refresh_timer):
             if timer_id:
                 GLib.source_remove(timer_id)
-                setattr(self, timer_attr, None)
+        self.search_timer = None
+        self._refresh_timer = None
 
         for obj, sig_id in self.signal_ids:
             if obj.handler_is_connected(sig_id):

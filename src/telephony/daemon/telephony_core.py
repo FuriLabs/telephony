@@ -548,18 +548,17 @@ class TelephonyCore:
         """Service nudges follow the automatic recovery preference."""
         return self.gsettings_mgr.get_setting("automatic_modem_recovery") == "true"
 
-    def cancel_timer(self, attr):
-        """Cancel a named GLib timer attribute when armed."""
-        timer_id = getattr(self, attr)
+    def cancel_timer(self, timer_id):
+        """Cancel a GLib timer when armed and return the cleared value."""
         if timer_id is not None:
             GLib.source_remove(timer_id)
-            setattr(self, attr, None)
+        return None
 
     def watch_network_status(self, _ofono, status):
         """Nudge a stalled registration, surface a persistent denial."""
         if status in ("registered", "roaming") or status == "":
-            self.cancel_timer("_net_nudge_timer")
-            self.cancel_timer("_denied_timer")
+            self._net_nudge_timer = self.cancel_timer(self._net_nudge_timer)
+            self._denied_timer = self.cancel_timer(self._denied_timer)
             if self._denied_notified:
                 self._denied_notified = False
                 self.notification_manager.close_notification("network_denied")
