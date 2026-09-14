@@ -162,6 +162,7 @@ class MainWindow(Adw.Window):
                 self.signal_ids.append((self.ofono, self.ofono.connect(sig, self.refresh_calling_controls)))
             self.signal_ids.append((self.ofono, self.ofono.connect('dial-availability-changed', self.on_capability_changed)))
             self.signal_ids.append((self.ofono, self.ofono.connect('modem-interface-appeared', self.on_modem_interface_appeared)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('emergency-numbers-changed', self.on_emergency_numbers_changed)))
             self.on_capability_changed()
             self.restore_ussd_session()
 
@@ -343,7 +344,13 @@ class MainWindow(Adw.Window):
         self.check_country_code()
 
     def check_emergency_setup(self):
-        """Check if emergency numbers are configured."""
+        """Ask for emergency numbers only when nothing already supplies them.
+
+        The network publishes its own list, but it arrives with the modem
+        state rather than at startup, so an unseeded mirror says nothing
+        yet instead of nothing at all. The hint waits for that answer and
+        is re-asked when it lands.
+        """
         try:
             if not get_phosh_emergency_calls():
                 return
@@ -351,9 +358,19 @@ class MainWindow(Adw.Window):
             if self.gsettings_mgr.get_emergency_numbers():
                 return
 
+            if not self.ofono or not self.ofono.modem_state_known:
+                return
+
+            if self.ofono.network_emergency_numbers:
+                return
+
             GLib.idle_add(lambda: self.show_setup_hint(_("Setup Emergency Numbers in Settings")) or False)
         except Exception as e:
             logger.warning(f"[MainWindow] Emergency setup check warning: {e}")
+
+    def on_emergency_numbers_changed(self, _mirror):
+        """Re-decide the hint once the network's own numbers are known."""
+        self.check_emergency_setup()
 
     def setup_actions_menu(self):
         """Initialize the primary actions menu."""
