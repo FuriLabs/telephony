@@ -21,7 +21,7 @@ from telephony.shared.utils.thread_utils import run_in_background
 from gi.repository import GLib
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
-RECENT_WINDOW_MINUTES = 1
+MISSED_OVERDUE_MINUTES = 5
 
 
 class ScheduleManager:
@@ -86,7 +86,7 @@ class ScheduleManager:
             seconds_until = (next_dt - now).total_seconds()
 
             if seconds_until <= 0:
-                cutoff_time = now - timedelta(minutes=RECENT_WINDOW_MINUTES)
+                cutoff_time = now - timedelta(minutes=MISSED_OVERDUE_MINUTES)
                 if next_dt < cutoff_time:
                     logger.debug(f"[ScheduleManager] Next message is old/missed ({next_ts_str}). Waiting 60s.")
                     seconds_until = 60
@@ -110,14 +110,22 @@ class ScheduleManager:
         return False
 
     def check_and_send_pending(self):
-        """Check for messages that are due within the recent window and send them."""
+        """Send the messages that came due while nothing was listening.
+
+        A phone that was off, or a modem that was not ready yet, leaves
+        a message sitting past its time. It is still sent when the gap
+        is small; past that the reader is asked first, because a message
+        arriving long after it was meant to is a surprise, not a
+        delivery. The two sides use the same threshold, so nothing falls
+        between being sent and being offered.
+        """
         count = 0
         if not self.ofono or not self.ofono.msg_proxy:
             logger.info("[ScheduleManager] Modem not ready, skipping send.")
             return 0
 
         now = datetime.now()
-        start_time = now - timedelta(minutes=RECENT_WINDOW_MINUTES)
+        start_time = now - timedelta(minutes=MISSED_OVERDUE_MINUTES)
 
         now_str = now.strftime(DATE_FORMAT)
         start_str = start_time.strftime(DATE_FORMAT)
@@ -177,8 +185,12 @@ class ScheduleManager:
         logger.info(f"[ScheduleManager] Message {message_id} removed. Rescheduling.")
         self.schedule_next_run()
 
-    def get_missed_messages(self, buffer_minutes=5):
-        """Return scheduled messages that are overdue beyond the grace period."""
+    def get_missed_messages(self, buffer_minutes=MISSED_OVERDUE_MINUTES):
+        """Return scheduled messages that are overdue beyond the grace period.
+
+        The offer and the send both ask this, so they must agree on
+        overdue or Send Now answers for a message that was never listed.
+        """
         now = datetime.now()
         cutoff_time = now - timedelta(minutes=buffer_minutes)
         cutoff_str = cutoff_time.strftime(DATE_FORMAT)
