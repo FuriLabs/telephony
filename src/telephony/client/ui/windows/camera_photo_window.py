@@ -240,7 +240,7 @@ class CameraPhoto(MediaCaptureWindow):
         if self._closed:
             return
         device = self.portal.device_for(self.camera_device)
-        fd = self.portal.pipeline_fd()
+        fd = self.take_remote_fd(self.portal)
         if not devices or device is None or fd < 0:
             self.show_error(_("Error: {e}").format(e="camera unavailable"))
             return
@@ -302,6 +302,7 @@ class CameraPhoto(MediaCaptureWindow):
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline.get_state(PIPELINE_DRAIN_TIMEOUT_NS)
             self.pipeline = None
+        self.close_remote_fd()
 
     def on_shutter_clicked(self, btn):
         """Take the picture from the running stream.
