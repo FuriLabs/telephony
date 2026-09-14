@@ -114,7 +114,7 @@ class QrScanDialog(MediaCaptureWindow):
         if self._closed:
             return
         device = self.portal.device_for(BACK_CAMERA)
-        fd = self.portal.pipeline_fd()
+        fd = self.take_remote_fd(self.portal)
         if not devices or device is None or fd < 0:
             self.toast_overlay.add_toast(
                 Adw.Toast.new(_("Error: {e}").format(e="camera unavailable")))
@@ -180,6 +180,7 @@ class QrScanDialog(MediaCaptureWindow):
         if self.pipeline:
             self.pipeline.set_state(Gst.State.NULL)
             self.pipeline = None
+        self.close_remote_fd()
 
     def on_closed(self, _dialog):
         """Tear the pipeline down whichever way the sheet goes away."""

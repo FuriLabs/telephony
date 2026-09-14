@@ -195,6 +195,27 @@ class MediaCaptureWindow(Adw.NavigationPage):
         super().__init__(**kwargs)
         self._closed = False
         self._timeout_ids = set()
+        self.remote_fd = -1
+
+    def take_remote_fd(self, portal):
+        """Take the portal remote the next pipeline is built on.
+
+        pipewiresrc dups the descriptor it is handed, so the original
+        outlives the pipeline and belongs to whoever asked for it.
+        """
+        self.close_remote_fd()
+        self.remote_fd = portal.pipeline_fd()
+        return self.remote_fd
+
+    def close_remote_fd(self):
+        """Close the remote the last pipeline was built on."""
+        if self.remote_fd < 0:
+            return
+        try:
+            os.close(self.remote_fd)
+        except OSError as e:
+            logger.warning(f"[MediaCapture] Remote fd close failed: {e}")
+        self.remote_fd = -1
 
     def schedule_timeout(self, interval_ms, callback):
         """Schedule a tracked GLib timeout that is cancelled when the window closes."""
