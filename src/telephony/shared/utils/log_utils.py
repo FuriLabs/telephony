@@ -18,6 +18,16 @@ import sys
 
 LOG_FORMAT = "%(asctime)s.%(msecs)03d | %(levelname)-8s | %(module)s:%(funcName)s:%(lineno)d - %(message)s"
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+LOG_LEVELS = {
+    "CRITICAL": logging.CRITICAL,
+    "FATAL": logging.FATAL,
+    "ERROR": logging.ERROR,
+    "WARNING": logging.WARNING,
+    "WARN": logging.WARN,
+    "INFO": logging.INFO,
+    "DEBUG": logging.DEBUG,
+    "NOTSET": logging.NOTSET,
+}
 
 
 class TelephonyLogger(logging.Logger):
@@ -32,7 +42,7 @@ class TelephonyLogger(logging.Logger):
     def add(self, sink=sys.stderr, level="DEBUG"):
         """Attach a stream handler at the given level, loguru style."""
         handler = logging.StreamHandler(sink)
-        handler.setLevel(getattr(logging, level, logging.DEBUG))
+        handler.setLevel(LOG_LEVELS.get(level.upper(), logging.DEBUG))
         handler.setFormatter(logging.Formatter(LOG_FORMAT, LOG_DATE_FORMAT))
         self.addHandler(handler)
         return len(self.handlers)

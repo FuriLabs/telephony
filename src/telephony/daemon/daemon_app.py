@@ -25,11 +25,10 @@ from telephony.daemon.telephony_core import TelephonyCore
 class DaemonApp(Gio.Application):
     """The headless face of the telephony service.
 
-    Wraps TelephonyCore in a bare Gio.Application that owns the daemon
-    bus name and holds itself alive. It implements the same ui delegate
-    the windowed application does, with window-free answers: no window
-    is ever active, no chat is ever open on screen, and every screen
-    the user must reach is a launcher started with a scheme URI.
+    Wrap TelephonyCore in a bare Gio.Application that owns the daemon
+    bus name and stays resident. The core uses this object only for the
+    service-process integration it cannot provide itself: checking focus,
+    launching the in-call surface and withdrawing application notifications.
 
     ofono is mirrored as an attribute because module helpers reach the
     modem through the default application object.
@@ -86,14 +85,6 @@ class DaemonApp(Gio.Application):
     def is_any_window_active(self):
         """No window ever has focus in the service process."""
         return False
-
-    def apply_recovery_state(self, active, message, failed):
-        """The recovery page lives in the in-call process.
-
-        The core only calls this on the process that owns the in-call
-        window; the service publishes the state over the bus instead.
-        """
-        logger.debug("[Daemon] Recovery state is published, not drawn here")
 
     def on_global_call_added(self, _manager, path, _props):
         """Bring up the call surface for every new call."""

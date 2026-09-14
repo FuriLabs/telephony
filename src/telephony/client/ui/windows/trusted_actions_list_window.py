@@ -84,11 +84,7 @@ class TrustedActionsListWindow(Adw.NavigationPage):
                 self.set_seed_func = self.gsettings_mgr.set_trusted_sms_lock_device_totp_seed
                 self.remove_seed_func = self.gsettings_mgr.remove_trusted_sms_lock_device_totp_seed
 
-            parent_win = getattr(parent, 'parent_win', None)
-            if parent_win is not None:
-                self.app_window = parent_win.main_window
-            else:
-                self.app_window = getattr(parent, 'main_window', None)
+            self.app_window = parent.parent_win.main_window
 
             title = _("Set \"Find my Telephony\"")
             if mode == "trusted_sms_silent_callback":
@@ -199,16 +195,15 @@ class TrustedActionsListWindow(Adw.NavigationPage):
 
             self.page_list = Adw.PreferencesPage()
 
-            if True:
-                self.totp_grp = Adw.PreferencesGroup()
-                self.page_list.add(self.totp_grp)
+            self.totp_grp = Adw.PreferencesGroup()
+            self.page_list.add(self.totp_grp)
 
-                self.totp_btn = Gtk.Button()
-                self.totp_btn.add_css_class("suggested-action")
-                self.totp_btn.set_margin_bottom(8)
-                self.totp_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.show_totp_setup() or False))
-                self.totp_grp.add(self.totp_btn)
-                self.update_totp_button_label()
+            self.totp_btn = Gtk.Button()
+            self.totp_btn.add_css_class("suggested-action")
+            self.totp_btn.set_margin_bottom(8)
+            self.totp_btn.connect("clicked", lambda b: GLib.idle_add(lambda: self.show_totp_setup() or False))
+            self.totp_grp.add(self.totp_btn)
+            self.update_totp_button_label()
 
             self.grp_list = Adw.PreferencesGroup()
             self.page_list.add(self.grp_list)
@@ -342,9 +337,6 @@ class TrustedActionsListWindow(Adw.NavigationPage):
 
         self.grp_list = Adw.PreferencesGroup()
         self.page_list.add(self.grp_list)
-
-        if not self.local_contacts:
-            pass
 
         for c in self.local_contacts:
             self.create_contact_row(c)
@@ -486,7 +478,10 @@ class TrustedActionsListWindow(Adw.NavigationPage):
         if not row.get_sensitive():
             return
 
-        data = getattr(row, "contact_data", None)
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
         if data is None:
             return
         name = data.get("name")

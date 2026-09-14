@@ -23,18 +23,20 @@ never subscriptions, so windows stay stateless toward ofonod.
 
 from gi.repository import Gio
 from telephony.shared.utils.log_utils import logger
+from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem
 
 OFONO_BUS = "org.ofono"
 DIRECT_CALL_TIMEOUT_MS = 10000
 
 
 def first_modem_path(bus):
-    """Return the first modem's object path, or None; blocking."""
+    """Return the first non-HFP modem path, or None; blocking."""
     res = bus.call_sync(
         OFONO_BUS, "/", "org.ofono.Manager", "GetModems",
         None, None, Gio.DBusCallFlags.NONE, DIRECT_CALL_TIMEOUT_MS, None)
     modems = res.unpack()[0]
-    return modems[0][0] if modems else None
+    modem = get_first_non_hfp_modem(modems)
+    return modem[0] if modem else None
 
 
 def hangup_all_direct():

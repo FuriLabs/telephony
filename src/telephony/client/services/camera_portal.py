@@ -39,10 +39,7 @@ class CameraDevice:
     """One camera as the portal's PipeWire remote advertises it."""
 
     serial: int
-    node_name: str
     location: str
-    rotation: int
-    description: str
 
 
 class CameraPortal:
@@ -224,14 +221,10 @@ class CameraPortal:
         is missing.
         """
         props = device.get_properties()
-        rotation = props.get_value("api.libcamera.rotation")
         serial = props.get_value("object.serial")
         return CameraDevice(
             serial=int(serial) if serial is not None else index,
-            node_name=props.get_string("node.name") or "",
-            location=props.get_string("api.libcamera.location") or "",
-            rotation=int(rotation) if rotation is not None else 0,
-            description=device.get_display_name() or "")
+            location=props.get_string("api.libcamera.location") or "")
 
     def finish(self, devices):
         """Settle the handshake and answer everyone who asked."""

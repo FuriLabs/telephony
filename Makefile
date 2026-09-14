@@ -69,7 +69,6 @@ install: build
 	install -m 644 data/io.furios.Telephony.Daemon.service $(DESTDIR)$(DBUS_SERVICE_DIR)/
 	install -m 644 data/io.furios.Telephony.metainfo.xml $(DESTDIR)$(METAINFO_DIR)/
 
-	install -m 644 data/io.furios.Telephony.svg $(DESTDIR)$(ICON_DIR)/apps/
 	install -m 644 data/io.furios.Telephony.Calls.svg $(DESTDIR)$(ICON_DIR)/apps/
 	install -m 644 data/io.furios.Telephony.Contacts.svg $(DESTDIR)$(ICON_DIR)/apps/
 	install -m 644 data/io.furios.Telephony.Messages.svg $(DESTDIR)$(ICON_DIR)/apps/

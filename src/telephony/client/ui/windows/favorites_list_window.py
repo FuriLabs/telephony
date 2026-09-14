@@ -182,7 +182,10 @@ class FavoritesListWindow(Adw.NavigationPage):
 
     def on_result_activated_row(self, row):
         """Ask which slot the picked contact should occupy."""
-        data = getattr(row, "contact_data", None)
+        try:
+            data = row.contact_data
+        except AttributeError:
+            return
         if data is None:
             return
         self._pending_contact = data

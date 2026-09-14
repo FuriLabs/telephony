@@ -13,8 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from telephony.shared.constants import DEFAULT_MAX_ATTACHMENT_SIZE
 from telephony.shared.utils.log_utils import logger
+
+
+DEFAULT_MAX_ATTACHMENT_SIZE = 600 * 1024
 
 
 def max_attachment_size(gsettings_mgr):

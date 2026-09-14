@@ -40,7 +40,6 @@ from telephony.client.ui.windows.duplicate_resolution_window import DuplicateRes
 from telephony.client.utils.model_utils import (call_direction_text, call_outcome_text,
                                                 call_ending_text)
 from telephony.client.ui.widgets.common_widget import (present_choice_sheet, add_choice_row,
-                                                      build_info_sheet,
                                                       install_sheet_host, present_sheet,
                                                       present_sheet_page, close_sheet_page,
                                                       present_alert_sheet,
@@ -59,6 +58,12 @@ class MainWindow(Adw.Window):
         self.in_error_mode = False
         self._manual_sync_active = False
         self._ussd_in_flight = False
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = False
+        self._ussd_generation = 0
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
         self._loading_toast = None
         self._current_toast = None
         self._current_message = None
@@ -72,7 +77,7 @@ class MainWindow(Adw.Window):
         self.show_contacts_mode = show_contacts
 
         self.set_title("Telephony")
-        self.set_icon_name("io.furios.Telephony")
+        self.set_icon_name("io.furios.Telephony.Calls")
         self.set_default_size(360, 600)
         self.eds = eds_manager
         self.db = db_manager
@@ -84,6 +89,7 @@ class MainWindow(Adw.Window):
         self.toast_overlay = Adw.ToastOverlay()
         self.set_content(self.toast_overlay)
         self.sheet_host = install_sheet_host(self)
+        self.sheet_host.connect("notify::open", self.on_sheet_open_changed)
 
         main_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.toast_overlay.set_child(main_vbox)
@@ -145,7 +151,9 @@ class MainWindow(Adw.Window):
         if self.ofono:
             self.signal_ids.append((self.ofono, self.ofono.connect('connection-status', self.on_ofono_status)))
             self.signal_ids.append((self.ofono, self.ofono.connect('action-error', lambda obj, msg: self.notify_error(msg))))
-            self.signal_ids.append((self.ofono, self.ofono.connect('ussd-notification', lambda obj, msg: self.show_ussd_dialog(msg))))
+            self.signal_ids.append((self.ofono, self.ofono.connect('ussd-notification', self.on_ussd_notification)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('ussd-request', self.on_ussd_request)))
+            self.signal_ids.append((self.ofono, self.ofono.connect('ussd-state-changed', self.on_ussd_state_changed)))
 
         self.signal_ids.append((self.eds, self.eds.connect('contacts-loaded', self.on_contacts_loaded)))
 
@@ -155,6 +163,7 @@ class MainWindow(Adw.Window):
             self.signal_ids.append((self.ofono, self.ofono.connect('dial-availability-changed', self.on_capability_changed)))
             self.signal_ids.append((self.ofono, self.ofono.connect('modem-interface-appeared', self.on_modem_interface_appeared)))
             self.on_capability_changed()
+            self.restore_ussd_session()
 
         if self.msgs_page:
             self.signal_ids.append((self.db, self.db.connect('messages-updated', lambda *args: self.update_unread_badge())))
@@ -180,7 +189,6 @@ class MainWindow(Adw.Window):
         self.pending_conflicts = []
         self._duplicate_count = 0
 
-        self.blocklist_view = None
 
     def enqueue_popup(self, start_func):
         """Enqueue a popup/dialog task to ensure they don't overlap."""
@@ -257,6 +265,13 @@ class MainWindow(Adw.Window):
 
     def cleanup(self):
         """Cleanup resources and widgets before destruction."""
+        if self._ussd_in_flight or self._ussd_state in ("active", "user-response"):
+            self._ussd_generation += 1
+            self._ussd_in_flight = False
+            self._ussd_state = "idle"
+            if self.ofono:
+                run_in_background(self.ofono.cancel_ussd)
+
         if self._unread_timer:
             GLib.source_remove(self._unread_timer)
             self._unread_timer = None
@@ -620,37 +635,289 @@ class MainWindow(Adw.Window):
             self.dialpad_view.entry.set_position(-1)
 
     def handle_ussd(self, code):
-        """Initiate a USSD request, one at a time."""
-        if self._ussd_in_flight:
+        """Start a USSD session and show its progress in the shared sheet."""
+        if self._ussd_in_flight or self._ussd_state in ("active", "user-response"):
             self.notify_error(_("A USSD request is already in progress"))
             return
         if not self.ofono:
             self.notify_error(_("Modem not ready"))
             return
 
+        self._ussd_generation += 1
+        generation = self._ussd_generation
         self._ussd_in_flight = True
-        self.notify_loading(_("Sending USSD..."))
+        self._ussd_state = "active"
+        self._ussd_last_text = ""
+        self.show_ussd_waiting()
 
-        def done(res):
+        def done(result):
+            if generation != self._ussd_generation:
+                return
             self._ussd_in_flight = False
-            self.hide_loading()
-            if res:
-                self.show_ussd_dialog(res)
-            else:
-                self.notify_error(_("USSD request failed"))
+            if not result:
+                run_in_background(self.ofono.cancel_ussd)
+                self.show_ussd_error(_("USSD request failed"))
+                return
+
+            success, response, state = result
+            if not success:
+                if state in ("active", "user-response"):
+                    run_in_background(self.ofono.cancel_ussd)
+                self._ussd_state = "idle"
+                self.show_ussd_error(_("USSD request failed"))
+                return
+
+            self.apply_ussd_result(response, state)
 
         def failed(error):
+            if generation != self._ussd_generation:
+                return
             self._ussd_in_flight = False
-            self.hide_loading()
             logger.error(f"[MainWindow] USSD request failed: {error}")
-            self.notify_error(_("USSD request failed"))
+            run_in_background(self.ofono.cancel_ussd)
+            self.show_ussd_error(_("USSD request failed"))
 
-        run_in_background(self.ofono.send_ussd, code, on_complete=done, on_error=failed)
+        run_in_background(self.ofono.start_ussd, code, on_complete=done, on_error=failed)
 
-    def show_ussd_dialog(self, text):
-        """Show the USSD response sheet, replacing any shown before it."""
-        present_sheet_page(self, build_info_sheet(_("USSD Result"), text, selectable=True),
-                           replace=True)
+    def restore_ussd_session(self):
+        """Reopen a daemon-owned USSD session when this client starts."""
+        if not self.ofono:
+            return
+
+        self._ussd_state = self.ofono.ussd_state or "idle"
+        text = self.ofono.ussd_text or ""
+        if self._ussd_state == "user-response":
+            self.show_ussd_request(text)
+        elif self._ussd_state == "active":
+            self.show_ussd_waiting(text)
+
+    def apply_ussd_result(self, text, state):
+        """Render a USSD reply according to the session state returned by oFono."""
+        self._ussd_state = state or "idle"
+        text = text or ""
+
+        if self._ussd_state == "user-response":
+            self.show_ussd_request(text)
+        elif self._ussd_state == "active":
+            self.show_ussd_waiting(text)
+        else:
+            self.show_ussd_result(text or _("USSD session ended."))
+
+    def on_ussd_notification(self, _ofono, text):
+        """Show a network USSD notification that needs no user response."""
+        self._ussd_in_flight = False
+        self.show_ussd_result(text or _("USSD session ended."))
+
+    def on_ussd_request(self, _ofono, text):
+        """Show a network USSD request and let the user respond to it."""
+        self._ussd_in_flight = False
+        self._ussd_state = "user-response"
+        self.show_ussd_request(text)
+
+    def on_ussd_state_changed(self, _ofono, state):
+        """Track oFono's USSD state and reflect waiting sessions in the sheet."""
+        self._ussd_state = state or "idle"
+        if self._ussd_in_flight:
+            return
+        if self._ussd_state == "active":
+            self.show_ussd_waiting(self.ofono.ussd_text or self._ussd_last_text)
+        elif self._ussd_state == "user-response" and not self._ussd_sheet_active:
+            self.show_ussd_request(self.ofono.ussd_text or "")
+
+    def build_ussd_page(self, mode, text=""):
+        """Build the waiting, interactive or finished USSD sheet page."""
+        toolbar = Adw.ToolbarView()
+        header = Adw.HeaderBar(show_end_title_buttons=False)
+        toolbar.add_top_bar(header)
+
+        box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=16,
+            margin_top=18,
+            margin_bottom=24,
+            margin_start=18,
+            margin_end=18,
+        )
+
+        if text:
+            label = Gtk.Label(
+                label=text,
+                wrap=True,
+                selectable=True,
+                xalign=0,
+                valign=Gtk.Align.START,
+            )
+            box.append(label)
+
+        if mode == "waiting":
+            spinner = Adw.Spinner()
+            spinner.set_halign(Gtk.Align.CENTER)
+            spinner.set_valign(Gtk.Align.CENTER)
+            spinner.set_size_request(48, 48)
+            box.append(spinner)
+
+            waiting = Gtk.Label(
+                label=_("Waiting for USSD response…"),
+                wrap=True,
+                justify=Gtk.Justification.CENTER,
+                halign=Gtk.Align.CENTER,
+            )
+            box.append(waiting)
+
+            cancel = Gtk.Button(label=_("Cancel"))
+            cancel.connect("clicked", lambda _b: self.cancel_ussd_session())
+            box.append(cancel)
+
+        elif mode == "request":
+            self._ussd_response_entry = Gtk.Entry(
+                placeholder_text=_("Enter response")
+            )
+            self._ussd_response_entry.set_hexpand(True)
+            self._ussd_response_entry.connect("activate", lambda _e: self.respond_to_ussd())
+            self._ussd_response_entry.connect("changed", self.on_ussd_response_changed)
+            box.append(self._ussd_response_entry)
+
+            self._ussd_send_button = Gtk.Button(
+                label=_("Send"),
+                css_classes=["suggested-action"],
+            )
+            self._ussd_send_button.set_sensitive(False)
+            self._ussd_send_button.connect("clicked", lambda _b: self.respond_to_ussd())
+            box.append(self._ussd_send_button)
+
+            cancel = Gtk.Button(label=_("Cancel"))
+            cancel.connect("clicked", lambda _b: self.cancel_ussd_session())
+            box.append(cancel)
+
+        else:
+            close = Gtk.Button(label=_("Close"))
+            close.connect("clicked", lambda _b: self.close_ussd_sheet())
+            box.append(close)
+
+        scroll = Gtk.ScrolledWindow(
+            propagate_natural_height=True,
+            vexpand=True,
+            max_content_height=520,
+        )
+        scroll.set_child(box)
+        toolbar.set_content(scroll)
+        return Adw.NavigationPage(title=_("USSD"), child=toolbar)
+
+    def show_ussd_waiting(self, text=""):
+        """Show an animated in-sheet wait state while oFono waits on the network."""
+        self._ussd_last_text = text or self._ussd_last_text
+        self._ussd_sheet_active = True
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        present_sheet_page(self, self.build_ussd_page("waiting", self._ussd_last_text), replace=True)
+
+    def show_ussd_request(self, text):
+        """Show a USSD menu/request with an editable response field."""
+        self._ussd_last_text = text or ""
+        self._ussd_sheet_active = True
+        present_sheet_page(self, self.build_ussd_page("request", text), replace=True)
+
+    def show_ussd_result(self, text):
+        """Show the final USSD text after the session no longer needs input."""
+        self._ussd_last_text = text or ""
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = True
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        present_sheet_page(self, self.build_ussd_page("result", self._ussd_last_text), replace=True)
+
+    def show_ussd_error(self, text):
+        """End the local USSD flow and show the failure in the sheet."""
+        self._ussd_last_text = text or ""
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = True
+        present_sheet_page(self, self.build_ussd_page("result", self._ussd_last_text), replace=True)
+
+    def on_ussd_response_changed(self, entry):
+        """Enable Send only when the interactive USSD reply contains text."""
+        if self._ussd_send_button is not None:
+            self._ussd_send_button.set_sensitive(bool(entry.get_text().strip()))
+
+    def respond_to_ussd(self):
+        """Send the current input through oFono Respond() and await the next page."""
+        if self._ussd_in_flight or not self.ofono or self._ussd_response_entry is None:
+            return
+
+        response = self._ussd_response_entry.get_text().strip()
+        if not response:
+            return
+
+        generation = self._ussd_generation
+        self._ussd_in_flight = True
+        self._ussd_state = "active"
+        self.show_ussd_waiting()
+
+        def done(result):
+            if generation != self._ussd_generation:
+                return
+            self._ussd_in_flight = False
+            if not result:
+                run_in_background(self.ofono.cancel_ussd)
+                self.show_ussd_error(_("USSD response failed"))
+                return
+
+            success, network_response, state = result
+            if not success:
+                if state in ("active", "user-response"):
+                    run_in_background(self.ofono.cancel_ussd)
+                self._ussd_state = "idle"
+                self.show_ussd_error(_("USSD response failed"))
+                return
+
+            self.apply_ussd_result(network_response, state)
+
+        def failed(error):
+            if generation != self._ussd_generation:
+                return
+            self._ussd_in_flight = False
+            logger.error(f"[MainWindow] USSD response failed: {error}")
+            run_in_background(self.ofono.cancel_ussd)
+            self.show_ussd_error(_("USSD response failed"))
+
+        run_in_background(self.ofono.respond_ussd, response, on_complete=done, on_error=failed)
+
+    def cancel_ussd_session(self):
+        """Cancel the network USSD session and dismiss its sheet."""
+        self._ussd_generation += 1
+        self._ussd_in_flight = False
+        self._ussd_state = "idle"
+        self._ussd_sheet_active = False
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+        close_sheet_page(self)
+        if self.ofono:
+            run_in_background(self.ofono.cancel_ussd)
+
+    def close_ussd_sheet(self):
+        """Dismiss a completed USSD result without sending Cancel()."""
+        self._ussd_sheet_active = False
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+        close_sheet_page(self)
+
+    def on_sheet_open_changed(self, host, _param):
+        """Cancel an active USSD session if its sheet is dismissed by gesture."""
+        if host.get_open() or not self._ussd_sheet_active:
+            return
+
+        should_cancel = self._ussd_in_flight or self._ussd_state in ("active", "user-response")
+        self._ussd_generation += 1
+        self._ussd_in_flight = False
+        self._ussd_sheet_active = False
+        self._ussd_response_entry = None
+        self._ussd_send_button = None
+        self._ussd_last_text = ""
+
+        if should_cancel and self.ofono:
+            self._ussd_state = "idle"
+            run_in_background(self.ofono.cancel_ussd)
 
     def confirm_action(self, title, body, on_confirm):
         """Show a confirmation dialog."""

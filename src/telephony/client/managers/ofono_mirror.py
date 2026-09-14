@@ -35,6 +35,9 @@ class MirrorAudioState:
     mic_muted: bool = False
 
 
+USSD_CALL_TIMEOUT_MS = 100000
+
+
 class OfonoMirror(GObject.Object):
     """Window-side view of the daemon's telephony state.
 
@@ -57,6 +60,8 @@ class OfonoMirror(GObject.Object):
         'voicemail-changed': (GObject.SignalFlags.RUN_FIRST, None, (bool, int)),
         'modem-interface-appeared': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-notification': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'ussd-request': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'ussd-state-changed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
     }
 
@@ -76,6 +81,8 @@ class OfonoMirror(GObject.Object):
         self.voicemail_waiting = False
         self.voicemail_count = 0
         self.voicemail_mailbox = ""
+        self.ussd_state = "idle"
+        self.ussd_text = ""
         self._reseed_id = 0
 
         for signal_name, handler in (
@@ -87,10 +94,12 @@ class OfonoMirror(GObject.Object):
                 ("VoicemailChanged", self.on_sig_voicemail),
                 ("AudioRouteChanged", self.on_sig_audio),
                 ("UssdReceived", self.on_sig_ussd),
+                ("UssdRequestReceived", self.on_sig_ussd_request),
+                ("UssdStateChanged", self.on_sig_ussd_state),
                 ("NetworkServiceChanged", self.on_sig_network_service)):
             self.daemon.subscribe(signal_name, handler)
 
-        self._watch_id = Gio.bus_watch_name(
+        Gio.bus_watch_name(
             Gio.BusType.SESSION, DAEMON_BUS_NAME, Gio.BusNameWatcherFlags.NONE,
             self.on_owner_appeared, self.on_owner_vanished)
 
@@ -150,6 +159,10 @@ class OfonoMirror(GObject.Object):
             self.emit('voicemail-changed', waiting, count)
         self.voicemail_mailbox = state.get("voicemail_mailbox", "")
         self.apply_audio_state(state)
+        self.apply_ussd_snapshot(
+            state.get("ussd_state", "idle"),
+            state.get("ussd_text", ""),
+        )
 
     def apply_capability(self, can_dial, reason, description):
         self.can_dial = can_dial
@@ -216,7 +229,37 @@ class OfonoMirror(GObject.Object):
         self.emit('audio-changed')
 
     def on_sig_ussd(self, *args):
-        self.emit('ussd-notification', args[5].unpack()[0])
+        text = args[5].unpack()[0]
+        self.ussd_text = text or ""
+        self.emit('ussd-notification', text)
+
+    def on_sig_ussd_request(self, *args):
+        text = args[5].unpack()[0]
+        self.ussd_state = "user-response"
+        self.ussd_text = text or ""
+        self.emit('ussd-request', text)
+
+    def on_sig_ussd_state(self, *args):
+        state = args[5].unpack()[0] or "idle"
+        self.ussd_state = state
+        if state == "idle":
+            self.ussd_text = ""
+        self.emit('ussd-state-changed', state)
+
+    def apply_ussd_snapshot(self, state, text):
+        """Restore a USSD session from the daemon's complete state snapshot."""
+        state = state or "idle"
+        text = text or ""
+        state_changed = state != self.ussd_state
+        text_changed = text != self.ussd_text
+
+        self.ussd_state = state
+        self.ussd_text = text if state != "idle" else ""
+
+        if state_changed:
+            self.emit('ussd-state-changed', state)
+        if state == "user-response" and self.ussd_text and (state_changed or text_changed):
+            self.emit('ussd-request', self.ussd_text)
 
     def on_sig_network_service(self, *args):
         service, name, value = args[5].unpack()
@@ -298,11 +341,51 @@ class OfonoMirror(GObject.Object):
         run_in_background(self.daemon.send_tracked_sms, number, text)
         return True
 
-    def send_ussd(self, command):
-        """Send a USSD command; blocking, call from a worker."""
-        reply = self.daemon.call("SendUssd", GLib.Variant("(s)", (command,)),
-                                 GLib.VariantType("(s)"))
-        return reply[0] if reply and reply[0] else None
+    def start_ussd(self, command):
+        """Start a USSD session; blocking, call from a worker.
+
+        Returns (success, response, state) so the UI can distinguish a
+        finished request from an interactive session waiting for the user.
+        """
+        reply = self.daemon.call(
+            "StartUssd",
+            GLib.Variant("(s)", (command,)),
+            GLib.VariantType("(bss)"),
+            timeout_ms=USSD_CALL_TIMEOUT_MS,
+        )
+        if not reply:
+            return None
+        success, response, state = reply
+        self.ussd_state = state or "idle"
+        self.ussd_text = (response or "") if self.ussd_state != "idle" else ""
+        return bool(success), response, self.ussd_state
+
+    def respond_ussd(self, response):
+        """Reply inside an interactive USSD session; blocking."""
+        reply = self.daemon.call(
+            "RespondUssd",
+            GLib.Variant("(s)", (response,)),
+            GLib.VariantType("(bss)"),
+            timeout_ms=USSD_CALL_TIMEOUT_MS,
+        )
+        if not reply:
+            return None
+        success, network_response, state = reply
+        self.ussd_state = state or "idle"
+        self.ussd_text = (network_response or "") if self.ussd_state != "idle" else ""
+        return bool(success), network_response, self.ussd_state
+
+    def cancel_ussd(self):
+        """Cancel the current USSD session; blocking."""
+        reply = self.daemon.call(
+            "CancelUssd", None, GLib.VariantType("(b)"),
+            timeout_ms=USSD_CALL_TIMEOUT_MS,
+        )
+        success = bool(reply and reply[0])
+        if success:
+            self.ussd_state = "idle"
+            self.ussd_text = ""
+        return success
 
     def set_active_chat(self, number):
         """Tell the owner which chat is open so its alerts stay quiet."""
@@ -346,9 +429,14 @@ class OfonoMirror(GObject.Object):
 
     def ask_network_write(self, service, name, value, password):
         """Have the owner change a supplementary service."""
+        packed_value = (
+            GLib.Variant("q", value)
+            if isinstance(value, int) and not isinstance(value, bool)
+            else GLib.Variant("s", str(value))
+        )
         reply = self.daemon.call(
             "SetNetworkProperty",
-            GLib.Variant("(ssvs)", (service, name, GLib.Variant("s", str(value)), password or "")),
+            GLib.Variant("(ssvs)", (service, name, packed_value, password or "")),
             GLib.VariantType("(s)"))
         if reply is None:
             return (False, "no reply")

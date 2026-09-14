@@ -193,7 +193,7 @@ def unescape_value(value):
     return "".join(out)
 
 
-def parse_vcard_string(vcard_str, source_uid, real_uid=None):
+def parse_vcard_string(vcard_str, source_uid):
     """
     Extract contact details (UID, name, phones, emails, and generated vcard
     hash) from a serialized vcard string, as delivered by the D-Bus book
@@ -201,11 +201,11 @@ def parse_vcard_string(vcard_str, source_uid, real_uid=None):
     """
     vcard = unfold_vcard(vcard_str)
 
-    if not real_uid:
-        for line in vcard.splitlines():
-            if line.startswith("UID:"):
-                real_uid = line[4:].strip()
-                break
+    real_uid = None
+    for line in vcard.splitlines():
+        if line.startswith("UID:"):
+            real_uid = line[4:].strip()
+            break
     if not real_uid or not isinstance(real_uid, str):
         real_uid = ""
 

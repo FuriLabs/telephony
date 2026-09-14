@@ -19,6 +19,7 @@ from functools import lru_cache
 import phonenumbers
 from gi.repository import Gio
 from telephony.shared.utils.log_utils import logger
+from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem
 
 from telephony.shared.utils.region_utils import get_system_region
 
@@ -128,8 +129,9 @@ def get_own_number():
             "org.ofono", "/", "org.ofono.Manager", None)
         result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
         modems = result.unpack()[0]
-        if modems:
-            modem_path = modems[0][0]
+        modem = get_first_non_hfp_modem(modems)
+        if modem:
+            modem_path, _props = modem
 
         if modem_path:
             sim_proxy = Gio.DBusProxy.new_sync(

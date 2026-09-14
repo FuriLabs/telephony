@@ -618,7 +618,7 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Get Conversation Ids Error: {e}")
             return []
 
-    def add_message(self, remote_number, direction, body, status="unread", subject=None, attachments=[], sender=None, scheduled_timestamp=None):
+    def add_message(self, remote_number, direction, body, status="unread", attachments=[], sender=None, scheduled_timestamp=None):
         """Add a message to the database."""
         if not remote_number or not direction:
             logger.warning("[DB] Cannot add message: missing remote_number or direction.")
@@ -636,7 +636,7 @@ class DatabaseManager(GObject.Object):
                 norm_number = normalize_number(remote_number, permissive=True)
 
             att_json = json.dumps(attachments) if attachments else "[]"
-            msg_type = 'mms' if (subject or attachments) else 'sms'
+            msg_type = 'mms' if attachments else 'sms'
 
             if not sender:
                 sender = "Me" if direction == "outgoing" else norm_number
@@ -649,9 +649,9 @@ class DatabaseManager(GObject.Object):
             with self.lock:
                 c = self.conn_messages.cursor()
                 c.execute('''INSERT INTO messages
-                             (remote_number, direction, body, status, timestamp, type, subject, attachments, sender, scheduled_timestamp)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                          (norm_number, direction, body, status, final_ts, msg_type, subject, att_json, sender, scheduled_timestamp))
+                             (remote_number, direction, body, status, timestamp, type, attachments, sender, scheduled_timestamp)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                          (norm_number, direction, body, status, final_ts, msg_type, att_json, sender, scheduled_timestamp))
                 self.conn_messages.commit()
                 rowid = c.lastrowid
 
@@ -908,7 +908,7 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Get Message Offset Error: {e}")
             return 0
 
-    def get_chat_messages_around(self, msg_id, limit_before=20, limit_after=None):
+    def get_chat_messages_around(self, msg_id, limit_before=20, limit_after=50):
         """Retrieve context messages around a specific message ID."""
         try:
             with self.lock:
@@ -928,18 +928,11 @@ class DatabaseManager(GObject.Object):
                           (remote_number, target_ts, msg_id, limit_before))
                 before = c.fetchall()
 
-                if limit_after is not None:
-                    c.execute('''SELECT id, direction, body, timestamp, status, subject, attachments, sender, scheduled_timestamp
-                                 FROM messages
-                                 WHERE remote_number=? AND timestamp >= ? AND id != ?
-                                 ORDER BY timestamp ASC, id ASC LIMIT ?''',
-                              (remote_number, target_ts, msg_id, limit_after))
-                else:
-                    c.execute('''SELECT id, direction, body, timestamp, status, subject, attachments, sender, scheduled_timestamp
-                                 FROM messages
-                                 WHERE remote_number=? AND timestamp >= ? AND id != ?
-                                 ORDER BY timestamp ASC, id ASC''',
-                              (remote_number, target_ts, msg_id))
+                c.execute('''SELECT id, direction, body, timestamp, status, subject, attachments, sender, scheduled_timestamp
+                             FROM messages
+                             WHERE remote_number=? AND timestamp >= ? AND id != ?
+                             ORDER BY timestamp ASC, id ASC LIMIT ?''',
+                          (remote_number, target_ts, msg_id, limit_after))
                 after = c.fetchall()
 
                 c.execute('''SELECT id, direction, body, timestamp, status, subject, attachments, sender, scheduled_timestamp
@@ -1225,15 +1218,15 @@ class DatabaseManager(GObject.Object):
             self.eds.remove_number_everywhere(clean_num)
         return True
 
-    def unblock_number(self, bid, number=None):
+    def unblock_number(self, bid):
         """Remove a blocklist entry and rename the number back to Unknown."""
         if self.refuse_write("unblock_number"):
             return
-        if number is None:
-            for entry in self.get_blocked_numbers():
-                if entry["id"] == bid:
-                    number = entry["number"]
-                    break
+        number = None
+        for entry in self.get_blocked_numbers():
+            if entry["id"] == bid:
+                number = entry["number"]
+                break
 
         self.remove_blocked_number(bid)
 

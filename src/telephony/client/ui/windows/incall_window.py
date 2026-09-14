@@ -40,7 +40,6 @@ from telephony.shared.utils.call_state_utils import (count_lines, conference_pat
 KEYPAD_LAYOUT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#']
 INCALL_SHEET_HEIGHT = 520
 PILL_HEIGHT = 60
-PAD_MORPH_DURATION_MS = 250
 
 SEARCH_ENGINE_URLS = {
     "startpage": "https://www.startpage.com/do/dsearch?query={query}",
@@ -136,12 +135,10 @@ class InCallWindow(Adw.Window):
         self.audio = CallFeedback()
         self.fader = ProximityFader()
 
-        self.lock_manager = LockScreenManager(self.ofono, self.eds, self.audio, self)
+        self.lock_manager = LockScreenManager(self)
 
         self.active_path = None
         self.is_speaker = False
-        self.is_muted = False
-        self.dtmf_visible = False
         self.current_route = "earpiece"
         self.current_input_route = "mic"
         self.call_history = {}
@@ -273,59 +270,8 @@ class InCallWindow(Adw.Window):
                                             self.on_hangup_click, style="stack-pill-red"))
         self.controls_stack.add_named(inc_box, "incoming")
 
-        act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, valign=Gtk.Align.END, margin_bottom=20)
-
-        self.route_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, margin_start=40, margin_end=40)
-        self.btn_output, self.lbl_output_route, self.img_output_route = self.mk_selector_btn(route_icon("earpiece"), route_label("earpiece"), self.on_output_routing_click)
-        self.btn_input, self.lbl_input_route, self.img_input_route = self.mk_selector_btn(input_route_icon("mic"), input_route_label("mic"), self.on_input_routing_click)
-        self.route_box.append(self.btn_output)
-        self.route_box.append(self.btn_input)
-
-        pad_grid = Gtk.Grid(row_spacing=8, column_spacing=15, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=14)
-        for i, c in enumerate(KEYPAD_LAYOUT):
-            b = Gtk.Button(label=c, css_classes=["pill", "dialpad-btn"], width_request=60, height_request=46)
-            b.connect("clicked", lambda x, ch=c: GLib.idle_add(lambda: self.ofono.send_dtmf(ch) or False))
-            pad_grid.attach(b, i % 3, i // 3, 1, 1)
-
-        self.pad_route_stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE,
-                                         vhomogeneous=False, interpolate_size=True,
-                                         transition_duration=PAD_MORPH_DURATION_MS)
-        self.pad_route_stack.add_named(self.route_box, "routes")
-        self.pad_route_stack.add_named(pad_grid, "pad")
-
-
-        self.multiparty_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        pills_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10, halign=Gtk.Align.CENTER)
-        self.btn_merge = Gtk.Button(css_classes=["pill", "suggested-action"])
-        self.btn_merge.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_merge_click(b) or False))
-        pills_row.append(self.btn_merge)
-        self.btn_transfer = Gtk.Button(label=_("Transfer"), css_classes=["pill", "destructive-action"])
-        self.btn_transfer.connect("clicked", lambda b: GLib.idle_add(lambda: self.on_transfer_click(b) or False))
-        pills_row.append(self.btn_transfer)
-        self.multiparty_box.append(pills_row)
-        self.lbl_transfer_hint = Gtk.Label(css_classes=["caption", "dim-label"], justify=Gtk.Justification.CENTER, wrap=True)
-        self.multiparty_box.append(self.lbl_transfer_hint)
-        self.multiparty_box.set_visible(False)
-
-        self.actions_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, halign=Gtk.Align.CENTER)
-        mute_wrap, self.btn_mute = self.mk_labeled_btn("microphone-sensitivity-muted-symbolic", _("Mute"), self.on_mute_toggle)
-        pad_wrap, self.btn_pad = self.mk_labeled_btn("input-dialpad-symbolic", _("Keypad"), self.on_pad_toggle)
-        hold_wrap, self.btn_hold = self.mk_labeled_btn("media-playback-pause-symbolic", _("Hold"), self.on_hold_toggle)
-        add_wrap, self.btn_add_call = self.mk_labeled_btn("contact-new-symbolic", _("Add Call"), self.on_add_call_click)
-        self.actions_row.append(mute_wrap)
-        self.actions_row.append(pad_wrap)
-        self.actions_row.append(hold_wrap)
-        self.actions_row.append(add_wrap)
-
-        self._legacy_controls = Gtk.Box(visible=False)
-        self._legacy_controls.append(self.pad_route_stack)
-        self._legacy_controls.append(self.multiparty_box)
-        self._legacy_controls.append(self.actions_row)
-        act_box.append(self._legacy_controls)
-
-        act_box.set_margin_start(18)
-        act_box.set_margin_end(18)
-        act_box.set_spacing(10)
+        act_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, valign=Gtk.Align.END,
+                          margin_bottom=20, margin_start=18, margin_end=18)
 
         self.pill_audio = self.build_audio_pill()
         act_box.append(self.pill_audio)
@@ -765,64 +711,6 @@ class InCallWindow(Adw.Window):
         nav = self.present_call_sheet(_("Participants"))
         self.push_sheet_page(nav, _("Participants"), self.rows_page(build))
 
-    def mk_btn(self, icon, cb, cls=None):
-        """Helper to create a circular icon button."""
-        b = Gtk.Button(icon_name=icon, css_classes=["circular"], width_request=70, height_request=70)
-        if cls:
-            b.add_css_class(cls)
-        b.connect("clicked", lambda btn: GLib.idle_add(lambda: cb(btn) or False))
-        return b
-
-    def mk_labeled_btn(self, icon, caption, cb, cls=None):
-        """Create a circular icon button with a caption underneath."""
-        btn = self.mk_btn(icon, cb, cls)
-        btn.set_size_request(64, 64)
-        btn.set_halign(Gtk.Align.CENTER)
-
-        lbl = Gtk.Label(label=caption, css_classes=["caption", "dim-label"])
-        lbl.set_ellipsize(Pango.EllipsizeMode.END)
-        lbl.set_max_width_chars(12)
-
-        wrap = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, halign=Gtk.Align.CENTER)
-        wrap.append(btn)
-        wrap.append(lbl)
-        return wrap, btn
-
-    def mk_selector_btn(self, icon, text, cb):
-        """Create a full-width route selector button showing the current choice."""
-        btn = Gtk.Button(css_classes=["pill"])
-        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-
-        img = Gtk.Image.new_from_icon_name(icon)
-        row.append(img)
-
-        lbl = Gtk.Label(label=text, hexpand=True, xalign=0)
-        lbl.set_ellipsize(Pango.EllipsizeMode.END)
-        row.append(lbl)
-
-        chevron = Gtk.Image.new_from_icon_name("pan-up-symbolic")
-        chevron.add_css_class("dim-label")
-        row.append(chevron)
-
-        btn.set_child(row)
-        btn.connect("clicked", lambda b: GLib.idle_add(lambda: cb(b) or False))
-        return btn, lbl, img
-
-    def show_output_route(self, route_id):
-        """Reflect the active output route on its selector button."""
-        self.lbl_output_route.set_text(route_label(route_id))
-        self.img_output_route.set_from_icon_name(route_icon(route_id))
-
-    def show_input_route(self, route_id):
-        """Reflect the active input route on its selector button."""
-        self.lbl_input_route.set_text(input_route_label(route_id))
-        self.img_input_route.set_from_icon_name(input_route_icon(route_id))
-
-    def present_choice_sheet(self, title, build_rows):
-        """Show one group of choice rows in the window's sheet."""
-        nav = self.present_call_sheet(title)
-        self.push_sheet_page(nav, title, self.rows_page(build_rows))
-
     def start_timers(self):
         """Start timers only when call is active."""
         if self._timer_id is None:
@@ -881,8 +769,6 @@ class InCallWindow(Adw.Window):
 
         calls = self.ofono.active_calls
 
-        self.lock_manager.sync_notifications(calls, self.call_history, self.ignored_calls)
-
         if self.is_closing:
             if not calls:
                 self.is_closing = False
@@ -894,7 +780,7 @@ class InCallWindow(Adw.Window):
             self.recover_from_closing()
 
         if not calls:
-            if self.active_path is not None or self.is_muted or self.is_speaker:
+            if self.active_path is not None or self.is_speaker:
                 self.clean_reset()
             if self.is_visible():
                 self.set_visible(False)
@@ -904,8 +790,6 @@ class InCallWindow(Adw.Window):
 
         if not self.defer_present:
             self.present()
-        if not self.is_locked:
-            self.lock_manager.clear_all()
 
         self.btn_hangup_act.update_mode(len(calls))
 
@@ -937,7 +821,7 @@ class InCallWindow(Adw.Window):
 
         has_incoming = any(c[2]['state'] == 'incoming' for c in sorted_c)
         if len(calls) > 1 and has_incoming and not self.manual_hangup:
-            for score, path, c_data in sorted_c:
+            for _score, path, c_data in sorted_c:
                 if c_data['state'] == 'incoming':
                     if not self.call_history[path].get('knocked', False) and not self.bg_call_is_silenced(path, c_data):
                         self.audio.play_knock()
@@ -981,13 +865,6 @@ class InCallWindow(Adw.Window):
         else:
             self.anon_chip.set_visible(bool(p_data.get('anonymous')))
             self.controls_stack.set_visible_child_name("active")
-            self.show_output_route(self.current_route)
-            self.toggle_blue(self.btn_mute, self.is_muted)
-
-            can_hold = p_data['state'] in ['active', 'held']
-            self.btn_hold.set_sensitive(can_hold)
-
-            self.toggle_blue(self.btn_hold, p_data['state'] == 'held')
             self.lbl_status.set_text(call_state_label(p_data['state']))
 
         conf_paths = conference_paths(calls)
@@ -997,8 +874,6 @@ class InCallWindow(Adw.Window):
             self.lbl_name.set_text(_("Conference Call"))
             self.lbl_number.set_text(ngettext("{count} participant", "{count} participants",
                                               len(conf_paths)).format(count=len(conf_paths)))
-
-        self.update_multiparty_actions(calls, p_data, conf_paths)
 
         bg_list = [(x[1], x[2]) for x in sorted_c[1:] if x[1] not in conf_paths]
         self.render_bg(bg_list, conf_paths, primary_in_conf)
@@ -1057,62 +932,20 @@ class InCallWindow(Adw.Window):
         self._closing_paths = set()
 
         self.current_route = "earpiece"
+        self.current_input_route = "mic"
 
         self.lock_manager.clear_all()
         self.audio.update_hardware_state(False)
 
         self.active_path = None
         self.is_speaker = False
-        self.is_muted = False
-        self.dtmf_visible = False
         self.manual_hangup = False
         self.ignored_calls.clear()
         self.fader.set_active(False)
 
-        self.current_input_route = "mic"
-        self.show_output_route("earpiece")
-        self.show_input_route("mic")
-        self.toggle_blue(self.btn_mute, False)
-        self.toggle_blue(self.btn_pad, False)
-        self.pad_route_stack.set_transition_duration(0)
-        self.pad_route_stack.set_visible_child_name("routes")
-        self.pad_route_stack.set_transition_duration(PAD_MORPH_DURATION_MS)
-
         self.call_history.clear()
         if self.is_visible():
             self.set_visible(False)
-
-    def update_multiparty_actions(self, calls, p_data, conf_paths):
-        """Show the merge, join and transfer actions matching the call mix."""
-        held_normal = held_single_paths(calls)
-        held_conf = held_conference_paths(calls)
-        primary_free = bool(self.active_path) and p_data['state'] == 'active' and not p_data.get('multiparty')
-
-        conference_allowed = self.gsettings_mgr.get_setting("allow_conference_calls") == "true"
-        transfer_allowed = self.gsettings_mgr.get_setting("allow_call_transfer") == "true"
-
-        show_pair = bool(primary_free and held_normal and (conference_allowed or transfer_allowed))
-        show_join = bool(primary_free and held_conf and not held_normal and conference_allowed)
-
-        if show_pair:
-            self.btn_merge.set_label(_("Merge Calls"))
-            self.btn_merge.set_visible(conference_allowed)
-            self.btn_transfer.set_visible(transfer_allowed)
-            a = self.call_history.get(self.active_path, {}).get('name', _("Unknown"))
-            b = self.call_history.get(held_normal[0], {}).get('name', _("Unknown"))
-            self.lbl_transfer_hint.set_text(
-                _("Transfer connects {a} and {b} together and you leave the call").format(a=a, b=b))
-            self.lbl_transfer_hint.set_visible(True)
-        elif show_join:
-            self.btn_merge.set_label(_("Join Conference"))
-            self.btn_merge.set_visible(True)
-            self.btn_transfer.set_visible(False)
-            self.lbl_transfer_hint.set_visible(False)
-        self.multiparty_box.set_visible(show_pair or show_join)
-
-        self.lbl_transfer_hint.set_visible(self.lbl_transfer_hint.get_visible() and transfer_allowed)
-
-        self.btn_add_call.set_sensitive(count_lines(calls) < 2 and p_data['state'] in ('active', 'held'))
 
     def build_participants_card(self, conf_paths):
         """Build the conference participants card with per leg actions."""
@@ -1425,15 +1258,10 @@ class InCallWindow(Adw.Window):
             self.lock_manager.show_stuck_notification()
 
     def enter_recovery_mode(self, reason, failed=False):
-        """Show the modem recovery page; it stays until the modem works again.
+        """Show the modem recovery page until recovery state clears.
 
-        Whether this window was ever on screen used to depend on how its
-        process came to exist, since filling the page in is not the same
-        as asking to be seen. A recovery reaching a process that was
-        already running left it repairing the modem invisibly.
-
-        A locked phone is told about it by notification instead, so the
-        page is prepared and left waiting rather than shown to nobody.
+        While locked, prepare the recovery UI but leave presentation to the
+        notification and unlock flow. Otherwise present the window immediately.
         """
         if not self.in_recovery_mode and not self.in_error_mode:
             self.audio.play_error_alert()
@@ -1465,12 +1293,7 @@ class InCallWindow(Adw.Window):
         self.present()
 
     def exit_recovery_mode(self):
-        """Leave the recovery page once the modem works again.
-
-        Resetting only hides the window, and this window is its own
-        process, so a repair that ended without a call ending left a
-        process standing with nothing on screen to explain it.
-        """
+        """Leave recovery mode and return to call UI or close when idle."""
         if not self.in_recovery_mode:
             return
         self.in_recovery_mode = False
@@ -1485,12 +1308,7 @@ class InCallWindow(Adw.Window):
         self.close_when_idle()
 
     def on_recovery_done(self, success, reason=""):
-        """React to the recovery verdict while the page is showing.
-
-        A refusal comes back with the reason for it, and saying it is
-        the whole point: a press that puts the button back exactly as
-        it was is indistinguishable from one that did nothing.
-        """
+        """Update the recovery UI after a modem recovery attempt."""
         if not self.in_error_mode and not self.in_recovery_mode:
             return
         self.btn_restart.set_label(_("Recover Modem"))
@@ -1507,12 +1325,7 @@ class InCallWindow(Adw.Window):
             self.lock_manager.show_stuck_notification()
 
     def on_modem_recovery_click(self, btn):
-        """Restart the modem stack from the recovery page.
-
-        Whether a restart can help at all is the owner's to answer,
-        since it is the one watching the modem; a refusal comes back
-        with its reason and takes the place of the message here.
-        """
+        """Request modem recovery and show progress while it runs."""
         app = Gio.Application.get_default()
         if not app:
             return
@@ -1561,12 +1374,7 @@ class InCallWindow(Adw.Window):
         self.close_when_idle()
 
     def close_when_idle(self):
-        """Close once the last call is gone, unless the modem needs the page.
-
-        This window is its own process now, so a window left standing
-        after the call holds a process worth of memory until the phone
-        is restarted.
-        """
+        """Close after the last call unless a recovery or error page must remain."""
         if self.ofono.active_calls or self.in_recovery_mode or self.in_error_mode:
             return
         logger.info("[InCall] No calls left, closing")
@@ -1588,86 +1396,22 @@ class InCallWindow(Adw.Window):
         row.set_activatable(True)
         return row
 
-    def on_output_routing_click(self, btn):
-        """Show the output routing sheet from the daemon's route list."""
-        def present(reply):
-            if reply is None:
-                return
-            outputs, _inputs = reply
-
-            def build(group):
-                for route_id, available in outputs:
-                    row = self.mk_route_row(route_icon(route_id), route_label(route_id),
-                                             route_id == self.current_route, available)
-
-                    def cb_out(row_widget, r_id=route_id):
-                        close_sheet(self)
-                        self.handle_output_selection(r_id)
-                    if row.get_sensitive():
-                        row.connect("activated", cb_out)
-                    group.add(row)
-
-            self.present_choice_sheet(_("Output"), build)
-
-        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
-
-    def on_input_routing_click(self, btn):
-        """Show the input routing sheet from the daemon's route list."""
-        def present(reply):
-            if reply is None:
-                return
-            _outputs, inputs = reply
-
-            def build(group):
-                for route_id, available in inputs:
-                    row = self.mk_route_row(input_route_icon(route_id), input_route_label(route_id),
-                                             route_id == self.current_input_route, available)
-
-                    def cb_in(row_widget, r_id=route_id):
-                        close_sheet(self)
-                        if self.is_muted:
-                            self.on_mute_toggle(None)
-                        self.ofono.daemon.set_input_route(r_id)
-                    if row.get_sensitive():
-                        row.connect("activated", cb_in)
-                    group.add(row)
-
-            self.present_choice_sheet(_("Input"), build)
-
-        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
-
     def handle_output_selection(self, route_id):
         """Send the route intent; the daemon's broadcast renders it."""
         self.ofono.daemon.set_audio_route(route_id)
-        self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
     def on_audio_changed(self):
         """Render the daemon's applied audio state."""
         audio = self.ofono.audio
-        self.is_muted = audio.mic_muted
         self.current_route = audio.current_route
         self.current_input_route = audio.current_input
         self.is_speaker = audio.current_route == "speaker"
-        self.toggle_blue(self.btn_mute, self.is_muted)
-        self.show_output_route(self.current_route)
-        self.show_input_route(self.current_input_route)
         self.refresh_pills()
         self.proximity_tick()
-
-    def on_mute_toggle(self, btn):
-        """Toggle microphone mute; the daemon's broadcast renders it."""
-        self.ofono.daemon.set_mic_muted(not self.is_muted)
-        self.lock_manager.sync_notifications(self.ofono.active_calls, self.call_history, self.ignored_calls)
 
     def on_hold_toggle(self, btn):
         """Toggle call hold."""
         self.ofono.swap_calls()
-
-    def on_pad_toggle(self, btn):
-        """Toggle the DTMF pad, morphing it over the audio selector rows."""
-        self.dtmf_visible = not self.dtmf_visible
-        self.pad_route_stack.set_visible_child_name("pad" if self.dtmf_visible else "routes")
-        self.toggle_blue(btn, self.dtmf_visible)
 
     def on_reject_with_msg(self, btn):
         """Reject call and send a quick response SMS."""
@@ -1681,13 +1425,6 @@ class InCallWindow(Adw.Window):
             self.ofono.hangup_call(self.active_path)
 
         self.pick_quick_response(btn, do_reject)
-
-    def toggle_blue(self, btn, active):
-        """Helper to toggle active button state style."""
-        if active:
-            btn.add_css_class("blue-active")
-        else:
-            btn.remove_css_class("blue-active")
 
     def update_timer(self):
         """Update call duration timer."""

@@ -20,7 +20,6 @@ from gi.repository import Gtk, Adw, Gio, GLib, Pango
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _, ngettext
 
-from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.utils.contact_display_utils import resolve_contact_name
 from telephony.client.utils.locale_utils import get_date_format, get_time_format
 from telephony.client.utils.model_utils import CallItem
@@ -268,7 +267,7 @@ class HistoryView(Adw.Bin):
             subtitle = _("New voicemail")
 
         item = CallItem(-1, ofono.voicemail_mailbox or "", _("Voicemail"),
-                        "voicemail", 0, "", subtitle, True)
+                        "voicemail", 0, "", subtitle)
         self.model.insert(0, item)
 
     def refresh_data(self):
@@ -405,14 +404,10 @@ class HistoryView(Adw.Bin):
                 if not self.is_search_mode and self.active_date_bucket != 'any':
                     continue
 
-            norm_num = normalize_number(number)
-
             real_name = resolve_contact_name(contact_map, number) or number
 
             if not real_name or real_name == "Unknown":
                 real_name = _("Unknown")
-
-            is_saved = (norm_num in contact_map)
 
             processed.append({
                 "id": call_id,
@@ -422,7 +417,6 @@ class HistoryView(Adw.Bin):
                 "duration": duration,
                 "full_ts": full_ts_str,
                 "display_time": display_time_str,
-                "is_saved": is_saved,
                 "anonymous": bool(r["anonymous"]),
                 "multiparty": bool(r["multiparty"]),
                 "transferred": bool(r["transferred"]),
@@ -450,7 +444,6 @@ class HistoryView(Adw.Bin):
                 d["duration"],
                 d["full_ts"],
                 d["display_time"],
-                d["is_saved"],
                 anonymous=d["anonymous"],
                 multiparty=d["multiparty"],
                 transferred=d["transferred"],
@@ -475,11 +468,11 @@ class HistoryView(Adw.Bin):
     def cleanup(self):
         """Cleanup resources before destruction."""
         self.load_token += 1
-        for timer_attr in ("search_timer", "_refresh_timer"):
-            timer_id = getattr(self, timer_attr)
+        for timer_id in (self.search_timer, self._refresh_timer):
             if timer_id:
                 GLib.source_remove(timer_id)
-                setattr(self, timer_attr, None)
+        self.search_timer = None
+        self._refresh_timer = None
 
         for obj, sig_id in self.signal_ids:
             if obj.handler_is_connected(sig_id):

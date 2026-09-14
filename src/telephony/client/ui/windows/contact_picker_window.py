@@ -150,7 +150,7 @@ class ContactPicker(Adw.NavigationPage):
         for r in rows:
             is_fav = r[5] if len(r) > 5 else False
             source_uid = r[6] if len(r) > 6 else None
-            new_items.append(ContactItem(r[0], r[1], r[2], r[3], r[4], is_favorite=is_fav, source_uid=source_uid))
+            new_items.append(ContactItem(r[0], r[1], r[2], r[3], is_favorite=is_fav, source_uid=source_uid))
         model.splice(model.get_n_items(), 0, new_items)
         return False
 
