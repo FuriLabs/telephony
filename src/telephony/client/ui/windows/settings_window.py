@@ -1024,17 +1024,28 @@ class SettingsWindow(Adw.Bin):
         if app:
             app.ensure_voicemail_contact()
 
+    def selectable_default_books(self):
+        """Return the address books that may hold new contacts.
+
+        Andromeda Contacts is a copy of what the container syncs over,
+        so a contact written there is gone the next time it syncs. It is
+        offered only when it already is the default, because a row that
+        names a different book than the one in use reads as a bug.
+        """
+        return [item for item in self.sources_state
+                if item.get('name') != "Andromeda Contacts" or item['is_system_default']]
+
     def on_default_ab_selected(self, idx):
         """Handle default address book selection change."""
-        if idx < 0 or idx >= len(self.sources_state):
+        choices = self.selectable_default_books()
+        if idx < 0 or idx >= len(choices):
             return
 
-        for i, item in enumerate(self.sources_state):
-            if i == idx:
-                item['is_system_default'] = True
+        chosen_uid = choices[idx]['uid']
+        for item in self.sources_state:
+            item['is_system_default'] = item['uid'] == chosen_uid
+            if item['is_system_default']:
                 item['enabled'] = True
-            else:
-                item['is_system_default'] = False
 
         self.build_sources_list(rebuild_dropdown=False)
         self.persist_sources()
@@ -1114,10 +1125,11 @@ class SettingsWindow(Adw.Bin):
     def build_sources_list(self, rebuild_dropdown=True):
         """Rebuild the address books list UI."""
         if rebuild_dropdown:
+            choices = self.selectable_default_books()
             default_idx = next(
-                (i for i, item in enumerate(self.sources_state) if item['is_system_default']), 0)
+                (i for i, item in enumerate(choices) if item['is_system_default']), 0)
             set_selector_options(
-                self.row_default_ab, [item['name'] for item in self.sources_state], default_idx)
+                self.row_default_ab, [item['name'] for item in choices], default_idx)
 
         if (self.source_rows is not None):
             for r in self.source_rows:
