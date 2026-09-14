@@ -59,7 +59,12 @@ def normalize_number_cached(number, region, permissive=False):
 
     try:
         parsed = phonenumbers.parse(number_str, region)
-        if phonenumbers.is_possible_number(parsed):
+        reason = phonenumbers.is_possible_number_with_reason(parsed)
+        if reason == phonenumbers.ValidationResult.IS_POSSIBLE_LOCAL_ONLY:
+            local_only = re.sub(r'[^0-9\*\#]', '', number_str)
+            logger.debug(f"[Utils] normalize_number: Local-only number, no international form: {local_only}")
+            return local_only
+        if reason == phonenumbers.ValidationResult.IS_POSSIBLE:
             if number_str.strip().startswith("+"):
                 clean_input = re.sub(r'[^0-9\+]', '', number_str)
                 if not clean_input.startswith("+" + str(parsed.country_code)):
