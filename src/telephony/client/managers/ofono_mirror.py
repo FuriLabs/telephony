@@ -63,6 +63,7 @@ class OfonoMirror(GObject.Object):
         'ussd-request': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'ussd-state-changed': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'network-service-changed': (GObject.SignalFlags.RUN_FIRST, None, (str, str, object)),
+        'emergency-numbers-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     def __init__(self, gsettings_mgr=None, daemon_client=None):
@@ -78,6 +79,7 @@ class OfonoMirror(GObject.Object):
         self.modem_online = False
         self.interfaces = set()
         self.network_emergency_numbers = set()
+        self.modem_state_known = False
         self.voicemail_waiting = False
         self.voicemail_count = 0
         self.voicemail_mailbox = ""
@@ -172,7 +174,10 @@ class OfonoMirror(GObject.Object):
         self.emit('dial-availability-changed', can_dial)
 
     def apply_modem_state(self, present, online, interfaces, emergency_numbers):
-        self.network_emergency_numbers = set(emergency_numbers)
+        numbers = set(emergency_numbers)
+        numbers_moved = numbers != self.network_emergency_numbers or not self.modem_state_known
+        self.network_emergency_numbers = numbers
+        self.modem_state_known = True
         new_interfaces = set(interfaces)
         added = new_interfaces - self.interfaces
         presence_changed = present != self.modem_present
@@ -184,6 +189,8 @@ class OfonoMirror(GObject.Object):
         if presence_changed:
             self.emit('connection-status',
                       "connected" if present else "disconnected", "")
+        if numbers_moved:
+            self.emit('emergency-numbers-changed')
 
     def on_sig_call_added(self, *args):
         self.schedule_reseed()
