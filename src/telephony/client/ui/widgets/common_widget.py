@@ -133,8 +133,7 @@ def present_unblock_choice(window, daemon, entry, context, on_done):
         elif answer == "own":
             keep_calls = False if context == "calls" else bool(entry["block_calls"])
             keep_messages = bool(entry["block_messages"]) if context == "calls" else False
-            run_in_background(daemon.set_blocked_number_flags,
-                              entry["id"], keep_calls, keep_messages)
+            daemon.set_blocked_number_flags(entry["id"], keep_calls, keep_messages)
         else:
             return
         on_done()
