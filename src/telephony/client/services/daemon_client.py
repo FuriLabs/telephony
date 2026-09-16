@@ -120,37 +120,50 @@ class DaemonClient:
             self.bus.signal_unsubscribe(sub)
         self._subscriptions = []
 
-    def send_tracked_sms(self, number, text):
-        """Record and send an SMS with tracking; blocking, call from a worker."""
-        reply = self.call("SendTrackedSms", GLib.Variant("(ss)", (number, text)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def send_tracked_sms(self, number, text, callback=None):
+        """Record and send an SMS with tracking; the callback hears whether it went."""
+        params = GLib.Variant("(ss)", (number, text))
+        if callback is None:
+            self.call_async("SendTrackedSms", params)
+            return
+        self.call_with_reply("SendTrackedSms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def send_mms(self, number, text, attachments):
-        """Record and send an MMS with tracking; blocking, call from a worker."""
-        reply = self.call("SendMms",
-                          GLib.Variant("(sss)", (number, text, json.dumps(attachments or []))),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def send_mms(self, number, text, attachments, callback=None):
+        """Record and send an MMS with tracking; the callback hears whether it went."""
+        params = GLib.Variant("(sss)", (number, text, json.dumps(attachments or [])))
+        if callback is None:
+            self.call_async("SendMms", params)
+            return
+        self.call_with_reply("SendMms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def schedule_sms(self, number, text, timestamp):
-        """Store an SMS for later sending; blocking, call from a worker."""
-        reply = self.call("ScheduleSms", GLib.Variant("(sss)", (number, text, timestamp)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def schedule_sms(self, number, text, timestamp, callback=None):
+        """Store an SMS for later sending; the callback hears whether it stored."""
+        params = GLib.Variant("(sss)", (number, text, timestamp))
+        if callback is None:
+            self.call_async("ScheduleSms", params)
+            return
+        self.call_with_reply("ScheduleSms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def schedule_mms(self, number, text, attachments, timestamp):
-        """Store an MMS for later sending; blocking, call from a worker."""
-        reply = self.call("ScheduleMms",
-                          GLib.Variant("(ssss)", (number, text, json.dumps(attachments or []), timestamp)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def schedule_mms(self, number, text, attachments, timestamp, callback=None):
+        """Store an MMS for later sending; the callback hears whether it stored."""
+        params = GLib.Variant("(ssss)", (number, text, json.dumps(attachments or []), timestamp))
+        if callback is None:
+            self.call_async("ScheduleMms", params)
+            return
+        self.call_with_reply("ScheduleMms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def save_draft(self, number, text, attachments):
-        """Replace the stored draft; blocking, call from a worker."""
-        reply = self.call("SaveDraft",
-                          GLib.Variant("(sss)", (number, text, json.dumps(attachments or []))))
-        return reply is not None
+    def save_draft(self, number, text, attachments, callback=None):
+        """Replace the stored draft; the callback hears the reply land."""
+        params = GLib.Variant("(sss)", (number, text, json.dumps(attachments or [])))
+        if callback is None:
+            self.call_async("SaveDraft", params)
+            return
+        self.call_with_reply("SaveDraft", params,
+                             lambda reply: callback(reply is not None))
 
     def mark_thread_read(self, number):
         """Mark a conversation read without waiting for the reply."""
@@ -383,10 +396,10 @@ class DaemonClient:
         return self.call("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
                          GLib.VariantType("(is)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_telephony_state(self):
-        """Read the full state snapshot; blocking, call from a worker."""
-        reply = self.call("GetTelephonyState", None, GLib.VariantType("(a{sv})"))
-        return reply[0] if reply is not None else None
+    def get_telephony_state(self, callback):
+        """Hand the full state snapshot to callback, or None when unreachable."""
+        self.call_with_reply("GetTelephonyState", None,
+                             lambda reply: callback(reply[0] if reply is not None else None))
 
     def set_active_chat(self, number):
         """Tell the owner which chat is open so its alerts stay quiet."""
