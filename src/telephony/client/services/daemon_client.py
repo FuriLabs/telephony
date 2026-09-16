@@ -423,13 +423,13 @@ class DaemonClient:
         """Ask the owner to mute or unmute the microphone."""
         self.call_async("MuteMic" if muted else "UnmuteMic")
 
-    def get_audio_routes(self):
-        """List selectable routes; blocking, call from a worker.
+    def get_audio_routes(self, callback):
+        """List selectable routes; callback hears (outputs, inputs), or None.
 
-        Returns (outputs, inputs) as (id, available) pairs, or None
-        when the owner is away.
+        The routes arrive as (id, available) pairs, and None means the
+        owner was away.
         """
-        return self.call("GetAudioRoutes", None, GLib.VariantType("(a(sb)a(sb))"))
+        self.call_with_reply("GetAudioRoutes", None, callback)
 
     def prepare_attachment(self, source_path, max_bytes):
         """Have the owner store and fit an attachment; blocking, call from a worker.
