@@ -375,8 +375,7 @@ class ChatPage(Gtk.Box):
             if (self.messages_view is not None):
                 self.messages_view.close_active_chat()
 
-        run_in_background(self.app_window.daemon.mark_conversation_unread,
-                          self.db_number, message_id, on_complete=done)
+        self.app_window.daemon.mark_conversation_unread(self.db_number, message_id, done)
 
     def on_reschedule_message(self, item):
         """Reschedule a scheduled message or retry a failed one."""
@@ -404,8 +403,7 @@ class ChatPage(Gtk.Box):
                 self.reload_chat()
                 self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
 
-            run_in_background(self.app_window.daemon.reschedule_message, item.id, ts_str,
-                              on_complete=done)
+            self.app_window.daemon.reschedule_message(item.id, ts_str, done)
 
         DateTimePicker(
             parent=self.app_window,
@@ -1117,7 +1115,7 @@ class ChatPage(Gtk.Box):
             self.contact_name = new_name
             self.title_widget.set_title(new_name)
 
-        run_in_background(self.app_window.daemon.set_group_name, self.recipients, new_name, on_complete=done)
+        self.app_window.daemon.set_group_name(self.recipients, new_name, done)
 
     def on_paste_clipboard(self, text_view):
         """Divert file and image pastes into the attachment pipeline."""
