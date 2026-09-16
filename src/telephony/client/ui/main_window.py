@@ -1013,9 +1013,6 @@ class MainWindow(Adw.Window):
     def on_force_sync_click(self, btn):
         """Force address book backends to sync, falling back to a local reload."""
 
-        def task():
-            return self.daemon.refresh_contacts()
-
         def done(refreshed):
             if refreshed:
                 self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
@@ -1023,12 +1020,7 @@ class MainWindow(Adw.Window):
             self._manual_sync_active = True
             self.eds.reload()
 
-        def failed(error):
-            logger.error(f"[MainWindow] Backend refresh failed: {error}")
-            self._manual_sync_active = True
-            self.eds.reload()
-
-        run_in_background(task, on_complete=done, on_error=failed)
+        self.daemon.refresh_contacts(done)
 
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""
@@ -1046,7 +1038,7 @@ class MainWindow(Adw.Window):
                     book_names = {book['uid']: book['name'] for book in (books or [])}
                     self.choose_contact_to_edit(results, book_names)
 
-                run_in_background(self.daemon.get_address_books, on_complete=offer)
+                self.daemon.get_address_books(offer)
                 return
 
         self.open_contact_editor(contact_data, number_preset)

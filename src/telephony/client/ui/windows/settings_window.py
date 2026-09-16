@@ -1078,8 +1078,8 @@ class SettingsWindow(Adw.Bin):
             return
         self.entry_new_ab.set_text("")
         self.row_add_ab.set_expanded(False)
-        run_in_background(self.main_window.daemon.create_address_book, name,
-                          on_complete=lambda ok: self.on_addressbook_created(ok, name))
+        self.main_window.daemon.create_address_book(
+            name, lambda ok: self.on_addressbook_created(ok, name))
 
     def on_addressbook_created(self, success, name):
         """Refresh the sources list after creating an address book."""

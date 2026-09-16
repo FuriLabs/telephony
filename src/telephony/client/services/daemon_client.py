@@ -345,11 +345,11 @@ class DaemonClient:
                           timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply is not None
 
-    def refresh_contacts(self):
-        """Ask the backends to re-sync; blocking, call from a worker."""
-        reply = self.call("RefreshContacts", None, GLib.VariantType("(i)"),
-                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply[0] if reply else 0
+    def refresh_contacts(self, callback):
+        """Ask the backends to re-sync; callback hears how many started."""
+        self.call_with_reply("RefreshContacts", None,
+                             lambda reply: callback(reply[0] if reply else 0),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def import_contacts(self, vcard_data, source_uid=None):
         """Import vCards into a book; blocking, call from a worker."""
@@ -466,23 +466,26 @@ class DaemonClient:
                              lambda reply: callback(bool(reply and reply[0])),
                              timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_address_books(self):
-        """Return the daemon's address book list, or None when unreachable.
+    def get_address_books(self, callback):
+        """Hand the daemon's address book list to callback, or None when unreachable.
 
-        Blocking, call from a worker. This is the window's window onto
-        the books; the window never reads Evolution itself.
+        This is the window's window onto the books; the window never
+        reads Evolution itself.
         """
-        reply = self.call("GetAddressBooks", None, GLib.VariantType("(s)"))
-        if not reply:
-            return None
-        try:
-            return json.loads(reply[0])
-        except Exception as e:
-            logger.error(f"[DaemonClient] Bad address book list: {e}")
-            return None
+        def parsed(reply):
+            if not reply:
+                callback(None)
+                return
+            try:
+                callback(json.loads(reply[0]))
+            except Exception as e:
+                logger.error(f"[DaemonClient] Bad address book list: {e}")
+                callback(None)
 
-    def create_address_book(self, name):
-        """Ask the daemon to create a local address book; blocking, from a worker."""
-        reply = self.call("CreateAddressBook", GLib.Variant("(s)", (name,)),
-                          GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return bool(reply and reply[0])
+        self.call_with_reply("GetAddressBooks", None, parsed)
+
+    def create_address_book(self, name, callback):
+        """Ask the daemon to create a local address book; callback hears whether it took."""
+        self.call_with_reply("CreateAddressBook", GLib.Variant("(s)", (name,)),
+                             lambda reply: callback(bool(reply and reply[0])),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
