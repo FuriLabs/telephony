@@ -18,7 +18,6 @@ from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.widgets.common_widget import (
                                                       wire_blocklist_switch_locks,
                                                       close_sheet_page, present_alert_sheet)
@@ -102,8 +101,7 @@ class BlocklistEditor(Adw.NavigationPage):
         block_messages = self.sw_messages.get_active()
 
         def start_block(done):
-            run_in_background(self.daemon.add_blocked_number, norm_num, note,
-                              block_calls, block_messages, on_complete=done)
+            self.daemon.add_blocked_number(norm_num, note, block_calls, block_messages, done)
 
         def confirmed():
             """Leave first, then block.

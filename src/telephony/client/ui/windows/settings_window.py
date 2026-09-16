@@ -240,14 +240,13 @@ class SettingsWindow(Adw.Bin):
                         _("{number} is already on the blocklist.").format(number=number))
                     return
 
-                run_in_background(self.main_window.daemon.update_blocked_number,
-                                  entry["id"], number, entry_note.get_text().strip(),
-                                  block_calls, block_messages, on_complete=done)
+                self.main_window.daemon.update_blocked_number(
+                    entry["id"], number, entry_note.get_text().strip(),
+                    block_calls, block_messages, done)
             else:
-                run_in_background(self.main_window.daemon.add_blocked_number,
-                                  number, entry_note.get_text().strip(),
-                                  block_calls, block_messages,
-                                  on_complete=done)
+                self.main_window.daemon.add_blocked_number(
+                    number, entry_note.get_text().strip(),
+                    block_calls, block_messages, done)
 
         btn.connect("clicked", submit)
         box.append(btn)

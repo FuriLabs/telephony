@@ -188,27 +188,35 @@ class DaemonClient:
                           GLib.VariantType("(b)"))
         return bool(reply and reply[0])
 
-    def add_blocked_number(self, number, note, block_calls=True, block_messages=True):
-        """Block a number for the chosen domains; blocking, call from a worker."""
-        reply = self.call("AddBlockedNumber",
-                          GLib.Variant("(ssbb)", (number, note, block_calls, block_messages)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def add_blocked_number(self, number, note, block_calls=True, block_messages=True,
+                           callback=None):
+        """Block a number for the chosen domains; the callback hears whether it took."""
+        params = GLib.Variant("(ssbb)", (number, note, block_calls, block_messages))
+        if callback is None:
+            self.call_async("AddBlockedNumber", params)
+            return
+        self.call_with_reply("AddBlockedNumber", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def update_blocked_number(self, bid, number, note, block_calls=True, block_messages=True):
-        """Change one entry, number included; blocking, call from a worker."""
-        reply = self.call("UpdateBlockedNumber",
-                          GLib.Variant("(sssbb)", (str(bid), number, note,
-                                                   block_calls, block_messages)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def update_blocked_number(self, bid, number, note, block_calls=True, block_messages=True,
+                              callback=None):
+        """Change one entry, number included; the callback hears whether it took."""
+        params = GLib.Variant("(sssbb)", (str(bid), number, note,
+                                          block_calls, block_messages))
+        if callback is None:
+            self.call_async("UpdateBlockedNumber", params)
+            return
+        self.call_with_reply("UpdateBlockedNumber", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def set_blocked_number_flags(self, bid, block_calls, block_messages):
-        """Set one entry's domain flags; blocking, call from a worker."""
-        reply = self.call("SetBlockedNumberFlags",
-                          GLib.Variant("(sbb)", (str(bid), block_calls, block_messages)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def set_blocked_number_flags(self, bid, block_calls, block_messages, callback=None):
+        """Set one entry's domain flags; the callback hears whether it took."""
+        params = GLib.Variant("(sbb)", (str(bid), block_calls, block_messages))
+        if callback is None:
+            self.call_async("SetBlockedNumberFlags", params)
+            return
+        self.call_with_reply("SetBlockedNumberFlags", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
     def import_blocklist(self, json_data):
         """Merge an exported blocklist; blocking, call from a worker."""
