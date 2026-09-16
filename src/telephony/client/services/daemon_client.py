@@ -156,16 +156,23 @@ class DaemonClient:
         """Mark a conversation read without waiting for the reply."""
         self.call_async("MarkThreadAsRead", GLib.Variant("(s)", (number,)))
 
-    def mark_conversation_unread(self, number, msg_id):
-        """Mark a message and newer ones unread; blocking, call from a worker."""
-        reply = self.call("MarkConversationUnread", GLib.Variant("(si)", (number, msg_id)))
-        return reply is not None
+    def mark_conversation_unread(self, number, msg_id, callback=None):
+        """Mark a message and newer ones unread; the callback hears the reply land."""
+        params = GLib.Variant("(si)", (number, msg_id))
+        if callback is None:
+            self.call_async("MarkConversationUnread", params)
+            return
+        self.call_with_reply("MarkConversationUnread", params,
+                             lambda reply: callback(reply is not None))
 
-    def reschedule_message(self, msg_id, timestamp):
-        """Move a scheduled message; blocking, call from a worker."""
-        reply = self.call("RescheduleMessage", GLib.Variant("(is)", (msg_id, timestamp)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def reschedule_message(self, msg_id, timestamp, callback=None):
+        """Move a scheduled message; the callback hears whether it moved."""
+        params = GLib.Variant("(is)", (msg_id, timestamp))
+        if callback is None:
+            self.call_async("RescheduleMessage", params)
+            return
+        self.call_with_reply("RescheduleMessage", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
     def retry_message(self, msg_id):
         """Resend a failed message without waiting for the reply."""
@@ -181,12 +188,14 @@ class DaemonClient:
         reply = self.call("DeleteConversation", GLib.Variant("(s)", (number,)))
         return reply is not None
 
-    def set_group_name(self, recipients, name):
-        """Rename a group conversation; blocking, call from a worker."""
-        reply = self.call("SetGroupName",
-                          GLib.Variant("(ss)", (",".join(recipients), name)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def set_group_name(self, recipients, name, callback=None):
+        """Rename a group conversation; the callback hears whether it took."""
+        params = GLib.Variant("(ss)", (",".join(recipients), name))
+        if callback is None:
+            self.call_async("SetGroupName", params)
+            return
+        self.call_with_reply("SetGroupName", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
     def add_blocked_number(self, number, note, block_calls=True, block_messages=True,
                            callback=None):
