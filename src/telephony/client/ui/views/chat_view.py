@@ -1161,12 +1161,9 @@ class ChatPage(Gtk.Box):
             self.show_compression_indicator(_("Compressing video..."))
             compressing = True
 
-        run_in_background(
-            self.app_window.daemon.prepare_attachment,
-            path,
-            remaining,
-            on_complete=lambda reply: self.on_attachment_prepared(reply, path, compressing)
-        )
+        self.app_window.daemon.prepare_attachment(
+            path, remaining,
+            lambda reply: self.on_attachment_prepared(reply, path, compressing))
 
     def on_attachment_prepared(self, reply, source_path, compressing=False):
         """Add the stored attachment, or say why it could not be."""

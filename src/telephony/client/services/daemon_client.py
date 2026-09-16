@@ -191,10 +191,17 @@ class DaemonClient:
         """Resend a failed message without waiting for the reply."""
         self.call_async("RetryMessage", GLib.Variant("(i)", (msg_id,)))
 
-    def delete_message(self, msg_id):
-        """Delete one message; blocking, call from a worker."""
-        reply = self.call("DeleteMessage", GLib.Variant("(i)", (msg_id,)))
-        return reply is not None
+    def delete_message(self, msg_id, callback=None):
+        """Delete one message; the callback hears the reply land.
+
+        Without a callback this blocks and must be called from a worker,
+        because the attachment removal it follows is sequential.
+        """
+        params = GLib.Variant("(i)", (msg_id,))
+        if callback is None:
+            return self.call("DeleteMessage", params) is not None
+        self.call_with_reply("DeleteMessage", params,
+                             lambda reply: callback(reply is not None))
 
     def delete_conversation(self, number):
         """Delete a whole conversation; blocking, call from a worker."""
@@ -294,16 +301,19 @@ class DaemonClient:
                              lambda reply: callback(reply is not None),
                              timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_missed_messages(self):
-        """Fetch missed scheduled messages; blocking, call from a worker."""
-        reply = self.call("GetMissedMessages", None, GLib.VariantType("(s)"))
-        if not reply:
-            return []
-        try:
-            return json.loads(reply[0])
-        except Exception as e:
-            logger.error(f"[DaemonClient] Bad missed messages payload: {e}")
-            return []
+    def get_missed_messages(self, callback):
+        """Hand the missed scheduled messages to callback, empty when there are none."""
+        def parsed(reply):
+            if not reply:
+                callback([])
+                return
+            try:
+                callback(json.loads(reply[0]))
+            except Exception as e:
+                logger.error(f"[DaemonClient] Bad missed messages payload: {e}")
+                callback([])
+
+        self.call_with_reply("GetMissedMessages", None, parsed)
 
     def send_missed_message(self, msg_id):
         """Send a missed scheduled message without waiting for the reply."""
@@ -387,14 +397,14 @@ class DaemonClient:
                           GLib.VariantType("(i)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply[0] if reply else 0
 
-    def import_sim_contacts(self, source_uid=None):
-        """Import the SIM phonebook into a book; blocking, call from a worker.
+    def import_sim_contacts(self, source_uid, callback):
+        """Import the SIM phonebook into a book.
 
-        Returns (count, message) where message is a stable code, or None
-        when the owner could not be reached.
+        The callback hears (count, message) where message is a stable
+        code, or None when the owner could not be reached.
         """
-        return self.call("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
-                         GLib.VariantType("(is)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        self.call_with_reply("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
+                             callback, timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def get_telephony_state(self, callback):
         """Hand the full state snapshot to callback, or None when unreachable."""
@@ -473,15 +483,15 @@ class DaemonClient:
         """
         self.call_with_reply("GetAudioRoutes", None, callback)
 
-    def prepare_attachment(self, source_path, max_bytes):
-        """Have the owner store and fit an attachment; blocking, call from a worker.
+    def prepare_attachment(self, source_path, max_bytes, callback):
+        """Have the owner store and fit an attachment.
 
-        Returns (path, code) — path is empty when preparation failed —
-        or None when the owner could not be reached.
+        The callback hears (path, code) — path is empty when preparation
+        failed — or None when the owner could not be reached.
         """
-        return self.call("PrepareAttachment",
-                         GLib.Variant("(si)", (source_path, int(max_bytes))),
-                         GLib.VariantType("(ss)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        self.call_with_reply("PrepareAttachment",
+                             GLib.Variant("(si)", (source_path, int(max_bytes))),
+                             callback, timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def clear_contacts(self, source_uid, callback):
         """Delete every contact of a source, or all unprotected ones."""
