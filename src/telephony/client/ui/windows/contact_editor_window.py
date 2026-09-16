@@ -687,18 +687,18 @@ class ContactEditor(Adw.NavigationPage):
         if self.main_window.contacts_view:
             self.main_window.contacts_view.search.set_text("")
 
-        def task():
-            self.main_window.daemon.delete_contact(self.uid)
-            if numbers:
-                self.main_window.daemon.update_history_names(numbers, None)
-            return numbers
-
-        def done(deleted_numbers):
-            for num in deleted_numbers or []:
+        def done(_ok):
+            for num in numbers:
                 self.main_window.gsettings_mgr.reset_special_list_names(num)
             close_sheet_page(self.get_root())
 
-        run_in_background(task, on_complete=done)
+        def deleted(_ok):
+            if not numbers:
+                done(True)
+                return
+            self.main_window.daemon.update_history_names(numbers, None, done)
+
+        self.main_window.daemon.delete_contact(self.uid, deleted)
 
     def generate_vcard_from_ui(self, phones_to_save):
         """Generate VCard string from UI fields."""
