@@ -234,27 +234,32 @@ class DaemonClient:
                           GLib.Variant("(ss)", (json.dumps(list(numbers)), new_name or "")))
         return reply is not None
 
-    def clear_call_history(self):
-        """Wipe call history; blocking, call from a worker."""
-        return self.call("ClearCallHistory") is not None
+    def clear_call_history(self, callback):
+        """Wipe call history; callback hears whether the owner answered."""
+        self.call_with_reply("ClearCallHistory", None,
+                             lambda reply: callback(reply is not None))
 
-    def clear_messages(self):
-        """Wipe messages and attachments; blocking, call from a worker."""
-        return self.call("ClearMessages", timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS) is not None
+    def clear_messages(self, callback):
+        """Wipe messages and attachments; callback hears whether the owner answered."""
+        self.call_with_reply("ClearMessages", None,
+                             lambda reply: callback(reply is not None),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def clear_group_names(self):
-        """Wipe custom group names; blocking, call from a worker."""
-        return self.call("ClearGroupNames") is not None
+    def clear_group_names(self, callback):
+        """Wipe custom group names; callback hears whether the owner answered."""
+        self.call_with_reply("ClearGroupNames", None,
+                             lambda reply: callback(reply is not None))
 
-    def clear_blocklist(self):
-        """Wipe the blocklist; blocking, call from a worker."""
-        return self.call("ClearBlocklist") is not None
+    def clear_blocklist(self, callback):
+        """Wipe the blocklist; callback hears whether the owner answered."""
+        self.call_with_reply("ClearBlocklist", None,
+                             lambda reply: callback(reply is not None))
 
-    def clear_everything(self, source_uid):
-        """Wipe all stored data; blocking, call from a worker."""
-        reply = self.call("ClearEverything", GLib.Variant("(s)", (source_uid or "",)),
-                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply is not None
+    def clear_everything(self, source_uid, callback):
+        """Wipe all stored data; callback hears whether the owner answered."""
+        self.call_with_reply("ClearEverything", GLib.Variant("(s)", (source_uid or "",)),
+                             lambda reply: callback(reply is not None),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def get_missed_messages(self):
         """Fetch missed scheduled messages; blocking, call from a worker."""
@@ -441,17 +446,17 @@ class DaemonClient:
                          GLib.Variant("(si)", (source_path, int(max_bytes))),
                          GLib.VariantType("(ss)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def clear_contacts(self, source_uid=None):
-        """Delete every contact of a source, or all unprotected ones; blocking."""
-        reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
-                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply is not None
+    def clear_contacts(self, source_uid, callback):
+        """Delete every contact of a source, or all unprotected ones."""
+        self.call_with_reply("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
+                             lambda reply: callback(reply is not None),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def delete_address_book(self, source_uid):
-        """Delete a whole address book; blocking, call from a worker."""
-        reply = self.call("DeleteAddressBook", GLib.Variant("(s)", (source_uid,)),
-                          GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return bool(reply and reply[0])
+    def delete_address_book(self, source_uid, callback):
+        """Delete a whole address book; callback hears whether it went."""
+        self.call_with_reply("DeleteAddressBook", GLib.Variant("(s)", (source_uid,)),
+                             lambda reply: callback(bool(reply and reply[0])),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def get_address_books(self):
         """Return the daemon's address book list, or None when unreachable.
