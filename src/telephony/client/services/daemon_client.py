@@ -236,11 +236,14 @@ class DaemonClient:
         """Delete one call history row without waiting for the reply."""
         self.call_async("DeleteCallHistoryEntry", GLib.Variant("(i)", (call_id,)))
 
-    def update_history_names(self, numbers, new_name):
-        """Rename call history rows; blocking, call from a worker."""
-        reply = self.call("UpdateHistoryNames",
-                          GLib.Variant("(ss)", (json.dumps(list(numbers)), new_name or "")))
-        return reply is not None
+    def update_history_names(self, numbers, new_name, callback=None):
+        """Rename call history rows; the callback hears the reply land."""
+        params = GLib.Variant("(ss)", (json.dumps(list(numbers)), new_name or ""))
+        if callback is None:
+            self.call_async("UpdateHistoryNames", params)
+            return
+        self.call_with_reply("UpdateHistoryNames", params,
+                             lambda reply: callback(reply is not None))
 
     def clear_call_history(self, callback):
         """Wipe call history; callback hears whether the owner answered."""
@@ -334,10 +337,14 @@ class DaemonClient:
             return (False, "write-failed")
         return (bool(reply[0]), reply[1])
 
-    def delete_contact(self, uid):
-        """Delete one contact; blocking, call from a worker."""
-        reply = self.call("DeleteContact", GLib.Variant("(s)", (uid,)))
-        return reply is not None
+    def delete_contact(self, uid, callback=None):
+        """Delete one contact; the callback hears the reply land."""
+        params = GLib.Variant("(s)", (uid,))
+        if callback is None:
+            self.call_async("DeleteContact", params)
+            return
+        self.call_with_reply("DeleteContact", params,
+                             lambda reply: callback(reply is not None))
 
     def delete_contacts(self, uids):
         """Delete a batch of contacts; blocking, call from a worker."""
