@@ -1094,8 +1094,7 @@ class SettingsWindow(Adw.Bin):
         def answered(answer):
             if answer != "delete":
                 return
-            run_in_background(self.main_window.daemon.delete_address_book, uid,
-                              on_complete=self.on_addressbook_deleted)
+            self.main_window.daemon.delete_address_book(uid, self.on_addressbook_deleted)
 
         present_alert_sheet(
             self.get_root(), _("Delete Address Book"),
