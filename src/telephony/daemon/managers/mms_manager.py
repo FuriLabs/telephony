@@ -29,6 +29,7 @@ from telephony.shared.utils.thread_utils import run_in_background
 
 
 MMS_RESOLVE_TIMEOUT_SECONDS = 180
+MMS_DELIVERY_WATCH_LIMIT = 50
 UNCLAIMED_STATE_LIMIT = 20
 SEEN_SIGNATURE_LIMIT = 50
 
@@ -108,7 +109,9 @@ class MmsManager(GObject.Object):
 
         self.inflight_mms = {}
         self.inflight_mms_paths = {}
+        self.inflight_mms_recipients = {}
         self.unclaimed_mms_states = {}
+        self.delivery_watch = {}
         self.mms_send_lock = threading.Lock()
 
         if not mimetypes.inited:
@@ -173,21 +176,29 @@ class MmsManager(GObject.Object):
             )
             if self.proxy:
                 self.connected = True
-                if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
-                    self.set_delivery_reports(True)
+                if self.gsettings_mgr:
+                    enabled = self.gsettings_mgr.get_setting("delivery_reports") == "true"
+                    self.set_delivery_reports(enabled)
         except Exception as e:
             logger.debug(f"[MMS-LOG] PROXY-FAILED | {e}")
 
     def set_delivery_reports(self, enabled):
-        """Ask mmsd for MMS delivery reports; blocking, call from a worker."""
+        """Ask mmsd for MMS delivery reports; blocking, call from a worker.
+
+        Returns (True, None) on success or (False, error text).
+        """
         if not self.proxy:
-            return
+            self.init_manager()
+            if not self.proxy:
+                return (False, "no proxy")
         try:
             self.proxy.call_sync("SetProperty",
                                  GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
                                  Gio.DBusCallFlags.NONE, -1, None)
+            return (True, None)
         except Exception as e:
             logger.error(f"[MMS-LOG] DELIVERY-REPORTS | {e}")
+            return (False, str(e))
 
     def load_existing_messages(self):
         """Load messages already present in the daemon."""
@@ -335,23 +346,46 @@ class MmsManager(GObject.Object):
             self.db.update_message_status(row_id, "failed")
             return
 
+        delivery_recipients = {}
+        delivery_reports_enabled = (
+            self.gsettings_mgr
+            and self.gsettings_mgr.get_setting("delivery_reports") == "true"
+        )
+        if delivery_reports_enabled:
+            for recipient in recipients:
+                number = normalize_number(recipient, permissive=True)
+                if number:
+                    delivery_recipients[number] = "none"
+
         with self.mms_send_lock:
             state = self.unclaimed_mms_states.pop(path, None)
             if state is None:
                 self.inflight_mms[row_id] = path
                 self.inflight_mms_paths[path] = row_id
+                self.inflight_mms_recipients[row_id] = delivery_recipients
 
         if state is not None:
-            self.resolve_mms(row_id, state)
+            self.resolve_mms(row_id, state, path, delivery_recipients)
             return
 
         GLib.timeout_add_seconds(MMS_RESOLVE_TIMEOUT_SECONDS, self.timeout_mms, row_id)
 
-    def resolve_mms(self, row_id, state):
+    def resolve_mms(self, row_id, state, path=None, delivery_recipients=None):
         """Write the final status for an in-flight MMS row."""
         status = "sent" if state == "sent" else "failed"
         logger.info(f"[MMS] Row {row_id} resolved: {status}")
         self.db.update_message_status(row_id, status)
+
+        if status != "sent" or not path or not delivery_recipients:
+            return
+
+        with self.mms_send_lock:
+            self.delivery_watch[path] = {
+                "row_id": row_id,
+                "recipients": dict(delivery_recipients),
+            }
+            while len(self.delivery_watch) > MMS_DELIVERY_WATCH_LIMIT:
+                self.delivery_watch.pop(next(iter(self.delivery_watch)))
 
     def timeout_mms(self, row_id):
         """Fail an MMS row that never received a state signal."""
@@ -360,34 +394,98 @@ class MmsManager(GObject.Object):
                 return False
             path = self.inflight_mms.pop(row_id)
             self.inflight_mms_paths.pop(path, None)
+            self.inflight_mms_recipients.pop(row_id, None)
 
         logger.warning(f"[MMS] Row {row_id} timed out without a state signal")
         self.db.update_message_status(row_id, "failed")
         return False
 
+    def update_delivery_status(self, path, value):
+        """Apply one mmsd delivery_update signal to a tracked outgoing MMS."""
+        if not isinstance(value, str) or not value.startswith("delivery_update,"):
+            return
+
+        update = value.split(',', 1)[1]
+        if '=' not in update:
+            logger.debug(f"[MMS] Invalid delivery update for {path}: {value}")
+            return
+
+        recipient, delivery_status = update.split('=', 1)
+        recipient = normalize_number(recipient, permissive=True)
+        delivery_status = delivery_status.lower()
+
+        row_id = None
+        all_retrieved = False
+
+        with self.mms_send_lock:
+            watch = self.delivery_watch.get(path)
+            if not watch:
+                return
+
+            statuses = watch["recipients"]
+            delivery_recipient = None
+
+            if recipient in statuses:
+                delivery_recipient = recipient
+            else:
+                matching_recipients = []
+                for number in statuses:
+                    if recipient and number.lstrip('+') == recipient.lstrip('+'):
+                        matching_recipients.append(number)
+
+                if len(matching_recipients) == 1:
+                    delivery_recipient = matching_recipients[0]
+                elif len(statuses) == 1:
+                    delivery_recipient = next(iter(statuses))
+
+            if delivery_recipient is None:
+                logger.debug(f"[MMS] Delivery report recipient {recipient} does not match {path}")
+                return
+
+            statuses[delivery_recipient] = delivery_status
+            row_id = watch["row_id"]
+            all_retrieved = bool(statuses) and all(status == "retrieved" for status in statuses.values())
+
+            logger.info(f"[MMS] Delivery report for row {row_id}: {delivery_recipient}={delivery_status}")
+
+            if all_retrieved:
+                self.delivery_watch.pop(path, None)
+
+        if all_retrieved and row_id is not None:
+            self.db.update_message_status(row_id, "delivered")
+
     def on_message_prop_changed(self, conn, sender, path, iface, signal, params, user_data):
-        """Resolve in-flight sends from mmsd message status changes."""
+        """Resolve sends and delivery reports from mmsd message status changes."""
         try:
             name, value = params.unpack()
         except Exception as e:
             logger.debug(f"[MMS] Message state unpack failed: {e}")
             return
 
-        if name != "status" or value != "sent":
+        if name != "status":
+            return
+
+        if isinstance(value, str) and value.startswith("delivery_update,"):
+            self.update_delivery_status(path, value)
+            return
+
+        if value != "sent":
             return
 
         row_id = None
+        delivery_recipients = None
         with self.mms_send_lock:
             row_id = self.inflight_mms_paths.pop(path, None)
             if row_id is not None:
                 self.inflight_mms.pop(row_id, None)
+                delivery_recipients = self.inflight_mms_recipients.pop(row_id, {})
             else:
                 self.unclaimed_mms_states[path] = value
                 while len(self.unclaimed_mms_states) > UNCLAIMED_STATE_LIMIT:
                     self.unclaimed_mms_states.pop(next(iter(self.unclaimed_mms_states)))
 
         if row_id is not None:
-            self.resolve_mms(row_id, "sent")
+            self.resolve_mms(row_id, "sent", path, delivery_recipients)
 
     def on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
         """Fail the oldest in-flight MMS when the daemon reports a send error."""
@@ -398,6 +496,7 @@ class MmsManager(GObject.Object):
                 row_id = next(iter(self.inflight_mms))
                 msg_path = self.inflight_mms.pop(row_id)
                 self.inflight_mms_paths.pop(msg_path, None)
+                self.inflight_mms_recipients.pop(row_id, None)
 
         if row_id is not None:
             self.resolve_mms(row_id, "failed")

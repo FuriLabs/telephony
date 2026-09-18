@@ -1053,9 +1053,24 @@ class TelephonyDaemonDBus:
         invocation.return_value(None)
 
     def handle_setdeliveryreports(self, parameters, invocation):
-        """Ask the network for SMS delivery reports for a window instance."""
+        """Apply the delivery report preference to both SMS and MMS."""
         enabled = parameters.unpack()[0]
-        run_in_background(self.ofono.set_delivery_reports, enabled,
+
+        def apply_delivery_reports():
+            errors = []
+
+            sms_ok, sms_error = self.ofono.set_delivery_reports(enabled)
+            if not sms_ok:
+                errors.append(f"SMS: {sms_error or 'failed'}")
+
+            if self.app and self.app.mms:
+                mms_ok, mms_error = self.app.mms.set_delivery_reports(enabled)
+                if not mms_ok:
+                    errors.append(f"MMS: {mms_error or 'failed'}")
+
+            return (not errors, '; '.join(errors) if errors else None)
+
+        run_in_background(apply_delivery_reports,
                           on_complete=lambda result: self.reply_ss_result(invocation, result))
 
     def handle_getaudioroutes(self, parameters, invocation):

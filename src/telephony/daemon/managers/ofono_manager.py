@@ -765,8 +765,9 @@ class OfonoManager(GObject.Object):
         self.cs_proxy = self.get_proxy("org.ofono.CallSettings")
         if self.cs_proxy:
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
-        if self.gsettings_mgr and self.gsettings_mgr.get_setting("delivery_reports") == "true":
-            run_in_background(self.set_delivery_reports, True)
+        if self.gsettings_mgr:
+            enabled = self.gsettings_mgr.get_setting("delivery_reports") == "true"
+            run_in_background(self.set_delivery_reports, enabled)
         run_in_background(self.load_emergency_numbers)
 
         self.mw_proxy = self.get_proxy("org.ofono.MessageWaiting")
