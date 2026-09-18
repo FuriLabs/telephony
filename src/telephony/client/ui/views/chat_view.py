@@ -273,6 +273,29 @@ class ChatPage(Gtk.Box):
 
         self.append(self.att_scrolled)
 
+        self._compression_jobs = 0
+        self.compression_spinner = Adw.Spinner()
+        self.compression_spinner.set_size_request(18, 18)
+        self.compression_spinner.set_valign(Gtk.Align.CENTER)
+
+        self.compression_label = Gtk.Label(xalign=0)
+        self.compression_label.add_css_class("dim-label")
+
+        compression_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        compression_box.set_margin_start(12)
+        compression_box.set_margin_end(12)
+        compression_box.set_margin_top(4)
+        compression_box.set_margin_bottom(4)
+        compression_box.append(self.compression_spinner)
+        compression_box.append(self.compression_label)
+
+        self.compression_revealer = Gtk.Revealer()
+        self.compression_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+        self.compression_revealer.set_transition_duration(150)
+        self.compression_revealer.set_child(compression_box)
+        self.compression_revealer.set_reveal_child(False)
+        self.append(self.compression_revealer)
+
         input_box = Gtk.Box(spacing=6)
         input_box.set_margin_start(6)
         input_box.set_margin_end(6)
@@ -1107,6 +1130,18 @@ class ChatPage(Gtk.Box):
         used = sum(os.path.getsize(p) for p in self.attachments if os.path.exists(p))
         return budget - used
 
+    def show_compression_indicator(self, message):
+        """Show an inline busy indicator while an attachment is compressed."""
+        self._compression_jobs += 1
+        self.compression_label.set_label(message)
+        self.compression_revealer.set_reveal_child(True)
+
+    def hide_compression_indicator(self):
+        """Hide the compression indicator once all compression jobs finish."""
+        self._compression_jobs = max(0, self._compression_jobs - 1)
+        if self._compression_jobs == 0:
+            self.compression_revealer.set_reveal_child(False)
+
     def on_attachment_captured(self, path):
         """Hand a captured file to the daemon to store and fit the budget."""
         if not path or path in self.attachments:
@@ -1120,17 +1155,25 @@ class ChatPage(Gtk.Box):
             logger.warning(f"[Chat] Attachment size check failed: {e}")
             oversized = False
 
+        compressing = False
         if oversized and mime and mime.startswith("image/"):
-            self.app_window.notify_loading(_("Compressing image..."))
+            self.show_compression_indicator(_("Compressing image..."))
+            compressing = True
         elif oversized and mime and mime.startswith("video/"):
-            self.app_window.notify_loading(_("Compressing video..."))
+            self.show_compression_indicator(_("Compressing video..."))
+            compressing = True
 
-        run_in_background(self.app_window.daemon.prepare_attachment, path, remaining,
-                          on_complete=lambda reply: self.on_attachment_prepared(reply, path))
+        run_in_background(
+            self.app_window.daemon.prepare_attachment,
+            path,
+            remaining,
+            on_complete=lambda reply: self.on_attachment_prepared(reply, path, compressing)
+        )
 
-    def on_attachment_prepared(self, reply, source_path):
+    def on_attachment_prepared(self, reply, source_path, compressing=False):
         """Add the stored attachment, or say why it could not be."""
-        self.app_window.hide_loading()
+        if compressing:
+            self.hide_compression_indicator()
         if reply is None:
             self.app_window.notify_error(_("Failed to prepare attachment."))
             return
