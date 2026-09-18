@@ -70,6 +70,8 @@ class GSettingsManager:
             g_key = key.replace("_", "-")
 
             if g_key not in self.gsettings.props.settings_schema.list_keys():
+                logger.warning(f"[GSettings] Dropping write to unknown key {g_key}; "
+                               "a schema installed after this process started is not visible to it")
                 return
 
             key_type = self.gsettings.props.settings_schema.get_key(g_key).get_value_type().dup_string()
