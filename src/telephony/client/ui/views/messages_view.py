@@ -63,12 +63,14 @@ class MessagesView(Adw.Bin):
         self._is_programmatic_update = False
 
         self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+        self.show_numbers = self.app_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false"
 
         self.signal_ids = []
         self.signal_ids.append((self.db, self.db.connect('messages-updated', self.on_messages_updated)))
         self.signal_ids.append((self.db, self.db.connect('blocklist-updated', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
         gsettings = self.app_window.gsettings_mgr.gsettings
         self.signal_ids.append((gsettings, gsettings.connect('changed::muted_conversations', self.on_muted_changed)))
+        self.signal_ids.append((gsettings, gsettings.connect('changed::show-numbers-in-message-list', self.on_show_numbers_changed)))
         if self.app_window.eds:
             self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(lambda: self.refresh_list()))))
 
@@ -322,7 +324,8 @@ class MessagesView(Adw.Bin):
         if not body:
             body = _("[Multimedia Message]")
 
-        new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status)
+        new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status,
+                                    has_name=old_item.has_name)
         target = 0 if change == "insert" else idx
         if target == idx:
             self.model.splice(idx, 1, [new_item])
@@ -428,6 +431,8 @@ class MessagesView(Adw.Bin):
         for r in raw_rows:
             num, body, ts, unread, status = r[0], r[1], r[2], r[3], r[5]
 
+            has_name = True
+
             if "," in num:
                 recipients = [n.strip() for n in num.split(',')]
                 custom_name = group_names.get(num)
@@ -451,11 +456,13 @@ class MessagesView(Adw.Bin):
                     else:
                         name = resolve_contact_name(contact_map, num)
                         if not name:
+                            has_name = False
                             if any(c.isalpha() for c in num):
                                 name = _("Unknown")
                             else:
                                 name = num
                         elif name == "Unknown":
+                            has_name = False
                             name = _("Unknown")
 
             if not body:
@@ -464,6 +471,7 @@ class MessagesView(Adw.Bin):
             processed.append({
                 "number": num,
                 "name": name,
+                "has_name": has_name,
                 "body": body,
                 "ts": ts,
                 "unread": unread,
@@ -485,7 +493,8 @@ class MessagesView(Adw.Bin):
         for d in items:
             real_items_count += 1
             new_conv_items.append(ConversationItem(
-                d["number"], d["name"], d["body"], d["ts"], d["unread"], status=d.get("status")
+                d["number"], d["name"], d["body"], d["ts"], d["unread"], status=d.get("status"),
+                has_name=d.get("has_name", False)
             ))
 
         if new_conv_items:
@@ -507,9 +516,14 @@ class MessagesView(Adw.Bin):
         self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
         self.refresh_list()
 
+    def on_show_numbers_changed(self, _settings, _key):
+        """Re-read whether rows carry their number and repaint them."""
+        self.show_numbers = self.app_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false"
+        self.refresh_list()
+
     def on_bind_row(self, factory, list_item):
         """Bind row items to widgets."""
-        ConversationRowFactory.bind(factory, list_item, self.muted_ids)
+        ConversationRowFactory.bind(factory, list_item, self.muted_ids, self.show_numbers)
 
     def on_activate_conv(self, lv, pos):
         """Handle activation of a conversation row."""

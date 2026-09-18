@@ -174,13 +174,19 @@ class ConversationItem(GObject.Object):
     Model representing a conversation thread.
     """
 
-    def __init__(self, number, name, last_msg, timestamp, unread_count, status=None):
+    def __init__(self, number, name, last_msg, timestamp, unread_count, status=None,
+                 has_name=False):
         """
         Initialize the conversation item.
+
+        has_name says the name came from a contact or a group the user
+        named, rather than standing in for one, which is what decides
+        whether a row can be shown without its number.
         """
         super().__init__()
         self.number = number
         self.name = name
+        self.has_name = has_name
         self.last_msg = last_msg
         self.timestamp = timestamp
         self.unread_count = unread_count
