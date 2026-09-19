@@ -807,17 +807,9 @@ class TelephonyDaemonDBus:
             if not vcards:
                 invocation.return_value(GLib.Variant("(is)", (0, "empty")))
                 return
-            count = 0
-            reason = ""
-            for vcard in vcards:
-                try:
-                    if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
-                        count += 1
-                except Exception as e:
-                    logger.error(f"[Daemon] Storing a SIM contact failed: {e}")
-                    reason = str(e)
-                    break
-            invocation.return_value(GLib.Variant("(is)", (count, reason)))
+            self.save_vcards_in_turn(
+                vcards, source_uid,
+                lambda count: invocation.return_value(GLib.Variant("(is)", (count, ""))))
 
         def failed(error):
             logger.error(f"[Daemon] Reading the SIM phonebook failed: {error}")
@@ -1723,16 +1715,44 @@ class TelephonyDaemonDBus:
     def handle_importcontacts(self, parameters, invocation):
         """Handle ImportContacts command."""
         vcard_data, source_uid = parameters.unpack()
-        count = 0
 
         is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to import to {name} via CLI")
 
-        if not is_protected and self.eds:
-            vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
-            for vcard in vcards:
-                if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
-                    count += 1
-        invocation.return_value(GLib.Variant("(i)", (count,)))
+        if is_protected or not self.eds:
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+            return
+
+        vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
+        self.save_vcards_in_turn(
+            vcards, source_uid,
+            lambda count: invocation.return_value(GLib.Variant("(i)", (count,))))
+
+    def save_vcards_in_turn(self, vcards, source_uid, on_done):
+        """Save each vcard in order, then report the count to on_done.
+
+        One save is in flight at a time, so the owner's loop runs
+        between contacts: a whole phonebook used to be written inside
+        this handler and nothing else the daemon owns could answer for
+        the length of it.
+        """
+        state = {"index": 0, "count": 0}
+
+        def save_next():
+            if state["index"] >= len(vcards):
+                on_done(state["count"])
+                return
+
+            vcard = vcards[state["index"]]
+            state["index"] += 1
+            self.eds.save_contact_async(
+                vcard, saved, source_uid=source_uid if source_uid else None)
+
+        def saved(ok):
+            if ok:
+                state["count"] += 1
+            save_next()
+
+        save_next()
 
     def handle_exportcontacts(self, parameters, invocation):
         """Handle ExportContacts command."""
@@ -1756,11 +1776,13 @@ class TelephonyDaemonDBus:
     def handle_addcontact(self, parameters, invocation):
         """Handle AddContact command."""
         name, number = parameters.unpack()
-        if self.eds:
-            uid = str(uuid.uuid4())
-            vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
-            self.eds.save_contact(vcard_data)
-        invocation.return_value(None)
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        uid = str(uuid.uuid4())
+        vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
+        self.eds.save_contact_async(vcard_data, lambda _ok: invocation.return_value(None))
 
     def handle_savecontact(self, parameters, invocation):
         """Write a full vCard to a book, refusing the read-only sync book."""
@@ -1778,19 +1800,14 @@ class TelephonyDaemonDBus:
             invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
             return
 
-        def done(result):
-            ok, reason = result
+        def done(ok, reason):
             invocation.return_value(GLib.Variant("(bs)", (bool(ok), reason)))
-
-        def failed(error):
-            logger.error(f"[DBus] Save contact failed: {error}")
-            invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
 
         if not self.eds:
             invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
             return
-        run_in_background(self.eds.save_contact_with_reason, vcard, uid or None, source_uid or None,
-                          on_complete=done, on_error=failed)
+        self.eds.save_contact_with_reason_async(vcard, done, uid=uid or None,
+                                                source_uid=source_uid or None)
 
     def handle_deletecontacts(self, parameters, invocation):
         """Delete a batch of contacts, skipping the protected ones."""
@@ -1802,18 +1819,32 @@ class TelephonyDaemonDBus:
         except Exception as e:
             logger.warning(f"[DBus] Failed to parse contact uids: {e}")
 
-        def task():
-            for uid in uids:
+        if not uids or not self.eds:
+            invocation.return_value(None)
+            return
+
+        self.delete_contacts_in_turn(uids, lambda: invocation.return_value(None))
+
+    def delete_contacts_in_turn(self, uids, on_done):
+        """Delete each contact in order, skipping protected ones, then call on_done.
+
+        One delete is in flight at a time so the owner's loop keeps
+        running between contacts.
+        """
+        remaining = list(uids)
+
+        def delete_next(*_args):
+            while remaining:
+                uid = remaining.pop(0)
                 with self.eds.cache_lock:
                     contact = self.eds.cache.get(uid)
                 if contact and self.is_protected_contact(contact, uid, "delete"):
                     continue
-                self.eds.delete_contact(uid)
+                self.eds.delete_contact_async(uid, delete_next)
+                return
+            on_done()
 
-        if not uids or not self.eds:
-            invocation.return_value(None)
-            return
-        self.run_task_then_reply(invocation, task)
+        delete_next()
 
     def handle_refreshcontacts(self, parameters, invocation):
         """Ask every refresh-capable backend to re-sync with its remote."""
@@ -1832,24 +1863,30 @@ class TelephonyDaemonDBus:
     def handle_deletecontact(self, parameters, invocation):
         """Handle DeleteContact command."""
         uid = parameters.unpack()[0]
-        if self.eds:
-            with self.eds.cache_lock:
-                contact = self.eds.cache.get(uid)
-            if contact and self.is_protected_contact(contact, uid, "delete"):
-                invocation.return_value(None)
-                return
-            self.eds.delete_contact(uid)
-        invocation.return_value(None)
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        with self.eds.cache_lock:
+            contact = self.eds.cache.get(uid)
+        if contact and self.is_protected_contact(contact, uid, "delete"):
+            invocation.return_value(None)
+            return
+
+        self.eds.delete_contact_async(uid, lambda _ok: invocation.return_value(None))
 
     def handle_modifycontact(self, parameters, invocation):
         """Handle ModifyContact command."""
         uid, name, number = parameters.unpack()
-        if self.eds:
-            with self.eds.cache_lock:
-                contact = self.eds.cache.get(uid)
-            if contact and self.is_protected_contact(contact, uid, "modify"):
-                invocation.return_value(None)
-                return
-            vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
-            self.eds.save_contact(vcard_data, uid=uid)
-        invocation.return_value(None)
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        with self.eds.cache_lock:
+            contact = self.eds.cache.get(uid)
+        if contact and self.is_protected_contact(contact, uid, "modify"):
+            invocation.return_value(None)
+            return
+
+        vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
+        self.eds.save_contact_async(vcard_data, lambda _ok: invocation.return_value(None), uid=uid)
