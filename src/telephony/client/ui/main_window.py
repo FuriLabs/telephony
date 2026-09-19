@@ -1098,9 +1098,6 @@ class MainWindow(Adw.Window):
             self.notify_error(description if description else _("Call Failed"))
             return
 
-        status_msg = _("Calling (Anonymous)...") if hide_id else _("Calling {number}...").format(number=number)
-        self.notify_success(status_msg)
-
         if not self.ofono:
             self.notify_error(_("Call Failed"))
             return
