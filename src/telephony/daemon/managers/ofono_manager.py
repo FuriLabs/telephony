@@ -1140,7 +1140,12 @@ class OfonoManager(GObject.Object):
             logger.error(f"Sync calls error: {e}")
 
     def dial(self, number, hide_id=False, on_result=None):
-        """Initiate an outgoing call; on_result hears (success, message) exactly once."""
+        """Initiate an outgoing call; on_result hears (success, message) exactly once.
+
+        The return value only says the dial was taken up, since a refusal
+        may not be known until the modem answers. on_result is what says
+        whether the call was placed.
+        """
 
         if self._interfaces_known and "org.ofono.VoiceCallManager" not in self._seen_interfaces:
             return self.refuse_dial(_("Modem not ready"), on_result)
@@ -1149,38 +1154,52 @@ class OfonoManager(GObject.Object):
             self.park_dial(number, hide_id, on_result)
             return True
 
-        if len(self.active_calls) > 0:
-            try:
-                ret = self.voice_proxy.call_sync("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None)
-                real_calls = ret.unpack()[0]
-                if len(real_calls) == 0:
-                    for path in list(self.active_calls.keys()):
-                        self.force_remove(path)
-            except Exception as e:
-                logger.error(f"[OfonoManager] Sanity check failed: {e}")
-
-        if count_lines(self.active_calls) >= 2:
-            return self.refuse_dial(_("Cannot dial while in another call"), on_result)
-
-        if not self.active_calls and self.audio.voice_profile_active:
-            logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
-            return self.refuse_dial(_("Please wait, the previous call is still ending"), on_result)
-
-        try:
+        def place_call():
             clean_num = normalize_number(number)
 
             self.emit('notification-cleared', clean_num)
 
-            if number.startswith("#31#"):
-                hide_id = True
-            clir = "enabled" if hide_id else ("disabled" if number.startswith("*31#") else "default")
-            self._dial_hides_id = bool(hide_id or (self.clir_hidden and clir == "default"))
-            self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            return self.refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+            hidden = hide_id or number.startswith("#31#")
+            clir = "enabled" if hidden else ("disabled" if number.startswith("*31#") else "default")
+            self._dial_hides_id = bool(hidden or (self.clir_hidden and clir == "default"))
 
-        if on_result is not None:
-            on_result(True, "")
+            def dialed(proxy, result, _data):
+                try:
+                    proxy.call_finish(result)
+                except Exception as e:
+                    self.refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+                    return
+                if on_result is not None:
+                    on_result(True, "")
+
+            self.voice_proxy.call("Dial", GLib.Variant("(ss)", (clean_num, clir)),
+                                  Gio.DBusCallFlags.NONE, -1, None, dialed, None)
+
+        def gate():
+            if count_lines(self.active_calls) >= 2:
+                self.refuse_dial(_("Cannot dial while in another call"), on_result)
+                return
+            if not self.active_calls and self.audio.voice_profile_active:
+                logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
+                self.refuse_dial(_("Please wait, the previous call is still ending"), on_result)
+                return
+            place_call()
+
+        if len(self.active_calls) > 0:
+            def checked(proxy, result, _data):
+                try:
+                    if len(proxy.call_finish(result).unpack()[0]) == 0:
+                        for path in list(self.active_calls.keys()):
+                            self.force_remove(path)
+                except Exception as e:
+                    logger.error(f"[OfonoManager] Sanity check failed: {e}")
+                gate()
+
+            self.voice_proxy.call("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None,
+                                  checked, None)
+            return True
+
+        gate()
         return True
 
     def refuse_dial(self, message, on_result):
