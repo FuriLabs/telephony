@@ -1369,73 +1369,80 @@ class OfonoManager(GObject.Object):
         self.voice_proxy.call("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None,
                               self.on_modem_call_done, "SwapCalls")
 
-    def create_multiparty(self):
-        """Join the active and held calls into a conference; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
-
-        if not self.voice_proxy:
-            return (False, "no proxy")
+    def report_ss_result(self, proxy, result, label, on_result, after=None):
+        """Turn one supplementary-service reply into (ok, error) for the asker."""
         try:
-            self.voice_proxy.call_sync("CreateMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
+            proxy.call_finish(result)
         except Exception as e:
-            logger.error(f"[OfonoManager] CreateMultiparty failed: {e}")
-            return (False, str(e))
+            logger.error(f"[OfonoManager] {label} failed: {e}")
+            if on_result:
+                on_result(False, str(e))
+            return
+        if after:
+            after()
+        if on_result:
+            on_result(True, None)
 
-    def hangup_multiparty(self):
-        """Release every call in the conference; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
-
+    def create_multiparty(self, on_result=None):
+        """Join the active and held calls into a conference; on_result hears (ok, error)."""
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("HangupMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] HangupMultiparty failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.voice_proxy.call("CreateMultiparty", None, Gio.DBusCallFlags.NONE,
+                              SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, "CreateMultiparty", on_result),
+                              None)
 
-    def private_chat(self, path):
-        """Split one conference participant into a private call; blocking, call from a worker.
+    def hangup_multiparty(self, on_result=None):
+        """Release every call in the conference; on_result hears (ok, error)."""
+        if not self.voice_proxy:
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.voice_proxy.call("HangupMultiparty", None, Gio.DBusCallFlags.NONE,
+                              SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, "HangupMultiparty", on_result),
+                              None)
+
+    def private_chat(self, path, on_result=None):
+        """Split one conference participant into a private call.
 
         The network may refuse this on IMS conferences, so failures are
-        expected and reported, never hidden. Returns (True, None) on
-        success or (False, error text).
+        expected and reported, never hidden. on_result hears (ok, error).
         """
 
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("PrivateChat", GLib.Variant("(o)", (path,)),
-                                       Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] PrivateChat failed for {path}: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.voice_proxy.call("PrivateChat", GLib.Variant("(o)", (path,)),
+                              Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, f"PrivateChat for {path}", on_result),
+                              None)
 
-    def transfer_call(self):
-        """Connect the active and held calls to each other and leave; blocking, call from a worker.
+    def transfer_call(self, on_result=None):
+        """Connect the active and held calls to each other and leave.
 
         Requires the Explicit Call Transfer service from the carrier, so
-        rejection is a normal outcome. Returns (True, None) on success
-        or (False, error text).
+        rejection is a normal outcome. on_result hears (ok, error).
         """
 
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("Transfer", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            if on_result:
+                on_result(False, "no proxy")
+            return
+
+        def mark_transferred():
             for data in self.active_calls.values():
                 if data.get('state') in ('active', 'held'):
                     data['transferred'] = True
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Transfer failed: {e}")
-            return (False, str(e))
+
+        self.voice_proxy.call("Transfer", None, Gio.DBusCallFlags.NONE,
+                              SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, "Transfer", on_result,
+                                                                     mark_transferred),
+                              None)
 
     def load_emergency_numbers(self):
         """Seed the network emergency number list.
@@ -1827,52 +1834,43 @@ class OfonoManager(GObject.Object):
             logger.error(f"[OfonoManager] {service} query failed: {e}")
             return None
 
-    def set_service_property(self, service, name, value):
-        """Set a supplementary service property; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
+    def set_service_property(self, service, name, value, on_result=None):
+        """Set a supplementary service property; on_result hears (ok, error)."""
 
         proxy = self.service_proxy(service)
         if not proxy:
-            return (False, "no proxy")
+            if on_result:
+                on_result(False, "no proxy")
+            return
         variant = GLib.Variant("q", value) if isinstance(value, int) else GLib.Variant("s", value)
-        try:
-            proxy.call_sync("SetProperty", GLib.Variant("(sv)", (name, variant)),
-                            Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Setting {service} {name} failed: {e}")
-            return (False, str(e))
+        proxy.call("SetProperty", GLib.Variant("(sv)", (name, variant)),
+                   Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                   lambda pr, r, _d: self.report_ss_result(pr, r, f"Setting {service} {name}", on_result),
+                   None)
 
-    def set_barring_property(self, name, value, password):
-        """Set a call barring rule; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
+    def set_barring_property(self, name, value, password, on_result=None):
+        """Set a call barring rule; on_result hears (ok, error)."""
 
         if not self.cb_proxy:
-            return (False, "no proxy")
-        try:
-            self.cb_proxy.call_sync("SetProperty",
-                                    GLib.Variant("(svs)", (name, GLib.Variant("s", value), password)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Setting barring {name} failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cb_proxy.call("SetProperty",
+                           GLib.Variant("(svs)", (name, GLib.Variant("s", value), password)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, f"Setting barring {name}", on_result),
+                           None)
 
-    def disable_all_forwarding(self):
-        """Clear every forwarding rule; blocking, call from a worker."""
+    def disable_all_forwarding(self, on_result=None):
+        """Clear every forwarding rule; on_result hears (ok, error)."""
         if not self.cf_proxy:
-            return (False, "no proxy")
-        try:
-            self.cf_proxy.call_sync("DisableAll", GLib.Variant("(s)", ("all",)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Disabling forwarding failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cf_proxy.call("DisableAll", GLib.Variant("(s)", ("all",)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, "Disabling forwarding", on_result),
+                           None)
 
     def disable_all_barrings(self, password):
         """Clear every barring rule; blocking, call from a worker."""

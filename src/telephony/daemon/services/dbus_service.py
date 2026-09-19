@@ -685,25 +685,24 @@ class TelephonyDaemonDBus:
     def handle_callaction(self, params, invocation):
         """Run a call control action a window instance asked for."""
         action, argument = params.unpack()
+
+        def done(ok, error):
+            if not ok:
+                logger.error(f"[Daemon] Call action {action} failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
         actions = {
-            "create_multiparty": lambda: self.ofono.create_multiparty(),
-            "hangup_multiparty": lambda: self.ofono.hangup_multiparty(),
-            "transfer": lambda: self.ofono.transfer_call(),
-            "private_chat": lambda: self.ofono.private_chat(argument),
+            "create_multiparty": lambda: self.ofono.create_multiparty(done),
+            "hangup_multiparty": lambda: self.ofono.hangup_multiparty(done),
+            "transfer": lambda: self.ofono.transfer_call(done),
+            "private_chat": lambda: self.ofono.private_chat(argument, done),
         }
         handler = actions.get(action)
         if handler is None:
             invocation.return_value(GLib.Variant("(b)", (False,)))
             return
 
-        def done(result):
-            invocation.return_value(GLib.Variant("(b)", (bool(result and result[0]),)))
-
-        def failed(error):
-            logger.error(f"[Daemon] Call action {action} failed: {error}")
-            invocation.return_value(GLib.Variant("(b)", (False,)))
-
-        run_in_background(handler, on_complete=done, on_error=failed)
+        handler()
 
     def handle_getnetworkproperties(self, params, invocation):
         """Read a supplementary service for a window instance."""
@@ -724,20 +723,16 @@ class TelephonyDaemonDBus:
         """Change a supplementary service for a window instance."""
         service, name, value, password = params.unpack()
 
-        def task():
-            if service == "barring" and password:
-                return self.ofono.set_barring_property(name, value, password)
-            return self.ofono.set_service_property(service, name, value)
-
-        def done(result):
-            ok, error = result if result else (False, "no reply")
+        def done(ok, error):
+            if not ok:
+                logger.error(f"[Daemon] Network property write failed: {error}")
             invocation.return_value(GLib.Variant("(s)", ("" if ok else (error or "failed"),)))
 
-        def failed(error):
-            logger.error(f"[Daemon] Network property write failed: {error}")
-            invocation.return_value(GLib.Variant("(s)", (str(error),)))
+        if service == "barring" and password:
+            self.ofono.set_barring_property(name, value, password, done)
+            return
 
-        run_in_background(task, on_complete=done, on_error=failed)
+        self.ofono.set_service_property(service, name, value, done)
 
     def handle_getrecoverystate(self, parameters, invocation):
         """Report the recovery state to a call window that just started.
@@ -797,8 +792,8 @@ class TelephonyDaemonDBus:
 
     def handle_disableallforwarding(self, parameters, invocation):
         """Handle DisableAllForwarding command."""
-        run_in_background(self.ofono.disable_all_forwarding,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.disable_all_forwarding(
+            lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
 
     def handle_disableallbarrings(self, parameters, invocation):
         """Handle DisableAllBarrings command."""
