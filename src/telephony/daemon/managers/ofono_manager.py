@@ -1262,21 +1262,24 @@ class OfonoManager(GObject.Object):
 
     def execute_answer(self, path):
         """Internal helper to answer a call."""
-        try:
-            if path in self.active_calls:
-                proxy = self.active_calls[path].get('proxy')
-                if proxy:
-                    proxy.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
-                return
+        def answered(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.debug(f"[OfonoManager] Answer failed for {path}: {e}")
+                err_str = str(e)
+                if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
+                    self.force_remove(path)
 
-            call = self.get_proxy("org.ofono.VoiceCall", path)
-            if call:
-                call.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.debug(f"[OfonoManager] Answer failed for {path}: {e}")
-            err_str = str(e)
-            if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                self.force_remove(path)
+        if path in self.active_calls:
+            proxy = self.active_calls[path].get('proxy')
+            if proxy:
+                proxy.call("Answer", None, Gio.DBusCallFlags.NONE, -1, None, answered, None)
+            return
+
+        call = self.get_proxy("org.ofono.VoiceCall", path)
+        if call:
+            call.call("Answer", None, Gio.DBusCallFlags.NONE, -1, None, answered, None)
 
     def hangup_call(self, path):
         """Hangup a specific call; hanging up an unanswered ring is a rejection.
@@ -1287,25 +1290,29 @@ class OfonoManager(GObject.Object):
         happened to drop at the same moment still says so.
         """
         self.emit('hangup-requested')
-        try:
-            if path in self.active_calls:
-                if self.active_calls[path].get('state') in ('incoming', 'waiting'):
-                    self.active_calls[path]['rejected'] = True
-                self.active_calls[path]['disconnect_reason'] = "local"
-                proxy = self.active_calls[path].get('proxy')
-                if proxy:
-                    proxy.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
-                    return
 
-            call = self.get_proxy("org.ofono.VoiceCall", path)
-            if call:
-                call.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            call_state = self.active_calls.get(path, {}).get("state", "gone")
-            logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
-            err_str = str(e)
-            if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left, path)
+        def hung_up(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                call_state = self.active_calls.get(path, {}).get("state", "gone")
+                logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
+                err_str = str(e)
+                if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
+                    GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left, path)
+
+        if path in self.active_calls:
+            if self.active_calls[path].get('state') in ('incoming', 'waiting'):
+                self.active_calls[path]['rejected'] = True
+            self.active_calls[path]['disconnect_reason'] = "local"
+            proxy = self.active_calls[path].get('proxy')
+            if proxy:
+                proxy.call("Hangup", None, Gio.DBusCallFlags.NONE, -1, None, hung_up, None)
+                return
+
+        call = self.get_proxy("org.ofono.VoiceCall", path)
+        if call:
+            call.call("Hangup", None, Gio.DBusCallFlags.NONE, -1, None, hung_up, None)
 
     def hangup_all(self):
         """Hangup all active calls, which is as local as hanging up one.
@@ -1324,22 +1331,24 @@ class OfonoManager(GObject.Object):
                 data['rejected'] = True
             data['disconnect_reason'] = "local"
 
-        try:
-            self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
-            for path in list(self.active_calls.keys()):
-                self.hangup_call(path)
+        def hangup_all_done(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
+                for path in list(self.active_calls.keys()):
+                    self.hangup_call(path)
+
+        self.voice_proxy.call("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None,
+                              hangup_all_done, None)
 
     def swap_calls(self):
         """Swap active and held calls."""
 
         if not self.voice_proxy:
             return
-        try:
-            self.voice_proxy.call_sync("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.error(f"SwapCalls failed: {e}")
+        self.voice_proxy.call("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None,
+                              self.on_modem_call_done, "SwapCalls")
 
     def create_multiparty(self):
         """Join the active and held calls into a conference; blocking, call from a worker.
@@ -1487,24 +1496,30 @@ class OfonoManager(GObject.Object):
             self.force_remove(path)
         return False
 
+    def on_modem_call_done(self, proxy, result, label):
+        """Log a modem call nothing waits on, for when the modem refuses it."""
+        try:
+            proxy.call_finish(result)
+        except Exception as e:
+            logger.error(f"[OfonoManager] {label} failed: {e}")
+
     def send_dtmf(self, tones):
         """Send DTMF tones during a call."""
 
         if not self.voice_proxy:
             return
-        try:
-            self.voice_proxy.call_sync("SendTones", GLib.Variant("(s)", (tones,)), Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Send DTMF failed: {e}")
+        self.voice_proxy.call("SendTones", GLib.Variant("(s)", (tones,)),
+                              Gio.DBusCallFlags.NONE, -1, None,
+                              self.on_modem_call_done, "SendTones")
 
     def mute(self, muted=True):
         """Mute or unmute the modem volume."""
         if not self.vol_proxy:
             return
-        try:
-            self.vol_proxy.call_sync("SetProperty", GLib.Variant("(sv)", ("Muted", GLib.Variant("b", muted))), Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Mute failed: {e}")
+        self.vol_proxy.call("SetProperty",
+                            GLib.Variant("(sv)", ("Muted", GLib.Variant("b", muted))),
+                            Gio.DBusCallFlags.NONE, -1, None,
+                            self.on_modem_call_done, "Mute")
 
     def send_sms(self, number, text):
         """Send an SMS message."""
