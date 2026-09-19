@@ -554,7 +554,7 @@ class InCallWindow(Adw.Window):
             page.add(group)
             self.push_sheet_page(nav, _("Output"), page)
 
-        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
+        self.ofono.daemon.get_audio_routes(present)
 
     def open_input_sheet(self):
         """Show mute and the input routes on their own sheet."""
@@ -590,7 +590,7 @@ class InCallWindow(Adw.Window):
 
             self.push_sheet_page(nav, _("Input"), page)
 
-        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
+        self.ofono.daemon.get_audio_routes(present)
 
     def open_keypad_sheet(self):
         """Show the DTMF keypad as a bottom sheet with an echo line."""

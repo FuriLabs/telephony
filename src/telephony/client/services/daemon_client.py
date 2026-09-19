@@ -120,95 +120,132 @@ class DaemonClient:
             self.bus.signal_unsubscribe(sub)
         self._subscriptions = []
 
-    def send_tracked_sms(self, number, text):
-        """Record and send an SMS with tracking; blocking, call from a worker."""
-        reply = self.call("SendTrackedSms", GLib.Variant("(ss)", (number, text)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def send_tracked_sms(self, number, text, callback=None):
+        """Record and send an SMS with tracking; the callback hears whether it went."""
+        params = GLib.Variant("(ss)", (number, text))
+        if callback is None:
+            self.call_async("SendTrackedSms", params)
+            return
+        self.call_with_reply("SendTrackedSms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def send_mms(self, number, text, attachments):
-        """Record and send an MMS with tracking; blocking, call from a worker."""
-        reply = self.call("SendMms",
-                          GLib.Variant("(sss)", (number, text, json.dumps(attachments or []))),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def send_mms(self, number, text, attachments, callback=None):
+        """Record and send an MMS with tracking; the callback hears whether it went."""
+        params = GLib.Variant("(sss)", (number, text, json.dumps(attachments or [])))
+        if callback is None:
+            self.call_async("SendMms", params)
+            return
+        self.call_with_reply("SendMms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def schedule_sms(self, number, text, timestamp):
-        """Store an SMS for later sending; blocking, call from a worker."""
-        reply = self.call("ScheduleSms", GLib.Variant("(sss)", (number, text, timestamp)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def schedule_sms(self, number, text, timestamp, callback=None):
+        """Store an SMS for later sending; the callback hears whether it stored."""
+        params = GLib.Variant("(sss)", (number, text, timestamp))
+        if callback is None:
+            self.call_async("ScheduleSms", params)
+            return
+        self.call_with_reply("ScheduleSms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def schedule_mms(self, number, text, attachments, timestamp):
-        """Store an MMS for later sending; blocking, call from a worker."""
-        reply = self.call("ScheduleMms",
-                          GLib.Variant("(ssss)", (number, text, json.dumps(attachments or []), timestamp)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def schedule_mms(self, number, text, attachments, timestamp, callback=None):
+        """Store an MMS for later sending; the callback hears whether it stored."""
+        params = GLib.Variant("(ssss)", (number, text, json.dumps(attachments or []), timestamp))
+        if callback is None:
+            self.call_async("ScheduleMms", params)
+            return
+        self.call_with_reply("ScheduleMms", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def save_draft(self, number, text, attachments):
-        """Replace the stored draft; blocking, call from a worker."""
-        reply = self.call("SaveDraft",
-                          GLib.Variant("(sss)", (number, text, json.dumps(attachments or []))))
-        return reply is not None
+    def save_draft(self, number, text, attachments, callback=None):
+        """Replace the stored draft; the callback hears the reply land."""
+        params = GLib.Variant("(sss)", (number, text, json.dumps(attachments or [])))
+        if callback is None:
+            self.call_async("SaveDraft", params)
+            return
+        self.call_with_reply("SaveDraft", params,
+                             lambda reply: callback(reply is not None))
 
     def mark_thread_read(self, number):
         """Mark a conversation read without waiting for the reply."""
         self.call_async("MarkThreadAsRead", GLib.Variant("(s)", (number,)))
 
-    def mark_conversation_unread(self, number, msg_id):
-        """Mark a message and newer ones unread; blocking, call from a worker."""
-        reply = self.call("MarkConversationUnread", GLib.Variant("(si)", (number, msg_id)))
-        return reply is not None
+    def mark_conversation_unread(self, number, msg_id, callback=None):
+        """Mark a message and newer ones unread; the callback hears the reply land."""
+        params = GLib.Variant("(si)", (number, msg_id))
+        if callback is None:
+            self.call_async("MarkConversationUnread", params)
+            return
+        self.call_with_reply("MarkConversationUnread", params,
+                             lambda reply: callback(reply is not None))
 
-    def reschedule_message(self, msg_id, timestamp):
-        """Move a scheduled message; blocking, call from a worker."""
-        reply = self.call("RescheduleMessage", GLib.Variant("(is)", (msg_id, timestamp)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def reschedule_message(self, msg_id, timestamp, callback=None):
+        """Move a scheduled message; the callback hears whether it moved."""
+        params = GLib.Variant("(is)", (msg_id, timestamp))
+        if callback is None:
+            self.call_async("RescheduleMessage", params)
+            return
+        self.call_with_reply("RescheduleMessage", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
     def retry_message(self, msg_id):
         """Resend a failed message without waiting for the reply."""
         self.call_async("RetryMessage", GLib.Variant("(i)", (msg_id,)))
 
-    def delete_message(self, msg_id):
-        """Delete one message; blocking, call from a worker."""
-        reply = self.call("DeleteMessage", GLib.Variant("(i)", (msg_id,)))
-        return reply is not None
+    def delete_message(self, msg_id, callback=None):
+        """Delete one message; the callback hears the reply land.
+
+        Without a callback this blocks and must be called from a worker,
+        because the attachment removal it follows is sequential.
+        """
+        params = GLib.Variant("(i)", (msg_id,))
+        if callback is None:
+            return self.call("DeleteMessage", params) is not None
+        self.call_with_reply("DeleteMessage", params,
+                             lambda reply: callback(reply is not None))
 
     def delete_conversation(self, number):
         """Delete a whole conversation; blocking, call from a worker."""
         reply = self.call("DeleteConversation", GLib.Variant("(s)", (number,)))
         return reply is not None
 
-    def set_group_name(self, recipients, name):
-        """Rename a group conversation; blocking, call from a worker."""
-        reply = self.call("SetGroupName",
-                          GLib.Variant("(ss)", (",".join(recipients), name)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def set_group_name(self, recipients, name, callback=None):
+        """Rename a group conversation; the callback hears whether it took."""
+        params = GLib.Variant("(ss)", (",".join(recipients), name))
+        if callback is None:
+            self.call_async("SetGroupName", params)
+            return
+        self.call_with_reply("SetGroupName", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def add_blocked_number(self, number, note, block_calls=True, block_messages=True):
-        """Block a number for the chosen domains; blocking, call from a worker."""
-        reply = self.call("AddBlockedNumber",
-                          GLib.Variant("(ssbb)", (number, note, block_calls, block_messages)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def add_blocked_number(self, number, note, block_calls=True, block_messages=True,
+                           callback=None):
+        """Block a number for the chosen domains; the callback hears whether it took."""
+        params = GLib.Variant("(ssbb)", (number, note, block_calls, block_messages))
+        if callback is None:
+            self.call_async("AddBlockedNumber", params)
+            return
+        self.call_with_reply("AddBlockedNumber", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def update_blocked_number(self, bid, number, note, block_calls=True, block_messages=True):
-        """Change one entry, number included; blocking, call from a worker."""
-        reply = self.call("UpdateBlockedNumber",
-                          GLib.Variant("(sssbb)", (str(bid), number, note,
-                                                   block_calls, block_messages)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def update_blocked_number(self, bid, number, note, block_calls=True, block_messages=True,
+                              callback=None):
+        """Change one entry, number included; the callback hears whether it took."""
+        params = GLib.Variant("(sssbb)", (str(bid), number, note,
+                                          block_calls, block_messages))
+        if callback is None:
+            self.call_async("UpdateBlockedNumber", params)
+            return
+        self.call_with_reply("UpdateBlockedNumber", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
-    def set_blocked_number_flags(self, bid, block_calls, block_messages):
-        """Set one entry's domain flags; blocking, call from a worker."""
-        reply = self.call("SetBlockedNumberFlags",
-                          GLib.Variant("(sbb)", (str(bid), block_calls, block_messages)),
-                          GLib.VariantType("(b)"))
-        return bool(reply and reply[0])
+    def set_blocked_number_flags(self, bid, block_calls, block_messages, callback=None):
+        """Set one entry's domain flags; the callback hears whether it took."""
+        params = GLib.Variant("(sbb)", (str(bid), block_calls, block_messages))
+        if callback is None:
+            self.call_async("SetBlockedNumberFlags", params)
+            return
+        self.call_with_reply("SetBlockedNumberFlags", params,
+                             lambda reply: callback(bool(reply and reply[0])))
 
     def import_blocklist(self, json_data):
         """Merge an exported blocklist; blocking, call from a worker."""
@@ -228,44 +265,55 @@ class DaemonClient:
         """Delete one call history row without waiting for the reply."""
         self.call_async("DeleteCallHistoryEntry", GLib.Variant("(i)", (call_id,)))
 
-    def update_history_names(self, numbers, new_name):
-        """Rename call history rows; blocking, call from a worker."""
-        reply = self.call("UpdateHistoryNames",
-                          GLib.Variant("(ss)", (json.dumps(list(numbers)), new_name or "")))
-        return reply is not None
+    def update_history_names(self, numbers, new_name, callback=None):
+        """Rename call history rows; the callback hears the reply land."""
+        params = GLib.Variant("(ss)", (json.dumps(list(numbers)), new_name or ""))
+        if callback is None:
+            self.call_async("UpdateHistoryNames", params)
+            return
+        self.call_with_reply("UpdateHistoryNames", params,
+                             lambda reply: callback(reply is not None))
 
-    def clear_call_history(self):
-        """Wipe call history; blocking, call from a worker."""
-        return self.call("ClearCallHistory") is not None
+    def clear_call_history(self, callback):
+        """Wipe call history; callback hears whether the owner answered."""
+        self.call_with_reply("ClearCallHistory", None,
+                             lambda reply: callback(reply is not None))
 
-    def clear_messages(self):
-        """Wipe messages and attachments; blocking, call from a worker."""
-        return self.call("ClearMessages", timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS) is not None
+    def clear_messages(self, callback):
+        """Wipe messages and attachments; callback hears whether the owner answered."""
+        self.call_with_reply("ClearMessages", None,
+                             lambda reply: callback(reply is not None),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def clear_group_names(self):
-        """Wipe custom group names; blocking, call from a worker."""
-        return self.call("ClearGroupNames") is not None
+    def clear_group_names(self, callback):
+        """Wipe custom group names; callback hears whether the owner answered."""
+        self.call_with_reply("ClearGroupNames", None,
+                             lambda reply: callback(reply is not None))
 
-    def clear_blocklist(self):
-        """Wipe the blocklist; blocking, call from a worker."""
-        return self.call("ClearBlocklist") is not None
+    def clear_blocklist(self, callback):
+        """Wipe the blocklist; callback hears whether the owner answered."""
+        self.call_with_reply("ClearBlocklist", None,
+                             lambda reply: callback(reply is not None))
 
-    def clear_everything(self, source_uid):
-        """Wipe all stored data; blocking, call from a worker."""
-        reply = self.call("ClearEverything", GLib.Variant("(s)", (source_uid or "",)),
-                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply is not None
+    def clear_everything(self, source_uid, callback):
+        """Wipe all stored data; callback hears whether the owner answered."""
+        self.call_with_reply("ClearEverything", GLib.Variant("(s)", (source_uid or "",)),
+                             lambda reply: callback(reply is not None),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_missed_messages(self):
-        """Fetch missed scheduled messages; blocking, call from a worker."""
-        reply = self.call("GetMissedMessages", None, GLib.VariantType("(s)"))
-        if not reply:
-            return []
-        try:
-            return json.loads(reply[0])
-        except Exception as e:
-            logger.error(f"[DaemonClient] Bad missed messages payload: {e}")
-            return []
+    def get_missed_messages(self, callback):
+        """Hand the missed scheduled messages to callback, empty when there are none."""
+        def parsed(reply):
+            if not reply:
+                callback([])
+                return
+            try:
+                callback(json.loads(reply[0]))
+            except Exception as e:
+                logger.error(f"[DaemonClient] Bad missed messages payload: {e}")
+                callback([])
+
+        self.call_with_reply("GetMissedMessages", None, parsed)
 
     def send_missed_message(self, msg_id):
         """Send a missed scheduled message without waiting for the reply."""
@@ -321,10 +369,14 @@ class DaemonClient:
             return (False, "write-failed")
         return (bool(reply[0]), reply[1])
 
-    def delete_contact(self, uid):
-        """Delete one contact; blocking, call from a worker."""
-        reply = self.call("DeleteContact", GLib.Variant("(s)", (uid,)))
-        return reply is not None
+    def delete_contact(self, uid, callback=None):
+        """Delete one contact; the callback hears the reply land."""
+        params = GLib.Variant("(s)", (uid,))
+        if callback is None:
+            self.call_async("DeleteContact", params)
+            return
+        self.call_with_reply("DeleteContact", params,
+                             lambda reply: callback(reply is not None))
 
     def delete_contacts(self, uids):
         """Delete a batch of contacts; blocking, call from a worker."""
@@ -332,11 +384,11 @@ class DaemonClient:
                           timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply is not None
 
-    def refresh_contacts(self):
-        """Ask the backends to re-sync; blocking, call from a worker."""
-        reply = self.call("RefreshContacts", None, GLib.VariantType("(i)"),
-                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply[0] if reply else 0
+    def refresh_contacts(self, callback):
+        """Ask the backends to re-sync; callback hears how many started."""
+        self.call_with_reply("RefreshContacts", None,
+                             lambda reply: callback(reply[0] if reply else 0),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def import_contacts(self, vcard_data, source_uid=None):
         """Import vCards into a book; blocking, call from a worker."""
@@ -345,19 +397,19 @@ class DaemonClient:
                           GLib.VariantType("(i)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply[0] if reply else 0
 
-    def import_sim_contacts(self, source_uid=None):
-        """Import the SIM phonebook into a book; blocking, call from a worker.
+    def import_sim_contacts(self, source_uid, callback):
+        """Import the SIM phonebook into a book.
 
-        Returns (count, message) where message is a stable code, or None
-        when the owner could not be reached.
+        The callback hears (count, message) where message is a stable
+        code, or None when the owner could not be reached.
         """
-        return self.call("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
-                         GLib.VariantType("(is)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        self.call_with_reply("ImportSimContacts", GLib.Variant("(s)", (source_uid or "",)),
+                             callback, timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_telephony_state(self):
-        """Read the full state snapshot; blocking, call from a worker."""
-        reply = self.call("GetTelephonyState", None, GLib.VariantType("(a{sv})"))
-        return reply[0] if reply is not None else None
+    def get_telephony_state(self, callback):
+        """Hand the full state snapshot to callback, or None when unreachable."""
+        self.call_with_reply("GetTelephonyState", None,
+                             lambda reply: callback(reply[0] if reply is not None else None))
 
     def set_active_chat(self, number):
         """Tell the owner which chat is open so its alerts stay quiet."""
@@ -423,53 +475,56 @@ class DaemonClient:
         """Ask the owner to mute or unmute the microphone."""
         self.call_async("MuteMic" if muted else "UnmuteMic")
 
-    def get_audio_routes(self):
-        """List selectable routes; blocking, call from a worker.
+    def get_audio_routes(self, callback):
+        """List selectable routes; callback hears (outputs, inputs), or None.
 
-        Returns (outputs, inputs) as (id, available) pairs, or None
-        when the owner is away.
+        The routes arrive as (id, available) pairs, and None means the
+        owner was away.
         """
-        return self.call("GetAudioRoutes", None, GLib.VariantType("(a(sb)a(sb))"))
+        self.call_with_reply("GetAudioRoutes", None, callback)
 
-    def prepare_attachment(self, source_path, max_bytes):
-        """Have the owner store and fit an attachment; blocking, call from a worker.
+    def prepare_attachment(self, source_path, max_bytes, callback):
+        """Have the owner store and fit an attachment.
 
-        Returns (path, code) — path is empty when preparation failed —
-        or None when the owner could not be reached.
+        The callback hears (path, code) — path is empty when preparation
+        failed — or None when the owner could not be reached.
         """
-        return self.call("PrepareAttachment",
-                         GLib.Variant("(si)", (source_path, int(max_bytes))),
-                         GLib.VariantType("(ss)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+        self.call_with_reply("PrepareAttachment",
+                             GLib.Variant("(si)", (source_path, int(max_bytes))),
+                             callback, timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def clear_contacts(self, source_uid=None):
-        """Delete every contact of a source, or all unprotected ones; blocking."""
-        reply = self.call("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
-                          timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply is not None
+    def clear_contacts(self, source_uid, callback):
+        """Delete every contact of a source, or all unprotected ones."""
+        self.call_with_reply("ClearContacts", GLib.Variant("(s)", (source_uid or "",)),
+                             lambda reply: callback(reply is not None),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def delete_address_book(self, source_uid):
-        """Delete a whole address book; blocking, call from a worker."""
-        reply = self.call("DeleteAddressBook", GLib.Variant("(s)", (source_uid,)),
-                          GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return bool(reply and reply[0])
+    def delete_address_book(self, source_uid, callback):
+        """Delete a whole address book; callback hears whether it went."""
+        self.call_with_reply("DeleteAddressBook", GLib.Variant("(s)", (source_uid,)),
+                             lambda reply: callback(bool(reply and reply[0])),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_address_books(self):
-        """Return the daemon's address book list, or None when unreachable.
+    def get_address_books(self, callback):
+        """Hand the daemon's address book list to callback, or None when unreachable.
 
-        Blocking, call from a worker. This is the window's window onto
-        the books; the window never reads Evolution itself.
+        This is the window's window onto the books; the window never
+        reads Evolution itself.
         """
-        reply = self.call("GetAddressBooks", None, GLib.VariantType("(s)"))
-        if not reply:
-            return None
-        try:
-            return json.loads(reply[0])
-        except Exception as e:
-            logger.error(f"[DaemonClient] Bad address book list: {e}")
-            return None
+        def parsed(reply):
+            if not reply:
+                callback(None)
+                return
+            try:
+                callback(json.loads(reply[0]))
+            except Exception as e:
+                logger.error(f"[DaemonClient] Bad address book list: {e}")
+                callback(None)
 
-    def create_address_book(self, name):
-        """Ask the daemon to create a local address book; blocking, from a worker."""
-        reply = self.call("CreateAddressBook", GLib.Variant("(s)", (name,)),
-                          GLib.VariantType("(b)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return bool(reply and reply[0])
+        self.call_with_reply("GetAddressBooks", None, parsed)
+
+    def create_address_book(self, name, callback):
+        """Ask the daemon to create a local address book; callback hears whether it took."""
+        self.call_with_reply("CreateAddressBook", GLib.Variant("(s)", (name,)),
+                             lambda reply: callback(bool(reply and reply[0])),
+                             timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)

@@ -15,7 +15,6 @@
 
 from gi.repository import GObject, Gio, GLib
 from telephony.shared.utils.log_utils import logger
-from telephony.shared.utils.thread_utils import run_in_background
 
 SYSTEMD_BUS = "org.freedesktop.systemd1"
 SYSTEMD_PATH = "/org/freedesktop/systemd1"
@@ -67,19 +66,20 @@ class ServiceMonitor(GObject.Object):
 
     def read_state(self):
         """Seed the unit state; the signal covers everything after."""
-        def fetch():
-            res = self.bus.call_sync(
-                SYSTEMD_BUS, UNIT_PATH, PROPERTIES_IFACE, "GetAll",
-                GLib.Variant("(s)", (SYSTEMD_UNIT_IFACE,)),
-                GLib.VariantType("(a{sv})"), Gio.DBusCallFlags.NONE, -1, None)
-            return res.unpack()[0]
-
-        def apply(props):
+        def seeded(bus, result, _data):
+            try:
+                props = bus.call_finish(result).unpack()[0]
+            except GLib.Error as e:
+                logger.debug(f"[ServiceMonitor] Unit read failed: {e}")
+                return
             if props:
                 self.apply_props(props)
 
-        run_in_background(fetch, on_complete=apply,
-                          on_error=lambda e: logger.debug(f"[ServiceMonitor] Unit read failed: {e}"))
+        self.bus.call(
+            SYSTEMD_BUS, UNIT_PATH, PROPERTIES_IFACE, "GetAll",
+            GLib.Variant("(s)", (SYSTEMD_UNIT_IFACE,)),
+            GLib.VariantType("(a{sv})"), Gio.DBusCallFlags.NONE, -1, None,
+            seeded, None)
 
     def on_unit_properties(self, *args):
         iface, changed, _invalidated = args[5].unpack()
@@ -111,23 +111,32 @@ class ServiceMonitor(GObject.Object):
         """Reset a failed unit and start it; on_done hears whether it worked.
 
         A failed unit refuses bus activation until ResetFailedUnit, so
-        this is the only start path that always works.
+        this is the only start path that always works. The reset is
+        allowed to fail: a unit that never failed has nothing to reset.
         """
-        def task():
+        def reset_done(bus, result, _data):
             try:
-                self.bus.call_sync(
-                    SYSTEMD_BUS, SYSTEMD_PATH, SYSTEMD_MANAGER_IFACE, "ResetFailedUnit",
-                    GLib.Variant("(s)", (UNIT_NAME,)), None, Gio.DBusCallFlags.NONE, -1, None)
-            except Exception as e:
+                bus.call_finish(result)
+            except GLib.Error as e:
                 logger.debug(f"[ServiceMonitor] ResetFailedUnit: {e}")
-            try:
-                self.bus.call_sync(
-                    SYSTEMD_BUS, SYSTEMD_PATH, SYSTEMD_MANAGER_IFACE, "StartUnit",
-                    GLib.Variant("(ss)", (UNIT_NAME, "replace")), None,
-                    Gio.DBusCallFlags.NONE, -1, None)
-                return True
-            except Exception as e:
-                logger.error(f"[ServiceMonitor] StartUnit failed: {e}")
-                return False
+            self.bus.call(
+                SYSTEMD_BUS, SYSTEMD_PATH, SYSTEMD_MANAGER_IFACE, "StartUnit",
+                GLib.Variant("(ss)", (UNIT_NAME, "replace")), None,
+                Gio.DBusCallFlags.NONE, -1, None, start_done, None)
 
-        run_in_background(task, on_complete=on_done)
+        def start_done(bus, result, _data):
+            try:
+                bus.call_finish(result)
+                on_done(True)
+            except GLib.Error as e:
+                logger.error(f"[ServiceMonitor] StartUnit failed: {e}")
+                on_done(False)
+
+        if not self.bus:
+            on_done(False)
+            return
+
+        self.bus.call(
+            SYSTEMD_BUS, SYSTEMD_PATH, SYSTEMD_MANAGER_IFACE, "ResetFailedUnit",
+            GLib.Variant("(s)", (UNIT_NAME,)), None, Gio.DBusCallFlags.NONE,
+            -1, None, reset_done, None)

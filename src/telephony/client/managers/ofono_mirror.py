@@ -18,7 +18,6 @@ from gi.repository import GObject, Gio, GLib
 from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.services.daemon_client import DaemonClient
 from telephony.shared.constants import DAEMON_BUS_NAME
 
@@ -126,7 +125,7 @@ class OfonoMirror(GObject.Object):
 
     def start_reseed(self):
         self._reseed_id = 0
-        run_in_background(self.daemon.get_telephony_state, on_complete=self.apply_state)
+        self.daemon.get_telephony_state(self.apply_state)
         return GLib.SOURCE_REMOVE
 
     def apply_state(self, state):
@@ -345,7 +344,7 @@ class OfonoMirror(GObject.Object):
 
     def send_quick_response(self, number, text):
         """Record and send an SMS with delivery tracking."""
-        run_in_background(self.daemon.send_tracked_sms, number, text)
+        self.daemon.send_tracked_sms(number, text)
         return True
 
     def start_ussd(self, command):

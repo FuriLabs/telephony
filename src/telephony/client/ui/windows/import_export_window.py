@@ -192,7 +192,7 @@ class ImportExportDialog:
             self.app_window.notify_success(_("Imported {count} contacts from SIM.").format(count=count))
             self.eds.reload()
 
-        run_in_background(lambda: self.app_window.daemon.import_sim_contacts(source_uid), on_complete=done)
+        self.app_window.daemon.import_sim_contacts(source_uid, done)
 
     def ask_import_chatty(self):
         def on_wizard_done(db_path, mms_path):

@@ -18,7 +18,6 @@ from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 from telephony.shared.utils.datetime_utils import parse_timestamp
 from telephony.client.ui.widgets.chat_bubbles_widget import ChatBubbleFactory
-from telephony.shared.utils.thread_utils import run_in_background
 import json
 import os
 from telephony.client.ui.widgets.common_widget import (present_alert_sheet, close_sheet_page)
@@ -42,13 +41,7 @@ class MissedScheduledMessagesDialog:
                 return
             self.process_missed_message_queue(missed, 0, done_callback)
 
-        def failed(error):
-            logger.error(f"[MissedScheduled] Check missed messages error: {error}")
-            if done_callback:
-                done_callback()
-
-        run_in_background(self.daemon.get_missed_messages,
-                          on_complete=done, on_error=failed)
+        self.daemon.get_missed_messages(done)
 
     def process_missed_message_queue(self, messages, index, done_callback):
         """Recursively show dialogs for missed messages."""
@@ -167,10 +160,12 @@ class MissedScheduledMessagesDialog:
 
         def on_remove(b):
             close_sheet_page(self.app_window)
-            run_in_background(self.daemon.delete_message, mid)
-            self.app_window.notify_success(_("Message removed"))
 
-            GLib.idle_add(lambda: self.process_missed_message_queue(messages, index + 1, done_callback))
+            def removed(_ok):
+                self.app_window.notify_success(_("Message removed"))
+                self.process_missed_message_queue(messages, index + 1, done_callback)
+
+            self.daemon.delete_message(mid, removed)
 
         btn_remove.connect("clicked", lambda b: GLib.idle_add(lambda: on_remove(b) or False))
         btn_box.append(btn_remove)
