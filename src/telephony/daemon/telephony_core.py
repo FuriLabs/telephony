@@ -578,7 +578,7 @@ class TelephonyCore:
             self._net_nudge_timer = None
             return False
         logger.warning(f"[App] Network stuck in {self.ofono.network_status}, nudging Register()")
-        run_in_background(self.ofono.register_network)
+        self.ofono.register_network()
         return True
 
     def on_denied_persisted(self):

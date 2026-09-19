@@ -647,11 +647,7 @@ class TelephonyDaemonDBus:
             response, state = result
             invocation.return_value(GLib.Variant("(bss)", (True, response or "", state or "idle")))
 
-        def failed(error):
-            logger.error(f"[Daemon] USSD start failed: {error}")
-            invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
-
-        run_in_background(self.ofono.start_ussd, command, on_complete=done, on_error=failed)
+        self.ofono.start_ussd(command, done)
 
     def handle_respondussd(self, params, invocation):
         """Send a response inside an interactive USSD session."""
@@ -665,22 +661,12 @@ class TelephonyDaemonDBus:
             invocation.return_value(GLib.Variant(
                 "(bss)", (True, network_response or "", state or "idle")))
 
-        def failed(error):
-            logger.error(f"[Daemon] USSD response failed: {error}")
-            invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
-
-        run_in_background(self.ofono.respond_ussd, response, on_complete=done, on_error=failed)
+        self.ofono.respond_ussd(response, done)
 
     def handle_cancelussd(self, _params, invocation):
         """Cancel the current USSD session."""
-        def done(success):
-            invocation.return_value(GLib.Variant("(b)", (bool(success),)))
-
-        def failed(error):
-            logger.debug(f"[Daemon] USSD cancel failed: {error}")
-            invocation.return_value(GLib.Variant("(b)", (False,)))
-
-        run_in_background(self.ofono.cancel_ussd, on_complete=done, on_error=failed)
+        self.ofono.cancel_ussd()
+        invocation.return_value(GLib.Variant("(b)", (True,)))
 
     def handle_callaction(self, params, invocation):
         """Run a call control action a window instance asked for."""
