@@ -1043,14 +1043,12 @@ class TelephonyDaemonDBus:
                 self.reply_ss_result(invocation, verdict(errors))
                 return
 
-            def mms_done(mms_result):
-                mms_ok, mms_error = mms_result if mms_result else (False, "failed")
+            def mms_done(mms_ok, mms_error):
                 if not mms_ok:
                     errors.append(f"MMS: {mms_error or 'failed'}")
                 self.reply_ss_result(invocation, verdict(errors))
 
-            run_in_background(lambda: self.app.mms.set_delivery_reports(enabled),
-                              on_complete=mms_done)
+            self.app.mms.set_delivery_reports(enabled, mms_done)
 
         self.ofono.set_delivery_reports(enabled, sms_done)
 
