@@ -1131,13 +1131,16 @@ class OfonoManager(GObject.Object):
         """Sync existing calls from the modem."""
         if not self.voice_proxy:
             return
-        try:
-            ret = self.voice_proxy.call_sync("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None)
-            calls = ret.unpack()[0]
-            for path, props in calls:
-                self.add_call(path, props)
-        except Exception as e:
-            logger.error(f"Sync calls error: {e}")
+
+        def synced(proxy, result, _data):
+            try:
+                for path, props in proxy.call_finish(result).unpack()[0]:
+                    self.add_call(path, props)
+            except Exception as e:
+                logger.error(f"Sync calls error: {e}")
+
+        self.voice_proxy.call("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None,
+                              synced, None)
 
     def dial(self, number, hide_id=False, on_result=None):
         """Initiate an outgoing call; on_result hears (success, message) exactly once.
@@ -1817,22 +1820,31 @@ class OfonoManager(GObject.Object):
         """Return whether the modem currently exports the interface."""
         return interface in self._seen_interfaces
 
-    def get_service_properties(self, service):
-        """Read a supplementary service's properties; blocking, call from a worker.
+    def get_service_properties(self, service, on_result=None):
+        """Read a supplementary service's properties.
 
-        Returns the property dict, or None when the network query failed.
+        on_result hears the property dict, or None when the query failed.
         """
 
         proxy = self.service_proxy(service)
         if not proxy:
             logger.warning(f"[OfonoManager] {service} unavailable, no proxy")
-            return None
-        try:
-            res = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return res.unpack()[0]
-        except Exception as e:
-            logger.error(f"[OfonoManager] {service} query failed: {e}")
-            return None
+            if on_result:
+                on_result(None)
+            return
+
+        def read(pr, r, _d):
+            try:
+                if on_result:
+                    on_result(pr.call_finish(r).unpack()[0])
+                return
+            except Exception as e:
+                logger.error(f"[OfonoManager] {service} query failed: {e}")
+            if on_result:
+                on_result(None)
+
+        proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS,
+                   None, read, None)
 
     def set_service_property(self, service, name, value, on_result=None):
         """Set a supplementary service property; on_result hears (ok, error)."""
@@ -1872,29 +1884,27 @@ class OfonoManager(GObject.Object):
                            lambda p, r, _d: self.report_ss_result(p, r, "Disabling forwarding", on_result),
                            None)
 
-    def disable_all_barrings(self, password):
-        """Clear every barring rule; blocking, call from a worker."""
+    def disable_all_barrings(self, password, on_result=None):
+        """Clear every barring rule; on_result hears (ok, error)."""
         if not self.cb_proxy:
-            return (False, "no proxy")
-        try:
-            self.cb_proxy.call_sync("DisableAll", GLib.Variant("(s)", (password,)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Disabling barrings failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cb_proxy.call("DisableAll", GLib.Variant("(s)", (password,)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, "Disabling barrings", on_result),
+                           None)
 
-    def change_barring_password(self, old, new):
-        """Change the network barring password; blocking, call from a worker."""
+    def change_barring_password(self, old, new, on_result=None):
+        """Change the network barring password; on_result hears (ok, error)."""
         if not self.cb_proxy:
-            return (False, "no proxy")
-        try:
-            self.cb_proxy.call_sync("ChangePassword", GLib.Variant("(ss)", (old, new)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Barring password change failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cb_proxy.call("ChangePassword", GLib.Variant("(ss)", (old, new)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, "Barring password change", on_result),
+                           None)
 
     def on_message_signal(self, proxy, sender, signal, params):
         """Handle incoming message signals."""

@@ -712,12 +712,7 @@ class TelephonyDaemonDBus:
             packed = {k: GLib.Variant("s", str(v)) for k, v in (props or {}).items()}
             invocation.return_value(GLib.Variant("(a{sv})", (packed,)))
 
-        def failed(error):
-            logger.error(f"[Daemon] Network property read failed: {error}")
-            invocation.return_value(GLib.Variant("(a{sv})", ({},)))
-
-        run_in_background(self.ofono.get_service_properties, service,
-                          on_complete=done, on_error=failed)
+        self.ofono.get_service_properties(service, done)
 
     def handle_setnetworkproperty(self, params, invocation):
         """Change a supplementary service for a window instance."""
@@ -798,14 +793,14 @@ class TelephonyDaemonDBus:
     def handle_disableallbarrings(self, parameters, invocation):
         """Handle DisableAllBarrings command."""
         password = parameters.unpack()[0]
-        run_in_background(self.ofono.disable_all_barrings, password,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.disable_all_barrings(
+            password, lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
 
     def handle_changebarringpassword(self, parameters, invocation):
         """Handle ChangeBarringPassword command."""
         old, new = parameters.unpack()
-        run_in_background(self.ofono.change_barring_password, old, new,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.change_barring_password(
+            old, new, lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
 
     def handle_importsimcontacts(self, parameters, invocation):
         """Read the SIM phonebook and import its vcards for a window instance."""
