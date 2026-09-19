@@ -505,23 +505,27 @@ class DaemonClient:
                              lambda reply: callback(bool(reply and reply[0])),
                              timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
-    def get_address_books(self, callback):
-        """Hand the daemon's address book list to callback, or None when unreachable.
+    def get_address_books(self, callback=None):
+        """Hand the daemon's address book list to callback, or return it without one.
 
         This is the window's window onto the books; the window never
-        reads Evolution itself.
+        reads Evolution itself. Without a callback this blocks and must
+        be called from a worker: the window's sources cache is filled by
+        one, which hands this method over as a plain provider.
         """
-        def parsed(reply):
+        def unpack(reply):
             if not reply:
-                callback(None)
-                return
+                return None
             try:
-                callback(json.loads(reply[0]))
+                return json.loads(reply[0])
             except Exception as e:
                 logger.error(f"[DaemonClient] Bad address book list: {e}")
-                callback(None)
+                return None
 
-        self.call_with_reply("GetAddressBooks", None, parsed)
+        if callback is None:
+            return unpack(self.call("GetAddressBooks", None, GLib.VariantType("(s)")))
+
+        self.call_with_reply("GetAddressBooks", None, lambda reply: callback(unpack(reply)))
 
     def create_address_book(self, name, callback):
         """Ask the daemon to create a local address book; callback hears whether it took."""
