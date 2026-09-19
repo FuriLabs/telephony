@@ -98,7 +98,7 @@ class SettingsWindow(Adw.Bin):
                                        lambda: self.push_category(_("Calls"), self.build_calls_page),
                                        icon="call-start-symbolic"))
         if self.mode_messages:
-            grp_cats.add(self.nav_row(_("Messages"), _("Delivery reports"),
+            grp_cats.add(self.nav_row(_("Messages"), _("Delivery reports, number display"),
                                        lambda: self.push_category(_("Messages"), self.build_messages_page),
                                        icon="mail-unread-symbolic"))
         grp_cats.add(self.nav_row(_("SIM Settings"), _("Own number and country code"),
@@ -481,6 +481,14 @@ class SettingsWindow(Adw.Bin):
         self.sw_delivery.add_suffix(btn_dr_info)
         self.sw_delivery.connect("notify::active", self.on_delivery_reports_toggled)
         grp_msg.add(self.sw_delivery)
+
+        self.sw_show_numbers = Adw.SwitchRow(
+            title=_("Show Numbers In Message List"),
+            subtitle=_("Off keeps numbers off the list; one with no contact shows its number as the name"))
+        self.sw_show_numbers.set_active(
+            self.main_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false")
+        self.sw_show_numbers.connect("notify::active", self.on_show_numbers_toggled)
+        grp_msg.add(self.sw_show_numbers)
 
 
     def build_contacts_page(self, page):
@@ -967,6 +975,11 @@ class SettingsWindow(Adw.Bin):
             "delivery_reports", "true" if enabled else "false")
         if self.main_window.ofono:
             run_in_background(self.main_window.ofono.set_delivery_reports, enabled)
+
+    def on_show_numbers_toggled(self, row, _pspec):
+        """Persist whether the message list carries each conversation's number."""
+        self.main_window.gsettings_mgr.set_setting(
+            "show_numbers_in_message_list", "true" if row.get_active() else "false")
 
     def reload_reject_messages(self):
         """Load the decline messages into the list group."""

@@ -88,8 +88,13 @@ class ConversationRowFactory:
         }
 
     @staticmethod
-    def bind(factory, list_item, muted_ids=()):
-        """Bind data to the conversation row widgets."""
+    def bind(factory, list_item, muted_ids=(), show_numbers=True):
+        """Bind data to the conversation row widgets.
+
+        With numbers hidden a named conversation shows only its name, and
+        one without a name shows its number where the name would be, so
+        that strangers stay tellable apart.
+        """
         if list_item.get_child() is None:
             ConversationRowFactory.setup(factory, list_item)
 
@@ -103,8 +108,12 @@ class ConversationRowFactory:
         if display_name == item.number and any(c.isdigit() for c in str(item.number)):
             display_name = _("Unknown")
 
+        if not show_numbers and not item.has_name:
+            display_name = item.number
+
         w["name"].set_text(display_name)
         w["num"].set_text(item.number)
+        w["num"].set_visible(show_numbers)
 
         if "," in str(item.number):
             w["date"].set_text(_("{time} • Group").format(time=item.display_time))
