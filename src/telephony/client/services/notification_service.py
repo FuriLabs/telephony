@@ -16,6 +16,7 @@
 from gi.repository import Gio, GLib, GObject
 
 from telephony.shared.constants import NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE
+from telephony.shared.utils.log_utils import logger
 
 
 class NotificationService(GObject.Object):
@@ -60,18 +61,36 @@ class NotificationService(GObject.Object):
         reason = args[1]
         self.emit('notification-closed', nid, reason)
 
-    def call_notify(self, params):
-        """Call the Notify method on the notification service."""
-        result = self.connection.call_sync(
+    def call_notify(self, params, callback):
+        """Call Notify and hand the server id to the callback, or 0 on failure."""
+        self.connection.call(
             NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE,
-            "Notify", params, None, Gio.DBusCallFlags.NONE, -1, None
+            "Notify", params, None, Gio.DBusCallFlags.NONE, -1, None,
+            self.on_notify_done, callback
         )
-        return result.unpack()[0]
+
+    def on_notify_done(self, connection, result, callback):
+        """Deliver the server id for a finished Notify."""
+        try:
+            nid = connection.call_finish(result).unpack()[0]
+        except GLib.Error as e:
+            logger.warning(f"[NotificationService] Notify failed: {e}")
+            nid = 0
+
+        callback(nid)
 
     def call_close(self, nid):
         """Call the CloseNotification method."""
-        self.connection.call_sync(
+        self.connection.call(
             NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE,
             "CloseNotification", GLib.Variant('(u)', (nid,)),
-            None, Gio.DBusCallFlags.NONE, -1, None
+            None, Gio.DBusCallFlags.NONE, -1, None,
+            self.on_close_done, None
         )
+
+    def on_close_done(self, connection, result, _user_data):
+        """Report a withdrawal the server refused."""
+        try:
+            connection.call_finish(result)
+        except GLib.Error as e:
+            logger.debug(f"[NotificationService] CloseNotification failed: {e}")

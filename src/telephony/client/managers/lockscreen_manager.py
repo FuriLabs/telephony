@@ -39,6 +39,7 @@ class LockScreenManager:
         self.respawn_id = 0
         self.is_locked = True
         self.self_closed_ids = set()
+        self.notify_serial = 0
 
     def set_locked(self, locked):
         """Update the lock state."""
@@ -81,36 +82,50 @@ class LockScreenManager:
             'desktop-entry': GLib.Variant('s', EMERGENCY_DESKTOP_ID),
         }
 
-        try:
-            params = GLib.Variant('(susssasa{sv}i)', (
-                display_app_name,
-                self.active_notification_id,
-                icon,
-                title,
-                body,
-                actions,
-                hints,
-                0
-            ))
-            nid = self.monitor.call_notify(params)
-            if nid > 0:
-                self.active_notification_id = nid
-        except Exception as e:
-            logger.warning(f"[LockscreenManager] Failed to show modem recovery notification: {e}")
+        params = GLib.Variant('(susssasa{sv}i)', (
+            display_app_name,
+            self.active_notification_id,
+            icon,
+            title,
+            body,
+            actions,
+            hints,
+            0
+        ))
+
+        self.notify_serial += 1
+        serial = self.notify_serial
+        self.monitor.call_notify(params, lambda nid: self.on_notification_shown(serial, nid))
+
+    def on_notification_shown(self, serial, nid):
+        """Adopt the new id, unless it was closed or replaced while in flight.
+
+        Every close and every fresh show moves the serial on, so a late id
+        that no longer matches names a notification nobody asked for: it is
+        withdrawn here, or it would outlive the unlock with nothing tracking
+        it.
+        """
+        if not nid:
+            return
+
+        if serial != self.notify_serial:
+            self.self_closed_ids.add(nid)
+            self.monitor.call_close(nid)
+            return
+
+        self.active_notification_id = nid
 
     def close_notification(self):
         """Close the modem recovery notification."""
         nid = self.active_notification_id
         self.active_notification_id = 0
+        self.notify_serial += 1
 
         if not nid:
             return
 
         self.self_closed_ids.add(nid)
-        try:
-            self.monitor.call_close(nid)
-        except Exception as e:
-            logger.debug(f"[LockscreenManager] Failed to close modem recovery notification {nid}: {e}")
+        self.monitor.call_close(nid)
 
     def on_action_invoked_signal(self, monitor, nid, full_action):
         """Handle an action from the modem recovery notification."""
