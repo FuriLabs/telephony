@@ -421,13 +421,16 @@ class EdsManager(GObject.Object):
             except Exception as e:
                 logger.debug(f"[EDS] Unsubscribe error (ignorable): {e}")
         if record['view_path']:
-            try:
-                bus.call_sync(
-                    record['bus_name'], record['view_path'], EDS_VIEW_IFACE,
-                    "Dispose", None, GLib.VariantType("()"),
-                    Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None)
-            except Exception as e:
-                logger.debug(f"[EDS] View dispose error (ignorable): {e}")
+            def disposed(conn, result, _data):
+                try:
+                    conn.call_finish(result)
+                except Exception as e:
+                    logger.debug(f"[EDS] View dispose error (ignorable): {e}")
+
+            bus.call(
+                record['bus_name'], record['view_path'], EDS_VIEW_IFACE,
+                "Dispose", None, GLib.VariantType("()"),
+                Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None, disposed, None)
 
     def start_view(self, uid):
         """Open the live view and stream the book; blocking, call from a worker.
@@ -978,8 +981,11 @@ class EdsManager(GObject.Object):
     def refresh_backends(self):
         """Ask every remote backend to re-sync with its store.
 
-        Blocking, call from a worker. Local books have nothing to
-        refresh, so only the remote ones are asked.
+        Returns how many were asked, not how many answered: a refresh is
+        a request to the backend and the answer says only that it heard.
+        Local books have nothing to refresh, so only the remote ones are
+        asked. The registry read above still blocks, so this stays on a
+        worker.
         """
         with self.sources_lock:
             uids = list(self.sources.keys())
@@ -995,16 +1001,19 @@ class EdsManager(GObject.Object):
             info = registry_books.get(uid)
             if not info or info['is_local']:
                 continue
-            try:
-                self.get_bus().call_sync(
-                    EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, EDS_SOURCE_MANAGER_IFACE,
-                    "RefreshBackend", GLib.Variant("(s)", (uid,)),
-                    GLib.VariantType("()"), Gio.DBusCallFlags.NONE,
-                    EDS_CALL_TIMEOUT_MS, None)
-                refreshed += 1
-                logger.info(f"[EDS] Backend refresh started for {uid}")
-            except Exception as e:
-                logger.warning(f"[EDS] Backend refresh failed for {uid}: {e}")
+            def refreshed_backend(bus, result, book_uid):
+                try:
+                    bus.call_finish(result)
+                    logger.info(f"[EDS] Backend refresh started for {book_uid}")
+                except Exception as e:
+                    logger.warning(f"[EDS] Backend refresh failed for {book_uid}: {e}")
+
+            self.get_bus().call(
+                EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, EDS_SOURCE_MANAGER_IFACE,
+                "RefreshBackend", GLib.Variant("(s)", (uid,)),
+                GLib.VariantType("()"), Gio.DBusCallFlags.NONE,
+                EDS_CALL_TIMEOUT_MS, None, refreshed_backend, uid)
+            refreshed += 1
         return refreshed
 
     def create_local_addressbook(self, name):
