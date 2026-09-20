@@ -271,7 +271,7 @@ class MainWindow(Adw.Window):
             self._ussd_in_flight = False
             self._ussd_state = "idle"
             if self.ofono:
-                run_in_background(self.ofono.cancel_ussd)
+                self.ofono.cancel_ussd()
 
         if self._unread_timer:
             GLib.source_remove(self._unread_timer)
@@ -672,29 +672,21 @@ class MainWindow(Adw.Window):
                 return
             self._ussd_in_flight = False
             if not result:
-                run_in_background(self.ofono.cancel_ussd)
+                self.ofono.cancel_ussd()
                 self.show_ussd_error(_("USSD request failed"))
                 return
 
             success, response, state = result
             if not success:
                 if state in ("active", "user-response"):
-                    run_in_background(self.ofono.cancel_ussd)
+                    self.ofono.cancel_ussd()
                 self._ussd_state = "idle"
                 self.show_ussd_error(_("USSD request failed"))
                 return
 
             self.apply_ussd_result(response, state)
 
-        def failed(error):
-            if generation != self._ussd_generation:
-                return
-            self._ussd_in_flight = False
-            logger.error(f"[MainWindow] USSD request failed: {error}")
-            run_in_background(self.ofono.cancel_ussd)
-            self.show_ussd_error(_("USSD request failed"))
-
-        run_in_background(self.ofono.start_ussd, code, on_complete=done, on_error=failed)
+        self.ofono.start_ussd(code, done)
 
     def restore_ussd_session(self):
         """Reopen a daemon-owned USSD session when this client starts."""
@@ -874,29 +866,21 @@ class MainWindow(Adw.Window):
                 return
             self._ussd_in_flight = False
             if not result:
-                run_in_background(self.ofono.cancel_ussd)
+                self.ofono.cancel_ussd()
                 self.show_ussd_error(_("USSD response failed"))
                 return
 
             success, network_response, state = result
             if not success:
                 if state in ("active", "user-response"):
-                    run_in_background(self.ofono.cancel_ussd)
+                    self.ofono.cancel_ussd()
                 self._ussd_state = "idle"
                 self.show_ussd_error(_("USSD response failed"))
                 return
 
             self.apply_ussd_result(network_response, state)
 
-        def failed(error):
-            if generation != self._ussd_generation:
-                return
-            self._ussd_in_flight = False
-            logger.error(f"[MainWindow] USSD response failed: {error}")
-            run_in_background(self.ofono.cancel_ussd)
-            self.show_ussd_error(_("USSD response failed"))
-
-        run_in_background(self.ofono.respond_ussd, response, on_complete=done, on_error=failed)
+        self.ofono.respond_ussd(response, done)
 
     def cancel_ussd_session(self):
         """Cancel the network USSD session and dismiss its sheet."""
@@ -909,7 +893,7 @@ class MainWindow(Adw.Window):
         self._ussd_last_text = ""
         close_sheet_page(self)
         if self.ofono:
-            run_in_background(self.ofono.cancel_ussd)
+            self.ofono.cancel_ussd()
 
     def close_ussd_sheet(self):
         """Dismiss a completed USSD result without sending Cancel()."""
@@ -934,7 +918,7 @@ class MainWindow(Adw.Window):
 
         if should_cancel and self.ofono:
             self._ussd_state = "idle"
-            run_in_background(self.ofono.cancel_ussd)
+            self.ofono.cancel_ussd()
 
     def confirm_action(self, title, body, on_confirm):
         """Show a confirmation dialog."""

@@ -314,84 +314,92 @@ class OfonoMirror(GObject.Object):
         """Send DTMF tones during a call."""
         self.daemon.call_async("SendDtmf", GLib.Variant("(s)", (tones,)))
 
-    def create_multiparty(self):
-        """Merge the active and held calls; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("create_multiparty", "")),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+    def ask_call_action(self, action, argument, callback):
+        """Ask the owner for a call action and report (ok, reason).
 
-    def hangup_multiparty(self):
-        """Hang up the conference; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("hangup_multiparty", "")),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+        callback may be None for the actions nobody waits on, like
+        hanging up a conference, where there is nothing to say if the
+        network refuses beyond what the call list already shows.
+        """
+        def done(reply):
+            if callback is None:
+                return
+            ok = bool(reply and reply[0])
+            callback((ok, None if ok else "refused"))
 
-    def private_chat(self, path):
-        """Split one conference participant out; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("private_chat", path)),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+        self.daemon.call_with_reply(
+            "CallAction", GLib.Variant("(ss)", (action, argument)), done)
 
-    def transfer_call(self):
-        """Connect active and held calls to each other; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("transfer", "")),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+    def create_multiparty(self, callback=None):
+        """Merge the active and held calls."""
+        self.ask_call_action("create_multiparty", "", callback)
+
+    def hangup_multiparty(self, callback=None):
+        """Hang up the conference."""
+        self.ask_call_action("hangup_multiparty", "", callback)
+
+    def private_chat(self, path, callback=None):
+        """Split one conference participant out."""
+        self.ask_call_action("private_chat", path, callback)
+
+    def transfer_call(self, callback=None):
+        """Connect active and held calls to each other."""
+        self.ask_call_action("transfer", "", callback)
 
     def send_quick_response(self, number, text):
         """Record and send an SMS with delivery tracking."""
         self.daemon.send_tracked_sms(number, text)
         return True
 
-    def start_ussd(self, command):
-        """Start a USSD session; blocking, call from a worker.
+    def take_ussd_reply(self, reply, callback):
+        """Record the session state a USSD reply carries and pass it on.
 
-        Returns (success, response, state) so the UI can distinguish a
-        finished request from an interactive session waiting for the user.
+        A session that is no longer idle is still waiting for the user,
+        so its text is kept; an idle one has finished and the text goes,
+        or the next dialog would open showing the last answer.
         """
-        reply = self.daemon.call(
-            "StartUssd",
-            GLib.Variant("(s)", (command,)),
-            GLib.VariantType("(bss)"),
-            timeout_ms=USSD_CALL_TIMEOUT_MS,
-        )
         if not reply:
-            return None
+            callback(None)
+            return
         success, response, state = reply
         self.ussd_state = state or "idle"
         self.ussd_text = (response or "") if self.ussd_state != "idle" else ""
-        return bool(success), response, self.ussd_state
+        callback((bool(success), response, self.ussd_state))
 
-    def respond_ussd(self, response):
-        """Reply inside an interactive USSD session; blocking."""
-        reply = self.daemon.call(
-            "RespondUssd",
-            GLib.Variant("(s)", (response,)),
-            GLib.VariantType("(bss)"),
-            timeout_ms=USSD_CALL_TIMEOUT_MS,
-        )
-        if not reply:
-            return None
-        success, network_response, state = reply
-        self.ussd_state = state or "idle"
-        self.ussd_text = (network_response or "") if self.ussd_state != "idle" else ""
-        return bool(success), network_response, self.ussd_state
+    def start_ussd(self, command, callback):
+        """Start a USSD session; callback hears (success, response, state) or None.
 
-    def cancel_ussd(self):
-        """Cancel the current USSD session; blocking."""
-        reply = self.daemon.call(
-            "CancelUssd", None, GLib.VariantType("(b)"),
-            timeout_ms=USSD_CALL_TIMEOUT_MS,
-        )
-        success = bool(reply and reply[0])
-        if success:
-            self.ussd_state = "idle"
-            self.ussd_text = ""
-        return success
+        The state tells the UI whether the request finished or an
+        interactive session is waiting for the user.
+        """
+        self.daemon.call_with_reply(
+            "StartUssd", GLib.Variant("(s)", (command,)),
+            lambda reply: self.take_ussd_reply(reply, callback),
+            timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def respond_ussd(self, response, callback):
+        """Reply inside an interactive USSD session."""
+        self.daemon.call_with_reply(
+            "RespondUssd", GLib.Variant("(s)", (response,)),
+            lambda reply: self.take_ussd_reply(reply, callback),
+            timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def cancel_ussd(self, callback=None):
+        """Cancel the current USSD session.
+
+        The session is forgotten as soon as the owner confirms it, and
+        every caller but none so far cares whether it agreed.
+        """
+        def done(reply):
+            success = bool(reply and reply[0])
+            if success:
+                self.ussd_state = "idle"
+                self.ussd_text = ""
+            if callback is not None:
+                callback(success)
+
+        self.daemon.call_with_reply(
+            "CancelUssd", None, done, timeout_ms=USSD_CALL_TIMEOUT_MS)
 
     def set_active_chat(self, number):
         """Tell the owner which chat is open so its alerts stay quiet."""
