@@ -319,20 +319,31 @@ class DaemonClient:
         """Send a missed scheduled message without waiting for the reply."""
         self.call_async("SendMissedMessage", GLib.Variant("(i)", (msg_id,)))
 
-    def import_chatty(self, db_path, mms_path):
-        """Import a chatty database; blocking, call from a worker."""
-        reply = self.call("ImportChatty", GLib.Variant("(ss)", (db_path or "", mms_path or "")),
-                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply if reply else (False, "")
+    def import_reply(self, reply, callback):
+        """Report an import's (ok, message), with silence counting as failure."""
+        callback(reply if reply else (False, ""))
 
-    def import_local_calls(self, db_path):
-        """Import a gnome-calls database; blocking, call from a worker."""
-        reply = self.call("ImportLocalCalls", GLib.Variant("(s)", (db_path or "",)),
-                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
-        return reply if reply else (False, "")
+    def import_chatty(self, db_path, mms_path, callback):
+        """Import a chatty database; callback hears (ok, message)."""
+        self.call_with_reply(
+            "ImportChatty", GLib.Variant("(ss)", (db_path or "", mms_path or "")),
+            lambda reply: self.import_reply(reply, callback),
+            timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
+    def import_local_calls(self, db_path, callback):
+        """Import a gnome-calls database; callback hears (ok, message)."""
+        self.call_with_reply(
+            "ImportLocalCalls", GLib.Variant("(s)", (db_path or "",)),
+            lambda reply: self.import_reply(reply, callback),
+            timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
     def import_android_sms(self, file_path):
-        """Import an Android SMS backup; blocking, call from a worker."""
+        """Import an Android SMS backup; blocking, call from a worker.
+
+        The worker stays because one page hands all four backup kinds
+        to the same task, and the iOS ones are read out of an extracted
+        archive that the same thread unpacks and cleans up.
+        """
         reply = self.call("ImportAndroidSms", GLib.Variant("(s)", (file_path,)),
                           GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
         return reply if reply else (False, "")
@@ -435,15 +446,19 @@ class DaemonClient:
         packed = json.dumps(value) if isinstance(value, (list, dict)) else str(value)
         self.call_async("SetSetting", GLib.Variant("(ss)", (key, packed)))
 
-    def get_own_number(self):
-        """Read the subscriber's number; blocking, call from a worker."""
-        reply = self.call("GetOwnNumber", None, GLib.VariantType("(s)"))
-        return reply[0] if reply and reply[0] else None
+    def first_or_none(self, reply, callback):
+        """Report a single string reply, with an empty one counting as nothing."""
+        callback(reply[0] if reply and reply[0] else None)
 
-    def detect_region(self):
-        """Detect the network region; blocking, call from a worker."""
-        reply = self.call("DetectRegion", None, GLib.VariantType("(s)"))
-        return reply[0] if reply and reply[0] else None
+    def get_own_number(self, callback):
+        """Read the subscriber's number; callback hears it or None."""
+        self.call_with_reply("GetOwnNumber", None,
+                             lambda reply: self.first_or_none(reply, callback))
+
+    def detect_region(self, callback):
+        """Detect the network region; callback hears it or None."""
+        self.call_with_reply("DetectRegion", None,
+                             lambda reply: self.first_or_none(reply, callback))
 
     def request_recovery(self, callback):
         """Run modem recovery; callback hears the verdict, or None."""

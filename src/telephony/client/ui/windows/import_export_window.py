@@ -200,15 +200,7 @@ class ImportExportDialog:
                 return
             self.app_window.notify_loading(_("Importing Chatty..."))
 
-            def task():
-                success, msg = self.app_window.daemon.import_chatty(db_path, mms_path)
-                GLib.idle_add(self.app_window.hide_loading)
-                if success:
-                    GLib.idle_add(lambda: self.app_window.notify_success(msg))
-
-                else:
-                    GLib.idle_add(lambda: self.app_window.notify_error(msg))
-            run_in_background(task)
+            self.app_window.daemon.import_chatty(db_path, mms_path, self.on_import_done)
 
         self.push_page(ImportWizardWindow(self.app_window, "chatty", on_wizard_done))
 
@@ -218,15 +210,7 @@ class ImportExportDialog:
                 return
             self.app_window.notify_loading(_("Importing Calls..."))
 
-            def task():
-                success, msg = self.app_window.daemon.import_local_calls(db_path)
-                GLib.idle_add(self.app_window.hide_loading)
-                if success:
-                    GLib.idle_add(lambda: self.app_window.notify_success(msg))
-
-                else:
-                    GLib.idle_add(lambda: self.app_window.notify_error(msg))
-            run_in_background(task)
+            self.app_window.daemon.import_local_calls(db_path, self.on_import_done)
 
         self.push_page(ImportWizardWindow(self.app_window, "calls", on_wizard_done))
 
@@ -338,6 +322,15 @@ class ImportExportDialog:
                 GLib.idle_add(lambda: self.app_window.notify_error(msg))
 
         run_in_background(task)
+
+    def on_import_done(self, result):
+        """Report what the owner made of an import."""
+        self.app_window.hide_loading()
+        success, msg = result if result else (False, "")
+        if success:
+            self.app_window.notify_success(msg)
+        else:
+            self.app_window.notify_error(msg)
 
     def ask_export_data(self):
         """Show the export destination choices."""

@@ -302,14 +302,13 @@ class MainWindow(Adw.Window):
 
     def check_own_number(self):
         """Check if own number is set, warn if not."""
-        def check():
-            num = self.app.daemon_client.get_own_number()
+        def checked(num):
             if not num:
                 num = self.gsettings_mgr.get_setting("own_number")
-
             if not num:
-                GLib.idle_add(lambda: self.show_setup_hint(_("Set your number in Settings")) or False)
-        run_in_background(check)
+                self.show_setup_hint(_("Set your number in Settings"))
+
+        self.app.daemon_client.get_own_number(checked)
 
     def check_country_code(self):
         """Give this window the country its numbers belong to.
@@ -318,22 +317,22 @@ class MainWindow(Adw.Window):
         wherever the app thinks it is, so the answer has to be in hand
         before the first list is built rather than shortly after it.
         The setting is a local read and is applied straight away; only
-        asking the modem is worth a thread, and that is the case where
-        there is no answer to be late with.
+        asking the modem has to be waited for, and that is the case
+        where there is no answer to be late with.
         """
         cc = self.gsettings_mgr.get_setting("default_country_code")
         if cc:
             utils.set_custom_region(cc)
             return
 
-        def task():
-            region = self.app.daemon_client.detect_region()
+        def detected(region):
             if region:
                 self.gsettings_mgr.set_setting("default_country_code", region)
                 utils.set_custom_region(region)
             else:
-                GLib.idle_add(lambda: self.show_setup_hint(_("Please set Default Country Code in Settings")) or False)
-        run_in_background(task)
+                self.show_setup_hint(_("Please set Default Country Code in Settings"))
+
+        self.app.daemon_client.detect_region(detected)
 
     def on_modem_interface_appeared(self, _ofono, interface):
         """Retry region detection once network registration becomes available."""
