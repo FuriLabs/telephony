@@ -52,6 +52,7 @@ class TelephonyAudioManager:
         self._initialized = True
         self._last_mute_state = None
         self.current_route = "earpiece"
+        self.route_serial = 0
         self.current_input = "mic"
         self.mic_muted = False
         self.lfb_available = True
@@ -246,6 +247,7 @@ class TelephonyAudioManager:
 
                 pulse.sink_port_set(sink.index, port_name)
                 self.current_route = mode
+                self.route_serial += 1
                 logger.info(f"[Audio] Output route set to {mode} ({port_name})")
         except Exception as e:
             logger.error(f"[Audio] Set route failed: {e}")
