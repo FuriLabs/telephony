@@ -415,13 +415,16 @@ class OfonoMirror(GObject.Object):
             return number
         return normalize_number(number)
 
-    def get_service_properties(self, service):
-        """Read a supplementary service's properties; blocking, call from a worker."""
-        reply = self.daemon.call("GetNetworkProperties", GLib.Variant("(s)", (service,)),
-                                 GLib.VariantType("(a{sv})"))
-        if reply is None:
-            return None
-        return {k: self.restore_service_value(k, v) for k, v in reply[0].items()}
+    def get_service_properties(self, service, callback):
+        """Read a supplementary service's properties; callback hears a dict or None."""
+        def done(reply):
+            if reply is None:
+                callback(None)
+                return
+            callback({k: self.restore_service_value(k, v) for k, v in reply[0].items()})
+
+        self.daemon.call_with_reply(
+            "GetNetworkProperties", GLib.Variant("(s)", (service,)), done)
 
     def restore_service_value(self, name, packed):
         """Turn a relayed property back into the type the UI expects."""
@@ -433,50 +436,55 @@ class OfonoMirror(GObject.Object):
                 return 0
         return text
 
-    def set_service_property(self, service, name, value):
-        """Set a supplementary service property; blocking, call from a worker."""
-        return self.ask_network_write(service, name, value, "")
+    def set_service_property(self, service, name, value, callback):
+        """Set a supplementary service property."""
+        self.ask_network_write(service, name, value, "", callback)
 
-    def set_barring_property(self, name, value, password):
-        """Set a call barring rule; blocking, call from a worker."""
-        return self.ask_network_write("barring", name, value, password)
+    def set_barring_property(self, name, value, password, callback):
+        """Set a call barring rule."""
+        self.ask_network_write("barring", name, value, password, callback)
 
-    def ask_network_write(self, service, name, value, password):
-        """Have the owner change a supplementary service."""
+    def ask_network_write(self, service, name, value, password, callback):
+        """Have the owner change a supplementary service; reports (ok, reason)."""
         packed_value = (
             GLib.Variant("q", value)
             if isinstance(value, int) and not isinstance(value, bool)
             else GLib.Variant("s", str(value))
         )
-        reply = self.daemon.call(
+
+        def done(reply):
+            if reply is None:
+                callback((False, "no reply"))
+                return
+            error = reply[0]
+            callback((not error, error or None))
+
+        self.daemon.call_with_reply(
             "SetNetworkProperty",
             GLib.Variant("(ssvs)", (service, name, packed_value, password or "")),
-            GLib.VariantType("(s)"))
-        if reply is None:
-            return (False, "no reply")
-        error = reply[0]
-        return (not error, error or None)
+            done)
 
-    def change_barring_password(self, old, new):
-        """Change the network barring password; blocking, call from a worker."""
-        reply = self.daemon.change_barring_password(old, new)
+    def take_network_reply(self, reply, callback):
+        """Turn an owner reply about a service into (ok, reason)."""
         if reply is None:
-            return (False, "no reply")
-        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+            callback((False, "no reply"))
+            return
+        callback((reply[0], None if reply[0] else (reply[1] or "refused")))
 
-    def disable_all_forwarding(self):
-        """Clear every forwarding rule; blocking, call from a worker."""
-        reply = self.daemon.disable_all_forwarding()
-        if reply is None:
-            return (False, "no reply")
-        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+    def change_barring_password(self, old, new, callback):
+        """Change the network barring password."""
+        self.daemon.change_barring_password(
+            old, new, lambda reply: self.take_network_reply(reply, callback))
 
-    def disable_all_barrings(self, password):
-        """Clear every barring rule; blocking, call from a worker."""
-        reply = self.daemon.disable_all_barrings(password)
-        if reply is None:
-            return (False, "no reply")
-        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+    def disable_all_forwarding(self, callback):
+        """Clear every forwarding rule."""
+        self.daemon.disable_all_forwarding(
+            lambda reply: self.take_network_reply(reply, callback))
+
+    def disable_all_barrings(self, password, callback):
+        """Clear every barring rule."""
+        self.daemon.disable_all_barrings(
+            password, lambda reply: self.take_network_reply(reply, callback))
 
     def set_delivery_reports(self, enabled):
         """Ask the network for delivery reports; blocking, call from a worker."""
