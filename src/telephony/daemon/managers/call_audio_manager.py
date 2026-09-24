@@ -153,7 +153,14 @@ class CallAudioManager(GObject.Object):
             if not self._volume_applied or not route or route == self.audio.current_route:
                 return
             logger.info(f"[CallAudio] Output route moved externally to {route}")
+            old_route = self.audio.current_route
             self.audio.current_route = route
+
+            if route in ("bluetooth", "usb"):
+                self.audio.current_input = route
+            elif old_route in ("bluetooth", "usb"):
+                self.audio.current_input = "mic"
+
             self.audio.ensure_sink_unmuted()
             self.push_route_volume()
             self.emit('audio-state-applied')

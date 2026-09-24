@@ -359,7 +359,8 @@ class SettingsWindow(Adw.Bin):
         route_titles = (("earpiece", _("Earpiece")),
                         ("speaker", _("Speaker")),
                         ("wired", _("Wired Headset")),
-                        ("bluetooth", _("Bluetooth")))
+                        ("bluetooth", _("Bluetooth")),
+                        ("usb", _("USB Headset")))
         for route_id, title in route_titles:
             row = Adw.ActionRow(title=title)
             scale = Gtk.Scale.new_with_range(
@@ -942,7 +943,7 @@ class SettingsWindow(Adw.Bin):
 
     def show_call_volume_info(self, btn):
         """Show info about base call volume levels."""
-        present_info_sheet(self, _("Call Volume"), _("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. The Bluetooth level is stored for upcoming routing support."))
+        present_info_sheet(self, _("Call Volume"), _("This is the call volume for each output. The level applies automatically when a call connects and whenever the output changes during a call, and slider changes are heard live. The hardware applies levels in coarse steps, and the earpiece never goes fully silent. Bluetooth and USB levels apply when those call routes are active."))
 
     def show_delivery_reports_info(self, btn):
         """Explain what delivery reports do and how far to trust them."""

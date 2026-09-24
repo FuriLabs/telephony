@@ -28,6 +28,13 @@ from telephony.shared.constants import APP_ID
 
 FALLBACK_MEDIA_VOLUME = 0.5
 
+AUDIO_MANAGER_CARD = "audio-manager-card"
+AUDIO_MANAGER_SINK = "audio-manager-output"
+AUDIO_MANAGER_SOURCE = "audio-manager-input"
+DROID_CARD = "droid_card.primary"
+DROID_SINK = "sink.primary_output"
+DROID_SOURCE = "source.primary_input"
+
 
 class TelephonyAudioManager:
     """
@@ -129,6 +136,51 @@ class TelephonyAudioManager:
             logger.debug(f"[Audio] Source {name} not present")
             return None
 
+    def get_audio_backend(self, pulse):
+        """Return (backend, card)"""
+        cards = pulse.card_list()
+
+        for card in cards:
+            if card.name == AUDIO_MANAGER_CARD:
+                return "audio-manager", card
+
+        for card in cards:
+            if card.name == DROID_CARD:
+                return "droid", card
+
+        return None, None
+
+    def get_primary_sink(self, pulse):
+        """Return the local hardware sink for the active audio backend."""
+        backend, _card = self.get_audio_backend(pulse)
+        if backend == "audio-manager":
+            return self.lookup_sink(pulse, AUDIO_MANAGER_SINK)
+        if backend == "droid":
+            return self.lookup_sink(pulse, DROID_SINK)
+
+        info = pulse.server_info()
+        return self.lookup_sink(pulse, info.default_sink_name)
+
+    def get_primary_source(self, pulse):
+        """Return the local hardware source for the active audio backend."""
+        backend, _card = self.get_audio_backend(pulse)
+        if backend == "audio-manager":
+            return self.lookup_source(pulse, AUDIO_MANAGER_SOURCE)
+        if backend == "droid":
+            return self.lookup_source(pulse, DROID_SOURCE)
+
+        info = pulse.server_info()
+        return self.lookup_source(pulse, info.default_source_name)
+
+    @staticmethod
+    def audio_manager_profile_for_route(route):
+        """Return the audio-manager voicecall profile for a call route."""
+        if route == "bluetooth":
+            return "voicecall-bluetooth"
+        if route == "usb":
+            return "voicecall-usb"
+        return "voicecall"
+
     def start_ringing(self, custom_path=None):
         """Start the ringing feedback."""
         if not self.lfb_available or self.is_ringing:
@@ -181,42 +233,91 @@ class TelephonyAudioManager:
                 logger.error(f"[Audio] Play hangup failed: {e}")
 
     def set_voice_profile(self, enable=True):
-        """Set the PulseAudio card profile to voicecall or default."""
+        """Enable or disable the call profile for the available audio backend."""
         self.voice_profile_active = enable
+
+        try:
+            with self.pulse() as pulse:
+                backend, target_card = self.get_audio_backend(pulse)
+                if not target_card:
+                    logger.warning("[Audio] No supported PulseAudio card found")
+                    return
+
+                if backend == "audio-manager":
+                    if enable:
+                        self.current_route = "earpiece"
+                        self.current_input = "mic"
+                        pulse.card_profile_set(target_card, "voicecall")
+
+                        sink = self.lookup_sink(pulse, AUDIO_MANAGER_SINK)
+                        if sink:
+                            port_name = self.pick_route_port(sink, "earpiece")
+                            if port_name:
+                                pulse.sink_port_set(sink.index, port_name)
+                            else:
+                                logger.warning("[Audio] Audio Manager earpiece port not found")
+                        else:
+                            logger.warning("[Audio] Audio Manager output sink not found")
+
+                        source = self.lookup_source(pulse, AUDIO_MANAGER_SOURCE)
+                        if source:
+                            port_name = self.pick_input_port(source, "mic")
+                            if port_name:
+                                pulse.source_port_set(source.index, port_name)
+                            else:
+                                logger.warning("[Audio] Audio Manager built-in mic port not found")
+                        else:
+                            logger.warning("[Audio] Audio Manager input source not found")
+
+                        profile_name = "voicecall"
+                    else:
+                        profile_name = "default"
+                        pulse.card_profile_set(target_card, profile_name)
+                else:
+                    profile_name = "voicecall" if enable else "default"
+                    pulse.card_profile_set(target_card, profile_name)
+
+                logger.info(f"[Audio] {backend} card profile set to {profile_name}")
+
+        except Exception as e:
+            logger.error(f"[Audio] Set profile failed: {e}")
+
         if self.on_profile_change:
             try:
                 self.on_profile_change()
             except Exception as e:
                 logger.error(f"[Audio] Profile change callback failed: {e}")
-        profile_name = "voicecall" if enable else "default"
-        try:
-            with self.pulse() as pulse:
-                cards = pulse.card_list()
-                target_card = None
-                for c in cards:
-                    if c.name == "droid_card.primary":
-                        target_card = c
-                        break
-
-                if target_card:
-                    pulse.card_profile_set(target_card, profile_name)
-                else:
-                    logger.warning("[Audio] droid_card.primary not found")
-
-        except Exception as e:
-            logger.error(f"[Audio] Set profile failed: {e}")
 
     def pick_route_port(self, sink, mode):
-        """Map a route id to the sink port to activate, or None when absent."""
-        if mode == "earpiece":
-            return "output-earpiece"
-        if mode == "speaker":
-            return "output-speaker"
-        if mode == "wired":
-            for name in ("output-wired_headset", "output-wired_headphone"):
-                for p in sink.port_list:
-                    if p.name == name and self.is_port_available(p):
-                        return name
+        """Map a route id to a port exposed by supported backends."""
+        candidates = {
+            "earpiece": ("output-earpiece",),
+            "speaker": ("output-speaker",),
+            "wired": (
+                "output-headset",
+                "output-headphones",
+                "output-wired_headset",
+                "output-wired_headphone",
+            ),
+        }.get(mode, ())
+
+        for name in candidates:
+            for port in sink.port_list:
+                if port.name == name and self.is_port_available(port):
+                    return name
+        return None
+
+    def pick_input_port(self, source, mode):
+        """Map a local input route to a port exposed by audio-manager."""
+        candidates = {
+            "mic": ("input-internal-mic", "input-builtin_mic"),
+            "wired": ("input-headset-mic", "input-wired_headset"),
+        }.get(mode, ())
+
+        for name in candidates:
+            for port in source.port_list:
+                if port.name == name and self.is_port_available(port):
+                    return name
         return None
 
     @staticmethod
@@ -227,17 +328,63 @@ class TelephonyAudioManager:
         except AttributeError:
             return True
 
+    @staticmethod
+    def is_profile_available(card, profile_name):
+        """Return whether a named card profile exists and is usable."""
+        for profile in card.profile_list:
+            if profile.name != profile_name:
+                continue
+            try:
+                return profile.available != 'no'
+            except AttributeError:
+                return True
+        return False
+
     def set_audio_route(self, mode="earpiece"):
-        """
-        Route call audio with a single direct port switch on the primary sink.
-        A parking hop is never used here: parking is only meant for profile
-        changes and the droid card module parks by itself around those.
-        """
+        """Route call output."""
         try:
             with self.pulse() as pulse:
-                sink = self.lookup_sink(pulse, "sink.primary_output")
+                backend, card = self.get_audio_backend(pulse)
+                if not card:
+                    logger.warning("[Audio] No supported PulseAudio card found")
+                    return
+
+                if backend == "audio-manager" and mode in ("bluetooth", "usb"):
+                    if not self.voice_profile_active:
+                        self.current_route = mode
+                        self.current_input = mode
+                        return
+
+                    profile_name = self.audio_manager_profile_for_route(mode)
+                    if not self.is_profile_available(card, profile_name):
+                        logger.warning(f"[Audio] {mode} call route is not available")
+                        return
+
+                    # Bluetooth and USB call profiles are duplex
+                    # both directions must describe the same external device.
+                    pulse.card_profile_set(card, profile_name)
+                    self.current_route = mode
+                    self.current_input = mode
+                    logger.info(f"[Audio] Call route set to {mode} ({profile_name})")
+                    return
+
+                if backend == "audio-manager" and self.voice_profile_active:
+                    # earpiece, speaker and wired routing lives under the
+                    # hostless profile. If we came from Bluetooth or
+                    # USB, return the input to the built-in mic as well.
+                    was_external = self.current_route in ("bluetooth", "usb") or self.current_input in ("bluetooth", "usb")
+                    pulse.card_profile_set(card, "voicecall")
+                    if was_external:
+                        source = self.lookup_source(pulse, AUDIO_MANAGER_SOURCE)
+                        if source:
+                            input_port = self.pick_input_port(source, "mic")
+                            if input_port:
+                                pulse.source_port_set(source.index, input_port)
+                        self.current_input = "mic"
+
+                sink = self.get_primary_sink(pulse)
                 if not sink:
-                    logger.warning("[Audio] sink.primary_output not found")
+                    logger.warning("[Audio] Primary output sink not found")
                     return
 
                 port_name = self.pick_route_port(sink, mode)
@@ -253,15 +400,77 @@ class TelephonyAudioManager:
             logger.error(f"[Audio] Set route failed: {e}")
 
     def set_input_route(self, mode="mic"):
-        """Route input audio to mic or dummy routes."""
-        self.current_input = mode
-        logger.info(f"[Audio] Setting input route: {mode}")
+        """Route call input"""
+        try:
+            with self.pulse() as pulse:
+                backend, card = self.get_audio_backend(pulse)
+                if backend != "audio-manager":
+                    self.current_input = mode
+                    logger.info(f"[Audio] Setting input route: {mode}")
+                    return
+
+                if not card:
+                    logger.warning("[Audio] No supported PulseAudio card found")
+                    return
+
+                if mode in ("bluetooth", "usb"):
+                    if not self.voice_profile_active:
+                        self.current_input = mode
+                        self.current_route = mode
+                        return
+
+                    profile_name = self.audio_manager_profile_for_route(mode)
+                    if not self.is_profile_available(card, profile_name):
+                        logger.warning(f"[Audio] {mode} input route is not available")
+                        return
+
+                    # Bluetooth and USB are one duplex call path. Selecting the
+                    # input must select the matching output as well.
+                    pulse.card_profile_set(card, profile_name)
+                    self.current_input = mode
+                    self.current_route = mode
+                    logger.info(f"[Audio] Call input/output set to {mode} ({profile_name})")
+                    return
+
+                # A local input can't coexist with an external duplex call
+                # profile. Return to hostless voicecall and if the output was
+                # external, use the earpiece as the local output.
+                if self.voice_profile_active:
+                    was_external = self.current_route in ("bluetooth", "usb") or self.current_input in ("bluetooth", "usb")
+                    pulse.card_profile_set(card, "voicecall")
+                    if was_external:
+                        sink = self.lookup_sink(pulse, AUDIO_MANAGER_SINK)
+                        if sink:
+                            output_port = self.pick_route_port(sink, "earpiece")
+                            if output_port:
+                                pulse.sink_port_set(sink.index, output_port)
+                        self.current_route = "earpiece"
+
+                source = self.get_primary_source(pulse)
+                if not source:
+                    logger.warning("[Audio] Audio Manager input source not found")
+                    return
+
+                port_name = self.pick_input_port(source, mode)
+                if not port_name:
+                    logger.info(f"[Audio] No port for input route: {mode}")
+                    return
+
+                pulse.source_port_set(source.index, port_name)
+                self.current_input = mode
+                logger.info(f"[Audio] Input route set to {mode} ({port_name})")
+        except Exception as e:
+            logger.error(f"[Audio] Set input route failed: {e}")
 
     def initial_call_route(self):
         """Return the route a new call should start on."""
         try:
             with self.pulse() as pulse:
-                sink = self.lookup_sink(pulse, "sink.primary_output")
+                backend, _card = self.get_audio_backend(pulse)
+                if backend == "audio-manager":
+                    return "earpiece"
+
+                sink = self.get_primary_sink(pulse)
                 if sink and self.pick_route_port(sink, "wired"):
                     return "wired"
         except Exception as e:
@@ -269,11 +478,19 @@ class TelephonyAudioManager:
         return "earpiece"
 
     def get_active_output_route(self):
-        """Map the primary sink's active port to a route id, or None when parked."""
+        """Return the active call output route for supported backends."""
         name = None
         try:
             with self.pulse() as pulse:
-                sink = self.lookup_sink(pulse, "sink.primary_output")
+                backend, card = self.get_audio_backend(pulse)
+                if backend == "audio-manager" and card and card.profile_active:
+                    profile_name = card.profile_active.name
+                    if profile_name == "voicecall-bluetooth":
+                        return "bluetooth"
+                    if profile_name == "voicecall-usb":
+                        return "usb"
+
+                sink = self.get_primary_sink(pulse)
                 if sink and sink.port_active:
                     name = sink.port_active.name
         except Exception as e:
@@ -283,22 +500,18 @@ class TelephonyAudioManager:
             return "earpiece"
         if name == "output-speaker":
             return "speaker"
-        if name and "wired" in name:
+        if name and ("headset" in name or "headphone" in name or "wired" in name):
             return "wired"
         return None
 
     def set_call_volume_level(self, level):
-        """
-        Apply the call volume by setting the primary sink volume, which is the
-        effective call loudness on this stack; the phone-role stream is only
-        the fine trim on top and is left to the user.
-        """
+        """Apply the call volume."""
         level = max(0.0, min(1.0, level))
         try:
             with self.pulse() as pulse:
-                sink = self.lookup_sink(pulse, "sink.primary_output")
+                sink = self.get_primary_sink(pulse)
                 if not sink:
-                    logger.warning("[Audio] sink.primary_output not found for call volume")
+                    logger.warning("[Audio] Primary output sink not found for call volume")
                     return
 
                 pulse.volume_set_all_chans(sink, level)
@@ -310,7 +523,7 @@ class TelephonyAudioManager:
         """Clear any mute that module-device-restore re-applied on a port change."""
         try:
             with self.pulse() as pulse:
-                sink = self.lookup_sink(pulse, "sink.primary_output")
+                sink = self.get_primary_sink(pulse)
                 if sink and sink.mute:
                     pulse.sink_mute(sink.index, False)
                     logger.info("[Audio] Cleared restored sink mute")
@@ -320,63 +533,85 @@ class TelephonyAudioManager:
     def get_available_outputs(self):
         """Return the output routes with per-route availability."""
         has_bt = False
+        has_usb = False
         has_wired = False
+        backend = None
         try:
             with self.pulse() as pulse:
-                for c in pulse.card_list():
-                    if "bluez" in c.name:
-                        has_bt = True
-                        break
-                sink = self.lookup_sink(pulse, "sink.primary_output")
+                backend, card = self.get_audio_backend(pulse)
+                if backend == "audio-manager" and card:
+                    has_bt = self.is_profile_available(card, "voicecall-bluetooth")
+                    has_usb = self.is_profile_available(card, "voicecall-usb")
+                else:
+                    has_bt = any("bluez" in c.name for c in pulse.card_list())
+
+                sink = self.get_primary_sink(pulse)
                 if sink:
                     for p in sink.port_list:
-                        if "wired_headphone" in p.name or "headset" in p.name:
+                        if "headphone" in p.name or "headset" in p.name:
                             if self.is_port_available(p):
                                 has_wired = True
                                 break
         except Exception as e:
             logger.warning(f"[Audio] Failed to probe output routes: {e}")
 
-        return [
+        routes = [
             {"id": "earpiece", "name": "Earpiece", "icon": "phone-symbolic", "available": True},
             {"id": "speaker", "name": "Speaker", "icon": "audio-speakers-symbolic", "available": True},
             {"id": "wired", "name": "Wired Headset", "icon": "audio-headset-symbolic", "available": has_wired},
             {"id": "bluetooth", "name": "Bluetooth", "icon": "bluetooth-active-symbolic", "available": has_bt},
         ]
+        if backend == "audio-manager":
+            routes.append(
+                {"id": "usb", "name": "USB Headset", "icon": "audio-headset-symbolic", "available": has_usb}
+            )
+        return routes
 
     def get_available_inputs(self):
-        """Return the input routes with per-route availability."""
+        """Return input routes with availability for the active backend."""
         has_bt = False
+        has_usb = False
         has_wired = False
+        backend = None
         try:
             with self.pulse() as pulse:
-                for c in pulse.card_list():
-                    if "bluez" in c.name:
-                        has_bt = True
-                        break
-                sink = self.lookup_sink(pulse, "sink.primary_output")
-                if sink:
-                    for p in sink.port_list:
-                        if "headset" in p.name and self.is_port_available(p):
+                backend, card = self.get_audio_backend(pulse)
+                if backend == "audio-manager" and card:
+                    has_bt = self.is_profile_available(card, "voicecall-bluetooth")
+                    has_usb = self.is_profile_available(card, "voicecall-usb")
+                else:
+                    has_bt = any("bluez" in c.name for c in pulse.card_list())
+
+                source = self.get_primary_source(pulse)
+                if source:
+                    for port in source.port_list:
+                        if ("headset" in port.name or "wired" in port.name) and self.is_port_available(port):
                             has_wired = True
                             break
         except Exception as e:
             logger.warning(f"[Audio] Failed to probe input routes: {e}")
 
-        return [
+        routes = [
             {"id": "mic", "name": "Microphone", "icon": "audio-input-microphone-symbolic", "available": True},
             {"id": "wired", "name": "Wired Mic", "icon": "audio-headset-symbolic", "available": has_wired},
             {"id": "bluetooth", "name": "Bluetooth Mic", "icon": "bluetooth-active-symbolic", "available": has_bt},
         ]
+        if backend == "audio-manager":
+            routes.append(
+                {"id": "usb", "name": "USB Microphone", "icon": "audio-input-microphone-symbolic", "available": has_usb}
+            )
+        return routes
 
     def get_call_sink(self, pulse, preferred_name=None):
-        """Return the sink used for call audio, preferring the droid primary output."""
-        for name in (preferred_name, "sink.primary_output"):
-            if not name:
-                continue
-            sink = self.lookup_sink(pulse, name)
+        """Return the local sink used for media and hostless call volume."""
+        if preferred_name:
+            sink = self.lookup_sink(pulse, preferred_name)
             if sink:
                 return sink
+
+        sink = self.get_primary_sink(pulse)
+        if sink:
+            return sink
 
         info = pulse.server_info()
         return self.lookup_sink(pulse, info.default_sink_name)
@@ -400,29 +635,33 @@ class TelephonyAudioManager:
             logger.error(f"[Audio] Save media state failed: {e}")
 
     def pick_media_port(self, sink):
-        """
-        Choose the output port to return to after the last call ends.
-        The earpiece is never a media port, so a stale earpiece snapshot
-        cannot leave media playing through it after a call.
-        """
+        """Choose an output port when restoring media audio that isn't earpiece."""
         usable = [p.name for p in sink.port_list if self.is_port_available(p)]
 
-        blocked = ("output-parking", "output-earpiece")
-        if self._pre_call_port and self._pre_call_port not in blocked and self._pre_call_port in usable:
+        blocked = {
+            "output-parking",
+            "output-earpiece",
+        }
+        if (
+            self._pre_call_port
+            and self._pre_call_port not in blocked
+            and self._pre_call_port in usable
+        ):
             return self._pre_call_port
 
-        for name in ("output-wired_headphone", "output-wired_headset", "output-speaker"):
+        for name in (
+            "output-headphones",
+            "output-headset",
+            "output-wired_headphone",
+            "output-wired_headset",
+            "output-speaker",
+        ):
             if name in usable:
                 return name
         return None
 
     def restore_call_volume(self):
-        """
-        Restore the media output port and volume saved by save_media_state.
-        Run after the profile is back to default: the port switch commits the
-        normal mode in the HAL, and the volume is written as an actual change
-        because the pcm gain stays frozen for equal values after a call.
-        """
+        """Restore the saved media output port and volume."""
         if self._pre_call_vol is None:
             return
         try:
@@ -453,17 +692,14 @@ class TelephonyAudioManager:
 
         try:
             with self.pulse() as pulse:
-                info = pulse.server_info()
-                default_source_name = info.default_source_name
-
-                source = self.lookup_source(pulse, default_source_name)
+                source = self.get_primary_source(pulse)
                 if source:
                     pulse.source_mute(source.index, muted)
                     self._last_mute_state = muted
                     self.mic_muted = muted
                     logger.info(f"[Audio] Microphone mute set to: {muted}")
                 else:
-                    logger.warning(f"[Audio] Default source {default_source_name} not found")
+                    logger.warning("[Audio] Primary input source not found")
 
         except Exception as e:
             logger.error(f"[Audio] Mute failed: {e}")

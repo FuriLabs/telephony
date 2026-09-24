@@ -68,6 +68,7 @@ def route_label(route_id):
         "speaker": _("Speaker"),
         "wired": _("Wired Headset"),
         "bluetooth": _("Bluetooth"),
+        "usb": _("USB Headset"),
     }
     return labels.get(route_id, route_id)
 
@@ -78,6 +79,7 @@ def input_route_label(route_id):
         "mic": _("Microphone"),
         "wired": _("Wired Mic"),
         "bluetooth": _("Bluetooth Mic"),
+        "usb": _("USB Microphone"),
     }
     return labels.get(route_id, route_id)
 
@@ -89,6 +91,7 @@ def route_icon(route_id):
         "speaker": "audio-speakers-symbolic",
         "wired": "audio-headset-symbolic",
         "bluetooth": "bluetooth-active-symbolic",
+        "usb": "audio-headset-symbolic",
     }
     return icons.get(route_id, "phone-symbolic")
 
@@ -99,6 +102,7 @@ def input_route_icon(route_id):
         "mic": "audio-input-microphone-symbolic",
         "wired": "audio-headset-symbolic",
         "bluetooth": "bluetooth-active-symbolic",
+        "usb": "audio-input-microphone-symbolic",
     }
     return icons.get(route_id, "audio-input-microphone-symbolic")
 
@@ -508,7 +512,7 @@ class InCallWindow(Adw.Window):
         muted = audio.mic_muted
         self.lbl_pill_in.set_text(_("Muted") if muted else input_route_label(audio.current_input))
         self.img_pill_in.set_from_icon_name(
-            "microphone-sensitivity-muted-symbolic" if muted else "audio-input-microphone-symbolic")
+            "microphone-sensitivity-muted-symbolic" if muted else input_route_icon(audio.current_input))
         for w in (self.img_pill_in, self.lbl_pill_in):
             if muted:
                 w.add_css_class("stack-pill-muted")
