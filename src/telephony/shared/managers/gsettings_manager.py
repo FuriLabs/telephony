@@ -86,7 +86,7 @@ class GSettingsManager:
 
     def get_call_volume_levels(self):
         """Return per-route base call volume percentages with defaults applied."""
-        levels = {"earpiece": 80, "speaker": 80, "wired": 80, "bluetooth": 80}
+        levels = {"earpiece": 80, "speaker": 80, "wired": 80, "bluetooth": 80, "usb": 80}
         try:
             val = self.get_setting("call_volume_levels")
             if val:
