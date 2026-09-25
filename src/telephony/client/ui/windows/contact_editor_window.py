@@ -73,6 +73,7 @@ class ContactEditor(Adw.NavigationPage):
 
         self.phone_entries = []
         self.blocked_ids = {}
+        self.phone_view_buttons = []
         self.email_entries = []
         self.adv_entries = {}
 
@@ -212,8 +213,10 @@ class ContactEditor(Adw.NavigationPage):
             self.reload_blocked_numbers()
         else:
             if current_phones:
+                self.phone_view_buttons = []
                 for num, lbl in current_phones:
                     self.grp_phones.add(self.phone_view_row(num, lbl))
+                self.reload_blocked_numbers()
             else:
                 self.grp_phones.set_visible(False)
         page.add(self.grp_phones)
@@ -457,37 +460,35 @@ class ContactEditor(Adw.NavigationPage):
                             label_keys, display_labels, label, text,
                             _("Phone"), Gtk.InputPurpose.PHONE, blockable=True)
 
-    def blocked_entry_id(self, row):
-        """Return the blocklist id for what this row currently holds, or None."""
-        number = normalize_number(row.get_text().strip())
-        if not number:
-            return None
-        return self.blocked_ids.get(number)
+    def blocked_entry_id(self, number):
+        """Return the blocklist id standing against a number, or None."""
+        norm = normalize_number((number or "").strip())
+        return self.blocked_ids.get(norm) if norm else None
 
-    def show_block_state(self, row):
-        """Say whether this row's number is blocked, and what tapping will do."""
-        blocked = self.blocked_entry_id(row) is not None
+    def show_block_state(self, button, number):
+        """Say whether a number is blocked, and what tapping will do."""
+        blocked = self.blocked_entry_id(number) is not None
         classes = ["flat", "circular"] + (["error"] if blocked else [])
-        row.block_button.set_css_classes(classes)
-        row.block_button.set_tooltip_text(
+        button.set_css_classes(classes)
+        button.set_tooltip_text(
             _("Unblock this number") if blocked else _("Block this number"))
-        row.block_button.set_sensitive(bool(row.get_text().strip()))
+        button.set_sensitive(bool((number or "").strip()))
 
-    def on_block_clicked(self, row):
-        """Block the number this row holds, or unblock it if it already is."""
-        number = normalize_number(row.get_text().strip())
-        if not number:
+    def on_block_clicked(self, button, number):
+        """Block a number, or unblock it when it already is."""
+        norm = normalize_number((number or "").strip())
+        if not norm:
             return
 
-        entry_id = self.blocked_ids.get(number)
-        row.block_button.set_sensitive(False)
+        entry_id = self.blocked_ids.get(norm)
+        button.set_sensitive(False)
 
         if entry_id is not None:
             self.main_window.daemon.remove_blocked_number(entry_id)
             GLib.timeout_add(BLOCKLIST_SETTLE_MS, self.reload_blocked_numbers)
             return
 
-        run_in_background(self.main_window.daemon.add_blocked_number, number, "",
+        run_in_background(self.main_window.daemon.add_blocked_number, norm, "",
                           on_complete=lambda _ok: self.reload_blocked_numbers())
 
     def reload_blocked_numbers(self):
@@ -503,7 +504,9 @@ class ContactEditor(Adw.NavigationPage):
         """Take the blocklist read and put every phone row in step with it."""
         self.blocked_ids = blocked or {}
         for row, _type_row in self.phone_entries:
-            self.show_block_state(row)
+            self.show_block_state(row.block_button, row.get_text())
+        for button, number in self.phone_view_buttons:
+            self.show_block_state(button, number)
 
     def add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
@@ -554,10 +557,10 @@ class ContactEditor(Adw.NavigationPage):
             row.block_button = Gtk.Button(icon_name="action-unavailable-symbolic",
                                           css_classes=["flat", "circular"],
                                           valign=Gtk.Align.CENTER)
-            row.block_button.connect("clicked", lambda b: self.on_block_clicked(row))
-            row.connect("changed", lambda _e: self.show_block_state(row))
+            row.block_button.connect("clicked", lambda b: self.on_block_clicked(b, row.get_text()))
+            row.connect("changed", lambda _e: self.show_block_state(row.block_button, row.get_text()))
             row.add_suffix(row.block_button)
-            self.show_block_state(row)
+            self.show_block_state(row.block_button, row.get_text())
 
         row.add_suffix(btn_remove)
         group.add(row)
@@ -588,6 +591,13 @@ class ContactEditor(Adw.NavigationPage):
         btn_call.set_sensitive(bool(self.main_window.ofono and self.main_window.ofono.is_dialing_available()))
         btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self.call_number(number) or False))
 
+        btn_block = Gtk.Button(icon_name="action-unavailable-symbolic", valign=Gtk.Align.CENTER)
+        btn_block.set_size_request(34, 34)
+        btn_block.connect("clicked", lambda b: self.on_block_clicked(b, number))
+        self.phone_view_buttons.append((btn_block, number))
+        self.show_block_state(btn_block, number)
+
+        row.add_suffix(btn_block)
         row.add_suffix(btn_msg)
         row.add_suffix(btn_call)
         return row
