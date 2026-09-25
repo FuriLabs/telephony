@@ -63,6 +63,7 @@ class MessagesView(Adw.Bin):
         self._is_programmatic_update = False
 
         self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+        self.blocked_numbers = self.load_blocked_numbers()
         self.show_numbers = self.app_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false"
 
         self.signal_ids = []
@@ -347,6 +348,12 @@ class MessagesView(Adw.Bin):
         self.v_adj.set_value(self.v_adj.get_lower())
         return False
 
+    def load_blocked_numbers(self):
+        """Take the blocklist the conversation rows are drawn against."""
+        if not self.db:
+            return set()
+        return {normalize_number(entry["number"]) for entry in self.db.get_blocked_numbers()}
+
     def refresh_list(self):
         """Trigger a reload of the conversation list."""
         if (self._refresh_timer is not None) and self._refresh_timer:
@@ -514,6 +521,7 @@ class MessagesView(Adw.Bin):
         The set is cached instead and only re-read when the setting moves.
         """
         self.muted_ids = set(self.app_window.gsettings_mgr.get_muted_conversations())
+        self.blocked_numbers = self.load_blocked_numbers()
         self.refresh_list()
 
     def on_show_numbers_changed(self, _settings, _key):
@@ -523,7 +531,8 @@ class MessagesView(Adw.Bin):
 
     def on_bind_row(self, factory, list_item):
         """Bind row items to widgets."""
-        ConversationRowFactory.bind(factory, list_item, self.muted_ids, self.show_numbers)
+        ConversationRowFactory.bind(factory, list_item, self.muted_ids,
+                                    self.show_numbers, self.blocked_numbers)
 
     def on_activate_conv(self, lv, pos):
         """Handle activation of a conversation row."""

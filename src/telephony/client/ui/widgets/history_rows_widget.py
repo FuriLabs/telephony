@@ -26,7 +26,16 @@ class HistoryRowFactory:
         """Initialize the factory."""
         self.app_window = app_window
         self.calling_enabled = True
+        self.blocked_numbers = set()
         self._live_call_btns = set()
+
+    def reload_blocked_numbers(self):
+        """Take the blocklist the rows are drawn against."""
+        db = self.app_window.db
+        if not db:
+            return
+        self.blocked_numbers = {normalize_number(entry["number"])
+                                for entry in db.get_blocked_numbers()}
 
     def setup(self, factory, list_item):
         """Setup UI widgets for a history row."""
@@ -61,7 +70,8 @@ class HistoryRowFactory:
                                     ("xfer", "send-to-symbolic", "dim-label"),
                                     ("declined", "action-unavailable-symbolic", "dim-label"),
                                     ("netfail", "dialog-warning-symbolic", "dim-label"),
-                                    ("rej", "action-unavailable-symbolic", "marker-rejected")):
+                                    ("rej", "action-unavailable-symbolic", "marker-rejected"),
+                                    ("blocked", "action-unavailable-symbolic", "marker-rejected")):
             mark = Gtk.Image.new_from_icon_name(icon_name)
             mark.set_pixel_size(10)
             mark.add_css_class(css)
@@ -153,6 +163,8 @@ class HistoryRowFactory:
         w["markers"]["declined"].set_visible(
             item.direction == 'cancelled' and item.disconnect_reason == 'remote')
         w["markers"]["netfail"].set_visible(item.disconnect_reason == 'network')
+        w["markers"]["blocked"].set_visible(
+            normalize_number(item.number) in self.blocked_numbers)
         w["time"].set_text(item.display_time)
 
         w["icon"].remove_css_class("call-icon-missed")
