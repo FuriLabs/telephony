@@ -23,7 +23,7 @@ from telephony.shared.utils.vcard_utils import extract_e164_number, unfold_vcard
 from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
-from telephony.client.ui.widgets.common_widget import (translate_phone_label, present_alert_sheet,
+from telephony.client.ui.widgets.common_widget import (translate_phone_label,
                                                       close_sheet_page, present_sheet_page)
 from telephony.shared.constants import CONTACT_SHEET_HEIGHT
 
@@ -826,15 +826,16 @@ class ContactEditor(Adw.NavigationPage):
             logger.error(f"[ContactEditor] On save error: {e}")
 
     def run_save_prechecks(self, phones_to_save, selected_sources, resolver_enabled):
-        """Scan the blocklist and the contact cache for conflicts off the main thread."""
-        blocked_conflict = None
+        """Scan the contact cache for duplicates off the main thread.
+
+        A blocked number used to be refused here, because blocking
+        deleted the contact and the two could not both exist. Blocking
+        leaves contacts alone now, so a contact for a number you have
+        blocked is an ordinary thing to want.
+        """
         conflicts_by_num = {}
 
         for norm_val, _lbl in phones_to_save:
-            if self.main_window.db.is_blocked(norm_val, kind="any"):
-                blocked_conflict = norm_val
-                break
-
             if resolver_enabled:
                 with self.eds.cache_lock:
                     candidates = self.eds.lookup_map.get(norm_val, [])
@@ -846,7 +847,7 @@ class ContactEditor(Adw.NavigationPage):
                             if c_uid not in conflicts_by_num[norm_val]:
                                 conflicts_by_num[norm_val].append(c_uid)
 
-        return blocked_conflict, conflicts_by_num
+        return conflicts_by_num
 
     def on_prechecks_done(self, result, phones_to_save, selected_sources):
         """Continue the save flow on the main thread after background checks."""
@@ -855,12 +856,7 @@ class ContactEditor(Adw.NavigationPage):
             return
 
         try:
-            blocked_conflict, conflicts_by_num = result
-
-            if blocked_conflict:
-                self._saving_in_progress = False
-                self.confirm_unblock_add(blocked_conflict, lambda: self.unblock_and_resave(blocked_conflict))
-                return
+            conflicts_by_num = result
 
             if conflicts_by_num:
                 new_data = self.get_current_contact_data(phones_to_save)
@@ -900,17 +896,6 @@ class ContactEditor(Adw.NavigationPage):
         if self._destroyed:
             return
         self.toast_overlay.add_toast(Adw.Toast.new(_("Failed to save contact")))
-
-    def unblock_and_resave(self, blocked_conflict):
-        """Remove the conflicting blocklist entry, then retry the save."""
-        def task():
-            blocked_list = self.main_window.db.get_blocked_numbers()
-            for entry in blocked_list:
-                if normalize_number(entry["number"]) == blocked_conflict:
-                    self.main_window.daemon.remove_blocked_number(entry["id"])
-                    break
-
-        run_in_background(task, on_complete=lambda _result: self.on_save(self.btn_save, force=True))
 
     def proceed_with_save(self, phones_to_save, selected_sources):
         """Kick off the actual contact write after all pre-checks passed."""
@@ -1001,17 +986,6 @@ class ContactEditor(Adw.NavigationPage):
         except Exception as e:
             logger.error(f"[ContactEditor] Could not reopen editor after failure: {e}")
             self.main_window.notify_error(_("Failed to save contact"))
-
-    def confirm_unblock_add(self, _number_str, on_confirm):
-        """Show confirmation to unblock and add to contacts."""
-        def cb(resp):
-            if resp == "yes":
-                on_confirm()
-        present_alert_sheet(
-            self.get_root(), _("Conflict"),
-            _("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Unblocking and add the number to Contacts?"),
-            [("cancel", _("Cancel"), None), ("yes", _("Yes, Add to Contacts"), "suggested")],
-            cb)
 
     def show_error(self, title, msg):
         """Report a failure on this sheet, where the user is looking."""
