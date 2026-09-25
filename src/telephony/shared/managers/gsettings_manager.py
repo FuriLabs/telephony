@@ -23,6 +23,7 @@ SPECIAL_LIST_KEYS = [
     "trusted_sms_location_request", "trusted_sms_silent_callback",
     "trusted_sms_relay", "trusted_sms_ssh_access",
     "trusted_sms_lock_device", "notification_override_dnd_bypass_contacts",
+    "notification_override_dnd_bypass_contacts_messages",
     "notification_override_sms_custom_tone_contacts",
     "notification_override_call_custom_contacts"
 ]
