@@ -1202,37 +1202,101 @@ class DatabaseManager(GObject.Object):
                 added += 1
         return (added, updated)
 
-    def block_number(self, number, note="", block_calls=True, block_messages=True):
+    def blocking_markers(self):
+        """Return the names blocking wrote, and the ones it wrote on unblock.
+
+        Both are matched in English as well as in the current language,
+        because a row carries whatever locale was in use when it was
+        written, which is not necessarily this one.
         """
-        Block a number and scrub it everywhere: rename it in call history,
-        remove it from contacts and drop it from trusted and special lists.
+        return ({"Blocked Number", _("Blocked Number")},
+                {"Unknown", _("Unknown")})
+
+    def overwritten_history_names(self):
+        """Return the (number, name) pairs blocking may have written over."""
+        blocked, unknown = self.blocking_markers()
+        wanted = tuple(blocked | unknown)
+        placeholders = ",".join("?" * len(wanted))
+        try:
+            with self.lock:
+                c = self.conn_calls.cursor()
+                c.execute(f"SELECT DISTINCT number, name FROM history WHERE name IN ({placeholders})",
+                          wanted)
+                return c.fetchall()
+        except Exception as e:
+            logger.error(f"[DB] Could not look for overwritten history names: {e}")
+            return []
+
+    def rename_history_rows(self, number, old_name, new_name):
+        """Rename one number's rows, but only those still carrying old_name."""
+        if new_name == old_name:
+            return 0
+        try:
+            with self.lock:
+                c = self.conn_calls.cursor()
+                c.execute("UPDATE history SET name=? WHERE number=? AND name=?",
+                          (new_name, number, old_name))
+                changed = c.rowcount
+                self.conn_calls.commit()
+            return changed
+        except Exception as e:
+            logger.error(f"[DB] Could not rename history rows for {number}: {e}")
+            return 0
+
+    def repair_blocked_history_names(self):
+        """Give back the names that blocking used to write over.
+
+        Blocking replaced the name on every past call from a number with
+        a marker, and unblocking wrote Unknown over the top, so the real
+        name was lost twice. A marker is always ours to take back, and
+        the number itself stands in when no contact holds it any more.
+        Unknown is only replaced where a contact holds the number now,
+        because a caller who was never known looks exactly the same.
+        """
+        if self.refuse_write("repair_blocked_history_names"):
+            return
+
+        _blocked, unknown = self.blocking_markers()
+        repaired = 0
+        for number, name in self.overwritten_history_names():
+            resolved = self.eds.get_contact_name(number) if self.eds else None
+            if not resolved and name in unknown:
+                continue
+            repaired += self.rename_history_rows(number, name, resolved or number)
+
+        if repaired:
+            logger.info(f"[DB] Gave back {repaired} history names that blocking had written over")
+            GLib.idle_add(self.emit, 'history-updated')
+
+    def block_number(self, number, note="", block_calls=True, block_messages=True):
+        """Block a number, leaving the contact and the call history alone.
+
+        Whether a number is blocked is this table's answer to give, and
+        the views ask it when they draw. Writing the answer into the
+        contact and into every past call was a second copy that then had
+        to be kept in step, and it was destructive: a contact holding
+        only that number was deleted outright.
+
+        The notification overrides are the exception, and adding the row
+        drops the number from them: a number set to ring through Do Not
+        Disturb while also blocked describes two different wishes, and
+        the newer one is the block.
         """
         if self.refuse_write("block_number"):
             return False
         clean_num = normalize_number(number, permissive=False)
-        if not self.add_blocked_number(clean_num, note, block_calls, block_messages):
-            return False
-
-        self.update_history_names([clean_num], _("Blocked Number"))
-        if self.eds:
-            self.eds.remove_number_everywhere(clean_num)
-        return True
+        return self.add_blocked_number(clean_num, note, block_calls, block_messages)
 
     def unblock_number(self, bid):
-        """Remove a blocklist entry and rename the number back to Unknown."""
+        """Remove a blocklist entry.
+
+        There is nothing to put back: blocking no longer writes anything
+        outside this table, so the marker stops being drawn as soon as
+        the row is gone.
+        """
         if self.refuse_write("unblock_number"):
             return
-        number = None
-        for entry in self.get_blocked_numbers():
-            if entry["id"] == bid:
-                number = entry["number"]
-                break
-
         self.remove_blocked_number(bid)
-
-        if number:
-            clean_num = normalize_number(number, permissive=False)
-            self.update_history_names([clean_num], _("Unknown"))
 
     def add_blocked_number(self, number, note="", block_calls=True, block_messages=True):
         """Add or widen a blocklist entry; merging never unblocks a domain."""
