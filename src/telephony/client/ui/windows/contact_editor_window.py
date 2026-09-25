@@ -25,7 +25,7 @@ from telephony.client.ui.windows.duplicate_resolution_window import DuplicateRes
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
 from telephony.client.ui.widgets.common_widget import (translate_phone_label,
                                                       close_sheet_page, present_sheet_page)
-from telephony.shared.constants import CONTACT_SHEET_HEIGHT
+from telephony.shared.constants import BLOCKLIST_SETTLE_MS, CONTACT_SHEET_HEIGHT
 
 
 class ContactEditor(Adw.NavigationPage):
@@ -72,6 +72,7 @@ class ContactEditor(Adw.NavigationPage):
 
 
         self.phone_entries = []
+        self.blocked_ids = {}
         self.email_entries = []
         self.adv_entries = {}
 
@@ -208,6 +209,7 @@ class ContactEditor(Adw.NavigationPage):
                 self.add_phone_row(p_num, p_label)
 
             self.grp_phones.set_header_suffix(self.group_add_button(_("Add Number"), lambda: self.add_phone_row("", "Mobile")))
+            self.reload_blocked_numbers()
         else:
             if current_phones:
                 for num, lbl in current_phones:
@@ -453,7 +455,55 @@ class ContactEditor(Adw.NavigationPage):
         display_labels = [_("Mobile"), _("Work"), _("Home"), _("Fax"), _("Other")]
         self.add_field_row(self.grp_phones, self.phone_entries,
                             label_keys, display_labels, label, text,
-                            _("Phone"), Gtk.InputPurpose.PHONE)
+                            _("Phone"), Gtk.InputPurpose.PHONE, blockable=True)
+
+    def blocked_entry_id(self, row):
+        """Return the blocklist id for what this row currently holds, or None."""
+        number = normalize_number(row.get_text().strip())
+        if not number:
+            return None
+        return self.blocked_ids.get(number)
+
+    def show_block_state(self, row):
+        """Say whether this row's number is blocked, and what tapping will do."""
+        blocked = self.blocked_entry_id(row) is not None
+        classes = ["flat", "circular"] + (["error"] if blocked else [])
+        row.block_button.set_css_classes(classes)
+        row.block_button.set_tooltip_text(
+            _("Unblock this number") if blocked else _("Block this number"))
+        row.block_button.set_sensitive(bool(row.get_text().strip()))
+
+    def on_block_clicked(self, row):
+        """Block the number this row holds, or unblock it if it already is."""
+        number = normalize_number(row.get_text().strip())
+        if not number:
+            return
+
+        entry_id = self.blocked_ids.get(number)
+        row.block_button.set_sensitive(False)
+
+        if entry_id is not None:
+            self.main_window.daemon.remove_blocked_number(entry_id)
+            GLib.timeout_add(BLOCKLIST_SETTLE_MS, self.reload_blocked_numbers)
+            return
+
+        run_in_background(self.main_window.daemon.add_blocked_number, number, "",
+                          on_complete=lambda _ok: self.reload_blocked_numbers())
+
+    def reload_blocked_numbers(self):
+        """Read the blocklist again and show what each phone row now is."""
+        def task():
+            return {normalize_number(entry["number"]): entry["id"]
+                    for entry in self.main_window.db.get_blocked_numbers()}
+
+        run_in_background(task, on_complete=self.apply_blocked_numbers)
+        return False
+
+    def apply_blocked_numbers(self, blocked):
+        """Take the blocklist read and put every phone row in step with it."""
+        self.blocked_ids = blocked or {}
+        for row, _type_row in self.phone_entries:
+            self.show_block_state(row)
 
     def add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
@@ -463,7 +513,8 @@ class ContactEditor(Adw.NavigationPage):
                             label_keys, display_labels, label, text,
                             _("Email"), Gtk.InputPurpose.EMAIL)
 
-    def add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose):
+    def add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose,
+                      blockable=False):
         """Add a full width entry row and its type expander for one value.
 
         The entry keeps the whole row for typing; the type lives in an
@@ -498,6 +549,15 @@ class ContactEditor(Adw.NavigationPage):
         btn_remove = Gtk.Button(icon_name="user-trash-symbolic", css_classes=["flat", "circular"], valign=Gtk.Align.CENTER)
         btn_remove.connect("clicked", lambda b: GLib.idle_add(
             lambda: [group.remove(row), group.remove(type_row), entries_list.remove((row, type_row))] and False))
+
+        if blockable:
+            row.block_button = Gtk.Button(icon_name="action-unavailable-symbolic",
+                                          css_classes=["flat", "circular"],
+                                          valign=Gtk.Align.CENTER)
+            row.block_button.connect("clicked", lambda b: self.on_block_clicked(row))
+            row.connect("changed", lambda _e: self.show_block_state(row))
+            row.add_suffix(row.block_button)
+            self.show_block_state(row)
 
         row.add_suffix(btn_remove)
         group.add(row)
