@@ -105,6 +105,22 @@ def present_alert_sheet(window, heading, body, responses, on_response, extra_chi
     present_sheet_page(window, Adw.NavigationPage(title=heading, child=toolbar))
 
 
+def blocked_state_text(entry):
+    """Name the part of a number that is blocked, for a subtitle.
+
+    An entry always blocks at least one of the two domains, so naming
+    the one that applies says more than the bare word blocked, and the
+    surfaces that show it all say it the same way.
+    """
+    if entry is None:
+        return ""
+    if entry["block_calls"] and entry["block_messages"]:
+        return _("Blocked")
+    if entry["block_calls"]:
+        return _("Calls blocked")
+    return _("Messages blocked")
+
+
 def present_unblock_choice(window, daemon, entry, context, on_done):
     """Ask whether to unblock the current domain or the whole entry.
 

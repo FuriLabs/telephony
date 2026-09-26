@@ -16,7 +16,8 @@
 
 from telephony.client.utils.mms_utils import max_attachment_size
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import present_unblock_choice, present_sheet_page
+from telephony.client.ui.widgets.common_widget import (blocked_state_text,
+                                                      present_unblock_choice, present_sheet_page)
 from telephony.client.ui.windows.chat_media_controller_window import ChatMediaController
 from telephony.shared.utils.datetime_utils import parse_timestamp
 
@@ -168,6 +169,8 @@ class ChatPage(Gtk.Box):
 
         self.details_revealer = Gtk.Revealer(transition_type=Gtk.RevealerTransitionType.SLIDE_DOWN)
         self._details_built = False
+        self._block_buttons = {}
+        self._block_labels = {}
         self.btn_menu.connect("toggled", self.ensure_details_panel)
         self.btn_menu.bind_property("active", self.details_revealer, "reveal-child", GObject.BindingFlags.BIDIRECTIONAL)
         self.append(self.details_revealer)
@@ -729,10 +732,47 @@ class ChatPage(Gtk.Box):
         return False
 
     def ensure_details_panel(self, btn):
-        """Build the details panel the first time the menu is opened."""
-        if btn.get_active() and not self._details_built:
+        """Build the details panel once, and bring it up to date each time.
+
+        Blocking is done from the panel itself and from elsewhere, so
+        what it says about a number is only true at the moment it is
+        read. A panel built once and never read again goes on offering
+        to block a number it already blocked.
+        """
+        if not btn.get_active():
+            return
+        if not self._details_built:
             self._details_built = True
             self.setup_details_panel()
+            return
+        self.refresh_block_states()
+
+    def refresh_block_states(self):
+        """Read the blocklist again and put every participant in step."""
+        if not self._block_buttons:
+            return
+
+        def task():
+            return {normalize_number(entry["number"]): dict(entry)
+                    for entry in self.db.get_blocked_numbers()}
+
+        run_in_background(task, on_complete=self.apply_block_states)
+
+    def apply_block_states(self, blocked):
+        """Say on each participant whether, and for what, it is blocked."""
+        entries = blocked or {}
+        for number, button in self._block_buttons.items():
+            entry = entries.get(normalize_number(number))
+            button.set_icon_name("changes-allow-symbolic" if entry
+                                 else "action-unavailable-symbolic")
+            button.set_tooltip_text(
+                _("Unblock this number") if entry else _("Block this number"))
+            button.set_sensitive(self.app_window.eds.is_ready)
+
+            label = self._block_labels.get(number)
+            if label is not None:
+                state = blocked_state_text(entry)
+                label.set_text(f"{number} · {state}" if state else number)
 
     def conversation_id(self):
         """Return the stable id of this conversation."""
@@ -814,6 +854,7 @@ class ChatPage(Gtk.Box):
             lbl_num = Gtk.Label(label=rec, xalign=0, css_classes=["caption", "dim-label"])
             lbl_num.set_ellipsize(Pango.EllipsizeMode.END)
             vbox.append(lbl_num)
+            self._block_labels[rec] = lbl_num
 
             inner.append(vbox)
 
@@ -884,7 +925,7 @@ class ChatPage(Gtk.Box):
                         return
 
                     def unblocked():
-                        target_btn.set_icon_name("action-unavailable-symbolic")
+                        self.refresh_block_states()
                         self.app_window.notify_success(_("Unblocked"))
 
                     present_unblock_choice(self.app_window, self.app_window.daemon,
@@ -897,16 +938,8 @@ class ChatPage(Gtk.Box):
             inner.append(actions_box)
             list_box.append(card)
 
-        def fetch_block_states():
-            return {num: self.db.is_blocked(num, kind="any") for num in block_buttons}
-
-        def apply_block_states(states):
-            for num, btn in block_buttons.items():
-                blocked_state = (states or {}).get(num, False)
-                btn.set_icon_name("changes-allow-symbolic" if blocked_state else "action-unavailable-symbolic")
-                btn.set_sensitive(self.app_window.eds.is_ready)
-
-        run_in_background(fetch_block_states, on_complete=apply_block_states)
+        self._block_buttons = block_buttons
+        self.refresh_block_states()
 
         scrolled.set_child(list_box)
         box.append(scrolled)

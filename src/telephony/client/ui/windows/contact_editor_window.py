@@ -24,8 +24,8 @@ from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
 from telephony.client.ui.widgets.common_widget import (translate_phone_label,
-                                                      close_sheet_page, present_sheet_page,
-                                                      present_unblock_choice)
+                                                      blocked_state_text, close_sheet_page,
+                                                      present_sheet_page, present_unblock_choice)
 from telephony.shared.constants import BLOCKLIST_SETTLE_MS, CONTACT_SHEET_HEIGHT
 
 
@@ -478,16 +478,6 @@ class ContactEditor(Adw.NavigationPage):
         norm = normalize_number((number or "").strip())
         return self.blocked_entries.get(norm) if norm else None
 
-    def blocked_state_text(self, entry):
-        """Name the part of a number that is blocked, for the subtitle."""
-        if entry is None:
-            return ""
-        if entry["block_calls"] and entry["block_messages"]:
-            return _("Blocked")
-        if entry["block_calls"]:
-            return _("Calls blocked")
-        return _("Messages blocked")
-
     def show_number_state(self, button, number, label, row=None, type_row=None):
         """Put one phone row in step with the blocklist.
 
@@ -501,7 +491,7 @@ class ContactEditor(Adw.NavigationPage):
             _("Unblock this number") if entry else _("Block this number"))
         button.set_sensitive(bool((number or "").strip()))
 
-        state = self.blocked_state_text(entry)
+        state = blocked_state_text(entry)
         said = f"{label} · {state}" if state else label
         if row is not None:
             row.set_subtitle(said)
