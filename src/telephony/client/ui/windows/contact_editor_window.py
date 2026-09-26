@@ -24,13 +24,18 @@ from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
 from telephony.client.ui.widgets.common_widget import (translate_phone_label,
-                                                      blocked_state_text, close_sheet_page,
-                                                      present_sheet_page, present_unblock_choice)
+                                                      blocked_state_text, close_sheet,
+                                                      close_sheet_page, present_sheet_page,
+                                                      present_unblock_choice)
 from telephony.shared.constants import BLOCKLIST_SETTLE_MS, CONTACT_SHEET_HEIGHT
 
 
 class ContactEditor(Adw.NavigationPage):
     """The page for editing or viewing contact details.
+
+    Reading and editing are two of these rather than two states of
+    one, so that editing arrives the way every other flow arrives and
+    leaving it returns to the contact rather than past it.
 
     Its own pages go onto the sheet's navigation rather than a private
     one. A navigation view inside a page of another one puts a second
@@ -39,8 +44,15 @@ class ContactEditor(Adw.NavigationPage):
     transition that every other page gets.
     """
 
-    def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None):
-        """Initialize the Contact Editor."""
+    def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None,
+                 start_mode=None):
+        """Initialize the Contact Editor.
+
+        A contact that exists opens for reading, and editing it pushes
+        a second one of these in ``start_mode`` EDIT on top, so that
+        leaving the edit lands back on the contact the way leaving any
+        other flow lands back where it started.
+        """
         self.btn_save = None
         self.source_toggles = None
         self.switch_fav = None
@@ -65,7 +77,10 @@ class ContactEditor(Adw.NavigationPage):
 
         self.number_preset = number_preset
 
-        self.mode = "VIEW" if self.uid else "EDIT"
+        self.mode = start_mode or ("VIEW" if self.uid else "EDIT")
+        self.edits_a_saved_contact = self.mode == "EDIT" and self.uid is not None
+        if self.mode == "EDIT":
+            self.set_title(_("Edit Contact") if self.uid else _("New Contact"))
 
         self.set_size_request(-1, CONTACT_SHEET_HEIGHT)
 
@@ -451,19 +466,29 @@ class ContactEditor(Adw.NavigationPage):
         self.toast_overlay.add_toast(Adw.Toast.new(_("Copied to clipboard")))
 
     def on_edit_mode_click(self, btn):
-        """Switch to EDIT mode."""
-        self.mode = "EDIT"
-        self.set_title(_("Edit Contact"))
-        self.refresh_ui()
+        """Open the editing page on top of the contact being read."""
+        present_sheet_page(self.main_window, ContactEditor(
+            self.eds, self.main_window,
+            contact_data={'uid': self.uid, 'name': self.contact_name,
+                          'vcard': self.vcard_cache},
+            start_mode="EDIT"))
 
     def on_cancel_edit(self, btn):
-        """Cancel editing."""
-        if self.uid:
-            self.mode = "VIEW"
-            self.set_title(_("Contact Details"))
-            self.refresh_ui()
-        else:
-            GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
+        """Leave the editing page, landing on whatever opened it."""
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
+
+    def leave_after_saving(self):
+        """Put the sheet away once a save is on its way.
+
+        Saving ends the flow, the way saving a blocked number ends
+        that one. The contact underneath is not returned to, because
+        the write is still running and what it would show is the
+        version that was read before the edit.
+        """
+        if self.edits_a_saved_contact:
+            close_sheet(self.get_root())
+            return
+        close_sheet_page(self.get_root())
 
     def add_phone_row(self, text="", label="Mobile"):
         """Add a phone number entry row."""
@@ -1036,7 +1061,7 @@ class ContactEditor(Adw.NavigationPage):
                 on_error=lambda error: self.on_save_failed(error, fn, final_vcard)
             )
             self._saving_in_progress = False
-            close_sheet_page(self.get_root())
+            self.leave_after_saving()
         except Exception as e:
             self._saving_in_progress = False
             self.btn_save.set_sensitive(True)
@@ -1093,8 +1118,8 @@ class ContactEditor(Adw.NavigationPage):
         logger.error(f"[ContactEditor] Save failed: {error}")
         try:
             editor = ContactEditor(self.eds, self.main_window,
-                                   contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard})
-            editor.on_edit_mode_click(None)
+                                   contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard},
+                                   start_mode="EDIT")
             present_sheet_page(self.main_window, editor)
             messages = {"read-only": _("This address book is read-only"),
                         "no-writable-book": _("No writable address book available")}
