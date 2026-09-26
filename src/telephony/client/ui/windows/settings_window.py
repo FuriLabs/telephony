@@ -240,14 +240,13 @@ class SettingsWindow(Adw.Bin):
                         _("{number} is already on the blocklist.").format(number=number))
                     return
 
-                run_in_background(self.main_window.daemon.update_blocked_number,
-                                  entry["id"], number, entry_note.get_text().strip(),
-                                  block_calls, block_messages, on_complete=done)
+                self.main_window.daemon.update_blocked_number(
+                    entry["id"], number, entry_note.get_text().strip(),
+                    block_calls, block_messages, done)
             else:
-                run_in_background(self.main_window.daemon.add_blocked_number,
-                                  number, entry_note.get_text().strip(),
-                                  block_calls, block_messages,
-                                  on_complete=done)
+                self.main_window.daemon.add_blocked_number(
+                    number, entry_note.get_text().strip(),
+                    block_calls, block_messages, done)
 
         btn.connect("clicked", submit)
         box.append(btn)
@@ -1092,8 +1091,8 @@ class SettingsWindow(Adw.Bin):
             return
         self.entry_new_ab.set_text("")
         self.row_add_ab.set_expanded(False)
-        run_in_background(self.main_window.daemon.create_address_book, name,
-                          on_complete=lambda ok: self.on_addressbook_created(ok, name))
+        self.main_window.daemon.create_address_book(
+            name, lambda ok: self.on_addressbook_created(ok, name))
 
     def on_addressbook_created(self, success, name):
         """Refresh the sources list after creating an address book."""
@@ -1107,8 +1106,7 @@ class SettingsWindow(Adw.Bin):
         def answered(answer):
             if answer != "delete":
                 return
-            run_in_background(self.main_window.daemon.delete_address_book, uid,
-                              on_complete=self.on_addressbook_deleted)
+            self.main_window.daemon.delete_address_book(uid, self.on_addressbook_deleted)
 
         present_alert_sheet(
             self.get_root(), _("Delete Address Book"),

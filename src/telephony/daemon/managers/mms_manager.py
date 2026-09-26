@@ -182,36 +182,44 @@ class MmsManager(GObject.Object):
         except Exception as e:
             logger.debug(f"[MMS-LOG] PROXY-FAILED | {e}")
 
-    def set_delivery_reports(self, enabled):
-        """Ask mmsd for MMS delivery reports; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
+    def set_delivery_reports(self, enabled, on_result=None):
+        """Ask mmsd for MMS delivery reports; on_result hears (ok, error)."""
         if not self.proxy:
             self.init_manager()
             if not self.proxy:
-                return (False, "no proxy")
-        try:
-            self.proxy.call_sync("SetProperty",
-                                 GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
-                                 Gio.DBusCallFlags.NONE, -1, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[MMS-LOG] DELIVERY-REPORTS | {e}")
-            return (False, str(e))
+                if on_result:
+                    on_result(False, "no proxy")
+                return
+
+        def answered(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.error(f"[MMS-LOG] DELIVERY-REPORTS | {e}")
+                if on_result:
+                    on_result(False, str(e))
+                return
+            if on_result:
+                on_result(True, None)
+
+        self.proxy.call("SetProperty",
+                        GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                        Gio.DBusCallFlags.NONE, -1, None, answered, None)
 
     def load_existing_messages(self):
         """Load messages already present in the daemon."""
         if not self.proxy or not self.owns_reception:
             return
         logger.debug("[MMS-LOG] HISTORY-CHECK | Scanning daemon for existing messages")
-        try:
-            ret = self.proxy.call_sync("GetMessages", None, Gio.DBusCallFlags.NONE, -1, None)
-            messages = ret.unpack()[0]
-            for msg_path, props in messages:
-                self.process_message_signal(msg_path, props)
-        except Exception as e:
-            logger.debug(f"[MMS-LOG] HISTORY-ERROR | {e}")
+
+        def scanned(proxy, result, _data):
+            try:
+                for msg_path, props in proxy.call_finish(result).unpack()[0]:
+                    self.process_message_signal(msg_path, props)
+            except Exception as e:
+                logger.debug(f"[MMS-LOG] HISTORY-ERROR | {e}")
+
+        self.proxy.call("GetMessages", None, Gio.DBusCallFlags.NONE, -1, None, scanned, None)
 
     def on_message_added_raw(self, conn, sender, path, iface, signal, params, user_data):
         """Handle raw DBus MessageAdded signal."""
@@ -284,8 +292,14 @@ class MmsManager(GObject.Object):
                 self.bus, Gio.DBusProxyFlags.NONE, None,
                 "org.ofono.mms", msg_path, "org.ofono.mms.Message", None
             )
-            msg_proxy.call_sync("Delete", None, Gio.DBusCallFlags.NONE, -1, None)
-            logger.debug(f"[MMS-LOG] MSG-CLEANUP | Removed {msg_path} from daemon storage")
+            def deleted(proxy, result, _data):
+                try:
+                    proxy.call_finish(result)
+                    logger.debug(f"[MMS-LOG] MSG-CLEANUP | Removed {msg_path} from daemon storage")
+                except Exception as e:
+                    logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
+
+            msg_proxy.call("Delete", None, Gio.DBusCallFlags.NONE, -1, None, deleted, None)
         except Exception as e:
             logger.debug(f"[MMS-LOG] CLEANUP-FAILED | {e}")
 

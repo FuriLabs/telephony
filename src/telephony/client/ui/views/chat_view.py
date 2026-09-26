@@ -375,8 +375,7 @@ class ChatPage(Gtk.Box):
             if (self.messages_view is not None):
                 self.messages_view.close_active_chat()
 
-        run_in_background(self.app_window.daemon.mark_conversation_unread,
-                          self.db_number, message_id, on_complete=done)
+        self.app_window.daemon.mark_conversation_unread(self.db_number, message_id, done)
 
     def on_reschedule_message(self, item):
         """Reschedule a scheduled message or retry a failed one."""
@@ -404,8 +403,7 @@ class ChatPage(Gtk.Box):
                 self.reload_chat()
                 self.app_window.notify_success(_("Rescheduled for {time}").format(time=ts_str))
 
-            run_in_background(self.app_window.daemon.reschedule_message, item.id, ts_str,
-                              on_complete=done)
+            self.app_window.daemon.reschedule_message(item.id, ts_str, done)
 
         DateTimePicker(
             parent=self.app_window,
@@ -1117,7 +1115,7 @@ class ChatPage(Gtk.Box):
             self.contact_name = new_name
             self.title_widget.set_title(new_name)
 
-        run_in_background(self.app_window.daemon.set_group_name, self.recipients, new_name, on_complete=done)
+        self.app_window.daemon.set_group_name(self.recipients, new_name, done)
 
     def on_paste_clipboard(self, text_view):
         """Divert file and image pastes into the attachment pipeline."""
@@ -1163,12 +1161,9 @@ class ChatPage(Gtk.Box):
             self.show_compression_indicator(_("Compressing video..."))
             compressing = True
 
-        run_in_background(
-            self.app_window.daemon.prepare_attachment,
-            path,
-            remaining,
-            on_complete=lambda reply: self.on_attachment_prepared(reply, path, compressing)
-        )
+        self.app_window.daemon.prepare_attachment(
+            path, remaining,
+            lambda reply: self.on_attachment_prepared(reply, path, compressing))
 
     def on_attachment_prepared(self, reply, source_path, compressing=False):
         """Add the stored attachment, or say why it could not be."""
@@ -1357,18 +1352,6 @@ class ChatPage(Gtk.Box):
         self.attachments = []
         self.refresh_attachment_ui()
 
-        def prepare():
-            final_attachments = pending_attachments
-            self.app_window.daemon.save_draft(self.number, "", [])
-            if scheduled_timestamp:
-                if self.is_group or final_attachments:
-                    return self.app_window.daemon.schedule_mms(
-                        self.number, text, final_attachments, scheduled_timestamp)
-                return self.app_window.daemon.schedule_sms(self.number, text, scheduled_timestamp)
-            if self.is_group or final_attachments:
-                return self.app_window.daemon.send_mms(self.number, text, final_attachments)
-            return self.app_window.daemon.send_tracked_sms(self.number, text)
-
         def done(sent):
             self.btn_send.set_sensitive(True)
             if not sent:
@@ -1378,7 +1361,21 @@ class ChatPage(Gtk.Box):
                 self.app_window.notify_success(_("Message scheduled for {time}").format(time=scheduled_timestamp))
             self.scroll_to_bottom()
 
-        run_in_background(prepare, on_complete=done)
+        def send(_draft_cleared):
+            daemon = self.app_window.daemon
+            if scheduled_timestamp:
+                if self.is_group or pending_attachments:
+                    daemon.schedule_mms(self.number, text, pending_attachments,
+                                        scheduled_timestamp, done)
+                    return
+                daemon.schedule_sms(self.number, text, scheduled_timestamp, done)
+                return
+            if self.is_group or pending_attachments:
+                daemon.send_mms(self.number, text, pending_attachments, done)
+                return
+            daemon.send_tracked_sms(self.number, text, done)
+
+        self.app_window.daemon.save_draft(self.number, "", [], send)
 
     def on_scroll_changed(self, adj):
         """Load older messages once fast scrolling settles; mark read at once.
@@ -1638,14 +1635,10 @@ class ChatPage(Gtk.Box):
         text = buffer.get_text(start, end, True).strip()
         draft_attachments = list(self.attachments)
 
-        def persist():
-            self.app_window.daemon.save_draft(self.number, text, draft_attachments)
-            return bool(text or draft_attachments)
-
-        def done(saved):
-            if saved:
+        def done(_stored):
+            if text or draft_attachments:
                 logger.info("[ChatPage] Draft saved")
             if self.messages_view:
                 self.messages_view.refresh_list()
 
-        run_in_background(persist, on_complete=done)
+        self.app_window.daemon.save_draft(self.number, text, draft_attachments, done)

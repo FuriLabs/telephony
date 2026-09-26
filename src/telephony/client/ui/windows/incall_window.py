@@ -554,7 +554,7 @@ class InCallWindow(Adw.Window):
             page.add(group)
             self.push_sheet_page(nav, _("Output"), page)
 
-        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
+        self.ofono.daemon.get_audio_routes(present)
 
     def open_input_sheet(self):
         """Show mute and the input routes on their own sheet."""
@@ -590,7 +590,7 @@ class InCallWindow(Adw.Window):
 
             self.push_sheet_page(nav, _("Input"), page)
 
-        run_in_background(self.ofono.daemon.get_audio_routes, on_complete=present)
+        self.ofono.daemon.get_audio_routes(present)
 
     def open_keypad_sheet(self):
         """Show the DTMF keypad as a bottom sheet with an echo line."""
@@ -998,19 +998,16 @@ class InCallWindow(Adw.Window):
     def on_merge_click(self, btn):
         """Join the active and held calls into one conference."""
         btn.set_sensitive(False)
-        run_in_background(self.ofono.create_multiparty,
-                          on_complete=lambda result: self.on_multiparty_done(result, btn))
+        self.ofono.create_multiparty(lambda result: self.on_multiparty_done(result, btn))
 
     def on_transfer_click(self, btn):
         """Connect the two calls to each other and leave."""
         btn.set_sensitive(False)
-        run_in_background(self.ofono.transfer_call,
-                          on_complete=lambda result: self.on_multiparty_done(result, btn))
+        self.ofono.transfer_call(lambda result: self.on_multiparty_done(result, btn))
 
     def on_private_chat_click(self, path):
         """Split one participant out of the conference."""
-        run_in_background(self.ofono.private_chat, path,
-                          on_complete=lambda result: self.on_multiparty_done(result, None))
+        self.ofono.private_chat(path, lambda result: self.on_multiparty_done(result, None))
 
     def on_multiparty_done(self, result, btn):
         """Re-enable the action and report a refused network request."""
@@ -1169,7 +1166,7 @@ class InCallWindow(Adw.Window):
             return
         remaining = self.ofono.active_calls
         if len(remaining) > 1 and all(d.get('multiparty') for d in remaining.values()):
-            run_in_background(self.ofono.hangup_multiparty)
+            self.ofono.hangup_multiparty()
         elif len(remaining) > 1:
             self.ofono.hangup_all()
         elif self.active_path:

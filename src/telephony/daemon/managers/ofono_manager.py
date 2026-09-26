@@ -52,6 +52,9 @@ OPENSTREETMAP_URL = "https://www.openstreetmap.org/"
 REPEATED_MESSAGES_BYPASS_COUNT = 3
 REPEATED_MESSAGES_WINDOW_SECONDS = 60
 
+SMS_SEND_TIMEOUT_MS = 30000
+
+
 class OfonoManager(GObject.Object):
     """
     Manages voice calls, SMS, and USSD via ofono.
@@ -317,17 +320,12 @@ class OfonoManager(GObject.Object):
         self.apply_ims_props({"Registered": False, "VoiceCapable": False, "SmsCapable": False})
 
     def load_ims_state(self):
-        """Fetch the initial IMS registration and capability state off the main thread."""
+        """Seed the IMS registration and capability state."""
         proxy = self.ims_proxy
         if not proxy:
             return
 
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0]
-
-        run_in_background(fetch, on_complete=self.apply_ims_props,
-                          on_error=self.modem_went_away("the IMS state"))
+        self.read_properties(proxy, "the IMS state", self.apply_ims_props)
 
     def apply_ims_props(self, props):
         """Apply IpMultimediaSystem properties and announce meaningful changes."""
@@ -358,18 +356,30 @@ class OfonoManager(GObject.Object):
         if name in ("Registered", "VoiceCapable", "SmsCapable"):
             self.apply_ims_props({name: value})
 
-    def load_service_property(self, proxy, name, setter):
-        """Read one property off the main thread and feed it to its setter."""
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0].get(name)
+    def read_properties(self, proxy, what, apply):
+        """Read one object's properties and hand them to apply.
 
-        def apply(value):
+        Every seed read races the modem disappearing, so they all shrug
+        the same way when it does.
+        """
+        def done(source, result, _data):
+            try:
+                props = source.call_finish(result).unpack()[0]
+            except GLib.Error as e:
+                self.modem_went_away(what)(e)
+                return
+            apply(props)
+
+        proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None, done, None)
+
+    def load_service_property(self, proxy, name, setter):
+        """Read one property and feed it to its setter."""
+        def apply(props):
+            value = props.get(name)
             if value is not None:
                 setter(value)
 
-        run_in_background(fetch, on_complete=apply,
-                          on_error=self.modem_went_away(f"property {name}"))
+        self.read_properties(proxy, f"property {name}", apply)
 
     @staticmethod
     def modem_went_away(what):
@@ -428,14 +438,19 @@ class OfonoManager(GObject.Object):
         GLib.idle_add(self.emit, 'sim-pin-required-changed', pin_type)
 
     def register_network(self):
-        """Ask ofono to retry network registration; blocking, worker."""
+        """Ask ofono to retry network registration."""
         if not self.netreg_proxy:
             return
-        try:
-            self.netreg_proxy.call_sync("Register", None, Gio.DBusCallFlags.NONE, 30000, None)
-            logger.info("[OfonoManager] Network registration nudge sent")
-        except Exception as e:
-            logger.warning(f"[OfonoManager] Network registration nudge failed: {e}")
+
+        def registered(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+                logger.info("[OfonoManager] Network registration nudge sent")
+            except Exception as e:
+                logger.warning(f"[OfonoManager] Network registration nudge failed: {e}")
+
+        self.netreg_proxy.call("Register", None, Gio.DBusCallFlags.NONE, 30000, None,
+                               registered, None)
 
     def load_modem_interfaces(self):
         """Seed the interface list and radio state at modem-ready.
@@ -447,10 +462,6 @@ class OfonoManager(GObject.Object):
         if not proxy:
             return
 
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0]
-
         def apply_seed(props):
             if not self._interfaces_known:
                 self.apply_modem_interfaces(props.get("Interfaces", []))
@@ -458,8 +469,7 @@ class OfonoManager(GObject.Object):
             if online is not None and self.modem_online is None:
                 self.set_modem_online(online)
 
-        run_in_background(fetch, on_complete=apply_seed,
-                          on_error=self.modem_went_away("the modem properties"))
+        self.read_properties(proxy, "the modem properties", apply_seed)
 
     def load_voicemail_state(self):
         """Fetch the initial MessageWaiting properties off the main thread."""
@@ -467,12 +477,7 @@ class OfonoManager(GObject.Object):
         if not proxy:
             return
 
-        def fetch():
-            ret = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            return ret.unpack()[0]
-
-        run_in_background(fetch, on_complete=self.apply_voicemail_props,
-                          on_error=self.modem_went_away("the voicemail state"))
+        self.read_properties(proxy, "the voicemail state", self.apply_voicemail_props)
 
     def is_dialing_available(self):
         """Return True when a new outgoing call can be placed right now.
@@ -752,7 +757,7 @@ class OfonoManager(GObject.Object):
         self.ussd_proxy = self.get_proxy("org.ofono.SupplementaryServices")
         if self.ussd_proxy:
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
-            run_in_background(self.get_ussd_state, on_complete=self.apply_ussd_state)
+            self.get_ussd_state(self.apply_ussd_state)
 
         self.cf_proxy = self.get_proxy("org.ofono.CallForwarding")
         if self.cf_proxy:
@@ -767,8 +772,8 @@ class OfonoManager(GObject.Object):
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
         if self.gsettings_mgr:
             enabled = self.gsettings_mgr.get_setting("delivery_reports") == "true"
-            run_in_background(self.set_delivery_reports, enabled)
-        run_in_background(self.load_emergency_numbers)
+            self.set_delivery_reports(enabled)
+        self.load_emergency_numbers()
 
         self.mw_proxy = self.get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
@@ -1016,22 +1021,26 @@ class OfonoManager(GObject.Object):
         self.ussd_state = state
         self.emit('ussd-state-changed', state)
 
-    def get_ussd_state(self):
-        """Return the current oFono USSD session state; blocking."""
+    def get_ussd_state(self, on_state):
+        """Hand the current oFono USSD session state to on_state."""
         if not self.ussd_proxy:
-            return "idle"
-        try:
-            result = self.ussd_proxy.call_sync(
-                "GetProperties", None, Gio.DBusCallFlags.NONE,
-                SS_REQUEST_TIMEOUT_MS, None)
-            props = result.unpack()[0] if result else {}
+            on_state("idle")
+            return
+
+        def read(proxy, result, _data):
+            try:
+                props = proxy.call_finish(result).unpack()[0]
+            except Exception as e:
+                logger.debug(f"[OfonoManager] Could not read USSD state: {e}")
+                on_state(self.ussd_state or "idle")
+                return
             state = props.get("State", "idle")
             if isinstance(state, GLib.Variant):
                 state = state.unpack()
-            return str(state or "idle")
-        except Exception as e:
-            logger.debug(f"[OfonoManager] Could not read USSD state: {e}")
-            return self.ussd_state or "idle"
+            on_state(str(state or "idle"))
+
+        self.ussd_proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE,
+                             SS_REQUEST_TIMEOUT_MS, None, read, None)
 
     def check_priority_contact(self, sender):
         """Check if sender is a priority contact and override volume."""
@@ -1131,16 +1140,24 @@ class OfonoManager(GObject.Object):
         """Sync existing calls from the modem."""
         if not self.voice_proxy:
             return
-        try:
-            ret = self.voice_proxy.call_sync("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None)
-            calls = ret.unpack()[0]
-            for path, props in calls:
-                self.add_call(path, props)
-        except Exception as e:
-            logger.error(f"Sync calls error: {e}")
+
+        def synced(proxy, result, _data):
+            try:
+                for path, props in proxy.call_finish(result).unpack()[0]:
+                    self.add_call(path, props)
+            except Exception as e:
+                logger.error(f"Sync calls error: {e}")
+
+        self.voice_proxy.call("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None,
+                              synced, None)
 
     def dial(self, number, hide_id=False, on_result=None):
-        """Initiate an outgoing call; on_result hears (success, message) exactly once."""
+        """Initiate an outgoing call; on_result hears (success, message) exactly once.
+
+        The return value only says the dial was taken up, since a refusal
+        may not be known until the modem answers. on_result is what says
+        whether the call was placed.
+        """
 
         if self._interfaces_known and "org.ofono.VoiceCallManager" not in self._seen_interfaces:
             return self.refuse_dial(_("Modem not ready"), on_result)
@@ -1149,38 +1166,52 @@ class OfonoManager(GObject.Object):
             self.park_dial(number, hide_id, on_result)
             return True
 
-        if len(self.active_calls) > 0:
-            try:
-                ret = self.voice_proxy.call_sync("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None)
-                real_calls = ret.unpack()[0]
-                if len(real_calls) == 0:
-                    for path in list(self.active_calls.keys()):
-                        self.force_remove(path)
-            except Exception as e:
-                logger.error(f"[OfonoManager] Sanity check failed: {e}")
-
-        if count_lines(self.active_calls) >= 2:
-            return self.refuse_dial(_("Cannot dial while in another call"), on_result)
-
-        if not self.active_calls and self.audio.voice_profile_active:
-            logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
-            return self.refuse_dial(_("Please wait, the previous call is still ending"), on_result)
-
-        try:
+        def place_call():
             clean_num = normalize_number(number)
 
             self.emit('notification-cleared', clean_num)
 
-            if number.startswith("#31#"):
-                hide_id = True
-            clir = "enabled" if hide_id else ("disabled" if number.startswith("*31#") else "default")
-            self._dial_hides_id = bool(hide_id or (self.clir_hidden and clir == "default"))
-            self.voice_proxy.call_sync("Dial", GLib.Variant("(ss)", (clean_num, clir)), Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            return self.refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+            hidden = hide_id or number.startswith("#31#")
+            clir = "enabled" if hidden else ("disabled" if number.startswith("*31#") else "default")
+            self._dial_hides_id = bool(hidden or (self.clir_hidden and clir == "default"))
 
-        if on_result is not None:
-            on_result(True, "")
+            def dialed(proxy, result, _data):
+                try:
+                    proxy.call_finish(result)
+                except Exception as e:
+                    self.refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+                    return
+                if on_result is not None:
+                    on_result(True, "")
+
+            self.voice_proxy.call("Dial", GLib.Variant("(ss)", (clean_num, clir)),
+                                  Gio.DBusCallFlags.NONE, -1, None, dialed, None)
+
+        def gate():
+            if count_lines(self.active_calls) >= 2:
+                self.refuse_dial(_("Cannot dial while in another call"), on_result)
+                return
+            if not self.active_calls and self.audio.voice_profile_active:
+                logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
+                self.refuse_dial(_("Please wait, the previous call is still ending"), on_result)
+                return
+            place_call()
+
+        if len(self.active_calls) > 0:
+            def checked(proxy, result, _data):
+                try:
+                    if len(proxy.call_finish(result).unpack()[0]) == 0:
+                        for path in list(self.active_calls.keys()):
+                            self.force_remove(path)
+                except Exception as e:
+                    logger.error(f"[OfonoManager] Sanity check failed: {e}")
+                gate()
+
+            self.voice_proxy.call("GetCalls", None, Gio.DBusCallFlags.NONE, -1, None,
+                                  checked, None)
+            return True
+
+        gate()
         return True
 
     def refuse_dial(self, message, on_result):
@@ -1262,21 +1293,24 @@ class OfonoManager(GObject.Object):
 
     def execute_answer(self, path):
         """Internal helper to answer a call."""
-        try:
-            if path in self.active_calls:
-                proxy = self.active_calls[path].get('proxy')
-                if proxy:
-                    proxy.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
-                return
+        def answered(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.debug(f"[OfonoManager] Answer failed for {path}: {e}")
+                err_str = str(e)
+                if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
+                    self.force_remove(path)
 
-            call = self.get_proxy("org.ofono.VoiceCall", path)
-            if call:
-                call.call_sync("Answer", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.debug(f"[OfonoManager] Answer failed for {path}: {e}")
-            err_str = str(e)
-            if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                self.force_remove(path)
+        if path in self.active_calls:
+            proxy = self.active_calls[path].get('proxy')
+            if proxy:
+                proxy.call("Answer", None, Gio.DBusCallFlags.NONE, -1, None, answered, None)
+            return
+
+        call = self.get_proxy("org.ofono.VoiceCall", path)
+        if call:
+            call.call("Answer", None, Gio.DBusCallFlags.NONE, -1, None, answered, None)
 
     def hangup_call(self, path):
         """Hangup a specific call; hanging up an unanswered ring is a rejection.
@@ -1287,25 +1321,29 @@ class OfonoManager(GObject.Object):
         happened to drop at the same moment still says so.
         """
         self.emit('hangup-requested')
-        try:
-            if path in self.active_calls:
-                if self.active_calls[path].get('state') in ('incoming', 'waiting'):
-                    self.active_calls[path]['rejected'] = True
-                self.active_calls[path]['disconnect_reason'] = "local"
-                proxy = self.active_calls[path].get('proxy')
-                if proxy:
-                    proxy.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
-                    return
 
-            call = self.get_proxy("org.ofono.VoiceCall", path)
-            if call:
-                call.call_sync("Hangup", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            call_state = self.active_calls.get(path, {}).get("state", "gone")
-            logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
-            err_str = str(e)
-            if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left, path)
+        def hung_up(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                call_state = self.active_calls.get(path, {}).get("state", "gone")
+                logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
+                err_str = str(e)
+                if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
+                    GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left, path)
+
+        if path in self.active_calls:
+            if self.active_calls[path].get('state') in ('incoming', 'waiting'):
+                self.active_calls[path]['rejected'] = True
+            self.active_calls[path]['disconnect_reason'] = "local"
+            proxy = self.active_calls[path].get('proxy')
+            if proxy:
+                proxy.call("Hangup", None, Gio.DBusCallFlags.NONE, -1, None, hung_up, None)
+                return
+
+        call = self.get_proxy("org.ofono.VoiceCall", path)
+        if call:
+            call.call("Hangup", None, Gio.DBusCallFlags.NONE, -1, None, hung_up, None)
 
     def hangup_all(self):
         """Hangup all active calls, which is as local as hanging up one.
@@ -1324,106 +1362,120 @@ class OfonoManager(GObject.Object):
                 data['rejected'] = True
             data['disconnect_reason'] = "local"
 
-        try:
-            self.voice_proxy.call_sync("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
-            for path in list(self.active_calls.keys()):
-                self.hangup_call(path)
+        def hangup_all_done(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.debug(f"[OfonoManager] HangupAll failed, falling back to per-call hangup: {e}")
+                for path in list(self.active_calls.keys()):
+                    self.hangup_call(path)
+
+        self.voice_proxy.call("HangupAll", None, Gio.DBusCallFlags.NONE, -1, None,
+                              hangup_all_done, None)
 
     def swap_calls(self):
         """Swap active and held calls."""
 
         if not self.voice_proxy:
             return
+        self.voice_proxy.call("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None,
+                              self.on_modem_call_done, "SwapCalls")
+
+    def report_ss_result(self, proxy, result, label, on_result, after=None):
+        """Turn one supplementary-service reply into (ok, error) for the asker."""
         try:
-            self.voice_proxy.call_sync("SwapCalls", None, Gio.DBusCallFlags.NONE, -1, None)
+            proxy.call_finish(result)
         except Exception as e:
-            logger.error(f"SwapCalls failed: {e}")
+            logger.error(f"[OfonoManager] {label} failed: {e}")
+            if on_result:
+                on_result(False, str(e))
+            return
+        if after:
+            after()
+        if on_result:
+            on_result(True, None)
 
-    def create_multiparty(self):
-        """Join the active and held calls into a conference; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
-
+    def create_multiparty(self, on_result=None):
+        """Join the active and held calls into a conference; on_result hears (ok, error)."""
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("CreateMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] CreateMultiparty failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.voice_proxy.call("CreateMultiparty", None, Gio.DBusCallFlags.NONE,
+                              SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, "CreateMultiparty", on_result),
+                              None)
 
-    def hangup_multiparty(self):
-        """Release every call in the conference; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
-
+    def hangup_multiparty(self, on_result=None):
+        """Release every call in the conference; on_result hears (ok, error)."""
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("HangupMultiparty", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] HangupMultiparty failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.voice_proxy.call("HangupMultiparty", None, Gio.DBusCallFlags.NONE,
+                              SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, "HangupMultiparty", on_result),
+                              None)
 
-    def private_chat(self, path):
-        """Split one conference participant into a private call; blocking, call from a worker.
+    def private_chat(self, path, on_result=None):
+        """Split one conference participant into a private call.
 
         The network may refuse this on IMS conferences, so failures are
-        expected and reported, never hidden. Returns (True, None) on
-        success or (False, error text).
+        expected and reported, never hidden. on_result hears (ok, error).
         """
 
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("PrivateChat", GLib.Variant("(o)", (path,)),
-                                       Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] PrivateChat failed for {path}: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.voice_proxy.call("PrivateChat", GLib.Variant("(o)", (path,)),
+                              Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, f"PrivateChat for {path}", on_result),
+                              None)
 
-    def transfer_call(self):
-        """Connect the active and held calls to each other and leave; blocking, call from a worker.
+    def transfer_call(self, on_result=None):
+        """Connect the active and held calls to each other and leave.
 
         Requires the Explicit Call Transfer service from the carrier, so
-        rejection is a normal outcome. Returns (True, None) on success
-        or (False, error text).
+        rejection is a normal outcome. on_result hears (ok, error).
         """
 
         if not self.voice_proxy:
-            return (False, "no proxy")
-        try:
-            self.voice_proxy.call_sync("Transfer", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
+            if on_result:
+                on_result(False, "no proxy")
+            return
+
+        def mark_transferred():
             for data in self.active_calls.values():
                 if data.get('state') in ('active', 'held'):
                     data['transferred'] = True
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Transfer failed: {e}")
-            return (False, str(e))
+
+        self.voice_proxy.call("Transfer", None, Gio.DBusCallFlags.NONE,
+                              SS_REQUEST_TIMEOUT_MS, None,
+                              lambda p, r, _d: self.report_ss_result(p, r, "Transfer", on_result,
+                                                                     mark_transferred),
+                              None)
 
     def load_emergency_numbers(self):
-        """Seed the network emergency number list; blocking, call from a worker.
+        """Seed the network emergency number list.
 
         The cached list deliberately survives modem loss, so a flaky
         modem can only ever add numbers, never remove them.
         """
         if not self.voice_proxy:
             return
-        try:
-            res = self.voice_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            numbers = res.unpack()[0].get("EmergencyNumbers", [])
+
+        def seeded(proxy, result, _data):
+            try:
+                numbers = proxy.call_finish(result).unpack()[0].get("EmergencyNumbers", [])
+            except GLib.Error as e:
+                logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
+                return
             if numbers:
-                GLib.idle_add(self.set_network_emergency_numbers, numbers)
-        except Exception as e:
-            logger.warning(f"[OfonoManager] Emergency number read failed: {e}")
+                self.set_network_emergency_numbers(numbers)
+
+        self.voice_proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None,
+                              seeded, None)
 
     def get_emergency_numbers(self):
         """Return configured emergency entries merged with the network list."""
@@ -1436,21 +1488,31 @@ class OfonoManager(GObject.Object):
                 entries.append({"name": number, "number": number})
         return entries
 
-    def set_delivery_reports(self, enabled):
-        """Ask the network for SMS delivery reports; blocking, call from a worker.
+    def set_delivery_reports(self, enabled, on_result=None):
+        """Ask the network for SMS delivery reports.
 
-        Returns (True, None) on success or (False, error text).
+        on_result hears (True, None) or (False, error text); the modem
+        seed asks for none, since nothing is waiting on the answer.
         """
+        def answer(ok, error):
+            if on_result:
+                on_result((ok, error))
+
         if not self.msg_proxy:
-            return (False, "no proxy")
-        try:
-            self.msg_proxy.call_sync("SetProperty",
-                                     GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
-                                     Gio.DBusCallFlags.NONE, -1, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
-            return (False, str(e))
+            answer(False, "no proxy")
+            return
+
+        def done(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+                answer(True, None)
+            except GLib.Error as e:
+                logger.error(f"[OfonoManager] Delivery report setting failed: {e}")
+                answer(False, str(e))
+
+        self.msg_proxy.call("SetProperty",
+                            GLib.Variant("(sv)", ("UseDeliveryReports", GLib.Variant("b", enabled))),
+                            Gio.DBusCallFlags.NONE, -1, None, done, None)
 
     def force_remove(self, path):
         """Forcefully remove a call from the active list."""
@@ -1472,24 +1534,30 @@ class OfonoManager(GObject.Object):
             self.force_remove(path)
         return False
 
+    def on_modem_call_done(self, proxy, result, label):
+        """Log a modem call nothing waits on, for when the modem refuses it."""
+        try:
+            proxy.call_finish(result)
+        except Exception as e:
+            logger.error(f"[OfonoManager] {label} failed: {e}")
+
     def send_dtmf(self, tones):
         """Send DTMF tones during a call."""
 
         if not self.voice_proxy:
             return
-        try:
-            self.voice_proxy.call_sync("SendTones", GLib.Variant("(s)", (tones,)), Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Send DTMF failed: {e}")
+        self.voice_proxy.call("SendTones", GLib.Variant("(s)", (tones,)),
+                              Gio.DBusCallFlags.NONE, -1, None,
+                              self.on_modem_call_done, "SendTones")
 
     def mute(self, muted=True):
         """Mute or unmute the modem volume."""
         if not self.vol_proxy:
             return
-        try:
-            self.vol_proxy.call_sync("SetProperty", GLib.Variant("(sv)", ("Muted", GLib.Variant("b", muted))), Gio.DBusCallFlags.NONE, -1, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Mute failed: {e}")
+        self.vol_proxy.call("SetProperty",
+                            GLib.Variant("(sv)", ("Muted", GLib.Variant("b", muted))),
+                            Gio.DBusCallFlags.NONE, -1, None,
+                            self.on_modem_call_done, "Mute")
 
     def send_sms(self, number, text):
         """Send an SMS message."""
@@ -1522,17 +1590,22 @@ class OfonoManager(GObject.Object):
             return
 
         clean_num = normalize_number(number)
-        try:
-            ret = self.msg_proxy.call_sync("SendMessage", GLib.Variant("(ss)", (clean_num, text)), Gio.DBusCallFlags.NONE, 30000, None)
-            self.track_sms(row_id, ret.unpack()[0])
-        except Exception as e:
-            err = str(e)
+
+        def sent(proxy, result, _data):
+            try:
+                self.track_sms(row_id, proxy.call_finish(result).unpack()[0])
+                return
+            except GLib.Error as e:
+                err = str(e)
             if any(x in err for x in ["Operation failed", "Timeout", "NoReply", "org.ofono.Error.Failed"]):
-                logger.warning(f"[OfonoManager] Ambiguous SMS send error, waiting for state signals: {e}")
+                logger.warning(f"[OfonoManager] Ambiguous SMS send error, waiting for state signals: {err}")
                 self.track_sms(row_id, None)
             else:
-                logger.error(f"[OfonoManager] SMS send failed: {e}")
+                logger.error(f"[OfonoManager] SMS send failed: {err}")
                 self.db.update_message_status(row_id, "failed")
+
+        self.msg_proxy.call("SendMessage", GLib.Variant("(ss)", (clean_num, text)),
+                            Gio.DBusCallFlags.NONE, SMS_SEND_TIMEOUT_MS, None, sent, None)
 
     def track_sms(self, row_id, path):
         """Register an in-flight SMS and arm its resolution timeout."""
@@ -1637,11 +1710,11 @@ class OfonoManager(GObject.Object):
         if row_id is None:
             return False
 
-        run_in_background(self.send_sms_tracked, number, text, row_id)
+        self.send_sms_tracked(number, text, row_id)
         return True
 
-    def start_ussd(self, command):
-        """Start a USSD session and return (text, state); blocking.
+    def start_ussd(self, command, on_result=None):
+        """Start a USSD session; on_result hears (text, state), or None on failure.
 
         oFono returns a result type and a variant payload from Initiate().
         For ordinary USSD the payload is the network text. The session may
@@ -1649,17 +1722,19 @@ class OfonoManager(GObject.Object):
         """
         if not self.ussd_proxy:
             logger.warning("[OfonoManager] USSD unavailable, no proxy")
-            return None
+            if on_result:
+                on_result(None)
+            return
 
-        try:
-            result = self.ussd_proxy.call_sync(
-                "Initiate",
-                GLib.Variant("(s)", (command,)),
-                Gio.DBusCallFlags.NONE,
-                SS_REQUEST_TIMEOUT_MS,
-                None,
-            )
-            result_type, payload = result.unpack()
+        def initiated(proxy, result, _data):
+            try:
+                result_type, payload = proxy.call_finish(result).unpack()
+            except Exception as e:
+                logger.error(f"[OfonoManager] USSD request failed: {e}")
+                if on_result:
+                    on_result(None)
+                return
+
             if isinstance(payload, GLib.Variant):
                 payload = payload.unpack()
 
@@ -1668,64 +1743,75 @@ class OfonoManager(GObject.Object):
             else:
                 text = str(payload) if payload is not None else str(result_type or "")
 
-            state = self.get_ussd_state()
-            self.ussd_text = text or ""
-            GLib.idle_add(self.apply_ussd_state, state)
-            logger.debug(
-                f"[OfonoManager] USSD initiate type={result_type}, state={state}, "
-                f"payload={payload!r}"
-            )
-            return text, state
-        except Exception as e:
-            logger.error(f"[OfonoManager] USSD request failed: {e}")
-            return None
+            def with_state(state):
+                self.ussd_text = text or ""
+                self.apply_ussd_state(state)
+                logger.debug(
+                    f"[OfonoManager] USSD initiate type={result_type}, state={state}, "
+                    f"payload={payload!r}"
+                )
+                if on_result:
+                    on_result((text, state))
 
-    def respond_ussd(self, response):
-        """Reply to an interactive USSD session; blocking.
+            self.get_ussd_state(with_state)
 
-        Returns (text, state). If the network presents another menu,
-        state remains user-response and the returned text is that menu.
+        self.ussd_proxy.call("Initiate", GLib.Variant("(s)", (command,)),
+                             Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                             initiated, None)
+
+    def respond_ussd(self, response, on_result=None):
+        """Reply to an interactive USSD session; on_result hears (text, state).
+
+        If the network presents another menu, state remains user-response
+        and the text is that menu.
         """
         if not self.ussd_proxy:
             logger.warning("[OfonoManager] USSD unavailable, no proxy")
-            return None
+            if on_result:
+                on_result(None)
+            return
 
-        try:
-            result = self.ussd_proxy.call_sync(
-                "Respond",
-                GLib.Variant("(s)", (response,)),
-                Gio.DBusCallFlags.NONE,
-                SS_REQUEST_TIMEOUT_MS,
-                None,
-            )
-            values = result.unpack() if result else ()
+        def answered(proxy, result, _data):
+            try:
+                values = proxy.call_finish(result).unpack()
+            except Exception as e:
+                logger.error(f"[OfonoManager] USSD response failed: {e}")
+                if on_result:
+                    on_result(None)
+                return
+
             text = str(values[0]) if values else ""
-            state = self.get_ussd_state()
-            self.ussd_text = text or ""
-            GLib.idle_add(self.apply_ussd_state, state)
-            logger.debug(
-                f"[OfonoManager] USSD response state={state}, payload={text!r}"
-            )
-            return text, state
-        except Exception as e:
-            logger.error(f"[OfonoManager] USSD response failed: {e}")
-            return None
+
+            def with_state(state):
+                self.ussd_text = text or ""
+                self.apply_ussd_state(state)
+                logger.debug(
+                    f"[OfonoManager] USSD response state={state}, payload={text!r}")
+                if on_result:
+                    on_result((text, state))
+
+            self.get_ussd_state(with_state)
+
+        self.ussd_proxy.call("Respond", GLib.Variant("(s)", (response,)),
+                             Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                             answered, None)
 
     def cancel_ussd(self):
-        """Cancel the active USSD session; blocking."""
+        """Cancel the active USSD session."""
         if not self.ussd_proxy:
-            return False
+            return
 
-        try:
-            self.ussd_proxy.call_sync(
-                "Cancel", None, Gio.DBusCallFlags.NONE,
-                SS_REQUEST_TIMEOUT_MS, None)
+        def cancelled(proxy, result, _data):
+            try:
+                proxy.call_finish(result)
+            except Exception as e:
+                logger.debug(f"[OfonoManager] USSD cancel failed: {e}")
+                return
             self.ussd_text = ""
-            GLib.idle_add(self.apply_ussd_state, "idle")
-            return True
-        except Exception as e:
-            logger.debug(f"[OfonoManager] USSD cancel failed: {e}")
-            return False
+            self.apply_ussd_state("idle")
+
+        self.ussd_proxy.call("Cancel", None, Gio.DBusCallFlags.NONE,
+                             SS_REQUEST_TIMEOUT_MS, None, cancelled, None)
 
     def service_proxy(self, service):
         """Map a supplementary service key to its D-Bus proxy."""
@@ -1756,93 +1842,91 @@ class OfonoManager(GObject.Object):
         """Return whether the modem currently exports the interface."""
         return interface in self._seen_interfaces
 
-    def get_service_properties(self, service):
-        """Read a supplementary service's properties; blocking, call from a worker.
+    def get_service_properties(self, service, on_result=None):
+        """Read a supplementary service's properties.
 
-        Returns the property dict, or None when the network query failed.
+        on_result hears the property dict, or None when the query failed.
         """
 
         proxy = self.service_proxy(service)
         if not proxy:
             logger.warning(f"[OfonoManager] {service} unavailable, no proxy")
-            return None
-        try:
-            res = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return res.unpack()[0]
-        except Exception as e:
-            logger.error(f"[OfonoManager] {service} query failed: {e}")
-            return None
+            if on_result:
+                on_result(None)
+            return
 
-    def set_service_property(self, service, name, value):
-        """Set a supplementary service property; blocking, call from a worker.
+        def read(pr, r, _d):
+            try:
+                if on_result:
+                    on_result(pr.call_finish(r).unpack()[0])
+                return
+            except Exception as e:
+                logger.error(f"[OfonoManager] {service} query failed: {e}")
+            if on_result:
+                on_result(None)
 
-        Returns (True, None) on success or (False, error text).
-        """
+        proxy.call("GetProperties", None, Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS,
+                   None, read, None)
+
+    def set_service_property(self, service, name, value, on_result=None):
+        """Set a supplementary service property; on_result hears (ok, error)."""
 
         proxy = self.service_proxy(service)
         if not proxy:
-            return (False, "no proxy")
+            if on_result:
+                on_result(False, "no proxy")
+            return
         variant = GLib.Variant("q", value) if isinstance(value, int) else GLib.Variant("s", value)
-        try:
-            proxy.call_sync("SetProperty", GLib.Variant("(sv)", (name, variant)),
-                            Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Setting {service} {name} failed: {e}")
-            return (False, str(e))
+        proxy.call("SetProperty", GLib.Variant("(sv)", (name, variant)),
+                   Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                   lambda pr, r, _d: self.report_ss_result(pr, r, f"Setting {service} {name}", on_result),
+                   None)
 
-    def set_barring_property(self, name, value, password):
-        """Set a call barring rule; blocking, call from a worker.
-
-        Returns (True, None) on success or (False, error text).
-        """
+    def set_barring_property(self, name, value, password, on_result=None):
+        """Set a call barring rule; on_result hears (ok, error)."""
 
         if not self.cb_proxy:
-            return (False, "no proxy")
-        try:
-            self.cb_proxy.call_sync("SetProperty",
-                                    GLib.Variant("(svs)", (name, GLib.Variant("s", value), password)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Setting barring {name} failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cb_proxy.call("SetProperty",
+                           GLib.Variant("(svs)", (name, GLib.Variant("s", value), password)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, f"Setting barring {name}", on_result),
+                           None)
 
-    def disable_all_forwarding(self):
-        """Clear every forwarding rule; blocking, call from a worker."""
+    def disable_all_forwarding(self, on_result=None):
+        """Clear every forwarding rule; on_result hears (ok, error)."""
         if not self.cf_proxy:
-            return (False, "no proxy")
-        try:
-            self.cf_proxy.call_sync("DisableAll", GLib.Variant("(s)", ("all",)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Disabling forwarding failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cf_proxy.call("DisableAll", GLib.Variant("(s)", ("all",)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, "Disabling forwarding", on_result),
+                           None)
 
-    def disable_all_barrings(self, password):
-        """Clear every barring rule; blocking, call from a worker."""
+    def disable_all_barrings(self, password, on_result=None):
+        """Clear every barring rule; on_result hears (ok, error)."""
         if not self.cb_proxy:
-            return (False, "no proxy")
-        try:
-            self.cb_proxy.call_sync("DisableAll", GLib.Variant("(s)", (password,)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Disabling barrings failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cb_proxy.call("DisableAll", GLib.Variant("(s)", (password,)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, "Disabling barrings", on_result),
+                           None)
 
-    def change_barring_password(self, old, new):
-        """Change the network barring password; blocking, call from a worker."""
+    def change_barring_password(self, old, new, on_result=None):
+        """Change the network barring password; on_result hears (ok, error)."""
         if not self.cb_proxy:
-            return (False, "no proxy")
-        try:
-            self.cb_proxy.call_sync("ChangePassword", GLib.Variant("(ss)", (old, new)),
-                                    Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None)
-            return (True, None)
-        except Exception as e:
-            logger.error(f"[OfonoManager] Barring password change failed: {e}")
-            return (False, str(e))
+            if on_result:
+                on_result(False, "no proxy")
+            return
+        self.cb_proxy.call("ChangePassword", GLib.Variant("(ss)", (old, new)),
+                           Gio.DBusCallFlags.NONE, SS_REQUEST_TIMEOUT_MS, None,
+                           lambda p, r, _d: self.report_ss_result(p, r, "Barring password change", on_result),
+                           None)
 
     def on_message_signal(self, proxy, sender, signal, params):
         """Handle incoming message signals."""

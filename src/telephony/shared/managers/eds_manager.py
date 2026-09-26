@@ -97,6 +97,7 @@ class EdsManager(GObject.Object):
         self.books = {}
         self.books_lock = threading.Lock()
         self._book_locks = {}
+        self.book_openers = {}
         self.registry_watched = False
         self._registry_sub_ids = []
         self._registry_paths = {}
@@ -355,8 +356,7 @@ class EdsManager(GObject.Object):
             Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None)
         record = {'uid': uid, 'path': book_path, 'bus_name': book_bus_name,
                   'view_path': None, 'sub_ids': []}
-        with self.books_lock:
-            self.books[uid] = record
+        record = self.remember_book(uid, record)
         logger.info(f"[EDS] Book open for {uid} at {book_path}")
         return record
 
@@ -392,6 +392,133 @@ class EdsManager(GObject.Object):
                 method, params, reply_type, Gio.DBusCallFlags.NONE,
                 EDS_CALL_TIMEOUT_MS, None)
 
+    def remember_book(self, uid, record):
+        """Store a freshly opened book, keeping one that got there first.
+
+        The factory hands out the same book for the same uid however
+        many times it is asked, so a second open costs nothing and only
+        the record matters: an earlier one may already carry a live
+        view's path and subscriptions, and replacing it would strand
+        them.
+        """
+        with self.books_lock:
+            existing = self.books.get(uid)
+            if existing:
+                return existing
+            self.books[uid] = record
+            return record
+
+    def open_book_async(self, uid, callback):
+        """Hand a book's record to callback(record, error), opening it if needed.
+
+        Opens for one book are folded together: a caller arriving while
+        another's open is in flight waits for that one instead of asking
+        the factory again.
+        """
+        with self.books_lock:
+            record = self.books.get(uid)
+        if record:
+            callback(record, None)
+            return
+
+        waiting = self.book_openers.get(uid)
+        if waiting is not None:
+            waiting.append(callback)
+            return
+
+        self.book_openers[uid] = [callback]
+        self.get_bus().call(
+            EDS_BOOK_BUS_NAME, EDS_FACTORY_PATH, EDS_FACTORY_IFACE,
+            "OpenAddressBook", GLib.Variant("(s)", (uid,)),
+            GLib.VariantType("(ss)"), Gio.DBusCallFlags.NONE,
+            EDS_CALL_TIMEOUT_MS, None, self.on_address_book_opened, uid)
+
+    def on_address_book_opened(self, connection, result, uid):
+        """Ready the book the factory named, then open it for business."""
+        try:
+            book_path, book_bus_name = connection.call_finish(result).unpack()
+        except GLib.Error as e:
+            self.finish_book_open(uid, None, e)
+            return
+
+        connection.call(
+            book_bus_name, book_path, EDS_BOOK_IFACE,
+            "Open", None, GLib.VariantType("(as)"),
+            Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None,
+            self.on_book_ready, (uid, book_path, book_bus_name))
+
+    def on_book_ready(self, connection, result, user_data):
+        """Record the opened book and release everyone waiting for it."""
+        uid, book_path, book_bus_name = user_data
+        try:
+            connection.call_finish(result)
+        except GLib.Error as e:
+            self.finish_book_open(uid, None, e)
+            return
+
+        record = {'uid': uid, 'path': book_path, 'bus_name': book_bus_name,
+                  'view_path': None, 'sub_ids': []}
+        record = self.remember_book(uid, record)
+        logger.info(f"[EDS] Book open for {uid} at {book_path}")
+        self.finish_book_open(uid, record, None)
+
+    def finish_book_open(self, uid, record, error):
+        """Tell everyone who waited for this book how the open went."""
+        for callback in self.book_openers.pop(uid, []):
+            callback(record, error)
+
+    def book_call_async(self, uid, method, params, reply_type, callback):
+        """Call a method on a book, reopening once if its process died.
+
+        Reports through callback(reply, error). The retry rule is the
+        blocking path's: only a dead connection is tried again, because
+        a reply the server may have already acted on must not run twice
+        or a create without a stated uid would duplicate the contact.
+        """
+        def opened(record, error):
+            if error:
+                callback(None, error)
+                return
+            self.get_bus().call(
+                record['bus_name'], record['path'], EDS_BOOK_IFACE,
+                method, params, reply_type, Gio.DBusCallFlags.NONE,
+                EDS_CALL_TIMEOUT_MS, None, answered, record)
+
+        def answered(connection, result, record):
+            try:
+                callback(connection.call_finish(result), None)
+            except GLib.Error as e:
+                if not self.is_gone_error(e):
+                    callback(None, e)
+                    return
+                logger.warning(f"[EDS] {method} on {uid} lost its book, reopening: {e}")
+                self.forget_dead_book(uid, record)
+                self.open_book_async(uid, reopened)
+
+        def reopened(record, error):
+            if error:
+                callback(None, error)
+                return
+            self.get_bus().call(
+                record['bus_name'], record['path'], EDS_BOOK_IFACE,
+                method, params, reply_type, Gio.DBusCallFlags.NONE,
+                EDS_CALL_TIMEOUT_MS, None, retried, None)
+
+        def retried(connection, result, _user_data):
+            try:
+                callback(connection.call_finish(result), None)
+            except GLib.Error as e:
+                callback(None, e)
+
+        self.open_book_async(uid, opened)
+
+    def forget_dead_book(self, uid, record):
+        """Drop a book that died, unless it was already replaced."""
+        with self.books_lock:
+            current = self.books.get(uid)
+        if current is record or current is None:
+            self.close_book(uid)
+
     def is_gone_error(self, error):
         """Return True when the error means the book's process is gone."""
         gone = ("org.freedesktop.DBus.Error.ServiceUnknown",
@@ -421,13 +548,16 @@ class EdsManager(GObject.Object):
             except Exception as e:
                 logger.debug(f"[EDS] Unsubscribe error (ignorable): {e}")
         if record['view_path']:
-            try:
-                bus.call_sync(
-                    record['bus_name'], record['view_path'], EDS_VIEW_IFACE,
-                    "Dispose", None, GLib.VariantType("()"),
-                    Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None)
-            except Exception as e:
-                logger.debug(f"[EDS] View dispose error (ignorable): {e}")
+            def disposed(conn, result, _data):
+                try:
+                    conn.call_finish(result)
+                except Exception as e:
+                    logger.debug(f"[EDS] View dispose error (ignorable): {e}")
+
+            bus.call(
+                record['bus_name'], record['view_path'], EDS_VIEW_IFACE,
+                "Dispose", None, GLib.VariantType("()"),
+                Gio.DBusCallFlags.NONE, EDS_CALL_TIMEOUT_MS, None, disposed, None)
 
     def start_view(self, uid):
         """Open the live view and stream the book; blocking, call from a worker.
@@ -978,8 +1108,11 @@ class EdsManager(GObject.Object):
     def refresh_backends(self):
         """Ask every remote backend to re-sync with its store.
 
-        Blocking, call from a worker. Local books have nothing to
-        refresh, so only the remote ones are asked.
+        Returns how many were asked, not how many answered: a refresh is
+        a request to the backend and the answer says only that it heard.
+        Local books have nothing to refresh, so only the remote ones are
+        asked. The registry read above still blocks, so this stays on a
+        worker.
         """
         with self.sources_lock:
             uids = list(self.sources.keys())
@@ -995,16 +1128,19 @@ class EdsManager(GObject.Object):
             info = registry_books.get(uid)
             if not info or info['is_local']:
                 continue
-            try:
-                self.get_bus().call_sync(
-                    EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, EDS_SOURCE_MANAGER_IFACE,
-                    "RefreshBackend", GLib.Variant("(s)", (uid,)),
-                    GLib.VariantType("()"), Gio.DBusCallFlags.NONE,
-                    EDS_CALL_TIMEOUT_MS, None)
-                refreshed += 1
-                logger.info(f"[EDS] Backend refresh started for {uid}")
-            except Exception as e:
-                logger.warning(f"[EDS] Backend refresh failed for {uid}: {e}")
+            def refreshed_backend(bus, result, book_uid):
+                try:
+                    bus.call_finish(result)
+                    logger.info(f"[EDS] Backend refresh started for {book_uid}")
+                except Exception as e:
+                    logger.warning(f"[EDS] Backend refresh failed for {book_uid}: {e}")
+
+            self.get_bus().call(
+                EDS_SOURCES_BUS_NAME, EDS_SOURCES_PATH, EDS_SOURCE_MANAGER_IFACE,
+                "RefreshBackend", GLib.Variant("(s)", (uid,)),
+                GLib.VariantType("()"), Gio.DBusCallFlags.NONE,
+                EDS_CALL_TIMEOUT_MS, None, refreshed_backend, uid)
+            refreshed += 1
         return refreshed
 
     def create_local_addressbook(self, name):
@@ -1417,101 +1553,196 @@ class EdsManager(GObject.Object):
         ok = self.save_contact(vcard_string, uid=uid, source_uid=source_uid)
         return (ok, "" if ok else "write-failed")
 
-    def save_contact(self, vcard_string, uid=None, source_uid=None):
-        """Save a contact from a VCard string; blocking, call from a worker."""
-        lines = vcard_string.splitlines()
+    def cleaned_vcard(self, vcard_string):
+        """Return the vcard with EDS's own E164 annotations stripped from TEL lines."""
         cleaned_lines = []
-        for line in lines:
-            if is_property(line, "TEL"):
-                try:
-                    parts = line.split(":", 1)
-                    if len(parts) > 1:
-                        raw = parts[1].strip()
-                        key_part = parts[0]
+        for line in vcard_string.splitlines():
+            if not is_property(line, "TEL"):
+                cleaned_lines.append(line)
+                continue
+            try:
+                parts = line.split(":", 1)
+                if len(parts) > 1:
+                    raw = parts[1].strip()
+                    key_part = parts[0]
 
-                        if "X-EVOLUTION-E164" in key_part.upper():
-                            subparts = key_part.split(";")
-                            new_subparts = [sp for sp in subparts
-                                            if not sp.upper().startswith("X-EVOLUTION-E164")]
-                            key_part = ";".join(new_subparts)
+                    if "X-EVOLUTION-E164" in key_part.upper():
+                        subparts = key_part.split(";")
+                        new_subparts = [sp for sp in subparts
+                                        if not sp.upper().startswith("X-EVOLUTION-E164")]
+                        key_part = ";".join(new_subparts)
 
-                        cleaned_lines.append(f"{key_part}:{raw}")
-                    else:
-                        cleaned_lines.append(line)
-                except Exception as e:
-                    logger.warning(f"[EDS] VCard line processing error: {e}")
+                    cleaned_lines.append(f"{key_part}:{raw}")
+                else:
                     cleaned_lines.append(line)
-            else:
+            except Exception as e:
+                logger.warning(f"[EDS] VCard line processing error: {e}")
                 cleaned_lines.append(line)
 
-        final_vcard = "\n".join(cleaned_lines)
+        return "\n".join(cleaned_lines)
 
-        try:
-            real_uid = None
-            target_uid = None
+    def save_plan(self, vcard_string, uid=None, source_uid=None):
+        """Work out where a save goes and what to send.
 
-            if uid and isinstance(uid, str) and uid.strip():
-                s_uid, r_uid = self.parse_composite_uid(uid)
-                if not s_uid:
-                    s_uid = source_uid
-                    r_uid = uid
+        Returns (target_uid, vcard, method), or (None, "", "") when the
+        save is refused; the reason is logged where it is decided.
+        """
+        final_vcard = self.cleaned_vcard(vcard_string)
+        refused = (None, "", "")
 
-                if not s_uid:
-                    with self.cache_lock:
-                        cached = self.cache.get(uid)
-                    if cached:
-                        s_uid = cached.get('source_uid')
+        if not (uid and isinstance(uid, str) and uid.strip()):
+            if source_uid and self.is_andromeda_source(source_uid):
+                logger.warning("[EDS] Refusing to save new Andromeda Contact")
+                return refused
 
-                if not s_uid:
-                    logger.error(f"[EDS] Save failed: Could not determine source for UID {uid}")
-                    return False
-
-                if self.is_andromeda_source(s_uid):
-                    logger.warning(f"[EDS] Refusing to modify Andromeda Contact {uid}")
-                    return False
-
-                target_uid = self.writable_book_uid(s_uid)
-                real_uid = r_uid
-            else:
-                if source_uid and self.is_andromeda_source(source_uid):
-                    logger.warning("[EDS] Refusing to save new Andromeda Contact")
-                    return False
-
-                target_uid = self.writable_book_uid(source_uid)
-
+            target_uid = self.writable_book_uid(source_uid)
             if not target_uid:
                 logger.error("[EDS] Save failed: No writable book found.")
-                return False
+                return refused
 
-            if real_uid:
-                lines = final_vcard.splitlines()
-                lines = [line for line in lines if not line.upper().startswith("UID:")]
-                uid_line = f"UID:{real_uid}"
-                end_index = next((i for i, line in enumerate(lines)
-                                  if line.strip().upper().startswith("END:VCARD")), None)
-                if end_index is None:
-                    lines.append(uid_line)
-                    lines.append("END:VCARD")
-                else:
-                    lines.insert(end_index, uid_line)
-                final_vcard = "\n".join(lines)
-                self.book_call(target_uid, "ModifyContacts",
-                                GLib.Variant("(asu)", ([final_vcard], 0)), None)
-                logger.info(f"[EDS] Modified: {real_uid}")
-            else:
-                self.book_call(target_uid, "CreateContacts",
-                                GLib.Variant("(asu)", ([final_vcard], 0)), None)
-                logger.info("[EDS] Created new contact")
-            return True
+            return (target_uid, final_vcard, "CreateContacts")
+
+        s_uid, r_uid = self.parse_composite_uid(uid)
+        if not s_uid:
+            s_uid = source_uid
+            r_uid = uid
+
+        if not s_uid:
+            with self.cache_lock:
+                cached = self.cache.get(uid)
+            if cached:
+                s_uid = cached.get('source_uid')
+
+        if not s_uid:
+            logger.error(f"[EDS] Save failed: Could not determine source for UID {uid}")
+            return refused
+
+        if self.is_andromeda_source(s_uid):
+            logger.warning(f"[EDS] Refusing to modify Andromeda Contact {uid}")
+            return refused
+
+        target_uid = self.writable_book_uid(s_uid)
+        if not target_uid:
+            logger.error("[EDS] Save failed: No writable book found.")
+            return refused
+
+        lines = [line for line in final_vcard.splitlines()
+                 if not line.upper().startswith("UID:")]
+        uid_line = f"UID:{r_uid}"
+        end_index = next((i for i, line in enumerate(lines)
+                          if line.strip().upper().startswith("END:VCARD")), None)
+        if end_index is None:
+            lines.append(uid_line)
+            lines.append("END:VCARD")
+        else:
+            lines.insert(end_index, uid_line)
+
+        return (target_uid, "\n".join(lines), "ModifyContacts")
+
+    def save_contact_with_reason_async(self, vcard_string, callback, uid=None, source_uid=None):
+        """Save a contact and say why a refusal happened, through callback(ok, reason)."""
+        if uid and ':' in uid:
+            target = uid.split(':', 1)[0]
+        elif source_uid:
+            target = source_uid
+        else:
+            target = self.default_source_uid()
+
+        if target and self.is_andromeda_source(target):
+            GLib.idle_add(callback, False, "read-only")
+            return
+
+        def done(ok):
+            callback(ok, "" if ok else "write-failed")
+
+        self.save_contact_async(vcard_string, done, uid=uid, source_uid=source_uid)
+
+    def save_contact(self, vcard_string, uid=None, source_uid=None):
+        """Save a contact from a VCard string; blocking, call from a worker."""
+        target_uid, final_vcard, method = self.save_plan(vcard_string, uid, source_uid)
+        if not target_uid:
+            return False
+
+        try:
+            self.book_call(target_uid, method,
+                           GLib.Variant("(asu)", ([final_vcard], 0)), None)
         except Exception as e:
             logger.error(f"[EDS] Save Error: {e}")
             return False
 
+        logger.info(f"[EDS] {method} done for {target_uid}")
+        return True
+
+    def save_contact_async(self, vcard_string, callback, uid=None, source_uid=None):
+        """Save a contact, reporting True or False through callback.
+
+        The callback always arrives later, never from inside this call,
+        so a caller feeding contacts one after another cannot recurse
+        into itself once per refused vcard.
+        """
+        target_uid, final_vcard, method = self.save_plan(vcard_string, uid, source_uid)
+        if not target_uid:
+            GLib.idle_add(callback, False)
+            return
+
+        def done(_reply, error):
+            if error:
+                logger.error(f"[EDS] Save Error: {error}")
+                callback(False)
+                return
+            logger.info(f"[EDS] {method} done for {target_uid}")
+            callback(True)
+
+        self.book_call_async(target_uid, method,
+                             GLib.Variant("(asu)", ([final_vcard], 0)), None, done)
+
     def delete_contact(self, uid):
         """Delete a contact by UID; blocking, call from a worker."""
+        s_uid, r_uid = self.delete_target(uid)
+        if not s_uid:
+            return False
+
+        try:
+            self.book_call(s_uid, "RemoveContacts",
+                            GLib.Variant("(asu)", ([r_uid], 0)), None)
+            logger.info(f"[EDS] Deleted: {uid}")
+            return True
+        except Exception as e:
+            logger.error(f"[EDS] Delete Error: {e}")
+            return False
+
+    def delete_contact_async(self, uid, callback):
+        """Delete a contact by UID, reporting True or False through callback.
+
+        The callback always arrives later, never from inside this call,
+        so a caller working through a list cannot recurse into itself
+        once per refused contact.
+        """
+        s_uid, r_uid = self.delete_target(uid)
+        if not s_uid:
+            GLib.idle_add(callback, False)
+            return
+
+        def done(_reply, error):
+            if error:
+                logger.error(f"[EDS] Delete Error: {error}")
+                callback(False)
+                return
+            logger.info(f"[EDS] Deleted: {uid}")
+            callback(True)
+
+        self.book_call_async(s_uid, "RemoveContacts",
+                             GLib.Variant("(asu)", ([r_uid], 0)), None, done)
+
+    def delete_target(self, uid):
+        """Return the (source, contact) uids a delete should address.
+
+        Returns (None, None) when the contact cannot be placed or its
+        book refuses deletion; the reason is logged where it is decided.
+        """
         if not isinstance(uid, str) or not uid.strip():
             logger.error("[EDS] Delete failed: Invalid UID format")
-            return False
+            return (None, None)
 
         s_uid, r_uid = self.parse_composite_uid(uid)
 
@@ -1530,20 +1761,13 @@ class EdsManager(GObject.Object):
 
         if not s_uid:
             logger.error(f"[EDS] Delete failed: Unknown source for {uid}")
-            return False
+            return (None, None)
 
         if self.is_andromeda_source(s_uid):
             logger.warning(f"[EDS] Refusing to delete Andromeda Contact {uid}")
-            return False
+            return (None, None)
 
-        try:
-            self.book_call(s_uid, "RemoveContacts",
-                            GLib.Variant("(asu)", ([r_uid], 0)), None)
-            logger.info(f"[EDS] Deleted: {uid}")
-            return True
-        except Exception as e:
-            logger.error(f"[EDS] Delete Error: {e}")
-            return False
+        return (s_uid, r_uid)
 
     def delete_contacts(self, uids):
         """Delete multiple contacts by UIDs; blocking, call from a worker."""

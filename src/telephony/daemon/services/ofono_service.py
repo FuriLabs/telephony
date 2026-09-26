@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gi.repository import Gio, GObject
+from gi.repository import Gio, GLib, GObject
 from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem, is_hfp_modem
 
@@ -33,6 +33,7 @@ class OfonoService(GObject.Object):
         self.connected = False
         self.modem_path = None
         self.manager_proxy = None
+        self.manager_serial = 0
 
         bus_type = Gio.BusType.SYSTEM
         self.bus = Gio.bus_get_sync(bus_type, None)
@@ -57,15 +58,34 @@ class OfonoService(GObject.Object):
 
     def init_manager(self):
         """Initialize the ofono manager proxy."""
-        self.manager_proxy = Gio.DBusProxy.new_sync(
+        self.manager_serial += 1
+        Gio.DBusProxy.new(
             self.bus, Gio.DBusProxyFlags.NONE, None,
-            "org.ofono", "/", "org.ofono.Manager", None)
+            "org.ofono", "/", "org.ofono.Manager", None,
+            self.on_manager_proxy_ready, self.manager_serial)
 
-        if self.manager_proxy:
-            self.manager_proxy.connect("g-signal", self.on_manager_signal)
-            self.scan_modems()
-        else:
+    def on_manager_proxy_ready(self, _source, result, serial):
+        """Start watching the manager once its proxy is up.
+
+        Ofono can vanish and come back while the proxy is still being
+        built, and each appearance asks for one: a proxy that outlived its
+        own attempt is dropped, or its signal handler would double every
+        ModemAdded from then on.
+        """
+        try:
+            proxy = Gio.DBusProxy.new_finish(result)
+        except GLib.Error as e:
+            logger.error(f"[Monitor] Could not get Manager proxy: {e}")
             self.emit('status-changed', 'error', "Could not get Manager proxy")
+            return
+
+        if serial != self.manager_serial:
+            proxy.run_dispose()
+            return
+
+        self.manager_proxy = proxy
+        self.manager_proxy.connect("g-signal", self.on_manager_signal)
+        self.scan_modems()
 
     def on_manager_signal(self, proxy, sender, signal, params):
         """Handle signals from the ofono manager."""
@@ -81,8 +101,27 @@ class OfonoService(GObject.Object):
 
     def scan_modems(self):
         """Scan for the first existing non-HFP modem."""
-        result = self.manager_proxy.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
-        modems = result.unpack()[0]
+        self.manager_proxy.call(
+            "GetModems", None, Gio.DBusCallFlags.NONE, -1, None,
+            self.on_scan_modems_done, None)
+
+    def on_scan_modems_done(self, proxy, result, _user_data):
+        """Take the first non-HFP modem the scan returned.
+
+        A scan that started before the service went away is dropped: ofono
+        answers this one late when it is still coming up, which is exactly
+        when the name can vanish underneath it.
+        """
+        try:
+            modems = proxy.call_finish(result).unpack()[0]
+        except GLib.Error as e:
+            logger.warning(f"[Monitor] Could not list modems: {e}")
+            self.emit('status-changed', 'error', "Could not list modems")
+            return
+
+        if proxy is not self.manager_proxy:
+            return
+
         modem = get_first_non_hfp_modem(modems)
         if modem:
             path, props = modem
@@ -110,6 +149,7 @@ class OfonoService(GObject.Object):
             self.connected = False
             self.modem_path = None
             self.manager_proxy = None
+            self.manager_serial += 1
             self.emit('status-changed', 'offline', reason)
 
     def stop(self):

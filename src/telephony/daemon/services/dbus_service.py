@@ -647,11 +647,7 @@ class TelephonyDaemonDBus:
             response, state = result
             invocation.return_value(GLib.Variant("(bss)", (True, response or "", state or "idle")))
 
-        def failed(error):
-            logger.error(f"[Daemon] USSD start failed: {error}")
-            invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
-
-        run_in_background(self.ofono.start_ussd, command, on_complete=done, on_error=failed)
+        self.ofono.start_ussd(command, done)
 
     def handle_respondussd(self, params, invocation):
         """Send a response inside an interactive USSD session."""
@@ -665,45 +661,34 @@ class TelephonyDaemonDBus:
             invocation.return_value(GLib.Variant(
                 "(bss)", (True, network_response or "", state or "idle")))
 
-        def failed(error):
-            logger.error(f"[Daemon] USSD response failed: {error}")
-            invocation.return_value(GLib.Variant("(bss)", (False, "", self.ofono.ussd_state)))
-
-        run_in_background(self.ofono.respond_ussd, response, on_complete=done, on_error=failed)
+        self.ofono.respond_ussd(response, done)
 
     def handle_cancelussd(self, _params, invocation):
         """Cancel the current USSD session."""
-        def done(success):
-            invocation.return_value(GLib.Variant("(b)", (bool(success),)))
-
-        def failed(error):
-            logger.debug(f"[Daemon] USSD cancel failed: {error}")
-            invocation.return_value(GLib.Variant("(b)", (False,)))
-
-        run_in_background(self.ofono.cancel_ussd, on_complete=done, on_error=failed)
+        self.ofono.cancel_ussd()
+        invocation.return_value(GLib.Variant("(b)", (True,)))
 
     def handle_callaction(self, params, invocation):
         """Run a call control action a window instance asked for."""
         action, argument = params.unpack()
+
+        def done(ok, error):
+            if not ok:
+                logger.error(f"[Daemon] Call action {action} failed: {error}")
+            invocation.return_value(GLib.Variant("(b)", (bool(ok),)))
+
         actions = {
-            "create_multiparty": lambda: self.ofono.create_multiparty(),
-            "hangup_multiparty": lambda: self.ofono.hangup_multiparty(),
-            "transfer": lambda: self.ofono.transfer_call(),
-            "private_chat": lambda: self.ofono.private_chat(argument),
+            "create_multiparty": lambda: self.ofono.create_multiparty(done),
+            "hangup_multiparty": lambda: self.ofono.hangup_multiparty(done),
+            "transfer": lambda: self.ofono.transfer_call(done),
+            "private_chat": lambda: self.ofono.private_chat(argument, done),
         }
         handler = actions.get(action)
         if handler is None:
             invocation.return_value(GLib.Variant("(b)", (False,)))
             return
 
-        def done(result):
-            invocation.return_value(GLib.Variant("(b)", (bool(result and result[0]),)))
-
-        def failed(error):
-            logger.error(f"[Daemon] Call action {action} failed: {error}")
-            invocation.return_value(GLib.Variant("(b)", (False,)))
-
-        run_in_background(handler, on_complete=done, on_error=failed)
+        handler()
 
     def handle_getnetworkproperties(self, params, invocation):
         """Read a supplementary service for a window instance."""
@@ -713,31 +698,22 @@ class TelephonyDaemonDBus:
             packed = {k: GLib.Variant("s", str(v)) for k, v in (props or {}).items()}
             invocation.return_value(GLib.Variant("(a{sv})", (packed,)))
 
-        def failed(error):
-            logger.error(f"[Daemon] Network property read failed: {error}")
-            invocation.return_value(GLib.Variant("(a{sv})", ({},)))
-
-        run_in_background(self.ofono.get_service_properties, service,
-                          on_complete=done, on_error=failed)
+        self.ofono.get_service_properties(service, done)
 
     def handle_setnetworkproperty(self, params, invocation):
         """Change a supplementary service for a window instance."""
         service, name, value, password = params.unpack()
 
-        def task():
-            if service == "barring" and password:
-                return self.ofono.set_barring_property(name, value, password)
-            return self.ofono.set_service_property(service, name, value)
-
-        def done(result):
-            ok, error = result if result else (False, "no reply")
+        def done(ok, error):
+            if not ok:
+                logger.error(f"[Daemon] Network property write failed: {error}")
             invocation.return_value(GLib.Variant("(s)", ("" if ok else (error or "failed"),)))
 
-        def failed(error):
-            logger.error(f"[Daemon] Network property write failed: {error}")
-            invocation.return_value(GLib.Variant("(s)", (str(error),)))
+        if service == "barring" and password:
+            self.ofono.set_barring_property(name, value, password, done)
+            return
 
-        run_in_background(task, on_complete=done, on_error=failed)
+        self.ofono.set_service_property(service, name, value, done)
 
     def handle_getrecoverystate(self, parameters, invocation):
         """Report the recovery state to a call window that just started.
@@ -797,20 +773,20 @@ class TelephonyDaemonDBus:
 
     def handle_disableallforwarding(self, parameters, invocation):
         """Handle DisableAllForwarding command."""
-        run_in_background(self.ofono.disable_all_forwarding,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.disable_all_forwarding(
+            lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
 
     def handle_disableallbarrings(self, parameters, invocation):
         """Handle DisableAllBarrings command."""
         password = parameters.unpack()[0]
-        run_in_background(self.ofono.disable_all_barrings, password,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.disable_all_barrings(
+            password, lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
 
     def handle_changebarringpassword(self, parameters, invocation):
         """Handle ChangeBarringPassword command."""
         old, new = parameters.unpack()
-        run_in_background(self.ofono.change_barring_password, old, new,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        self.ofono.change_barring_password(
+            old, new, lambda ok, error: self.reply_ss_result(invocation, (ok, error)))
 
     def handle_importsimcontacts(self, parameters, invocation):
         """Read the SIM phonebook and import its vcards for a window instance."""
@@ -831,17 +807,9 @@ class TelephonyDaemonDBus:
             if not vcards:
                 invocation.return_value(GLib.Variant("(is)", (0, "empty")))
                 return
-            count = 0
-            reason = ""
-            for vcard in vcards:
-                try:
-                    if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
-                        count += 1
-                except Exception as e:
-                    logger.error(f"[Daemon] Storing a SIM contact failed: {e}")
-                    reason = str(e)
-                    break
-            invocation.return_value(GLib.Variant("(is)", (count, reason)))
+            self.save_vcards_in_turn(
+                vcards, source_uid,
+                lambda count: invocation.return_value(GLib.Variant("(is)", (count, ""))))
 
         def failed(error):
             logger.error(f"[Daemon] Reading the SIM phonebook failed: {error}")
@@ -1056,22 +1024,25 @@ class TelephonyDaemonDBus:
         """Apply the delivery report preference to both SMS and MMS."""
         enabled = parameters.unpack()[0]
 
-        def apply_delivery_reports():
-            errors = []
-
-            sms_ok, sms_error = self.ofono.set_delivery_reports(enabled)
-            if not sms_ok:
-                errors.append(f"SMS: {sms_error or 'failed'}")
-
-            if self.app and self.app.mms:
-                mms_ok, mms_error = self.app.mms.set_delivery_reports(enabled)
-                if not mms_ok:
-                    errors.append(f"MMS: {mms_error or 'failed'}")
-
+        def verdict(errors):
             return (not errors, '; '.join(errors) if errors else None)
 
-        run_in_background(apply_delivery_reports,
-                          on_complete=lambda result: self.reply_ss_result(invocation, result))
+        def sms_done(sms_result):
+            sms_ok, sms_error = sms_result if sms_result else (False, "failed")
+            errors = [] if sms_ok else [f"SMS: {sms_error or 'failed'}"]
+
+            if not (self.app and self.app.mms):
+                self.reply_ss_result(invocation, verdict(errors))
+                return
+
+            def mms_done(mms_ok, mms_error):
+                if not mms_ok:
+                    errors.append(f"MMS: {mms_error or 'failed'}")
+                self.reply_ss_result(invocation, verdict(errors))
+
+            self.app.mms.set_delivery_reports(enabled, mms_done)
+
+        self.ofono.set_delivery_reports(enabled, sms_done)
 
     def handle_getaudioroutes(self, parameters, invocation):
         """List the selectable output and input routes for a window."""
@@ -1744,16 +1715,44 @@ class TelephonyDaemonDBus:
     def handle_importcontacts(self, parameters, invocation):
         """Handle ImportContacts command."""
         vcard_data, source_uid = parameters.unpack()
-        count = 0
 
         is_protected = self.is_protected_source(source_uid, "[DBus] Refusing to import to {name} via CLI")
 
-        if not is_protected and self.eds:
-            vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
-            for vcard in vcards:
-                if self.eds.save_contact(vcard, source_uid=source_uid if source_uid else None):
-                    count += 1
-        invocation.return_value(GLib.Variant("(i)", (count,)))
+        if is_protected or not self.eds:
+            invocation.return_value(GLib.Variant("(i)", (0,)))
+            return
+
+        vcards = re.findall(r'BEGIN:VCARD.*?END:VCARD', vcard_data, re.DOTALL)
+        self.save_vcards_in_turn(
+            vcards, source_uid,
+            lambda count: invocation.return_value(GLib.Variant("(i)", (count,))))
+
+    def save_vcards_in_turn(self, vcards, source_uid, on_done):
+        """Save each vcard in order, then report the count to on_done.
+
+        One save is in flight at a time, so the owner's loop runs
+        between contacts: a whole phonebook used to be written inside
+        this handler and nothing else the daemon owns could answer for
+        the length of it.
+        """
+        state = {"index": 0, "count": 0}
+
+        def save_next():
+            if state["index"] >= len(vcards):
+                on_done(state["count"])
+                return
+
+            vcard = vcards[state["index"]]
+            state["index"] += 1
+            self.eds.save_contact_async(
+                vcard, saved, source_uid=source_uid if source_uid else None)
+
+        def saved(ok):
+            if ok:
+                state["count"] += 1
+            save_next()
+
+        save_next()
 
     def handle_exportcontacts(self, parameters, invocation):
         """Handle ExportContacts command."""
@@ -1777,11 +1776,13 @@ class TelephonyDaemonDBus:
     def handle_addcontact(self, parameters, invocation):
         """Handle AddContact command."""
         name, number = parameters.unpack()
-        if self.eds:
-            uid = str(uuid.uuid4())
-            vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
-            self.eds.save_contact(vcard_data)
-        invocation.return_value(None)
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        uid = str(uuid.uuid4())
+        vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
+        self.eds.save_contact_async(vcard_data, lambda _ok: invocation.return_value(None))
 
     def handle_savecontact(self, parameters, invocation):
         """Write a full vCard to a book, refusing the read-only sync book."""
@@ -1799,19 +1800,14 @@ class TelephonyDaemonDBus:
             invocation.return_value(GLib.Variant("(bs)", (False, "read-only")))
             return
 
-        def done(result):
-            ok, reason = result
+        def done(ok, reason):
             invocation.return_value(GLib.Variant("(bs)", (bool(ok), reason)))
-
-        def failed(error):
-            logger.error(f"[DBus] Save contact failed: {error}")
-            invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
 
         if not self.eds:
             invocation.return_value(GLib.Variant("(bs)", (False, "write-failed")))
             return
-        run_in_background(self.eds.save_contact_with_reason, vcard, uid or None, source_uid or None,
-                          on_complete=done, on_error=failed)
+        self.eds.save_contact_with_reason_async(vcard, done, uid=uid or None,
+                                                source_uid=source_uid or None)
 
     def handle_deletecontacts(self, parameters, invocation):
         """Delete a batch of contacts, skipping the protected ones."""
@@ -1823,18 +1819,32 @@ class TelephonyDaemonDBus:
         except Exception as e:
             logger.warning(f"[DBus] Failed to parse contact uids: {e}")
 
-        def task():
-            for uid in uids:
+        if not uids or not self.eds:
+            invocation.return_value(None)
+            return
+
+        self.delete_contacts_in_turn(uids, lambda: invocation.return_value(None))
+
+    def delete_contacts_in_turn(self, uids, on_done):
+        """Delete each contact in order, skipping protected ones, then call on_done.
+
+        One delete is in flight at a time so the owner's loop keeps
+        running between contacts.
+        """
+        remaining = list(uids)
+
+        def delete_next(*_args):
+            while remaining:
+                uid = remaining.pop(0)
                 with self.eds.cache_lock:
                     contact = self.eds.cache.get(uid)
                 if contact and self.is_protected_contact(contact, uid, "delete"):
                     continue
-                self.eds.delete_contact(uid)
+                self.eds.delete_contact_async(uid, delete_next)
+                return
+            on_done()
 
-        if not uids or not self.eds:
-            invocation.return_value(None)
-            return
-        self.run_task_then_reply(invocation, task)
+        delete_next()
 
     def handle_refreshcontacts(self, parameters, invocation):
         """Ask every refresh-capable backend to re-sync with its remote."""
@@ -1853,24 +1863,30 @@ class TelephonyDaemonDBus:
     def handle_deletecontact(self, parameters, invocation):
         """Handle DeleteContact command."""
         uid = parameters.unpack()[0]
-        if self.eds:
-            with self.eds.cache_lock:
-                contact = self.eds.cache.get(uid)
-            if contact and self.is_protected_contact(contact, uid, "delete"):
-                invocation.return_value(None)
-                return
-            self.eds.delete_contact(uid)
-        invocation.return_value(None)
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        with self.eds.cache_lock:
+            contact = self.eds.cache.get(uid)
+        if contact and self.is_protected_contact(contact, uid, "delete"):
+            invocation.return_value(None)
+            return
+
+        self.eds.delete_contact_async(uid, lambda _ok: invocation.return_value(None))
 
     def handle_modifycontact(self, parameters, invocation):
         """Handle ModifyContact command."""
         uid, name, number = parameters.unpack()
-        if self.eds:
-            with self.eds.cache_lock:
-                contact = self.eds.cache.get(uid)
-            if contact and self.is_protected_contact(contact, uid, "modify"):
-                invocation.return_value(None)
-                return
-            vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
-            self.eds.save_contact(vcard_data, uid=uid)
-        invocation.return_value(None)
+        if not self.eds:
+            invocation.return_value(None)
+            return
+
+        with self.eds.cache_lock:
+            contact = self.eds.cache.get(uid)
+        if contact and self.is_protected_contact(contact, uid, "modify"):
+            invocation.return_value(None)
+            return
+
+        vcard_data = f"BEGIN:VCARD\nVERSION:3.0\nFN:{name}\nTEL:{number}\nUID:{uid}\nEND:VCARD"
+        self.eds.save_contact_async(vcard_data, lambda _ok: invocation.return_value(None), uid=uid)

@@ -271,7 +271,7 @@ class MainWindow(Adw.Window):
             self._ussd_in_flight = False
             self._ussd_state = "idle"
             if self.ofono:
-                run_in_background(self.ofono.cancel_ussd)
+                self.ofono.cancel_ussd()
 
         if self._unread_timer:
             GLib.source_remove(self._unread_timer)
@@ -302,14 +302,13 @@ class MainWindow(Adw.Window):
 
     def check_own_number(self):
         """Check if own number is set, warn if not."""
-        def check():
-            num = self.app.daemon_client.get_own_number()
+        def checked(num):
             if not num:
                 num = self.gsettings_mgr.get_setting("own_number")
-
             if not num:
-                GLib.idle_add(lambda: self.show_setup_hint(_("Set your number in Settings")) or False)
-        run_in_background(check)
+                self.show_setup_hint(_("Set your number in Settings"))
+
+        self.app.daemon_client.get_own_number(checked)
 
     def check_country_code(self):
         """Give this window the country its numbers belong to.
@@ -318,22 +317,22 @@ class MainWindow(Adw.Window):
         wherever the app thinks it is, so the answer has to be in hand
         before the first list is built rather than shortly after it.
         The setting is a local read and is applied straight away; only
-        asking the modem is worth a thread, and that is the case where
-        there is no answer to be late with.
+        asking the modem has to be waited for, and that is the case
+        where there is no answer to be late with.
         """
         cc = self.gsettings_mgr.get_setting("default_country_code")
         if cc:
             utils.set_custom_region(cc)
             return
 
-        def task():
-            region = self.app.daemon_client.detect_region()
+        def detected(region):
             if region:
                 self.gsettings_mgr.set_setting("default_country_code", region)
                 utils.set_custom_region(region)
             else:
-                GLib.idle_add(lambda: self.show_setup_hint(_("Please set Default Country Code in Settings")) or False)
-        run_in_background(task)
+                self.show_setup_hint(_("Please set Default Country Code in Settings"))
+
+        self.app.daemon_client.detect_region(detected)
 
     def on_modem_interface_appeared(self, _ofono, interface):
         """Retry region detection once network registration becomes available."""
@@ -672,29 +671,21 @@ class MainWindow(Adw.Window):
                 return
             self._ussd_in_flight = False
             if not result:
-                run_in_background(self.ofono.cancel_ussd)
+                self.ofono.cancel_ussd()
                 self.show_ussd_error(_("USSD request failed"))
                 return
 
             success, response, state = result
             if not success:
                 if state in ("active", "user-response"):
-                    run_in_background(self.ofono.cancel_ussd)
+                    self.ofono.cancel_ussd()
                 self._ussd_state = "idle"
                 self.show_ussd_error(_("USSD request failed"))
                 return
 
             self.apply_ussd_result(response, state)
 
-        def failed(error):
-            if generation != self._ussd_generation:
-                return
-            self._ussd_in_flight = False
-            logger.error(f"[MainWindow] USSD request failed: {error}")
-            run_in_background(self.ofono.cancel_ussd)
-            self.show_ussd_error(_("USSD request failed"))
-
-        run_in_background(self.ofono.start_ussd, code, on_complete=done, on_error=failed)
+        self.ofono.start_ussd(code, done)
 
     def restore_ussd_session(self):
         """Reopen a daemon-owned USSD session when this client starts."""
@@ -874,29 +865,21 @@ class MainWindow(Adw.Window):
                 return
             self._ussd_in_flight = False
             if not result:
-                run_in_background(self.ofono.cancel_ussd)
+                self.ofono.cancel_ussd()
                 self.show_ussd_error(_("USSD response failed"))
                 return
 
             success, network_response, state = result
             if not success:
                 if state in ("active", "user-response"):
-                    run_in_background(self.ofono.cancel_ussd)
+                    self.ofono.cancel_ussd()
                 self._ussd_state = "idle"
                 self.show_ussd_error(_("USSD response failed"))
                 return
 
             self.apply_ussd_result(network_response, state)
 
-        def failed(error):
-            if generation != self._ussd_generation:
-                return
-            self._ussd_in_flight = False
-            logger.error(f"[MainWindow] USSD response failed: {error}")
-            run_in_background(self.ofono.cancel_ussd)
-            self.show_ussd_error(_("USSD response failed"))
-
-        run_in_background(self.ofono.respond_ussd, response, on_complete=done, on_error=failed)
+        self.ofono.respond_ussd(response, done)
 
     def cancel_ussd_session(self):
         """Cancel the network USSD session and dismiss its sheet."""
@@ -909,7 +892,7 @@ class MainWindow(Adw.Window):
         self._ussd_last_text = ""
         close_sheet_page(self)
         if self.ofono:
-            run_in_background(self.ofono.cancel_ussd)
+            self.ofono.cancel_ussd()
 
     def close_ussd_sheet(self):
         """Dismiss a completed USSD result without sending Cancel()."""
@@ -934,7 +917,7 @@ class MainWindow(Adw.Window):
 
         if should_cancel and self.ofono:
             self._ussd_state = "idle"
-            run_in_background(self.ofono.cancel_ussd)
+            self.ofono.cancel_ussd()
 
     def confirm_action(self, title, body, on_confirm):
         """Show a confirmation dialog."""
@@ -1013,9 +996,6 @@ class MainWindow(Adw.Window):
     def on_force_sync_click(self, btn):
         """Force address book backends to sync, falling back to a local reload."""
 
-        def task():
-            return self.daemon.refresh_contacts()
-
         def done(refreshed):
             if refreshed:
                 self.notify_success(_("Sync started for {count} address books").format(count=refreshed))
@@ -1023,12 +1003,7 @@ class MainWindow(Adw.Window):
             self._manual_sync_active = True
             self.eds.reload()
 
-        def failed(error):
-            logger.error(f"[MainWindow] Backend refresh failed: {error}")
-            self._manual_sync_active = True
-            self.eds.reload()
-
-        run_in_background(task, on_complete=done, on_error=failed)
+        self.daemon.refresh_contacts(done)
 
     def present_edit_contact(self, contact_data=None, number_preset=None):
         """Open contact editor."""
@@ -1046,7 +1021,7 @@ class MainWindow(Adw.Window):
                     book_names = {book['uid']: book['name'] for book in (books or [])}
                     self.choose_contact_to_edit(results, book_names)
 
-                run_in_background(self.daemon.get_address_books, on_complete=offer)
+                self.daemon.get_address_books(offer)
                 return
 
         self.open_contact_editor(contact_data, number_preset)

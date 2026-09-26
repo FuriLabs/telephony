@@ -47,6 +47,8 @@ class NotificationManager(GObject.Object):
 
         self.active_notifications = {}
         self.default_actions = {}
+        self.pending_notifications = {}
+        self.notify_serial = 0
 
         if self.connection:
             try:
@@ -150,49 +152,84 @@ class NotificationManager(GObject.Object):
             hints['suppress-sound'] = GLib.Variant('b', True)
             hints['sound-name'] = GLib.Variant('s', 'none')
 
+        logger.debug(f"[NotificationManager] Sending notification '{title}' with hints: {hints}")
+        params = GLib.Variant(
+            "(susssasa{sv}i)",
+            (
+                "Telephony",
+                replaces_id,
+                app_id_hint,
+                title,
+                body,
+                actions_list,
+                hints,
+                -1
+            )
+        )
+
+        self.notify_serial += 1
+        serial = self.notify_serial
+        self.pending_notifications[id_key] = serial
+
+        self.connection.call(
+            NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE,
+            "Notify", params, None, Gio.DBusCallFlags.NONE, -1, None,
+            self.on_notify_done, (id_key, serial, actions)
+        )
+
+    def on_notify_done(self, connection, result, user_data):
+        """Adopt the server id, unless this send was closed or replaced meanwhile.
+
+        The key holds a ticket only while its own send is in flight, so a
+        reply whose ticket is gone belongs to a notification nobody wants:
+        it is withdrawn instead of recorded, or it would sit on screen with
+        no id to close it by.
+        """
+        id_key, serial, actions = user_data
+
         try:
-            logger.debug(f"[NotificationManager] Sending notification '{title}' with hints: {hints}")
-            params = GLib.Variant(
-                "(susssasa{sv}i)",
-                (
-                    "Telephony",
-                    replaces_id,
-                    app_id_hint,
-                    title,
-                    body,
-                    actions_list,
-                    hints,
-                    -1
-                )
-            )
-
-            res = self.connection.call_sync(
-                NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE,
-                "Notify", params, None, Gio.DBusCallFlags.NONE, -1, None
-            )
-
-            new_id = res.unpack()[0]
-            self.active_notifications[id_key] = new_id
-            if actions and "default" in actions:
-                self.default_actions[new_id] = actions["default"]
-
-        except Exception as e:
+            res = connection.call_finish(result)
+        except GLib.Error as e:
             logger.error(f"Failed to send DBus notification: {e}")
+            if self.pending_notifications.get(id_key) == serial:
+                del self.pending_notifications[id_key]
+            return
+
+        new_id = res.unpack()[0]
+        if self.pending_notifications.get(id_key) != serial:
+            self.close_notification_id(new_id)
+            return
+
+        del self.pending_notifications[id_key]
+        self.active_notifications[id_key] = new_id
+        if actions and "default" in actions:
+            self.default_actions[new_id] = actions["default"]
+
+    def close_notification_id(self, nid):
+        """Withdraw one notification by the id the server gave it."""
+        self.connection.call(
+            NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE,
+            "CloseNotification", GLib.Variant("(u)", (nid,)),
+            None, Gio.DBusCallFlags.NONE, -1, None,
+            self.on_close_done, None
+        )
+
+    def on_close_done(self, connection, result, _user_data):
+        """Report a withdrawal the server refused."""
+        try:
+            connection.call_finish(result)
+        except GLib.Error as e:
+            logger.warning(f"Close notification warning: {e}")
 
     def close_notification(self, id_key):
         """Close a specific notification by internal key."""
+        self.pending_notifications.pop(id_key, None)
+
         if not self.connection or id_key not in self.active_notifications:
             return
 
         nid = self.active_notifications[id_key]
-        try:
-            self.connection.call_sync(
-                NOTIFY_DBUS_NAME, NOTIFY_DBUS_PATH, NOTIFY_INTERFACE,
-                "CloseNotification", GLib.Variant("(u)", (nid,)),
-                None, Gio.DBusCallFlags.NONE, -1, None
-            )
-        except Exception as e:
-            logger.warning(f"Close notification warning: {e}")
+        self.close_notification_id(nid)
 
         if nid in self.default_actions:
             del self.default_actions[nid]
@@ -200,6 +237,6 @@ class NotificationManager(GObject.Object):
 
     def clear_all(self):
         """Close all active notifications."""
-        keys = list(self.active_notifications.keys())
+        keys = set(self.active_notifications) | set(self.pending_notifications)
         for k in keys:
             self.close_notification(k)

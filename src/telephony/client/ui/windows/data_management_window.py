@@ -181,40 +181,38 @@ class DataManagementDialog:
 
     def do_clear_history(self):
         """Clear history action."""
-        run_in_background(self.app_window.daemon.clear_call_history,
-                          on_complete=lambda _r: self.app_window.notify_success(_("Call History Deleted")))
+        self.app_window.daemon.clear_call_history(
+            lambda _ok: self.app_window.notify_success(_("Call History Deleted")))
 
     def do_clear_messages(self):
         """Clear messages action."""
         self.app_window.notify_loading(_("Deleting messages..."))
 
-        def task():
-            self.app_window.daemon.clear_messages()
-            GLib.idle_add(self.app_window.hide_loading)
+        def done(_ok):
+            self.app_window.hide_loading()
+            self.app_window.notify_success(_("Messages & Attachments Deleted"))
 
-            GLib.idle_add(lambda: self.app_window.notify_success(_("Messages & Attachments Deleted")))
-        run_in_background(task)
+        self.app_window.daemon.clear_messages(done)
 
     def do_clear_groups(self):
         """Clear groups action."""
-        run_in_background(self.app_window.daemon.clear_group_names,
-                          on_complete=lambda _r: self.app_window.notify_success(_("Group Names Reset")))
+        self.app_window.daemon.clear_group_names(
+            lambda _ok: self.app_window.notify_success(_("Group Names Reset")))
 
     def do_clear_blocklist(self):
         """Clear blocklist action."""
-        run_in_background(self.app_window.daemon.clear_blocklist,
-                          on_complete=lambda _r: self.app_window.notify_success(_("Blocklist Cleared")))
+        self.app_window.daemon.clear_blocklist(
+            lambda _ok: self.app_window.notify_success(_("Blocklist Cleared")))
 
     def do_clear_contacts(self, source_uid=None):
         """Clear contacts action."""
         self.app_window.notify_loading(_("Deleting contacts..."))
 
-        def task():
-            self.app_window.daemon.clear_contacts(source_uid)
-            GLib.idle_add(self.app_window.hide_loading)
+        def done(_ok):
+            self.app_window.hide_loading()
+            self.app_window.notify_success(_("Contacts Deleted"))
 
-            GLib.idle_add(lambda: self.app_window.notify_success(_("Contacts Deleted")))
-        run_in_background(task)
+        self.app_window.daemon.clear_contacts(source_uid, done)
 
     def do_delete_addressbook(self, source_uid):
         """Delete entire address book action."""
@@ -223,22 +221,21 @@ class DataManagementDialog:
 
         self.app_window.notify_loading(_("Deleting address book..."))
 
-        def task():
-            success = self.app_window.daemon.delete_address_book(source_uid)
-            GLib.idle_add(self.app_window.hide_loading)
+        def done(success):
+            self.app_window.hide_loading()
             if success:
-                GLib.idle_add(lambda: self.app_window.notify_success(_("Address Book Deleted")))
+                self.app_window.notify_success(_("Address Book Deleted"))
             else:
-                GLib.idle_add(lambda: self.app_window.notify_error(_("Failed to delete Address Book")))
-        run_in_background(task)
+                self.app_window.notify_error(_("Failed to delete Address Book"))
+
+        self.app_window.daemon.delete_address_book(source_uid, done)
 
     def do_clear_everything(self, source_uid=None):
         """Clear everything action."""
         self.app_window.notify_loading(_("Wiping Database..."))
 
-        def task():
-            self.app_window.daemon.clear_everything(source_uid)
-            GLib.idle_add(self.app_window.hide_loading)
+        def done(_ok):
+            self.app_window.hide_loading()
+            self.app_window.notify_success(_("App Reset Complete"))
 
-            GLib.idle_add(lambda: self.app_window.notify_success(_("App Reset Complete")))
-        run_in_background(task)
+        self.app_window.daemon.clear_everything(source_uid, done)

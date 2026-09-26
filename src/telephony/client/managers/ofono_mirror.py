@@ -18,7 +18,6 @@ from gi.repository import GObject, Gio, GLib
 from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.services.daemon_client import DaemonClient
 from telephony.shared.constants import DAEMON_BUS_NAME
 
@@ -126,7 +125,7 @@ class OfonoMirror(GObject.Object):
 
     def start_reseed(self):
         self._reseed_id = 0
-        run_in_background(self.daemon.get_telephony_state, on_complete=self.apply_state)
+        self.daemon.get_telephony_state(self.apply_state)
         return GLib.SOURCE_REMOVE
 
     def apply_state(self, state):
@@ -315,84 +314,92 @@ class OfonoMirror(GObject.Object):
         """Send DTMF tones during a call."""
         self.daemon.call_async("SendDtmf", GLib.Variant("(s)", (tones,)))
 
-    def create_multiparty(self):
-        """Merge the active and held calls; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("create_multiparty", "")),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+    def ask_call_action(self, action, argument, callback):
+        """Ask the owner for a call action and report (ok, reason).
 
-    def hangup_multiparty(self):
-        """Hang up the conference; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("hangup_multiparty", "")),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+        callback may be None for the actions nobody waits on, like
+        hanging up a conference, where there is nothing to say if the
+        network refuses beyond what the call list already shows.
+        """
+        def done(reply):
+            if callback is None:
+                return
+            ok = bool(reply and reply[0])
+            callback((ok, None if ok else "refused"))
 
-    def private_chat(self, path):
-        """Split one conference participant out; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("private_chat", path)),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+        self.daemon.call_with_reply(
+            "CallAction", GLib.Variant("(ss)", (action, argument)), done)
 
-    def transfer_call(self):
-        """Connect active and held calls to each other; blocking, call from a worker."""
-        reply = self.daemon.call("CallAction", GLib.Variant("(ss)", ("transfer", "")),
-                                 GLib.VariantType("(b)"))
-        ok = bool(reply and reply[0])
-        return (ok, None if ok else "refused")
+    def create_multiparty(self, callback=None):
+        """Merge the active and held calls."""
+        self.ask_call_action("create_multiparty", "", callback)
+
+    def hangup_multiparty(self, callback=None):
+        """Hang up the conference."""
+        self.ask_call_action("hangup_multiparty", "", callback)
+
+    def private_chat(self, path, callback=None):
+        """Split one conference participant out."""
+        self.ask_call_action("private_chat", path, callback)
+
+    def transfer_call(self, callback=None):
+        """Connect active and held calls to each other."""
+        self.ask_call_action("transfer", "", callback)
 
     def send_quick_response(self, number, text):
         """Record and send an SMS with delivery tracking."""
-        run_in_background(self.daemon.send_tracked_sms, number, text)
+        self.daemon.send_tracked_sms(number, text)
         return True
 
-    def start_ussd(self, command):
-        """Start a USSD session; blocking, call from a worker.
+    def take_ussd_reply(self, reply, callback):
+        """Record the session state a USSD reply carries and pass it on.
 
-        Returns (success, response, state) so the UI can distinguish a
-        finished request from an interactive session waiting for the user.
+        A session that is no longer idle is still waiting for the user,
+        so its text is kept; an idle one has finished and the text goes,
+        or the next dialog would open showing the last answer.
         """
-        reply = self.daemon.call(
-            "StartUssd",
-            GLib.Variant("(s)", (command,)),
-            GLib.VariantType("(bss)"),
-            timeout_ms=USSD_CALL_TIMEOUT_MS,
-        )
         if not reply:
-            return None
+            callback(None)
+            return
         success, response, state = reply
         self.ussd_state = state or "idle"
         self.ussd_text = (response or "") if self.ussd_state != "idle" else ""
-        return bool(success), response, self.ussd_state
+        callback((bool(success), response, self.ussd_state))
 
-    def respond_ussd(self, response):
-        """Reply inside an interactive USSD session; blocking."""
-        reply = self.daemon.call(
-            "RespondUssd",
-            GLib.Variant("(s)", (response,)),
-            GLib.VariantType("(bss)"),
-            timeout_ms=USSD_CALL_TIMEOUT_MS,
-        )
-        if not reply:
-            return None
-        success, network_response, state = reply
-        self.ussd_state = state or "idle"
-        self.ussd_text = (network_response or "") if self.ussd_state != "idle" else ""
-        return bool(success), network_response, self.ussd_state
+    def start_ussd(self, command, callback):
+        """Start a USSD session; callback hears (success, response, state) or None.
 
-    def cancel_ussd(self):
-        """Cancel the current USSD session; blocking."""
-        reply = self.daemon.call(
-            "CancelUssd", None, GLib.VariantType("(b)"),
-            timeout_ms=USSD_CALL_TIMEOUT_MS,
-        )
-        success = bool(reply and reply[0])
-        if success:
-            self.ussd_state = "idle"
-            self.ussd_text = ""
-        return success
+        The state tells the UI whether the request finished or an
+        interactive session is waiting for the user.
+        """
+        self.daemon.call_with_reply(
+            "StartUssd", GLib.Variant("(s)", (command,)),
+            lambda reply: self.take_ussd_reply(reply, callback),
+            timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def respond_ussd(self, response, callback):
+        """Reply inside an interactive USSD session."""
+        self.daemon.call_with_reply(
+            "RespondUssd", GLib.Variant("(s)", (response,)),
+            lambda reply: self.take_ussd_reply(reply, callback),
+            timeout_ms=USSD_CALL_TIMEOUT_MS)
+
+    def cancel_ussd(self, callback=None):
+        """Cancel the current USSD session.
+
+        The session is forgotten as soon as the owner confirms it, and
+        every caller but none so far cares whether it agreed.
+        """
+        def done(reply):
+            success = bool(reply and reply[0])
+            if success:
+                self.ussd_state = "idle"
+                self.ussd_text = ""
+            if callback is not None:
+                callback(success)
+
+        self.daemon.call_with_reply(
+            "CancelUssd", None, done, timeout_ms=USSD_CALL_TIMEOUT_MS)
 
     def set_active_chat(self, number):
         """Tell the owner which chat is open so its alerts stay quiet."""
@@ -408,13 +415,16 @@ class OfonoMirror(GObject.Object):
             return number
         return normalize_number(number)
 
-    def get_service_properties(self, service):
-        """Read a supplementary service's properties; blocking, call from a worker."""
-        reply = self.daemon.call("GetNetworkProperties", GLib.Variant("(s)", (service,)),
-                                 GLib.VariantType("(a{sv})"))
-        if reply is None:
-            return None
-        return {k: self.restore_service_value(k, v) for k, v in reply[0].items()}
+    def get_service_properties(self, service, callback):
+        """Read a supplementary service's properties; callback hears a dict or None."""
+        def done(reply):
+            if reply is None:
+                callback(None)
+                return
+            callback({k: self.restore_service_value(k, v) for k, v in reply[0].items()})
+
+        self.daemon.call_with_reply(
+            "GetNetworkProperties", GLib.Variant("(s)", (service,)), done)
 
     def restore_service_value(self, name, packed):
         """Turn a relayed property back into the type the UI expects."""
@@ -426,50 +436,55 @@ class OfonoMirror(GObject.Object):
                 return 0
         return text
 
-    def set_service_property(self, service, name, value):
-        """Set a supplementary service property; blocking, call from a worker."""
-        return self.ask_network_write(service, name, value, "")
+    def set_service_property(self, service, name, value, callback):
+        """Set a supplementary service property."""
+        self.ask_network_write(service, name, value, "", callback)
 
-    def set_barring_property(self, name, value, password):
-        """Set a call barring rule; blocking, call from a worker."""
-        return self.ask_network_write("barring", name, value, password)
+    def set_barring_property(self, name, value, password, callback):
+        """Set a call barring rule."""
+        self.ask_network_write("barring", name, value, password, callback)
 
-    def ask_network_write(self, service, name, value, password):
-        """Have the owner change a supplementary service."""
+    def ask_network_write(self, service, name, value, password, callback):
+        """Have the owner change a supplementary service; reports (ok, reason)."""
         packed_value = (
             GLib.Variant("q", value)
             if isinstance(value, int) and not isinstance(value, bool)
             else GLib.Variant("s", str(value))
         )
-        reply = self.daemon.call(
+
+        def done(reply):
+            if reply is None:
+                callback((False, "no reply"))
+                return
+            error = reply[0]
+            callback((not error, error or None))
+
+        self.daemon.call_with_reply(
             "SetNetworkProperty",
             GLib.Variant("(ssvs)", (service, name, packed_value, password or "")),
-            GLib.VariantType("(s)"))
-        if reply is None:
-            return (False, "no reply")
-        error = reply[0]
-        return (not error, error or None)
+            done)
 
-    def change_barring_password(self, old, new):
-        """Change the network barring password; blocking, call from a worker."""
-        reply = self.daemon.change_barring_password(old, new)
+    def take_network_reply(self, reply, callback):
+        """Turn an owner reply about a service into (ok, reason)."""
         if reply is None:
-            return (False, "no reply")
-        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+            callback((False, "no reply"))
+            return
+        callback((reply[0], None if reply[0] else (reply[1] or "refused")))
 
-    def disable_all_forwarding(self):
-        """Clear every forwarding rule; blocking, call from a worker."""
-        reply = self.daemon.disable_all_forwarding()
-        if reply is None:
-            return (False, "no reply")
-        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+    def change_barring_password(self, old, new, callback):
+        """Change the network barring password."""
+        self.daemon.change_barring_password(
+            old, new, lambda reply: self.take_network_reply(reply, callback))
 
-    def disable_all_barrings(self, password):
-        """Clear every barring rule; blocking, call from a worker."""
-        reply = self.daemon.disable_all_barrings(password)
-        if reply is None:
-            return (False, "no reply")
-        return (reply[0], None if reply[0] else (reply[1] or "refused"))
+    def disable_all_forwarding(self, callback):
+        """Clear every forwarding rule."""
+        self.daemon.disable_all_forwarding(
+            lambda reply: self.take_network_reply(reply, callback))
+
+    def disable_all_barrings(self, password, callback):
+        """Clear every barring rule."""
+        self.daemon.disable_all_barrings(
+            password, lambda reply: self.take_network_reply(reply, callback))
 
     def set_delivery_reports(self, enabled):
         """Ask the network for delivery reports; blocking, call from a worker."""

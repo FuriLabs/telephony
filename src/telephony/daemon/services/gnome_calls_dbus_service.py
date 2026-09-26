@@ -491,12 +491,16 @@ class GnomeCallsDBusService:
                 invocation.return_dbus_error("org.freedesktop.DBus.Error.NotSupported", f"Unknown emergency contact: {contact_id}")
                 return
 
-            try:
-                if not self.ofono.dial(contact_id):
-                    invocation.return_dbus_error("org.gnome.Calls.Error.Failed", f"Failed to dial {contact_id}")
+            def dialed(ok, message):
+                if ok:
+                    invocation.return_value(None)
                     return
+                logger.error(f"[GnomeCallsDBus] Emergency dial failed for {contact_id}: {message}")
+                invocation.return_dbus_error("org.gnome.Calls.Error.Failed",
+                                             message or f"Failed to dial {contact_id}")
 
-                invocation.return_value(None)
+            try:
+                self.ofono.dial(contact_id, on_result=dialed)
             except Exception as e:
                 logger.error(f"[GnomeCallsDBus] Emergency dial failed for {contact_id}: {e}")
                 invocation.return_dbus_error("org.gnome.Calls.Error.Failed", str(e))

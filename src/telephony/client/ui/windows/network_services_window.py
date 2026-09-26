@@ -20,7 +20,6 @@ from gi.repository import Gtk, Adw, GLib
 from gettext import gettext as _
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, present_alert_sheet)
 
 RING_TIME_VALUES = [5, 10, 15, 20, 25, 30]
@@ -234,9 +233,15 @@ class NetworkServicesWindow(Adw.NavigationPage):
         """Show a transient message on this page."""
         self.overlay.add_toast(Adw.Toast.new(message))
 
-    def enqueue(self, task, on_done):
-        """Queue a blocking network operation; operations run one at a time."""
-        self._ops.append((task, on_done))
+    def enqueue(self, start, on_done):
+        """Queue a network operation; they still run one at a time.
+
+        start is handed the callback to answer through. The queue is
+        what serializes them now rather than a thread each: the network
+        refuses a second supplementary service request while one is
+        outstanding, so they wait for each other regardless.
+        """
+        self._ops.append((start, on_done))
         self.pump_ops()
 
     def pump_ops(self):
@@ -244,20 +249,18 @@ class NetworkServicesWindow(Adw.NavigationPage):
         if self._op_running or not self._ops:
             return
         self._op_running = True
-        task, on_done = self._ops.pop(0)
+        start, on_done = self._ops.pop(0)
 
-        def done(result):
+        def report(result):
             self._op_running = False
             on_done(result)
             self.pump_ops()
 
-        def failed(error):
-            self._op_running = False
-            logger.error(f"[NetworkServices] Operation failed: {error}")
-            on_done(None)
-            self.pump_ops()
-
-        run_in_background(task, on_complete=done, on_error=failed)
+        try:
+            start(report)
+        except Exception as e:
+            logger.error(f"[NetworkServices] Operation could not be started: {e}")
+            report(None)
 
     def load_all(self):
         """Query every available service from the network."""
@@ -265,15 +268,15 @@ class NetworkServicesWindow(Adw.NavigationPage):
             self.toast(_("The modem is not working correctly."))
             return
         if self.ofono.has_modem_interface("org.ofono.CallForwarding"):
-            self.enqueue(lambda: self.ofono.get_service_properties("forwarding"),
+            self.enqueue(lambda report: self.ofono.get_service_properties("forwarding", report),
                           self.on_forwarding_loaded)
         else:
             self.grp_forwarding.set_description(_("Not available on this network"))
         if self.ofono.has_modem_interface("org.ofono.CallSettings"):
-            self.enqueue(lambda: self.ofono.get_service_properties("settings"),
+            self.enqueue(lambda report: self.ofono.get_service_properties("settings", report),
                           self.on_settings_loaded)
         if self.ofono.has_modem_interface("org.ofono.CallBarring"):
-            self.enqueue(lambda: self.ofono.get_service_properties("barring"),
+            self.enqueue(lambda report: self.ofono.get_service_properties("barring", report),
                           self.on_barring_loaded)
         else:
             self.grp_barring.set_description(_("Not available on this network"))
@@ -366,7 +369,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self.toast(_("Could not change the setting"))
             row.set_sensitive(True)
 
-        self.enqueue(lambda: self.ofono.set_service_property("forwarding", prop, number), done)
+        self.enqueue(lambda report: self.ofono.set_service_property("forwarding", prop, number, report), done)
 
     def on_ring_time_selected(self, idx):
         """Send the picked no-reply ring time to the network."""
@@ -380,7 +383,8 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self.apply_service_value("forwarding", "VoiceNoReplyTimeout", known)
                 self.toast(_("Could not change the setting"))
 
-        self.enqueue(lambda: self.ofono.set_service_property("forwarding", "VoiceNoReplyTimeout", int(seconds)), done)
+        self.enqueue(lambda report: self.ofono.set_service_property(
+            "forwarding", "VoiceNoReplyTimeout", int(seconds), report), done)
 
     def confirm_disable_forwarding(self):
         """Confirm and clear every forwarding rule."""
@@ -393,7 +397,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
                         self.apply_service_value("forwarding", prop, "")
                 else:
                     self.toast(_("Could not change the setting"))
-            self.enqueue(lambda: self.ofono.disable_all_forwarding(), done)
+            self.enqueue(lambda report: self.ofono.disable_all_forwarding(report), done)
         present_alert_sheet(
             self.get_root(), _("Disable All Forwarding"),
             _("Turn off every call forwarding rule?"),
@@ -416,7 +420,8 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self.toast(_("Could not change the setting"))
             row.set_sensitive(True)
 
-        self.enqueue(lambda: self.ofono.set_service_property("settings", "VoiceCallWaiting", target), done)
+        self.enqueue(lambda report: self.ofono.set_service_property(
+            "settings", "VoiceCallWaiting", target, report), done)
 
     def on_clir_selected(self, idx):
         """Send the caller id preference to the network."""
@@ -432,7 +437,8 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self.apply_service_value("settings", "HideCallerId", known)
                 self.toast(_("Could not change the setting"))
 
-        self.enqueue(lambda: self.ofono.set_service_property("settings", "HideCallerId", value), done)
+        self.enqueue(lambda report: self.ofono.set_service_property(
+            "settings", "HideCallerId", value, report), done)
 
     def barring_password(self):
         """Read the barring password entry, empty when missing."""
@@ -459,7 +465,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
                 self.apply_service_value("barring", prop, known)
                 self.toast(self.barring_error(result))
 
-        self.enqueue(lambda: self.ofono.set_barring_property(prop, value, password), done)
+        self.enqueue(lambda report: self.ofono.set_barring_property(prop, value, password, report), done)
 
     def barring_error(self, result):
         """Map a barring failure to a readable message."""
@@ -484,7 +490,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
             else:
                 self.toast(self.barring_error(result))
 
-        self.enqueue(lambda: self.ofono.change_barring_password(old, new), done)
+        self.enqueue(lambda report: self.ofono.change_barring_password(old, new, report), done)
 
     def confirm_disable_barrings(self):
         """Confirm and clear every barring rule."""
@@ -502,7 +508,7 @@ class NetworkServicesWindow(Adw.NavigationPage):
                     self.apply_service_value("barring", "VoiceIncoming", "disabled")
                 else:
                     self.toast(self.barring_error(result))
-            self.enqueue(lambda: self.ofono.disable_all_barrings(password), done)
+            self.enqueue(lambda report: self.ofono.disable_all_barrings(password, report), done)
         present_alert_sheet(
             self.get_root(), _("Disable All Barrings"),
             _("Turn off every call barring rule?"),

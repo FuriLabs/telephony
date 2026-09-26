@@ -53,38 +53,42 @@ class CallFeedback:
 
         self.is_near = False
         self.proximity_claimed = False
+        self.claim_wanted = False
+        self.claim_in_flight = False
         self.sensor_proxy = None
         self.init_sensor_proxy()
 
     def init_sensor_proxy(self):
-        """Initialize the DBus proxy for the sensor daemon."""
-        try:
-            self.sensor_proxy = Gio.DBusProxy.new_for_bus_sync(
-                Gio.BusType.SYSTEM, Gio.DBusProxyFlags.NONE, None,
-                "net.hadess.SensorProxy", "/net/hadess/SensorProxy",
-                "net.hadess.SensorProxy", None
-            )
-            self.sensor_proxy.connect("g-properties-changed", self.on_sensor_changed)
+        """Ask for the sensor daemon's proxy."""
+        Gio.DBusProxy.new_for_bus(
+            Gio.BusType.SYSTEM, Gio.DBusProxyFlags.NONE, None,
+            "net.hadess.SensorProxy", "/net/hadess/SensorProxy",
+            "net.hadess.SensorProxy", None,
+            self.on_sensor_proxy_ready, None
+        )
 
-            res = self.sensor_proxy.get_connection().call_sync(
-                self.sensor_proxy.get_name(),
-                self.sensor_proxy.get_object_path(),
-                "org.freedesktop.DBus.Properties",
-                "Get",
-                GLib.Variant('(ss)', ("net.hadess.SensorProxy", "ProximityNear")),
-                GLib.VariantType('(v)'),
-                Gio.DBusCallFlags.NONE,
-                -1,
-                None
-            )
-            if res:
-                self.is_near = bool(res.unpack()[0])
-            else:
-                cached = self.sensor_proxy.get_cached_property("ProximityNear")
-                if cached:
-                    self.is_near = cached.get_boolean()
-        except Exception as e:
+    def on_sensor_proxy_ready(self, _source, result, _user_data):
+        """Take the sensor proxy and the proximity state it arrived with.
+
+        Building the proxy reads the interface's properties, so the
+        starting value is already cached here and does not need asking
+        for again. A claim that was wanted while the proxy was still
+        being built is applied now.
+        """
+        try:
+            self.sensor_proxy = Gio.DBusProxy.new_for_bus_finish(result)
+        except GLib.Error as e:
             logger.error(f"[Hardware] SensorProxy Error: {e}")
+            return
+
+        self.sensor_proxy.connect("g-properties-changed", self.on_sensor_changed)
+
+        cached = self.sensor_proxy.get_cached_property("ProximityNear")
+        if cached:
+            self.is_near = cached.get_boolean()
+
+        if self.claim_wanted:
+            self.send_claim()
 
     def on_sensor_changed(self, proxy, changed, _invalidated):
         """Handle sensor property changes."""
@@ -98,22 +102,44 @@ class CallFeedback:
 
     def update_hardware_state(self, is_earpiece_active):
         """Claim the proximity sensor while the earpiece is at the ear."""
-        if is_earpiece_active and not self.proximity_claimed:
-            self.set_claim(True)
-        elif not is_earpiece_active and self.proximity_claimed:
-            self.set_claim(False)
+        self.claim_wanted = bool(is_earpiece_active)
+        self.send_claim()
 
-    def set_claim(self, claim):
-        """Claim or release the proximity sensor."""
-        if not self.sensor_proxy:
+    def send_claim(self):
+        """Move the sensor daemon towards the claim the call asks for.
+
+        Only one of these is ever out at a time and the wanted state is
+        reconciled when it answers, so a route flipped twice while the
+        first call is still in flight settles on what was asked for last
+        rather than on whichever reply happens to land last.
+        """
+        if not self.sensor_proxy or self.claim_in_flight:
             return
-        method = "ClaimProximity" if claim else "ReleaseProximity"
+
+        if self.claim_wanted == self.proximity_claimed:
+            return
+
+        method = "ClaimProximity" if self.claim_wanted else "ReleaseProximity"
+        self.claim_in_flight = True
+        self.sensor_proxy.call(
+            method, None, Gio.DBusCallFlags.NONE, -1, None,
+            self.on_claim_done, (method, self.claim_wanted)
+        )
+
+    def on_claim_done(self, proxy, result, user_data):
+        """Record what the sensor daemon did, then settle any later change."""
+        method, claimed = user_data
+        self.claim_in_flight = False
+
         try:
-            self.sensor_proxy.call_sync(method, None, Gio.DBusCallFlags.NONE, -1, None)
-            self.proximity_claimed = claim
-            logger.info(f"[Hardware] {method} successful")
-        except Exception as e:
+            proxy.call_finish(result)
+        except GLib.Error as e:
             logger.error(f"[Hardware] {method} failed: {e}")
+            return
+
+        self.proximity_claimed = claimed
+        logger.info(f"[Hardware] {method} successful")
+        self.send_claim()
 
     def play_error_alert(self):
         """Play the standard alert sound and vibration for entering an error state."""
@@ -131,8 +157,7 @@ class CallFeedback:
         hangup, because the tone announces the other side ending the
         call, while the sensor cleanup is owed either way.
         """
-        if self.proximity_claimed:
-            self.set_claim(False)
+        self.update_hardware_state(False)
 
         if feedback and self.lfb_available:
             try:
