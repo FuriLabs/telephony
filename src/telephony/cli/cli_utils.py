@@ -13,10 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-import subprocess
 import sys
-import time
 
 from gi.repository import Gio
 
@@ -37,29 +34,15 @@ def get_proxy():
     )
 
     if not proxy.get_name_owner():
-        print("Daemon not running. Starting it now...")
-        env = os.environ.copy()
+        start_hint = """The telephony daemon is not running.
 
-        subprocess.Popen(
-            [sys.executable, "-m", "telephony.main"],
-            env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            stdin=subprocess.DEVNULL
-        )
+Start it with:
+    systemctl --user start telephony.service
 
-        for _ in range(50):
-            time.sleep(0.1)
-            proxy = Gio.DBusProxy.new_sync(
-                bus,
-                Gio.DBusProxyFlags.DO_NOT_AUTO_START,
-                None,
-                DAEMON_BUS_NAME,
-                DAEMON_OBJECT_PATH,
-                DAEMON_INTERFACE,
-                None
-            )
-            if proxy.get_name_owner():
-                break
+Or, to have it start with your session:
+    systemctl --user enable --now telephony.service"""
+
+        print(start_hint, file=sys.stderr)
+        raise SystemExit(1)
 
     return proxy
