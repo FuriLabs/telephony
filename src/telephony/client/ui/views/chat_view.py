@@ -983,6 +983,7 @@ class ChatPage(Gtk.Box):
             title=_("Forward To"),
             action_label=_("Forward"),
             allow_custom_number=True,
+            blocked_kind="messages",
             return_contact_uid=False
         )
         present_sheet_page(self.app_window, picker)

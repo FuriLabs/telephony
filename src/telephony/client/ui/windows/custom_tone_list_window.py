@@ -21,7 +21,9 @@ from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.shared.utils.thread_utils import run_in_background
-from telephony.client.ui.widgets.common_widget import (populate_contact_search_results, translate_phone_label)
+from telephony.client.ui.widgets.common_widget import (blocked_entry_for, confirm_unblock_and_add,
+                                                      populate_contact_search_results,
+                                                      translate_phone_label)
 
 
 class CustomToneListWindow(Adw.NavigationPage):
@@ -265,12 +267,25 @@ class CustomToneListWindow(Adw.NavigationPage):
             self.eds,
             is_added=self.is_result_added,
             on_add=lambda row: self.on_result_activated(None, row),
+            blocked_entry=self.blocked_entry,
             translate_label=translate_phone_label,
             unknown_name=_("Unknown"),
             source_map=self._source_map)
 
+    def blocked_entry(self, number):
+        """Return the blocklist row refusing what this list is about."""
+        return blocked_entry_for(self.app_window.db, number, self.domain())
+
+    def domain(self):
+        """Say which half of the blocklist this list of tones is about."""
+        return "messages" if self.mode == "sms" else "calls"
+
     def on_result_activated(self, listbox, row):
-        """Handle activation of a search result."""
+        """Handle activation of a search result.
+
+        A tone for something that never arrives is no tone at all, so
+        a blocked number is put to the user before one is chosen.
+        """
         if not row.get_sensitive():
             return
 
@@ -279,6 +294,13 @@ class CustomToneListWindow(Adw.NavigationPage):
         except AttributeError:
             return
         if data is None:
+            return
+
+        entry = self.blocked_entry(data.get("number"))
+        if entry is not None:
+            confirm_unblock_and_add(
+                self.app_window, self.app_window.daemon, entry, self.domain(),
+                lambda: self.open_audio_picker(data))
             return
 
         self.open_audio_picker(data)

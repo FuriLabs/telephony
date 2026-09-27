@@ -349,10 +349,17 @@ class MessagesView(Adw.Bin):
         return False
 
     def load_blocked_numbers(self):
-        """Take the blocklist the conversation rows are drawn against."""
+        """Take the blocklist the conversation rows are drawn against.
+
+        Only the numbers whose messages are refused count here. One
+        blocked for calls alone still writes, and marking its thread
+        blocked would say the opposite of what happens.
+        """
         if not self.db:
             return set()
-        return {normalize_number(entry["number"]) for entry in self.db.get_blocked_numbers()}
+        return {normalize_number(entry["number"])
+                for entry in self.db.get_blocked_numbers()
+                if entry["block_messages"]}
 
     def refresh_list(self):
         """Trigger a reload of the conversation list."""
@@ -815,7 +822,10 @@ class MessagesView(Adw.Bin):
                     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
                     lbl_name = Gtk.Label(label=name, xalign=0, css_classes=["heading"])
                     lbl_name.set_ellipsize(Pango.EllipsizeMode.END)
-                    lbl_num = Gtk.Label(label=f"{label}: {norm_num}", xalign=0, css_classes=["caption", "dim-label"])
+                    said = f"{label}: {norm_num}"
+                    if norm_num in self.blocked_numbers:
+                        said = f"{said} · {_('Messages blocked')}"
+                    lbl_num = Gtk.Label(label=said, xalign=0, css_classes=["caption", "dim-label"])
                     lbl_num.set_ellipsize(Pango.EllipsizeMode.END)
 
                     vbox.append(lbl_name)
