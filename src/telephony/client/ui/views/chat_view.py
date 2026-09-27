@@ -114,6 +114,7 @@ class ChatPage(Gtk.Box):
 
         sig_id = self.db.connect('messages-updated', self.on_messages_updated)
         self.db_signals.append((self.db, sig_id))
+        self.watch_blocklist()
 
         self.setup_ui()
 
@@ -156,8 +157,10 @@ class ChatPage(Gtk.Box):
 
             full_str = ", ".join(participant_names)
             subtitle_text = full_str if len(full_str) < 50 else _("{count} Participants").format(count=len(self.recipients))
+        self.plain_subtitle = subtitle_text
         self.title_widget = Adw.WindowTitle(title=title_text, subtitle=subtitle_text)
         header.set_title_widget(self.title_widget)
+        self.show_blocked_in_title()
 
         self.btn_search = Gtk.ToggleButton(icon_name="system-search-symbolic", css_classes=["circular"])
         header.pack_end(self.btn_search)
@@ -747,8 +750,40 @@ class ChatPage(Gtk.Box):
             return
         self.refresh_block_states()
 
+    def watch_blocklist(self):
+        """Follow the blocklist, so the header is right however it changed.
+
+        Blocking is done from this page and from several others, and
+        the header would otherwise go on saying what was true when the
+        conversation opened.
+        """
+        sig_id = self.db.connect('blocklist-updated',
+                                 lambda *_a: GLib.idle_add(self.refresh_block_states))
+        self.db_signals.append((self.db, sig_id))
+
+    def show_blocked_in_title(self):
+        """Say under the name when this conversation is not being heard.
+
+        Only for a chat with one person: a group says who is in it,
+        and one blocked member does not make the conversation blocked.
+        The details panel names the member instead.
+        """
+        if self.is_group:
+            return
+
+        entry = None
+        for row in self.db.get_blocked_numbers():
+            if normalize_number(row["number"]) == self.number and row["block_messages"]:
+                entry = dict(row)
+                break
+
+        state = blocked_state_text(entry)
+        self.title_widget.set_subtitle(
+            f"{self.plain_subtitle} · {state}" if state else self.plain_subtitle)
+
     def refresh_block_states(self):
         """Read the blocklist again and put every participant in step."""
+        self.show_blocked_in_title()
         if not self._block_buttons:
             return
 
@@ -1620,6 +1655,7 @@ class ChatPage(Gtk.Box):
 
         sig_id = self.db.connect('messages-updated', self.on_messages_updated)
         self.db_signals.append((self.db, sig_id))
+        self.watch_blocklist()
 
         if not self.is_loading:
             self.append_new_messages()
