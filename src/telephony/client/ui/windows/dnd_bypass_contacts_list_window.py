@@ -28,7 +28,7 @@ from telephony.client.ui.widgets.common_widget import (blocked_entries_for, bloc
 class DndBypassContactsListWindow(Adw.NavigationPage):
     """Settings subpage managing the priority contacts (Notification Override)."""
 
-    def __init__(self, parent, db, eds, kind="calls"):
+    def __init__(self, parent, gsettings_mgr, eds, kind="calls"):
         self.grp_list = None
         self.search_token = 0
         self._source_map = {}
@@ -36,7 +36,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         self.kind = kind
         super().__init__(title=_("Notification Overrides"))
         self.app_window = parent.main_window
-        self.gsettings_mgr = db
+        self.gsettings_mgr = gsettings_mgr
         self.eds = eds
 
         self.local_contacts = []

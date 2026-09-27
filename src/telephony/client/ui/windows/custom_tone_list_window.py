@@ -30,11 +30,11 @@ from telephony.client.ui.widgets.common_widget import (blocked_entries_for, bloc
 class CustomToneListWindow(Adw.NavigationPage):
     """Settings subpage managing the contacts with custom tones (SMS or Ringtone)."""
 
-    def __init__(self, parent, db, eds, mode="sms"):
+    def __init__(self, parent, gsettings_mgr, eds, mode="sms"):
         self.grp_list = None
         title = _("Individual SMS Notifications") if mode == "sms" else _("Individual Ringtones")
         super().__init__(title=title)
-        self.gsettings_mgr = db
+        self.gsettings_mgr = gsettings_mgr
         self.eds = eds
         self.mode = mode
         self.app_window = parent.main_window
