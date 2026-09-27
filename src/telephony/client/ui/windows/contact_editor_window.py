@@ -183,10 +183,12 @@ class ContactEditor(Adw.NavigationPage):
         view.add_top_bar(header)
 
         is_read_only_source = False
+        refusal = ""
         if self.uid:
             current_source = self.uid.split(':', 1)[0] if ':' in self.uid else None
             if current_source in self.eds.read_only_source_uids():
                 is_read_only_source = True
+                refusal = self.eds.read_only_reason(current_source)
 
         if self.mode == "VIEW":
             header.set_show_end_title_buttons(True)
@@ -219,6 +221,10 @@ class ContactEditor(Adw.NavigationPage):
 
             if not self.eds.is_ready:
                 self.btn_save.set_sensitive(False)
+
+        if refusal:
+            banner = Adw.Banner(title=refusal, revealed=True)
+            view.add_top_bar(banner)
 
         page = Adw.PreferencesPage()
         view.set_content(page)
