@@ -86,8 +86,19 @@ class ContactEditor(Adw.NavigationPage):
                               on_complete=self.on_vcard_loaded, on_error=self.on_vcard_load_failed)
 
     def on_closed(self, _dialog):
-        """Remember that the dialog is closing so async callbacks bail out."""
-        self._destroyed = True
+        """Remember that the page is gone so async callbacks bail out.
+
+        Hidden fires for being covered as well as for leaving, and a
+        covered page has to keep working, since the flows it opens are
+        what cover it. A page that left has lost its parent by the next
+        idle and a covered one has not, so the answer waits a turn.
+        """
+        def check():
+            if self.get_parent() is None:
+                self._destroyed = True
+            return False
+
+        GLib.idle_add(check)
 
     def on_vcard_loaded(self, vcard):
         """Apply the asynchronously fetched vCard and rebuild the view."""
