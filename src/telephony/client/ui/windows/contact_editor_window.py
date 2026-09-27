@@ -578,7 +578,8 @@ class ContactEditor(Adw.NavigationPage):
         Neither flow is confirmed here, because each one confirms
         itself: the blocklist editor shows the number and its two
         switches and waits for Save, and unblocking asks which of the
-        two to give back.
+        two to give back. Both are offered, since a contact is no more
+        about calls than about messages.
         """
         number = (number or "").strip()
         if not number:
@@ -590,7 +591,7 @@ class ContactEditor(Adw.NavigationPage):
             return
 
         present_unblock_choice(
-            self.main_window, self.main_window.daemon, entry, "calls",
+            self.main_window, self.main_window.daemon, entry, None,
             lambda: GLib.timeout_add(BLOCKLIST_SETTLE_MS, self.reload_blocked_numbers))
 
     def show_entry_row_state(self, row):

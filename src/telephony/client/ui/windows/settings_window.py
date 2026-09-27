@@ -31,7 +31,7 @@ from telephony.client.ui.windows.favorites_list_window import FavoritesListWindo
 from telephony.client.ui.windows.network_services_window import NetworkServicesWindow
 from telephony.client.ui.windows.import_export_window import ImportExportDialog
 from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row, wire_blocklist_switch_locks,
-                                                      blocked_state_text,
+                                                      blocked_state_text, present_unblock_choice,
                                                       present_sheet_page,
                                                       close_sheet_page,
                                                       present_alert_sheet)
@@ -264,23 +264,14 @@ class SettingsWindow(Adw.Bin):
         return False
 
     def on_block_deleted(self, entry):
-        """Ask before deleting, then take the whole entry.
+        """Ask what to give back, the way every other place asks.
 
-        The trash removes every domain at once now, so it asks first,
-        naming the number: a switch can be flipped back, a deleted
-        entry has to be retyped.
+        The row belongs to the number rather than to calls or to
+        messages, so each half that stands is offered, and an entry
+        holding one half is offered that one.
         """
-        def answered(answer):
-            if answer != "delete":
-                return
-            self.main_window.daemon.remove_blocked_number(
-                entry["id"], callback=self.reload_blocklist)
-
-        present_alert_sheet(
-            self.get_root(), entry["number"],
-            _("{number} will be removed from the blocklist.").format(number=entry["number"]),
-            [("cancel", _("Cancel"), None), ("delete", _("Delete"), "destructive")],
-            answered)
+        present_unblock_choice(self.get_root(), self.main_window.daemon, entry, None,
+                               lambda: GLib.idle_add(self.reload_blocklist))
 
     def push_page(self, page):
         """Push a settings page, which takes the focus itself.

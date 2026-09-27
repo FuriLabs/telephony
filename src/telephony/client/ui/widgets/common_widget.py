@@ -185,34 +185,43 @@ def confirm_unblock_and_add(window, daemon, entry, context, on_added):
 
 
 def present_unblock_choice(window, daemon, entry, context, on_done):
-    """Ask whether to unblock the current domain or the whole entry.
+    """Ask what to give back, offering only what there is to give.
 
-    If the other domain is not blocked, remove the entry directly.
-    ``on_done`` runs only after an unblock choice is applied.
+    Somewhere about one half asks about that half; somewhere about the
+    number itself offers each half that stands. An entry blocking a
+    single half has one thing to offer, and offers it rather than
+    acting unasked: the asking is what makes it deliberate.
     """
-    own = entry["block_calls"] if context == "calls" else entry["block_messages"]
-    other = entry["block_messages"] if context == "calls" else entry["block_calls"]
-
-    if not other:
-        daemon.remove_blocked_number(entry["id"])
-        on_done()
-        return
+    standing = [half for half in ("calls", "messages") if entry[f"block_{half}"]]
 
     responses = []
-    if own:
-        label = _("Unblock Calls Only") if context == "calls" else _("Unblock Messages Only")
-        responses.append(("own", label, None))
-    responses.append(("all", _("Unblock Everything"), None))
-    body = (_("This number is also blocked for messages.") if context == "calls"
-            else _("This number is also blocked for calls."))
+    if len(standing) > 1:
+        for half in standing:
+            if context not in (None, half):
+                continue
+            responses.append((half, _("Unblock Calls Only") if half == "calls"
+                              else _("Unblock Messages Only"), None))
+        responses.append(("all", _("Unblock Everything"), None))
+        if context == "calls":
+            body = _("This number is also blocked for messages.")
+        elif context == "messages":
+            body = _("This number is also blocked for calls.")
+        else:
+            body = _("This number is blocked for both calls and messages.")
+    else:
+        responses.append(("all", _("Unblock"), None))
+        body = (_("Calls from this number are blocked.") if standing == ["calls"]
+                else _("Messages from this number are blocked."))
+
+    responses.insert(0, ("cancel", _("Cancel"), None))
 
     def answered(answer):
         if answer == "all":
             daemon.remove_blocked_number(entry["id"])
             on_done()
             return
-        if answer == "own":
-            release_block_domain(daemon, entry, context, on_done)
+        if answer in ("calls", "messages"):
+            release_block_domain(daemon, entry, answer, on_done)
 
     present_alert_sheet(window, entry["number"], body, responses, answered)
 
