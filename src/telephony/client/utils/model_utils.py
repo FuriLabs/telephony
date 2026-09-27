@@ -47,8 +47,8 @@ def call_outcome_text(kind, reason=None):
     An outgoing call that never connected is only given up on when the
     giving up happened here. The same row is written when the other end
     declined it or the network could not put it through, and the reason
-    is the only thing telling those apart, which is what the marks on
-    the history row already go by.
+    is the only thing telling those apart. The list does not draw that
+    distinction; this is where it is said.
     """
     if kind == "cancelled":
         if reason == "remote":

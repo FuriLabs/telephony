@@ -1290,9 +1290,11 @@ class DatabaseManager(GObject.Object):
     def unblock_number(self, bid):
         """Remove a blocklist entry.
 
-        There is nothing to put back: blocking no longer writes anything
-        outside this table, so the marker stops being drawn as soon as
-        the row is gone.
+        The contact and its history are untouched by blocking and so
+        need nothing back. The one thing blocking does reach outside
+        this table for, the notification overrides, is not put back
+        either: it was set deliberately once and asking for it again
+        is a different wish from lifting the block.
         """
         if self.refuse_write("unblock_number"):
             return

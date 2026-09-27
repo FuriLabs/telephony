@@ -763,8 +763,7 @@ class ChatPage(Gtk.Box):
         entries = blocked or {}
         for number, button in self._block_buttons.items():
             entry = entries.get(normalize_number(number))
-            button.set_icon_name("changes-allow-symbolic" if entry
-                                 else "action-unavailable-symbolic")
+            button.set_css_classes(["circular"] + (["error"] if entry else []))
             button.set_tooltip_text(
                 _("Unblock this number") if entry else _("Block this number"))
             button.set_sensitive(self.app_window.eds.is_ready)
@@ -902,7 +901,7 @@ class ChatPage(Gtk.Box):
                 self.app_window.copy_to_clipboard(n)
             b_copy.connect("clicked", lambda b, n=rec: handle_copy_click(n))
 
-            b_blk = Gtk.Button(icon_name="action-unavailable-symbolic", css_classes=["circular", "destructive-action"])
+            b_blk = Gtk.Button(icon_name="action-unavailable-symbolic", css_classes=["circular"])
             b_blk.set_valign(Gtk.Align.CENTER)
             b_blk.set_sensitive(False)
 
