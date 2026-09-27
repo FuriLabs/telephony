@@ -19,7 +19,8 @@ from gettext import gettext as _
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.client.ui.widgets.common_widget import (blocked_entry_for, confirm_unblock_and_add,
+from telephony.client.ui.widgets.common_widget import (blocked_entries_for, blocked_entry_for,
+                                                      confirm_unblock_and_add,
                                                       populate_contact_search_results,
                                                       translate_phone_label)
 
@@ -234,7 +235,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
             self.eds,
             is_added=self.is_result_added,
             on_add=lambda row: self.on_result_activated(None, row),
-            blocked_entry=self.blocked_entry,
+            blocked_entries=blocked_entries_for(self.app_window.db, self.kind),
             translate_label=translate_phone_label,
             unknown_name=_("Unknown"),
             source_map=self._source_map)

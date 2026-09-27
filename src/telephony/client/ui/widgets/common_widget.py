@@ -121,6 +121,20 @@ def blocked_state_text(entry):
     return _("Messages blocked")
 
 
+def blocked_entries_for(db, context):
+    """The blocklist rows refusing one half, by number, read once.
+
+    A list of results asks about every number it draws, and the
+    blocklist is one small table: reading it once and looking in what
+    came back beats asking the database per row.
+    """
+    if not db:
+        return {}
+    key = "block_calls" if context == "calls" else "block_messages"
+    return {normalize_number(entry["number"]): dict(entry)
+            for entry in db.get_blocked_numbers() if entry[key]}
+
+
 def blocked_entry_for(db, number, context):
     """Return the blocklist row refusing this number for calls or messages.
 
@@ -596,7 +610,7 @@ def translate_phone_label(label):
     return LABELS.get(label, label)
 
 
-def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown", source_map=None, blocked_entry=None):
+def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown", source_map=None, blocked_entries=None):
     """Populate a Gtk.ListBox with contact search result rows.
 
     Clears results_list, then appends one Adw.ActionRow per phone number of
@@ -605,11 +619,12 @@ def populate_contact_search_results(results_list, contacts, eds, is_added, on_ad
     list: those rows are made insensitive and get a check icon, while the
     others get an add button that invokes on_add(row). translate_label, when
     given, maps the phone label key to a localized string for the subtitle,
-    and unknown_name is the display name fallback. blocked_entry, when
-    given, is asked for the blocklist row standing against a number, and
-    a row with one says so and is marked. Appends a placeholder label
-    when no rows were produced.
+    and unknown_name is the display name fallback. blocked_entries, when
+    given, holds the blocklist rows standing against numbers, and a row
+    named in it says so and is marked. Appends a placeholder label when
+    no rows were produced.
     """
+    blocked_entries = blocked_entries or {}
     while child := results_list.get_first_child():
         results_list.remove(child)
 
@@ -641,7 +656,7 @@ def populate_contact_search_results(results_list, contacts, eds, is_added, on_ad
                     s_name = source_map[source_uid]
                     subtitle_text += f"\n{s_name}"
 
-                entry = blocked_entry(ph_num) if blocked_entry else None
+                entry = blocked_entries.get(normalize_number(ph_num))
                 if entry is not None:
                     subtitle_text = f"{ph_num} ({shown_label}) · {blocked_state_text(entry)}"
                     if source_uid and source_uid in source_map:
