@@ -31,6 +31,7 @@ from telephony.client.ui.windows.favorites_list_window import FavoritesListWindo
 from telephony.client.ui.windows.network_services_window import NetworkServicesWindow
 from telephony.client.ui.windows.import_export_window import ImportExportDialog
 from telephony.client.ui.widgets.common_widget import (present_info_sheet, build_selector_row, set_selector_options, EntryListGroup, build_nav_row, wire_blocklist_switch_locks,
+                                                      blocked_state_text,
                                                       present_sheet_page,
                                                       close_sheet_page,
                                                       present_alert_sheet)
@@ -161,15 +162,10 @@ class SettingsWindow(Adw.Bin):
         self._blocklist_rows = []
 
         for entry in self.main_window.db.get_blocked_numbers():
-            row = Adw.ActionRow(title=entry["number"], subtitle=entry["note"] or "")
-            for flag, icon in (("block_calls", "call-stop-symbolic"),
-                               ("block_messages", "mail-unread-symbolic")):
-                if entry[flag]:
-                    badge = Gtk.Image.new_from_icon_name(icon)
-                    badge.set_pixel_size(14)
-                    badge.set_valign(Gtk.Align.CENTER)
-                    badge.add_css_class("blocklist-on")
-                    row.add_suffix(badge)
+            note = entry["note"] or ""
+            state = blocked_state_text(entry)
+            row = Adw.ActionRow(title=entry["number"],
+                                subtitle=f"{state} · {note}" if note else state)
             btn_edit = Gtk.Button(icon_name="document-edit-symbolic", valign=Gtk.Align.CENTER,
                                   css_classes=["flat", "circular"])
             btn_edit.connect("clicked", lambda b, e=dict(entry): GLib.idle_add(
