@@ -18,7 +18,7 @@ import hashlib
 
 from gi.repository import Gtk, Adw, Gio, GLib, Pango
 from telephony.shared.utils.log_utils import logger
-from gettext import gettext as _
+from gettext import gettext as _, ngettext
 
 from telephony.shared.constants import SCROLL_SETTLE_MS
 from telephony.shared.utils.phone_utils import normalize_number
@@ -54,8 +54,11 @@ class ContactsView(Adw.Bin):
         self.calling_enabled = True
         self._live_call_btns = set()
 
+        self.blocked_numbers = self.load_blocked_numbers()
+
         self.signal_ids = []
         self.signal_ids.append((self.app_window.db, self.app_window.db.connect('contacts-updated', lambda *args: GLib.idle_add(lambda: self.refresh()))))
+        self.signal_ids.append((self.app_window.db, self.app_window.db.connect('blocklist-updated', lambda *args: GLib.idle_add(self.on_blocklist_changed))))
         if self.app_window.eds:
             self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('contacts-loaded', lambda *args: GLib.idle_add(self.on_contacts_loaded_signal))))
             self.signal_ids.append((self.app_window.eds, self.app_window.eds.connect('address-books-changed', lambda *args: GLib.idle_add(self.on_books_changed_signal))))
@@ -347,6 +350,44 @@ class ContactsView(Adw.Bin):
         self.search_timer = None
         return False
 
+    def load_blocked_numbers(self):
+        """Take the blocklist the contact rows are drawn against.
+
+        The blocklist lives in the window's database; this view's own
+        db is the contact store, which knows nothing about blocking.
+        Whole entries are kept rather than numbers, because picking a
+        number to call asks a different question than picking one to
+        write to.
+        """
+        database = self.app_window.db
+        if not database:
+            return {}
+        return {normalize_number(entry["number"]): dict(entry)
+                for entry in database.get_blocked_numbers()}
+
+    def on_blocklist_changed(self):
+        """Redraw the rows against the blocklist as it now stands."""
+        self.blocked_numbers = self.load_blocked_numbers()
+        self.refresh(self.current_query)
+        return False
+
+    def is_any_number_blocked(self, phones):
+        """Say whether any of a contact's numbers is on the blocklist."""
+        return any(normalize_number(number) in self.blocked_numbers
+                   for number, _label in phones)
+
+    def blocked_for(self, number, kind):
+        """Say whether a number is blocked for calls or for messages.
+
+        An entry always blocks at least one of the two, so a number the
+        picker offers may be perfectly callable and still refuse
+        messages, or the other way about.
+        """
+        entry = self.blocked_numbers.get(normalize_number(number))
+        if entry is None:
+            return False
+        return bool(entry["block_calls"] if kind == "calls" else entry["block_messages"])
+
     def setup_row(self, factory, list_item):
         """Setup handler for list item factory."""
         box = Gtk.Box(spacing=10)
@@ -372,10 +413,24 @@ class ContactsView(Adw.Bin):
         name_box.append(name)
         name_box.append(star)
 
+        num_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
+        num_box.set_visible(False)
+
         num_lbl = Gtk.Label(xalign=0, css_classes=["caption", "dim-label"])
         num_lbl.set_halign(Gtk.Align.START)
         num_lbl.set_ellipsize(Pango.EllipsizeMode.END)
-        num_lbl.set_visible(False)
+        num_box.append(num_lbl)
+
+        blocked_mark = Gtk.Image.new_from_icon_name("action-unavailable-symbolic")
+        blocked_mark.set_pixel_size(10)
+        blocked_mark.add_css_class("marker-rejected")
+        blocked_mark.set_visible(False)
+        num_box.append(blocked_mark)
+
+        count_lbl = Gtk.Label(xalign=0, css_classes=["tiny-label", "dim-label"])
+        count_lbl.set_valign(Gtk.Align.CENTER)
+        count_lbl.set_visible(False)
+        num_box.append(count_lbl)
 
         source_lbl = Gtk.Label(xalign=0, css_classes=["tiny-label"])
         source_lbl.set_halign(Gtk.Align.START)
@@ -383,7 +438,7 @@ class ContactsView(Adw.Bin):
         source_lbl.set_visible(False)
 
         vbox.append(name_box)
-        vbox.append(num_lbl)
+        vbox.append(num_box)
         vbox.append(source_lbl)
 
         actions = Gtk.Box(spacing=8)
@@ -439,8 +494,12 @@ class ContactsView(Adw.Bin):
         name_lbl = name_box.get_first_child()
         star = name_lbl.get_next_sibling()
 
-        num_lbl = name_box.get_next_sibling()
-        source_lbl = num_lbl.get_next_sibling()
+        num_box = name_box.get_next_sibling()
+        source_lbl = num_box.get_next_sibling()
+
+        num_lbl = num_box.get_first_child()
+        blocked_mark = num_lbl.get_next_sibling()
+        count_lbl = blocked_mark.get_next_sibling()
 
         btn_msg = actions.get_first_child()
         btn_edit = btn_msg.get_next_sibling()
@@ -462,11 +521,14 @@ class ContactsView(Adw.Bin):
             phones = [(str(item.phone), "Mobile")]
 
         if phones:
-            p_num = phones[0][0]
-            num_lbl.set_text(p_num)
-            num_lbl.set_visible(True)
+            num_lbl.set_text(phones[0][0])
+            blocked_mark.set_visible(self.is_any_number_blocked(phones))
+            count_lbl.set_text(ngettext("· {count} number", "· {count} numbers",
+                                        len(phones)).format(count=len(phones)))
+            count_lbl.set_visible(len(phones) > 1)
+            num_box.set_visible(True)
         else:
-            num_lbl.set_visible(False)
+            num_box.set_visible(False)
 
         if item.source_uid and (self.source_map is not None):
             s_name = self.source_map.get(item.source_uid)
@@ -531,15 +593,33 @@ class ContactsView(Adw.Bin):
             self.search.set_text("")
             self.app_window.present_chat(normalize_number(phones[0][0]))
         else:
-            self.show_picker(btn, phones, self.app_window.present_chat)
+            self.show_picker(btn, phones, self.app_window.present_chat, kind="messages")
 
-    def show_picker(self, parent_btn, phones, callback):
-        """Show the phone number choice sheet."""
+    def show_picker(self, parent_btn, phones, callback, kind="calls"):
+        """Show the phone number choice sheet.
+
+        Each number says whether it is blocked for the thing being
+        chosen, since a number blocked for messages can still be called
+        and saying only that it is blocked would be wrong about one of
+        the two.
+        """
+        blocked_word = (_("Calls blocked") if kind == "calls"
+                        else _("Messages blocked"))
+
         def build(group, sheet):
             for number, label in phones:
-                add_choice_row(group, sheet, number,
-                               lambda n=number: [self.search.set_text(""), callback(normalize_number(n))],
-                               subtitle=translate_phone_label(label))
+                shown = translate_phone_label(label)
+                if self.blocked_for(number, kind):
+                    shown = f"{shown} · {blocked_word}"
+                row = add_choice_row(group, sheet, number,
+                                     lambda n=number: [self.search.set_text(""), callback(normalize_number(n))],
+                                     subtitle=shown)
+                if self.blocked_for(number, kind):
+                    mark = Gtk.Image.new_from_icon_name("action-unavailable-symbolic")
+                    mark.set_pixel_size(14)
+                    mark.add_css_class("marker-rejected")
+                    mark.set_valign(Gtk.Align.CENTER)
+                    row.add_suffix(mark)
 
         present_choice_sheet(self.app_window, _("Pick Contact"), build)
 

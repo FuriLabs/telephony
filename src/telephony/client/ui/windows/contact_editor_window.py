@@ -24,7 +24,8 @@ from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
 from telephony.client.ui.widgets.common_widget import (translate_phone_label,
-                                                      close_sheet_page, present_sheet_page)
+                                                      close_sheet_page, present_sheet_page,
+                                                      present_unblock_choice)
 from telephony.shared.constants import BLOCKLIST_SETTLE_MS, CONTACT_SHEET_HEIGHT
 
 
@@ -47,6 +48,7 @@ class ContactEditor(Adw.NavigationPage):
         self._destroyed = False
         super().__init__(title=_("Contact Details"))
         self.connect("hidden", self.on_closed)
+        self.connect("showing", self.reload_blocked_numbers)
         self.eds = eds_manager
         self.main_window = main_window
         self.uid = contact_data['uid'] if contact_data else None
@@ -72,8 +74,8 @@ class ContactEditor(Adw.NavigationPage):
 
 
         self.phone_entries = []
-        self.blocked_ids = {}
-        self.phone_view_buttons = []
+        self.blocked_entries = {}
+        self.phone_view_rows = []
         self.email_entries = []
         self.adv_entries = {}
 
@@ -224,7 +226,7 @@ class ContactEditor(Adw.NavigationPage):
             self.reload_blocked_numbers()
         else:
             if current_phones:
-                self.phone_view_buttons = []
+                self.phone_view_rows = []
                 for num, lbl in current_phones:
                     self.grp_phones.add(self.phone_view_row(num, lbl))
                 self.reload_blocked_numbers()
@@ -471,41 +473,77 @@ class ContactEditor(Adw.NavigationPage):
                             label_keys, display_labels, label, text,
                             _("Phone"), Gtk.InputPurpose.PHONE, blockable=True)
 
-    def blocked_entry_id(self, number):
-        """Return the blocklist id standing against a number, or None."""
+    def blocked_entry(self, number):
+        """Return the blocklist row standing against a number, or None."""
         norm = normalize_number((number or "").strip())
-        return self.blocked_ids.get(norm) if norm else None
+        return self.blocked_entries.get(norm) if norm else None
 
-    def show_block_state(self, button, number):
-        """Say whether a number is blocked, and what tapping will do."""
-        blocked = self.blocked_entry_id(number) is not None
-        classes = ["flat", "circular"] + (["error"] if blocked else [])
-        button.set_css_classes(classes)
+    def blocked_state_text(self, entry):
+        """Name the part of a number that is blocked, for the subtitle."""
+        if entry is None:
+            return ""
+        if entry["block_calls"] and entry["block_messages"]:
+            return _("Blocked")
+        if entry["block_calls"]:
+            return _("Calls blocked")
+        return _("Messages blocked")
+
+    def show_number_state(self, button, number, label, row=None, type_row=None):
+        """Put one phone row in step with the blocklist.
+
+        The words carry the state and the button carries the action, so
+        the two are never the same red circle standing beside itself.
+        The lists use a marker instead, having no room for words.
+        """
+        entry = self.blocked_entry(number)
+        button.set_css_classes(["flat", "circular"] + (["error"] if entry else []))
         button.set_tooltip_text(
-            _("Unblock this number") if blocked else _("Block this number"))
+            _("Unblock this number") if entry else _("Block this number"))
         button.set_sensitive(bool((number or "").strip()))
 
-    def on_block_clicked(self, button, number):
-        """Block a number, or unblock it when it already is."""
-        norm = normalize_number((number or "").strip())
-        if not norm:
+        state = self.blocked_state_text(entry)
+        said = f"{label} · {state}" if state else label
+        if row is not None:
+            row.set_subtitle(said)
+        if type_row is not None:
+            type_row.set_subtitle(said)
+
+    def on_block_clicked(self, number):
+        """Open the flow that blocks a number, or the one that frees it.
+
+        Neither flow is confirmed here, because each one confirms
+        itself: the blocklist editor shows the number and its two
+        switches and waits for Save, and unblocking asks which of the
+        two to give back.
+        """
+        number = (number or "").strip()
+        if not number:
             return
 
-        entry_id = self.blocked_ids.get(norm)
-        button.set_sensitive(False)
-
-        if entry_id is not None:
-            self.main_window.daemon.remove_blocked_number(entry_id)
-            GLib.timeout_add(BLOCKLIST_SETTLE_MS, self.reload_blocked_numbers)
+        entry = self.blocked_entry(number)
+        if entry is None:
+            self.main_window.present_blocklist_editor(number_preset=number)
             return
 
-        run_in_background(self.main_window.daemon.add_blocked_number, norm, "",
-                          on_complete=lambda _ok: self.reload_blocked_numbers())
+        present_unblock_choice(
+            self.main_window, self.main_window.daemon, entry, "calls",
+            lambda: GLib.timeout_add(BLOCKLIST_SETTLE_MS, self.reload_blocked_numbers))
 
-    def reload_blocked_numbers(self):
+    def show_entry_row_state(self, row):
+        """Put one number being typed in step with the blocklist.
+
+        A number being edited has no subtitle of its own, so the state
+        is said on the type row beneath it, which already carries the
+        label it belongs to.
+        """
+        label = row.display_labels[row.type_row._selected_index]
+        self.show_number_state(row.block_button, row.get_text(), label,
+                               type_row=row.type_row)
+
+    def reload_blocked_numbers(self, *_args):
         """Read the blocklist again and show what each phone row now is."""
         def task():
-            return {normalize_number(entry["number"]): entry["id"]
+            return {normalize_number(entry["number"]): dict(entry)
                     for entry in self.main_window.db.get_blocked_numbers()}
 
         run_in_background(task, on_complete=self.apply_blocked_numbers)
@@ -513,11 +551,11 @@ class ContactEditor(Adw.NavigationPage):
 
     def apply_blocked_numbers(self, blocked):
         """Take the blocklist read and put every phone row in step with it."""
-        self.blocked_ids = blocked or {}
+        self.blocked_entries = blocked or {}
         for row, _type_row in self.phone_entries:
-            self.show_block_state(row.block_button, row.get_text())
-        for button, number in self.phone_view_buttons:
-            self.show_block_state(button, number)
+            self.show_entry_row_state(row)
+        for row, button, number, label in self.phone_view_rows:
+            self.show_number_state(button, number, label, row=row)
 
     def add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
@@ -550,6 +588,8 @@ class ContactEditor(Adw.NavigationPage):
             for i, check in enumerate(type_row._option_checks):
                 check.set_visible(i == index)
             type_row.set_expanded(False)
+            if blockable:
+                self.show_entry_row_state(row)
 
         for i, name in enumerate(display_labels):
             option = Adw.ActionRow(title=name, activatable=True)
@@ -565,13 +605,16 @@ class ContactEditor(Adw.NavigationPage):
             lambda: [group.remove(row), group.remove(type_row), entries_list.remove((row, type_row))] and False))
 
         if blockable:
+            row.type_row = type_row
+            row.display_labels = display_labels
             row.block_button = Gtk.Button(icon_name="action-unavailable-symbolic",
-                                          css_classes=["flat", "circular"],
                                           valign=Gtk.Align.CENTER)
-            row.block_button.connect("clicked", lambda b: self.on_block_clicked(b, row.get_text()))
-            row.connect("changed", lambda _e: self.show_block_state(row.block_button, row.get_text()))
+            row.block_button.connect("clicked", lambda b: GLib.idle_add(
+                lambda: self.on_block_clicked(row.get_text()) or False))
             row.add_suffix(row.block_button)
-            self.show_block_state(row.block_button, row.get_text())
+
+            row.connect("changed", lambda _e: self.show_entry_row_state(row))
+            self.show_entry_row_state(row)
 
         row.add_suffix(btn_remove)
         group.add(row)
@@ -586,8 +629,15 @@ class ContactEditor(Adw.NavigationPage):
         return btn
 
     def phone_view_row(self, number, label):
-        """Read-only phone row with message and call shortcuts."""
-        row = self.create_view_row(number, translate_phone_label(label), copy_text=number)
+        """Read-only phone row with copy, block, message and call."""
+        shown_label = translate_phone_label(label)
+        row = self.create_view_row(number, shown_label, copy_text=number)
+
+        btn_block = Gtk.Button(icon_name="action-unavailable-symbolic",
+                               valign=Gtk.Align.CENTER)
+        btn_block.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self.on_block_clicked(number) or False))
+        row.add_suffix(btn_block)
 
         btn_msg = Gtk.Button(icon_name="mail-message-new-symbolic", valign=Gtk.Align.CENTER)
         btn_msg.add_css_class("circular")
@@ -602,13 +652,9 @@ class ContactEditor(Adw.NavigationPage):
         btn_call.set_sensitive(bool(self.main_window.ofono and self.main_window.ofono.is_dialing_available()))
         btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self.call_number(number) or False))
 
-        btn_block = Gtk.Button(icon_name="action-unavailable-symbolic", valign=Gtk.Align.CENTER)
-        btn_block.set_size_request(34, 34)
-        btn_block.connect("clicked", lambda b: self.on_block_clicked(b, number))
-        self.phone_view_buttons.append((btn_block, number))
-        self.show_block_state(btn_block, number)
+        self.phone_view_rows.append((row, btn_block, number, shown_label))
+        self.show_number_state(btn_block, number, shown_label, row=row)
 
-        row.add_suffix(btn_block)
         row.add_suffix(btn_msg)
         row.add_suffix(btn_call)
         return row
