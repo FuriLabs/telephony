@@ -136,6 +136,39 @@ class ContactEditor(Adw.NavigationPage):
         if self.mode == "VIEW":
             self.refresh_ui()
 
+    def scrolled_inside(self, widget):
+        """Find the scrolled view a preferences page keeps its content in."""
+        if isinstance(widget, Gtk.ScrolledWindow):
+            return widget
+        child = widget.get_first_child()
+        while child is not None:
+            found = self.scrolled_inside(child)
+            if found is not None:
+                return found
+            child = child.get_next_sibling()
+        return None
+
+    def hold_content_height(self, page):
+        """Keep the sheet at the contact's height whatever the page holds.
+
+        A preferences page reports the height of everything inside it,
+        and the sheet grows to that, so the sheet was as tall as the
+        page was long. Editing shows more than reading does: the books
+        to save into, a type beneath every number. The content scrolls
+        within the height a contact asks for instead, and reading and
+        editing the same contact are the same size.
+
+        It has to be told to fill that height as well as to stop
+        asking for more, or it keeps only the room its shortest self
+        needs and the contact is left showing nothing.
+        """
+        scroller = self.scrolled_inside(page)
+        if scroller is None:
+            return
+        scroller.set_propagate_natural_height(False)
+        scroller.set_vexpand(True)
+        page.set_vexpand(True)
+
     def clean_vcard_str(self, text):
         """Clean up vCard text field (unescape)."""
         if not text:
@@ -189,6 +222,7 @@ class ContactEditor(Adw.NavigationPage):
 
         page = Adw.PreferencesPage()
         view.set_content(page)
+        self.hold_content_height(page)
 
         current_phones = self.extract_phones_with_labels()
         current_emails = self.extract_emails_with_labels()
@@ -466,12 +500,21 @@ class ContactEditor(Adw.NavigationPage):
         self.toast_overlay.add_toast(Adw.Toast.new(_("Copied to clipboard")))
 
     def on_edit_mode_click(self, btn):
-        """Open the editing page on top of the contact being read."""
-        present_sheet_page(self.main_window, ContactEditor(
+        """Open the editing page on top of the contact being read.
+
+        A pushed page is grown to the height the sheet already stands
+        at, which suits a flow arriving over something taller than
+        itself. Here the two pages are the same contact and ask for the
+        same height, so the edit is put back to it once pushed and the
+        sheet stops changing size on the way in and out.
+        """
+        editor = ContactEditor(
             self.eds, self.main_window,
             contact_data={'uid': self.uid, 'name': self.contact_name,
                           'vcard': self.vcard_cache},
-            start_mode="EDIT"))
+            start_mode="EDIT")
+        present_sheet_page(self.main_window, editor)
+        editor.set_size_request(-1, CONTACT_SHEET_HEIGHT)
 
     def on_cancel_edit(self, btn):
         """Leave the editing page, landing on whatever opened it."""
