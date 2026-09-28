@@ -61,13 +61,31 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             toast.set_priority(Adw.ToastPriority.HIGH)
         self.overlay.add_toast(toast)
 
+    def what_this_page_does(self):
+        """Name what this page holds, for the app it was opened from.
+
+        The groups are shown by what the window is for, so a fixed
+        sentence describes a page nobody opening it from contacts would
+        recognise: it promised text-message triggers and a modem
+        restart where neither is drawn.
+        """
+        held = []
+        if self.parent_win.mode_messages:
+            held.append(_("lets trusted senders trigger actions on your phone "
+                          "by text message"))
+        if self.parent_win.mode_calls or self.parent_win.mode_messages:
+            held.append(_("restarts the modem"))
+        held.append(_("changes which app icons are installed"))
+        held.append(_("erases your data"))
+
+        listed = held[0] if len(held) == 1 else \
+            _("{most} and {last}").format(most=", ".join(held[:-1]), last=held[-1])
+        return _("For experienced users. This page {listed}.").format(listed=listed)
+
     def build_ui(self):
         """Construct the settings UI."""
         self.page = Adw.PreferencesPage()
-        self.page.set_description(
-            _("For experienced users. This page lets trusted senders trigger "
-              "actions on your phone by text message, restarts the modem, "
-              "changes which app icons are installed, and erases your data."))
+        self.page.set_description(self.what_this_page_does())
         self.content_box.append(self.page)
 
         grp_actions = Adw.PreferencesGroup(title=_("Secret SMS Triggers"))
