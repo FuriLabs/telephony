@@ -35,6 +35,8 @@ EDS_SOURCE_MANAGER_IFACE = "org.gnome.evolution.dataserver.SourceManager"
 EDS_SOURCE_IFACE = "org.gnome.evolution.dataserver.Source"
 EDS_SOURCE_WRITABLE_IFACE = "org.gnome.evolution.dataserver.Source.Writable"
 EDS_STATUS_CONNECTED = "connected"
+EDS_CONNECTION_STATUS_PROP = "ConnectionStatus"
+EDS_STATUS_SETTLE_MS = 1500
 EDS_SOURCE_REMOVABLE_IFACE = "org.gnome.evolution.dataserver.Source.Removable"
 EDS_BOOK_BUS_NAME = "org.gnome.evolution.dataserver.AddressBook10"
 EDS_FACTORY_PATH = "/org/gnome/evolution/dataserver/AddressBookFactory"
@@ -46,6 +48,7 @@ VCARD_BEGIN = "BEGIN:VCARD"
 EDS_CALL_TIMEOUT_MS = 25000
 VIEW_FLAG_NOTIFY_INITIAL = 1
 OBJECT_MANAGER_IFACE = "org.freedesktop.DBus.ObjectManager"
+PROPERTIES_IFACE = "org.freedesktop.DBus.Properties"
 EVOLUTION_SCHEMA_ID = "org.gnome.evolution"
 DEFAULT_BOOK_KEY = "default-address-book"
 SYSTEM_BOOK_UID = "system-address-book"
@@ -100,6 +103,7 @@ class EdsManager(GObject.Object):
         self.book_openers = {}
         self.registry_watched = False
         self._registry_sub_ids = []
+        self._status_settle_id = 0
         self._registry_paths = {}
         self.is_ready = False
         self._sources_info_cache = None
@@ -228,7 +232,7 @@ class EdsManager(GObject.Object):
         }
 
     def watch_registry(self):
-        """Follow registry additions and removals; safe to call twice."""
+        """Follow registry additions, removals and status; safe to call twice."""
         if self.registry_watched:
             return
         self.registry_watched = True
@@ -241,6 +245,50 @@ class EdsManager(GObject.Object):
             EDS_SOURCES_BUS_NAME, OBJECT_MANAGER_IFACE, "InterfacesRemoved",
             EDS_SOURCES_PATH, None, Gio.DBusSignalFlags.NONE,
             self.on_registry_removed))
+        self._registry_sub_ids.append(bus.signal_subscribe(
+            EDS_SOURCES_BUS_NAME, PROPERTIES_IFACE, "PropertiesChanged",
+            None, EDS_SOURCE_IFACE, Gio.DBusSignalFlags.NONE,
+            self.on_source_properties_changed))
+
+    def on_source_properties_changed(self, _conn, _sender, _path, _iface, _member, params):
+        """A source changed a property; refresh if it was its connection.
+
+        A book reports itself disconnected until something opens it, so
+        the status read while the daemon starts is the status before any
+        account has come up. Nothing else announces the change: it
+        arrives as a property, not as the book appearing, so without
+        this the first reading stands for the life of the daemon and
+        every online book stays read-only.
+        """
+        try:
+            changed_iface, changed, invalidated = params.unpack()
+        except Exception as e:
+            logger.debug(f"[EDS] Bad property payload: {e}")
+            return
+
+        if changed_iface != EDS_SOURCE_IFACE:
+            return
+        if EDS_CONNECTION_STATUS_PROP not in changed and EDS_CONNECTION_STATUS_PROP not in invalidated:
+            return
+
+        self.invalidate_sources_info()
+        if not self.owns_live_views or self._status_settle_id:
+            return
+        self._status_settle_id = GLib.timeout_add(EDS_STATUS_SETTLE_MS,
+                                                  self.announce_books_after_status)
+
+    def announce_books_after_status(self):
+        """Tell the windows once a run of connection changes has settled.
+
+        Books do not come up one at a time or in one step: a single
+        start walks each of them through connecting and sometimes
+        awaiting-credentials before landing. Announcing every step would
+        re-read the registry for each, so the run is allowed to finish
+        and the windows hear the result once.
+        """
+        self._status_settle_id = 0
+        run_in_background(self.emit_books_changed_if_moved)
+        return False
 
     def on_registry_added(self, _conn, _sender, _path, _iface, _member, params):
         """A source appeared somewhere in the system.
@@ -928,13 +976,15 @@ class EdsManager(GObject.Object):
         """A hashable snapshot of the book set for change detection.
 
         Only the fields the settings list draws matter: which books
-        exist, their order, whether they are enabled and which is the
-        default. Contact content is deliberately absent, so a contact
-        edit never counts as a book change.
+        exist, their order, whether they are enabled, which is the
+        default, and whether each one is reachable, since that last one
+        decides whether a contact can be edited at all. Contact content
+        is deliberately absent, so a contact edit never counts as a book
+        change.
         """
         return tuple(sorted(
             (item['uid'], bool(item.get('enabled')), item.get('rank'),
-             bool(item.get('is_system_default')))
+             bool(item.get('is_system_default')), item.get('status') or "")
             for item in self.get_sources_info()
         ))
 
