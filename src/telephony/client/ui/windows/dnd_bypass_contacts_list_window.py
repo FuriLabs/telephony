@@ -19,7 +19,10 @@ from gettext import gettext as _
 
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.client.ui.widgets.common_widget import (populate_contact_search_results, translate_phone_label)
+from telephony.client.ui.widgets.common_widget import (blocked_entries_for, blocked_entry_for,
+                                                      confirm_unblock_and_add,
+                                                      populate_contact_search_results,
+                                                      translate_phone_label)
 
 
 class DndBypassContactsListWindow(Adw.NavigationPage):
@@ -32,6 +35,7 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         run_in_background(self.load_source_map)
         self.kind = kind
         super().__init__(title=_("Notification Overrides"))
+        self.app_window = parent.main_window
         self.gsettings_mgr = db
         self.eds = eds
 
@@ -231,12 +235,22 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
             self.eds,
             is_added=self.is_result_added,
             on_add=lambda row: self.on_result_activated(None, row),
+            blocked_entries=blocked_entries_for(self.app_window.db, self.kind),
             translate_label=translate_phone_label,
             unknown_name=_("Unknown"),
             source_map=self._source_map)
 
+    def blocked_entry(self, number):
+        """Return the blocklist row refusing what this list is about."""
+        return blocked_entry_for(self.app_window.db, number, self.kind)
+
     def on_result_activated(self, listbox, row):
-        """Handle activation of a search result."""
+        """Handle activation of a search result.
+
+        A number whose calls or messages are refused would sit here
+        doing nothing, so the block is put to the user before the
+        number is taken.
+        """
         if not row.get_sensitive():
             return
 
@@ -249,6 +263,18 @@ class DndBypassContactsListWindow(Adw.NavigationPage):
         name = data.get("name")
         raw_number = data.get("number")
         number = normalize_number(raw_number)
+
+        entry = self.blocked_entry(raw_number)
+        if entry is not None:
+            confirm_unblock_and_add(
+                self.app_window, self.app_window.daemon, entry, self.kind,
+                lambda: self.take_number(name, raw_number, number))
+            return
+
+        self.take_number(name, raw_number, number)
+
+    def take_number(self, name, raw_number, number):
+        """Put the number on the list and show the list again."""
 
         for t in self.local_contacts:
             if normalize_number(t.get("number")) == number:

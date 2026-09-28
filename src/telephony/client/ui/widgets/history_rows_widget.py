@@ -17,6 +17,7 @@ from gi.repository import Gtk, Pango, GLib
 from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
+from telephony.client.ui.widgets.common_widget import blocked_state_text
 
 
 class HistoryRowFactory:
@@ -26,7 +27,16 @@ class HistoryRowFactory:
         """Initialize the factory."""
         self.app_window = app_window
         self.calling_enabled = True
+        self.blocked_entries = {}
         self._live_call_btns = set()
+
+    def reload_blocked_numbers(self):
+        """Take the blocklist the rows are drawn against."""
+        db = self.app_window.db
+        if not db:
+            return
+        self.blocked_entries = {normalize_number(entry["number"]): dict(entry)
+                                for entry in db.get_blocked_numbers()}
 
     def setup(self, factory, list_item):
         """Setup UI widgets for a history row."""
@@ -59,9 +69,8 @@ class HistoryRowFactory:
         for key, icon_name, css in (("anon", "view-conceal-symbolic", "dim-label"),
                                     ("conf", "system-users-symbolic", "dim-label"),
                                     ("xfer", "send-to-symbolic", "dim-label"),
-                                    ("declined", "action-unavailable-symbolic", "dim-label"),
                                     ("netfail", "dialog-warning-symbolic", "dim-label"),
-                                    ("rej", "action-unavailable-symbolic", "marker-rejected")):
+                                    ("blocked", "action-unavailable-symbolic", "marker-rejected")):
             mark = Gtk.Image.new_from_icon_name(icon_name)
             mark.set_pixel_size(10)
             mark.add_css_class(css)
@@ -149,10 +158,13 @@ class HistoryRowFactory:
         w["markers"]["anon"].set_visible(bool(item.anonymous))
         w["markers"]["conf"].set_visible(bool(item.multiparty))
         w["markers"]["xfer"].set_visible(bool(item.transferred))
-        w["markers"]["rej"].set_visible(item.direction == 'rejected')
-        w["markers"]["declined"].set_visible(
-            item.direction == 'cancelled' and item.disconnect_reason == 'remote')
         w["markers"]["netfail"].set_visible(item.disconnect_reason == 'network')
+
+        entry = self.blocked_entries.get(normalize_number(item.number))
+        refuses_calls = bool(entry and entry["block_calls"])
+        w["markers"]["blocked"].set_visible(refuses_calls)
+        if refuses_calls:
+            w["markers"]["blocked"].set_tooltip_text(blocked_state_text(entry))
         w["time"].set_text(item.display_time)
 
         w["icon"].remove_css_class("call-icon-missed")

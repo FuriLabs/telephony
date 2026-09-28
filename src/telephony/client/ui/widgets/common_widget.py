@@ -105,38 +105,137 @@ def present_alert_sheet(window, heading, body, responses, on_response, extra_chi
     present_sheet_page(window, Adw.NavigationPage(title=heading, child=toolbar))
 
 
-def present_unblock_choice(window, daemon, entry, context, on_done):
-    """Ask whether to unblock the current domain or the whole entry.
+def blocked_state_text(entry):
+    """Name the part of a number that is blocked, for a subtitle.
 
-    If the other domain is not blocked, remove the entry directly.
-    ``on_done`` runs only after an unblock choice is applied.
+    An entry always blocks at least one of the two domains, so naming
+    the one that applies says more than the bare word blocked, and the
+    surfaces that show it all say it the same way.
     """
-    own = entry["block_calls"] if context == "calls" else entry["block_messages"]
-    other = entry["block_messages"] if context == "calls" else entry["block_calls"]
+    if entry is None:
+        return ""
+    if entry["block_calls"] and entry["block_messages"]:
+        return _("Blocked")
+    if entry["block_calls"]:
+        return _("Calls blocked")
+    return _("Messages blocked")
 
+
+def blocked_entries_for(db, context):
+    """The blocklist rows refusing one half, by number, read once.
+
+    A list of results asks about every number it draws, and the
+    blocklist is one small table: reading it once and looking in what
+    came back beats asking the database per row.
+    """
+    if not db:
+        return {}
+    key = "block_calls" if context == "calls" else "block_messages"
+    return {normalize_number(entry["number"]): dict(entry)
+            for entry in db.get_blocked_numbers() if entry[key]}
+
+
+def blocked_entry_for(db, number, context):
+    """Return the blocklist row refusing this number for calls or messages.
+
+    Only the domain being asked about counts: a number that refuses
+    calls has nothing to say about a list of message tones.
+    """
+    if not db:
+        return None
+    wanted = normalize_number(number)
+    if not wanted:
+        return None
+    for entry in db.get_blocked_numbers():
+        if normalize_number(entry["number"]) != wanted:
+            continue
+        if entry["block_calls"] if context == "calls" else entry["block_messages"]:
+            return dict(entry)
+        return None
+    return None
+
+
+def release_block_domain(daemon, entry, context, on_done):
+    """Lift the block on one domain, keeping the other as it stands.
+
+    An entry that blocked nothing else goes away entirely, since a row
+    blocking neither calls nor messages is a row that means nothing.
+    """
+    other = entry["block_messages"] if context == "calls" else entry["block_calls"]
     if not other:
         daemon.remove_blocked_number(entry["id"])
         on_done()
         return
 
+    keep_calls = False if context == "calls" else bool(entry["block_calls"])
+    keep_messages = bool(entry["block_messages"]) if context == "calls" else False
+    daemon.set_blocked_number_flags(entry["id"], keep_calls, keep_messages)
+    on_done()
+
+
+def confirm_unblock_and_add(window, daemon, entry, context, on_added):
+    """Ask whether to lift a block so the number can go on a list.
+
+    Wanting a number on one of the notification lists and blocking the
+    thing that list is about are opposite wishes, and the list would
+    have nothing to act on. Rather than take the number quietly and do
+    nothing with it, the block is offered up for the newer wish.
+    """
+    body = (_("Calls from this number are blocked, so this would have no "
+              "effect until the block is lifted.") if context == "calls"
+            else _("Messages from this number are blocked, so this would have "
+                   "no effect until the block is lifted."))
+    label = (_("Unblock Calls and Add") if context == "calls"
+             else _("Unblock Messages and Add"))
+
+    def answered(answer):
+        if answer != "unblock":
+            return
+        release_block_domain(daemon, entry, context, on_added)
+
+    present_alert_sheet(window, entry["number"], body,
+                        [("cancel", _("Cancel"), None), ("unblock", label, None)],
+                        answered)
+
+
+def present_unblock_choice(window, daemon, entry, context, on_done):
+    """Ask what to give back, offering only what there is to give.
+
+    Somewhere about one half asks about that half; somewhere about the
+    number itself offers each half that stands. An entry blocking a
+    single half has one thing to offer, and offers it rather than
+    acting unasked: the asking is what makes it deliberate.
+    """
+    standing = [half for half in ("calls", "messages") if entry[f"block_{half}"]]
+
     responses = []
-    if own:
-        label = _("Unblock Calls Only") if context == "calls" else _("Unblock Messages Only")
-        responses.append(("own", label, None))
-    responses.append(("all", _("Unblock Everything"), None))
-    body = (_("This number is also blocked for messages.") if context == "calls"
-            else _("This number is also blocked for calls."))
+    if len(standing) > 1:
+        for half in standing:
+            if context not in (None, half):
+                continue
+            responses.append((half, _("Unblock Calls Only") if half == "calls"
+                              else _("Unblock Messages Only"), None))
+        responses.append(("all", _("Unblock Everything"), None))
+        if context == "calls":
+            body = _("This number is also blocked for messages.")
+        elif context == "messages":
+            body = _("This number is also blocked for calls.")
+        else:
+            body = _("This number is blocked for both calls and messages.")
+    else:
+        responses.append(("all", _("Unblock"), None))
+        body = (_("Calls from this number are blocked.") if standing == ["calls"]
+                else _("Messages from this number are blocked."))
+
+    responses.insert(0, ("cancel", _("Cancel"), None))
 
     def answered(answer):
         if answer == "all":
             daemon.remove_blocked_number(entry["id"])
-        elif answer == "own":
-            keep_calls = False if context == "calls" else bool(entry["block_calls"])
-            keep_messages = bool(entry["block_messages"]) if context == "calls" else False
-            daemon.set_blocked_number_flags(entry["id"], keep_calls, keep_messages)
-        else:
+            on_done()
             return
-        on_done()
+        if answer in ("calls", "messages"):
+            release_block_domain(daemon, entry, answer, on_done)
 
     present_alert_sheet(window, entry["number"], body, responses, answered)
 
@@ -511,7 +610,7 @@ def translate_phone_label(label):
     return LABELS.get(label, label)
 
 
-def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown", source_map=None):
+def populate_contact_search_results(results_list, contacts, eds, is_added, on_add, translate_label=None, unknown_name="Unknown", source_map=None, blocked_entries=None):
     """Populate a Gtk.ListBox with contact search result rows.
 
     Clears results_list, then appends one Adw.ActionRow per phone number of
@@ -520,9 +619,12 @@ def populate_contact_search_results(results_list, contacts, eds, is_added, on_ad
     list: those rows are made insensitive and get a check icon, while the
     others get an add button that invokes on_add(row). translate_label, when
     given, maps the phone label key to a localized string for the subtitle,
-    and unknown_name is the display name fallback. Appends a placeholder
-    label when no rows were produced.
+    and unknown_name is the display name fallback. blocked_entries, when
+    given, holds the blocklist rows standing against numbers, and a row
+    named in it says so and is marked. Appends a placeholder label when
+    no rows were produced.
     """
+    blocked_entries = blocked_entries or {}
     while child := results_list.get_first_child():
         results_list.remove(child)
 
@@ -554,9 +656,22 @@ def populate_contact_search_results(results_list, contacts, eds, is_added, on_ad
                     s_name = source_map[source_uid]
                     subtitle_text += f"\n{s_name}"
 
+                entry = blocked_entries.get(normalize_number(ph_num))
+                if entry is not None:
+                    subtitle_text = f"{ph_num} ({shown_label}) · {blocked_state_text(entry)}"
+                    if source_uid and source_uid in source_map:
+                        subtitle_text += f"\n{source_map[source_uid]}"
+
                 row = Adw.ActionRow(title=full_name, subtitle=subtitle_text)
                 row.set_subtitle_lines(2)
                 row.contact_data = {"name": full_name, "number": ph_num}
+
+                if entry is not None:
+                    mark = Gtk.Image.new_from_icon_name("action-unavailable-symbolic")
+                    mark.set_pixel_size(14)
+                    mark.add_css_class("marker-rejected")
+                    mark.set_valign(Gtk.Align.CENTER)
+                    row.add_suffix(mark)
 
                 norm_ph = normalize_number(ph_num)
                 if is_added(norm_ph):

@@ -278,6 +278,7 @@ class HistoryView(Adw.Bin):
 
     def do_refresh_data(self):
         self._refresh_timer = None
+        self.row_factory.reload_blocked_numbers()
         self.load_token += 1
         self.page_offset = 0
         self.start_fetch()

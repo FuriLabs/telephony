@@ -1561,6 +1561,27 @@ class EdsManager(GObject.Object):
                 uids.add(item.get('uid'))
         return uids
 
+    def read_only_reason(self, uid):
+        """Say why a book refuses changes, in words, or nothing if it takes them.
+
+        Sits beside the rule it explains so the two cannot drift: a
+        book turned away here is a book turned away there, and for the
+        same reason.
+        """
+        for item in self.get_sources_info():
+            if item.get('uid') != uid:
+                continue
+            if item.get('name') == "Andromeda Contacts":
+                return _("Andromeda contacts come from the system and are read here only.")
+            if item.get('is_local'):
+                return ""
+            status = (item.get('status') or "").strip().lower()
+            if status and status != EDS_STATUS_CONNECTED:
+                return _("{book} is not connected, so its contacts cannot be changed "
+                         "until it is back.").format(book=item.get('name') or uid)
+            return ""
+        return ""
+
     def is_andromeda_source(self, source_uid):
         """Return True when the source is the read-only Andromeda Contacts book."""
         with self.sources_lock:

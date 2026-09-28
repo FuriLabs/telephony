@@ -151,6 +151,7 @@ class TelephonyCore:
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
+        run_in_background(self.db.repair_blocked_history_names)
 
     def apply_region(self):
         """Give this process the country its numbers belong to.

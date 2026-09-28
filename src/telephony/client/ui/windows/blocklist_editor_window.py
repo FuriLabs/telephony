@@ -18,9 +18,8 @@ from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.client.ui.widgets.common_widget import (
-                                                      wire_blocklist_switch_locks,
-                                                      close_sheet_page, present_alert_sheet)
+from telephony.client.ui.widgets.common_widget import (wire_blocklist_switch_locks,
+                                                      close_sheet_page)
 
 
 class BlocklistEditor(Adw.NavigationPage):
@@ -100,40 +99,19 @@ class BlocklistEditor(Adw.NavigationPage):
         block_calls = self.sw_calls.get_active()
         block_messages = self.sw_messages.get_active()
 
-        def start_block(done):
-            self.daemon.add_blocked_number(norm_num, note, block_calls, block_messages, done)
+        def done(success):
+            """Leave on a write that landed, and say so on one that did not.
 
-        def confirmed():
-            """Leave first, then block.
-
-            Answering the question is the end of the flow. Falling back
-            into the block sheet for however long the write takes reads
-            as the question not having worked, so the sheet goes first
-            and the write reports through a toast if it fails.
+            A number already in the contacts is blocked like any other
+            now: the two used to be refused together, because blocking
+            deleted the contact, and neither is true any more.
             """
-            close_sheet_page(self.get_root())
-            start_block(lambda ok: None if ok else
-                         self.app_window.notify_error(_("Failed to save to blocklist.")))
-
-        if self.eds.search_contacts(norm_num):
-            self.confirm_block_remove(raw_num, confirmed)
-            return
-
-        def direct_done(success):
             if success:
                 close_sheet_page(self.get_root())
-            else:
-                self.show_error(_("Database Error"), _("Failed to save to blocklist."))
+                return
+            self.show_error(_("Database Error"), _("Failed to save to blocklist."))
 
-        start_block(direct_done)
-
-    def confirm_block_remove(self, _number_str, on_confirm):
-        """Show confirmation to block and remove from contacts."""
-        present_alert_sheet(
-            self.get_root(), _("Conflict"),
-            _("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Blocking and remove the number from Contacts?"),
-            [("cancel", _("Cancel"), None), ("yes", _("Yes, Block"), "destructive")],
-            lambda answer: on_confirm() if answer == "yes" else None)
+        self.daemon.add_blocked_number(norm_num, note, block_calls, block_messages, done)
 
     def show_error(self, title, msg):
         """Report a failure the user can only acknowledge."""

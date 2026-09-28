@@ -17,14 +17,15 @@ from gi.repository import Gtk, Adw, Gio, GLib, Pango
 from gettext import gettext as _
 
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.client.ui.widgets.common_widget import DataLoader, close_sheet_page
+from telephony.client.ui.widgets.common_widget import (blocked_state_text, DataLoader,
+                                                      close_sheet_page)
 from telephony.client.utils.model_utils import ContactItem
 
 
 class ContactPicker(Adw.NavigationPage):
     """Window for selecting a contact from the list."""
 
-    def __init__(self, eds, parent_window, on_picked, title=None, action_label=None, allow_custom_number=True, return_contact_uid=False):
+    def __init__(self, eds, parent_window, on_picked, title=None, action_label=None, allow_custom_number=True, return_contact_uid=False, blocked_kind=None):
         self.source_map = None
         """Initialize the Contact Picker."""
         display_title = title if title else _("Pick Contact")
@@ -35,6 +36,8 @@ class ContactPicker(Adw.NavigationPage):
         self.on_picked = on_picked
         self.allow_custom_number = allow_custom_number
         self.return_contact_uid = return_contact_uid
+        self.blocked_kind = blocked_kind
+        self.blocked_numbers = self.load_blocked_numbers(parent_window)
         self.set_size_request(-1, 500)
         self.load_token = 0
         self.search_timer = None
@@ -154,6 +157,19 @@ class ContactPicker(Adw.NavigationPage):
         model.splice(model.get_n_items(), 0, new_items)
         return False
 
+    def load_blocked_numbers(self, parent_window):
+        """Name the numbers this pick would not reach, if any would not.
+
+        A picker that hands a number to a call cares about blocked
+        calls and one that opens a chat about blocked messages, so a
+        picker told neither says nothing at all.
+        """
+        if not self.blocked_kind:
+            return {}
+        return {normalize_number(entry["number"]): blocked_state_text(entry)
+                for entry in parent_window.db.get_blocked_numbers()
+                if entry["block_calls" if self.blocked_kind == "calls" else "block_messages"]}
+
     def setup_row(self, factory, list_item):
         """Setup row widgets."""
         box = Gtk.Box(spacing=10)
@@ -173,8 +189,12 @@ class ContactPicker(Adw.NavigationPage):
         source_lbl.set_ellipsize(Pango.EllipsizeMode.END)
         source_lbl.set_visible(False)
 
+        blocked = Gtk.Label(xalign=0, css_classes=["tiny-label", "marker-rejected"])
+        blocked.set_visible(False)
+
         vbox.append(name)
         vbox.append(phone)
+        vbox.append(blocked)
         vbox.append(source_lbl)
 
         box.append(vbox)
@@ -187,7 +207,8 @@ class ContactPicker(Adw.NavigationPage):
         vbox = box.get_first_child()
         name_lbl = vbox.get_first_child()
         phone_lbl = name_lbl.get_next_sibling()
-        source_lbl = phone_lbl.get_next_sibling()
+        blocked_lbl = phone_lbl.get_next_sibling()
+        source_lbl = blocked_lbl.get_next_sibling()
 
         name_lbl.set_text(item.full_name)
         phones = item.phone if isinstance(item.phone, list) else []
@@ -197,6 +218,10 @@ class ContactPicker(Adw.NavigationPage):
             phone_lbl.set_text(phones[0][0])
         else:
             phone_lbl.set_text(_("No number"))
+
+        said = self.blocked_numbers.get(normalize_number(phones[0][0])) if phones else None
+        blocked_lbl.set_text(said or "")
+        blocked_lbl.set_visible(bool(said))
 
         if item.source_uid and (self.source_map is not None):
             s_name = self.source_map.get(item.source_uid)

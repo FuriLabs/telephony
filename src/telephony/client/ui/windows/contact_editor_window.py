@@ -23,13 +23,19 @@ from telephony.shared.utils.vcard_utils import extract_e164_number, unfold_vcard
 from telephony.client.ui.windows.date_time_picker_window import DateTimePicker
 from telephony.client.ui.windows.duplicate_resolution_window import DuplicateResolutionWindow
 from telephony.client.ui.windows.qr_share_window import QrShareDialog
-from telephony.client.ui.widgets.common_widget import (translate_phone_label, present_alert_sheet,
-                                                      close_sheet_page, present_sheet_page)
-from telephony.shared.constants import CONTACT_SHEET_HEIGHT
+from telephony.client.ui.widgets.common_widget import (translate_phone_label,
+                                                      blocked_state_text, close_sheet,
+                                                      close_sheet_page, present_sheet_page,
+                                                      present_unblock_choice)
+from telephony.shared.constants import BLOCKLIST_SETTLE_MS, CONTACT_SHEET_HEIGHT
 
 
 class ContactEditor(Adw.NavigationPage):
     """The page for editing or viewing contact details.
+
+    Reading and editing are two of these rather than two states of
+    one, so that editing arrives the way every other flow arrives and
+    leaving it returns to the contact rather than past it.
 
     Its own pages go onto the sheet's navigation rather than a private
     one. A navigation view inside a page of another one puts a second
@@ -38,8 +44,15 @@ class ContactEditor(Adw.NavigationPage):
     transition that every other page gets.
     """
 
-    def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None):
-        """Initialize the Contact Editor."""
+    def __init__(self, eds_manager, main_window, contact_data=None, number_preset=None,
+                 start_mode=None):
+        """Initialize the Contact Editor.
+
+        A contact that exists opens for reading, and editing it pushes
+        a second one of these in ``start_mode`` EDIT on top, so that
+        leaving the edit lands back on the contact the way leaving any
+        other flow lands back where it started.
+        """
         self.btn_save = None
         self.source_toggles = None
         self.switch_fav = None
@@ -47,6 +60,7 @@ class ContactEditor(Adw.NavigationPage):
         self._destroyed = False
         super().__init__(title=_("Contact Details"))
         self.connect("hidden", self.on_closed)
+        self.connect("showing", self.reload_blocked_numbers)
         self.eds = eds_manager
         self.main_window = main_window
         self.uid = contact_data['uid'] if contact_data else None
@@ -63,7 +77,10 @@ class ContactEditor(Adw.NavigationPage):
 
         self.number_preset = number_preset
 
-        self.mode = "VIEW" if self.uid else "EDIT"
+        self.mode = start_mode or ("VIEW" if self.uid else "EDIT")
+        self.edits_a_saved_contact = self.mode == "EDIT" and self.uid is not None
+        if self.mode == "EDIT":
+            self.set_title(_("Edit Contact") if self.uid else _("New Contact"))
 
         self.set_size_request(-1, CONTACT_SHEET_HEIGHT)
 
@@ -72,6 +89,8 @@ class ContactEditor(Adw.NavigationPage):
 
 
         self.phone_entries = []
+        self.blocked_entries = {}
+        self.phone_view_rows = []
         self.email_entries = []
         self.adv_entries = {}
 
@@ -84,8 +103,19 @@ class ContactEditor(Adw.NavigationPage):
                               on_complete=self.on_vcard_loaded, on_error=self.on_vcard_load_failed)
 
     def on_closed(self, _dialog):
-        """Remember that the dialog is closing so async callbacks bail out."""
-        self._destroyed = True
+        """Remember that the page is gone so async callbacks bail out.
+
+        Hidden fires for being covered as well as for leaving, and a
+        covered page has to keep working, since the flows it opens are
+        what cover it. A page that left has lost its parent by the next
+        idle and a covered one has not, so the answer waits a turn.
+        """
+        def check():
+            if self.get_parent() is None:
+                self._destroyed = True
+            return False
+
+        GLib.idle_add(check)
 
     def on_vcard_loaded(self, vcard):
         """Apply the asynchronously fetched vCard and rebuild the view."""
@@ -106,6 +136,39 @@ class ContactEditor(Adw.NavigationPage):
         if self.mode == "VIEW":
             self.refresh_ui()
 
+    def scrolled_inside(self, widget):
+        """Find the scrolled view a preferences page keeps its content in."""
+        if isinstance(widget, Gtk.ScrolledWindow):
+            return widget
+        child = widget.get_first_child()
+        while child is not None:
+            found = self.scrolled_inside(child)
+            if found is not None:
+                return found
+            child = child.get_next_sibling()
+        return None
+
+    def hold_content_height(self, page):
+        """Keep the sheet at the contact's height whatever the page holds.
+
+        A preferences page reports the height of everything inside it,
+        and the sheet grows to that, so the sheet was as tall as the
+        page was long. Editing shows more than reading does: the books
+        to save into, a type beneath every number. The content scrolls
+        within the height a contact asks for instead, and reading and
+        editing the same contact are the same size.
+
+        It has to be told to fill that height as well as to stop
+        asking for more, or it keeps only the room its shortest self
+        needs and the contact is left showing nothing.
+        """
+        scroller = self.scrolled_inside(page)
+        if scroller is None:
+            return
+        scroller.set_propagate_natural_height(False)
+        scroller.set_vexpand(True)
+        page.set_vexpand(True)
+
     def clean_vcard_str(self, text):
         """Clean up vCard text field (unescape)."""
         if not text:
@@ -120,10 +183,12 @@ class ContactEditor(Adw.NavigationPage):
         view.add_top_bar(header)
 
         is_read_only_source = False
+        refusal = ""
         if self.uid:
             current_source = self.uid.split(':', 1)[0] if ':' in self.uid else None
             if current_source in self.eds.read_only_source_uids():
                 is_read_only_source = True
+                refusal = self.eds.read_only_reason(current_source)
 
         if self.mode == "VIEW":
             header.set_show_end_title_buttons(True)
@@ -157,8 +222,13 @@ class ContactEditor(Adw.NavigationPage):
             if not self.eds.is_ready:
                 self.btn_save.set_sensitive(False)
 
+        if refusal:
+            banner = Adw.Banner(title=refusal, revealed=True)
+            view.add_top_bar(banner)
+
         page = Adw.PreferencesPage()
         view.set_content(page)
+        self.hold_content_height(page)
 
         current_phones = self.extract_phones_with_labels()
         current_emails = self.extract_emails_with_labels()
@@ -208,10 +278,13 @@ class ContactEditor(Adw.NavigationPage):
                 self.add_phone_row(p_num, p_label)
 
             self.grp_phones.set_header_suffix(self.group_add_button(_("Add Number"), lambda: self.add_phone_row("", "Mobile")))
+            self.reload_blocked_numbers()
         else:
             if current_phones:
+                self.phone_view_rows = []
                 for num, lbl in current_phones:
                     self.grp_phones.add(self.phone_view_row(num, lbl))
+                self.reload_blocked_numbers()
             else:
                 self.grp_phones.set_visible(False)
         page.add(self.grp_phones)
@@ -433,19 +506,38 @@ class ContactEditor(Adw.NavigationPage):
         self.toast_overlay.add_toast(Adw.Toast.new(_("Copied to clipboard")))
 
     def on_edit_mode_click(self, btn):
-        """Switch to EDIT mode."""
-        self.mode = "EDIT"
-        self.set_title(_("Edit Contact"))
-        self.refresh_ui()
+        """Open the editing page on top of the contact being read.
+
+        A pushed page is grown to the height the sheet already stands
+        at, which suits a flow arriving over something taller than
+        itself. Here the two pages are the same contact and ask for the
+        same height, so the edit is put back to it once pushed and the
+        sheet stops changing size on the way in and out.
+        """
+        editor = ContactEditor(
+            self.eds, self.main_window,
+            contact_data={'uid': self.uid, 'name': self.contact_name,
+                          'vcard': self.vcard_cache},
+            start_mode="EDIT")
+        present_sheet_page(self.main_window, editor)
+        editor.set_size_request(-1, CONTACT_SHEET_HEIGHT)
 
     def on_cancel_edit(self, btn):
-        """Cancel editing."""
-        if self.uid:
-            self.mode = "VIEW"
-            self.set_title(_("Contact Details"))
-            self.refresh_ui()
-        else:
-            GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
+        """Leave the editing page, landing on whatever opened it."""
+        GLib.idle_add(lambda: close_sheet_page(self.get_root()) or False)
+
+    def leave_after_saving(self):
+        """Put the sheet away once a save is on its way.
+
+        Saving ends the flow, the way saving a blocked number ends
+        that one. The contact underneath is not returned to, because
+        the write is still running and what it would show is the
+        version that was read before the edit.
+        """
+        if self.edits_a_saved_contact:
+            close_sheet(self.get_root())
+            return
+        close_sheet_page(self.get_root())
 
     def add_phone_row(self, text="", label="Mobile"):
         """Add a phone number entry row."""
@@ -453,7 +545,82 @@ class ContactEditor(Adw.NavigationPage):
         display_labels = [_("Mobile"), _("Work"), _("Home"), _("Fax"), _("Other")]
         self.add_field_row(self.grp_phones, self.phone_entries,
                             label_keys, display_labels, label, text,
-                            _("Phone"), Gtk.InputPurpose.PHONE)
+                            _("Phone"), Gtk.InputPurpose.PHONE, blockable=True)
+
+    def blocked_entry(self, number):
+        """Return the blocklist row standing against a number, or None."""
+        norm = normalize_number((number or "").strip())
+        return self.blocked_entries.get(norm) if norm else None
+
+    def show_number_state(self, button, number, label, row=None, type_row=None):
+        """Put one phone row in step with the blocklist.
+
+        The words carry the state and the button carries the action, so
+        the two are never the same red circle standing beside itself.
+        The lists use a marker instead, having no room for words.
+        """
+        entry = self.blocked_entry(number)
+        button.set_css_classes(["flat", "circular"] + (["error"] if entry else []))
+        button.set_tooltip_text(
+            _("Unblock this number") if entry else _("Block this number"))
+        button.set_sensitive(bool((number or "").strip()))
+
+        state = blocked_state_text(entry)
+        said = f"{label} · {state}" if state else label
+        if row is not None:
+            row.set_subtitle(said)
+        if type_row is not None:
+            type_row.set_subtitle(said)
+
+    def on_block_clicked(self, number):
+        """Open the flow that blocks a number, or the one that frees it.
+
+        Neither flow is confirmed here, because each one confirms
+        itself: the blocklist editor shows the number and its two
+        switches and waits for Save, and unblocking asks which of the
+        two to give back. Both are offered, since a contact is no more
+        about calls than about messages.
+        """
+        number = (number or "").strip()
+        if not number:
+            return
+
+        entry = self.blocked_entry(number)
+        if entry is None:
+            self.main_window.present_blocklist_editor(number_preset=number)
+            return
+
+        present_unblock_choice(
+            self.main_window, self.main_window.daemon, entry, None,
+            lambda: GLib.timeout_add(BLOCKLIST_SETTLE_MS, self.reload_blocked_numbers))
+
+    def show_entry_row_state(self, row):
+        """Put one number being typed in step with the blocklist.
+
+        A number being edited has no subtitle of its own, so the state
+        is said on the type row beneath it, which already carries the
+        label it belongs to.
+        """
+        label = row.display_labels[row.type_row._selected_index]
+        self.show_number_state(row.block_button, row.get_text(), label,
+                               type_row=row.type_row)
+
+    def reload_blocked_numbers(self, *_args):
+        """Read the blocklist again and show what each phone row now is."""
+        def task():
+            return {normalize_number(entry["number"]): dict(entry)
+                    for entry in self.main_window.db.get_blocked_numbers()}
+
+        run_in_background(task, on_complete=self.apply_blocked_numbers)
+        return False
+
+    def apply_blocked_numbers(self, blocked):
+        """Take the blocklist read and put every phone row in step with it."""
+        self.blocked_entries = blocked or {}
+        for row, _type_row in self.phone_entries:
+            self.show_entry_row_state(row)
+        for row, button, number, label in self.phone_view_rows:
+            self.show_number_state(button, number, label, row=row)
 
     def add_email_row(self, text="", label="Home"):
         """Add an email entry row."""
@@ -463,7 +630,8 @@ class ContactEditor(Adw.NavigationPage):
                             label_keys, display_labels, label, text,
                             _("Email"), Gtk.InputPurpose.EMAIL)
 
-    def add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose):
+    def add_field_row(self, group, entries_list, label_keys, display_labels, label, text, title, purpose,
+                      blockable=False):
         """Add a full width entry row and its type expander for one value.
 
         The entry keeps the whole row for typing; the type lives in an
@@ -485,6 +653,8 @@ class ContactEditor(Adw.NavigationPage):
             for i, check in enumerate(type_row._option_checks):
                 check.set_visible(i == index)
             type_row.set_expanded(False)
+            if blockable:
+                self.show_entry_row_state(row)
 
         for i, name in enumerate(display_labels):
             option = Adw.ActionRow(title=name, activatable=True)
@@ -499,6 +669,18 @@ class ContactEditor(Adw.NavigationPage):
         btn_remove.connect("clicked", lambda b: GLib.idle_add(
             lambda: [group.remove(row), group.remove(type_row), entries_list.remove((row, type_row))] and False))
 
+        if blockable:
+            row.type_row = type_row
+            row.display_labels = display_labels
+            row.block_button = Gtk.Button(icon_name="action-unavailable-symbolic",
+                                          valign=Gtk.Align.CENTER)
+            row.block_button.connect("clicked", lambda b: GLib.idle_add(
+                lambda: self.on_block_clicked(row.get_text()) or False))
+            row.add_suffix(row.block_button)
+
+            row.connect("changed", lambda _e: self.show_entry_row_state(row))
+            self.show_entry_row_state(row)
+
         row.add_suffix(btn_remove)
         group.add(row)
         group.add(type_row)
@@ -512,8 +694,15 @@ class ContactEditor(Adw.NavigationPage):
         return btn
 
     def phone_view_row(self, number, label):
-        """Read-only phone row with message and call shortcuts."""
-        row = self.create_view_row(number, translate_phone_label(label), copy_text=number)
+        """Read-only phone row with copy, block, message and call."""
+        shown_label = translate_phone_label(label)
+        row = self.create_view_row(number, shown_label, copy_text=number)
+
+        btn_block = Gtk.Button(icon_name="action-unavailable-symbolic",
+                               valign=Gtk.Align.CENTER)
+        btn_block.connect("clicked", lambda b: GLib.idle_add(
+            lambda: self.on_block_clicked(number) or False))
+        row.add_suffix(btn_block)
 
         btn_msg = Gtk.Button(icon_name="mail-message-new-symbolic", valign=Gtk.Align.CENTER)
         btn_msg.add_css_class("circular")
@@ -527,6 +716,9 @@ class ContactEditor(Adw.NavigationPage):
         btn_call.set_size_request(34, 34)
         btn_call.set_sensitive(bool(self.main_window.ofono and self.main_window.ofono.is_dialing_available()))
         btn_call.connect("clicked", lambda b: GLib.idle_add(lambda: self.call_number(number) or False))
+
+        self.phone_view_rows.append((row, btn_block, number, shown_label))
+        self.show_number_state(btn_block, number, shown_label, row=row)
 
         row.add_suffix(btn_msg)
         row.add_suffix(btn_call)
@@ -826,15 +1018,16 @@ class ContactEditor(Adw.NavigationPage):
             logger.error(f"[ContactEditor] On save error: {e}")
 
     def run_save_prechecks(self, phones_to_save, selected_sources, resolver_enabled):
-        """Scan the blocklist and the contact cache for conflicts off the main thread."""
-        blocked_conflict = None
+        """Scan the contact cache for duplicates off the main thread.
+
+        A blocked number used to be refused here, because blocking
+        deleted the contact and the two could not both exist. Blocking
+        leaves contacts alone now, so a contact for a number you have
+        blocked is an ordinary thing to want.
+        """
         conflicts_by_num = {}
 
         for norm_val, _lbl in phones_to_save:
-            if self.main_window.db.is_blocked(norm_val, kind="any"):
-                blocked_conflict = norm_val
-                break
-
             if resolver_enabled:
                 with self.eds.cache_lock:
                     candidates = self.eds.lookup_map.get(norm_val, [])
@@ -846,7 +1039,7 @@ class ContactEditor(Adw.NavigationPage):
                             if c_uid not in conflicts_by_num[norm_val]:
                                 conflicts_by_num[norm_val].append(c_uid)
 
-        return blocked_conflict, conflicts_by_num
+        return conflicts_by_num
 
     def on_prechecks_done(self, result, phones_to_save, selected_sources):
         """Continue the save flow on the main thread after background checks."""
@@ -855,12 +1048,7 @@ class ContactEditor(Adw.NavigationPage):
             return
 
         try:
-            blocked_conflict, conflicts_by_num = result
-
-            if blocked_conflict:
-                self._saving_in_progress = False
-                self.confirm_unblock_add(blocked_conflict, lambda: self.unblock_and_resave(blocked_conflict))
-                return
+            conflicts_by_num = result
 
             if conflicts_by_num:
                 new_data = self.get_current_contact_data(phones_to_save)
@@ -901,17 +1089,6 @@ class ContactEditor(Adw.NavigationPage):
             return
         self.toast_overlay.add_toast(Adw.Toast.new(_("Failed to save contact")))
 
-    def unblock_and_resave(self, blocked_conflict):
-        """Remove the conflicting blocklist entry, then retry the save."""
-        def task():
-            blocked_list = self.main_window.db.get_blocked_numbers()
-            for entry in blocked_list:
-                if normalize_number(entry["number"]) == blocked_conflict:
-                    self.main_window.daemon.remove_blocked_number(entry["id"])
-                    break
-
-        run_in_background(task, on_complete=lambda _result: self.on_save(self.btn_save, force=True))
-
     def proceed_with_save(self, phones_to_save, selected_sources):
         """Kick off the actual contact write after all pre-checks passed."""
         try:
@@ -934,7 +1111,7 @@ class ContactEditor(Adw.NavigationPage):
                 on_error=lambda error: self.on_save_failed(error, fn, final_vcard)
             )
             self._saving_in_progress = False
-            close_sheet_page(self.get_root())
+            self.leave_after_saving()
         except Exception as e:
             self._saving_in_progress = False
             self.btn_save.set_sensitive(True)
@@ -991,8 +1168,8 @@ class ContactEditor(Adw.NavigationPage):
         logger.error(f"[ContactEditor] Save failed: {error}")
         try:
             editor = ContactEditor(self.eds, self.main_window,
-                                   contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard})
-            editor.on_edit_mode_click(None)
+                                   contact_data={'uid': self.uid, 'name': fn, 'vcard': final_vcard},
+                                   start_mode="EDIT")
             present_sheet_page(self.main_window, editor)
             messages = {"read-only": _("This address book is read-only"),
                         "no-writable-book": _("No writable address book available")}
@@ -1001,17 +1178,6 @@ class ContactEditor(Adw.NavigationPage):
         except Exception as e:
             logger.error(f"[ContactEditor] Could not reopen editor after failure: {e}")
             self.main_window.notify_error(_("Failed to save contact"))
-
-    def confirm_unblock_add(self, _number_str, on_confirm):
-        """Show confirmation to unblock and add to contacts."""
-        def cb(resp):
-            if resp == "yes":
-                on_confirm()
-        present_alert_sheet(
-            self.get_root(), _("Conflict"),
-            _("Number can't be on both Blocklist and Contacts.\n\nDo you want to proceed with Unblocking and add the number to Contacts?"),
-            [("cancel", _("Cancel"), None), ("yes", _("Yes, Add to Contacts"), "suggested")],
-            cb)
 
     def show_error(self, title, msg):
         """Report a failure on this sheet, where the user is looking."""

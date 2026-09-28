@@ -15,7 +15,7 @@
 
 from gi.repository import Gtk, Pango
 from gettext import gettext as _
-from telephony.shared.utils.phone_utils import conversation_id
+from telephony.shared.utils.phone_utils import conversation_id, normalize_number
 
 
 class ConversationRowFactory:
@@ -61,11 +61,16 @@ class ConversationRowFactory:
         img_muted.set_pixel_size(14)
         img_muted.set_visible(False)
 
+        img_blocked = Gtk.Image(icon_name="action-unavailable-symbolic", css_classes=["marker-rejected"])
+        img_blocked.set_pixel_size(14)
+        img_blocked.set_visible(False)
+
         lbl_badge = Gtk.Label(css_classes=["numeric", "badge"])
         lbl_badge.set_visible(False)
 
         btm_line.append(lbl_msg)
         btm_line.append(img_muted)
+        btm_line.append(img_blocked)
         btm_line.append(lbl_badge)
 
         vbox.append(top_line)
@@ -84,11 +89,11 @@ class ConversationRowFactory:
             "stack": stack,
             "name": lbl_name, "date": lbl_date, "msg": lbl_msg,
             "badge": lbl_badge, "btn": btn_open, "num": lbl_number,
-            "muted": img_muted
+            "muted": img_muted, "blocked": img_blocked
         }
 
     @staticmethod
-    def bind(factory, list_item, muted_ids=(), show_numbers=True):
+    def bind(factory, list_item, muted_ids=(), show_numbers=True, blocked_numbers=()):
         """Bind data to the conversation row widgets.
 
         With numbers hidden a named conversation shows only its name, and
@@ -131,6 +136,8 @@ class ConversationRowFactory:
 
         w["msg"].set_text(body_preview)
         w["muted"].set_visible(conversation_id(item.number) in muted_ids)
+        w["blocked"].set_visible(any(normalize_number(part) in blocked_numbers
+                                     for part in str(item.number).split(",") if part))
 
         if item.unread_count > 0:
             w["badge"].set_text(str(item.unread_count))

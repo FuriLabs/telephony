@@ -1019,7 +1019,8 @@ class InCallWindow(Adw.Window):
     def on_add_call_click(self, btn):
         """Pick a contact or number and dial it as a second call."""
         picker = ContactPicker(self.eds, self, self.on_add_call_picked,
-                               title=_("Add Call"), action_label=_("Call"))
+                               title=_("Add Call"), action_label=_("Call"),
+                               blocked_kind="calls")
         present_sheet_page(self, picker)
 
     def on_add_call_picked(self, number):
