@@ -131,14 +131,25 @@ class CallAudioManager(GObject.Object):
         PulseAudio moves the port itself when hardware appears, so this
         follows instead of fighting it: the route name is adopted and
         its configured volume applied.
+
+        A reading taken before the app moved the route itself is thrown
+        away. Reading the port happens on a worker, so one that started
+        just before the user pressed speaker comes back a few
+        milliseconds after the switch still holding the earpiece, and
+        adopting it puts the old route back for as long as it takes the
+        next poll to notice. The in-call window reads that as the
+        earpiece being live and blanks the screen mid-call.
         """
         if self._route_poll_busy:
             return GLib.SOURCE_CONTINUE
 
         self._route_poll_busy = True
+        serial = self.audio.route_serial
 
         def done(route):
             self._route_poll_busy = False
+            if serial != self.audio.route_serial:
+                return
             if not self._volume_applied or not route or route == self.audio.current_route:
                 return
             logger.info(f"[CallAudio] Output route moved externally to {route}")
