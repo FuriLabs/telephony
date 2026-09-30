@@ -104,6 +104,7 @@ def input_route_icon(route_id):
 
 
 HANGUP_VERIFY_DELAY_MS = 4000
+INCALL_LINGER_MS = 1000
 HANGUP_RETRY_DELAY_MS = 2000
 KNOCK_REPEAT_SECONDS = 5
 
@@ -1369,14 +1370,37 @@ class InCallWindow(Adw.Window):
         if p in self.ignored_calls:
             self.ignored_calls.remove(p)
         self.update_state()
-        self.close_when_idle()
+        self.close_when_idle(linger_ms=INCALL_LINGER_MS)
 
-    def close_when_idle(self):
-        """Close after the last call unless a recovery or error page must remain."""
+    def close_when_idle(self, linger_ms=0):
+        """Close after the last call unless a recovery or error page must remain.
+
+        A call the other end put down takes the window out from under
+        whatever finger was already reaching for it, and the tap lands
+        on whatever the window was covering. Staying a moment with the
+        controls dead gives that tap somewhere harmless to go. A
+        hangup of our own is not lingered over: the finger that asked
+        for it has already been answered.
+        """
         if self.ofono.active_calls or self.in_recovery_mode or self.in_error_mode:
             return
+        if not linger_ms:
+            logger.info("[InCall] No calls left, closing")
+            self.close()
+            return
+
+        logger.info(f"[InCall] Call ended elsewhere, closing in {linger_ms}ms")
+        self.btn_hangup_act.set_sensitive(False)
+        GLib.timeout_add(linger_ms, self.close_after_linger)
+
+    def close_after_linger(self):
+        """Close once the moment is up, unless a call arrived inside it."""
+        if self.ofono.active_calls or self.in_recovery_mode or self.in_error_mode:
+            self.btn_hangup_act.set_sensitive(True)
+            return False
         logger.info("[InCall] No calls left, closing")
         self.close()
+        return False
 
     def mk_route_row(self, icon_name, name, selected, available):
         """Build one selectable route row for a routing popover."""
