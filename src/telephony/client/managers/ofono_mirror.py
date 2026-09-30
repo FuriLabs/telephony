@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from gi.repository import GObject, Gio, GLib
 from gettext import gettext as _
 
+from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.phone_utils import normalize_number
 from telephony.client.services.daemon_client import DaemonClient
 from telephony.shared.constants import DAEMON_BUS_NAME
@@ -286,12 +287,19 @@ class OfonoMirror(GObject.Object):
         return True
 
     def on_remote_dial_done(self, reply):
-        """Surface a dial the daemon refused or never heard."""
+        """Surface a dial the daemon refused or never heard.
+
+        What came back is written down too: the reason reaches the
+        screen as a toast, which is gone by the time anyone asks what
+        it said.
+        """
         if reply is None:
+            logger.warning("[OfonoMirror] Dial went unanswered: the daemon is not running")
             self.emit('action-error', _("Telephony service is not running"))
             return
         success, message = reply
         if not success:
+            logger.warning(f"[OfonoMirror] Daemon refused the dial: {message or 'no reason given'}")
             self.emit('action-error', message if message else _("Modem not ready"))
 
     def answer_call(self, target_path):

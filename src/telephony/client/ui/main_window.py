@@ -1065,15 +1065,23 @@ class MainWindow(Adw.Window):
         self.messages_view.open_chat(number, name)
 
     def start_call(self, number, hide_id=False):
-        """Start a call."""
+        """Start a call.
+
+        A refusal here is written down as well as shown. These two are
+        where a tap ends without the daemon ever hearing of it, so a
+        button that looks like it did nothing left nothing to read.
+        """
         self.set_focus(None)
 
         if self.ofono and not self.ofono.is_dialing_available():
             description = self.ofono.dial_description
+            logger.warning(f"[MainWindow] Not dialling {number}: "
+                           f"{description or 'the daemon says calls cannot be placed'}")
             self.notify_error(description if description else _("Call Failed"))
             return
 
         if not self.ofono:
+            logger.warning(f"[MainWindow] Not dialling {number}: no modem mirror")
             self.notify_error(_("Call Failed"))
             return
 
@@ -1081,6 +1089,7 @@ class MainWindow(Adw.Window):
             if not success:
                 logger.error(f"[MainWindow] Call failed to {number}")
 
+        logger.info(f"[MainWindow] Asking the daemon to dial {number}")
         run_in_background(self.ofono.dial, number, on_complete=done, hide_id=hide_id)
 
     def show_call_details(self, item):
