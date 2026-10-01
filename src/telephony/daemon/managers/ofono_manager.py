@@ -1182,11 +1182,14 @@ class OfonoManager(GObject.Object):
                 try:
                     proxy.call_finish(result)
                 except Exception as e:
-                    self.refuse_dial(_("Dial Error: {e}").format(e=e), on_result)
+                    logger.error(f"[OfonoManager] Modem refused to dial {clean_num}: {e}")
+                    self.refuse_dial(_("The call could not be started"), on_result)
                     return
+                logger.info(f"[OfonoManager] Modem took the dial for {clean_num}")
                 if on_result is not None:
                     on_result(True, "")
 
+            logger.info(f"[OfonoManager] Asking the modem to dial {clean_num}")
             self.voice_proxy.call("Dial", GLib.Variant("(ss)", (clean_num, clir)),
                                   Gio.DBusCallFlags.NONE, -1, None, dialed, None)
 
@@ -1195,7 +1198,6 @@ class OfonoManager(GObject.Object):
                 self.refuse_dial(_("Cannot dial while in another call"), on_result)
                 return
             if not self.active_calls and self.audio.voice_profile_active:
-                logger.warning("[OfonoManager] Dial refused: previous call teardown still in progress")
                 self.refuse_dial(_("Please wait, the previous call is still ending"), on_result)
                 return
             place_call()
@@ -1218,7 +1220,13 @@ class OfonoManager(GObject.Object):
         return True
 
     def refuse_dial(self, message, on_result):
-        """Report one dial refusal to the local listeners and the asker."""
+        """Report one dial refusal to the local listeners and the asker.
+
+        The reason is written down as well as shown. A toast is gone
+        as soon as it is read and was the only record of why a call
+        did not happen.
+        """
+        logger.warning(f"[OfonoManager] Dial refused: {message}")
         self.emit('action-error', message)
         if on_result is not None:
             on_result(False, message)
