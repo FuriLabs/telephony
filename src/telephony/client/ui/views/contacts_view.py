@@ -32,13 +32,13 @@ DUPLICATE_RECHECK_DELAY_MS = 1500
 class ContactsView(Adw.Bin):
     """View displaying the list of contacts."""
 
-    def __init__(self, db, app_window):
+    def __init__(self, eds, app_window):
         self._refresh_timer = None
         self._dup_timer = None
         self.source_map = None
         """Initialize the ContactsView."""
         super().__init__()
-        self.db = db
+        self.eds = eds
         self.app_window = app_window
         self.search_timer = None
         self.load_token = 0
@@ -296,7 +296,7 @@ class ContactsView(Adw.Bin):
                     for c in contacts:
                         h = c.get('vcard_hash')
                         if not h:
-                            vcard_str = self.db.get_contact_vcard(c['uid']) or ""
+                            vcard_str = self.eds.get_contact_vcard(c['uid']) or ""
                             h = hashlib.md5(vcard_str.encode('utf-8')).hexdigest()
                             c['vcard_hash'] = h
 
@@ -684,7 +684,7 @@ class ContactsView(Adw.Bin):
         self.spinner.set_visible(True)
 
         def bg_fetch():
-            rows = self.db.search_contacts(self.current_query, limit=self.page_limit + 1, offset=self.page_offset)
+            rows = self.eds.search_contacts(self.current_query, limit=self.page_limit + 1, offset=self.page_offset)
 
             has_more = False
             if len(rows) > self.page_limit:

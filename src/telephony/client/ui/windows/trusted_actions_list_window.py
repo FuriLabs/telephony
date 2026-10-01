@@ -26,14 +26,14 @@ from telephony.client.ui.widgets.common_widget import (populate_contact_search_r
 class TrustedActionsListWindow(Adw.NavigationPage):
     """Settings subpage managing the list of trusted actions/contacts."""
 
-    def __init__(self, parent, db, eds, mode="trusted_sms_location_request"):
+    def __init__(self, parent, gsettings_mgr, eds, mode="trusted_sms_location_request"):
         self.grp_list = None
         self.gsettings_handler_id = None
         self.totp_btn = None
         self.totp_page = None
         try:
             self.mode = mode
-            self.gsettings_mgr = db
+            self.gsettings_mgr = gsettings_mgr
             self.eds = eds
             self.get_contacts_func = None
             self.set_contacts_func = None
