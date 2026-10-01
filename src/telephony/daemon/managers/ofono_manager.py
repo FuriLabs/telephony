@@ -145,6 +145,7 @@ class OfonoManager(GObject.Object):
         self.voicemail_mailbox = ""
 
         self.active_calls = {}
+        self.call_serial = 0
         self.active_chat_number = None
         self.focus_provider = None
 
@@ -881,7 +882,9 @@ class OfonoManager(GObject.Object):
         call_proxy = self.get_proxy("org.ofono.VoiceCall", path)
 
         is_outgoing = state not in ("incoming", "waiting")
+        self.call_serial += 1
         self.active_calls[path] = {
+            "serial": self.call_serial,
             "number": number,
             "state": state,
             "start": time.time() if state == "active" else None,
@@ -1321,6 +1324,7 @@ class OfonoManager(GObject.Object):
         happened to drop at the same moment still says so.
         """
         self.emit('hangup-requested')
+        hanging_up = self.active_calls.get(path, {}).get("serial")
 
         def hung_up(proxy, result, _data):
             try:
@@ -1328,9 +1332,12 @@ class OfonoManager(GObject.Object):
             except Exception as e:
                 call_state = self.active_calls.get(path, {}).get("state", "gone")
                 logger.debug(f"[OfonoManager] Hangup failed for {path} in state {call_state}: {e}")
+                if hanging_up is None:
+                    return
                 err_str = str(e)
                 if any(x in err_str for x in ["UnknownObject", "Operation failed", "InProgress", "Failed"]):
-                    GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left, path)
+                    GLib.timeout_add(HANGUP_GRACE_MS, self.force_remove_if_left,
+                                     path, hanging_up)
 
         if path in self.active_calls:
             if self.active_calls[path].get('state') in ('incoming', 'waiting'):
@@ -1519,8 +1526,8 @@ class OfonoManager(GObject.Object):
         if path in self.active_calls:
             self.remove_call(path)
 
-    def force_remove_if_left(self, path):
-        """Drop a call the modem never reported gone.
+    def force_remove_if_left(self, path, serial):
+        """Drop the call this was scheduled for, if it is still there.
 
         Asking this modem to hang up an answered call answers with an
         error and hangs it up anyway, so the error cannot be taken as
@@ -1528,10 +1535,23 @@ class OfonoManager(GObject.Object):
         itself, which is also how the call keeps the reason it ended
         for: dropping it here writes the history first and the reason
         arrives to find nothing to attach itself to.
+
+        The modem gives the next call the path the last one had, and
+        the wait is long enough for a second call to have started on
+        it, so the call is known by the number it was given when it
+        arrived rather than by where it lives. The number is taken
+        when the hangup is asked for, since by the time the modem
+        answers the call may already be gone from the list.
         """
-        if path in self.active_calls:
-            logger.warning(f"[OfonoManager] {path} outlived the hangup, dropping it")
-            self.force_remove(path)
+        call = self.active_calls.get(path)
+        if call is None:
+            return False
+        if call.get("serial") != serial:
+            logger.debug(f"[OfonoManager] {path} holds a newer call, leaving it alone")
+            return False
+
+        logger.warning(f"[OfonoManager] {path} outlived the hangup, dropping it")
+        self.force_remove(path)
         return False
 
     def on_modem_call_done(self, proxy, result, label):
