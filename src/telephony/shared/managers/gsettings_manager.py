@@ -35,16 +35,30 @@ class GSettingsManager:
     def __init__(self):
         self.gsettings = Gio.Settings(schema_id="io.furios.Telephony")
         self.secret_manager = SecretManager()
+        self.key_types = self.read_key_types()
+
+    def read_key_types(self):
+        """Map every key this schema declares to its value type.
+
+        The schema behind a Gio.Settings is fixed when the settings
+        object is built, so asking it again per call cannot see a
+        schema installed later anyway. Reading it once keeps a settings
+        read off the schema, which contact ingestion does thousands of
+        times on the main loop.
+        """
+        schema = self.gsettings.props.settings_schema
+        return {name: schema.get_key(name).get_value_type().dup_string()
+                for name in schema.list_keys()}
 
     def get_setting(self, key):
         """Retrieve a setting value by key via gsettings."""
         try:
             g_key = key.replace("_", "-")
 
-            if g_key not in self.gsettings.props.settings_schema.list_keys():
+            key_type = self.key_types.get(g_key)
+            if key_type is None:
                 return None
 
-            key_type = self.gsettings.props.settings_schema.get_key(g_key).get_value_type().dup_string()
             if key_type == 'b':
                 val = self.gsettings.get_boolean(g_key)
                 return "true" if val else "false"
@@ -70,12 +84,12 @@ class GSettingsManager:
         try:
             g_key = key.replace("_", "-")
 
-            if g_key not in self.gsettings.props.settings_schema.list_keys():
+            key_type = self.key_types.get(g_key)
+            if key_type is None:
                 logger.warning(f"[GSettings] Dropping write to unknown key {g_key}; "
                                "a schema installed after this process started is not visible to it")
                 return
 
-            key_type = self.gsettings.props.settings_schema.get_key(g_key).get_value_type().dup_string()
             if key_type == 'b':
                 b_val = str(val).lower() == "true" if isinstance(val, str) else bool(val)
                 self.gsettings.set_boolean(g_key, b_val)
