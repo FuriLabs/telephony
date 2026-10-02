@@ -330,12 +330,19 @@ class TelephonyAudioManager:
 
     @staticmethod
     def is_profile_available(card, profile_name):
-        """Return whether a named card profile exists and is usable."""
+        """Return whether a named card profile exists and is usable.
+
+        A profile says it is available with a plain non-zero flag, while
+        a port says it with a yes/no/unknown enum. Reading a profile the
+        way a port is read compares an int against a string, which is
+        never equal, so every profile looked usable and an absent
+        Bluetooth or USB headset stayed selectable in the route picker.
+        """
         for profile in card.profile_list:
             if profile.name != profile_name:
                 continue
             try:
-                return profile.available != 'no'
+                return bool(profile.available)
             except AttributeError:
                 return True
         return False
