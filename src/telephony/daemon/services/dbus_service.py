@@ -431,6 +431,10 @@ DAEMON_INTERFACE_XML = """
     <signal name="AudioRouteChanged">
       <arg type="a{sv}" name="state"/>
     </signal>
+    <signal name="AudioRoutesChanged">
+      <arg type="a(sb)" name="outputs"/>
+      <arg type="a(sb)" name="inputs"/>
+    </signal>
     <signal name="UssdReceived">
       <arg type="s" name="text"/>
     </signal>
@@ -530,6 +534,9 @@ class TelephonyDaemonDBus:
             self.app.call_audio.connect('audio-state-applied',
                                         lambda *_args: self.emit_audio_route())
 
+        if self.ofono and self.ofono.audio:
+            self.ofono.audio.watch_routes(self.emit_audio_routes)
+
     def on_call_added(self, manager, path, props):
         number = props.get("number", "Unknown")
         self.emit_signal("IncomingCall", GLib.Variant("(ss)", (path, number)))
@@ -585,6 +592,31 @@ class TelephonyDaemonDBus:
             "input": GLib.Variant("s", audio.current_input),
         }
         self.emit_signal("AudioRouteChanged", GLib.Variant("(a{sv})", (packed,)))
+
+    def emit_audio_routes(self):
+        """Broadcast which routes a window may offer.
+
+        Carries the same pair GetAudioRoutes answers with, so a window
+        holding an open route sheet redraws from the signal instead of
+        asking again. Reading availability talks to PulseAudio, so it
+        happens on a worker like the call it mirrors.
+        """
+        def fetch():
+            outputs = [(r['id'], bool(r.get('available', True)))
+                       for r in self.ofono.audio.get_available_outputs()]
+            inputs = [(r['id'], bool(r.get('available', True)))
+                      for r in self.ofono.audio.get_available_inputs()]
+            return (outputs, inputs)
+
+        def done(result):
+            outputs, inputs = result if result else ([], [])
+            self.emit_signal("AudioRoutesChanged",
+                             GLib.Variant("(a(sb)a(sb))", (outputs, inputs)))
+
+        def failed(error):
+            logger.error(f"[Daemon] Reporting audio routes failed: {error}")
+
+        run_in_background(fetch, on_complete=done, on_error=failed)
 
     def on_network_service_changed(self, _manager, service, name, value):
         self.emit_signal("NetworkServiceChanged", GLib.Variant("(sss)", (service, name, str(value))))

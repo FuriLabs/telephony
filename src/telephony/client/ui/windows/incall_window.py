@@ -171,10 +171,13 @@ class InCallWindow(Adw.Window):
         self.sys_state = SystemStateService()
         self.is_locked = self.sys_state.is_locked
 
+        self.route_sheet_fill = None
+
         self.signal_ids = [
             (self.ofono, self.ofono.connect('call-removed', self.on_call_removed)),
             (self.ofono, self.ofono.connect('call-added', lambda *a: self.update_state())),
             (self.ofono, self.ofono.connect('audio-changed', lambda *a: self.on_audio_changed())),
+            (self.ofono, self.ofono.connect('audio-routes-changed', self.on_routes_changed)),
             (self.ofono, self.ofono.connect('call-changed', lambda *a: self.update_state())),
             (self.sys_state, self.sys_state.connect("lock-state-changed", self.on_lock_changed)),
         ]
@@ -548,14 +551,27 @@ class InCallWindow(Adw.Window):
             nav = self.present_call_sheet(_("Output"))
             page = Adw.PreferencesPage()
             group = Adw.PreferencesGroup()
-            for route_id, available in outputs:
-                row = self.mk_route_row(route_icon(route_id), route_label(route_id),
-                                         route_id == self.current_route, available)
-                if row.get_sensitive():
-                    row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                        lambda: [close_sheet(self),
-                                 self.handle_output_selection(r_id)] and False))
-                group.add(row)
+            rows = []
+
+            def fill(route_list):
+                if group.get_root() is None:
+                    return False
+                for stale in rows:
+                    group.remove(stale)
+                rows.clear()
+                for route_id, available in route_list:
+                    row = self.mk_route_row(route_icon(route_id), route_label(route_id),
+                                             route_id == self.current_route, available)
+                    if row.get_sensitive():
+                        row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                            lambda: [close_sheet(self),
+                                     self.handle_output_selection(r_id)] and False))
+                    group.add(row)
+                    rows.append(row)
+                return True
+
+            fill(outputs)
+            self.route_sheet_fill = lambda o, i: fill(o)
             page.add(group)
             self.push_sheet_page(nav, _("Output"), page)
 
@@ -582,15 +598,28 @@ class InCallWindow(Adw.Window):
             page.add(mute_group)
 
             input_group = Adw.PreferencesGroup()
-            for route_id, available in inputs:
-                row = self.mk_route_row(input_route_icon(route_id), input_route_label(route_id),
-                                         route_id == self.current_input_route, available)
-                if row.get_sensitive():
-                    row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
-                        lambda: [close_sheet(self),
-                                 self.ofono.daemon.set_mic_muted(False),
-                                 self.ofono.daemon.set_input_route(r_id)] and False))
-                input_group.add(row)
+            rows = []
+
+            def fill(route_list):
+                if input_group.get_root() is None:
+                    return False
+                for stale in rows:
+                    input_group.remove(stale)
+                rows.clear()
+                for route_id, available in route_list:
+                    row = self.mk_route_row(input_route_icon(route_id), input_route_label(route_id),
+                                             route_id == self.current_input_route, available)
+                    if row.get_sensitive():
+                        row.connect("activated", lambda r, r_id=route_id: GLib.idle_add(
+                            lambda: [close_sheet(self),
+                                     self.ofono.daemon.set_mic_muted(False),
+                                     self.ofono.daemon.set_input_route(r_id)] and False))
+                    input_group.add(row)
+                    rows.append(row)
+                return True
+
+            fill(inputs)
+            self.route_sheet_fill = lambda o, i: fill(i)
             page.add(input_group)
 
             self.push_sheet_page(nav, _("Input"), page)
@@ -1405,6 +1434,20 @@ class InCallWindow(Adw.Window):
         logger.info("[InCall] No calls left, closing")
         self.close()
         return False
+
+    def on_routes_changed(self, _mirror, outputs, inputs):
+        """Redraw an open route sheet when a headset arrives or leaves.
+
+        The sheet is built once when it opens, so without this a
+        headset plugged in while it is up stays greyed out until the
+        sheet is closed and opened again. A sheet that has gone away
+        says so by its rows having no root, and is forgotten.
+        """
+        fill = self.route_sheet_fill
+        if fill is None:
+            return
+        if not fill(outputs, inputs):
+            self.route_sheet_fill = None
 
     def mk_route_row(self, icon_name, name, selected, available):
         """Build one selectable route row for a routing popover."""

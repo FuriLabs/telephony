@@ -15,18 +15,22 @@
 
 import os
 import threading
+import time
 from contextlib import contextmanager
 
 import gi
 from telephony.shared.utils.log_utils import logger
 
 gi.require_version('Lfb', '0.0')
-from gi.repository import Lfb
+from gi.repository import GLib, Lfb
 
 from telephony.shared.utils.system_utils import get_feedbackd_profile, set_feedbackd_profile
+from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import APP_ID
 
 FALLBACK_MEDIA_VOLUME = 0.5
+CARD_WATCH_RETRY_SECONDS = 5
+ROUTES_SETTLE_MS = 200
 
 AUDIO_MANAGER_CARD = "audio-manager-card"
 AUDIO_MANAGER_SINK = "audio-manager-output"
@@ -86,7 +90,68 @@ class TelephonyAudioManager:
         self._pulse_lock = threading.RLock()
         self.voice_profile_active = False
         self.on_profile_change = None
+        self.route_listeners = []
+        self.card_watch_running = False
+        self.routes_settle_id = 0
 
+
+    def watch_routes(self, listener):
+        """Call a listener on the main loop when route availability moves.
+
+        Starts the card watch on the first listener, so a process that
+        never asks about routes never opens the extra connection.
+        """
+        self.route_listeners.append(listener)
+        if self.card_watch_running:
+            return
+        self.card_watch_running = True
+        run_in_background(self.card_watch_loop)
+
+    def card_watch_loop(self):
+        """Report card changes for as long as PulseAudio is there.
+
+        A profile says it became available by way of a card change, so
+        subscribing to cards is how an arriving or leaving headset gets
+        noticed rather than polled. The subscription gets a connection
+        of its own because pulsectl's listen call blocks for the life
+        of the subscription and cannot share the one queries use.
+        """
+        import pulsectl
+        while True:
+            try:
+                with pulsectl.Pulse('telephony-card-watch') as pulse:
+                    pulse.event_mask_set('card')
+                    pulse.event_callback_set(self.on_card_event)
+                    pulse.event_listen()
+            except Exception as e:
+                logger.debug(f"[Audio] Card watch stopped, reconnecting: {e}")
+            time.sleep(CARD_WATCH_RETRY_SECONDS)
+
+    def on_card_event(self, _event):
+        """Hand a card change to the main loop."""
+        GLib.idle_add(self.settle_routes_changed)
+
+    def settle_routes_changed(self):
+        """Collapse a burst of card changes into one report.
+
+        Unplugging a headset moves the card it owns and the card that
+        offers it as a route, so the changes arrive together and one
+        report covers them.
+        """
+        if self.routes_settle_id:
+            return False
+        self.routes_settle_id = GLib.timeout_add(ROUTES_SETTLE_MS, self.report_routes_changed)
+        return False
+
+    def report_routes_changed(self):
+        """Tell every listener that the offered routes may have moved."""
+        self.routes_settle_id = 0
+        for listener in list(self.route_listeners):
+            try:
+                listener()
+            except Exception as e:
+                logger.warning(f"[Audio] Route listener failed: {e}")
+        return False
 
     @contextmanager
     def pulse(self):

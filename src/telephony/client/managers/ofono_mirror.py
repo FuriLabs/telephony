@@ -51,6 +51,7 @@ class OfonoMirror(GObject.Object):
 
     __gsignals__ = {
         'audio-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
+        'audio-routes-changed': (GObject.SignalFlags.RUN_FIRST, None, (object, object)),
         'connection-status': (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
         'action-error': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         'call-added': (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
@@ -95,6 +96,7 @@ class OfonoMirror(GObject.Object):
                 ("ModemStateChanged", self.on_sig_modem_state),
                 ("VoicemailChanged", self.on_sig_voicemail),
                 ("AudioRouteChanged", self.on_sig_audio),
+                ("AudioRoutesChanged", self.on_sig_audio_routes),
                 ("UssdReceived", self.on_sig_ussd),
                 ("UssdRequestReceived", self.on_sig_ussd_request),
                 ("UssdStateChanged", self.on_sig_ussd_state),
@@ -228,6 +230,10 @@ class OfonoMirror(GObject.Object):
     def on_sig_audio(self, *args):
         state = args[5].unpack()[0]
         self.apply_audio_state(state)
+
+    def on_sig_audio_routes(self, *args):
+        outputs, inputs = args[5].unpack()
+        self.emit('audio-routes-changed', outputs, inputs)
 
     def apply_audio_state(self, state):
         self.audio.current_route = state.get("route") or ("speaker" if state.get("speaker") else "earpiece")
