@@ -126,13 +126,19 @@ class RingbackManager(GObject.Object):
                 logger.info("[RingbackManager] Loading PulseAudio modules...")
                 self.pulse_client = pulsectl.Pulse('telephony-ringback')
 
+                primary_sink = self.ofono.audio.get_primary_sink(self.pulse_client)
+                if primary_sink is None:
+                    logger.error("[RingbackManager] No primary audio sink available.")
+                    self.unload_modules_locked()
+                    return False
+
                 mod1 = self.pulse_client.module_load("module-null-sink", "sink_name=call_injector")
                 self.sink_module_id = int(mod1)
                 logger.info(f"[RingbackManager] Loaded null-sink: {self.sink_module_id}")
 
-                mod2 = self.pulse_client.module_load("module-loopback", "source=call_injector.monitor sink=sink.primary_output")
+                mod2 = self.pulse_client.module_load("module-loopback", f"source=call_injector.monitor sink={primary_sink.name}")
                 self.loopback_module_id = int(mod2)
-                logger.info(f"[RingbackManager] Loaded loopback: {self.loopback_module_id}")
+                logger.info(f"[RingbackManager] Loaded loopback: {self.loopback_module_id} -> {primary_sink.name}")
 
                 self.modules_loaded = True
                 return True
