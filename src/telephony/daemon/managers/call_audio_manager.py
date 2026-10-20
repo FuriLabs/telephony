@@ -55,15 +55,27 @@ class CallAudioManager(GObject.Object):
             self.teardown()
             return
 
-        engaged = [d for d in calls.values() if d.get("state") != "incoming"]
+        engaged = [
+            d for d in calls.values()
+            if d.get("state") in ("dialing", "alerting", "active", "held")
+            and not d.get("disconnect_reason")
+        ]
         if engaged:
             self.stop_ring()
             self.engage()
             return
 
-        if len(calls) == 1:
-            path, data = next(iter(calls.items()))
+        ringing = [
+            (path, data) for path, data in calls.items()
+            if data.get("state") in ("incoming", "waiting")
+            and not data.get("disconnect_reason")
+        ]
+        if len(ringing) == 1:
+            path, data = ringing[0]
             self.ring_for(path, data)
+            return
+
+        self.teardown()
 
     def ring_for(self, path, data):
         if data.get("silenced", False) or self._ring_suppressed:
