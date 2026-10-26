@@ -17,15 +17,13 @@ msgstr ""
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Telefon - Gelen"
+msgstr "Telefon hizmeti çalışmıyor"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Gelen aramalar ve mesajlar alınmıyor. Yeniden başlatmak için uygulamayı açın."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Modem Kurtarma"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Ayrıntıları görmek için kilidi açın."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Telefon Acil Durumu"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Modem kurtarılıyor..."
+msgstr "Modemi kurtar"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Kişiler"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Kişiler senkronize ediliyor..."
+msgstr "Kişiler eşitleniyor…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Telefon hizmeti yeniden başlatma"
+msgstr "Telefon hizmeti yeniden başlatılıyor…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Başlat"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Telefon hizmeti yeniden başlatma"
+msgstr "Telefon hizmeti başlatıldı"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Kişileri Yeniden Yükle"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Yinelenenleri Çöz"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Kişiler Silindi"
+msgstr "Kişiler yenilendi"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Zaten süren bir USSD isteği var"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "USSD isteği başarısız oldu"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "USSD oturumu sona erdi."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "USSD yanıtı bekleniyor…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "İptal etmek"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Numarayı girin"
+msgstr "Yanıtı yazın"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Şimdi Gönder"
+msgstr "Gönder"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Kapalı"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "USSD yanıtı başarısız oldu"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,15 @@ msgid "Confirm"
 msgstr "Onaylamak"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "{count} yinelenen kişi bulundu. Menüyü kontrol edin."
-msgstr[1] "{count} yinelenen kişi bulundu. Menüyü kontrol edin."
+msgstr[0] "{count} yinelenen kişi bulundu."
+msgstr[1] "{count} yinelenen kişi bulundu."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Çöz"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +316,48 @@ msgstr "İsim"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Yön"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "USSD Sonucu"
+msgstr "Sonuç"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Herhangi bir süre"
+msgstr "Süre"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Arama"
+msgstr "Arayan kimliği"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Gizli"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Konferans"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Bu arama bir konferansın parçasıydı"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Aktarıldı"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Aramanın bağlantısı kesilemedi."
+msgstr "Arama başka birine devredildi"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Sona erdi"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +413,7 @@ msgstr "Aramayı Sil"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "{when} tarihindeki {who} ile görüşme geçmişinizden kaldırılacak."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +478,13 @@ msgstr "Bu görüşmede sonuç bulunamadı"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Numaranın engeli kaldırıldı"
+msgstr "Bu numaranın engelini kaldır"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Blok Numarası"
+msgstr "Bu numarayı engelle"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +496,11 @@ msgstr "Grup adını ayarla..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Bu sohbeti sessize al"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Mesajlar bildirim olmadan gelir"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -642,12 +612,11 @@ msgid "Search contacts"
 msgstr "Kişileri arayın"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Numarayı girin"
-msgstr[1] "Numarayı girin"
+msgstr[0] "· {count} numara"
+msgstr[1] "· {count} numara"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -655,17 +624,13 @@ msgstr "İsimsiz Ara"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Arama Başarısız"
+msgstr "Aramalar engellendi"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Mesaj kaldırıldı"
+msgstr "Mesajlar engellendi"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -673,21 +638,17 @@ msgid "Pick Contact"
 msgstr "Kişi Seç"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
-msgstr "Numarayı girin"
+msgstr "Numara girin"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Kişileri arayın"
+msgstr "Eşleşen kişi yok"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Hızlı arama {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -722,10 +683,8 @@ msgid "3-10 mins"
 msgstr "3-10 dakika"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 dakika"
+msgstr "> 10 dk"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -884,7 +843,7 @@ msgstr "Gönderiliyor..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · İletildi"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -907,84 +866,64 @@ msgid "Save File As"
 msgstr "Dosyayı Farklı Kaydet"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Engelleme kaldırıldı"
+msgstr "Engellendi"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Bu numaradan gelen aramalar engelli, bu nedenle engel kaldırılana kadar bunun bir etkisi olmaz."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Bu numaradan gelen mesajlar engelli, bu nedenle engel kaldırılana kadar bunun bir etkisi olmaz."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Tüm numaraların engellemesi kaldırılsın mı?"
+msgstr "Aramaların engelini kaldır ve ekle"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Mesajların engelini kaldır ve ekle"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Tüm numaraların engellemesi kaldırılsın mı?"
+msgstr "Yalnızca aramaların engelini kaldır"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Okunmamış Mesajlar"
+msgstr "Yalnızca mesajların engelini kaldır"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Numaranın Engelini Kaldır"
+msgstr "Tüm engelleri kaldır"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Bu numara zaten engellendi."
+msgstr "Bu numara mesajlar için de engelli."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Bu numara zaten engellendi."
+msgstr "Bu numara aramalar için de engelli."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Bu numara hem aramalar hem de mesajlar için engelli."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Engelleme kaldırıldı"
+msgstr "Engeli kaldır"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Bu numara zaten engellendi."
+msgstr "Bu numaradan gelen aramalar engelli."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Bu numara zaten engellendi."
+msgstr "Bu numaradan gelen mesajlar engelli."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1021,13 +960,11 @@ msgstr "Ana"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "Son engel — numarayı çöp kutusuyla kaldırın"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Numara Ekle"
+msgstr "Gizli numara"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1054,103 +991,87 @@ msgstr "Gelişmiş Ayarlar"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "güvenilen göndericilerin kısa mesajla telefonunuzda işlem başlatmasına izin verir"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Modemi Yeniden Başlatın"
+msgstr "modemi yeniden başlatır"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "hangi uygulama simgelerinin kurulu olduğunu değiştirir"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "verilerinizi siler"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} ve {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Deneyimli kullanıcılar için. Bu sayfa {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Gizli SMS Tetikleyicileri"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "\"Telefonumu Bul\" ayarını yapın"
+msgstr "Telefonumu bul"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Güvenilen SMS ile konum"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "\"Güvenilir Geri Arama\"yı ayarlayın"
+msgstr "Güvenilen geri arama"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Sessiz geri arama tetikleyicisi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "\"SMS-Röle\"yi ayarlayın"
+msgstr "SMS iletme"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Okunmamış Mesajlar"
+msgstr "Mesajları ilet"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "\"SMS -tmate\" ayarını yapın"
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Uzaktan kabuk erişimi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Cihazı kilitle"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Güvenilen SMS ile kilitleme"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Özelliği Etkinleştir"
+msgstr "Deneysel arama özellikleri"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Acil Aramayı Onayla"
+msgstr "Konferans aramalarına izin ver"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Arama aktarmaya izin ver"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1174,7 +1095,7 @@ msgstr "Veri Yönetimi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Dışa aktarma, içe aktarma ve sıfırlama"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1220,7 +1141,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Aramaları konferansta birleştirmek operatöre bağlıdır ve testlerimizde sonuçlar düzgün çalışmaktan aramaların düşmesine kadar değişti. Kendi hattınızda denemek için bunu açın. Resmi olarak desteklenemez, bu yüzden aramalarınızın öngörülebilir davranmasını tercih ediyorsanız kapalı bırakın."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1229,51 +1150,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "İki aramayı birbirine aktarmak, operatörün sağlaması gereken bir hizmeti gerektirir ve testlerimizde birçok operatör ya bunu reddetti ya da aramaları sonlandırdı. Kendi hattınızda denemek için bunu açın. Resmi olarak desteklenemez, bu yüzden aramalarınızın öngörülebilir davranmasını tercih ediyorsanız kapalı bırakın."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Modem yanıt vermemeye başladığında telefon, kurtarma adımlarını sessizce "
-"kendi kendine çalıştırır: radyo yeniden başlatma, modem güç döngüsü, donanım "
-"yazılımını yeniden başlatma ve devre dışı bırakılmış radyoyu yeniden "
-"etkinleştirme. Telefon hiçbir zaman otomatik olarak yeniden başlatılmaz. "
-"Hiçbir şey işe yaramazsa yeniden başlatmanız istenir. Bu kapalıyken bunun "
-"yerine Modem Kurtarma penceresi açılır, böylece adımları kendiniz "
-"çalıştırabilirsiniz."
+msgstr "Modem yanıt vermeyi bıraktığında, telefon modem yazılımını kendisi sessizce yeniden başlatır ve bunu yalnızca başarısız olursa öğrenirsiniz. Telefon asla otomatik olarak yeniden başlatılmaz. Bu kapalıyken bunun yerine modem kurtarma ekranı görünür, böylece yeniden başlatmayı kendiniz yaparsınız."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Modem çalışıyor"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Modemi yeniden başlat; yaklaşık 30 saniye sürer"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Modem yeniden başlatılıyor..."
+msgstr "Modem yeniden başlatılıyor…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Aramalar ve mesajlar yeniden çalışıyor"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Kurtarma işe yaramadı. Modem hâlâ yanıt vermiyor"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1290,17 +1195,13 @@ msgstr "Not (İsteğe bağlı)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Engellenenler listesi"
+msgstr "Aramaları engelle"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Tüm Mesajlar"
+msgstr "Mesajları engelle"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1399,7 +1300,7 @@ msgstr "Dosya Seç"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Yapıştır"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1427,10 +1328,8 @@ msgid "Contact Details"
 msgstr "İletişim Bilgileri"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Kişiler"
+msgstr "Yeni kişi"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1504,7 +1403,7 @@ msgstr "Yıl dönümü"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "QR kodu olarak paylaş"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1548,45 +1447,36 @@ msgstr "Panoya kopyalandı"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "E-posta Ekle"
+msgstr "E-posta"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Tür"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Modem kullanılamıyor"
+msgstr "Kullanılabilir e-posta uygulaması yok"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Kişiyi Dışa Aktar"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Adres defteri oluşturulamadı"
+msgstr "QR kodu oluşturulamadı"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Gerçekten herkesi adres defterinizden silmek istiyor musunuz?"
+msgstr "{name} adres defterinizden kaldırılacak."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Kişileri arayın"
+msgstr "Bu kişi"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1596,13 +1486,11 @@ msgstr "Kişi kaydedilemedi"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Bu adres defteri salt okunur"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Silinebilir adres defteri yok"
+msgstr "Yazılabilir adres defteri yok"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1711,24 +1599,22 @@ msgstr "HER ŞEYİ SİL"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bu, {count} aramayı silecek. Geri alınamaz."
+msgstr[1] "Bu, {count} aramayı silecek. Geri alınamaz."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Bu, tüm SMS/MMS'leri ve ekleri silecektir."
-msgstr[1] "Bu, tüm SMS/MMS'leri ve ekleri silecektir."
+msgstr[0] "Bu, {count} mesajı ve eklerini silecek."
+msgstr[1] "Bu, {count} mesajı ve eklerini silecek."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Tüm özel grup sohbeti adları sıfırlansın mı?"
-msgstr[1] "Tüm özel grup sohbeti adları sıfırlansın mı?"
+msgstr[0] "Bu, {count} özel grup adını sıfırlayacak."
+msgstr[1] "Bu, {count} özel grup adını sıfırlayacak."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1738,8 +1624,8 @@ msgstr "Grup Adlarını Sil"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bu, {count} numaranın engelini kaldıracak."
+msgstr[1] "Bu, {count} numaranın engelini kaldıracak."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1757,18 +1643,10 @@ msgstr ""
 "'{name}' adres defterini kalıcı olarak silmek istediğinizden emin misiniz?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Hangi adres defterini kalıcı olarak silmek istiyorsunuz?\n"
-"\n"
-"Bu onu sistemden silecektir."
+msgstr "Hangi adres defterini kalıcı olarak silmek istiyorsunuz? Bu, onu sistemden siler."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1905,43 +1783,39 @@ msgstr "{current}/{total} birleştiriliyor..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "Favori"
+msgstr "Sık kullanılanlar"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Hızlı arama yuvasına yerleştirmek için bir kişi seçin. Tuş takımında o tek rakamı yazmak kişiyi gösterir, böylece arayabilirsiniz."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Hızlı arama"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "{number}'yı arayın"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Boş"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "{name} için Ton Seçin"
+msgstr "{name} için bir yuva seçin"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "{name}, {slot} yuvasına eklendi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1978,35 +1852,25 @@ msgid "Export Calls or Messages"
 msgstr "Aramaları veya Mesajları Dışa Aktarma"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Arama Geçmişini İçe Aktar"
+msgstr "Arama geçmişini dışa aktar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Mesajları İçe Aktar"
+msgstr "Mesajları dışa aktar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Engellenenler listesi"
+msgstr "Engel listesini dışa aktar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Engellenenler listesi"
+msgstr "Engel listesini içe aktar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "İthalat / İhracat"
+msgstr "İçe ve dışa aktarma"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2014,16 +1878,13 @@ msgid "Export File"
 msgstr "Dosyayı Dışa Aktar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "{count} kişi dışa aktarıldı"
+msgstr "{count} kayıt dışa aktarıldı."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Dosyayı Dışa Aktar"
+msgstr "Dışa aktarma başarısız oldu."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2034,13 +1895,11 @@ msgstr "Dosya Seç"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "İçe aktarıldı: {added} eklendi, {updated} genişletildi."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "İçe aktarma başarısız oldu: {e}"
+msgstr "İçe aktarma başarısız oldu."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2196,10 +2055,8 @@ msgstr "Adres Defterini Seçin"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Sistem Varsayılanı"
+msgstr "Varsayılan"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2369,10 +2226,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Kablolu Kulaklık"
+msgstr "USB kulaklık"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2387,16 +2242,12 @@ msgid "Bluetooth Mic"
 msgstr "Bluetooth Mikrofon"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Mikrofon"
+msgstr "USB mikrofon"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Numaranızı Ayarlar'da ayarlayın"
+msgstr "Numaranız gizli"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2427,14 +2278,14 @@ msgstr "Tuş Takımı"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Modem düzgün çalışmıyor."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Yeniden başlatılana kadar aramalar, mesajlar ve mobil veri çalışmayacak.\n\nYeniden başlatma yaklaşık 30 saniye sürer ve süren aramayı sonlandırır."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2448,16 +2299,12 @@ msgstr "Telefonu yeniden başlat"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Etkin"
+msgstr "İşlemler"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Sesi Kapat"
+msgstr "Sessize alındı"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2474,16 +2321,12 @@ msgid "Mute"
 msgstr "Sesi Kapat"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Hoparlör"
+msgstr "Hoparlöre geç"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Devam Et"
+msgstr "Sürdür"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2491,35 +2334,29 @@ msgstr "Beklet"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "E-posta Ekle"
+msgstr "Arama ekle"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Aramalar"
+msgstr "Aramaları değiştir"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Tümünü birleştir"
+msgstr "Aramaları birleştir"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Konferansa katıl"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Aktar"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Aktarma {a} ile {b} kişisini birbirine bağlar ve siz görüşmeden ayrılırsınız"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2527,27 +2364,24 @@ msgstr "Susturulan Gelen Arama"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Acil Aramayı Onayla"
+msgstr "Konferans araması"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} Katılımcı"
-msgstr[1] "{count} Katılımcı"
+msgstr[0] "{count} katılımcı"
+msgstr[1] "{count} katılımcı"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Özel görüşme"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Özel, diğerlerini beklemeye alır"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2556,7 +2390,7 @@ msgstr "Değiştir"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "Şebeke isteği reddetti"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2607,12 +2441,8 @@ msgid "Not connected"
 msgstr "Bağlı değil"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr ""
-"FLX1 ve FLX1'ler için tasarlanmış hızlı telefon çevirici ve mesajlaşma "
-"istemcisi."
+msgstr "FuriOS için tasarlanmış hızlı arama ve mesajlaşma uygulaması."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2640,14 +2470,12 @@ msgstr "Planlanmış ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Şebeke hizmetleri"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "İleri"
+msgstr "Çağrı yönlendirme"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2659,85 +2487,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Yönlendirme, telefonunuza ulaşılmadan önce şebekede gerçekleşir.\n\nHer zaman her aramayı hemen yönlendirir. Meşgulken başka bir görüşmedeyken geçerlidir, Yanıtlanmadığında telefon seçilen süre kadar çaldıktan sonra, Ulaşılamadığında ise telefon kapalıyken veya kapsama alanı dışındayken geçerlidir.\n\nNumaraları uluslararası biçimde girin, örneğin +358401234567. Boş bir numara uygulamak o kuralı kapatır."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "Her zaman"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Meşgulken"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Cevapsız"
+msgstr "Yanıtlanmadığında"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Ulaşılamadığında"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Geri Arama Tonu"
+msgstr "Çalma süresi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} Katılımcı"
+msgstr "{count} saniye"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Tüm yönlendirmeleri kapat"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Bekliyor..."
+msgstr "Çağrı bekletme"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Açıkken, süren bir görüşme sırasında ikinci bir gelen arama sesli uyarı verir; arayan meşgul sinyali almaz."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Sistem Varsayılanı"
+msgstr "Şebeke varsayılanı"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Gösteriliyor"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Numaramı gizle"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Aradığınız kişilerin numaranızı görüp görmeyeceğini seçin. Şebeke varsayılanı hattınızın ayarını izler. Gizleme, bir kişinin arama menüsünden tek bir arama için de seçilebilir."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Geri çağırmak"
+msgstr "Çağrı engelleme"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2746,77 +2563,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Engelleme, şebekede tüm arama sınıflarını durdurur.\n\nHer değişiklik operatörünüzden alınan engelleme parolasını gerektirir; çoğu zaman varsayılan olarak 0000'dır. Tekrarlanan yanlış denemeler engellemeyi şebeke tarafında kilitleyebilir; bu durumda yalnızca operatörünüz açabilir."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "İzin veriliyor"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Tüm Aramaları Kapat"
+msgstr "Tüm aramaları engelle"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "Numaram (Uluslararası Format)"
+msgstr "Uluslararası aramaları engelle"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Kendi ülkesi dışındaki uluslararası aramaları engelle"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Aramalar içe aktarılıyor..."
+msgstr "Giden aramalar"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Dolaşımdayken engelle"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Gelen Arama..."
+msgstr "Gelen aramalar"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Engelleme parolası"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Engelleme parolasını değiştir"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Mevcut parola"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Yeni parola"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Tüm engellemeleri kapat"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Bu şebekede kullanılamıyor"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Ayarlar şebekeden okunamadı"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2824,65 +2633,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Kamera başlatılamadı."
+msgstr "Ayar değiştirilemedi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Tüm çağrı yönlendirme kuralları kapatılsın mı?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Kapat"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Önce engelleme parolasını girin"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Yanlış engelleme parolası"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Engelleme parolası değiştirildi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Tüm çağrı engelleme kuralları kapatılsın mı?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Kişi kaydediliyor..."
+msgstr "Kişi tara"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Kamerayı bir kişi QR koduna doğrultun"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Bu kod bir kişi değil"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Bu kişiyi eklemek için herhangi bir telefonla tarayın"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Sesli Mesaj Numarası"
+msgstr "Sesli mesaj, ses düzeyi ve çalma sesi"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "İletim raporları, numara gösterimi"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2892,22 +2695,20 @@ msgstr "SIM Ayarları"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Kendi numaranız ve ülke kodu"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Hızlı arama yuvaları"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Yalnızca acil aramalar."
+msgstr "Acil aramalar"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Kilit ekranı düğmesi ve numaralar"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2916,24 +2717,20 @@ msgstr "Engellenenler listesi"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Hiç ses çıkarmayan numaralar"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Adres defteri adı"
+msgstr "Adres defterleri ve yinelenenler"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Bildirimi Geçersiz Kılmalar"
+msgstr "Bildirimler"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "İstisnalar, sesler ve atlatma"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2943,30 +2740,28 @@ msgstr "Bilinmeyen Arayanlar"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Süzme"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Numara kopyalandı"
+msgstr "Numara arama"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Arama düğmeleri için arama motoru"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Yönlendirme, bekletme ve engelleme"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Kişiler, mesajlar ve arama geçmişi"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Deneyimli kullanıcılar için"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2974,32 +2769,25 @@ msgstr "Engellenen Numaralar"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Bir numaranın neyi engellediğini değiştirmek için kaleme dokunun."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Numara yok"
+msgstr "Henüz numara eklenmedi"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Engellenenler listesi"
+msgstr "Engelle"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Numarayı girin"
+msgstr "Engellenecek bir numara girin"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Bu numara zaten engellendi."
+msgstr "{number} zaten engel listesinde."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3033,11 +2821,11 @@ msgstr "Reddetme Mesajı Ekle"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Henüz mesaj eklenmedi"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Bir aramayı mesajla reddettiğinizde gönderilir."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3075,29 +2863,27 @@ msgid "Emergency Numbers"
 msgstr "Acil Durum Numaraları"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Acil Durum Numaraları"
+msgstr "Şebeke acil numaraları"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Şebekeden gelen numaraları göster"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "İletim raporu iste"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Numaraları mesaj listesinde göster"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Kapalı, numaraları listeden uzak tutar; kişisi olmayan bir numara adı yerine numarasını gösterir"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3127,14 +2913,12 @@ msgid "Notification Exceptions"
 msgstr "Bildirim İstisnaları"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Her zaman ses çalan kişileri yönetin"
+msgstr "Her zaman çalan kişiler"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Bir arama sessiz modu deler"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3151,27 +2935,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Belirli kişiler için özel zil sesleri ayarlayın"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Her zaman ses çalan kişileri yönetin"
+msgstr "Her zaman ses çıkaran mesajlar"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Bir mesaj sessiz modu deler"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Tekrarlanan Aramaları Atlama"
+msgstr "Yinelenen mesajlarda atlatma"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr ""
-"Aynı numara 5 dakika içinde 3 kez ararsa ses seviyesini maksimuma ayarlayın."
+msgstr "Aynı gönderici bir dakika içinde 3 kez yazarsa sesi çal."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3280,11 +3057,11 @@ msgstr "Yalnızca Sessizlik"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Arama sırasında bilinmeyen arayanlar için arama düğmesi"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Aramalardaki, arama geçmişindeki ve grup mesajlarındaki arama düğmeleri tarafından kullanılır."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3321,28 +3098,16 @@ msgstr "Özel Arama URL'si"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "SIM olmadan bile her zaman ulaşılabilir"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Bu, her çıkış için arama ses düzeyidir. Düzey, bir arama bağlandığında ve "
-"arama sırasında çıkış her değiştiğinde otomatik olarak uygulanır; kaydırıcı "
-"değişiklikleri anında duyulur. Donanım düzeyleri kaba adımlarla uygular ve "
-"ahize hiçbir zaman tamamen sessiz olmaz. Bluetooth düzeyi, yakında gelecek "
-"yönlendirme desteği için saklanır."
+msgstr "Bu, her çıkış için arama ses düzeyidir. Düzey, bir arama bağlandığında ve arama sırasında çıkış her değiştiğinde otomatik olarak uygulanır; kaydırıcı değişiklikleri anında duyulur. Donanım düzeyleri kaba adımlarla uygular ve ahize hiçbir zaman tamamen susmaz. Bluetooth ve USB düzeyleri, o arama yolları etkinken geçerlidir."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3352,7 +3117,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Açıkken, kısa ve çoklu ortam mesajlarınızın alıcının telefonuna ulaştığını onaylaması için şebekeden istek yapılır.\n\nOnay geldiğinde güvenilirdir, ancak birçok operatör ve otomatik gönderici hiç onay üretmez; bu yüzden onayı olmayan bir mesaj yine de iletilmiş olabilir. İletildi hiçbir zaman okundu anlamına gelmez."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3643,75 +3408,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Telefon veritabanı başarıyla dışa aktarıldı."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Gelen Arama..."
+msgstr "Gelen"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Giden"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Karşı tarafta reddedildi"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Şebeke bağlantıyı kuramadı"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Bağlanmadan önce vazgeçildi"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Yanıtla"
+msgstr "Yanıtlandı"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "Cevapsız"
+msgstr "Yanıtlanmadı"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Reddetme Mesajı"
+msgstr "Burada reddedildi"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Bu telefonda sonlandırıldı"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Karşı tarafta sonlandırıldı"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Şebeke tarafından düşürüldü"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Burada kimse yanıtlamadı"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Bu telefonda reddedildi"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Bağlanmadan önce burada kapatıldı"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Modem hazır değil"
+msgstr "Modem bir neden belirtmedi"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3746,11 +3501,11 @@ msgstr "Uydu düzeltmesi bekleniyor..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Bu cihazda modem yok"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Uçak modu açık"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3764,7 +3519,7 @@ msgstr "Lütfen bekleyin, önceki arama hâlâ sonlandırılıyor"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Arama başlatılamadı"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3791,28 +3546,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Tüm yöntemleri denedikten sonra konum alınamadı."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "Uçak modu gibi, radyoyu kapatıp yeniden açar."
+msgstr "Telsiz kapalı. Modemi kullanmak için yeniden açın."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Bu cihaz hiçbir modem bildirmiyor. Yeniden başlatmak, olmayan ya da kimliği bulunmayan bir modemi düzeltemez."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Modem hizmeti yanıt vermiyor."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Modem yanıt veriyor ama arama hizmetini yitirmiş."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Modem yanıt veriyor ama telsizi kapalı."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3911,10 +3664,10 @@ msgstr "{count} çağrı içe aktarıldı."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Andromeda kişileri sistemden gelir ve burada yalnızca okunur."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} bağlı değil, bu yüzden geri gelene kadar kişileri değiştirilemez."
