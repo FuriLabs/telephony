@@ -17,15 +17,13 @@ msgstr ""
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Telephony - Saapuva"
+msgstr "Puhelinpalvelu ei ole käynnissä"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Saapuvia puheluita ja viestejä ei vastaanoteta. Avaa sovellus käynnistääksesi palvelun uudelleen."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Modeemin palautus"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Avaa lukitus nähdäksesi tiedot."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Telephony-hätätila"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Palautetaan modeemia..."
+msgstr "Palauta modeemi"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Yhteystiedot"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Synkronoidaan..."
+msgstr "Synkronoidaan yhteystietoja…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Puhelinpalvelun uudelleenkäynnistys"
+msgstr "Puhelinpalvelu käynnistyy uudelleen…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Käynnistä"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Puhelinpalvelun uudelleenkäynnistys"
+msgstr "Puhelinpalvelu käynnistetty"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Synkronoi yhteystiedot"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Tietoja"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Ratkaise kakskoiskappaleet"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Yhteystiedot poistettu"
+msgstr "Yhteystiedot päivitetty"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "USSD-pyyntö on jo käynnissä"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "USSD-pyyntö epäonnistui"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "USSD-istunto päättyi."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "Odotetaan USSD-vastausta…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Peruuta"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Syötä numero"
+msgstr "Kirjoita vastaus"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Lähetä heti"
+msgstr "Lähetä"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Sulje"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "USSD-vastaus epäonnistui"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,15 @@ msgid "Confirm"
 msgstr "Vahvista"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Löytyi {count} päällekkäinen yhteystieto. Katso valikko."
-msgstr[1] "Löytyi {count} päällekkäistä yhteystietoa. Katso valikko."
+msgstr[0] "Löytyi {count} päällekkäinen yhteystieto."
+msgstr[1] "Löytyi {count} päällekkäistä yhteystietoa."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Selvitä"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +316,48 @@ msgstr "Nimi"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Suunta"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "USSD-vastaus"
+msgstr "Tulos"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Päivämäärä"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Mikä tahansa kesto"
+msgstr "Kesto"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Soita"
+msgstr "Soittajan tunnus"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Piilotettu"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Neuvottelupuhelu"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Tämä puhelu oli osa neuvottelupuhelua"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Siirretty"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Puhelu ei suostunut katkeamaan."
+msgstr "Puhelu siirrettiin toiselle"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Päättyi"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +413,7 @@ msgstr "Poista puhelu"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "Puhelu {who} kanssa {when} poistetaan historiastasi."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +478,13 @@ msgstr "Ei tuloksia tässä keskustelussa"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Numero palautettu"
+msgstr "Poista tämän numeron esto"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Estä numero"
+msgstr "Estä tämä numero"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +496,11 @@ msgstr "Aseta ryhmän nimi..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Mykistä tämä keskustelu"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Viestit saapuvat ilman ilmoitusta"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -640,12 +610,11 @@ msgid "Search contacts"
 msgstr "Etsi yhteystietoja"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Syötä numero"
-msgstr[1] "Syötä numero"
+msgstr[0] "· {count} numero"
+msgstr[1] "· {count} numeroa"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -653,17 +622,13 @@ msgstr "Tuntematon puhelu"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Puhelu epäonnistui"
+msgstr "Puhelut estetty"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Viesti poistettu"
+msgstr "Viestit estetty"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -671,21 +636,17 @@ msgid "Pick Contact"
 msgstr "Valitse yhteystieto"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
 msgstr "Syötä numero"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Etsi yhteystietoja"
+msgstr "Ei vastaavia yhteystietoja"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Pikavalinta {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -720,10 +681,8 @@ msgid "3-10 mins"
 msgstr "3-10 min"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 min"
+msgstr "> 10 min"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -882,7 +841,7 @@ msgstr "Lähetetään..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Toimitettu"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -905,84 +864,64 @@ msgid "Save File As"
 msgstr "Tallenna tiedosto nimellä"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Esto poistettu"
+msgstr "Estetty"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Tästä numerosta tulevat puhelut on estetty, joten tällä ei ole vaikutusta ennen kuin esto poistetaan."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Tästä numerosta tulevat viestit on estetty, joten tällä ei ole vaikutusta ennen kuin esto poistetaan."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Poistetaanko kaikki estot?"
+msgstr "Poista puheluiden esto ja lisää"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Poista viestien esto ja lisää"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Poistetaanko kaikki estot?"
+msgstr "Poista vain puheluiden esto"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Lukemattomat"
+msgstr "Poista vain viestien esto"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Poista esto"
+msgstr "Poista kaikki estot"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Tämä numero on jo estetty."
+msgstr "Tämä numero on estetty myös viesteille."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Tämä numero on jo estetty."
+msgstr "Tämä numero on estetty myös puheluille."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Tämä numero on estetty sekä puheluille että viesteille."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Esto poistettu"
+msgstr "Poista esto"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Tämä numero on jo estetty."
+msgstr "Tästä numerosta tulevat puhelut on estetty."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Tämä numero on jo estetty."
+msgstr "Tästä numerosta tulevat viestit on estetty."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1019,13 +958,11 @@ msgstr "Päänumero"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "Viimeinen esto — poista numero roskakorilla"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Lisää numero"
+msgstr "Piilotettu numero"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1052,103 +989,87 @@ msgstr "Lisäasetukset"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "antaa luotettujen lähettäjien käynnistää toimintoja puhelimessasi tekstiviestillä"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Käynnistä modeemi uudelleen"
+msgstr "käynnistää modeemin uudelleen"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "muuttaa asennettuja sovelluskuvakkeita"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "poistaa tietosi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} ja {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Kokeneille käyttäjille. Tämä sivu {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Salaiset viestikomennot"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Aseta \"Find my Telephony\""
+msgstr "Etsi puhelimeni"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Sijainti luotetulla tekstiviestillä"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Aseta \"Trusted Callback\""
+msgstr "Luotettu takaisinsoitto"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Hiljaisen takaisinsoiton laukaisin"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Aseta \"SMS -Relay\""
+msgstr "Tekstiviestien välitys"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Lukemattomat"
+msgstr "Välitä viestit"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Aseta \"SMS -tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Etäpääteyhteys"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Lukitse laite"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Lukitus luotetulla tekstiviestillä"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Ota ominaisuus käyttöön"
+msgstr "Kokeelliset puheluominaisuudet"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Vahvista hätäpuhelu"
+msgstr "Salli neuvottelupuhelut"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Salli puhelunsiirto"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1172,7 +1093,7 @@ msgstr "Tietojen hallinta"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Vienti, tuonti ja palautus"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1217,7 +1138,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Puheluiden yhdistäminen neuvottelupuheluksi riippuu operaattorista, ja testeissämme tulokset vaihtelivat toimivasta puheluiden katkeamiseen. Ota tämä käyttöön kokeillaksesi sitä omalla liittymälläsi. Sitä ei voida tukea virallisesti, joten jätä se pois käytöstä, jos haluat puheluidesi toimivan ennustettavasti."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1226,51 +1147,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "Kahden puhelun siirtäminen toisiinsa vaatii palvelun, jonka operaattorin on tarjottava, ja testeissämme monet operaattorit joko kieltäytyivät siitä tai katkaisivat puhelut. Ota tämä käyttöön kokeillaksesi sitä omalla liittymälläsi. Sitä ei voida tukea virallisesti, joten jätä se pois käytöstä, jos haluat puheluidesi toimivan ennustettavasti."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Kun modeemi lakkaa vastaamasta, puhelin suorittaa palautusvaiheet "
-"hiljaisesti itse: radion uudelleenkäynnistys, modeemin virrankatkaisu, "
-"laiteohjelmiston uudelleenkäynnistys ja käytöstä poistetun radion ottaminen "
-"uudelleen käyttöön. Puhelinta ei koskaan käynnistetä uudelleen "
-"automaattisesti. Jos mikään ei auta, sinua pyydetään käynnistämään puhelin "
-"uudelleen. Kun tämä on pois päältä, sen sijaan avautuu Modeemin palautus -"
-"ikkuna, jossa voit suorittaa vaiheet itse."
+msgstr "Kun modeemi lakkaa vastaamasta, puhelin käynnistää modeemin ohjelmiston uudelleen itse huomaamattomasti, ja saat tiedon vain jos se ei onnistu. Puhelinta ei koskaan käynnistetä uudelleen automaattisesti. Kun tämä on pois käytöstä, näytölle avautuu sen sijaan modeemin palautusnäkymä, josta voit tehdä uudelleenkäynnistyksen itse."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Modeemi toimii"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Käynnistä modeemi uudelleen; se kestää noin 30 sekuntia"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Käynnistetään modeemia uudelleen..."
+msgstr "Käynnistetään modeemi uudelleen…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Puhelut ja viestit toimivat jälleen"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Palautus ei auttanut. Modeemi ei vastaa vieläkään"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1287,17 +1192,13 @@ msgstr "Muistiinpano (valinnainen)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Estolista"
+msgstr "Estä puhelut"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Kaikki viestit"
+msgstr "Estä viestit"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1396,7 +1297,7 @@ msgstr "Valitse tiedosto"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Liitä"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1424,10 +1325,8 @@ msgid "Contact Details"
 msgstr "Yhteystiedon tiedot"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Yhteystiedot"
+msgstr "Uusi yhteystieto"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1501,7 +1400,7 @@ msgstr "Vuosipäivä"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Jaa QR-koodina"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1545,45 +1444,36 @@ msgstr "Kopioitu leikepöydälle"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Puhelin"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Lisää sähköposti"
+msgstr "Sähköposti"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Modeemi ei ole käytettävissä"
+msgstr "Sähköpostisovellusta ei ole käytettävissä"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Vie yhteystieto"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Osoitekirjan luonti epäonnistui"
+msgstr "QR-koodin luonti ei onnistunut"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Haluatko varmasti poistaa kaikki yhteystietosi?"
+msgstr "{name} poistetaan osoitekirjastasi."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Etsi yhteystietoja"
+msgstr "Tämä yhteystieto"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1593,13 +1483,11 @@ msgstr "Yhteystiedon tallennus epäonnistui"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Tämä osoitekirja on vain luettavissa"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Ei poistettavia osoitekirjoja"
+msgstr "Kirjoitettavaa osoitekirjaa ei ole käytettävissä"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1708,24 +1596,22 @@ msgstr "POISTA KAIKKI"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tämä poistaa {count} puhelun. Toimintoa ei voi peruuttaa."
+msgstr[1] "Tämä poistaa {count} puhelua. Toimintoa ei voi peruuttaa."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Tämä poistaa kaikki viestit ja liitteet."
-msgstr[1] "Tämä poistaa kaikki viestit ja liitteet."
+msgstr[0] "Tämä poistaa {count} viestin ja sen liitteet."
+msgstr[1] "Tämä poistaa {count} viestiä ja niiden liitteet."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Nollataanko kaikki ryhmien nimet?"
-msgstr[1] "Nollataanko kaikki ryhmien nimet?"
+msgstr[0] "Tämä palauttaa {count} muokatun ryhmän nimen."
+msgstr[1] "Tämä palauttaa {count} muokattua ryhmän nimeä."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1735,8 +1621,8 @@ msgstr "Poista ryhmien nimet"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tämä poistaa {count} numeron eston."
+msgstr[1] "Tämä poistaa {count} numeron estot."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1753,18 +1639,10 @@ msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Haluatko varmasti poistaa osoitekirjan '{name}'?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Minkä osoitekirjan haluat poistaa pysyvästi?\n"
-"\n"
-"Tämä pyyhkii sen kokonaan järjestelmästä."
+msgstr "Minkä osoitekirjan haluat poistaa pysyvästi? Tämä pyyhkii sen järjestelmästä."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1900,43 +1778,39 @@ msgstr "Yhdistetään {current}/{total}..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "Suosikki"
+msgstr "Suosikit"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Valitse yhteystieto pikavalintapaikkaan. Numeronäppäimistöllä kyseisen numeron painaminen näyttää yhteystiedon, jolle voit soittaa."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Pikavalinta"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Soita numeroon {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Tyhjä"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Valitse ääni henkilölle {name}"
+msgstr "Valitse paikka yhteystiedolle {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "{name} lisättiin paikkaan {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1973,35 +1847,25 @@ msgid "Export Calls or Messages"
 msgstr "Vie puhelut tai viestit"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Tuo puheluhistoria"
+msgstr "Vie puheluhistoria"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Tuo viestit"
+msgstr "Vie viestit"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Estolista"
+msgstr "Vie estolista"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Estolista"
+msgstr "Tuo estolista"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Tuonti / Vienti"
+msgstr "Tuonti ja vienti"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2009,16 +1873,13 @@ msgid "Export File"
 msgstr "Vie tiedosto"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Viety {count} yhteystietoa"
+msgstr "Vietiin {count} merkintää."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Vie tiedosto"
+msgstr "Vienti epäonnistui."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2029,13 +1890,11 @@ msgstr "Valitse tiedosto"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Tuotiin: {added} lisätty, {updated} laajennettu."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "Tuonti epäonnistui: {e}"
+msgstr "Tuonti epäonnistui."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2189,10 +2048,8 @@ msgstr "Valitse osoitekirja"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Järjestelmän oletus"
+msgstr "Oletus"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2362,10 +2219,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Langalliset kuulokkeet"
+msgstr "USB-kuulokemikrofoni"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2380,16 +2235,12 @@ msgid "Bluetooth Mic"
 msgstr "Bluetooth-mikrofoni"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Mikrofoni"
+msgstr "USB-mikrofoni"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Aseta oma numerosi asetuksista"
+msgstr "Numerosi on piilotettu"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2420,14 +2271,14 @@ msgstr "Näppäimistö"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Modeemi ei toimi oikein."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Puhelut, viestit ja mobiilidata eivät toimi ennen uudelleenkäynnistystä.\n\nUudelleenkäynnistys kestää noin 30 sekuntia ja päättää käynnissä olevan puhelun."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2441,16 +2292,12 @@ msgstr "Käynnistä puhelin uudelleen"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Aktiivinen"
+msgstr "Toiminnot"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Mykistä"
+msgstr "Mykistetty"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2467,16 +2314,12 @@ msgid "Mute"
 msgstr "Mykistä"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Kaiutin"
+msgstr "Kaiuttimeen"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Jatka"
+msgstr "Jatka"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2484,35 +2327,29 @@ msgstr "Pito"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Lisää sähköposti"
+msgstr "Lisää puhelu"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Puhelut"
+msgstr "Vaihda puhelua"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Yhdistä kaikki"
+msgstr "Yhdistä puhelut"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Liity neuvottelupuheluun"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Siirrä"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Siirto yhdistää {a} ja {b} toisiinsa, ja sinä poistut puhelusta"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2520,27 +2357,24 @@ msgstr "Vaimennettu puhelu"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Vahvista hätäpuhelu"
+msgstr "Neuvottelupuhelu"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} osallistujaa"
+msgstr[0] "{count} osallistuja"
 msgstr[1] "{count} osallistujaa"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Yksityiskeskustelu"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Yksityinen siirtää muut pitoon"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2549,7 +2383,7 @@ msgstr "Vaihda"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "Verkko hylkäsi pyynnön"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2600,10 +2434,8 @@ msgid "Not connected"
 msgstr "Ei yhdistetty"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr "Nopea puhelin- ja viestintäsovellus FLX1- ja FLX1s-laitteille."
+msgstr "Nopea puhelinsovellus ja viestiohjelma FuriOS:lle."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2631,14 +2463,12 @@ msgstr "Ajastettu ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Verkkopalvelut"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Lähetä edelleen"
+msgstr "Soitonsiirto"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2650,85 +2480,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Soitonsiirto tapahtuu verkossa ennen kuin puhelu saavuttaa puhelimesi.\n\nAina ohjaa jokaisen puhelun välittömästi. Kun varattu koskee tilannetta, jossa olet toisessa puhelussa, Kun ei vastata sitä, että puhelin on soinut valitun ajan, ja Kun ei tavoitettavissa sitä, että puhelin on pois päältä tai kuuluvuusalueen ulkopuolella.\n\nSyötä numerot kansainvälisessä muodossa, esimerkiksi +358401234567. Tyhjän numeron käyttöönotto poistaa kyseisen säännön käytöstä."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "Aina"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Kun varattu"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Vastaamattomat"
+msgstr "Kun ei vastata"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Kun ei tavoitettavissa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Hälytysääni"
+msgstr "Soittoaika"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} osallistujaa"
+msgstr "{count} sekuntia"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Poista kaikki soitonsiirrot käytöstä"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Odottaa..."
+msgstr "Koputus"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Kun tämä on käytössä, toinen saapuva puhelu antaa äänimerkin käynnissä olevan puhelun aikana sen sijaan, että soittaja saisi varattu-äänen."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Järjestelmän oletus"
+msgstr "Verkon oletus"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Näytetään"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Piilota soittajan tunnus"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Valitse, näkevätkö soittamasi henkilöt numerosi. Verkon oletus seuraa liittymäsi asetusta. Piilotuksen voi valita myös yksittäiselle puhelulle yhteystiedon puheluvalikosta."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Soita takaisin"
+msgstr "Puheluiden esto"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2737,77 +2556,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Esto estää kokonaisia puheluluokkia verkossa.\n\nJokainen muutos vaatii operaattorilta saadun eston salasanan, joka on usein oletuksena 0000. Toistuvat väärät yritykset voivat lukita eston verkon puolella, jolloin vain operaattorisi voi avata sen."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Sallittu"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Lopeta kaikki puhelut"
+msgstr "Estä kaikki puhelut"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "Oma numero (kansainvälinen muoto)"
+msgstr "Estä ulkomaanpuhelut"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Estä ulkomaanpuhelut paitsi kotimaahan"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Tuodaan puhelutietoja..."
+msgstr "Lähtevät puhelut"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Estä verkkovierailussa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Puhelu saapuu..."
+msgstr "Saapuvat puhelut"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Eston salasana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Vaihda eston salasana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Nykyinen salasana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Uusi salasana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Poista kaikki estot käytöstä"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Ei käytettävissä tässä verkossa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Asetuksia ei voitu lukea verkosta"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2815,65 +2626,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Kameraa ei saatu käyntiin."
+msgstr "Asetusta ei voitu muuttaa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Poistetaanko kaikki soitonsiirtosäännöt käytöstä?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Poista käytöstä"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Syötä ensin eston salasana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Väärä eston salasana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Eston salasana vaihdettu"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Poistetaanko kaikki puheluiden estosäännöt käytöstä?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Tallennetaan yhteystietoa..."
+msgstr "Lue yhteystieto"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Suuntaa kamera yhteystiedon QR-koodiin"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Tämä koodi ei ole yhteystieto"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Lue millä tahansa puhelimella lisätäksesi tämän yhteystiedon"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Vastaajan numero"
+msgstr "Vastaaja, äänenvoimakkuus ja soittoääni"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Toimitusilmoitukset, numeron näyttö"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2883,22 +2688,20 @@ msgstr "SIM-asetukset"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Oma numero ja maatunnus"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Pikavalintapaikat"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Vain hätäpuhelut."
+msgstr "Hätäpuhelut"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Lukitusnäytön painike ja numerot"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2907,24 +2710,20 @@ msgstr "Estolista"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Numerot, joista et koskaan kuule"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Osoitekirjan nimi"
+msgstr "Osoitekirjat ja kaksoiskappaleet"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Ilmoitusten ohitukset"
+msgstr "Ilmoitukset"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Poikkeukset, äänet ja ohitus"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2934,30 +2733,28 @@ msgstr "Tuntemattomat soittajat"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Seulonta"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Numero kopioitu"
+msgstr "Numerohaku"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Hakukone hakupainikkeille"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Soitonsiirto, koputus ja estot"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Yhteystiedot, viestit ja puheluhistoria"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Kokeneille käyttäjille"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2965,32 +2762,25 @@ msgstr "Estetyt numerot"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Napauta kynää muuttaaksesi, mitä numero estää."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Ei numeroa"
+msgstr "Numeroita ei ole vielä lisätty"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Estolista"
+msgstr "Estä"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Syötä numero"
+msgstr "Syötä estettävä numero"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Tämä numero on jo estetty."
+msgstr "{number} on jo estolistalla."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3024,11 +2814,11 @@ msgstr "Lisää hylkäysviesti"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Viestejä ei ole vielä lisätty"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Lähetetään, kun hylkäät puhelun viestillä."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3066,29 +2856,27 @@ msgid "Emergency Numbers"
 msgstr "Hätänumerot"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Hätänumerot"
+msgstr "Verkon hätänumerot"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Näytä verkon numerot"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Pyydä toimitusilmoituksia"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Näytä numerot viestiluettelossa"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Pois käytöstä pitää numerot pois luettelosta; numero ilman yhteystietoa näyttää numeronsa nimenä"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3116,14 +2904,12 @@ msgid "Notification Exceptions"
 msgstr "Ilmoituspoikkeukset"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Hallitse yhteystietoja, jotka hälyttävät aina"
+msgstr "Yhteystiedot, jotka soivat aina"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Puhelu läpäisee äänettömän tilan"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3140,27 +2926,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Aseta omat soittoäänet tietyille henkilöille"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Hallitse yhteystietoja, jotka hälyttävät aina"
+msgstr "Viestit, jotka antavat aina äänimerkin"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Viesti läpäisee äänettömän tilan"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Toistuvien puheluiden läpipääsy"
+msgstr "Toistuvien viestien ohitus"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr ""
-"Jos sama numero soittaa 3 kertaa 5 minuutissa, puhelin hälyttää täysillä."
+msgstr "Jos sama lähettäjä kirjoittaa 3 kertaa minuutissa, soita äänimerkki."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3271,11 +3050,11 @@ msgstr "Ainoastaan vaimenna"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Hakupainike tuntemattomille soittajille puhelun aikana"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Käytetään hakupainikkeissa puheluissa, puheluhistoriassa ja ryhmäviesteissä."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3312,28 +3091,16 @@ msgstr "Oma hakuosoite"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "Aina tavoitettavissa, myös ilman SIM-korttia"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Tämä on puhelun äänenvoimakkuus kullekin ulostulolle. Taso otetaan käyttöön "
-"automaattisesti puhelun yhdistyessä ja aina kun ulostulo vaihtuu puhelun "
-"aikana, ja liukusäätimen muutokset kuuluvat heti. Laitteisto käyttää tasoja "
-"karkein askelin, eikä kuuloke koskaan mykisty täysin. Bluetooth-taso "
-"tallennetaan tulevaa reititystukea varten."
+msgstr "Tämä on puhelun äänenvoimakkuus kullekin ulostulolle. Taso otetaan käyttöön automaattisesti, kun puhelu yhdistyy ja aina kun ulostulo vaihtuu puhelun aikana, ja liukusäätimen muutokset kuuluvat heti. Laitteisto säätää tasoja karkeissa askelissa, eikä korvakuuloke mene koskaan täysin äänettömäksi. Bluetooth- ja USB-tasot ovat käytössä, kun kyseiset puhelureitit ovat aktiivisia."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3343,7 +3110,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Kun tämä on käytössä, verkolta pyydetään vahvistus siitä, että teksti- ja multimediaviestisi ovat saapuneet vastaanottajan puhelimeen.\n\nVahvistus on luotettava silloin kun se saapuu, mutta monet operaattorit ja automaattiset lähettäjät eivät tuota sitä koskaan, joten ilman vahvistusta oleva viesti on voinut silti mennä perille. Toimitettu ei koskaan tarkoita luettua."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3633,75 +3400,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Telephony-tietokanta viety onnistuneesti."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Puhelu saapuu..."
+msgstr "Saapuva"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Lähtevä"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Hylätty toisessa päässä"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Verkko ei saanut yhdistettyä puhelua"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Luovutettiin ennen yhdistämistä"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Vastaa"
+msgstr "Vastattu"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "Vastaamattomat"
+msgstr "Ei vastattu"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Hylkäysviesti"
+msgstr "Hylätty täällä"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Päätettiin tässä puhelimessa"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Päätettiin toisessa päässä"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Verkko katkaisi puhelun"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Kukaan ei vastannut täällä"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Hylätty tässä puhelimessa"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Puhelu katkaistiin täällä ennen yhdistämistä"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Modeemi ei ole valmis"
+msgstr "Modeemi ei kertonut syytä"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3736,11 +3493,11 @@ msgstr "Odotetaan satelliittiyhteyttä..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Tässä laitteessa ei ole modeemia"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Lentokonetila on päällä"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3754,7 +3511,7 @@ msgstr "Odota hetki, edellinen puhelu on vielä päättymässä"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Puhelua ei voitu aloittaa"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3781,28 +3538,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Sijainnin haku epäonnistui."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "Kytkee radion pois ja takaisin päälle, kuten lentotila."
+msgstr "Radio on kytketty pois päältä. Kytke se takaisin päälle käyttääksesi modeemia."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Tämä laite ei ilmoita modeemia. Uudelleenkäynnistys ei korjaa modeemia, joka puuttuu tai jolla ei ole tunnistetta."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Modeemipalvelu ei vastaa."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Modeemi vastaa, mutta se menetti puhelupalvelunsa."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Modeemi vastaa, mutta sen radio on kytketty pois päältä."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3902,10 +3657,10 @@ msgstr "{count} puhelua tuotu."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Andromeda-yhteystiedot tulevat järjestelmästä, ja niitä voi täällä vain lukea."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} ei ole yhdistetty, joten sen yhteystietoja ei voi muuttaa ennen kuin se on taas käytettävissä."
