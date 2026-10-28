@@ -17,15 +17,13 @@ msgstr ""
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "โทรศัพท์ - สายเรียกเข้า"
+msgstr "บริการโทรศัพท์ไม่ทำงาน"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "ไม่ได้รับสายเรียกเข้าและข้อความ เปิดแอปเพื่อเริ่มบริการอีกครั้ง"
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "การกู้คืนโมเด็ม"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "ปลดล็อกเพื่อดูรายละเอียด"
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "โทรศัพท์ฉุกเฉิน"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "กำลังกู้คืนโมเด็ม..."
+msgstr "กู้คืนโมเด็ม"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "รายชื่อผู้ติดต่อ"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "กำลังซิงค์รายชื่อติดต่อ..."
+msgstr "กำลังซิงค์รายชื่อ…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "รีสตาร์ทบริการโทรศัพท์"
+msgstr "บริการโทรศัพท์กำลังเริ่มใหม่…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "เริ่ม"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "รีสตาร์ทบริการโทรศัพท์"
+msgstr "บริการโทรศัพท์เริ่มทำงานแล้ว"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "โหลดผู้ติดต่อซ้ำ"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "เกี่ยวกับ"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "แก้ไขรายการที่ซ้ำกัน"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "ลบผู้ติดต่อแล้ว"
+msgstr "รีเฟรชรายชื่อแล้ว"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "มีคำขอ USSD ที่กำลังดำเนินอยู่แล้ว"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "คำขอ USSD ล้มเหลว"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "เซสชัน USSD สิ้นสุดแล้ว"
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "กำลังรอการตอบกลับ USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "ยกเลิก"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "ใส่หมายเลข"
+msgstr "ป้อนคำตอบ"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "ส่งตอนนี้"
+msgstr "ส่ง"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "ปิด"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "การตอบกลับ USSD ล้มเหลว"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,15 @@ msgid "Confirm"
 msgstr "ยืนยัน"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "พบผู้ติดต่อที่ซ้ำกัน {count} รายการ ตรวจสอบเมนู"
-msgstr[1] "พบผู้ติดต่อที่ซ้ำกัน {count} รายการ ตรวจสอบเมนู"
+msgstr[0] "พบรายชื่อซ้ำ {count} รายการ"
+msgstr[1] "พบรายชื่อซ้ำ {count} รายการ"
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "จัดการ"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +316,48 @@ msgstr "ชื่อ"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "ทิศทาง"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "ผลลัพธ์ของ USSD"
+msgstr "ผลลัพธ์"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "วันที่"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "ระยะเวลาใดก็ได้"
+msgstr "ระยะเวลา"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "เรียก"
+msgstr "หมายเลขผู้โทร"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "ซ่อนอยู่"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "การประชุมสาย"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "สายนี้เป็นส่วนหนึ่งของการประชุมสาย"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "โอนสายแล้ว"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "การโทรล้มเหลวในการตัดการเชื่อมต่อ"
+msgstr "สายถูกส่งต่อให้คนอื่น"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "สิ้นสุดแล้ว"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +413,7 @@ msgstr "ลบการโทร"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "สายกับ {who} เมื่อ {when} จะถูกลบออกจากประวัติของคุณ"
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +478,13 @@ msgstr "ไม่พบผลลัพธ์ในการสนทนานี
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "เลิกบล็อกหมายเลข"
+msgstr "เลิกบล็อกหมายเลขนี้"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "บล็อกหมายเลข"
+msgstr "บล็อกหมายเลขนี้"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +496,11 @@ msgstr "ตั้งชื่อกลุ่ม..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "ปิดเสียงแชทนี้"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "ข้อความเข้ามาโดยไม่มีการแจ้งเตือน"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -640,12 +610,11 @@ msgid "Search contacts"
 msgstr "ค้นหาผู้ติดต่อ"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "ใส่หมายเลข"
-msgstr[1] "ใส่หมายเลข"
+msgstr[0] "· {count} หมายเลข"
+msgstr[1] "· {count} หมายเลข"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -653,17 +622,13 @@ msgstr "โทรแบบไม่ระบุชื่อ"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "โทรล้มเหลว"
+msgstr "บล็อกสายแล้ว"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "ลบข้อความแล้ว"
+msgstr "บล็อกข้อความแล้ว"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -671,21 +636,17 @@ msgid "Pick Contact"
 msgstr "เลือกการติดต่อ"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
-msgstr "ใส่หมายเลข"
+msgstr "ป้อนหมายเลข"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "ค้นหาผู้ติดต่อ"
+msgstr "ไม่มีรายชื่อที่ตรงกัน"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "โทรด่วน {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -720,10 +681,8 @@ msgid "3-10 mins"
 msgstr "3-10 นาที"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 นาที"
+msgstr "> 10 นาที"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -882,7 +841,7 @@ msgstr "กำลังส่ง..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · ส่งถึงแล้ว"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -905,84 +864,64 @@ msgid "Save File As"
 msgstr "บันทึกไฟล์เป็น"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "เลิกบล็อกแล้ว"
+msgstr "ถูกบล็อก"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "สายจากหมายเลขนี้ถูกบล็อกอยู่ จึงยังไม่มีผลจนกว่าจะเลิกบล็อก"
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "ข้อความจากหมายเลขนี้ถูกบล็อกอยู่ จึงยังไม่มีผลจนกว่าจะเลิกบล็อก"
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "เลิกบล็อกหมายเลขทั้งหมดใช่ไหม"
+msgstr "เลิกบล็อกสายแล้วเพิ่ม"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "เลิกบล็อกข้อความแล้วเพิ่ม"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "เลิกบล็อกหมายเลขทั้งหมดใช่ไหม"
+msgstr "เลิกบล็อกเฉพาะสาย"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "ข้อความที่ยังไม่ได้อ่าน"
+msgstr "เลิกบล็อกเฉพาะข้อความ"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "เลิกบล็อกหมายเลข"
+msgstr "เลิกบล็อกทั้งหมด"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "หมายเลขนี้ถูกบล็อกแล้ว"
+msgstr "หมายเลขนี้ถูกบล็อกข้อความด้วย"
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "หมายเลขนี้ถูกบล็อกแล้ว"
+msgstr "หมายเลขนี้ถูกบล็อกสายด้วย"
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "หมายเลขนี้ถูกบล็อกทั้งสายและข้อความ"
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "เลิกบล็อกแล้ว"
+msgstr "เลิกบล็อก"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "หมายเลขนี้ถูกบล็อกแล้ว"
+msgstr "สายจากหมายเลขนี้ถูกบล็อกอยู่"
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "หมายเลขนี้ถูกบล็อกแล้ว"
+msgstr "ข้อความจากหมายเลขนี้ถูกบล็อกอยู่"
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1019,13 +958,11 @@ msgstr "หลัก"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "เป็นรายการบล็อกสุดท้าย — ลบหมายเลขด้วยไอคอนถังขยะ"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "เพิ่มหมายเลข"
+msgstr "หมายเลขที่ซ่อนไว้"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1052,103 +989,87 @@ msgstr "การตั้งค่าขั้นสูง"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "ให้ผู้ส่งที่เชื่อถือได้สั่งให้โทรศัพท์ของคุณทำงานผ่านข้อความ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "รีสตาร์ทโมเด็ม"
+msgstr "เริ่มโมเด็มใหม่"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "เปลี่ยนว่าไอคอนแอปใดถูกติดตั้ง"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "ลบข้อมูลของคุณ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} และ {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "สำหรับผู้ใช้ที่มีประสบการณ์ หน้านี้{listed}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "ทริกเกอร์ SMS ลับ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "ตั้งค่า \"ค้นหาโทรศัพท์ของฉัน\""
+msgstr "ค้นหาโทรศัพท์ของฉัน"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "ระบุตำแหน่งด้วย SMS ที่เชื่อถือได้"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "ตั้งค่า \"การโทรกลับที่เชื่อถือได้\""
+msgstr "โทรกลับที่เชื่อถือได้"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "ตัวกระตุ้นการโทรกลับแบบเงียบ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "ตั้งค่า \"SMS - รีเลย์\""
+msgstr "ส่งต่อ SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "ข้อความที่ยังไม่ได้อ่าน"
+msgstr "ส่งต่อข้อความ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "ตั้งค่า \"SMS -tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "การเข้าถึงเชลล์ระยะไกล"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "ล็อกอุปกรณ์"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "ล็อกด้วย SMS ที่เชื่อถือได้"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "เปิดใช้งานฟีเจอร์"
+msgstr "คุณสมบัติการโทรแบบทดลอง"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "ยืนยันการโทรฉุกเฉิน"
+msgstr "อนุญาตการประชุมสาย"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "อนุญาตการโอนสาย"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1172,7 +1093,7 @@ msgstr "การจัดการข้อมูล"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "ส่งออก นำเข้า และรีเซ็ต"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1216,7 +1137,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "การรวมสายเป็นการประชุมสายขึ้นอยู่กับผู้ให้บริการ และในการทดสอบของเรา ผลลัพธ์มีตั้งแต่ใช้งานได้จนถึงสายหลุด เปิดใช้เพื่อทดลองกับเลขหมายของคุณเอง คุณสมบัตินี้ไม่สามารถรองรับอย่างเป็นทางการได้ จึงควรปิดไว้หากคุณต้องการให้การโทรทำงานอย่างคาดเดาได้"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1225,48 +1146,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "การโอนสายสองสายให้เชื่อมต่อกันต้องใช้บริการที่ผู้ให้บริการต้องจัดให้ และในการทดสอบของเรา ผู้ให้บริการหลายรายปฏิเสธหรือตัดสายไปเลย เปิดใช้เพื่อทดลองกับเลขหมายของคุณเอง คุณสมบัตินี้ไม่สามารถรองรับอย่างเป็นทางการได้ จึงควรปิดไว้หากคุณต้องการให้การโทรทำงานอย่างคาดเดาได้"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"เมื่อโมเด็มหยุดตอบสนอง โทรศัพท์จะรันขั้นตอนการกู้คืนด้วยตัวเองอย่างเงียบ ๆ ได้แก่ รีสตาร์ทวิทยุ "
-"ปิดและเปิดไฟโมเด็มใหม่ รีสตาร์ทเฟิร์มแวร์ และเปิดใช้งานวิทยุที่ถูกปิดใช้งานอีกครั้ง "
-"โทรศัพท์จะไม่ถูกรีบูตโดยอัตโนมัติ หากไม่มีสิ่งใดช่วยได้ ระบบจะขอให้คุณรีบูต เมื่อปิดตัวเลือกนี้ "
-"หน้าต่างการกู้คืนโมเด็มจะเปิดขึ้นแทน เพื่อให้คุณรันขั้นตอนต่าง ๆ ด้วยตัวเอง"
+msgstr "เมื่อโมเด็มหยุดตอบสนอง โทรศัพท์จะเริ่มซอฟต์แวร์โมเด็มใหม่เองอย่างเงียบ ๆ และจะแจ้งคุณเฉพาะเมื่อการเริ่มใหม่ล้มเหลว โทรศัพท์จะไม่รีบูตเองโดยอัตโนมัติ เมื่อปิดตัวเลือกนี้ หน้าจอกู้คืนโมเด็มจะปรากฏขึ้นแทน เพื่อให้คุณเริ่มใหม่ด้วยตัวเอง"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "โมเด็มทำงานปกติ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "เริ่มโมเด็มใหม่ ใช้เวลาประมาณ 30 วินาที"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "กำลังรีสตาร์ทโมเด็ม..."
+msgstr "กำลังเริ่มโมเด็มใหม่…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "การโทรและข้อความใช้งานได้อีกครั้ง"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "การกู้คืนไม่ช่วยอะไร โมเด็มยังไม่ตอบสนอง"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1283,17 +1191,13 @@ msgstr "หมายเหตุ (ไม่บังคับ)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "รายการที่บล็อก"
+msgstr "บล็อกสาย"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "ข้อความทั้งหมด"
+msgstr "บล็อกข้อความ"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1392,7 +1296,7 @@ msgstr "เลือกไฟล์"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "วาง"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1420,10 +1324,8 @@ msgid "Contact Details"
 msgstr "รายละเอียดการติดต่อ"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "รายชื่อผู้ติดต่อ"
+msgstr "รายชื่อใหม่"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1497,7 +1399,7 @@ msgstr "วันครบรอบปี"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "แบ่งปันเป็นคิวอาร์โค้ด"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1541,45 +1443,36 @@ msgstr "คัดลอกไปยังคลิปบอร์ดแล้ว
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "โทรศัพท์"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "เพิ่มอีเมล"
+msgstr "อีเมล"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "ประเภท"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "โมเด็มไม่พร้อมใช้งาน"
+msgstr "ไม่มีแอปอีเมลที่ใช้ได้"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "ติดต่อส่งออก"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "ไม่สามารถสร้างสมุดที่อยู่ได้"
+msgstr "ไม่สามารถสร้างคิวอาร์โค้ดได้"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "ลบทุกคนออกจากสมุดที่อยู่ของคุณจริงหรือ?"
+msgstr "{name} จะถูกลบออกจากสมุดที่อยู่ของคุณ"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "ค้นหาผู้ติดต่อ"
+msgstr "รายชื่อนี้"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1589,13 +1482,11 @@ msgstr "บันทึกรายชื่อผู้ติดต่อไม
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "สมุดที่อยู่นี้อ่านได้เท่านั้น"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "ไม่มีสมุดที่อยู่ที่สามารถลบได้"
+msgstr "ไม่มีสมุดที่อยู่ที่เขียนได้"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1704,24 +1595,22 @@ msgstr "ลบทุกอย่าง"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "การทำเช่นนี้จะลบสาย {count} รายการ และไม่สามารถย้อนกลับได้"
+msgstr[1] "การทำเช่นนี้จะลบสาย {count} รายการ และไม่สามารถย้อนกลับได้"
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "การดำเนินการนี้จะลบ SMS/MMS และไฟล์แนบทั้งหมด"
-msgstr[1] "การดำเนินการนี้จะลบ SMS/MMS และไฟล์แนบทั้งหมด"
+msgstr[0] "การทำเช่นนี้จะลบข้อความ {count} รายการพร้อมไฟล์แนบ"
+msgstr[1] "การทำเช่นนี้จะลบข้อความ {count} รายการพร้อมไฟล์แนบ"
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "รีเซ็ตชื่อแชทกลุ่มแบบกำหนดเองทั้งหมดหรือไม่"
-msgstr[1] "รีเซ็ตชื่อแชทกลุ่มแบบกำหนดเองทั้งหมดหรือไม่"
+msgstr[0] "การทำเช่นนี้จะรีเซ็ตชื่อกลุ่มที่กำหนดเอง {count} รายการ"
+msgstr[1] "การทำเช่นนี้จะรีเซ็ตชื่อกลุ่มที่กำหนดเอง {count} รายการ"
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1731,8 +1620,8 @@ msgstr "ลบชื่อกลุ่ม"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "การทำเช่นนี้จะเลิกบล็อก {count} หมายเลข"
+msgstr[1] "การทำเช่นนี้จะเลิกบล็อก {count} หมายเลข"
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1749,18 +1638,10 @@ msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบสมุดที่อยู่ '{name}' อย่างถาวร"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"คุณต้องการลบสมุดที่อยู่ใดอย่างถาวร\n"
-"\n"
-"นี่จะเป็นการล้างข้อมูลออกจากระบบ"
+msgstr "คุณต้องการลบสมุดที่อยู่ใดอย่างถาวร การทำเช่นนี้จะลบออกจากระบบทั้งหมด"
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1895,43 +1776,39 @@ msgstr "กำลังรวม {current}/{total}..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "ที่ชื่นชอบ"
+msgstr "รายการโปรด"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "เลือกรายชื่อเพื่อใส่ในช่องโทรด่วน บนแป้นโทรศัพท์ การกดเลขตัวเดียวนั้นจะแสดงรายชื่อให้คุณโทรออกได้"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "โทรด่วน"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "โทร {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "ว่าง"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "เลือกเสียงสำหรับ {name}"
+msgstr "เลือกช่องสำหรับ {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "เพิ่ม {name} ไปที่ช่อง {slot} แล้ว"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1968,35 +1845,25 @@ msgid "Export Calls or Messages"
 msgstr "ส่งออกการโทรหรือข้อความ"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "นำเข้าประวัติการโทร"
+msgstr "ส่งออกประวัติการโทร"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "นำเข้าข้อความ"
+msgstr "ส่งออกข้อความ"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "รายการที่บล็อก"
+msgstr "ส่งออกรายการบล็อก"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "รายการที่บล็อก"
+msgstr "นำเข้ารายการบล็อก"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "นำเข้า/ส่งออก"
+msgstr "นำเข้าและส่งออก"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2004,16 +1871,13 @@ msgid "Export File"
 msgstr "ส่งออกไฟล์"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "ส่งออกรายชื่อติดต่อแล้ว {count} รายการ"
+msgstr "ส่งออก {count} รายการแล้ว"
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "ส่งออกไฟล์"
+msgstr "การส่งออกล้มเหลว"
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2024,13 +1888,11 @@ msgstr "เลือกไฟล์"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "นำเข้าแล้ว: เพิ่ม {added} รายการ ขยาย {updated} รายการ"
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "การนำเข้าล้มเหลว: {e}"
+msgstr "การนำเข้าล้มเหลว"
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2184,10 +2046,8 @@ msgstr "เลือกสมุดที่อยู่"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "ค่าเริ่มต้นของระบบ"
+msgstr "ค่าเริ่มต้น"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2357,10 +2217,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "ชุดหูฟังแบบมีสาย"
+msgstr "หูฟัง USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2375,16 +2233,12 @@ msgid "Bluetooth Mic"
 msgstr "ไมค์ Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "ไมโครโฟน"
+msgstr "ไมโครโฟน USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "ตั้งค่าหมายเลขของคุณในการตั้งค่า"
+msgstr "หมายเลขของคุณถูกซ่อนอยู่"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2415,14 +2269,14 @@ msgstr "แป้นกด"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "โมเด็มทำงานไม่ถูกต้อง"
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "การโทร ข้อความ และเน็ตมือถือจะใช้งานไม่ได้จนกว่าจะเริ่มโมเด็มใหม่\n\nการเริ่มใหม่ใช้เวลาประมาณ 30 วินาที และจะตัดสายที่กำลังใช้อยู่"
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2436,16 +2290,12 @@ msgstr "รีบูตโทรศัพท์"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "กำลังสนทนา"
+msgstr "การทำงาน"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "ปิดไมค์"
+msgstr "ปิดเสียงอยู่"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2462,16 +2312,12 @@ msgid "Mute"
 msgstr "ปิดไมค์"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "ลำโพง"
+msgstr "เปลี่ยนเป็นลำโพง"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 เรซูเม่"
+msgstr "ดำเนินต่อ"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2479,35 +2325,29 @@ msgstr "พักสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "เพิ่มอีเมล"
+msgstr "เพิ่มสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "โทร"
+msgstr "สลับสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "รวมทั้งหมด"
+msgstr "รวมสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "เข้าร่วมการประชุมสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "โอนสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "การโอนสายจะเชื่อม {a} กับ {b} เข้าด้วยกัน และคุณจะออกจากสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2515,15 +2355,12 @@ msgstr "ปิดเสียงสายเรียกเข้า"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "ยืนยันการโทรฉุกเฉิน"
+msgstr "การประชุมสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
 msgstr[0] "ผู้เข้าร่วม {count} คน"
@@ -2531,11 +2368,11 @@ msgstr[1] "ผู้เข้าร่วม {count} คน"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "คุยส่วนตัว"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "การคุยส่วนตัวจะพักสายคนอื่นไว้"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2544,7 +2381,7 @@ msgstr "สลับสาย"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "เครือข่ายปฏิเสธคำขอ"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2595,11 +2432,8 @@ msgid "Not connected"
 msgstr "ไม่ได้เชื่อมต่อ"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr ""
-"โปรแกรมเรียกเลขหมายโทรศัพท์และไคลเอนต์ส่งข้อความด่วนที่ออกแบบมาสำหรับ FLX1 และ FLX1"
+msgstr "แอปโทรศัพท์และข้อความที่รวดเร็ว ออกแบบมาสำหรับ FuriOS"
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2627,14 +2461,12 @@ msgstr "กำหนดเวลา ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "บริการเครือข่าย"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "ซึ่งไปข้างหน้า"
+msgstr "การโอนสายเรียกเข้า"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2646,85 +2478,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "การโอนสายเกิดขึ้นในเครือข่ายก่อนที่สายจะถึงโทรศัพท์ของคุณ\n\n“เสมอ” จะโอนทุกสายทันที “เมื่อสายไม่ว่าง” ใช้เมื่อคุณกำลังคุยสายอื่น “เมื่อไม่รับสาย” ใช้หลังจากโทรศัพท์ดังครบเวลาที่เลือก และ “เมื่อติดต่อไม่ได้” ใช้เมื่อโทรศัพท์ปิดอยู่หรืออยู่นอกพื้นที่บริการ\n\nป้อนหมายเลขในรูปแบบสากล เช่น +358401234567 การใช้หมายเลขว่างจะปิดกฎนั้น"
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "เสมอ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "เมื่อสายไม่ว่าง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "ยังไม่ได้ตอบ"
+msgstr "เมื่อไม่รับสาย"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "เมื่อติดต่อไม่ได้"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "เสียงเรียกเข้า"
+msgstr "เวลาที่ให้ดัง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "ผู้เข้าร่วม {count} คน"
+msgstr "{count} วินาที"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "ปิดการโอนสายทั้งหมด"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "สายเรียกซ้อน..."
+msgstr "สายเรียกซ้อน"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "เมื่อเปิดใช้ สายเรียกเข้าสายที่สองจะมีเสียงเตือนระหว่างที่คุณคุยอยู่ แทนที่ผู้โทรจะได้ยินสัญญาณสายไม่ว่าง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "ค่าเริ่มต้นของระบบ"
+msgstr "ค่าเริ่มต้นของเครือข่าย"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "แสดง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "ซ่อนหมายเลขของฉัน"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "เลือกว่าคนที่คุณโทรไปจะเห็นหมายเลขของคุณหรือไม่ “ค่าเริ่มต้นของเครือข่าย” จะตามการตั้งค่าของเลขหมายคุณ คุณยังเลือกซ่อนเฉพาะสายเดียวได้จากเมนูโทรของรายชื่อ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "โทรกลับ"
+msgstr "การระงับการโทร"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2733,77 +2554,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "การระงับจะปิดกั้นการโทรทั้งประเภทที่ฝั่งเครือข่าย\n\nทุกการเปลี่ยนแปลงต้องใช้รหัสระงับจากผู้ให้บริการของคุณ ซึ่งค่าเริ่มต้นมักเป็น 0000 การใส่ผิดซ้ำ ๆ อาจทำให้การระงับถูกล็อกที่ฝั่งเครือข่าย และจะมีเพียงผู้ให้บริการของคุณที่ปลดล็อกได้"
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "อนุญาต"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "วางสายทุกสาย"
+msgstr "ระงับทุกสาย"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "มายนัมเบอร์ (รูปแบบสากล)"
+msgstr "ระงับสายต่างประเทศ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "ระงับสายต่างประเทศ ยกเว้นกลับประเทศตัวเอง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "กำลังนำเข้าการโทร..."
+msgstr "สายโทรออก"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "ระงับเมื่อโรมมิ่ง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "สายเรียกเข้า..."
+msgstr "สายเรียกเข้า"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "รหัสระงับการโทร"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "เปลี่ยนรหัสระงับการโทร"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "รหัสปัจจุบัน"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "รหัสใหม่"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "ปิดการระงับทั้งหมด"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "ใช้ไม่ได้บนเครือข่ายนี้"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "ไม่สามารถอ่านการตั้งค่าจากเครือข่ายได้"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2811,65 +2624,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "ไม่สามารถสตาร์ทกล้องได้"
+msgstr "ไม่สามารถเปลี่ยนการตั้งค่าได้"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "ปิดกฎการโอนสายทั้งหมดหรือไม่"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "ปิด"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "ป้อนรหัสระงับการโทรก่อน"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "รหัสระงับการโทรไม่ถูกต้อง"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "เปลี่ยนรหัสระงับการโทรแล้ว"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "ปิดกฎการระงับการโทรทั้งหมดหรือไม่"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "กำลังบันทึกรายชื่อติดต่อ..."
+msgstr "สแกนรายชื่อ"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "เล็งกล้องไปที่คิวอาร์โค้ดของรายชื่อ"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "โค้ดนี้ไม่ใช่รายชื่อ"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "สแกนด้วยโทรศัพท์เครื่องใดก็ได้เพื่อเพิ่มรายชื่อนี้"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "หมายเลขข้อความเสียง"
+msgstr "ข้อความเสียง ระดับเสียง และเสียงรอสาย"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "รายงานการส่ง การแสดงหมายเลข"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2879,22 +2686,20 @@ msgstr "การตั้งค่าซิม"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "หมายเลขของเครื่องและรหัสประเทศ"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "ช่องโทรด่วน"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "โทรฉุกเฉินเท่านั้น"
+msgstr "สายฉุกเฉิน"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "ปุ่มบนหน้าจอล็อกและหมายเลข"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2903,24 +2708,20 @@ msgstr "รายการที่บล็อก"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "หมายเลขที่คุณไม่อยากได้รับการติดต่อ"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "ชื่อสมุดที่อยู่"
+msgstr "สมุดที่อยู่และรายการซ้ำ"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "แทนที่การแจ้งเตือน"
+msgstr "การแจ้งเตือน"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "ข้อยกเว้น เสียง และการข้ามโหมดเงียบ"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2930,30 +2731,28 @@ msgstr "ผู้โทรที่ไม่รู้จัก"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "การคัดกรอง"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "คัดลอกหมายเลขแล้ว"
+msgstr "การค้นหาหมายเลข"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "เครื่องมือค้นหาที่ใช้กับปุ่มค้นหา"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "การโอนสาย สายเรียกซ้อน และการระงับ"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "รายชื่อ ข้อความ และประวัติการโทร"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "สำหรับผู้ใช้ที่มีประสบการณ์"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2961,32 +2760,25 @@ msgstr "หมายเลขที่ถูกบล็อก"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "แตะไอคอนดินสอเพื่อเปลี่ยนสิ่งที่หมายเลขนั้นบล็อก"
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "ไม่มีหมายเลข"
+msgstr "ยังไม่ได้เพิ่มหมายเลข"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "รายการที่บล็อก"
+msgstr "บล็อก"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "ใส่หมายเลข"
+msgstr "ป้อนหมายเลขที่ต้องการบล็อก"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "หมายเลขนี้ถูกบล็อกแล้ว"
+msgstr "{number} อยู่ในรายการบล็อกแล้ว"
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3020,11 +2812,11 @@ msgstr "เพิ่มข้อความปฏิเสธสาย"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "ยังไม่ได้เพิ่มข้อความ"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "ส่งเมื่อคุณปฏิเสธสายพร้อมข้อความ"
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3062,29 +2854,27 @@ msgid "Emergency Numbers"
 msgstr "หมายเลขฉุกเฉิน"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "หมายเลขฉุกเฉิน"
+msgstr "หมายเลขฉุกเฉินจากเครือข่าย"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "แสดงหมายเลขจากเครือข่าย"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "ขอรายงานการส่ง"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "แสดงหมายเลขในรายการข้อความ"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "เมื่อปิด หมายเลขจะไม่ปรากฏในรายการ หมายเลขที่ไม่มีรายชื่อจะใช้หมายเลขเป็นชื่อ"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3112,14 +2902,12 @@ msgid "Notification Exceptions"
 msgstr "ข้อยกเว้นการแจ้งเตือน"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "จัดการผู้ติดต่อที่เล่นเสียงตลอดเวลา"
+msgstr "รายชื่อที่ดังเสมอ"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "สายจะทะลุโหมดเงียบ"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3135,26 +2923,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "ตั้งค่าเสียงเรียกเข้าแบบกำหนดเองสำหรับผู้ติดต่อเฉพาะ"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "จัดการผู้ติดต่อที่เล่นเสียงตลอดเวลา"
+msgstr "ข้อความที่มีเสียงเสมอ"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "ข้อความจะทะลุโหมดเงียบ"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "บายพาสการโทรซ้ำ"
+msgstr "ข้ามโหมดเงียบเมื่อมีข้อความซ้ำ"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr "หากหมายเลขเดิมโทร 3 ครั้งใน 5 นาที ให้บังคับระดับเสียงสูงสุด"
+msgstr "ถ้าผู้ส่งคนเดิมส่ง 3 ครั้งในหนึ่งนาที ให้เล่นเสียง"
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3257,11 +3039,11 @@ msgstr "ความเงียบเท่านั้น"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "ปุ่มค้นหาผู้โทรที่ไม่รู้จักระหว่างคุยสาย"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "ใช้โดยปุ่มค้นหาในสาย ประวัติการโทร และข้อความกลุ่ม"
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3297,28 +3079,16 @@ msgstr "URL การค้นหาที่กำหนดเอง"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "โทรได้เสมอ แม้ไม่มีซิม"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"นี่คือระดับเสียงสนทนาสำหรับเอาต์พุตแต่ละช่องทาง "
-"ระดับนี้จะถูกใช้โดยอัตโนมัติเมื่อสายเชื่อมต่อและทุกครั้งที่เอาต์พุตเปลี่ยนระหว่างการโทร "
-"และการเปลี่ยนแถบเลื่อนจะได้ยินทันที ฮาร์ดแวร์ปรับระดับเป็นขั้นใหญ่ ๆ "
-"และลำโพงแนบหูจะไม่เงียบสนิทเลย ระดับของ Bluetooth "
-"จะถูกบันทึกไว้สำหรับการรองรับการกำหนดเส้นทางเสียงที่กำลังจะมาถึง"
+msgstr "นี่คือระดับเสียงสนทนาของแต่ละอุปกรณ์ขาออก ระดับเสียงจะถูกใช้อัตโนมัติเมื่อสายเชื่อมต่อ และทุกครั้งที่อุปกรณ์ขาออกเปลี่ยนระหว่างสาย การเลื่อนแถบจะได้ยินผลทันที ฮาร์ดแวร์ปรับระดับเป็นขั้นหยาบ ๆ และลำโพงแนบหูจะไม่เงียบสนิท ระดับเสียงบลูทูธและ USB จะใช้เมื่อเส้นทางเสียงนั้นทำงานอยู่"
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3328,7 +3098,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "เมื่อเปิดใช้ ระบบจะขอให้เครือข่ายยืนยันว่าข้อความและข้อความมัลติมีเดียของคุณถึงโทรศัพท์ผู้รับเมื่อใด\n\nการยืนยันนั้นเชื่อถือได้เมื่อมาถึง แต่ผู้ให้บริการและผู้ส่งอัตโนมัติหลายรายไม่สร้างการยืนยันเลย ดังนั้นข้อความที่ไม่มีการยืนยันก็อาจถูกส่งถึงแล้ว “ส่งถึงแล้ว” ไม่ได้หมายถึง “อ่านแล้ว”"
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3605,75 +3375,65 @@ msgid "Exported Telephony database successfully."
 msgstr "ส่งออกฐานข้อมูลระบบโทรศัพท์เรียบร้อยแล้ว"
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "สายเรียกเข้า..."
+msgstr "สายเข้า"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "สายออก"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "ปลายสายปฏิเสธ"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "เครือข่ายไม่สามารถต่อสายได้"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "ยกเลิกก่อนที่สายจะติด"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "รับสาย"
+msgstr "รับสายแล้ว"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "ยังไม่ได้ตอบ"
+msgstr "ไม่มีการรับสาย"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "ปฏิเสธข้อความ"
+msgstr "ปฏิเสธที่เครื่องนี้"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "วางสายที่เครื่องนี้"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "ปลายสายวางสาย"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "เครือข่ายตัดสาย"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "ไม่มีใครรับสายที่เครื่องนี้"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "ปฏิเสธที่โทรศัพท์เครื่องนี้"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "วางสายที่เครื่องนี้ก่อนที่สายจะติด"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "โมเด็มไม่พร้อม"
+msgstr "โมเด็มไม่ได้บอกเหตุผล"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3708,11 +3468,11 @@ msgstr "กำลังรอการแก้ไขดาวเทียม...
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "อุปกรณ์นี้ไม่มีโมเด็ม"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "โหมดเครื่องบินเปิดอยู่"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3726,7 +3486,7 @@ msgstr "โปรดรอสักครู่ การโทรครั้�
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "ไม่สามารถเริ่มการโทรได้"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3753,28 +3513,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "ไม่สามารถรับตำแหน่งหลังจากลองวิธีการทั้งหมดแล้ว"
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "ปิดวิทยุแล้วเปิดใหม่ เหมือนโหมดเครื่องบิน"
+msgstr "สัญญาณวิทยุถูกปิดอยู่ เปิดอีกครั้งเพื่อใช้โมเด็ม"
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "อุปกรณ์นี้รายงานว่าไม่มีโมเด็ม การเริ่มใหม่ไม่สามารถแก้โมเด็มที่ไม่มีอยู่หรือไม่มีข้อมูลระบุตัวตนได้"
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "บริการโมเด็มไม่ตอบสนอง"
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "โมเด็มตอบสนอง แต่สูญเสียบริการโทรไปแล้ว"
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "โมเด็มตอบสนอง แต่สัญญาณวิทยุถูกปิดอยู่"
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3873,10 +3631,10 @@ msgstr "นำเข้าการโทรแล้ว {count}"
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "รายชื่อ Andromeda มาจากระบบ และที่นี่อ่านได้เท่านั้น"
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} ยังไม่เชื่อมต่อ จึงไม่สามารถแก้ไขรายชื่อในนั้นได้จนกว่าจะกลับมา"
