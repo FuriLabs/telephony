@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<12 || n%100>14)) ? 1 : 2);\n"
 
 #: src/telephony/cli/commands/management_command.py:110
 #: src/telephony/client/managers/ofono_mirror.py:94
@@ -212,8 +212,9 @@ msgstr "Підтвердити"
 #, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Знайдено {count} дубльований контакт."
-msgstr[1] "Знайдено {count} дубльованих контактів."
+msgstr[0] "Знайдено {count} повторюваний контакт."
+msgstr[1] "Знайдено {count} повторювані контакти."
+msgstr[2] "Знайдено {count} повторюваних контактів."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
@@ -615,7 +616,8 @@ msgstr "Пошук контактів"
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
 msgstr[0] "· {count} номер"
-msgstr[1] "· {count} номерів"
+msgstr[1] "· {count} номери"
+msgstr[2] "· {count} номерів"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -716,7 +718,8 @@ msgstr "Останні 60 днів"
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} нове повідомлення"
-msgstr[1] "{count} нових повідомлень"
+msgstr[1] "{count} нові повідомлення"
+msgstr[2] "{count} нових повідомлень"
 
 #: src/telephony/client/ui/views/history_view.py:248
 #: src/telephony/daemon/telephony_core.py:603
@@ -1598,22 +1601,25 @@ msgstr "ВИДАЛИТИ ВСЕ"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] "Буде вилучено {count} дзвінок. Скасувати це неможливо."
-msgstr[1] "Буде вилучено {count} дзвінків. Скасувати це неможливо."
+msgstr[0] "Буде видалено {count} виклик. Скасувати це не вдасться."
+msgstr[1] "Буде видалено {count} виклики. Скасувати це не вдасться."
+msgstr[2] "Буде видалено {count} викликів. Скасувати це не вдасться."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
 #, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Буде вилучено {count} повідомлення та його вкладення."
-msgstr[1] "Буде вилучено {count} повідомлень та їхні вкладення."
+msgstr[0] "Буде видалено {count} повідомлення разом із вкладеннями."
+msgstr[1] "Буде видалено {count} повідомлення разом із вкладеннями."
+msgstr[2] "Буде видалено {count} повідомлень разом із вкладеннями."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
 #, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
 msgstr[0] "Буде скинуто {count} власну назву групи."
-msgstr[1] "Буде скинуто {count} власних назв груп."
+msgstr[1] "Буде скинуто {count} власні назви груп."
+msgstr[2] "Буде скинуто {count} власних назв груп."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1624,7 +1630,8 @@ msgstr "Видалити назви груп"
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
 msgstr[0] "Буде розблоковано {count} номер."
-msgstr[1] "Буде розблоковано {count} номерів."
+msgstr[1] "Буде розблоковано {count} номери."
+msgstr[2] "Буде розблоковано {count} номерів."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -2370,7 +2377,8 @@ msgstr "Конференц-дзвінок"
 msgid "{count} participant"
 msgid_plural "{count} participants"
 msgstr[0] "{count} учасник"
-msgstr[1] "{count} учасників"
+msgstr[1] "{count} учасники"
+msgstr[2] "{count} учасників"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"

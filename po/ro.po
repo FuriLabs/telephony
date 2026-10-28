@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
 
 #: src/telephony/cli/commands/management_command.py:110
 #: src/telephony/client/managers/ofono_mirror.py:94
@@ -214,6 +214,7 @@ msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
 msgstr[0] "S-a găsit {count} contact duplicat."
 msgstr[1] "S-au găsit {count} contacte duplicate."
+msgstr[2] "S-au găsit {count} de contacte duplicate."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
@@ -617,6 +618,7 @@ msgid "· {count} number"
 msgid_plural "· {count} numbers"
 msgstr[0] "· {count} număr"
 msgstr[1] "· {count} numere"
+msgstr[2] "· {count} de numere"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -718,6 +720,7 @@ msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} mesaj nou"
 msgstr[1] "{count} mesaje noi"
+msgstr[2] "{count} de mesaje noi"
 
 #: src/telephony/client/ui/views/history_view.py:248
 #: src/telephony/daemon/telephony_core.py:603
@@ -1599,15 +1602,17 @@ msgstr "ȘTERGE TOTUL"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] "Aceasta va șterge {count} apel. Operațiunea nu poate fi anulată."
-msgstr[1] "Aceasta va șterge {count} apeluri. Operațiunea nu poate fi anulată."
+msgstr[0] "Aceasta va șterge {count} apel. Operația nu poate fi anulată."
+msgstr[1] "Aceasta va șterge {count} apeluri. Operația nu poate fi anulată."
+msgstr[2] "Aceasta va șterge {count} de apeluri. Operația nu poate fi anulată."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
 #, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Aceasta va șterge {count} mesaj și atașamentele lui."
-msgstr[1] "Aceasta va șterge {count} mesaje și atașamentele lor."
+msgstr[0] "Aceasta va șterge {count} mesaj împreună cu atașamentele sale."
+msgstr[1] "Aceasta va șterge {count} mesaje împreună cu atașamentele lor."
+msgstr[2] "Aceasta va șterge {count} de mesaje împreună cu atașamentele lor."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
 #, python-brace-format
@@ -1615,6 +1620,7 @@ msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
 msgstr[0] "Aceasta va reseta {count} nume de grup personalizat."
 msgstr[1] "Aceasta va reseta {count} nume de grup personalizate."
+msgstr[2] "Aceasta va reseta {count} de nume de grup personalizate."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1626,6 +1632,7 @@ msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
 msgstr[0] "Aceasta va debloca {count} număr."
 msgstr[1] "Aceasta va debloca {count} numere."
+msgstr[2] "Aceasta va debloca {count} de numere."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -2375,6 +2382,7 @@ msgid "{count} participant"
 msgid_plural "{count} participants"
 msgstr[0] "{count} participant"
 msgstr[1] "{count} participanți"
+msgstr[2] "{count} de participanți"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"

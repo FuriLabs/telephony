@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 #: src/telephony/cli/commands/management_command.py:110
 #: src/telephony/client/managers/ofono_mirror.py:94
@@ -213,7 +213,8 @@ msgstr "Potwierdzać"
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
 msgstr[0] "Znaleziono {count} zduplikowany kontakt."
-msgstr[1] "Znaleziono {count} zduplikowanych kontaktów."
+msgstr[1] "Znaleziono {count} zduplikowane kontakty."
+msgstr[2] "Znaleziono {count} zduplikowanych kontaktów."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
@@ -616,7 +617,8 @@ msgstr "Wyszukaj kontakty"
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
 msgstr[0] "· {count} numer"
-msgstr[1] "· {count} numerów"
+msgstr[1] "· {count} numery"
+msgstr[2] "· {count} numerów"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -718,6 +720,7 @@ msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} nowa wiadomość"
 msgstr[1] "{count} nowe wiadomości"
+msgstr[2] "{count} nowych wiadomości"
 
 #: src/telephony/client/ui/views/history_view.py:248
 #: src/telephony/daemon/telephony_core.py:603
@@ -1599,22 +1602,25 @@ msgstr "USUŃ WSZYSTKO"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] "Spowoduje to usunięcie {count} połączenia. Tej operacji nie można cofnąć."
-msgstr[1] "Spowoduje to usunięcie {count} połączeń. Tej operacji nie można cofnąć."
+msgstr[0] "Spowoduje to usunięcie {count} połączenia. Nie da się tego cofnąć."
+msgstr[1] "Spowoduje to usunięcie {count} połączeń. Nie da się tego cofnąć."
+msgstr[2] "Spowoduje to usunięcie {count} połączeń. Nie da się tego cofnąć."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
 #, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Spowoduje to usunięcie {count} wiadomości i jej załączników."
-msgstr[1] "Spowoduje to usunięcie {count} wiadomości i ich załączników."
+msgstr[0] "Spowoduje to usunięcie {count} wiadomości wraz z załącznikami."
+msgstr[1] "Spowoduje to usunięcie {count} wiadomości wraz z załącznikami."
+msgstr[2] "Spowoduje to usunięcie {count} wiadomości wraz z załącznikami."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
 #, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Spowoduje to przywrócenie {count} własnej nazwy grupy."
-msgstr[1] "Spowoduje to przywrócenie {count} własnych nazw grup."
+msgstr[0] "Spowoduje to zresetowanie {count} własnej nazwy grupy."
+msgstr[1] "Spowoduje to zresetowanie {count} własnych nazw grup."
+msgstr[2] "Spowoduje to zresetowanie {count} własnych nazw grup."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1626,6 +1632,7 @@ msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
 msgstr[0] "Spowoduje to odblokowanie {count} numeru."
 msgstr[1] "Spowoduje to odblokowanie {count} numerów."
+msgstr[2] "Spowoduje to odblokowanie {count} numerów."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -2371,7 +2378,8 @@ msgstr "Połączenie konferencyjne"
 msgid "{count} participant"
 msgid_plural "{count} participants"
 msgstr[0] "{count} uczestnik"
-msgstr[1] "{count} uczestników"
+msgstr[1] "{count} uczestnicy"
+msgstr[2] "{count} uczestników"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
