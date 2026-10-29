@@ -30,7 +30,7 @@ from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from telephony.shared.utils.region_utils import detect_region, set_custom_region
-from telephony.shared.utils.system_utils import (is_ofono_on_bus, is_ril_running,
+from telephony.shared.utils.system_utils import (getprop, is_ofono_on_bus, is_ril_running,
                                                  is_gsd_airplane_mode,
                                                  is_vendor_radio_disabled)
 from telephony.daemon.utils.importer_core_utils import get_calls_db_path, get_chatty_db_path
@@ -398,6 +398,9 @@ class TelephonyCore:
         return is_gsd_airplane_mode() or is_vendor_radio_disabled()
 
     def recovery_refusal_reason(self):
+        if getprop("init.svc.vendor.gsm0710muxd") == "stopped":
+            return "mux-stopped"
+
         if self.is_radio_off_by_choice():
             return "radio-off"
 
@@ -416,6 +419,10 @@ class TelephonyCore:
                  "that is missing or has no identity.")
 
     def decide_modem_recovery(self, blocker):
+        if blocker == "mux-stopped":
+            logger.info("[App] gsm0710muxd is stopped, suppressing modem recovery")
+            return
+
         if blocker == "radio-off":
             logger.info("[App] Modem is unavailable because the radio is off, not offering recovery")
             return
@@ -444,6 +451,9 @@ class TelephonyCore:
         return _("The modem is not working correctly.")
 
     def surface_modem_recovery(self, failed=False, message=None):
+        if getprop("init.svc.vendor.gsm0710muxd") == "stopped":
+            return
+
         self._modem_notified = True
         self.publish_recovery_state(True, message or self.describe_modem_problem(), failed)
 
@@ -461,6 +471,12 @@ class TelephonyCore:
             self.present_recovery_surface()
 
     def present_recovery_surface(self):
+        if getprop("init.svc.vendor.gsm0710muxd") == "stopped":
+            self._modem_notified = False
+            self.notification_manager.close_notification("modem_unavailable")
+            self.dismiss_recovery_surface()
+            return
+
         self._recovery_pending_unlock = False
         self.ui.show_incall_ui()
 
@@ -577,11 +593,11 @@ class TelephonyCore:
             watch_recovery_result(self.ofono, verdict)
 
         def decided(blocker):
-            if blocker == "radio-off":
+            if blocker in ("radio-off", "mux-stopped"):
                 self._auto_recovery_running = False
-                logger.info("[App] Not restarting the modem stack: the radio is switched off")
+                logger.info(f"[App] Not restarting the modem stack: {blocker}")
                 if on_done:
-                    on_done(False, self.recovery_refusal_text(blocker))
+                    on_done(False, "" if blocker == "mux-stopped" else self.recovery_refusal_text(blocker))
                 return
             state["hopeless"] = blocker
             run_in_background(execute_modem_recovery, on_complete=fired, on_error=failed)
