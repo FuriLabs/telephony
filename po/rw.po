@@ -17,15 +17,13 @@ msgstr ""
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Terefone - Kwinjira"
+msgstr "Serivisi ya telefoni ntikora"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Amahamagara n'ubutumwa binjira ntibyakirwa. Fungura porogaramu kugira ngo uyitangire bundi bushya."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Kugarura Modem"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Fungura urufunguzo kugira ngo urebe ibisobanuro."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Ibihe byihutirwa bya terefone"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Modem irimo kugarurwa ..."
+msgstr "Garura modemu"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Twandikire"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Guhuza Guhuza ..."
+msgstr "Kuringaniza abo mufitanye aho muhurira…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Gutangira serivisi ya telefoni bushya"
+msgstr "Serivisi ya telefoni iratangira bundi bushya…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Tangira"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Gutangira serivisi ya telefoni bushya"
+msgstr "Serivisi ya telefoni yatangiye"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Ongera usubiremo"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Ibyerekeye"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Gukemura Amakopi"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Twandikire"
+msgstr "Abo mufitanye aho muhurira bavuguruwe"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Icyifuzo cya USSD gisanzwe kiri kubaho"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "Icyifuzo cya USSD cyanze"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "Igihe cya USSD cyarangiye."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "Gutegereza igisubizo cya USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Kureka"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Injiza numero"
+msgstr "Andika igisubizo"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Ohereza nonaha"
+msgstr "Ohereza"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Funga"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "Igisubizo cya USSD cyanze"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,15 @@ msgid "Confirm"
 msgstr "Emeza"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Habonetse {count} inshuro ebyiri. Reba menu."
-msgstr[1] "Habonetse {count} inshuro ebyiri. Reba menu."
+msgstr[0] "Habonetse {count} uwo mufitanye aho muhurira wisubiramo."
+msgstr[1] "Habonetse {count} abo mufitanye aho muhurira bisubiramo."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Kemura"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +316,48 @@ msgstr "Izina"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Icyerekezo"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "Igisubizo cya USSD"
+msgstr "Igisubizo"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Itariki"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Igihe icyo ari cyo cyose"
+msgstr "Igihe cyamaze"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Hamagara"
+msgstr "Nimero y'uhamagara"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Byahishwe"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Guhamagara mu itsinda"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Iri hamagara ryari igice cyo guhamagara mu itsinda"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Byoherejwe"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Ihamagarwa ryananiwe guhagarika."
+msgstr "Ihamagara ryahawe undi muntu"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Byarangiye"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +413,7 @@ msgstr "Siba umuhamagaro"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "Ihamagara na {who} ku {when} rizakurwa mu mateka yawe."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +478,13 @@ msgstr "Nta bisubizo biboneka muri iki kiganiro"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Inomero idafunguye"
+msgstr "Kura ikibuza kuri iyi nimero"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Guhagarika Umubare"
+msgstr "Buza iyi nimero"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +496,11 @@ msgstr "Shiraho izina ry'itsinda ..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Ceceka iki kiganiro"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Ubutumwa buhinga nta kumenyesha"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -640,12 +610,11 @@ msgid "Search contacts"
 msgstr "Shakisha imibonano"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Injiza numero"
-msgstr[1] "Injiza numero"
+msgstr[0] "· nimero {count}"
+msgstr[1] "· nimero {count}"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -653,17 +622,13 @@ msgstr "Hamagara Anonymous"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Hamagara birananirana"
+msgstr "Amahamagara yabujijwe"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Ubutumwa bwakuweho"
+msgstr "Ubutumwa bwabujijwe"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -671,21 +636,17 @@ msgid "Pick Contact"
 msgstr "Tora"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
-msgstr "Injiza numero"
+msgstr "Andika nimero"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Shakisha imibonano"
+msgstr "Nta uwo mufitanye aho muhurira uhuye"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Guhamagara vuba {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -720,10 +681,8 @@ msgid "3-10 mins"
 msgstr "Iminota 3-10"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> Iminota 15"
+msgstr "> iminota 10"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -882,7 +841,7 @@ msgstr "Kohereza..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Byageze"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -905,84 +864,64 @@ msgid "Save File As"
 msgstr "Bika Idosiye Nka"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Gufungura"
+msgstr "Byabujijwe"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Amahamagara ava kuri iyi nimero yabujijwe, bityo ibi ntibizagira icyo bimaze kugeza igihe ikibuza kizakurwa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Ubutumwa buva kuri iyi nimero bwabujijwe, bityo ibi ntibizagira icyo bimaze kugeza igihe ikibuza kizakurwa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Kuramo imibare yose?"
+msgstr "Kura ikibuza ku mahamagara hanyuma wongere"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Kura ikibuza ku butumwa hanyuma wongere"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Kuramo imibare yose?"
+msgstr "Kura ikibuza ku mahamagara gusa"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Ubutumwa budasomwe"
+msgstr "Kura ikibuza ku butumwa gusa"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Kuramo umubare"
+msgstr "Kura ibibuza byose"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Uyu mubare umaze guhagarikwa."
+msgstr "Iyi nimero yabujijwe no ku butumwa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Uyu mubare umaze guhagarikwa."
+msgstr "Iyi nimero yabujijwe no ku mahamagara."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Iyi nimero yabujijwe ku mahamagara no ku butumwa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Gufungura"
+msgstr "Kura ikibuza"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Uyu mubare umaze guhagarikwa."
+msgstr "Amahamagara ava kuri iyi nimero yabujijwe."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Uyu mubare umaze guhagarikwa."
+msgstr "Ubutumwa buva kuri iyi nimero bwabujijwe."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1019,13 +958,11 @@ msgstr "Main"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "Ikibuza cya nyuma — kura nimero ukoresheje agatebo k'imyanda"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Ongeraho Umubare"
+msgstr "Nimero yahishwe"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1052,103 +989,87 @@ msgstr "Igenamiterere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "yemerera aboherezaga bizewe gutangiza ibikorwa kuri telefoni yawe hakoreshejwe ubutumwa bwanditse"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Ongera utangire Modem"
+msgstr "itangiza modemu bundi bushya"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "ihindura ni izihe shusho za porogaramu zashyizwemo"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "isiba amakuru yawe"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} na {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Ku bakoresha bafite ubunararibonye. Uru rupapuro {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Ibanga rya SMS Ibanga"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Shiraho \"Shakisha Terefone yanjye\""
+msgstr "Shakisha telefoni yanjye"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Ahantu hakoreshejwe SMS yizewe"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Shiraho \"Umuhamagaro Wizewe\""
+msgstr "Guhamagara gusubiza kwizewe"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Icyatangiza gituje cyo guhamagara gusubiza"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Shiraho \"SMS -Gusubiramo\""
+msgstr "Kohereza SMS imbere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Ubutumwa budasomwe"
+msgstr "Ohereza ubutumwa imbere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Shiraho \"SMS -tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Kugera kuri shell kuva kure"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Funga igikoresho"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Gufunga hakoreshejwe SMS yizewe"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Fungura Ubushobozi"
+msgstr "Ibiranga amahamagara bigerageza"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Emeza guhamagara byihutirwa"
+msgstr "Emera guhamagara mu itsinda"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Emera kohereza ihamagara"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1172,7 +1093,7 @@ msgstr "Gucunga amakuru"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Kohereza hanze, kuzana no kugarura"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1218,7 +1139,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Guhuza amahamagara mu guhamagara mu itsinda bishingira ku isosiyete y'itumanaho, kandi mu kugerageza kwacu ibyavuyemo byahindutse kuva ku gukora neza kugeza ku guhagarika amahamagara. Fungura ibi kugira ngo ubigerageze ku murongo wawe. Ntibishobora kuhabwa inkunga yemewe, bityo bisige bifunze niba wifuza ko amahamagara yawe akora nk'uko witeze."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1227,50 +1148,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "Guhuza amahamagara abiri bishaka serivisi isosiyete y'itumanaho igomba gutanga, kandi mu kugerageza kwacu amasosiyete menshi yabyanze cyangwa ahagarika amahamagara aho kubikora. Fungura ibi kugira ngo ubigerageze ku murongo wawe. Ntibishobora kuhabwa inkunga yemewe, bityo bisige bifunze niba wifuza ko amahamagara yawe akora nk'uko witeze."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Iyo modem ihagaritse gusubiza, telefoni yikorera ubwayo mu bucece intambwe "
-"zo kugarura: gutangira radiyo bushya, kuzimya no kongera gufungura modem, "
-"gutangira firmware bushya no kongera gufungura radiyo yazimijwe. Telefoni "
-"ntabwo yigera yongera gutangizwa ubwayo. Niba nta na kimwe gifasha, usabwa "
-"kongera gutangiza telefoni. Iyo ibi bizimye, idirishya rya Kugarura Modem "
-"rirafunguka aho kugira ngo wikorere intambwe ubwawe."
+msgstr "Igihe modemu ihagarika kusubiza, telefoni ubwayo itangiza porogaramu ya modemu bundi bushya mu bwitonzi, kandi ubimenya gusa niba ibyo byanze. Telefoni ntiyongera gutangira ubwayo na rimwe. Igihe ibi bifunze, ecran yo kugarura modemu iboneka aho, kugira ngo utangire bundi bushya ubwawe."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Modemu irakora"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Tangiza modemu bundi bushya; ibi bifata nk'amasegonda 30"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Gutangira Modem ..."
+msgstr "Kongera gutangiza modemu…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Amahamagara n'ubutumwa birakora bundi bushya"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Kugarura ntibyafashije. Modemu iracyadasubiza"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1287,17 +1193,13 @@ msgstr "Icyitonderwa (Bihitamo)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Urutonde"
+msgstr "Buza amahamagara"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Ubutumwa bwose"
+msgstr "Buza ubutumwa"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1396,7 +1298,7 @@ msgstr "Hitamo Idosiye"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Omeka"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1424,10 +1326,8 @@ msgid "Contact Details"
 msgstr "Menyesha Ibisobanuro"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Twandikire"
+msgstr "Uwo mufitanye aho muhurira mushya"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1501,7 +1401,7 @@ msgstr "Isabukuru"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Sangiza nk'ikodi QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1545,45 +1445,36 @@ msgstr "Yandukuwe kuri clip clip"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Telefoni"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Ongeraho imeri"
+msgstr "Imeyili"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Ubwoko"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Modem ntiboneka"
+msgstr "Nta porogaramu ya imeyili iboneka"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Kwohereza hanze"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Ntushobora gukora igitabo cya aderesi"
+msgstr "Ntibyashobotse kurema ikodi QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Mubyukuri gusiba abantu bose mugitabo cyawe?"
+msgstr "{name} azakurwa mu gitabo cyawe cy'aderesi."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Shakisha imibonano"
+msgstr "Uwo mufitanye aho muhurira"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1593,13 +1484,11 @@ msgstr "Kunanirwa kubika kontaki"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Iki gitabo cy'aderesi gisomwa gusa"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Nta bitabo byasibwe"
+msgstr "Nta gitabo cy'aderesi cyandikwamo kiboneka"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1708,24 +1597,22 @@ msgstr "SHAKA BYOSE"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ibi bizasiba ihamagara {count}. Ntibishobora kugarurwa."
+msgstr[1] "Ibi bizasiba amahamagara {count}. Ntibishobora kugarurwa."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Ibi bizasiba SMS / MMS zose hamwe nimigereka."
-msgstr[1] "Ibi bizasiba SMS / MMS zose hamwe nimigereka."
+msgstr[0] "Ibi bizasiba ubutumwa {count} n'ibyomekwaho."
+msgstr[1] "Ibi bizasiba ubutumwa {count} n'ibyomekwaho."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Ongera ushyireho amazina yose yo kuganira mumatsinda?"
-msgstr[1] "Ongera ushyireho amazina yose yo kuganira mumatsinda?"
+msgstr[0] "Ibi bizagarura izina ry'itsinda {count} ryihariye."
+msgstr[1] "Ibi bizagarura amazina y'itsinda {count} yihariye."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1735,8 +1622,8 @@ msgstr "Siba Amazina yitsinda"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ibi bizakura ikibuza kuri nimero {count}."
+msgstr[1] "Ibi bizakura ikibuza kuri nimero {count}."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1753,18 +1640,10 @@ msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Uzi neza ko ushaka gusiba burundu igitabo cya aderesi cya '{name}'?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Ni ikihe gitabo cya adresse ushaka gusiba burundu?\n"
-"\n"
-"Ibi bizahanagura muri sisitemu."
+msgstr "Ni ikihe gitabo cy'aderesi ushaka kusiba burundu? Ibi bikivana mu sisitemu."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1900,43 +1779,39 @@ msgstr "Guhuza {current} / {total} ..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "Ukunzwe"
+msgstr "Ibikunzwe"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Hitamo uwo mufitanye aho muhurira kugira ngo umushyire mu mwanya wo guhamagara vuba. Kuri agatandukanyo k'imibare, kukanda uwo mubare umwe byerekana uwo mufitanye aho muhurira, kugira ngo ushobore kumuhamagara."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Guhamagara vuba"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Hamagara {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Ubusa"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Hitamo Ijwi rya {name}"
+msgstr "Hitamo umwanya wa {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "{name} yongewe mu mwanya {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1973,35 +1848,25 @@ msgid "Export Calls or Messages"
 msgstr "Kohereza guhamagara cyangwa ubutumwa"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Kuzana Amateka yo guhamagara"
+msgstr "Ohereza hanze amateka y'amahamagara"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Kuzana Ubutumwa"
+msgstr "Ohereza hanze ubutumwa"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Urutonde"
+msgstr "Ohereza hanze urutonde rw'ibibuza"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Urutonde"
+msgstr "Zana urutonde rw'ibibuza"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Kuzana / Kwohereza hanze"
+msgstr "Kuzana no kohereza hanze"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2009,16 +1874,13 @@ msgid "Export File"
 msgstr "Kohereza dosiye"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Kohereza hanze {count}"
+msgstr "Byoherejwe hanze {count} byanditswe."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Kohereza dosiye"
+msgstr "Kohereza hanze byanze."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2029,13 +1891,11 @@ msgstr "Hitamo Idosiye"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Byazanywe: {added} byongewe, {updated} byagutse."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "Kuzana ibicuruzwa byananiranye: {e}"
+msgstr "Kuzana byanze."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2192,10 +2052,8 @@ msgstr "Hitamo Igitabo cya Aderesi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Sisitemu Mburabuzi"
+msgstr "Bisanzwe"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2365,10 +2223,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Icyuma cyo mu matwi gifite umugozi"
+msgstr "Uduce twa matwi ya USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2383,16 +2239,12 @@ msgid "Bluetooth Mic"
 msgstr "Mikoro ya Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Mikoro"
+msgstr "Mikoro ya USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Shira numero yawe muri Igenamiterere"
+msgstr "Nimero yawe yahishwe"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2423,14 +2275,14 @@ msgstr "Buto z'imibare"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Modemu ntikora neza."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Amahamagara, ubutumwa n'amakuru ya telefoni ntibizakora kugeza igihe modemu izatangira bundi bushya.\n\nKongera gutangira bifata nk'amasegonda 30 kandi bihagarika ihamagara iryo ariryo rikomeje."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2444,16 +2296,12 @@ msgstr "Ongera utangire telefoni"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Urakomeje"
+msgstr "Ibikorwa"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Gucecekesha"
+msgstr "Byacecekeshejwe"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2470,16 +2318,12 @@ msgid "Mute"
 msgstr "Gucecekesha"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Sipikari"
+msgstr "Hindura ujye ku ivugiro"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Gukomeza"
+msgstr "Komeza"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2487,35 +2331,29 @@ msgstr "Shyira ku murongo"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Ongeraho imeri"
+msgstr "Ongera ihamagara"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Hamagara"
+msgstr "Hindurana amahamagara"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Huza byose"
+msgstr "Huza amahamagara"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Injira mu guhamagara mu itsinda"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Ohereza"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Kohereza bihuza {a} na {b} kandi wowe usohoka mu ihamagara"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2523,27 +2361,24 @@ msgstr "Hamagara umuhamagaro winjira"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Emeza guhamagara byihutirwa"
+msgstr "Guhamagara mu itsinda"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} Abitabiriye"
-msgstr[1] "{count} Abitabiriye"
+msgstr[0] "umwitabire {count}"
+msgstr[1] "abitabire {count}"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Ikiganiro cyihariye"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Ikiganiro cyihariye gishyira abandi mu gutegereza"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2552,7 +2387,7 @@ msgstr "Guhinduranya"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "Urusobe rwanze icyifuzo"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2603,12 +2438,8 @@ msgid "Not connected"
 msgstr "Ntibihujwe"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr ""
-"Umuhamagaro wa terefone yihuse hamwe nubutumwa bwabakiriya bwagenewe FLX1 na "
-"FLX1s."
+msgstr "Porogaramu yihuta yo guhamagara n'ubutumwa, yakorewe FuriOS."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2636,14 +2467,12 @@ msgstr "Byateganijwe ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Serivisi z'urusobe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Imbere"
+msgstr "Kohereza ihamagara imbere"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2655,85 +2484,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Kohereza imbere bibera mu rusobe mbere y'uko ihamagara rigera kuri telefoni yawe.\n\n„Buri gihe“ byohereza buri hamagara ako kanya. „Igihe uhuze“ bikora igihe uri mu rindi hamagara, „Igihe nta gisubizo“ nyuma y'uko telefoni ivuze igihe cyatoranyijwe, na „Igihe utageraho“ igihe telefoni ifunze cyangwa iri hanze y'ahagera urusobe.\n\nAndika nimero mu miterere mpuzamahanga, urugero +358401234567. Gukoresha nimero itagira kirimo bifunga iryo tegeko."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "Buri gihe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Igihe uhuze"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Igisubizo"
+msgstr "Igihe nta gisubizo"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Igihe utageraho"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Ijwi ryisubiraho"
+msgstr "Igihe cyo kuvuga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} Abitabiriye"
+msgstr "amasegonda {count}"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Funga kohereza imbere kose"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Gutegereza ..."
+msgstr "Ihamagara ritegereje"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Igihe bifunguye, ihamagara rya kabiri rinjira rivuga mu gihe cy'ihamagara rikomeje, aho uhamagara kubona ikimenyetso cyo guhuza."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Sisitemu Mburabuzi"
+msgstr "Bisanzwe by'urusobe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Byerekanwa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Hisha nimero yanjye"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Hitamo niba abantu uhamagara babona nimero yawe. „Bisanzwe by'urusobe“ bikurikira igenamiterere ry'umurongo wawe. Guhisha bishobora kandi guhitwamo ku ihamagara rimwe uhereye kuri menu y'ihamagara y'uwo mufitanye aho muhurira."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Hamagara"
+msgstr "Kubuza amahamagara"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2742,77 +2560,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Kubuza bibuza ubwoko bwose bw'amahamagara mu rusobe.\n\nBuri mpinduka isaba ijambobanga ryo kubuza riva ku isosiyete yawe; bisanzwe akenshi ni 0000. Kugerageza nabi kenshi bishobora gufunga kubuza ku ruhande rw'urusobe, kandi icyo gihe isosiyete yawe gusa ishobora kubifungura."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Byemewe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Hanga Hamagara"
+msgstr "Buza amahamagara yose"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "Umubare wanjye (Imiterere mpuzamahanga)"
+msgstr "Buza amahamagara mpuzamahanga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Buza aya mpuzamahanga, uretse ayo mu gihugu cyawe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Gutumiza mu mahanga ..."
+msgstr "Amahamagara asohoka"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Buza igihe uri hanze y'urusobe rwawe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Umuhamagaro winjira ..."
+msgstr "Amahamagara yinjira"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Ijambobanga ryo kubuza"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Hindura ijambobanga ryo kubuza"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Ijambobanga rya ubu"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Ijambobanga rishya"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Funga kubuza kose"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Ntibiboneka kuri uru rusobe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Ntibyashobotse gusoma igenamiterere mu rusobe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2820,65 +2630,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Ntushobora gutangira kamera."
+msgstr "Ntibyashobotse guhindura igenamiterere"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Funga buri tegeko ryo kohereza ihamagara imbere?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Funga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Andika ijambobanga ryo kubuza mbere"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Ijambobanga ryo kubuza ribeshya"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Ijambobanga ryo kubuza ryahinduwe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Funga buri tegeko ryo kubuza amahamagara?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Kuzigama umubonano ..."
+msgstr "Soma uwo mufitanye aho muhurira"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Erekeza kamera ku kodi QR y'uwo mufitanye aho muhurira"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Iyi kodi ntabwo ari uwo mufitanye aho muhurira"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Soma ukoresheje telefoni iyo ari yo yose kugira ngo wongere uwo mufitanye aho muhurira"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Nimero y'ubutumwa bw'amajwi"
+msgstr "Ubutumwa bw'ijwi, ingano y'ijwi n'ijwi ryo kuvuga"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Raporo zo kugera, kwerekana nimero"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2888,22 +2692,20 @@ msgstr "Igenamiterere rya SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Nimero yawe n'ikodi y'igihugu"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Imyanya yo guhamagara vuba"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Hamagara byihutirwa gusa."
+msgstr "Amahamagara y'ubutabazi"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Buto ya ecran ifunze na nimero"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2912,24 +2714,20 @@ msgstr "Urutonde"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Nimero udashaka kumva ikintu kiva kuri zo"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Izina ry'igitabo cya aderesi"
+msgstr "Ibitabo by'aderesi n'ibyisubiramo"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Kumenyesha birarenze"
+msgstr "Kumenyesha"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Ibitavugwa, amajwi no kurenga ku kiceceka"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2939,30 +2737,28 @@ msgstr "Abahamagarwa"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Gutoranya"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Umubare wandukuwe"
+msgstr "Gushakisha nimero"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Igishakashatsi cya buto zo gushakisha"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Kohereza imbere, ihamagara ritegereje no kubuza"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Abo mufitanye aho muhurira, ubutumwa n'amateka y'amahamagara"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Ku bakoresha bafite ubunararibonye"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2970,32 +2766,25 @@ msgstr "Guhagarika Imibare"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Kanda ikaramu kugira ngo uhindure icyo nimero ibuza."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Nta mubare"
+msgstr "Nta nimero yongewe kugeza ubu"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Urutonde"
+msgstr "Buza"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Injiza numero"
+msgstr "Andika nimero yo kubuza"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Uyu mubare umaze guhagarikwa."
+msgstr "{number} isanzwe iri ku rutonde rw'ibibuza."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3029,11 +2818,11 @@ msgstr "Ongeraho Ubutumwa bwo Kwanga"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Nta butumwa bwongewe kugeza ubu"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Byoherezwa igihe wanze ihamagara ufatanyije n'ubutumwa."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3071,29 +2860,27 @@ msgid "Emergency Numbers"
 msgstr "Imibare yihutirwa"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Imibare yihutirwa"
+msgstr "Nimero z'ubutabazi z'urusobe"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Erekana nimero ziva mu rusobe"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Saba raporo zo kugera"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Erekana nimero ku rutonde rw'ubutumwa"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Igihe bifunze, nimero ntiziboneka ku rutonde; iyo idafite uwo mufitanye aho muhurira yerekana nimero yayo nk'izina"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3122,14 +2909,12 @@ msgid "Notification Exceptions"
 msgstr "Kumenyesha Ibidasanzwe"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Gucunga imibonano ihora ikina amajwi"
+msgstr "Abo mufitanye aho muhurira bavuga buri gihe"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Ihamagara rinyura mu buryo bw'akiceceka"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3145,26 +2930,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Shiraho amajwi yihariye kugirango uhuze"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Gucunga imibonano ihora ikina amajwi"
+msgstr "Ubutumwa buvuga buri gihe"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Ubutumwa bunyura mu buryo bw'akiceceka"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Gusubiramo Hamagara Bypass"
+msgstr "Kurenga ku kiceceka ku butumwa bwisubiramo"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr "Niba umubare umwe uhamagaye inshuro 3 muminota 5, fata amajwi menshi."
+msgstr "Niba uwohereza umwe yandika inshuro 3 mu munota umwe, vuza ijwi."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3274,11 +3053,11 @@ msgstr "Guceceka gusa"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Buto yo gushakisha abahamagara batazwi mu gihe cy'ihamagara"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Ikoreshwa na buto zo gushakisha mu mahamagara, mu mateka y'amahamagara no mu butumwa bw'itsinda."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3315,29 +3094,16 @@ msgstr "Shakisha URL"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "Bigerwaho buri gihe, n'iyo nta SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Uru ni urwego rw'ijwi ry'ikiganiro kuri buri sohoka. Urwego rukoreshwa mu "
-"buryo bwikora iyo telefone ihuye na buri gihe isohoka rihindutse mu gihe "
-"cy'ikiganiro, kandi impinduka z'akanyereza zumvikana ako kanya. Hardware "
-"ikoresha inzego mu ntambwe nini, kandi agasipikari k'ugutwi ntikigera "
-"gacecekera burundu. Urwego rwa Bluetooth rubikwa ku bw'inkunga y'icyerekezo "
-"izaza."
+msgstr "Iyi ni ingano y'ijwi ry'ihamagara kuri buri cyoherezwa. Urwego rukora ubwarwo igihe ihamagara rihuye kandi buri gihe icyoherezwa gihindutse mu gihe cy'ihamagara, kandi impinduka ku gatambitse zumvikana ako kanya. Igikoresho gishyira urwego mu ntambwe nini, kandi agace ka matwi ntigaceceka burundu na rimwe. Urwego rwa Bluetooth na USB rukora igihe izo nzira z'ihamagara zikora."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3347,7 +3113,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Igihe bifunguye, urusobe rusabwa kwemeza igihe ubutumwa bwanditse n'ubw'amashusho yawe bugeze kuri telefoni y'uwakira.\n\nKwemeza ni byizewe igihe bigeze, ariko amasosiyete menshi n'abohereza bikoresha ubwabo ntibabikora na rimwe, bityo ubutumwa butagira kwemeza bushobora kuba bwageze. „Byageze“ ntibisobanura na rimwe „byasomwe“."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3640,75 +3406,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Kohereza ibicuruzwa hanze muri terefone neza."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Umuhamagaro winjira ..."
+msgstr "Byinjira"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Bisohoka"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Byanzwe ku rundi ruhande"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Urusobe ntirwashoboye kubihuza"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Byaretswe mbere y'uko bihuza"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Kwitaba"
+msgstr "Byasubijwe"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "Igisubizo"
+msgstr "Ntibyasubijwe"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Kwanga Ubutumwa"
+msgstr "Byanzwe hano"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Byarangiye kuri iyi telefoni"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Byarangiye ku rundi ruhande"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Byahagaritswe n'urusobe"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Nta muntu wasubije hano"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Byanzwe kuri iyi telefoni"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Byahagaritswe hano mbere y'uko bihuza"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Modem ntabwo yiteguye"
+msgstr "Modemu ntiyavuze impamvu"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3743,11 +3499,11 @@ msgstr "Gutegereza icyogajuru gikosorwa ..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Iki gikoresho ntikigira modemu"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Uburyo bw'indege burafunguye"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3761,7 +3517,7 @@ msgstr "Nyamuneka tegereza, guhamagara kwabanje kuracyarangira"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Ihamagara ntiryashoboye gutangira"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3788,28 +3544,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Kunanirwa kubona ikibanza nyuma yo kugerageza uburyo bwose."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "Izimya radiyo ikongera kuyifungura, nka flight mode."
+msgstr "Radiyo irafunze. Ifungure bundi bushya kugira ngo ukoreshe modemu."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Iki gikoresho kivuga ko nta modemu ihari. Kongera gutangira ntibishobora gukosora modemu itahari cyangwa itagira amakuru kuri yo ubwayo."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Serivisi ya modemu ntisubiza."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Modemu irasubiza, ariko yatakaje serivisi yayo y'amahamagara."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Modemu irasubiza, ariko radiyo yayo irafunze."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3909,10 +3663,10 @@ msgstr "Kuzana guhamagara {count}."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Abo mufitanye aho muhurira ba Andromeda baturuka mu sisitemu kandi hano basomwa gusa."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} ntihujwe, bityo abo mufitanye aho muhurira bayo ntibashobora guhindurwa kugeza igihe izagaruka."
