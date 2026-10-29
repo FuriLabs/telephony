@@ -17,15 +17,13 @@ msgstr ""
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Waea - Taumai"
+msgstr "Kāore te pūnaha waea e rere"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Kāore ngā waea me ngā karere e tae mai. Whakatuwheratia te taupānga kia tīmata anō."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Whakaoranga Pouwhanga"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Wetekina te raka kia kite i ngā kōrero."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Waea ohorere"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "E whakaora ana i te pouwhanga..."
+msgstr "Whakaora i te mōrere"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Hoapā"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Tukutahi Hoapā..."
+msgstr "E tukutahi ana i ngā whakapānga…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Tīmata anō i te ratonga waea"
+msgstr "Kei te tīmata anō te pūnaha waea…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Tīmata"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Tīmata anō i te ratonga waea"
+msgstr "Kua tīmata te pūnaha waea"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Utaina Hoapā"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Mō"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Whakatau i nga Taarua"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Hoapā kua Mukua"
+msgstr "Kua whakahou i ngā whakapānga"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Kua tīmata kē tētahi tono USSD"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "I rahua te tono USSD"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "Kua mutu te wātū USSD."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "E tatari ana ki te whakautu USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Whakakore"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Whakauruhia te nama"
+msgstr "Tāuruhia te whakautu"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Tukua Inaianei"
+msgstr "Tukuna"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Katia"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "I rahua te whakautu USSD"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,15 @@ msgid "Confirm"
 msgstr "Whakaū"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "I kitea te {count} te whakapiri takirua. Takina tahua."
-msgstr[1] "I kitea te {count} te whakapiri takirua. Takina tahua."
+msgstr[0] "I kitea {count} whakapānga tārua."
+msgstr[1] "I kitea {count} whakapānga tārua."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Whakatikaia"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +316,48 @@ msgstr "Ingoa"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Ahunga"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "USSD Hua"
+msgstr "Hua"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Rā"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Te roanga"
+msgstr "Roanga"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Karanga"
+msgstr "Nama o te kaiwaea"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Kua huna"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Waea rōpū"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "He wāhanga tēnei waea nō tētahi waea rōpū"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Kua whakawhiti"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "I rahua te waea ki te momotu."
+msgstr "I hoatu te waea ki tētahi atu"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Kua mutu"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +413,7 @@ msgstr "Muku Waea"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "Ka tangohia te waea ki {who} i {when} i tō hītori."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +478,13 @@ msgstr "Karekau he hua i kitea i roto i tenei korerorero"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Tau wetekina"
+msgstr "Tangohia te ārai i tēnei nama"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Tau Poraka"
+msgstr "Āraia tēnei nama"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +496,11 @@ msgstr "Tautuhi ingoa roopu..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Whakangūtia tēnei kōrerorero"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Ka tae mai ngā karere kāore he pānui"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -640,12 +610,11 @@ msgid "Search contacts"
 msgstr "Rapu hoapā"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Whakauruhia te nama"
-msgstr[1] "Whakauruhia te nama"
+msgstr[0] "· {count} nama"
+msgstr[1] "· {count} nama"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -653,17 +622,13 @@ msgstr "Waea Kore ingoa"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "I Rahua te Waea"
+msgstr "Kua āraia ngā waea"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Kua tangohia te karere"
+msgstr "Kua āraia ngā karere"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -671,21 +636,17 @@ msgid "Pick Contact"
 msgstr "Kōwhiri Hoapā"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
-msgstr "Whakauruhia te nama"
+msgstr "Tāuruhia te nama"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Rapu hoapā"
+msgstr "Kāore he whakapānga e ōrite ana"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Waea tere {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -720,10 +681,8 @@ msgid "3-10 mins"
 msgstr "3-10 min"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 min"
+msgstr "> 10 mēneti"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -882,7 +841,7 @@ msgstr "E tuku ana..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Kua tae"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -905,84 +864,64 @@ msgid "Save File As"
 msgstr "Tiaki Kōnae Hei"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Kua wetekina"
+msgstr "Kua āraia"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Kua āraia ngā waea mai i tēnei nama, nō reira kāore he painga o tēnei kia tangohia rā anō te ārai."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Kua āraia ngā karere mai i tēnei nama, nō reira kāore he painga o tēnei kia tangohia rā anō te ārai."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Wewete tau katoa?"
+msgstr "Tangohia te ārai i ngā waea, ka tāpiri"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Tangohia te ārai i ngā karere, ka tāpiri"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Wewete tau katoa?"
+msgstr "Tangohia te ārai i ngā waea anake"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Nga Karere Kaore ano kia panuitia"
+msgstr "Tangohia te ārai i ngā karere anake"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Wewete Tau"
+msgstr "Tangohia ngā ārai katoa"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Kua parea kētia tēnei tau."
+msgstr "Kua āraia hoki tēnei nama mō ngā karere."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Kua parea kētia tēnei tau."
+msgstr "Kua āraia hoki tēnei nama mō ngā waea."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Kua āraia tēnei nama mō ngā waea me ngā karere."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Kua wetekina"
+msgstr "Tangohia te ārai"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Kua parea kētia tēnei tau."
+msgstr "Kua āraia ngā waea mai i tēnei nama."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Kua parea kētia tēnei tau."
+msgstr "Kua āraia ngā karere mai i tēnei nama."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1019,13 +958,11 @@ msgstr "Matua"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "Te ārai whakamutunga — tangohia te nama ki te ipu para"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Tāpiri Tau"
+msgstr "Nama kua huna"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1052,103 +989,87 @@ msgstr "Tautuhinga Arā Atu Anō"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "ka whakaae ki ngā kaituku e whakaponohia ana kia tīmata mahi i tō waea mā te karere kuputuhi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Tīmataria anō te Pouwhanga"
+msgstr "ka tīmata anō i te mōrere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "ka whakarereke ko ēhea ngā tohu taupānga kua whakaurua"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "ka muku i ō raraunga"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} me {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Mō ngā kaiwhakamahi mātanga. Ko tēnei whārangi {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Nga Kaipupuri SMS ngaro"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Tautuhia \"Kimihia taku Waea\""
+msgstr "Rapua tōku waea"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Wāhi mā te SMS e whakaponohia ana"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Tautuhia \"Waea Whakahoki Whakapono\""
+msgstr "Waea whakahoki e whakaponohia ana"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Whakaoho ngū mō te waea whakahoki"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Tautuhi \"SMS -Relay\""
+msgstr "Tuku whakamua i te SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Nga Karere Kaore ano kia panuitia"
+msgstr "Tukuna whakamua ngā karere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Tautuhia \"SMS -tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Urunga anga mai i tawhiti"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Rakaina te pūrere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Rakanga mā te SMS e whakaponohia ana"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Whakahohe Āhuatanga"
+msgstr "Āhuatanga waea whakamātau"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Whakaū Waea ohorere"
+msgstr "Whakaaetia ngā waea rōpū"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Whakaaetia te whakawhiti waea"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1172,7 +1093,7 @@ msgstr "Whakahaere Raraunga"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Kaweake, kawemai me te tautuhi anō"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1218,7 +1139,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Kei te kamupene waea te whakakotahi i ngā waea hei waea rōpū, ā, i ō mātou whakamātautau i rereke ngā hua mai i te mahi tika ki te motu o ngā waea. Whakaarahia tēnei kia whakamātau i tō raina ake. Kāore e taea te tautoko ōkawa, nō reira waiho kia whakaweto mēnā e hiahia ana koe kia mahi ō waea i runga i te tikanga e matapaetia ana."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1227,51 +1148,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "Mō te hono i ngā waea e rua tētahi ki tētahi, ka hiahiatia tētahi pūnaha me tuku e te kamupene waea, ā, i ō mātou whakamātautau he maha ngā kamupene i whakakāhore, i whakamutu rānei i ngā waea. Whakaarahia tēnei kia whakamātau i tō raina ake. Kāore e taea te tautoko ōkawa, nō reira waiho kia whakaweto mēnā e hiahia ana koe kia mahi ō waea i runga i te tikanga e matapaetia ana."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Ka mutu te urupare a te pouwhanga, ka whakahaerea puku e te waea ngā "
-"hikoinga whakaora: te tīmata anō i te reo irirangi, te whakaweto-whakakā i "
-"te pouwhanga, te tīmata anō i te pūmanawa, me te whakahohe anō i te reo "
-"irirangi kua monoa. E kore rawa te waea e tīmata anō aunoa. Ki te kore he "
-"mea e āwhina, ka tonoa koe kia tīmata anō i te waea. Ka weto tēnei, ka huaki "
-"kē te matapihi Whakaoranga Pouwhanga kia taea ai e koe ngā hikoinga te "
-"whakahaere."
+msgstr "Ka mutu te whakautu o te mōrere, ka tīmata anō te waea i te pūmanawa mōrere mā ia anō, ā, ka rongo koe mō tēnei anake mēnā ka rahua. Kāore te waea e tīmata anō mā ia anō. Ka whakawetohia tēnei, ka puta kē te mata Whakaora Mōrere, kia tīmata anō koe ake."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Kei te mahi te mōrere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Tīmata anō i te mōrere; ka pau te 30 hēkona pēnei"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Ka timata ano i te Pouwhanga..."
+msgstr "E tīmata anō ana i te mōrere…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Kei te mahi anō ngā waea me ngā karere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Kāore te whakaora i āwhina. Kāore anō te mōrere e whakautu"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1288,17 +1193,13 @@ msgstr "Tuhipoka (Kōwhiringa)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Rārangi poraka"
+msgstr "Āraia ngā waea"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Nga Karere Katoa"
+msgstr "Āraia ngā karere"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1397,7 +1298,7 @@ msgstr "Kōwhiri Kōnae"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Whakapiri"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1425,10 +1326,8 @@ msgid "Contact Details"
 msgstr "Nga Taipitopito Whakapā"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Hoapā"
+msgstr "Whakapānga hou"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1502,7 +1401,7 @@ msgstr "huritau"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Tohaina hei waehere QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1546,45 +1445,36 @@ msgstr "Kua tāruatia ki te papatopenga"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Waea"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Tāpiri Īmēra"
+msgstr "Īmēra"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Momo"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Kāore te pouwhanga e wātea ana"
+msgstr "Kāore he taupānga īmēra"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Kaweake Hoapā"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Kāore i taea te waihanga pukapuka wāhitau"
+msgstr "Kāore i taea te hanga i te waehere QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Me muku katoa mai i to pukapuka wahitau?"
+msgstr "Ka tangohia {name} i tō pukapuka wāhitau."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Rapu hoapā"
+msgstr "Tēnei whakapānga"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1594,13 +1484,11 @@ msgstr "I rahua te tiaki i te hoapā"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "He pānui-anake tēnei pukapuka wāhitau"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Karekau he pukapuka wahitau ka taea te muku"
+msgstr "Kāore he pukapuka wāhitau e taea te tuhi"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1709,24 +1597,22 @@ msgstr "MUMU KATOA"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ka muku tēnei i {count} waea. Kāore e taea te whakakore."
+msgstr[1] "Ka muku tēnei i {count} waea. Kāore e taea te whakakore."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Ma tenei ka mukua nga SMS/MMS me nga taapiri katoa."
-msgstr[1] "Ma tenei ka mukua nga SMS/MMS me nga taapiri katoa."
+msgstr[0] "Ka muku tēnei i {count} karere me ngā āpitihanga."
+msgstr[1] "Ka muku tēnei i {count} karere me ngā āpitihanga."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Tautuhi ano i nga ingoa korerorero roopu roopu katoa?"
-msgstr[1] "Tautuhi ano i nga ingoa korerorero roopu roopu katoa?"
+msgstr[0] "Ka tautuhi anō tēnei i {count} ingoa rōpū ake."
+msgstr[1] "Ka tautuhi anō tēnei i {count} ingoa rōpū ake."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1736,8 +1622,8 @@ msgstr "Mukua nga Ingoa Rōpū"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ka tango tēnei i te ārai i {count} nama."
+msgstr[1] "Ka tango tēnei i te ārai i {count} nama."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1754,18 +1640,10 @@ msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Me muku tonu te pukapuka wāhitau '{name}'?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Ko tehea pukapuka wahitau e hiahia ana koe kia muku tonu?\n"
-"\n"
-"Ma tenei ka muru i te punaha."
+msgstr "Ko tēhea pukapuka wāhitau e hiahia ana koe kia mukua mō ake tonu? Ka horoia atu i te pūnaha."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1902,43 +1780,39 @@ msgstr "Hanumi {current}/{total}..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "Makau"
+msgstr "Ngā makau"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Tīpakohia tētahi whakapānga kia whakanohoia ki tētahi wāhi waea tere. I te papapātuhi nama, ka pā atu ki taua mati kotahi, ka whakaatu i te whakapānga, kia taea e koe te waea atu."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Waea tere"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Karangatia {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Kau"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Tīpakohia Tone mo {name}"
+msgstr "Kōwhiria tētahi wāhi mō {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "Kua tāpiri {name} ki te wāhi {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1975,35 +1849,25 @@ msgid "Export Calls or Messages"
 msgstr "Kaweake Waea, Karere ranei"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Kawemai Hitori Waea"
+msgstr "Kaweake i te hītori waea"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Kawemai Karere"
+msgstr "Kaweake i ngā karere"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Rārangi poraka"
+msgstr "Kaweake i te rārangi ārai"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Rārangi poraka"
+msgstr "Kawemai i te rārangi ārai"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Kawemai / Kaweake"
+msgstr "Kawemai me te kaweake"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2011,16 +1875,13 @@ msgid "Export File"
 msgstr "Kaweake Kōnae"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Hoapā {count} kaweake"
+msgstr "Kua kaweake i ngā tāurunga {count}."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Kaweake Kōnae"
+msgstr "I rahua te kaweake."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2031,13 +1892,11 @@ msgstr "Tīpakohia te Kōnae"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Kua kawemai: {added} i tāpirihia, {updated} i whakawhānuihia."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "I rahua te kawemai: {e}"
+msgstr "I rahua te kawemai."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2193,10 +2052,8 @@ msgstr "Tīpakohia te Puka Wāhitau"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Pūnaha Taunoa"
+msgstr "Taunoa"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2366,10 +2223,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Taringa whakarongo whai waea"
+msgstr "Pūoro taringa USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2384,16 +2239,12 @@ msgid "Bluetooth Mic"
 msgstr "Hopureo Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Hopureo"
+msgstr "Hopureo USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Tautuhia to nama ki Tautuhinga"
+msgstr "Kua huna tō nama"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2424,14 +2275,14 @@ msgstr "Papapātuhi"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Kāore te mōrere e mahi tika."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Kāore ngā waea, ngā karere me ngā raraunga pūkoro e mahi kia tīmata anō rā anō te mōrere.\n\nKa pau te 30 hēkona pēnei te tīmata anō, ā, ka whakamutu i tētahi waea kei te haere."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2445,16 +2296,12 @@ msgstr "Tīmata anō i te waea"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Hohe"
+msgstr "Ngā mahi"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Wahangū"
+msgstr "Kua whakangūtia"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2471,16 +2318,12 @@ msgid "Mute"
 msgstr "Wahangū"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Pūkōrero"
+msgstr "Hurihia ki te kōrero nui"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Anō"
+msgstr "Haere tonu"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2488,35 +2331,29 @@ msgstr "Whakamau"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Tāpiri Īmēra"
+msgstr "Tāpiri waea"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Waea"
+msgstr "Whakawhiti waea"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Hanumi katoa"
+msgstr "Whakakotahi ngā waea"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Uru ki te waea rōpū"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Whakawhiti"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Ka hono te whakawhiti i {a} me {b} ki a rāua, ā, ka wehe koe i te waea"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2524,27 +2361,24 @@ msgstr "Wahangu Waea Taumai"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Whakaū Waea ohorere"
+msgstr "Waea rōpū"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} Kaiuru"
-msgstr[1] "{count} Kaiuru"
+msgstr[0] "{count} kaiuru"
+msgstr[1] "{count} kaiuru"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Kōrerorero tūmataiti"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Ka whakanoho te kōrerorero tūmataiti i ētahi atu ki te tatari"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2553,7 +2387,7 @@ msgstr "Whakawhiti"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "I whakakāhore te whatunga i te tono"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2604,10 +2438,8 @@ msgid "Not connected"
 msgstr "Kāore i te hono"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr "Waea waea tere me te kaihoko karere i hangaia mo FLX1 me FLX1s."
+msgstr "Taupānga waea me te karere tere, i hangaia mō FuriOS."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2635,14 +2467,12 @@ msgstr "Kua whakaritea ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Ngā pūnaha whatunga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Whakamua"
+msgstr "Tuku whakamua i te waea"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2654,85 +2484,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Ka mahia te tuku whakamua i te whatunga i mua i te taenga o te waea ki tō waea.\n\nKa tuku whakamua te „I ngā wā katoa“ i ngā waea katoa i te tonu. Ka whai mana te „Ina pukumahi“ i a koe i tētahi atu waea, te „Ina kāore he whakautu“ i muri i te tangi o te waea mō te wā i kōwhiria, ā, ko te „Ina kāore e taea te whakapā“ ina kua whakawetohia te waea, kei waho rānei i te rohe.\n\nTāuruhia ngā nama i te hōputu ao, hei tauira +358401234567. Mā te whakamahi i tētahi nama kau ka whakawetohia taua ture."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "I ngā wā katoa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Ina pukumahi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Kaore i whakautua"
+msgstr "Ina kāore he whakautu"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Ina kāore e taea te whakapā"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Ringback Tone"
+msgstr "Wā tangi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} Kaiuru"
+msgstr "{count} hēkona"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Whakawetohia ngā tuku whakamua katoa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "E Tatari Ana..."
+msgstr "Waea e tatari ana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Ina whakaarahia, ka tangi te waea tuarua e tae mai ana i waenga i tētahi waea kei te haere, kaua ko te kaiwaea e whiwhi i te tohu pukumahi."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Pūnaha Taunoa"
+msgstr "Taunoa o te whatunga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Kei te whakaatu"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Hunaia tōku nama"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Kōwhiria mēnā ka kite ngā tāngata e waea atu ana koe i tō nama. Ka whai te „Taunoa o te whatunga“ i te tautuhinga o tō raina. Ka taea hoki te kōwhiri i te hunanga mō tētahi waea kotahi mai i te tahua waea o tētahi whakapānga."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Karanga Hoki"
+msgstr "Aukati waea"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2741,77 +2560,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Ka ārai te aukati i ngā karangatanga katoa o ngā waea i te whatunga.\n\nMō ia panoni ka hiahiatia te kupuhipa aukati mai i tō kamupene; te nuinga o te wā ko 0000 taunoa. Mā ngā nganatanga hē i mahia anō ka taea te raka i te aukati i te taha whatunga, ā, ko tō kamupene anake ka taea te wetewete."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Kua whakaaetia"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Whakairi Waea Katoa"
+msgstr "Aukati i ngā waea katoa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "Taku Tau (Hōputu Ao)"
+msgstr "Aukati i ngā waea ao"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Aukati i ngā waea ao, hāunga ki tō whenua ake"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Kawemai Waea..."
+msgstr "Ngā waea e puta ana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Aukati i te wā e kopikopiko ana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Waea Taumai..."
+msgstr "Ngā waea e tae mai ana"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Kupuhipa aukati"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Panonitia te kupuhipa aukati"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Kupuhipa o nāianei"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Kupuhipa hou"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Whakawetohia ngā aukati katoa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Kāore e wātea ana i tēnei whatunga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Kāore i taea te pānui i ngā tautuhinga mai i te whatunga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2819,65 +2630,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Kaore i taea te timata te kamera."
+msgstr "Kāore i taea te panoni i te tautuhinga"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Me whakaweto i ngā ture katoa mō te tuku whakamua i te waea?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Whakawetohia"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Tāuruhia te kupuhipa aukati i te tuatahi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "He hē te kupuhipa aukati"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Kua panonihia te kupuhipa aukati"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Me whakaweto i ngā ture katoa mō te aukati waea?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Tiaki hoapā..."
+msgstr "Matawaia te whakapānga"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Whakaahua te kāmera ki tētahi waehere QR whakapānga"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Ehara tēnei waehere i te whakapānga"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Matawaia ki tētahi waea kia tāpiri i tēnei whakapānga"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Nama Karere Reo"
+msgstr "Pouaka reo, kaha oro me te oro tangi"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Pūrongo tukunga, whakaaturanga nama"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2887,22 +2692,20 @@ msgstr "Tautuhinga SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Nama ake me te waehere whenua"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Ngā wāhi waea tere"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Waea ohorere anake."
+msgstr "Waea ohotata"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Pātene o te mata raka me ngā nama"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2911,24 +2714,20 @@ msgstr "Rārangi poraka"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Ngā nama kāore koe e hiahia ana ki te rongo mai i a rātou"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Ingoa pukapuka wāhitau"
+msgstr "Ngā pukapuka wāhitau me ngā tārua"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Whakamohiotanga Whakakore"
+msgstr "Ngā pānui"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Ngā wehenga, ngā oro me te karo i te ngū"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2938,30 +2737,28 @@ msgstr "Nga Kaiwaea Kaore i mohiotia"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Tātari"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Kua kapehia te nama"
+msgstr "Rapu nama"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Pūrapu mō ngā pātene rapu"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Tuku whakamua, waea e tatari ana me ngā aukati"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Ngā whakapānga, ngā karere me te hītori waea"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Mō ngā kaiwhakamahi mātanga"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2969,32 +2766,25 @@ msgstr "Nga Tau kua aukati"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Pāwhiritia te pene rākau kia panoni i te mea e āraia ana e tētahi nama."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Karekau he nama"
+msgstr "Kāore anō he nama kia tāpirihia"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Rārangi poraka"
+msgstr "Āraia"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Whakauruhia te nama"
+msgstr "Tāuruhia tētahi nama hei ārai"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Kua parea kētia tēnei tau."
+msgstr "Kei te rārangi ārai kē {number}."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3028,11 +2818,11 @@ msgstr "Tāpiri Karere Whakakāhore"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Kāore anō he karere kia tāpirihia"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Ka tukuna ina whakakāhore koe i tētahi waea me tētahi karere."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3070,29 +2860,27 @@ msgid "Emergency Numbers"
 msgstr "Tau Ohotata"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Tau Ohotata"
+msgstr "Ngā nama ohotata o te whatunga"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Whakaatuhia ngā nama mai i te whatunga"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Tonoa ngā pūrongo tukunga"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Whakaatuhia ngā nama i te rārangi karere"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Ina whakawetohia, kāore ngā nama e puta i te rārangi; ko tētahi kāore he whakapānga ka whakaatu i tōna nama hei ingoa"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3122,14 +2910,12 @@ msgid "Notification Exceptions"
 msgstr "Nga Okotahi Whakamōhiotanga"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Whakahaerehia nga hoapaki e purei oro tonu"
+msgstr "Ngā whakapānga e tangi ana i ngā wā katoa"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Ka pakaru te waea i te aratau ngū"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3147,28 +2933,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Whakaritea nga orooro ritenga mo nga hoapaki motuhake"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Whakahaerehia nga hoapaki e purei oro tonu"
+msgstr "Ngā karere e tangi ana i ngā wā katoa"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Ka pakaru te karere i te aratau ngū"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Waea Tukuruatia"
+msgstr "Karo i te ngū mō ngā karere kua mahia anō"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr ""
-"Mēnā ka 3 ngā wā ka waea mai taua tau i roto i te 5 meneti, toia te rōrahi "
-"mōrahi."
+msgstr "Mēnā ka tuhi te kaituku ōrite kia 3 ngā wā i te mēneti kotahi, whakatangihia te oro."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3279,11 +3057,11 @@ msgstr "Wahangu anake"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Pātene rapu mō ngā kaiwaea kāore e mōhiotia i waenga i tētahi waea"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Ka whakamahia e ngā pātene rapu i ngā waea, i te hītori waea me ngā karere rōpū."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3321,28 +3099,16 @@ msgstr "URL Rapu Ritenga"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "Ka taea te whakapā i ngā wā katoa, ahakoa kāore he SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Koinei te rahinga oro waea mō ia putanga. Ka pā aunoa te taumata ina hono te "
-"waea, i ngā wā katoa hoki e rerekē ai te putanga i te wā o te waea, ā, ka "
-"rangona tonutia ngā panonitanga o te rēreti. Ka pā te pūrere i ngā taumata "
-"mā ngā hikoinga rarahi, ā, e kore rawa te pīhi taringa e tino wahangū. Ka "
-"penapenatia te taumata Bluetooth mō te tautoko arataki e haere ake nei."
+msgstr "Koinei te kaha oro waea mō ia putanga. Ka whai mana te taumata mā ia anō ina hono te waea, me ia wā ka rereke te putanga i waenga i tētahi waea, ā, ka rangona ngā panoni o te pānekeneke i te tonu. Ka whakamahia ngā taumata e te taputapu mā ngā hīkoi matotoru, ā, kāore te pūoro taringa e tino ngū rawa. Ka whai mana ngā taumata Bluetooth me USB ina kaha ana aua huarahi waea."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3352,7 +3118,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Ina whakaarahia, ka tonoa te whatunga kia whakatūturu i te wā ka tae ō karere kuputuhi me ō karere pāpāho maha ki te waea o te tangata e whiwhi ana.\n\nHe pono te whakatūturu ina tae mai, engari he maha ngā kamupene me ngā kaituku aunoa kāore e hanga i tētahi, nō reira tērā pea kua tae tētahi karere kāore he whakatūturu. Ehara te „Kua tae“ i te „Kua pānuihia“."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3642,75 +3408,65 @@ msgid "Exported Telephony database successfully."
 msgstr "I pai te kaweake i te patengi raraunga Waea."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Waea Taumai..."
+msgstr "E tae mai ana"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "E puta ana"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "I whakakāhoretia i tērā pito"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Kāore i taea e te whatunga te hono"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "I whakarērea i mua i te honotanga"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Whakautu"
+msgstr "Kua whakautua"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "Kaore i whakautua"
+msgstr "Kāore i whakautua"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Whakakorea te Karere"
+msgstr "I whakakāhoretia i konei"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "I mutu i tēnei waea"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "I mutu i tērā pito"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "I motuhia e te whatunga"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Kāore tētahi i whakautu i konei"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "I whakakāhoretia i tēnei waea"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "I motuhia i konei i mua i te honotanga"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Kāore te pouwhanga kia rite"
+msgstr "Kāore te mōrere i kī i te take"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3745,11 +3501,11 @@ msgstr "E tatari ana mo te whakatika amiorangi..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Kāore he mōrere o tēnei pūrere"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Kei te mahi te aratau waka rererangi"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3763,7 +3519,7 @@ msgstr "Tena koa taihoa, kei te mutu tonu te karanga o mua"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Kāore i taea te tīmata i te waea"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3790,30 +3546,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "I rahua te whiwhi waahi i muri i te whakamatau i nga tikanga katoa."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr ""
-"Ka whakawetoa te reo irirangi, kātahi ka whakakāngia anō, pēnei i te aratau "
-"rererangi."
+msgstr "Kua whakawetohia te irirangi. Whakaarahia anō kia whakamahi i te mōrere."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "E kī ana tēnei pūrere kāore he mōrere. Kāore e taea e te tīmata anō te whakatika i tētahi mōrere kāore i reira, kāore rānei he raraunga mōna ake."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Kāore te pūnaha mōrere e whakautu."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Kei te whakautu te mōrere, engari kua ngaro tōna pūnaha waea."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Kei te whakautu te mōrere, engari kua whakawetohia tōna irirangi."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3914,10 +3666,10 @@ msgstr "Waea {count} kawemai."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Ka puta mai ngā whakapānga Andromeda i te pūnaha, ā, ka pānuihia anake i konei."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "Kāore {book} i te hono, nō reira kāore e taea te panoni i ōna whakapānga kia hoki mai rā anō."
