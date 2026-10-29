@@ -31,8 +31,10 @@ from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
 from telephony.shared.utils.region_utils import detect_region, set_custom_region
 from telephony.shared.utils.system_utils import (is_ofono_on_bus, is_ril_running,
-                                                  is_gsd_airplane_mode,
+                                                 is_gsd_airplane_mode,
                                                  is_vendor_radio_disabled)
+from telephony.daemon.utils.importer_core_utils import get_calls_db_path, get_chatty_db_path
+from telephony.daemon.utils.importer_local_utils import import_local_calls, import_local_chatty
 from telephony.shared.constants import INCALL_APP_ID, EMERGENCY_APP_ID
 
 from gettext import gettext as _, ngettext
@@ -133,6 +135,42 @@ class TelephonyCore:
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
         run_in_background(self.db.repair_blocked_history_names)
+        self.run_initial_import()
+
+    def run_initial_import(self):
+        if self.gsettings_mgr.gsettings.get_boolean("initial-import-completed"):
+            return
+
+        def task():
+            sources = (
+                ("Calls", get_calls_db_path(), import_local_calls),
+                ("Chatty", get_chatty_db_path(), import_local_chatty),
+            )
+            completed = True
+            for name, path, importer in sources:
+                if not os.path.isfile(path):
+                    logger.info(f"[Initial Import] {name} database absent; skipping")
+                    continue
+                try:
+                    success, message = importer(self.db)
+                    if not success:
+                        completed = False
+                        logger.warning(f"[Initial Import] {name}: {message}")
+                    else:
+                        logger.info(f"[Initial Import] {name}: {message}")
+                except Exception as exc:
+                    completed = False
+                    logger.exception(f"[Initial Import] {name} failed: {exc}")
+
+            if completed:
+                GLib.idle_add(self.complete_initial_import)
+
+        run_in_background(task)
+
+    def complete_initial_import(self):
+        self.gsettings_mgr.gsettings.set_boolean("initial-import-completed", True)
+        logger.info("[Initial Import] Completed")
+        return False
 
     def apply_region(self):
         def task():

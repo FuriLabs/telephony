@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="io.furios.Telephony" path="/io/furios/Telephony/">
+    <key name="initial-import-completed" type="b">
+      <default>false</default>
+      <summary>Initial import completed</summary>
+      <description>Whether the one-time migration of existing local call and message history has completed.</description>
+    </key>
     <key name="allow-conference-calls" type="s">
       <default>"false"</default>
       <summary>Allow conference calls</summary>
