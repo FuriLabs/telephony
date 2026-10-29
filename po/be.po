@@ -11,21 +11,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<12 || n%100>14)) ? 1 : 2);\n"
 
 #: src/telephony/cli/commands/management_command.py:110
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Тэлефанія - Уваходная"
+msgstr "Тэлефонная служба не працуе"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Уваходныя выклікі і паведамленні не прымаюцца. Адкрыйце праграму, каб запусціць яе зноў."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Аднаўленне мадэма"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Разблакуйце, каб убачыць падрабязнасці."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Тэлефонная служба экстранай дапамогі"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Аднаўленне мадэма..."
+msgstr "Аднавіць мадэм"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Кантакты"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Сінхранізацыя кантактаў..."
+msgstr "Сінхранізацыя кантактаў…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Перазапуск тэлефоннай службы"
+msgstr "Тэлефонная служба перазапускаецца…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Запусціць"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Перазапуск тэлефоннай службы"
+msgstr "Тэлефонная служба запушчана"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Перазагрузіць кантакты"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Пра праграму"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Вырашыць дублікаты"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Кантакты выдалены"
+msgstr "Кантакты абноўлены"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Запыт USSD ужо выконваецца"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "Запыт USSD не ўдаўся"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "Сеанс USSD закончыўся."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "Чаканне адказу USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Адмяніць"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Увядзіце нумар"
+msgstr "Увядзіце адказ"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Адправіць зараз"
+msgstr "Адправіць"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Блізка"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "Адказ USSD не ўдаўся"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,16 @@ msgid "Confirm"
 msgstr "Пацвердзіць"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Знойдзены {count} дублікат кантакту. Праверце меню."
-msgstr[1] "Знойдзена {count} дублікатаў кантакту. Праверце меню."
+msgstr[0] "Знойдзены {count} паўтаральны кантакт."
+msgstr[1] "Знойдзена {count} паўтаральныя кантакты."
+msgstr[2] "Знойдзена {count} паўтаральных кантактаў."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Вырашыць"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +317,48 @@ msgstr "Імя"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Напрамак"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "USSD вынік"
+msgstr "Вынік"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Любая працягласць"
+msgstr "Працягласць"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Тэлефануйце"
+msgstr "Нумар таго, хто тэлефануе"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Схаваны"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Групавы выклік"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Гэты выклік быў часткай групавога выкліку"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Перададзены"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Не ўдалося разлучыць выклік."
+msgstr "Выклік быў перададзены камусьці іншаму"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Закончаны"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +414,7 @@ msgstr "Выдаліць выклік"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "Выклік з {who} ад {when} будзе выдалены з вашай гісторыі."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +479,13 @@ msgstr "У гэтай размове не знойдзена вынікаў"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Разблакіраваны нумар"
+msgstr "Разблакаваць гэты нумар"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Нумар блока"
+msgstr "Заблакаваць гэты нумар"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +497,11 @@ msgstr "Задаць назву групы..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Прыглушыць гэтую размову"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Паведамленні прыходзяць без апавяшчэння"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -642,12 +613,12 @@ msgid "Search contacts"
 msgstr "Пошук кантактаў"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Увядзіце нумар"
-msgstr[1] "Увядзіце нумар"
+msgstr[0] "· {count} нумар"
+msgstr[1] "· {count} нумары"
+msgstr[2] "· {count} нумароў"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -655,17 +626,13 @@ msgstr "Тэлефануйце ананіму"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Збой выкліку"
+msgstr "Выклікі заблакаваны"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Паведамленне выдалена"
+msgstr "Паведамленні заблакаваны"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -673,21 +640,17 @@ msgid "Pick Contact"
 msgstr "Выберыце Кантакт"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
 msgstr "Увядзіце нумар"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Пошук кантактаў"
+msgstr "Няма адпаведных кантактаў"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Хуткі набор {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -722,10 +685,8 @@ msgid "3-10 mins"
 msgstr "3-10 хвілін"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 хвілін"
+msgstr "> 10 хв"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -758,7 +719,8 @@ msgstr "Апошнія 60 дзён"
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} новае паведамленне"
-msgstr[1] "{count} новых паведамленняў"
+msgstr[1] "{count} новыя паведамленні"
+msgstr[2] "{count} новых паведамленняў"
 
 #: src/telephony/client/ui/views/history_view.py:248
 #: src/telephony/daemon/telephony_core.py:603
@@ -884,7 +846,7 @@ msgstr "Адпраўка..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Дастаўлена"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -907,84 +869,64 @@ msgid "Save File As"
 msgstr "Захаваць файл як"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Разблакіравана"
+msgstr "Заблакавана"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Выклікі з гэтага нумара заблакаваны, таму гэта не дасць ніякага эфекту, пакуль блакіроўка не будзе знята."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Паведамленні з гэтага нумара заблакаваны, таму гэта не дасць ніякага эфекту, пакуль блакіроўка не будзе знята."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Разблакіраваць усе нумары?"
+msgstr "Разблакаваць выклікі і дадаць"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Разблакаваць паведамленні і дадаць"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Разблакіраваць усе нумары?"
+msgstr "Разблакаваць толькі выклікі"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Непрачытаныя паведамленні"
+msgstr "Разблакаваць толькі паведамленні"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Разблакіраваць нумар"
+msgstr "Разблакаваць усё"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Гэты нумар ужо заблакіраваны."
+msgstr "Гэты нумар заблакаваны і для паведамленняў."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Гэты нумар ужо заблакіраваны."
+msgstr "Гэты нумар заблакаваны і для выклікаў."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Гэты нумар заблакаваны і для выклікаў, і для паведамленняў."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Разблакіравана"
+msgstr "Разблакаваць"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Гэты нумар ужо заблакіраваны."
+msgstr "Выклікі з гэтага нумара заблакаваны."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Гэты нумар ужо заблакіраваны."
+msgstr "Паведамленні з гэтага нумара заблакаваны."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1021,13 +963,11 @@ msgstr "Асноўны"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "Апошняя блакіроўка — выдаліце нумар смеццевым кошыкам"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Дадаць нумар"
+msgstr "Схаваны нумар"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1054,103 +994,87 @@ msgstr "Дадатковыя налады"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "дазваляе давераным адпраўнікам запускаць дзеянні на вашым тэлефоне тэкставым паведамленнем"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Перазапусціце мадэм"
+msgstr "перазапускае мадэм"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "змяняе, якія значкі праграм устаноўлены"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "выдаляе вашы даныя"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} і {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Для дасведчаных карыстальнікаў. Гэтая сторонка {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Сакрэтныя трыгеры SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Набор «Знайсці мой тэлефон»"
+msgstr "Знайсці мой тэлефон"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Месцазнаходжанне праз даверанае SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Усталюйце \"Надзейны зваротны званок\""
+msgstr "Давераны зваротны выклік"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Ціхі запускальнік зваротнага выкліку"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Набор «SMS-рэле»"
+msgstr "Перасылка SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Непрачытаныя паведамленні"
+msgstr "Перасылаць паведамленні"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Усталяваць «SMS -tmate»"
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Аддалены доступ да абалонкі"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Заблакаваць прыладу"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Блакіроўка праз даверанае SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Уключыць функцыю"
+msgstr "Пробныя магчымасці выклікаў"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Пацвердзіце экстранны выклік"
+msgstr "Дазволіць групавыя выклікі"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Дазволіць перадачу выклікаў"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1174,7 +1098,7 @@ msgstr "Кіраванне дадзенымі"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Экспарт, імпарт і скід"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1220,7 +1144,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Аб'яднанне выклікаў у групавы выклік залежыць ад аператара, і ў нашых выпрабаваннях вынікі змяняліся ад правільнай працы да разрыву выклікаў. Уключыце гэта, каб паспрабаваць на сваёй лініі. Афіцыйна гэта падтрымаць нельга, таму пакіньце выключаным, калі хочаце, каб вашы выклікі працавалі прадказальна."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1229,50 +1153,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "Злучэнне двух выклікаў між сабой патрабуе службы, якую павінен даваць аператар, і ў нашых выпрабаваннях многія аператары ад яе адмовіліся або замест таго разарвалі выклікі. Уключыце гэта, каб паспрабаваць на сваёй лініі. Афіцыйна гэта падтрымаць нельга, таму пакіньце выключаным, калі хочаце, каб вашы выклікі працавалі прадказальна."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Калі мадэм перастае адказваць, тэлефон ціха выконвае крокі аднаўлення "
-"самастойна: перазапуск радыё, перазапуск сілкавання мадэма, перазапуск "
-"прашыўкі мадэма і паўторнае ўключэнне адключанага радыё. Тэлефон ніколі не "
-"перазагружаецца аўтаматычна. Калі нічога не дапамагае, вам будзе прапанавана "
-"перазагрузіць тэлефон. Калі гэта выключана, замест гэтага адкрываецца акно "
-"«Аднаўленне мадэма», каб вы маглі выканаць крокі самастойна."
+msgstr "Калі мадэм перастае адказваць, тэлефон сам ціха перазапускае праграму мадэма, і вы даведваецеся пра гэта толькі тады, калі гэта не ўдасца. Тэлефон ніколі не перазапускаецца сам. Калі гэта выключана, замест таго з'яўляецца экран аднаўлення мадэма, каб вы выканалі перазапуск самі."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Мадэм працуе"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Перазапусціць мадэм, гэта займае прыкладна 30 секунд"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Перазапуск мадэма..."
+msgstr "Мадэм перазапускаецца…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Выклікі і паведамленні працуюць зноў"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Аднаўленне не дапамагло. Мадэм усё яшчэ не адказвае"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1289,17 +1198,13 @@ msgstr "Заўвага (неабавязкова)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Блакаваны спіс"
+msgstr "Блакаваць выклікі"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Усе паведамленні"
+msgstr "Блакаваць паведамленні"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1398,7 +1303,7 @@ msgstr "Выберыце Файл"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Уставіць"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1426,10 +1331,8 @@ msgid "Contact Details"
 msgstr "Кантактная інфармацыя"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Кантакты"
+msgstr "Новы кантакт"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1503,7 +1406,7 @@ msgstr "Юбілей"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Падзяліцца як QR кодам"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1547,45 +1450,36 @@ msgstr "Скапіравана ў буфер абмену"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Тэлефон"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Дадаць адрас электроннай пошты"
+msgstr "Эл. пошта"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Тып"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Мадэм недаступны"
+msgstr "Няма даступнай праграмы эл. пошты"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Экспарт кантактаў"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Не ўдалося стварыць адрасную кнігу"
+msgstr "Не ўдалося стварыць QR код"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Сапраўды выдаліць усіх з адраснай кнігі?"
+msgstr "{name} будзе выдалены з вашай адраснай кнігі."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Пошук кантактаў"
+msgstr "Гэты кантакт"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1595,13 +1489,11 @@ msgstr "Не ўдалося захаваць кантакт"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Гэтая адрасная кніга толькі для чытання"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Няма адрасных кніг, якія можна выдаліць"
+msgstr "Няма даступнай адраснай кнігі, у якую можна пісаць"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1710,24 +1602,25 @@ msgstr "ВЫДАЛІЦЬ УСЕ"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Гэта выдаліць {count} выклік. Адмяніць гэта нельга."
+msgstr[1] "Гэта выдаліць {count} выклікі. Адмяніць гэта нельга."
+msgstr[2] "Гэта выдаліць {count} выклікаў. Адмяніць гэта нельга."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Гэта выдаліць усе SMS/MMS і ўкладанні."
-msgstr[1] "Гэта выдаліць усе SMS/MMS і ўкладанні."
+msgstr[0] "Гэта выдаліць {count} паведамленне разам з укладаннямі."
+msgstr[1] "Гэта выдаліць {count} паведамленні разам з укладаннямі."
+msgstr[2] "Гэта выдаліць {count} паведамленняў разам з укладаннямі."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Скінуць усе назвы карыстальніцкіх групавых чатаў?"
-msgstr[1] "Скінуць усе назвы карыстальніцкіх групавых чатаў?"
+msgstr[0] "Гэта скіне {count} уласную назву групы."
+msgstr[1] "Гэта скіне {count} уласныя назвы груп."
+msgstr[2] "Гэта скіне {count} уласных назваў груп."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1737,8 +1630,9 @@ msgstr "Выдаліць назвы груп"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Гэта разблакуе {count} нумар."
+msgstr[1] "Гэта разблакуе {count} нумары."
+msgstr[2] "Гэта разблакуе {count} нумароў."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1755,18 +1649,10 @@ msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Вы ўпэўнены, што хочаце назаўжды выдаліць адрасную кнігу «{name}»?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Якую адрасную кнігу вы хочаце выдаліць назаўсёды?\n"
-"\n"
-"Гэта выдаліць яго з сістэмы."
+msgstr "Якую адрасную кнігу вы хочаце выдаліць назаўсёды? Гэта выдаляе яе з сістэмы."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1904,43 +1790,39 @@ msgstr "Аб'яднанне {current}/{total}..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "Любімая"
+msgstr "Улюбёныя"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Выберыце кантакт, каб паставіць у месца хуткага набору. На клавіятуры нумароў націск гэтай адной цыфры паказвае кантакт, каб вы маглі яму патэлефанаваць."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Хуткі набор"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Тэлефануйце на {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Пуста"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Выберыце мелодыю для {name}"
+msgstr "Выберыце месца для {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "{name} дададзены ў месца {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1977,35 +1859,25 @@ msgid "Export Calls or Messages"
 msgstr "Экспарт выклікаў або паведамленняў"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Імпарт гісторыі выклікаў"
+msgstr "Экспартаваць гісторыю выклікаў"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Імпартаваць паведамленні"
+msgstr "Экспартаваць паведамленні"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Блакаваны спіс"
+msgstr "Экспартаваць спіс блакіровак"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Блакаваны спіс"
+msgstr "Імпартаваць спіс блакіровак"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Імпарт / Экспарт"
+msgstr "Імпарт і экспарт"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2013,16 +1885,13 @@ msgid "Export File"
 msgstr "Экспартаваць файл"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Экспартавана {count} кантактаў"
+msgstr "Экспартавана {count} запісаў."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Экспартаваць файл"
+msgstr "Экспарт не ўдаўся."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2033,13 +1902,11 @@ msgstr "Выберыце Файл"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Імпартавана: {added} дададзена, {updated} пашырана."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "Памылка імпарту: {e}"
+msgstr "Імпарт не ўдаўся."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2194,10 +2061,8 @@ msgstr "Абярыце адрасную кнігу"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Сістэма па змаўчанні"
+msgstr "Прадвызначана"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2367,10 +2232,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Правадная гарнітура"
+msgstr "Навушнікі USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2385,16 +2248,12 @@ msgid "Bluetooth Mic"
 msgstr "Мікрафон Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Мікрафон"
+msgstr "Мікрафон USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Усталюйце свой нумар у наладах"
+msgstr "Ваш нумар схаваны"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2425,14 +2284,14 @@ msgstr "Клавіятура"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Мадэм працуе няправільна."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Выклікі, паведамленні і мабільныя даныя не будуць працаваць, пакуль мадэм не перазапусціцца.\n\nПеразапуск займае прыкладна 30 секунд і разрывае любы выклік, які ідзе."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2446,16 +2305,12 @@ msgstr "Перазагрузіць тэлефон"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Актыўны"
+msgstr "Дзеянні"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Адключыць гук"
+msgstr "Прыглушана"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2472,16 +2327,12 @@ msgid "Mute"
 msgstr "Адключыць гук"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Дынамік"
+msgstr "Пераключыць на гучнагаварыцель"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Рэзюмэ"
+msgstr "Працягнуць"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2489,35 +2340,29 @@ msgstr "Утрымліваць"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Дадаць адрас электроннай пошты"
+msgstr "Дадаць выклік"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Званкі"
+msgstr "Памяняць выклікі"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Аб'яднаць усе"
+msgstr "Аб'яднаць выклікі"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Далучыцца да групавога выкліку"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Перадаць"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Перадача злучае {a} і {b} між сабой, а вы выходзіце з выкліку"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2525,27 +2370,25 @@ msgstr "Адключаны ўваходны выклік"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Пацвердзіце экстранны выклік"
+msgstr "Групавы выклік"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} удзельнікаў"
-msgstr[1] "{count} удзельнікаў"
+msgstr[0] "{count} удзельнік"
+msgstr[1] "{count} удзельнікі"
+msgstr[2] "{count} удзельнікаў"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Асабістая размова"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Асабістая размова ставіць астатніх на чаканне"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2554,7 +2397,7 @@ msgstr "Памяняць"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "Сетка адмовіла ў запыце"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2605,12 +2448,8 @@ msgid "Not connected"
 msgstr "Не падключана"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr ""
-"Кліент для хуткага дазвону і абмену паведамленнямі, прызначаны для FLX1 і "
-"FLX1s."
+msgstr "Хуткая праграма выклікаў і паведамленняў, зробленая для FuriOS."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2638,14 +2477,12 @@ msgstr "Запланавана ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Сеткавыя службы"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Наперад"
+msgstr "Перанакіраванне выклікаў"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2657,85 +2494,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Перанакіраванне адбываецца ў сетцы, перад тым як выклік дойдзе да вашага тэлефона.\n\n„Заўсёды“ адразу перанакіроўвае кожны выклік. „Калі занята“ дзейнічае, пакуль вы ў іншым выкліку, „Калі не адказваюць“ пасля таго, як тэлефон тэлефанаваў выбраны час, а „Калі недасяжны“ калі тэлефон выключаны або па-за пакрыццём.\n\nУводзьце нумары ў міжнародным выглядзе, напрыклад +358401234567. Прымяненне пустога нумара выключае гэтае правіла."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "Заўсёды"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Калі занята"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Без адказу"
+msgstr "Калі не адказваюць"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Калі недасяжны"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Мелодыя зваротнага званка"
+msgstr "Час званка"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} удзельнікаў"
+msgstr "{count} секунд"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Выключыць усе перанакіраванні"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Чаканне..."
+msgstr "Выклік на чаканні"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Калі ўключана, другі ўваходны выклік падае гук падчас выкліку, замест таго каб той, хто тэлефануе, атрымаў сігнал занятасці."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Сістэма па змаўчанні"
+msgstr "Прадвызначана сеткай"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Паказваецца"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Схаваць мой нумар"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Выберыце, ці бачаць ваш нумар людзі, якім вы тэлефануеце. „Прадвызначана сеткай“ ідзе за наладай вашай лініі. Схаванне можна выбраць і для аднаго выкліку з меню выклікаў кантакта."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Зваротны званок"
+msgstr "Забарона выклікаў"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2744,77 +2570,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Забарона блакуе цэлыя класы выклікаў у сетцы.\n\nКожная змена патрабуе пароля забароны ад вашага аператара, прадвызначана ён часта 0000. Паўтораныя няправільныя спробы могуць заблакаваць забарону з боку сеткі, і тады толькі ваш аператар можа яе разблакаваць."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Дазволена"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Перапыніць усе званкі"
+msgstr "Забараніць усе выклікі"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "Мой нумар (міжнародны фармат)"
+msgstr "Забараніць міжнародныя выклікі"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Забараніць міжнародныя, апроч у сваю краіну"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Імпарт выклікаў..."
+msgstr "Выходныя выклікі"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Забараніць у роўмінгу"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Уваходны выклік..."
+msgstr "Уваходныя выклікі"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Пароль забароны"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Змяніць пароль забароны"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Цяперашні пароль"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Новы пароль"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Выключыць усе забароны"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Недаступна ў гэтай сетцы"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Не ўдалося прачытаць налады з сеткі"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2822,65 +2640,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Не атрымалася запусціць камеру."
+msgstr "Не ўдалося змяніць наладу"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Выключыць кожнае правіла перанакіравання выклікаў?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Выключыць"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Спачатку ўвядзіце пароль забароны"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Няправільны пароль забароны"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Пароль забароны змянены"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Выключыць кожнае правіла забароны выклікаў?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Захаванне кантакту..."
+msgstr "Прачытаць кантакт"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Накіруйце камеру на QR код кантакта"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Гэты код не кантакт"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Прачытайце любым тэлефонам, каб дадаць гэты кантакт"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Нумар галасавой пошты"
+msgstr "Галасавая пошта, гучнасць і мелодыя званка"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Паведамленні пра дастаўку, паказ нумара"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2890,22 +2702,20 @@ msgstr "Налады SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Уласны нумар і код краіны"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Месцы хуткага набору"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Толькі экстраныя выклікі."
+msgstr "Экстранныя выклікі"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Кнопка экрана блакіроўкі і нумары"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2914,24 +2724,20 @@ msgstr "Блакаваны спіс"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Нумары, ад якіх вы нічога не хочаце чуць"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Назва адраснай кнігі"
+msgstr "Адрасныя кнігі і паўторы"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Перавызначэнні апавяшчэнняў"
+msgstr "Апавяшчэнні"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Выключэнні, мелодыі і абыход цішыні"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2941,30 +2747,28 @@ msgstr "Невядомыя абаненты"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Прасейванне"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Нумар скапіраваны"
+msgstr "Пошук нумара"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Пошукавая сістэма для кнопак пошуку"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Перанакіраванне, выклік на чаканні і забароны"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Кантакты, паведамленні і гісторыя выклікаў"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Для дасведчаных карыстальнікаў"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2972,32 +2776,25 @@ msgstr "Заблакіраваныя нумары"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Націсніце аловак, каб змяніць, што блакуе нумар."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Няма нумара"
+msgstr "Пакуль не дададзены ні адзін нумар"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Блакаваны спіс"
+msgstr "Блакаваць"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Увядзіце нумар"
+msgstr "Увядзіце нумар для блакіроўкі"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Гэты нумар ужо заблакіраваны."
+msgstr "{number} ужо ў спісе блакіровак."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3031,11 +2828,11 @@ msgstr "Дадаць паведамленне пры адхіленні"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Пакуль не дададзена ні адно паведамленне"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Адпраўляецца, калі вы адхіляеце выклік з паведамленнем."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3073,29 +2870,27 @@ msgid "Emergency Numbers"
 msgstr "Нумары экстраных службаў"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Нумары экстраных службаў"
+msgstr "Экстранныя нумары сеткі"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Паказваць нумары сеткі"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Запрашваць паведамленні пра дастаўку"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Паказваць нумары ў спісе паведамленняў"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Калі выключана, нумары не з'яўляюцца ў спісе; нумар без кантакта паказвае свой нумар як імя"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3124,14 +2919,12 @@ msgid "Notification Exceptions"
 msgstr "Выключэнні для апавяшчэнняў"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Кіруйце кантактамі, якія заўсёды прайграваюць гук"
+msgstr "Кантакты, якія заўсёды тэлефануюць"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Выклік прабіваецца праз ціхі рэжым"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3149,28 +2942,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Усталюйце ўласныя мелодыі для пэўных кантактаў"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Кіруйце кантактамі, якія заўсёды прайграваюць гук"
+msgstr "Паведамленні, якія заўсёды падаюць гук"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Паведамленне прабіваецца праз ціхі рэжым"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Абыход паўторных выклікаў"
+msgstr "Абыход цішыні для паўтораных паведамленняў"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr ""
-"Калі адзін і той жа нумар тэлефануе 3 разы за 5 хвілін, уключыце "
-"максімальную гучнасць."
+msgstr "Калі той самы адпраўнік напіша 3 разы за хвіліну, прайграй гук."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3281,11 +3066,11 @@ msgstr "Толькі цішыня"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Кнопка пошуку невядомых, хто тэлефануе, падчас выкліку"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Выкарыстоўваецца кнопкамі пошуку ў выкліках, гісторыі выклікаў і групавых паведамленнях."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3321,28 +3106,16 @@ msgstr "URL карыстальніцкага пошуку"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "Заўсёды дасяжна, нават без SIM-карты"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Гэта гучнасць выкліку для кожнага вываду. Узровень прымяняецца аўтаматычна "
-"пры злучэнні выкліку і кожны раз, калі вывад мяняецца падчас выкліку, а "
-"змены паўзунка чуваць адразу. Апаратура прымяняе ўзроўні буйнымі крокамі, і "
-"размоўны дынамік ніколі не становіцца цалкам бязгучным. Узровень Bluetooth "
-"захоўваецца для будучай падтрымкі маршрутызацыі."
+msgstr "Гэта гучнасць выкліку для кожнага выхаду. Узровень прымяняецца сам, калі выклік злучаецца, і кожны раз, калі выхад мяняецца падчас выкліку, а змены паўзунка чуваць адразу. Абсталяванне прымяняе ўзроўні грубымі крокамі, а слухаўка ніколі не змаўкае зусім. Узроўні Bluetooth і USB прымяняюцца, калі гэтыя шляхі выкліку дзейныя."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3352,7 +3125,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Калі ўключана, у сеткі запрашваецца пацвярджэнне, калі вашы тэкставыя і мультымедыйныя паведамленні даходзяць да тэлефона атрымальніка.\n\nПацвярджэнне надзейнае, калі прыходзіць, але многія аператары і аўтаматычныя адпраўнікі яго ніколі не ствараюць, таму паведамленне без пацвярджэння ўсё роўна магло быць дастаўлена. „Дастаўлена“ ніколі не значыць „прачытана“."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3642,75 +3415,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Тэлефонная база дадзеных паспяхова экспартавана."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Уваходны выклік..."
+msgstr "Уваходны"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Выходны"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Адхілены на тым баку"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Сетка не змагла яго злучыць"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Кінуты да злучэння"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Адказаць"
+msgstr "Адказана"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
 msgstr "Без адказу"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Адхіліць паведамленне"
+msgstr "Адхілены тут"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Закончаны на гэтым тэлефоне"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Закончаны на тым баку"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Разарваны сеткай"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Тут ніхто не адказаў"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Адхілены на гэтым тэлефоне"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Разарваны тут да злучэння"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Мадэм не гатовы"
+msgstr "Мадэм не назваў прычыны"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3745,11 +3508,11 @@ msgstr "Чаканне выпраўлення спадарожніка..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "У гэтай прыладзе няма мадэма"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Рэжым самалёта ўключаны"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3763,7 +3526,7 @@ msgstr "Калі ласка, пачакайце, папярэдні выклік
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Не ўдалося пачаць выклік"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3790,28 +3553,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Не ўдалося вызначыць месцазнаходжанне пасля спробы ўсіх метадаў."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "Выключае радыё і зноў уключае, як рэжым палёту."
+msgstr "Радыё выключана. Уключыце яго зноў, каб карыстацца мадэмам."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Гэтая прылада паведамляе, што мадэма няма. Перазапуск не можа выправіць мадэм, якога няма або які не мае даных пра сябе."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Служба мадэма не адказвае."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Мадэм адказвае, але згубіў сваю службу выклікаў."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Мадэм адказвае, але яго радыё выключана."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3912,10 +3673,10 @@ msgstr "Імпартавана {count} выклікаў."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Кантакты Andromeda прыходзяць з сістэмы і тут толькі чытаюцца."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} не злучана, таму яе кантакты нельга мяняць, пакуль яна не вернецца."
