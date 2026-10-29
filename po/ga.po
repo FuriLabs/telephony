@@ -11,21 +11,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);\n"
 
 #: src/telephony/cli/commands/management_command.py:110
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Teileafónaíocht - Isteach"
+msgstr "Níl an tseirbhís teileafóin ag rith"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Ní fhaightear glaonna ná teachtaireachtaí isteach. Oscail an aip chun í a thosú arís."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Athshlánú Móideim"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Díghlasáil chun na sonraí a fheiceáil."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Éigeandáil Teileafónaíochta"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Móideim á athshlánú..."
+msgstr "Téarnaigh an móideim"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Teagmhálaithe"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Teagmhálaithe á Sioncronú..."
+msgstr "Teagmhálaithe á sioncronú…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Atosú na seirbhíse fóin"
+msgstr "Tá an tseirbhís teileafóin ag atosú…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Tosaigh"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Atosú na seirbhíse fóin"
+msgstr "Thosaigh an tseirbhís teileafóin"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Athlódáil Teagmhálacha"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Maidir leis"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Réitigh Dúblaigh"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Teagmhálaithe Scriosta"
+msgstr "Athnuaigh na teagmhálaithe"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Tá iarratas USSD ar siúl cheana"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "Theip ar an iarratas USSD"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "Chríochnaigh an seisiún USSD."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "Ag fanacht le freagra USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Cealaigh"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Cuir isteach uimhir"
+msgstr "Cuir an freagra isteach"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Seol Anois"
+msgstr "Seol"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Dún"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "Theip ar an bhfreagra USSD"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,18 @@ msgid "Confirm"
 msgstr "Deimhnigh"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Aimsíodh {count} teagmhálaí dúblach. Seiceáil an roghchlár."
-msgstr[1] "Aimsíodh {count} teagmhálaithe dúblacha. Seiceáil an roghchlár."
+msgstr[0] "Fuarthas {count} teagmhálaí dúblach."
+msgstr[1] "Fuarthas {count} teagmhálaí dúblach."
+msgstr[2] "Fuarthas {count} teagmhálaí dúblacha."
+msgstr[3] "Fuarthas {count} dteagmhálaí dúblacha."
+msgstr[4] "Fuarthas {count} teagmhálaí dúblach."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Réitigh"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +319,48 @@ msgstr "Ainm"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Treo"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "Toradh USSD"
+msgstr "Toradh"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Dáta"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Aon ré"
+msgstr "Fad"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Glaoigh"
+msgstr "Uimhir an ghlaoiteora"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Folaithe"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Comhghlao"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Bhí an glao seo mar chuid de chomhghlao"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Aistrithe"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Theip ar an nglao a dhícheangal."
+msgstr "Tugadh an glao do dhuine eile"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Críochnaithe"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +416,7 @@ msgstr "Scrios Glao"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "Baintear an glao le {who} ar {when} de do stair."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +481,13 @@ msgstr "Níor aimsíodh aon toradh sa chomhrá seo"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Uimhir a bhfuil bac uirthi"
+msgstr "Díbhac an uimhir seo"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Uimhir Bloc"
+msgstr "Bac an uimhir seo"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +499,11 @@ msgstr "Socraigh ainm an ghrúpa..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Balbhaigh an comhrá seo"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Tagann teachtaireachtaí isteach gan fógra"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -642,12 +615,14 @@ msgid "Search contacts"
 msgstr "Cuardaigh teagmhálaithe"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Cuir isteach uimhir"
-msgstr[1] "Cuir isteach uimhir"
+msgstr[0] "· {count} uimhir"
+msgstr[1] "· {count} uimhir"
+msgstr[2] "· {count} uimhir"
+msgstr[3] "· {count} n-uimhir"
+msgstr[4] "· {count} uimhir"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -655,17 +630,13 @@ msgstr "Glaoigh gan Ainm"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Theip ar an nglao"
+msgstr "Glaonna bactha"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Baineadh an teachtaireacht"
+msgstr "Teachtaireachtaí bactha"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -673,21 +644,17 @@ msgid "Pick Contact"
 msgstr "Roghnaigh Teagmháil"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
-msgstr "Cuir isteach uimhir"
+msgstr "Cuir an uimhir isteach"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Cuardaigh teagmhálaithe"
+msgstr "Níl teagmhálaí ar bith a mheaitseálann"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Mearghlao {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -722,10 +689,8 @@ msgid "3-10 mins"
 msgstr "3-10 nóim"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 nóim"
+msgstr "> 10 nóim"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -758,7 +723,10 @@ msgstr "60 lá anuas"
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} teachtaireacht nua"
-msgstr[1] "{count} teachtaireachtaí nua"
+msgstr[1] "{count} teachtaireacht nua"
+msgstr[2] "{count} teachtaireacht nua"
+msgstr[3] "{count} dteachtaireacht nua"
+msgstr[4] "{count} teachtaireacht nua"
 
 #: src/telephony/client/ui/views/history_view.py:248
 #: src/telephony/daemon/telephony_core.py:603
@@ -884,7 +852,7 @@ msgstr "Á sheoladh..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Seachadta"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -907,84 +875,64 @@ msgid "Save File As"
 msgstr "Sábháil Comhad Mar"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Baineadh an bac de"
+msgstr "Bactha"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Tá glaonna ón uimhir seo bactha, mar sin ní bheadh aon éifeacht leis seo go dtí go dtógtar an bac."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Tá teachtaireachtaí ón uimhir seo bactha, mar sin ní bheadh aon éifeacht leis seo go dtí go dtógtar an bac."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Bain an bac de gach uimhir?"
+msgstr "Díbhac na glaonna agus cuir leis"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Díbhac na teachtaireachtaí agus cuir leis"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Bain an bac de gach uimhir?"
+msgstr "Díbhac na glaonna amháin"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Teachtaireachtaí Neamhléite"
+msgstr "Díbhac na teachtaireachtaí amháin"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Bain an bac den Uimhir"
+msgstr "Díbhac gach rud"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Tá an uimhir seo bactha cheana féin."
+msgstr "Tá an uimhir seo bactha i gcomhair teachtaireachtaí freisin."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Tá an uimhir seo bactha cheana féin."
+msgstr "Tá an uimhir seo bactha i gcomhair glaonna freisin."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Tá an uimhir seo bactha i gcomhair glaonna agus teachtaireachtaí."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Baineadh an bac de"
+msgstr "Díbhac"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Tá an uimhir seo bactha cheana féin."
+msgstr "Tá glaonna ón uimhir seo bactha."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Tá an uimhir seo bactha cheana féin."
+msgstr "Tá teachtaireachtaí ón uimhir seo bactha."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1021,13 +969,11 @@ msgstr "Príomh-"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "An bac deireanach — bain an uimhir leis an mbosca bruscair"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Cuir Uimhir leis"
+msgstr "Uimhir fholaithe"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1054,103 +1000,87 @@ msgstr "Ardsocruithe"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "ligeann sé do sheoltóirí iontaofa gníomhartha a thosú ar do ghuthán le teachtaireacht téacs"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Atosaigh Móideim"
+msgstr "atosaíonn sé an móideim"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "athraíonn sé cé na deilbhíní aipe atá curtha isteach"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "scriosann sé do shonraí"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} agus {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "D'úsáideoirí a bhfuil taithí acu. Déanann an leathanach seo {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Truicear SMS Rúnda"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Socraigh \"Faigh mo Theileafónaíocht\""
+msgstr "Aimsigh mo ghuthán"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Suíomh trí SMS iontaofa"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Socraigh \"Aisghlaoch iontaofa\""
+msgstr "Glao ar ais iontaofa"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Truicear ciúin don ghlao ar ais"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Socraigh \"SMS -Relay\""
+msgstr "SMS a chur ar aghaidh"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Teachtaireachtaí Neamhléite"
+msgstr "Cuir teachtaireachtaí ar aghaidh"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Socraigh \"SMS -tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Rochtain sliogáin i gcéin"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Glasáil an gléas"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Glasáil trí SMS iontaofa"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Cumasaigh Gné"
+msgstr "Gnéithe glaonna turgnamhacha"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Deimhnigh Glao Éigeandála"
+msgstr "Ceadaigh comhghlaonna"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Ceadaigh aistriú glaonna"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1174,7 +1104,7 @@ msgstr "Bainistíocht Sonraí"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Easpórtáil, iompórtáil agus athshocrú"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1220,7 +1150,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Is faoin iompróir atá sé glaonna a chumasc i gcomhghlao, agus sna tástálacha a rinneamar bhí na torthaí idir obair cheart agus glaonna á scaoileadh. Cuir seo ar siúl chun triail a bhaint as ar do líne féin. Ní féidir tacaíocht oifigiúil a thabhairt dó, mar sin fág múchta é más fearr leat go n-oibreodh do ghlaonna mar a bheifeá ag súil leis."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1229,51 +1159,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "Teastaíonn seirbhís a chaithfidh an iompróir a sholáthar chun dhá ghlao a cheangal le chéile, agus sna tástálacha a rinneamar dhiúltaigh go leor iompróirí dó nó chríochnaigh siad na glaonna ina ionad. Cuir seo ar siúl chun triail a bhaint as ar do líne féin. Ní féidir tacaíocht oifigiúil a thabhairt dó, mar sin fág múchta é más fearr leat go n-oibreodh do ghlaonna mar a bheifeá ag súil leis."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Nuair a stopann an móideim de bheith ag freagairt, ritheann an fón na "
-"céimeanna athshlánaithe go ciúin leis féin: atosú raidió, timthriall "
-"cumhachta an mhóideim, atosú firmware agus athchumasú raidió atá "
-"díchumasaithe. Ní atosaítear an fón go huathoibríoch riamh. Mura gcabhraíonn "
-"aon rud, iarrtar ort atosú. Nuair a bhíonn sé seo múchta, osclaítear "
-"fuinneog Athshlánú Móideim ina ionad ionas gur féidir leat na céimeanna a "
-"rith tú féin."
+msgstr "Nuair a stopann an móideim ag freagairt, atosaíonn an guthán bogearraí an móideim go ciúin as féin, agus ní chloiseann tú faoi ach má theipeann sin. Ní atosaítear an guthán go huathoibríoch riamh. Nuair a bhíonn seo múchta, taispeántar scáileán Téarnaimh an Mhóideim ina ionad, ionas gur féidir leat an atosú a dhéanamh tú féin."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Tá an móideim ag obair"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Atosaigh an móideim; tógann sé timpeall 30 soicind"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Móideim á atosú..."
+msgstr "An móideim á atosú…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Oibríonn glaonna agus teachtaireachtaí arís"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Níor chabhraigh an téarnamh. Níl an móideim ag freagairt fós"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1290,17 +1204,13 @@ msgstr "Nóta (Roghnach)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Liosta blocála"
+msgstr "Bac glaonna"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Gach Teachtaireacht"
+msgstr "Bac teachtaireachtaí"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1399,7 +1309,7 @@ msgstr "Roghnaigh Comhad"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Greamaigh"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1427,10 +1337,8 @@ msgid "Contact Details"
 msgstr "Sonraí Teagmhála"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Teagmhálaithe"
+msgstr "Teagmhálaí nua"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1504,7 +1412,7 @@ msgstr "Comóradh"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Roinn mar chód QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1548,45 +1456,36 @@ msgstr "Cóipeáladh chuig an ngearrthaisce"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Guthán"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Cuir Ríomhphost leis"
+msgstr "Ríomhphost"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Cineál"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Níl an móideim ar fáil"
+msgstr "Níl aip ríomhphoist ar fáil"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Easpórtáil Teagmháil"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Níorbh fhéidir an leabhar seoltaí a chruthú"
+msgstr "Níorbh fhéidir an cód QR a chruthú"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "An bhfuil fonn ort gach duine a scriosadh as do leabhar seoltaí?"
+msgstr "Baintear {name} de do leabhar seoltaí."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Cuardaigh teagmhálaithe"
+msgstr "An teagmhálaí seo"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1596,13 +1495,11 @@ msgstr "Theip ar shábháil an teagmhálaí"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Is leabhar seoltaí inléite amháin é seo"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Níl aon leabhair seoltaí inscriosta"
+msgstr "Níl leabhar seoltaí inscríofa ar fáil"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1711,24 +1608,31 @@ msgstr "Scrios gach rud"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Scriosfaidh seo {count} ghlao. Ní féidir é a chealú."
+msgstr[1] "Scriosfaidh seo {count} ghlao. Ní féidir é a chealú."
+msgstr[2] "Scriosfaidh seo {count} ghlao. Ní féidir é a chealú."
+msgstr[3] "Scriosfaidh seo {count} nglao. Ní féidir é a chealú."
+msgstr[4] "Scriosfaidh seo {count} glao. Ní féidir é a chealú."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Scriosfaidh sé seo gach SMS/MMS agus ceangaltán."
-msgstr[1] "Scriosfaidh sé seo gach SMS/MMS agus ceangaltán."
+msgstr[0] "Scriosfaidh seo {count} teachtaireacht agus a ceangaltáin."
+msgstr[1] "Scriosfaidh seo {count} teachtaireacht agus a gceangaltáin."
+msgstr[2] "Scriosfaidh seo {count} teachtaireacht agus a gceangaltáin."
+msgstr[3] "Scriosfaidh seo {count} dteachtaireacht agus a gceangaltáin."
+msgstr[4] "Scriosfaidh seo {count} teachtaireacht agus a gceangaltáin."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Athshocraigh gach ainm comhrá grúpa saincheaptha?"
-msgstr[1] "Athshocraigh gach ainm comhrá grúpa saincheaptha?"
+msgstr[0] "Athshocróidh seo {count} ainm grúpa saincheaptha."
+msgstr[1] "Athshocróidh seo {count} ainm grúpa saincheaptha."
+msgstr[2] "Athshocróidh seo {count} ainm grúpa saincheaptha."
+msgstr[3] "Athshocróidh seo {count} n-ainm grúpa saincheaptha."
+msgstr[4] "Athshocróidh seo {count} ainm grúpa saincheaptha."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1738,8 +1642,11 @@ msgstr "Scrios Ainmneacha Grúpa"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Díbhacfaidh seo {count} uimhir."
+msgstr[1] "Díbhacfaidh seo {count} uimhir."
+msgstr[2] "Díbhacfaidh seo {count} uimhir."
+msgstr[3] "Díbhacfaidh seo {count} n-uimhir."
+msgstr[4] "Díbhacfaidh seo {count} uimhir."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1758,18 +1665,10 @@ msgstr ""
 "buan?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Cén leabhar seoltaí is mian leat a scriosadh go buan?\n"
-"\n"
-"Bainfidh sé seo as an gcóras é."
+msgstr "Cén leabhar seoltaí ar mhaith leat a scriosadh go buan? Glanann sé seo den chóras é."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1906,43 +1805,39 @@ msgstr "{current}/{total} á chumasc..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "is fearr leat"
+msgstr "Ceanáin"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Roghnaigh teagmhálaí chun é a chur i sliotán mearghlao. Ar an eochaircheap, taispeánann an t-aon dhigit sin an teagmhálaí, ionas gur féidir leat glao a chur air."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Mearghlao"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Glaoigh ar {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Folamh"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Roghnaigh Ton le haghaidh {name}"
+msgstr "Roghnaigh sliotán do {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "Cuireadh {name} le sliotán {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1979,35 +1874,25 @@ msgid "Export Calls or Messages"
 msgstr "Easpórtáil Glaonna nó Teachtaireachtaí"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Iompórtáil Stair Glaonna"
+msgstr "Easpórtáil stair na nglaonna"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Iompórtáil Teachtaireachtaí"
+msgstr "Easpórtáil teachtaireachtaí"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Liosta blocála"
+msgstr "Easpórtáil an liosta bacanna"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Liosta blocála"
+msgstr "Iompórtáil liosta bacanna"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Iompórtáil / Easpórtáil"
+msgstr "Iompórtáil agus easpórtáil"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2015,16 +1900,13 @@ msgid "Export File"
 msgstr "Easpórtáil Comhad"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Easpórtáladh {count} teagmhálaithe"
+msgstr "Easpórtáladh {count} iontráil."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Easpórtáil Comhad"
+msgstr "Theip ar an easpórtáil."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2035,13 +1917,11 @@ msgstr "Roghnaigh Comhad"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Iompórtáladh: {added} curtha leis, {updated} leathnaithe."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "Theip ar an iompórtáil: {e}"
+msgstr "Theip ar an iompórtáil."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2198,10 +2078,8 @@ msgstr "Roghnaigh Leabhar Seoltaí"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Réamhshocrú Córais"
+msgstr "Réamhshocrú"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2371,10 +2249,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Headset Sreangaithe"
+msgstr "Cluasán USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2389,16 +2265,12 @@ msgid "Bluetooth Mic"
 msgstr "Micreafón Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Micreafón"
+msgstr "Micreafón USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Socraigh d'uimhir sna Socruithe"
+msgstr "Tá d'uimhir folaithe"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2429,14 +2301,14 @@ msgstr "Eochaircheap"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Níl an móideim ag obair mar is ceart."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Ní oibreoidh glaonna, teachtaireachtaí ná sonraí soghluaiste go dtí go n-atosaítear an móideim.\n\nTógann an atosú timpeall 30 soicind agus cuireann sé deireadh le haon ghlao atá ar siúl."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2450,16 +2322,12 @@ msgstr "Atosaigh an fón"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Gníomhach"
+msgstr "Gníomhartha"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Balbhaigh"
+msgstr "Balbhaithe"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2476,16 +2344,12 @@ msgid "Mute"
 msgstr "Balbhaigh"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Callaire"
+msgstr "Athraigh go dtí an callaire"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Atosaigh"
+msgstr "Lean ar aghaidh"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2493,35 +2357,29 @@ msgstr "Coinnigh"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Cuir Ríomhphost leis"
+msgstr "Cuir glao leis"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Glaonna"
+msgstr "Malartaigh na glaonna"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Cumaisc go léir"
+msgstr "Cumaisc na glaonna"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Glac páirt sa chomhghlao"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Aistrigh"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Ceanglaíonn an t-aistriú {a} agus {b} le chéile agus fágann tú an glao"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2529,27 +2387,27 @@ msgstr "Glao Isteach Tosta"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Deimhnigh Glao Éigeandála"
+msgstr "Comhghlao"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} Rannpháirtithe"
-msgstr[1] "{count} Rannpháirtithe"
+msgstr[0] "{count} rannpháirtí"
+msgstr[1] "{count} rannpháirtí"
+msgstr[2] "{count} rannpháirtí"
+msgstr[3] "{count} rannpháirtí"
+msgstr[4] "{count} rannpháirtí"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Comhrá príobháideach"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Cuireann comhrá príobháideach na daoine eile ar fanacht"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2558,7 +2416,7 @@ msgstr "Malartaigh"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "Dhiúltaigh an líonra don iarratas"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2609,12 +2467,8 @@ msgid "Not connected"
 msgstr "Gan cheangal"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr ""
-"Diailitheoir mearfhóin agus cliant teachtaireachtaí deartha le haghaidh FLX1 "
-"agus FLX1anna."
+msgstr "Aip ghlaonna agus teachtaireachtaí tapa, deartha do FuriOS."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2642,14 +2496,12 @@ msgstr "Sceidealta ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Seirbhísí líonra"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Ar aghaidh"
+msgstr "Glaonna a chur ar aghaidh"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2661,85 +2513,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Tarlaíonn an cur ar aghaidh sa líonra sula sroicheann an glao do ghuthán.\n\nAthdhíríonn „I gcónaí“ gach glao láithreach. Baineann „Nuair atá gnóthach“ nuair atá tú ar ghlao eile, „Nuair nach bhfreagraítear“ tar éis don ghuthán bualadh ar feadh an ama a roghnaíodh, agus „Nuair nach féidir teagmháil“ nuair atá an guthán múchta nó as raon.\n\nCuir uimhreacha isteach i bhformáid idirnáisiúnta, mar shampla +358401234567. Múchann uimhir fholamh an riail sin."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "I gcónaí"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Nuair atá gnóthach"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Gan freagra"
+msgstr "Nuair nach bhfreagraítear"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Nuair nach féidir teagmháil"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Ton Ringback"
+msgstr "Am bualadh"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} Rannpháirtithe"
+msgstr "{count} soicind"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Múch gach cur ar aghaidh"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Ag fanacht..."
+msgstr "Glao ag fanacht"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Nuair atá sé ar siúl, bípeann glao isteach eile le linn glao atá ar siúl, in ionad comhartha gnóthach a thabhairt don ghlaoiteoir."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Réamhshocrú Córais"
+msgstr "Réamhshocrú an líonra"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Taispeánta"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Folaigh m'uimhir"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Roghnaigh an bhfeiceann na daoine ar a gcuireann tú glao d'uimhir. Leanann „Réamhshocrú an líonra“ socrú do líne. Is féidir an folú a roghnú d'aon ghlao amháin freisin ó rogha glaonna teagmhálaí."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Glaoigh Ar Ais"
+msgstr "Cosc ar ghlaonna"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2748,77 +2589,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Bacann an cosc aicmí iomlána glaonna sa líonra.\n\nTeastaíonn pasfhocal an choisc ó do oibreoir le gach athrú; is 0000 é go minic mar réamhshocrú. Is féidir le hiarrachtaí míchearta arís agus arís eile an cosc a ghlasáil ar thaobh an líonra, agus ansin ní féidir ach le do oibreoir é a dhíghlasáil."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Ceadaithe"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Hangup Gach Glaonna"
+msgstr "Cuir cosc ar gach glao"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "M'Uimhir (Formáid Idirnáisiúnta)"
+msgstr "Cuir cosc ar ghlaonna idirnáisiúnta"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Cuir cosc ar ghlaonna idirnáisiúnta seachas chuig do thír féin"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Glaonna á n-iompórtáil..."
+msgstr "Glaonna amach"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Cuir cosc le linn fánaíochta"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Glao Isteach..."
+msgstr "Glaonna isteach"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Pasfhocal an choisc"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Athraigh pasfhocal an choisc"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "An pasfhocal reatha"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Pasfhocal nua"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Múch gach cosc"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Níl sé ar fáil ar an líonra seo"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Níorbh fhéidir na socruithe a léamh ón líonra"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2826,65 +2659,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Níorbh fhéidir an ceamara a thosú."
+msgstr "Níorbh fhéidir an socrú a athrú"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Múch gach riail maidir le glaonna a chur ar aghaidh?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Múch"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Cuir pasfhocal an choisc isteach ar dtús"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Pasfhocal mícheart don chosc"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Athraíodh pasfhocal an choisc"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Múch gach riail maidir le cosc ar ghlaonna?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Teagmháil á shábháil..."
+msgstr "Scan teagmhálaí"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Dírigh an ceamara ar chód QR teagmhálaí"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Ní teagmhálaí an cód seo"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Scan le haon ghuthán chun an teagmhálaí seo a chur leis"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Uimhir Ghlórphoist"
+msgstr "Guthphost, airde agus fuaim bualadh"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Tuairiscí seachadta, an uimhir a thaispeáint"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2894,22 +2721,20 @@ msgstr "Socruithe SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Uimhir féin agus cód tíre"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Sliotáin mhearghlao"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Glaonna éigeandála amháin."
+msgstr "Glaonna éigeandála"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Cnaipe an scáileáin ghlasáilte agus uimhreacha"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2918,24 +2743,20 @@ msgstr "Liosta blocála"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Uimhreacha nach dteastaíonn aon rud uait uathu"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Ainm an leabhair seoltaí"
+msgstr "Leabhair sheoltaí agus dúbailtí"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Sáraítear Fógra"
+msgstr "Fógraí"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Eisceachtaí, toin agus an ciúnas a sheachaint"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2945,30 +2766,28 @@ msgstr "Glaoiteoirí Anaithnid"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Scagadh"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Cóipeáladh an uimhir"
+msgstr "Cuardach uimhreacha"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Inneall cuardaigh do na cnaipí cuardaigh"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Cur ar aghaidh, glao ag fanacht agus coisc"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Teagmhálaithe, teachtaireachtaí agus stair na nglaonna"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "D'úsáideoirí a bhfuil taithí acu"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2976,32 +2795,25 @@ msgstr "Uimhreacha Coiscthe"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Tapáil an peann luaidhe chun a athrú cad a bhacann uimhir."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Uimh uimhir"
+msgstr "Níor cuireadh uimhir ar bith leis go fóill"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Liosta blocála"
+msgstr "Bac"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Cuir isteach uimhir"
+msgstr "Cuir uimhir isteach chun í a bhacadh"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Tá an uimhir seo bactha cheana féin."
+msgstr "Tá {number} ar an liosta bacanna cheana."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3035,11 +2847,11 @@ msgstr "Cuir Teachtaireacht Diúltaithe Leis"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Níor cuireadh teachtaireacht ar bith leis go fóill"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Seoltar é nuair a dhiúltaíonn tú glao le teachtaireacht."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3077,29 +2889,27 @@ msgid "Emergency Numbers"
 msgstr "Uimhreacha Éigeandála"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Uimhreacha Éigeandála"
+msgstr "Uimhreacha éigeandála an líonra"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Taispeáin uimhreacha an líonra"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Iarr tuairiscí seachadta"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Taispeáin uimhreacha i liosta na dteachtaireachtaí"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Nuair atá sé múchta, ní thagann uimhreacha ar an liosta; taispeánann ceann gan teagmhálaí a uimhir féin mar ainm"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3129,14 +2939,12 @@ msgid "Notification Exceptions"
 msgstr "Eisceachtaí Fógra"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Bainistigh teagmhálacha a imríonn fuaim i gcónaí"
+msgstr "Teagmhálaithe a bhuaileann i gcónaí"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Briseann glao tríd an mód ciúin"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3154,28 +2962,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Socraigh clingthoin saincheaptha le haghaidh teagmhálaithe ar leith"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Bainistigh teagmhálacha a imríonn fuaim i gcónaí"
+msgstr "Teachtaireachtaí a bhfuil fuaim acu i gcónaí"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Briseann teachtaireacht tríd an mód ciúin"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Seachbhóthar Glaonna Athdhéanta"
+msgstr "An ciúnas a sheachaint le teachtaireachtaí arís is arís"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr ""
-"Má ghlaonn an uimhir chéanna 3 huaire i 5 nóiméad, cuir i bhfeidhm uasta "
-"toirte."
+msgstr "Má scríobhann an seoltóir céanna 3 huaire i nóiméad, seinn an fhuaim."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3286,11 +3086,11 @@ msgstr "Tost Amháin"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Cnaipe cuardaigh do ghlaoiteoirí anaithnide le linn glao"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Úsáidtear é ag na cnaipí cuardaigh i nglaonna, i stair na nglaonna agus i dteachtaireachtaí grúpa."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3328,29 +3128,16 @@ msgstr "URL Cuardach Saincheaptha"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "Insroichte i gcónaí, fiú gan SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Seo é airde an ghlao do gach aschur. Cuirtear an leibhéal i bhfeidhm go "
-"huathoibríoch nuair a nasctar glao agus aon uair a athraíonn an t-aschur le "
-"linn glao, agus cloistear athruithe an tsleamhnáin láithreach. Cuireann na "
-"crua-earraí na leibhéil i bhfeidhm i gcéimeanna garbha, agus ní thiteann an "
-"cluasán ina thost go hiomlán riamh. Stóráiltear leibhéal Bluetooth le "
-"haghaidh tacaíocht ródúcháin atá le teacht."
+msgstr "Seo airde an ghlao do gach aschur. Baineann an leibhéal go huathoibríoch nuair a cheanglaíonn glao agus gach uair a athraíonn an t-aschur le linn glao, agus cloistear athruithe ar an sleamhnán láithreach. Cuireann na crua-earraí na leibhéil i bhfeidhm i gcéimeanna garbha, agus ní théann an cluasán ciúin ar fad riamh. Baineann leibhéil Bluetooth agus USB nuair atá na bealaí glaonna sin gníomhach."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3360,7 +3147,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Nuair atá sé ar siúl, iarrtar ar an líonra a dhearbhú cathain a shroicheann do theachtaireachtaí téacs agus ilmheán guthán an fhaighteora.\n\nTá dearbhú iontaofa nuair a thagann sé, ach ní chruthaíonn go leor iompróirí ná seoltóirí uathoibríocha ceann riamh, mar sin b'fhéidir go bhfuil teachtaireacht gan dearbhú seachadta mar sin féin. Ní chiallaíonn „Seachadta“ „Léite“ riamh."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3653,75 +3440,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Easpórtáladh bunachar sonraí Teileafónaíochta go rathúil."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Glao Isteach..."
+msgstr "Isteach"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Amach"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Diúltaithe ar an taobh eile"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Níorbh fhéidir leis an líonra é a cheangal"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Tugadh suas é sular cheangail sé"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Freagair"
+msgstr "Freagartha"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
 msgstr "Gan freagra"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Teachtaireacht Meath"
+msgstr "Diúltaithe anseo"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Críochnaithe ar an ghuthán seo"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Críochnaithe ar an taobh eile"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Scaoilte ag an líonra"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Níor fhreagair aon duine anseo"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Diúltaithe ar an ghuthán seo"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Cuireadh síos anseo sular cheangail sé"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Móideim nach bhfuil réidh"
+msgstr "Níor luaigh an móideim an chúis"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3756,11 +3533,11 @@ msgstr "Ag fanacht le deisiú satailíte..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Níl móideim ar an ngléas seo"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Tá an mód eitleáin ar siúl"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3774,7 +3551,7 @@ msgstr "Fan le do thoil, tá an glao roimhe seo fós ag críochnú"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Níorbh fhéidir an glao a thosú"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3801,29 +3578,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Theip ar an suíomh a fháil tar éis gach modh a thriail."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr ""
-"Múchann sé an raidió agus cuireann sé ar siúl arís é, cosúil le mód eitilte."
+msgstr "Tá an raidió múchta. Cuir ar siúl arís é chun an móideim a úsáid."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Tuairiscíonn an gléas seo nach bhfuil móideim ann. Ní féidir le hatosú móideim atá in easnamh nó nach bhfuil aon fhaisnéis faoi féin aige a shocrú."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Níl seirbhís an mhóideim ag freagairt."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Tá an móideim ag freagairt, ach chaill sé a sheirbhís glaonna."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Tá an móideim ag freagairt, ach tá a raidió múchta."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3928,10 +3702,10 @@ msgstr "Glaonna {count} iompórtáilte."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Tagann teagmhálaithe Andromeda ón gcóras agus ní léitear ach amháin anseo iad."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "Níl {book} ceangailte, mar sin ní féidir a theagmhálaithe a athrú go dtí go mbeidh sé ar ais."
