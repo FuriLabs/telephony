@@ -11,21 +11,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 1 : n==0 || (n%100>1 && n%100<11) ? 0 : (n%100>10 && n%100<20) ? 2 : 3);\n"
 
 #: src/telephony/cli/commands/management_command.py:110
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Telephony - Dħul"
+msgstr "Is-servizz tat-telefonija mhuwiex għaddej"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "Is-sejħiet u l-messaġġi deħlin ma jaslux. Iftaħ l-app biex terġa' tibdieh."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Irkupru tal-Modem"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Iftaħ is-serratura biex tara d-dettalji."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Telephony Emerġenza"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Qed jiġi rkuprat il-modem..."
+msgstr "Irkupra l-modem"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Kuntatti"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Is-sinkronizzazzjoni tal-Kuntatti..."
+msgstr "Il-kuntatti qed jiġu sinkronizzati…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Ibda mill-ġdid is-servizz tat-telefown"
+msgstr "Is-servizz tat-telefonija qed jerġa' jibda…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Ibda"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Ibda mill-ġdid is-servizz tat-telefown"
+msgstr "Is-servizz tat-telefonija beda"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Reload Kuntatti"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Dwar"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "Issolvi d-duplikati"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "Kuntatti Mħassra"
+msgstr "Il-kuntatti ġew aġġornati"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Diġà hemm talba USSD għaddejja"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "It-talba USSD falliet"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "Is-sessjoni USSD intemmet."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "Qed nistennew tweġiba USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Ikkanċella"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Daħħal in-numru"
+msgstr "Daħħal it-tweġiba"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "Ibgħat Issa"
+msgstr "Ibgħat"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Agħlaq"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "It-tweġiba USSD falliet"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,17 @@ msgid "Confirm"
 msgstr "Ikkonferma"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Instab {count} kuntatt duplikat. Iċċekkja l-menu."
-msgstr[1] "Instabu {count} kuntatti duplikati. Iċċekkja l-menu."
+msgstr[0] "Instabu {count} kuntatti doppji."
+msgstr[1] "Instab {count} kuntatt doppju."
+msgstr[2] "Instabu {count} kuntatti doppji."
+msgstr[3] "Instabu {count} kuntatti doppji."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Solvi"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +318,48 @@ msgstr "Isem"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Direzzjoni"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "Riżultat USSD"
+msgstr "Riżultat"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Kwalunkwe tul ta' żmien"
+msgstr "Tul"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Ċempel"
+msgstr "Numru ta' min iċempel"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Moħbi"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Sejħa ta' grupp"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Din is-sejħa kienet parti minn sejħa ta' grupp"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Trasferita"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Is-sejħa naqset milli tiskonnettja."
+msgstr "Is-sejħa ngħatat lil ħaddieħor"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Intemmet"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +415,7 @@ msgstr "Ħassar Sejħa"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "Is-sejħa ma' {who} fi {when} titneħħa mill-istorja tiegħek."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +480,13 @@ msgstr "L-ebda riżultat ma nstab f'din il-konversazzjoni"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Numru mhux imblukkat"
+msgstr "Neħħi l-imblukkar ta' dan in-numru"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Numru tal-Blokk"
+msgstr "Imblokka dan in-numru"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +498,11 @@ msgstr "Issettja l-isem tal-grupp..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Silenzja din iċ-chat"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Il-messaġġi jaslu mingħajr notifika"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -642,12 +614,13 @@ msgid "Search contacts"
 msgstr "Fittex kuntatti"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Daħħal in-numru"
-msgstr[1] "Daħħal in-numru"
+msgstr[0] "· {count} numri"
+msgstr[1] "· {count} numru"
+msgstr[2] "· {count} numri"
+msgstr[3] "· {count} numri"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -655,17 +628,13 @@ msgstr "Ċempel Anonimu"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Sejħa Falliet"
+msgstr "Sejħiet imblukkati"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Messaġġ imneħħi"
+msgstr "Messaġġi mblukkati"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -673,21 +642,17 @@ msgid "Pick Contact"
 msgstr "Agħżel Kuntatt"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
 msgstr "Daħħal in-numru"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Fittex kuntatti"
+msgstr "L-ebda kuntatt li jaqbel"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Sejħa mgħaġġla {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -722,10 +687,8 @@ msgid "3-10 mins"
 msgstr "3-10 minuti"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15-il minuta"
+msgstr "> 10 min"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -757,8 +720,10 @@ msgstr "L-aħħar 60 jum"
 #, python-brace-format
 msgid "{count} new message"
 msgid_plural "{count} new messages"
-msgstr[0] "{count} messaġġ ġdid"
-msgstr[1] "{count} messaġġi ġodda"
+msgstr[0] "{count} messaġġi ġodda"
+msgstr[1] "{count} messaġġ ġdid"
+msgstr[2] "{count} messaġġi ġodda"
+msgstr[3] "{count} messaġġi ġodda"
 
 #: src/telephony/client/ui/views/history_view.py:248
 #: src/telephony/daemon/telephony_core.py:603
@@ -884,7 +849,7 @@ msgstr "Qed jintbagħat..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Twassal"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -907,84 +872,64 @@ msgid "Save File As"
 msgstr "Save File As"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
-msgstr "Sblokkat"
+msgstr "Imblukkat"
 
 #: src/telephony/client/ui/widgets/common_widget.py:130
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Is-sejħiet minn dan in-numru huma mblukkati, għalhekk dan ma jkollu l-ebda effett sakemm l-imblukkar jitneħħa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Il-messaġġi minn dan in-numru huma mblukkati, għalhekk dan ma jkollu l-ebda effett sakemm l-imblukkar jitneħħa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Tiżblokka n-numri kollha?"
+msgstr "Neħħi l-imblukkar tas-sejħiet u żid"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Neħħi l-imblukkar tal-messaġġi u żid"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Tiżblokka n-numri kollha?"
+msgstr "Neħħi l-imblukkar tas-sejħiet biss"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Messaġġi mhux moqrija"
+msgstr "Neħħi l-imblukkar tal-messaġġi biss"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Żblokka Numru"
+msgstr "Neħħi kull imblukkar"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Dan in-numru huwa diġà mblukkat."
+msgstr "Dan in-numru huwa mblukkat ukoll għall-messaġġi."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Dan in-numru huwa diġà mblukkat."
+msgstr "Dan in-numru huwa mblukkat ukoll għas-sejħiet."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Dan in-numru huwa mblukkat kemm għas-sejħiet kif ukoll għall-messaġġi."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Sblokkat"
+msgstr "Neħħi l-imblukkar"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Dan in-numru huwa diġà mblukkat."
+msgstr "Is-sejħiet minn dan in-numru huma mblukkati."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Dan in-numru huwa diġà mblukkat."
+msgstr "Il-messaġġi minn dan in-numru huma mblukkati."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1021,13 +966,11 @@ msgstr "Prinċipali"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "L-aħħar imblukkar — neħħi n-numru bil-landa taż-żibel"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Żid in-Numru"
+msgstr "Numru moħbi"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1054,103 +997,87 @@ msgstr "Settings Avvanzati"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "jħalli mittenti fdati jibdew azzjonijiet fuq it-telefon tiegħek bi messaġġ tat-test"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Ibda mill-ġdid il-Modem"
+msgstr "jerġa' jibda l-modem"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "ibiddel liema ikoni tal-apps huma installati"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "iħassar id-data tiegħek"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} u {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Għal utenti b'esperjenza. Din il-paġna {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Triggers sigrieti SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Issettja \"Sib l-Telephony tiegħi\""
+msgstr "Sib it-telefon tiegħi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Post permezz ta' SMS fdat"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Issettja \"Trusted Callback\""
+msgstr "Sejħa lura fdata"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Bidu siekta għas-sejħa lura"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Issettja \"SMS -Relay\""
+msgstr "Trasmissjoni ta' SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Messaġġi mhux moqrija"
+msgstr "Għaddi l-messaġġi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Issettja \"SMS -tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Aċċess għax-xell mill-bogħod"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Sakkar l-apparat"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Sakkar permezz ta' SMS fdat"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Attiva l-Funzjoni"
+msgstr "Karatteristiċi sperimentali tas-sejħiet"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Ikkonferma Sejħa ta' Emerġenza"
+msgstr "Ħalli sejħiet ta' grupp"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Ħalli t-trasferiment tas-sejħiet"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1174,7 +1101,7 @@ msgstr "Ġestjoni tad-Data"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Esportazzjoni, importazzjoni u rrisettjar"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1220,7 +1147,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "It-tgħaqqid tas-sejħiet f'sejħa ta' grupp jiddependi mill-operatur, u fit-testijiet tagħna r-riżultati varjaw minn ħidma tajba sa sejħiet li jaqtgħu. Ixgħel dan biex tipprovah fuq il-linja tiegħek stess. Ma jistax jiġi appoġġat b'mod ufficjali, għalhekk ħallih mitfi jekk tippreferi li s-sejħiet tiegħek jaħdmu kif tistenna."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1229,50 +1156,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "It-tgħaqqid ta' żewġ sejħiet ma' xulxin jeħtieġ servizz li l-operatur irid jipprovdi, u fit-testijiet tagħna ħafna operaturi jew irrifjutawh jew qatgħu s-sejħiet minflok. Ixgħel dan biex tipprovah fuq il-linja tiegħek stess. Ma jistax jiġi appoġġat b'mod ufficjali, għalhekk ħallih mitfi jekk tippreferi li s-sejħiet tiegħek jaħdmu kif tistenna."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Meta l-modem jieqaf iwieġeb, it-telefown iwettaq il-passi tal-irkupru waħdu "
-"fis-skiet: jibda mill-ġdid ir-radju, iċiklu l-enerġija tal-modem, jibda mill-"
-"ġdid il-firmware u jerġa' jattiva radju diżattivat. It-telefown qatt ma "
-"jerġa' jinbeda awtomatikament. Jekk xejn ma jgħin, tintalab terġa' tibda t-"
-"telefown. Meta dan ikun mitfi, minflok tinfetaħ it-tieqa tal-Irkupru tal-"
-"Modem biex tkun tista' twettaq il-passi int stess."
+msgstr "Meta l-modem jieqaf iwieġeb, it-telefon jerġa' jibda s-softwer tal-modem waħdu bil-kwiet, u inti ssir tafha biss jekk dik tfalli. It-telefon qatt ma jerġa' jibda waħdu. Meta dan ikun mitfi, tidher l-iskrin tal-irkupru tal-modem minflok, biex tagħmel il-bidu mill-ġdid inti stess."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Il-modem qed jaħdem"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Erġa' ibda l-modem; dan jieħu madwar 30 sekonda"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Nibda mill-ġdid il-Modem..."
+msgstr "Il-modem qed jerġa' jibda…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Is-sejħiet u l-messaġġi qed jaħdmu mill-ġdid"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "L-irkupru ma għenx. Il-modem għadu ma jweġibx"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1289,17 +1201,13 @@ msgstr "Nota (Mhux obbligatorju)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Blocklist"
+msgstr "Imblokka s-sejħiet"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Il-Messaġġi kollha"
+msgstr "Imblokka l-messaġġi"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1398,7 +1306,7 @@ msgstr "Agħżel File"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Waħħal"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1426,10 +1334,8 @@ msgid "Contact Details"
 msgstr "Dettalji ta' Kuntatt"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Kuntatti"
+msgstr "Kuntatt ġdid"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1503,7 +1409,7 @@ msgstr "Anniversarju"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Aqsam bħala kodiċi QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1547,45 +1453,36 @@ msgstr "Ikkopjati fil-clipboard"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Żid Email"
+msgstr "Imejl"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Il-modem mhux disponibbli"
+msgstr "L-ebda app tal-imejl disponibbli"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Kuntatt għall-Esportazzjoni"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Ma setax jinħoloq il-ktieb tal-indirizzi"
+msgstr "Il-kodiċi QR ma setax jinħoloq"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Verament tħassar lil kulħadd mill-ktieb tal-indirizzi tiegħek?"
+msgstr "{name} jitneħħa mill-ktieb tal-indirizzi tiegħek."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Fittex kuntatti"
+msgstr "Dan il-kuntatt"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1595,13 +1492,11 @@ msgstr "Il-kuntatt ma setax jiġi salvat"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Dan il-ktieb tal-indirizzi jinqara biss"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Ebda kotba tal-indirizzi li jistgħu jitħassru"
+msgstr "L-ebda ktieb tal-indirizzi li fih tista' tikteb"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1710,24 +1605,28 @@ msgstr "Ħassar KOLLOX"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dan iħassar {count} sejħiet. Ma jistax jiġi mdawwar lura."
+msgstr[1] "Dan iħassar {count} sejħa. Ma jistax jiġi mdawwar lura."
+msgstr[2] "Dan iħassar {count} sejħiet. Ma jistax jiġi mdawwar lura."
+msgstr[3] "Dan iħassar {count} sejħiet. Ma jistax jiġi mdawwar lura."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Dan se jħassar l-SMS/MMS u l-annessi kollha."
-msgstr[1] "Dan se jħassar l-SMS/MMS u l-annessi kollha."
+msgstr[0] "Dan iħassar {count} messaġġi u l-annessi tagħhom."
+msgstr[1] "Dan iħassar {count} messaġġ u l-annessi tiegħu."
+msgstr[2] "Dan iħassar {count} messaġġi u l-annessi tagħhom."
+msgstr[3] "Dan iħassar {count} messaġġi u l-annessi tagħhom."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Irrisettja l-ismijiet tad-dwana kollha taċ-chat tal-gruppi?"
-msgstr[1] "Irrisettja l-ismijiet tad-dwana kollha taċ-chat tal-gruppi?"
+msgstr[0] "Dan jirrisettja {count} ismijiet ta' gruppi personalizzati."
+msgstr[1] "Dan jirrisettja {count} isem ta' grupp personalizzat."
+msgstr[2] "Dan jirrisettja {count} ismijiet ta' gruppi personalizzati."
+msgstr[3] "Dan jirrisettja {count} ismijiet ta' gruppi personalizzati."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1737,8 +1636,10 @@ msgstr "Ħassar l-Ismijiet tal-Gruppi"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Dan ineħħi l-imblukkar ta' {count} numri."
+msgstr[1] "Dan ineħħi l-imblukkar ta' {count} numru."
+msgstr[2] "Dan ineħħi l-imblukkar ta' {count} numri."
+msgstr[3] "Dan ineħħi l-imblukkar ta' {count} numri."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1756,18 +1657,10 @@ msgstr ""
 "Int żgur li trid tħassar b'mod permanenti l-ktieb tal-indirizzi ' {name}'?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Liema ktieb tal-indirizzi trid tħassar b'mod permanenti?\n"
-"\n"
-"Dan se jimsaħ mis-sistema."
+msgstr "Liema ktieb tal-indirizzi trid tħassar għal dejjem? Dan ineħħih mis-sistema."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1903,43 +1796,39 @@ msgstr "Jingħaqdu {current} / {total}..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "Favorit"
+msgstr "Favoriti"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Agħżel kuntatt biex tpoġġih fi post tas-sejħa mgħaġġla. Fuq it-tastiera tan-numri, meta tagħfas dik iċ-ċifra waħda jidher il-kuntatt, biex tkun tista' ċċemplu."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Sejħa mgħaġġla"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Ċempel {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Vojt"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Agħżel Ton għal {name}"
+msgstr "Agħżel post għal {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "{name} żdied fil-post {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1976,35 +1865,25 @@ msgid "Export Calls or Messages"
 msgstr "Esportazzjoni Sejħiet jew Messaġġi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Importa Sejħa Storja"
+msgstr "Esporta l-istorja tas-sejħiet"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Importa Messaġġi"
+msgstr "Esporta l-messaġġi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Blocklist"
+msgstr "Esporta l-lista tal-imblukkar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Blocklist"
+msgstr "Importa lista tal-imblukkar"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Importazzjoni / Esportazzjoni"
+msgstr "Importazzjoni u esportazzjoni"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2012,16 +1891,13 @@ msgid "Export File"
 msgstr "Esportazzjoni Fajl"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Esportati kuntatti {count}"
+msgstr "Ġew esportati {count} entrati."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Esportazzjoni Fajl"
+msgstr "L-esportazzjoni falliet."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2032,13 +1908,11 @@ msgstr "Agħżel File"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Importati: {added} miżjuda, {updated} imwessgħa."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "L-importazzjoni falliet: {e}"
+msgstr "L-importazzjoni falliet."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2196,10 +2070,8 @@ msgstr "Agħżel Ktieb tal-Indirizzi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Default tas-Sistema"
+msgstr "Awtomatiku"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2369,10 +2241,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Headset bil-wajer"
+msgstr "Headset USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2387,16 +2257,12 @@ msgid "Bluetooth Mic"
 msgstr "Mikrofonu Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Mikrofonu"
+msgstr "Mikrofonu USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Issettja n-numru tiegħek fis-Settings"
+msgstr "In-numru tiegħek huwa moħbi"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2427,14 +2293,14 @@ msgstr "Tastiera"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Il-modem mhuwiex jaħdem sewwa."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Is-sejħiet, il-messaġġi u d-data mobbli ma jaħdmux sakemm il-modem jerġa' jibda.\n\nIl-bidu mill-ġdid jieħu madwar 30 sekonda u jaqta' kull sejħa li tkun għaddejja."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2448,16 +2314,12 @@ msgstr "Erġa' ibda t-telefown"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Attiva"
+msgstr "Azzjonijiet"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Mute"
+msgstr "Silenzjat"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2474,16 +2336,12 @@ msgid "Mute"
 msgstr "Mute"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Spiker"
+msgstr "Aqleb għall-ispiker"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 Ibda"
+msgstr "Kompli"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2491,35 +2349,29 @@ msgstr "Żomm"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Żid Email"
+msgstr "Żid sejħa"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Sejħiet"
+msgstr "Biddel is-sejħiet"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Għaqqad kollox"
+msgstr "Għaqqad is-sejħiet"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Ingħaqad mas-sejħa ta' grupp"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Ittrasferixxi"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "It-trasferiment jgħaqqad lil {a} u lil {b} ma' xulxin u inti titlaq mis-sejħa"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2527,27 +2379,26 @@ msgstr "Sejħa Dieħla Imsikkta"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Ikkonferma Sejħa ta' Emerġenza"
+msgstr "Sejħa ta' grupp"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} Parteċipanti"
-msgstr[1] "{count} Parteċipanti"
+msgstr[0] "{count} partiċipanti"
+msgstr[1] "{count} partiċipant"
+msgstr[2] "{count} partiċipanti"
+msgstr[3] "{count} partiċipanti"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Taħdita privata"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Taħdita privata tpoġġi lill-oħrajn fl-istennija"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2556,7 +2407,7 @@ msgstr "Ibdel"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "In-netwerk irrifjuta t-talba"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2608,12 +2459,8 @@ msgid "Not connected"
 msgstr "Mhux konness"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr ""
-"Dialer tat-telefon veloċi u klijent tal-messaġġi ddisinjati għal FLX1 u "
-"FLX1s."
+msgstr "App mgħaġġla tas-sejħiet u l-messaġġi, imfassla għal FuriOS."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2641,14 +2488,12 @@ msgstr "Skedat ( {current} / {total} )"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Servizzi tan-netwerk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Quddiem"
+msgstr "Tgħaddija tas-sejħiet"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2660,85 +2505,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "It-tgħaddija sseħħ fin-netwerk qabel ma s-sejħa tilħaq it-telefon tiegħek.\n\n„Dejjem“ tgħaddi kull sejħa minnufih. „Meta okkupat“ japplika waqt li tkun fi sejħa oħra, „Meta ma jirrispondix“ wara li t-telefon ikun daqq għall-ħin magħżul, u „Meta ma jintlaħaqx“ meta t-telefon ikun mitfi jew barra l-kopertura.\n\nDaħħal in-numri fil-forma internazzjonali, eżempju +358401234567. Jekk tapplika numru vojt, dik ir-regola tintefa."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "Dejjem"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Meta okkupat"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Bla tweġiba"
+msgstr "Meta ma jirrispondix"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Meta ma jintlaħaqx"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Ringback Ton"
+msgstr "Ħin tad-daqq"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} Parteċipanti"
+msgstr "{count} sekondi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Itfi kull tgħaddija"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Qed tistenna..."
+msgstr "Sejħa fl-istennija"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Meta mixgħul, sejħa dieħla oħra tagħmel ħoss waqt sejħa li tkun għaddejja, minflok min iċempel jirċievi sinjal li l-linja okkupata."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Default tas-Sistema"
+msgstr "Awtomatiku tan-netwerk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "Jidher"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Aħbi n-numru tiegħi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Agħżel jekk in-nies li ċċempillhom jaraw in-numru tiegħek. „Awtomatiku tan-netwerk“ isegwi s-setting tal-linja tiegħek. It-tħabbija tista' tintgħażel ukoll għal sejħa waħda mill-menu tas-sejħiet ta' kuntatt."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Ċempel Lura"
+msgstr "Restrizzjoni tas-sejħiet"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2747,77 +2581,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Ir-restrizzjoni timblokka klassijiet sħaħ ta' sejħiet fin-netwerk.\n\nKull bidla teħtieġ il-password tar-restrizzjoni mingħand l-operatur tiegħek; awtomatikament spiss hija 0000. Provi ħżiena ripetuti jistgħu jsakkru r-restrizzjoni fuq in-naħa tan-netwerk, u mbagħad l-operatur tiegħek biss jista' jiftaħha."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Permess"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Hangup Is-Sejħiet Kollha"
+msgstr "Irrestrinġi kull sejħa"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "In-Numru Tiegħi (Format Internazzjonali)"
+msgstr "Irrestrinġi s-sejħiet internazzjonali"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Irrestrinġi l-internazzjonali ħlief lejn pajjiżek"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Importazzjoni ta' Sejħiet..."
+msgstr "Sejħiet ħerġin"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Irrestrinġi fir-roaming"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Sejħa Dieħla..."
+msgstr "Sejħiet deħlin"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Password tar-restrizzjoni"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Ibdel il-password tar-restrizzjoni"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Il-password attwali"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Password ġdida"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Itfi kull restrizzjoni"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Mhux disponibbli fuq dan in-netwerk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Is-settings ma setgħux jinqraw min-netwerk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2825,65 +2651,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Ma setgħetx tibda l-kamera."
+msgstr "Is-setting ma setax jinbidel"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Titfi kull regola tat-tgħaddija tas-sejħiet?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Itfi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Daħħal il-password tar-restrizzjoni l-ewwel"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Il-password tar-restrizzjoni hija żbaljata"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Il-password tar-restrizzjoni nbidlet"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Titfi kull regola tar-restrizzjoni tas-sejħiet?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Jissejvja l-kuntatt..."
+msgstr "Skennja kuntatt"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Ipponta l-kamera lejn kodiċi QR ta' kuntatt"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Dan il-kodiċi mhuwiex kuntatt"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Skennja bi kwalunkwe telefon biex iżżid dan il-kuntatt"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Numru tal-Voicemail"
+msgstr "Voicemail, volum u ħoss tad-daqq"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Rapporti tal-wasla, il-wiri tan-numru"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2893,22 +2713,20 @@ msgstr "Settings tas-SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "In-numru tiegħek u l-kodiċi tal-pajjiż"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Postijiet tas-sejħa mgħaġġla"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Sejħiet ta' emerġenza biss."
+msgstr "Sejħiet ta' emerġenza"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Buttuna tal-iskrin imsakkar u numri"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2917,24 +2735,20 @@ msgstr "Blocklist"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Numri li ma tridx tisma' xejn minnhom"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Isem il-ktieb tal-indirizzi"
+msgstr "Kotba tal-indirizzi u doppji"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Invalida tan-Notifika"
+msgstr "Notifiki"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Eċċezzjonijiet, ħsejjes u l-qbiż tas-silenzju"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2944,30 +2758,28 @@ msgstr "Ċempel mhux magħrufa"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Għarbil"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Numru ikkupjat"
+msgstr "Tfittxija ta' numru"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Magna tat-tfittxija għall-buttuni tat-tfittxija"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Tgħaddija, sejħa fl-istennija u restrizzjonijiet"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Kuntatti, messaġġi u l-istorja tas-sejħiet"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Għal utenti b'esperjenza"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2975,32 +2787,25 @@ msgstr "Numri Imblukkati"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Agħfas il-lapes biex tibdel dak li jimblokka numru."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "L-ebda numru"
+msgstr "Għadu ma żdied l-ebda numru"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Blocklist"
+msgstr "Imblokka"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Daħħal in-numru"
+msgstr "Daħħal numru biex timblokkah"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Dan in-numru huwa diġà mblukkat."
+msgstr "{number} diġà qiegħed fil-lista tal-imblukkar."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3034,11 +2839,11 @@ msgstr "Żid Messaġġ ta' Rifjut"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Għadu ma żdied l-ebda messaġġ"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "Jintbagħat meta tirrifjuta sejħa bi messaġġ."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3076,29 +2881,27 @@ msgid "Emergency Numbers"
 msgstr "Numri ta' Emerġenza"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Numri ta' Emerġenza"
+msgstr "Numri ta' emerġenza tan-netwerk"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Uri n-numri tan-netwerk"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Itlob rapporti tal-wasla"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Uri n-numri fil-lista tal-messaġġi"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Meta mitfi, in-numri ma jidhrux fil-lista; wieħed bla kuntatt juri n-numru tiegħu bħala l-isem"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3128,14 +2931,12 @@ msgid "Notification Exceptions"
 msgstr "Eċċezzjonijiet ta' Notifika"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Immaniġġja kuntatti li dejjem jilagħbu l-ħoss"
+msgstr "Kuntatti li jdoqqu dejjem"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Sejħa tgħaddi minn ġos-sistema siekta"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3151,26 +2952,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Issettja ringtones personalizzati għal kuntatti speċifiċi"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Immaniġġja kuntatti li dejjem jilagħbu l-ħoss"
+msgstr "Messaġġi li jagħmlu ħoss dejjem"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Messaġġ jgħaddi minn ġos-sistema siekta"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Sejħiet Ripetuti Bypass"
+msgstr "Qbiż tas-silenzju għal messaġġi ripetuti"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr "Jekk l-istess numru jsejjaħ 3 darbiet f'5 minuti, seħħ volum massimu."
+msgstr "Jekk l-istess mittent jikteb 3 darbiet fi minuta, daqq il-ħoss."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3280,11 +3075,11 @@ msgstr "Silenzju Biss"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Buttuna tat-tfittxija għal min iċempel u mhux magħruf waqt sejħa"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Tintuża mill-buttuni tat-tfittxija fis-sejħiet, fl-istorja tas-sejħiet u fil-messaġġi tal-gruppi."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3321,28 +3116,16 @@ msgstr "URL tat-Tiftix Personalizzat"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "Dejjem jintlaħaq, anke bla SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Dan huwa l-volum tas-sejħa għal kull output. Il-livell jiġi applikat "
-"awtomatikament meta sejħa tiġi konnessa u kull meta l-output jinbidel waqt "
-"sejħa, u l-bidliet fl-islider jinstemgħu mill-ewwel. Il-hardware japplika l-"
-"livelli f'passi kbar, u l-earpiece qatt ma jsir sieket għalkollox. Il-livell "
-"tal-Bluetooth jinħażen għall-appoġġ tar-rotot li ġej."
+msgstr "Dan huwa l-volum tas-sejħa għal kull ħruġ. Il-livell japplika waħdu meta sejħa tingħaqad u kull darba li l-ħruġ jinbidel waqt sejħa, u l-bidliet fuq l-iżlajder jinstemgħu minnufih. Il-ħardwer japplika l-livelli bi passi kbar, u l-isperker tal-widna qatt ma jisket għalkollox. Il-livelli tal-Bluetooth u tal-USB japplikaw meta dawk il-mogħdijiet tas-sejħiet ikunu attivi."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3352,7 +3135,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Meta mixgħul, in-netwerk jintalab jikkonferma meta l-messaġġi tat-test u tal-multimidja tiegħek jaslu fit-telefon ta' min jirċievihom.\n\nKonferma hija affidabbli meta tasal, imma ħafna operaturi u mittenti awtomatiċi qatt ma jagħmlu waħda, għalhekk messaġġ bla konferma xorta jista' jkun wasal. „Twassal“ qatt ma jfisser „nqara“."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3647,75 +3430,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Id-database Telephony esportata b'suċċess."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Sejħa Dieħla..."
+msgstr "Dieħla"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Ħierġa"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Irrifjutata fuq in-naħa l-oħra"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "In-netwerk ma setax jgħaqqadha"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Twarrbet qabel ma ngħaqdet"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Wieġeb"
+msgstr "Mwieġba"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "Bla tweġiba"
+msgstr "Ma ġietx imwieġba"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Tnaqqas il-messaġġ"
+msgstr "Irrifjutata hawn"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Intemmet fuq dan it-telefon"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Intemmet fuq in-naħa l-oħra"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Maqtugħa min-netwerk"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Ħadd ma wieġeb hawn"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Irrifjutata fuq dan it-telefon"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Maqtugħa hawn qabel ma ngħaqdet"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Modem mhux lest"
+msgstr "Il-modem ma qalx ir-raġuni"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3750,11 +3523,11 @@ msgstr "Nistennew it-tiswija tas-satellita..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Dan l-apparat ma għandux modem"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Il-modalità tal-ajruplan hija mixgħula"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3768,7 +3541,7 @@ msgstr "Jekk jogħġbok stenna, is-sejħa ta' qabel għadha qed tintemm"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Is-sejħa ma setgħetx tinbeda"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3795,28 +3568,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Naqas milli jikseb il-post wara li ppruvajt il-metodi kollha."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "Jitfi r-radju u jerġa' jixgħlu, bħall-modalità tat-titjira."
+msgstr "Ir-radju huwa mitfi. Ixgħelu mill-ġdid biex tuża l-modem."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Dan l-apparat jirrapporta li ma hemmx modem. Il-bidu mill-ġdid ma jistax isewwi modem li mhux hemm jew li ma għandux data dwaru nnifsu."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Is-servizz tal-modem ma jweġibx."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Il-modem qed iwieġeb, imma tilef is-servizz tas-sejħiet tiegħu."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Il-modem qed iwieġeb, imma r-radju tiegħu huwa mitfi."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3916,10 +3687,10 @@ msgstr "Sejħiet {count} importati."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Il-kuntatti ta' Andromeda jiġu mis-sistema u hawn jinqraw biss."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} mhuwiex imqabbad, għalhekk il-kuntatti tiegħu ma jistgħux jinbidlu sakemm jerġa' jkun hemm."
