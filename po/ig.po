@@ -17,15 +17,13 @@ msgstr ""
 #: src/telephony/client/managers/ofono_mirror.py:94
 #: src/telephony/client/managers/ofono_mirror.py:261
 #: src/telephony/client/ui/main_window.py:225
-#, fuzzy
-#| msgid "Telephony - Incoming"
 msgid "Telephony service is not running"
-msgstr "Ekwentị - na-abata"
+msgstr "Ọrụ ekwentị anaghị arụ ọrụ"
 
 #: src/telephony/cli/commands/management_command.py:111
 msgid ""
 "Incoming calls and messages are not received. Open the app to start it again."
-msgstr ""
+msgstr "A naghị anata oku na ozi na-abata. Mepee ngwa ahụ ka ị malite ya ọzọ."
 
 #: src/telephony/client/managers/lockscreen_manager.py:58
 #: src/telephony/client/ui/windows/advanced_settings_window.py:110
@@ -37,7 +35,7 @@ msgstr "Mweghachi Modem"
 #: src/telephony/client/managers/lockscreen_manager.py:59
 #: src/telephony/daemon/telephony_core.py:417
 msgid "Please unlock to see details."
-msgstr ""
+msgstr "Kpọghee mkpọchi ka ị hụ nkọwa."
 
 #: src/telephony/client/managers/lockscreen_manager.py:61
 msgid "Telephony Emergency"
@@ -48,10 +46,8 @@ msgstr "Mberede ekwentị"
 #: src/telephony/client/ui/windows/incall_window.py:1132
 #: src/telephony/client/ui/windows/incall_window.py:1163
 #: src/telephony/client/ui/windows/incall_window.py:1195
-#, fuzzy
-#| msgid "Recovering modem..."
 msgid "Recover Modem"
-msgstr "Na-eweghachi modem..."
+msgstr "Weghachi modem"
 
 #: src/telephony/client/managers/ofono_mirror.py:266
 #: src/telephony/client/ui/main_window.py:560
@@ -94,27 +90,21 @@ msgid "Contacts"
 msgstr "Ndi ana-akpo"
 
 #: src/telephony/client/ui/main_window.py:168
-#, fuzzy
-#| msgid "Syncing Contacts..."
 msgid "Syncing contacts…"
-msgstr "Na-emekọrịta kọntaktị..."
+msgstr "Na-emekọrịta kọntaktị…"
 
 #: src/telephony/client/ui/main_window.py:223
 #: src/telephony/client/ui/windows/incall_window.py:669
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service is restarting…"
-msgstr "Mmalitegharị ọrụ ekwentị"
+msgstr "Ọrụ ekwentị na-amalite ọzọ…"
 
 #: src/telephony/client/ui/main_window.py:226
 msgid "Start"
-msgstr ""
+msgstr "Malite"
 
 #: src/telephony/client/ui/main_window.py:235
-#, fuzzy
-#| msgid "Phone service restart"
 msgid "Telephony service started"
-msgstr "Mmalitegharị ọrụ ekwentị"
+msgstr "Ọrụ ekwentị amalitela"
 
 #: src/telephony/client/ui/main_window.py:282
 msgid "Set your number in Settings"
@@ -140,35 +130,33 @@ msgstr "Bugharịa kọntaktị"
 
 #: src/telephony/client/ui/main_window.py:348
 msgid "About"
-msgstr ""
+msgstr "Gbasara"
 
 #: src/telephony/client/ui/main_window.py:360
 msgid "Resolve Duplicates"
 msgstr "dozie oyiri"
 
 #: src/telephony/client/ui/main_window.py:481
-#, fuzzy
-#| msgid "Contacts Deleted"
 msgid "Contacts refreshed"
-msgstr "ehichapụrụ kọntaktị"
+msgstr "Emelitere kọntaktị"
 
 #: src/telephony/client/ui/main_window.py:557
 msgid "A USSD request is already in progress"
-msgstr ""
+msgstr "Enwere arịrịọ USSD na-aga ugbua"
 
 #: src/telephony/client/ui/main_window.py:576
 #: src/telephony/client/ui/main_window.py:584
 msgid "USSD request failed"
-msgstr ""
+msgstr "Arịrịọ USSD dara"
 
 #: src/telephony/client/ui/main_window.py:611
 #: src/telephony/client/ui/main_window.py:615
 msgid "USSD session ended."
-msgstr ""
+msgstr "Nnọkọ USSD agwụla."
 
 #: src/telephony/client/ui/main_window.py:663
 msgid "Waiting for USSD response…"
-msgstr ""
+msgstr "Na-eche nzaghachi USSD…"
 
 #: src/telephony/client/ui/main_window.py:670
 #: src/telephony/client/ui/main_window.py:691
@@ -195,16 +183,12 @@ msgid "Cancel"
 msgstr "Kagbuo"
 
 #: src/telephony/client/ui/main_window.py:676
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter response"
-msgstr "Tinye nọmba"
+msgstr "Tinye nzaghachi"
 
 #: src/telephony/client/ui/main_window.py:684
-#, fuzzy
-#| msgid "Send Now"
 msgid "Send"
-msgstr "zipu Ugbu a"
+msgstr "Zipu"
 
 #: src/telephony/client/ui/main_window.py:696
 msgid "Close"
@@ -212,12 +196,12 @@ msgstr "Mechie"
 
 #: src/telephony/client/ui/main_window.py:707
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #: src/telephony/client/ui/main_window.py:758
 #: src/telephony/client/ui/main_window.py:766
 msgid "USSD response failed"
-msgstr ""
+msgstr "Nzaghachi USSD dara"
 
 #: src/telephony/client/ui/main_window.py:813
 #: src/telephony/client/ui/windows/date_time_picker_window.py:42
@@ -225,17 +209,15 @@ msgid "Confirm"
 msgstr "Kwenye"
 
 #: src/telephony/client/ui/main_window.py:842
-#, fuzzy, python-brace-format
-#| msgid "Found {count} duplicate contact. Check menu."
-#| msgid_plural "Found {count} duplicate contacts. Check menu."
+#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
-msgstr[0] "Achọtara kọntaktị oyiri {count}. Lelee menu."
-msgstr[1] "Achọtara kọntaktị oyiri {count}. Lelee menu."
+msgstr[0] "Achọtara kọntaktị {count} nke a kwughachiri."
+msgstr[1] "Achọtara kọntaktị {count} nke a kwughachiri."
 
 #: src/telephony/client/ui/main_window.py:846
 msgid "Resolve"
-msgstr ""
+msgstr "Dozie"
 
 #: src/telephony/client/ui/main_window.py:879
 #, python-brace-format
@@ -334,56 +316,48 @@ msgstr "Aha"
 
 #: src/telephony/client/ui/main_window.py:994
 msgid "Direction"
-msgstr ""
+msgstr "Ụzọ"
 
 #: src/telephony/client/ui/main_window.py:995
-#, fuzzy
-#| msgid "USSD Result"
 msgid "Result"
-msgstr "Nsonaazụ USSD"
+msgstr "Nsonaazụ"
 
 #: src/telephony/client/ui/main_window.py:996
 msgid "Date"
-msgstr ""
+msgstr "Ụbọchị"
 
 #: src/telephony/client/ui/main_window.py:996
-#, fuzzy
-#| msgid "Any duration"
 msgid "Duration"
-msgstr "Ogologo oge ọ bụla"
+msgstr "Ogologo oge"
 
 #: src/telephony/client/ui/main_window.py:999
-#, fuzzy
-#| msgid "Call"
 msgid "Caller ID"
-msgstr "Kpọọ"
+msgstr "Nọmba onye kpọrọ"
 
 #: src/telephony/client/ui/main_window.py:999
 #: src/telephony/client/ui/windows/network_services_window.py:128
 msgid "Hidden"
-msgstr ""
+msgstr "Ezoro ezo"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "Conference"
-msgstr ""
+msgstr "Oku ndị otu"
 
 #: src/telephony/client/ui/main_window.py:1001
 msgid "This call was part of a conference"
-msgstr ""
+msgstr "Oku a bụ akụkụ nke oku ndị otu"
 
 #: src/telephony/client/ui/main_window.py:1003
 msgid "Transferred"
-msgstr ""
+msgstr "Enyefere"
 
 #: src/telephony/client/ui/main_window.py:1003
-#, fuzzy
-#| msgid "The call failed to disconnect."
 msgid "The call was handed to someone else"
-msgstr "Oku a kwụsịrị ịkwụpụ."
+msgstr "Enyefere oku ahụ onye ọzọ"
 
 #: src/telephony/client/ui/main_window.py:1005
 msgid "Ended"
-msgstr ""
+msgstr "Agwụla"
 
 #: src/telephony/client/ui/main_window.py:1040
 #: src/telephony/client/ui/views/chat_view.py:888
@@ -439,7 +413,7 @@ msgstr "Hichapụ oku"
 #: src/telephony/client/ui/main_window.py:1064
 #, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
-msgstr ""
+msgstr "A ga-ewepụ oku ya na {who} na {when} site na akụkọ ihe mere eme gị."
 
 #: src/telephony/client/ui/main_window.py:1092
 msgid "Number copied"
@@ -504,17 +478,13 @@ msgstr "Enweghị nsonaazụ ahụrụ na mkparịta ụka a"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Unblocked number"
 msgid "Unblock this number"
-msgstr "Nọmba akpọchiri akpọchi"
+msgstr "Wepụ mgbochi nọmba a"
 
 #: src/telephony/client/ui/views/chat_view.py:732
 #: src/telephony/client/ui/windows/contact_editor_window.py:481
-#, fuzzy
-#| msgid "Block Number"
 msgid "Block this number"
-msgstr "Nọmba ngọngọ"
+msgstr "Gbochie nọmba a"
 
 #: src/telephony/client/ui/views/chat_view.py:762
 msgid "Group Name"
@@ -526,11 +496,11 @@ msgstr "Tọọ aha otu..."
 
 #: src/telephony/client/ui/views/chat_view.py:771
 msgid "Mute This Chat"
-msgstr ""
+msgstr "Mechie ụda nkata a"
 
 #: src/telephony/client/ui/views/chat_view.py:772
 msgid "Messages arrive without a notification"
-msgstr ""
+msgstr "Ozi na-abịa n'enweghị ọkwa"
 
 #: src/telephony/client/ui/views/chat_view.py:780
 #: src/telephony/client/ui/windows/incall_window.py:463
@@ -642,12 +612,11 @@ msgid "Search contacts"
 msgstr "Chọọ kọntaktị"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, fuzzy, python-brace-format
-#| msgid "Enter number"
+#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
-msgstr[0] "Tinye nọmba"
-msgstr[1] "Tinye nọmba"
+msgstr[0] "· nọmba {count}"
+msgstr[1] "· nọmba {count}"
 
 #: src/telephony/client/ui/views/contacts_view.py:527
 msgid "Call Anonymous"
@@ -655,17 +624,13 @@ msgstr "Kpọọ Amaghị aha"
 
 #: src/telephony/client/ui/views/contacts_view.py:539
 #: src/telephony/client/ui/widgets/common_widget.py:89
-#, fuzzy
-#| msgid "Call Failed"
 msgid "Calls blocked"
-msgstr "Oku agaghị"
+msgstr "Egbochiri oku"
 
 #: src/telephony/client/ui/views/contacts_view.py:540
 #: src/telephony/client/ui/widgets/common_widget.py:90
-#, fuzzy
-#| msgid "Message removed"
 msgid "Messages blocked"
-msgstr "Ewepụrụ ozi"
+msgstr "Egbochiri ozi"
 
 #: src/telephony/client/ui/views/contacts_view.py:557
 #: src/telephony/client/ui/windows/contact_picker_window.py:22
@@ -673,21 +638,17 @@ msgid "Pick Contact"
 msgstr "Họrọ kọntaktị"
 
 #: src/telephony/client/ui/views/dialpad_view.py:87
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter Number"
 msgstr "Tinye nọmba"
 
 #: src/telephony/client/ui/views/dialpad_view.py:287
-#, fuzzy
-#| msgid "Search contacts"
 msgid "No matching contacts"
-msgstr "Chọọ kọntaktị"
+msgstr "Enweghị kọntaktị dabara"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
 #, python-brace-format
 msgid "Speed dial {slot}"
-msgstr ""
+msgstr "Oku ngwa ngwa {slot}"
 
 #: src/telephony/client/ui/views/dialpad_view.py:572
 msgid "Invalid number in clipboard"
@@ -722,10 +683,8 @@ msgid "3-10 mins"
 msgstr "3-10 nkeji"
 
 #: src/telephony/client/ui/views/history_view.py:183
-#, fuzzy
-#| msgid "> 15 mins"
 msgid "> 10 mins"
-msgstr "> 15 nkeji"
+msgstr "> nkeji 10"
 
 #: src/telephony/client/ui/views/history_view.py:192
 msgid "Any date"
@@ -884,7 +843,7 @@ msgstr "Na-ezipu..."
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
 #, python-brace-format
 msgid "{time} · Delivered"
-msgstr ""
+msgstr "{time} · Erutere"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:556
 msgid "Open with"
@@ -907,8 +866,6 @@ msgid "Save File As"
 msgstr "Chekwaa faịlụ dịka"
 
 #: src/telephony/client/ui/widgets/common_widget.py:87
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Blocked"
 msgstr "Egbochiri"
 
@@ -916,75 +873,57 @@ msgstr "Egbochiri"
 msgid ""
 "Calls from this number are blocked, so this would have no effect until the "
 "block is lifted."
-msgstr ""
+msgstr "Egbochiri oku si na nọmba a, ya mere nke a agaghị enwe mmetụta ruo mgbe ewepụrụ mgbochi ahụ."
 
 #: src/telephony/client/ui/widgets/common_widget.py:132
 msgid ""
 "Messages from this number are blocked, so this would have no effect until "
 "the block is lifted."
-msgstr ""
+msgstr "Egbochiri ozi si na nọmba a, ya mere nke a agaghị enwe mmetụta ruo mgbe ewepụrụ mgbochi ahụ."
 
 #: src/telephony/client/ui/widgets/common_widget.py:134
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls and Add"
-msgstr "Kpọghee nọmba niile?"
+msgstr "Wepụ mgbochi oku ma tinye"
 
 #: src/telephony/client/ui/widgets/common_widget.py:135
 msgid "Unblock Messages and Add"
-msgstr ""
+msgstr "Wepụ mgbochi ozi ma tinye"
 
 #: src/telephony/client/ui/widgets/common_widget.py:155
-#, fuzzy
-#| msgid "Unblock all numbers?"
 msgid "Unblock Calls Only"
-msgstr "Kpọghee nọmba niile?"
+msgstr "Wepụ naanị mgbochi oku"
 
 #: src/telephony/client/ui/widgets/common_widget.py:156
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Unblock Messages Only"
-msgstr "Ozi anaghị agụ"
+msgstr "Wepụ naanị mgbochi ozi"
 
 #: src/telephony/client/ui/widgets/common_widget.py:157
-#, fuzzy
-#| msgid "Unblock Number"
 msgid "Unblock Everything"
-msgstr "Kpọghee Nọmba"
+msgstr "Wepụ mgbochi niile"
 
 #: src/telephony/client/ui/widgets/common_widget.py:159
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for messages."
-msgstr "Akpọchiela nọmba a."
+msgstr "Egbochiri nọmba a maka ozi kwa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:161
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "This number is also blocked for calls."
-msgstr "Akpọchiela nọmba a."
+msgstr "Egbochiri nọmba a maka oku kwa."
 
 #: src/telephony/client/ui/widgets/common_widget.py:163
 msgid "This number is blocked for both calls and messages."
-msgstr ""
+msgstr "Egbochiri nọmba a maka oku na ozi."
 
 #: src/telephony/client/ui/widgets/common_widget.py:165
-#, fuzzy
-#| msgid "Unblocked"
 msgid "Unblock"
-msgstr "Egbochiri"
+msgstr "Wepụ mgbochi"
 
 #: src/telephony/client/ui/widgets/common_widget.py:166
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Calls from this number are blocked."
-msgstr "Akpọchiela nọmba a."
+msgstr "Egbochiri oku si na nọmba a."
 
 #: src/telephony/client/ui/widgets/common_widget.py:167
-#, fuzzy
-#| msgid "This number is already blocked."
 msgid "Messages from this number are blocked."
-msgstr "Akpọchiela nọmba a."
+msgstr "Egbochiri ozi si na nọmba a."
 
 #: src/telephony/client/ui/widgets/common_widget.py:499
 #: src/telephony/client/ui/windows/contact_editor_window.py:468
@@ -1021,13 +960,11 @@ msgstr "Isi"
 #: src/telephony/client/ui/widgets/common_widget.py:641
 #: src/telephony/client/ui/widgets/common_widget.py:642
 msgid "Last block — remove the number with the trash can"
-msgstr ""
+msgstr "Mgbochi ikpeazụ — wepụ nọmba ahụ site n'iji nkata ahịhịa"
 
 #: src/telephony/client/ui/widgets/history_rows_widget.py:144
-#, fuzzy
-#| msgid "Add Number"
 msgid "Hidden number"
-msgstr "Tinye nọmba"
+msgstr "Nọmba ezoro ezo"
 
 #: src/telephony/client/ui/widgets/incall_elements_widget.py:31
 msgid "Hangup All Calls"
@@ -1054,103 +991,87 @@ msgstr "Ntọala dị elu"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:56
 msgid "lets trusted senders trigger actions on your phone by text message"
-msgstr ""
+msgstr "na-ekwe ndị na-ezipu a tụkwasịrị obi ka ha malite ihe omume na ekwentị gị site na ozi ederede"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:59
-#, fuzzy
-#| msgid "Restart Modem"
 msgid "restarts the modem"
-msgstr "Malitegharịa ekwentị modem"
+msgstr "na-amalite modem ọzọ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:60
 msgid "changes which app icons are installed"
-msgstr ""
+msgstr "na-agbanwe nke ihe nnọchianya ngwa ewunyere"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:61
 msgid "erases your data"
-msgstr ""
+msgstr "na-ehichapụ data gị"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
 #, python-brace-format
 msgid "{most} and {last}"
-msgstr ""
+msgstr "{most} na {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
 #, python-brace-format
 msgid "For experienced users. This page {listed}."
-msgstr ""
+msgstr "Maka ndị ọrụ nwere ahụmahụ. Ibe a {listed}."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:72
 msgid "Secret SMS Triggers"
 msgstr "Ihe mkpali SMS nzuzo"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
-#, fuzzy
-#| msgid "Set \"Find my Telephony\""
 msgid "Find my Telephony"
-msgstr "Tọọ \"Chọta ekwentị m\""
+msgstr "Chọta ekwentị m"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:76
 msgid "Location by trusted SMS"
-msgstr ""
+msgstr "Ebe site na SMS a tụkwasịrị obi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
-#, fuzzy
-#| msgid "Set \"Trusted Callback\""
 msgid "Trusted Callback"
-msgstr "Tọọ \"Akpọghachitere ntụkwasị obi\""
+msgstr "Nkpọghachi a tụkwasịrị obi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:78
 msgid "Silent callback trigger"
-msgstr ""
+msgstr "Ihe mmalite jụụ nke nkpọghachi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Set \"SMS -Relay\""
 msgid "SMS Relay"
-msgstr "Tọọ \"SMS-Relay\""
+msgstr "Nnyefe SMS"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:80
-#, fuzzy
-#| msgid "Unread Messages"
 msgid "Forward messages"
-msgstr "Ozi anaghị agụ"
+msgstr "Nyefee ozi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
-#, fuzzy
-#| msgid "Set \"SMS -tmate\""
 msgid "SMS tmate"
-msgstr "Tọọ \"SMS-tmate\""
+msgstr "SMS tmate"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:82
 msgid "Remote shell access"
-msgstr ""
+msgstr "Nnweta shell site n'ebe dị anya"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock Device"
-msgstr ""
+msgstr "Kpọchie ngwaọrụ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:84
 msgid "Lock by trusted SMS"
-msgstr ""
+msgstr "Mkpọchi site na SMS a tụkwasịrị obi"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:88
-#, fuzzy
-#| msgid "Enable Feature"
 msgid "Experimental Call Features"
-msgstr "Gbanye Atụmatụ"
+msgstr "Atụmatụ oku nnwale"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:93
 #: src/telephony/client/ui/windows/advanced_settings_window.py:351
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Allow Conference Calls"
-msgstr "Kwenyenụ oku mberede"
+msgstr "Kwe ka oku ndị otu dị"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:96
 #: src/telephony/client/ui/windows/advanced_settings_window.py:359
 msgid "Allow Call Transfer"
-msgstr ""
+msgstr "Kwe ka nnyefe oku dị"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:103
 #: src/telephony/client/ui/windows/advanced_settings_window.py:376
@@ -1174,7 +1095,7 @@ msgstr "Njikwa data"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:139
 msgid "Export, import and reset"
-msgstr ""
+msgstr "Mbupụ, mbubata na ntọghata"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:146
 msgid "Desktop Shortcuts"
@@ -1220,7 +1141,7 @@ msgid ""
 "results varied from working to dropping the calls. Turn this on to try it on "
 "your own subscription. It cannot be officially supported, so leave it off if "
 "you would rather your calls behaved predictably."
-msgstr ""
+msgstr "Ijikọta oku n'ime oku ndị otu dabere na ụlọ ọrụ ekwentị, na n'ule anyị nsonaazụ dị iche site n'ịrụ ọrụ nke ọma ruo n'ịkwụsị oku. Gbanye nke a ka ị nwalee ya n'ahịrị nke gị. Enweghị ike inye ya nkwado gọọmentị, ya mere hapụ ya gbanyụrụ ma ọ bụrụ na ị chọrọ ka oku gị na-arụ ọrụ dị ka a tụrụ anya."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:360
 msgid ""
@@ -1229,50 +1150,35 @@ msgid ""
 "instead. Turn this on to try it on your own subscription. It cannot be "
 "officially supported, so leave it off if you would rather your calls behaved "
 "predictably."
-msgstr ""
+msgstr "Ijikọ oku abụọ n'ibe ha chọrọ ọrụ nke ụlọ ọrụ ekwentị ga-enye, na n'ule anyị ọtụtụ ụlọ ọrụ jụrụ ya ma ọ bụ kwụsị oku ahụ kama. Gbanye nke a ka ị nwalee ya n'ahịrị nke gị. Enweghị ike inye ya nkwado gọọmentị, ya mere hapụ ya gbanyụrụ ma ọ bụrụ na ị chọrọ ka oku gị na-arụ ọrụ dị ka a tụrụ anya."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:371
-#, fuzzy
-#| msgid ""
-#| "When the modem stops responding, the phone quietly runs the recovery "
-#| "steps by itself: radio restart, modem power cycle, firmware restart and "
-#| "re-enabling a disabled radio. The phone is never rebooted automatically. "
-#| "If nothing helps you are asked to reboot. When this is off, the Modem "
-#| "Recovery window opens instead so you can run the steps yourself."
 msgid ""
 "When the modem stops responding, the phone quietly restarts the modem stack "
 "by itself and you only hear about it if that fails. The phone is never "
 "rebooted automatically. When this is off, the Modem Recovery screen appears "
 "instead so you can run the restart yourself."
-msgstr ""
-"Mgbe modem kwụsịrị ịza, ekwentị ahụ na-eji nwayọọ mee usoro mweghachi n'onwe "
-"ya: mmalitegharị redio, mgbanyụ na mgbanye ike modem, mmalitegharị firmware "
-"na ịgbanyeghachi redio a gbanyụrụ agbanyụ. A naghị amalitegharị ekwentị ahụ "
-"na akpaka ma ọlị. Ọ bụrụ na ọ dịghị ihe na-enyere aka, a ga-arịọ gị ka ị "
-"malitegharịa. Mgbe a gbanyụrụ nke a, windo Mweghachi Modem na-emeghe kama ka "
-"i wee nwee ike ime usoro ahụ n'onwe gị."
+msgstr "Mgbe modem kwụsịrị inye nzaghachi, ekwentị na-amalite ngwanrọ modem ọzọ n'onwe ya na nwayọọ, na ị na-anụ banyere ya naanị ma ọ bụrụ na nke ahụ dara. A naghị amalite ekwentị ọzọ n'onwe ya ma ọlị. Mgbe nke a gbanyụrụ, ihuenyo mweghachi modem na-apụta kama, ka i wee mee mmalite ọzọ n'onwe gị."
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:386
 msgid "The modem is working"
-msgstr ""
+msgstr "Modem na-arụ ọrụ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:387
 msgid "Restart the modem, which takes about 30 seconds"
-msgstr ""
+msgstr "Malite modem ọzọ; nke a na-ewe ihe dị ka sekọnd 30"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:402
-#, fuzzy
-#| msgid "Restarting Modem..."
 msgid "Restarting the modem…"
-msgstr "Na-amalitegharịa modem..."
+msgstr "Na-amalite modem ọzọ…"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:414
 msgid "Calls and messages work again"
-msgstr ""
+msgstr "Oku na ozi na-arụ ọrụ ọzọ"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:415
 msgid "Recovery did not help. The modem still is not responding"
-msgstr ""
+msgstr "Mweghachi enyereghị aka. Modem ka na-adịghị nye nzaghachi"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:46
 msgid "Number Details"
@@ -1289,17 +1195,13 @@ msgstr "Mara (nhọrọ)"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:63
 #: src/telephony/client/ui/windows/settings_window.py:184
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block Calls"
-msgstr "Ndepụta ngọngọ"
+msgstr "Gbochie oku"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:66
 #: src/telephony/client/ui/windows/settings_window.py:188
-#, fuzzy
-#| msgid "All Messages"
 msgid "Block Messages"
-msgstr "Ozi niile"
+msgstr "Gbochie ozi"
 
 #: src/telephony/client/ui/windows/blocklist_editor_window.py:82
 msgid "Duplicate"
@@ -1398,7 +1300,7 @@ msgstr "Họrọ faịlụ"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:40
 msgid "Paste"
-msgstr ""
+msgstr "Mado"
 
 #: src/telephony/client/ui/windows/chat_media_controller_window.py:42
 msgid "Schedule"
@@ -1426,10 +1328,8 @@ msgid "Contact Details"
 msgstr "Nkọwa kọntaktị"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:56
-#, fuzzy
-#| msgid "Contacts"
 msgid "New Contact"
-msgstr "Ndi ana-akpo"
+msgstr "Kọntaktị ọhụrụ"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:144
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:181
@@ -1503,7 +1403,7 @@ msgstr "Ememe ncheta"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:310
 msgid "Share as QR code"
-msgstr ""
+msgstr "Kesaa dị ka koodu QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:317
 #: src/telephony/client/ui/windows/contact_editor_window.py:739
@@ -1547,45 +1447,36 @@ msgstr "Eṅomiri ya na klipbọọdụ"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:471
 msgid "Phone"
-msgstr ""
+msgstr "Ekwentị"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:530
-#, fuzzy
-#| msgid "Add Email"
 msgid "Email"
-msgstr "Tinye Email"
+msgstr "Email"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:538
 msgid "Type"
-msgstr ""
+msgstr "Ụdị"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:638
-#, fuzzy
-#| msgid "Modem unavailable"
 msgid "No email app available"
-msgstr "Modem adịghị adị"
+msgstr "Enweghị ngwa email"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:706
 msgid "Export Contact"
 msgstr "Kpọtụrụ mbupụ"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:733
-#, fuzzy
-#| msgid "Could not create address book"
 msgid "Could not create the QR code"
-msgstr "Enweghị ike ịmepụta akwụkwọ adreesị"
+msgstr "Enweghị ike ịmepụta koodu QR"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, fuzzy, python-brace-format
-#| msgid "Really delete everyone from your address book?"
+#, python-brace-format
 msgid "{name} will be removed from your address book."
-msgstr "Hichapụ onye ọ bụla n'akwụkwọ adreesị gị?"
+msgstr "A ga-ewepụ {name} site n'akwụkwọ adreesị gị."
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:741
-#, fuzzy
-#| msgid "Search contacts"
 msgid "This contact"
-msgstr "Chọọ kọntaktị"
+msgstr "Kọntaktị a"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:953
 #: src/telephony/client/ui/windows/contact_editor_window.py:1036
@@ -1595,13 +1486,11 @@ msgstr "Ịchekwa kọntaktị adaghị"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1033
 msgid "This address book is read-only"
-msgstr ""
+msgstr "Akwụkwọ adreesị a bụ maka ọgụgụ naanị"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:1034
-#, fuzzy
-#| msgid "No deletable address books"
 msgid "No writable address book available"
-msgstr "Enweghị akwụkwọ adreesị nwere ike ihichapụ"
+msgstr "Enweghị akwụkwọ adreesị a pụrụ ide n'ime ya"
 
 #: src/telephony/client/ui/windows/contact_picker_window.py:23
 #: src/telephony/daemon/telephony_core.py:419
@@ -1710,24 +1599,22 @@ msgstr "Hichapụ ihe niile"
 #, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nke a ga-ehichapụ oku {count}. Enweghị ike ịkwatụ ya."
+msgstr[1] "Nke a ga-ehichapụ oku {count}. Enweghị ike ịkwatụ ya."
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, fuzzy, python-brace-format
-#| msgid "This will delete all SMS/MMS and attachments."
+#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
-msgstr[0] "Nke a ga-ehichapụ SMS/MMS na mgbakwunye niile."
-msgstr[1] "Nke a ga-ehichapụ SMS/MMS na mgbakwunye niile."
+msgstr[0] "Nke a ga-ehichapụ ozi {count} na ihe ejikọtara ya."
+msgstr[1] "Nke a ga-ehichapụ ozi {count} na ihe ejikọtara ha."
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, fuzzy, python-brace-format
-#| msgid "Reset all custom group chat names?"
+#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
-msgstr[0] "Tọgharia aha nkata otu omenala niile?"
-msgstr[1] "Tọgharia aha nkata otu omenala niile?"
+msgstr[0] "Nke a ga-atọghata aha otu {count} nke onwe gị."
+msgstr[1] "Nke a ga-atọghata aha otu {count} nke onwe gị."
 
 #: src/telephony/client/ui/windows/data_management_window.py:87
 msgid "Delete Group Names"
@@ -1737,8 +1624,8 @@ msgstr "Hichapụ aha otu"
 #, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Nke a ga-ewepụ mgbochi nọmba {count}."
+msgstr[1] "Nke a ga-ewepụ mgbochi nọmba {count}."
 
 #: src/telephony/client/ui/windows/data_management_window.py:120
 msgid "No deletable address books"
@@ -1755,18 +1642,10 @@ msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "Ị ji n'aka na ịchọrọ ihichapụ akwụkwọ adreesị '{name}' kpamkpam?"
 
 #: src/telephony/client/ui/windows/data_management_window.py:135
-#, fuzzy
-#| msgid ""
-#| "Which address book do you want to delete permanently?\n"
-#| "\n"
-#| "This will wipe it from the system."
 msgid ""
 "Which address book do you want to delete permanently? This wipes it from the "
 "system."
-msgstr ""
-"Kedu akwụkwọ adreesị ịchọrọ ihichapụ kpamkpam?\n"
-"\n"
-"Nke a ga-ehichapụ ya na sistemụ."
+msgstr "Kedu akwụkwọ adreesị ị chọrọ ihichapụ kpamkpam? Nke a na-ehichapụ ya n'usoro."
 
 #: src/telephony/client/ui/windows/data_management_window.py:144
 msgid "Delete EVERYTHING"
@@ -1901,43 +1780,39 @@ msgstr "Merging {current}/{total}..."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:26
 #: src/telephony/client/ui/windows/settings_window.py:93
-#, fuzzy
-#| msgid "Favorite"
 msgid "Favorites"
-msgstr "ọkacha mmasị"
+msgstr "Ndị a kacha hụ n'anya"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:55
 msgid ""
 "Pick a contact to place in a speed dial slot. On the dialpad, typing that "
 "single digit shows the contact so you can call it."
-msgstr ""
+msgstr "Họrọ kọntaktị ị ga-etinye n'ebe oku ngwa ngwa. N'elu ihe ndeere nọmba, ịpị otu dijit ahụ na-egosi kọntaktị ahụ, ka i wee kpọọ ya."
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:100
 #: src/telephony/client/ui/windows/favorites_list_window.py:178
 msgid "Speed Dial"
-msgstr ""
+msgstr "Oku ngwa ngwa"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, fuzzy, python-brace-format
-#| msgid "Call {number}"
+#, python-brace-format
 msgid "{name} · {number}"
-msgstr "Call {number}"
+msgstr "{name} · {number}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:118
 #: src/telephony/client/ui/windows/favorites_list_window.py:174
 msgid "Empty"
-msgstr ""
+msgstr "Nke tọgbọrọ chakoo"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, fuzzy, python-brace-format
-#| msgid "Select Tone for {name}"
+#, python-brace-format
 msgid "Choose a slot for {name}"
-msgstr "Họrọ ụda maka {name}"
+msgstr "Họrọ ebe maka {name}"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
 #, python-brace-format
 msgid "{name} added to slot {slot}"
-msgstr ""
+msgstr "Etinyere {name} n'ebe {slot}"
 
 #: src/telephony/client/ui/windows/import_export_window.py:79
 msgid "Import Contacts from vCard"
@@ -1974,35 +1849,25 @@ msgid "Export Calls or Messages"
 msgstr "Mbupu oku ma ọ bụ ozi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:92
-#, fuzzy
-#| msgid "Import Call History"
 msgid "Export Call History"
-msgstr "Bubata akụkọ ihe mere eme oku"
+msgstr "Bupụ akụkọ oku"
 
 #: src/telephony/client/ui/windows/import_export_window.py:94
-#, fuzzy
-#| msgid "Import Messages"
 msgid "Export Messages"
-msgstr "Bubata ozi"
+msgstr "Bupụ ozi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:96
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Export Blocklist"
-msgstr "Ndepụta ngọngọ"
+msgstr "Bupụ ndepụta mgbochi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:97
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Import Blocklist"
-msgstr "Ndepụta ngọngọ"
+msgstr "Bubata ndepụta mgbochi"
 
 #: src/telephony/client/ui/windows/import_export_window.py:98
 #: src/telephony/client/ui/windows/settings_window.py:122
-#, fuzzy
-#| msgid "Import / Export"
 msgid "Import and Export"
-msgstr "Bubata/bupu"
+msgstr "Mbubata na mbupụ"
 
 #: src/telephony/client/ui/windows/import_export_window.py:101
 #: src/telephony/client/ui/windows/import_export_window.py:333
@@ -2010,16 +1875,13 @@ msgid "Export File"
 msgstr "Mbupu faịlụ"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, fuzzy, python-brace-format
-#| msgid "Exported {count} contacts"
+#, python-brace-format
 msgid "Exported {count} entries."
-msgstr "Kọntaktsị {count} ebupula"
+msgstr "Bupụrụ ndenye {count}."
 
 #: src/telephony/client/ui/windows/import_export_window.py:119
-#, fuzzy
-#| msgid "Export File"
 msgid "Export failed."
-msgstr "Mbupu faịlụ"
+msgstr "Mbupụ dara."
 
 #: src/telephony/client/ui/windows/import_export_window.py:126
 #: src/telephony/client/ui/windows/import_export_window.py:261
@@ -2030,13 +1892,11 @@ msgstr "Họrọ faịlụ"
 #: src/telephony/client/ui/windows/import_export_window.py:142
 #, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
-msgstr ""
+msgstr "Bubatara: {added} etinyere, {updated} gbasapụrụ."
 
 #: src/telephony/client/ui/windows/import_export_window.py:146
-#, fuzzy
-#| msgid "Import failed: {e}"
 msgid "Import failed."
-msgstr "Mbubata adaghị: {e}"
+msgstr "Mbubata dara."
 
 #: src/telephony/client/ui/windows/import_export_window.py:156
 msgid "Importing contacts from SIM..."
@@ -2190,10 +2050,8 @@ msgstr "Họrọ Akwụkwọ adreesị"
 
 #: src/telephony/client/ui/windows/import_export_window.py:429
 #: src/telephony/client/ui/windows/import_export_window.py:468
-#, fuzzy
-#| msgid "System Default"
 msgid "Default"
-msgstr "Sistemụ ndabara"
+msgstr "Nke ndabere"
 
 #: src/telephony/client/ui/windows/import_export_window.py:431
 msgid "Where do you want to import contacts?"
@@ -2363,10 +2221,8 @@ msgstr "Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:61
 #: src/telephony/client/ui/windows/settings_window.py:323
-#, fuzzy
-#| msgid "Wired Headset"
 msgid "USB Headset"
-msgstr "Headset nwere eriri"
+msgstr "Igbe ntị USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:68
 msgid "Microphone"
@@ -2381,16 +2237,12 @@ msgid "Bluetooth Mic"
 msgstr "Maikrofon Bluetooth"
 
 #: src/telephony/client/ui/windows/incall_window.py:71
-#, fuzzy
-#| msgid "Microphone"
 msgid "USB Microphone"
-msgstr "Maikrofon"
+msgstr "Igwe okwu USB"
 
 #: src/telephony/client/ui/windows/incall_window.py:219
-#, fuzzy
-#| msgid "Set your number in Settings"
 msgid "Your number is hidden"
-msgstr "Tọọ nọmba gị na Ntọala"
+msgstr "Ezoro nọmba gị"
 
 #: src/telephony/client/ui/windows/incall_window.py:235
 msgid "Accept"
@@ -2421,14 +2273,14 @@ msgstr "Igodo"
 #: src/telephony/client/ui/windows/network_services_window.py:235
 #: src/telephony/daemon/telephony_core.py:406
 msgid "The modem is not working correctly."
-msgstr ""
+msgstr "Modem anaghị arụ ọrụ nke ọma."
 
 #: src/telephony/client/ui/windows/incall_window.py:280
 msgid ""
 "Calls, messages and mobile data will not work until it is restarted.\n"
 "\n"
 "Restarting takes about 30 seconds and ends any call in progress."
-msgstr ""
+msgstr "Oku, ozi na data ekwentị agaghị arụ ọrụ ruo mgbe amalitere modem ọzọ.\n\nMmalite ọzọ na-ewe ihe dị ka sekọnd 30 ma na-akwụsị oku ọ bụla na-aga."
 
 #: src/telephony/client/ui/windows/incall_window.py:287
 msgid "Save Modem Logs"
@@ -2442,16 +2294,12 @@ msgstr "Malitegharịa ekwentị"
 #: src/telephony/client/ui/windows/incall_window.py:473
 #: src/telephony/client/ui/windows/incall_window.py:589
 #: src/telephony/client/ui/windows/incall_window.py:590
-#, fuzzy
-#| msgid "Active"
 msgid "Actions"
-msgstr "Nọ n'ọrụ"
+msgstr "Ihe omume"
 
 #: src/telephony/client/ui/windows/incall_window.py:449
-#, fuzzy
-#| msgid "Mute"
 msgid "Muted"
-msgstr "Mechie olu"
+msgstr "Mechiri ụda"
 
 #: src/telephony/client/ui/windows/incall_window.py:483
 #: src/telephony/client/ui/windows/incall_window.py:495
@@ -2468,16 +2316,12 @@ msgid "Mute"
 msgstr "Mechie olu"
 
 #: src/telephony/client/ui/windows/incall_window.py:553
-#, fuzzy
-#| msgid "Speaker"
 msgid "Turn to Speaker"
-msgstr "Igwe okwu"
+msgstr "Gbanwee gaa ihe nkwuwa okwu"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
-#, fuzzy
-#| msgid "🔁 Resume"
 msgid "Resume"
-msgstr "🔁 malite"
+msgstr "Gaa n'ihu"
 
 #: src/telephony/client/ui/windows/incall_window.py:580
 msgid "Hold"
@@ -2485,35 +2329,29 @@ msgstr "Jide"
 
 #: src/telephony/client/ui/windows/incall_window.py:585
 #: src/telephony/client/ui/windows/incall_window.py:935
-#, fuzzy
-#| msgid "Add Email"
 msgid "Add Call"
-msgstr "Tinye Email"
+msgstr "Tinye oku"
 
 #: src/telephony/client/ui/windows/incall_window.py:604
-#, fuzzy
-#| msgid "Calls"
 msgid "Swap Calls"
-msgstr "Oku"
+msgstr "Gbanwee oku"
 
 #: src/telephony/client/ui/windows/incall_window.py:607
-#, fuzzy
-#| msgid "Merge all"
 msgid "Merge Calls"
-msgstr "Jikọta ha niile"
+msgstr "Jikọta oku"
 
 #: src/telephony/client/ui/windows/incall_window.py:611
 msgid "Join Conference"
-msgstr ""
+msgstr "Sonye n'oku ndị otu"
 
 #: src/telephony/client/ui/windows/incall_window.py:617
 msgid "Transfer"
-msgstr ""
+msgstr "Nyefee"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
 #, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
-msgstr ""
+msgstr "Nnyefe na-ejikọ {a} na {b} ọnụ ma ị na-apụ n'oku ahụ"
 
 #: src/telephony/client/ui/windows/incall_window.py:787
 msgid "Silenced Incoming Call"
@@ -2521,27 +2359,24 @@ msgstr "Oku mbata gbachiri nkịtị"
 
 #: src/telephony/client/ui/windows/incall_window.py:797
 #: src/telephony/client/ui/windows/incall_window.py:901
-#, fuzzy
-#| msgid "Confirm Emergency Call"
 msgid "Conference Call"
-msgstr "Kwenyenụ oku mberede"
+msgstr "Oku ndị otu"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
-msgstr[0] "{count} Ndị sonyere"
-msgstr[1] "{count} Ndị sonyere"
+msgstr[0] "onye sonyere {count}"
+msgstr[1] "ndị sonyere {count}"
 
 #: src/telephony/client/ui/windows/incall_window.py:887
 msgid "Private Chat"
-msgstr ""
+msgstr "Nkata nzuzo"
 
 #: src/telephony/client/ui/windows/incall_window.py:894
 msgid "Private moves the others to hold"
-msgstr ""
+msgstr "Nkata nzuzo na-eme ka ndị ọzọ chere"
 
 #: src/telephony/client/ui/windows/incall_window.py:910
 #: src/telephony/client/ui/windows/incall_window.py:968
@@ -2550,7 +2385,7 @@ msgstr "Gbanwee"
 
 #: src/telephony/client/ui/windows/incall_window.py:931
 msgid "The network refused the request"
-msgstr ""
+msgstr "Netwọk jụrụ arịrịọ ahụ"
 
 #: src/telephony/client/ui/windows/incall_window.py:935
 #: src/telephony/daemon/telephony_core.py:680
@@ -2601,10 +2436,8 @@ msgid "Not connected"
 msgstr "Ejikọghị ya"
 
 #: src/telephony/client/ui/windows/info_window.py:29
-#, fuzzy
-#| msgid "Fast phone dialer and messaging client designed for FLX1 and FLX1s."
 msgid "Fast phone dialer and messaging client designed for FuriOS."
-msgstr "Ọkpọ ekwentị ngwa ngwa na onye ahịa izi ozi emebere maka FLX1 na FLX1."
+msgstr "Ngwa oku na ozi dị ngwa, emebere maka FuriOS."
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
 #, python-brace-format
@@ -2632,14 +2465,12 @@ msgstr "Scheduled ({current}/{total})"
 #: src/telephony/client/ui/windows/network_services_window.py:30
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Network Services"
-msgstr ""
+msgstr "Ọrụ netwọk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:71
 #: src/telephony/client/ui/windows/network_services_window.py:81
-#, fuzzy
-#| msgid "Forward"
 msgid "Call Forwarding"
-msgstr "Gawa n'ihu"
+msgstr "Nnyefe oku"
 
 #: src/telephony/client/ui/windows/network_services_window.py:72
 msgid ""
@@ -2651,85 +2482,74 @@ msgid ""
 "\n"
 "Enter numbers in international format, for example +358401234567. Applying "
 "an empty number turns that rule off."
-msgstr ""
+msgstr "Nnyefe na-eme na netwọk tupu oku ahụ eruo ekwentị gị.\n\n„Mgbe niile“ na-enyefe oku ọ bụla ozugbo. „Mgbe ọ na-arụ ọrụ“ na-arụ ọrụ mgbe ị nọ n'oku ọzọ, „Mgbe a naghị aza“ mgbe ekwentị kụrụ ruo oge a họọrọ, na „Mgbe enweghị ike iru“ mgbe ekwentị gbanyụrụ ma ọ bụ nọ n'èzí ebe netwọk kpuchiri.\n\nTinye nọmba n'ụdị mba ụwa, dịka +358401234567. Itinye nọmba efu na-agbanyụ iwu ahụ."
 
 #: src/telephony/client/ui/windows/network_services_window.py:85
 msgid "Always"
-msgstr ""
+msgstr "Mgbe niile"
 
 #: src/telephony/client/ui/windows/network_services_window.py:86
 msgid "When Busy"
-msgstr ""
+msgstr "Mgbe ọ na-arụ ọrụ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:87
-#, fuzzy
-#| msgid "Unanswered"
 msgid "When Unanswered"
-msgstr "Anaghị aza ya"
+msgstr "Mgbe a naghị aza"
 
 #: src/telephony/client/ui/windows/network_services_window.py:88
 msgid "When Unreachable"
-msgstr ""
+msgstr "Mgbe enweghị ike iru"
 
 #: src/telephony/client/ui/windows/network_services_window.py:100
-#, fuzzy
-#| msgid "Ringback Tone"
 msgid "Ring Time"
-msgstr "Ụda alaghachi azụ"
+msgstr "Oge ịkụ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, fuzzy, python-brace-format
-#| msgid "{count} Participants"
+#, python-brace-format
 msgid "{count} seconds"
-msgstr "{count} Ndị sonyere"
+msgstr "sekọnd {count}"
 
 #: src/telephony/client/ui/windows/network_services_window.py:106
 #: src/telephony/client/ui/windows/network_services_window.py:361
 msgid "Disable All Forwarding"
-msgstr ""
+msgstr "Gbanyụọ nnyefe niile"
 
 #: src/telephony/client/ui/windows/network_services_window.py:117
 #: src/telephony/client/ui/windows/network_services_window.py:118
-#, fuzzy
-#| msgid "Waiting..."
 msgid "Call Waiting"
-msgstr "Na-eche..."
+msgstr "Oku na-eche"
 
 #: src/telephony/client/ui/windows/network_services_window.py:119
 msgid ""
 "When enabled, a second incoming call beeps during an ongoing call instead of "
 "the caller getting a busy signal."
-msgstr ""
+msgstr "Mgbe agbanyere ya, oku nke abụọ na-abata na-ada n'oge oku na-aga, kama onye na-akpọ inweta akara na-arụ ọrụ."
 
 #: src/telephony/client/ui/windows/network_services_window.py:127
-#, fuzzy
-#| msgid "System Default"
 msgid "Network Default"
-msgstr "Sistemụ ndabara"
+msgstr "Nke ndabere netwọk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:129
 msgid "Shown"
-msgstr ""
+msgstr "A na-egosi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:131
 #: src/telephony/client/ui/windows/network_services_window.py:133
 msgid "Hide Caller ID"
-msgstr ""
+msgstr "Zoo nọmba m"
 
 #: src/telephony/client/ui/windows/network_services_window.py:134
 msgid ""
 "Choose whether people you call see your number. Network Default follows your "
 "subscription setting. Hiding can also be chosen for a single call from a "
 "contact's call menu."
-msgstr ""
+msgstr "Họrọ ma ndị ị na-akpọ ga-ahụ nọmba gị. „Nke ndabere netwọk“ na-eso ntọala ahịrị gị. A pụkwara ịhọrọ nzuzo maka otu oku site na menu oku nke kọntaktị."
 
 #: src/telephony/client/ui/windows/network_services_window.py:142
 #: src/telephony/client/ui/windows/network_services_window.py:148
-#, fuzzy
-#| msgid "Call Back"
 msgid "Call Barring"
-msgstr "Kpọghachi"
+msgstr "Mmachi oku"
 
 #: src/telephony/client/ui/windows/network_services_window.py:143
 msgid ""
@@ -2738,77 +2558,69 @@ msgid ""
 "Every change needs the barring password from your operator, often 0000 by "
 "default. Repeated wrong attempts can lock barring at the network side, in "
 "which case only your operator can unlock it."
-msgstr ""
+msgstr "Mmachi na-egbochi ụdị oku niile na netwọk.\n\nMgbanwe ọ bụla chọrọ paswọọdụ mmachi site n'aka ụlọ ọrụ gị; na ndabere ọ na-abụkarị 0000. Nnwale ndị ezighị ezi ugboro ugboro nwere ike kpọchie mmachi n'akụkụ netwọk, mgbe ahụ naanị ụlọ ọrụ gị nwere ike ịkpọghe ya."
 
 #: src/telephony/client/ui/windows/network_services_window.py:152
 #: src/telephony/client/ui/windows/network_services_window.py:164
 msgid "Allowed"
-msgstr ""
+msgstr "Ekwere"
 
 #: src/telephony/client/ui/windows/network_services_window.py:153
 #: src/telephony/client/ui/windows/network_services_window.py:165
-#, fuzzy
-#| msgid "Hangup All Calls"
 msgid "Bar All Calls"
-msgstr "Mechie oku niile"
+msgstr "Machie oku niile"
 
 #: src/telephony/client/ui/windows/network_services_window.py:154
-#, fuzzy
-#| msgid "My Number (International Format)"
 msgid "Bar International Calls"
-msgstr "Nọmba m (Ụdị mba ụwa)"
+msgstr "Machie oku mba ọzọ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:155
 msgid "Bar International Except Home"
-msgstr ""
+msgstr "Machie oku mba ọzọ, ma e wezụga nke obodo gị"
 
 #: src/telephony/client/ui/windows/network_services_window.py:158
-#, fuzzy
-#| msgid "Importing Calls..."
 msgid "Outgoing Calls"
-msgstr "Na-ebubata oku..."
+msgstr "Oku na-apụ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:166
 msgid "Bar When Roaming"
-msgstr ""
+msgstr "Machie mgbe ị na-awagharị"
 
 #: src/telephony/client/ui/windows/network_services_window.py:169
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming Calls"
-msgstr "Oku mbata..."
+msgstr "Oku na-abata"
 
 #: src/telephony/client/ui/windows/network_services_window.py:174
 msgid "Barring Password"
-msgstr ""
+msgstr "Paswọọdụ mmachi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:177
 #: src/telephony/client/ui/windows/network_services_window.py:182
 msgid "Change Barring Password"
-msgstr ""
+msgstr "Gbanwee paswọọdụ mmachi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:178
 msgid "Current Password"
-msgstr ""
+msgstr "Paswọọdụ ugbua"
 
 #: src/telephony/client/ui/windows/network_services_window.py:179
 msgid "New Password"
-msgstr ""
+msgstr "Paswọọdụ ọhụrụ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:190
 #: src/telephony/client/ui/windows/network_services_window.py:465
 msgid "Disable All Barrings"
-msgstr ""
+msgstr "Gbanyụọ mmachi niile"
 
 #: src/telephony/client/ui/windows/network_services_window.py:241
 #: src/telephony/client/ui/windows/network_services_window.py:249
 msgid "Not available on this network"
-msgstr ""
+msgstr "Ọ nweghị na netwọk a"
 
 #: src/telephony/client/ui/windows/network_services_window.py:253
 #: src/telephony/client/ui/windows/network_services_window.py:272
 msgid "Could not read settings from the network"
-msgstr ""
+msgstr "Enweghị ike ịgụ ntọala site na netwọk"
 
 #: src/telephony/client/ui/windows/network_services_window.py:330
 #: src/telephony/client/ui/windows/network_services_window.py:344
@@ -2816,65 +2628,59 @@ msgstr ""
 #: src/telephony/client/ui/windows/network_services_window.py:378
 #: src/telephony/client/ui/windows/network_services_window.py:395
 #: src/telephony/client/ui/windows/network_services_window.py:428
-#, fuzzy
-#| msgid "Could not start the camera."
 msgid "Could not change the setting"
-msgstr "Enweghị ike ịmalite igwefoto."
+msgstr "Enweghị ike ịgbanwe ntọala ahụ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:362
 msgid "Turn off every call forwarding rule?"
-msgstr ""
+msgstr "Gbanyụọ iwu nnyefe oku niile?"
 
 #: src/telephony/client/ui/windows/network_services_window.py:363
 #: src/telephony/client/ui/windows/network_services_window.py:467
 msgid "Disable"
-msgstr ""
+msgstr "Gbanyụọ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:410
 #: src/telephony/client/ui/windows/network_services_window.py:434
 #: src/telephony/client/ui/windows/network_services_window.py:451
 msgid "Enter the barring password first"
-msgstr ""
+msgstr "Tinye paswọọdụ mmachi mbụ"
 
 #: src/telephony/client/ui/windows/network_services_window.py:427
 msgid "Wrong barring password"
-msgstr ""
+msgstr "Paswọọdụ mmachi ezighị ezi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:439
 msgid "Barring password changed"
-msgstr ""
+msgstr "Agbanwere paswọọdụ mmachi"
 
 #: src/telephony/client/ui/windows/network_services_window.py:466
 msgid "Turn off every call barring rule?"
-msgstr ""
+msgstr "Gbanyụọ iwu mmachi oku niile?"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:40
-#, fuzzy
-#| msgid "Saving contact..."
 msgid "Scan contact"
-msgstr "Na-echekwa kọntaktị..."
+msgstr "Nyochaa kọntaktị"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:84
 msgid "Point the camera at a contact QR code"
-msgstr ""
+msgstr "Tụọ igwefoto n'ebe koodu QR nke kọntaktị dị"
 
 #: src/telephony/client/ui/windows/qr_scan_window.py:141
 msgid "This code is not a contact"
-msgstr ""
+msgstr "Koodu a abụghị kọntaktị"
 
 #: src/telephony/client/ui/windows/qr_share_window.py:41
 msgid "Scan with any phone to add this contact"
-msgstr ""
+msgstr "Nyochaa ya na ekwentị ọ bụla ka ị tinye kọntaktị a"
 
 #: src/telephony/client/ui/windows/settings_window.py:82
-#, fuzzy
-#| msgid "Voicemail Number"
 msgid "Voicemail, volume and ringback"
-msgstr "Nọmba ozi olu"
+msgstr "Ozi olu, ịdị ike olu na ụda ịkụ"
 
 #: src/telephony/client/ui/windows/settings_window.py:86
 msgid "Delivery reports, number display"
-msgstr ""
+msgstr "Akụkọ nnyefe, ngosi nọmba"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 #: src/telephony/client/ui/windows/settings_window.py:90
@@ -2884,22 +2690,20 @@ msgstr "Ntọala SIM"
 
 #: src/telephony/client/ui/windows/settings_window.py:89
 msgid "Own number and country code"
-msgstr ""
+msgstr "Nọmba nke onwe na koodu obodo"
 
 #: src/telephony/client/ui/windows/settings_window.py:93
 msgid "Speed dial slots"
-msgstr ""
+msgstr "Ebe oku ngwa ngwa"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 #: src/telephony/client/ui/windows/settings_window.py:98
-#, fuzzy
-#| msgid "Emergency calls only."
 msgid "Emergency Calls"
-msgstr "Oku mberede."
+msgstr "Oku mberede"
 
 #: src/telephony/client/ui/windows/settings_window.py:97
 msgid "Lockscreen button and numbers"
-msgstr ""
+msgstr "Bọtịnụ ihuenyo mkpọchi na nọmba"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 #: src/telephony/client/ui/windows/settings_window.py:101
@@ -2908,24 +2712,20 @@ msgstr "Ndepụta ngọngọ"
 
 #: src/telephony/client/ui/windows/settings_window.py:100
 msgid "Numbers you never hear from"
-msgstr ""
+msgstr "Nọmba ndị ị na-achọghị ịnụ ihe ọ bụla n'aka ha"
 
 #: src/telephony/client/ui/windows/settings_window.py:104
-#, fuzzy
-#| msgid "Address book name"
 msgid "Address books and duplicates"
-msgstr "Aha akwụkwọ adreesị"
+msgstr "Akwụkwọ adreesị na ndenye okpuru"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 #: src/telephony/client/ui/windows/settings_window.py:109
-#, fuzzy
-#| msgid "Notification Overrides"
 msgid "Notifications"
-msgstr "Ịkwado ọkwa"
+msgstr "Ọkwa"
 
 #: src/telephony/client/ui/windows/settings_window.py:108
 msgid "Exceptions, tones and bypass"
-msgstr ""
+msgstr "Ihe ewepụrụ, ụda na ịgafe ịdị jụụ"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 #: src/telephony/client/ui/windows/settings_window.py:113
@@ -2935,30 +2735,28 @@ msgstr "Ndị na-akpọ oku amaghị"
 
 #: src/telephony/client/ui/windows/settings_window.py:112
 msgid "Screening"
-msgstr ""
+msgstr "Nzacha"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 #: src/telephony/client/ui/windows/settings_window.py:117
-#, fuzzy
-#| msgid "Number copied"
 msgid "Number Lookup"
-msgstr "Eṅomiri nọmba"
+msgstr "Nchọta nọmba"
 
 #: src/telephony/client/ui/windows/settings_window.py:116
 msgid "Search engine for the search buttons"
-msgstr ""
+msgstr "Ngwa nchọta maka bọtịnụ nchọta"
 
 #: src/telephony/client/ui/windows/settings_window.py:119
 msgid "Forwarding, waiting and barring"
-msgstr ""
+msgstr "Nnyefe, oku na-eche na mmachi"
 
 #: src/telephony/client/ui/windows/settings_window.py:122
 msgid "Contacts, messages and call history"
-msgstr ""
+msgstr "Kọntaktị, ozi na akụkọ oku"
 
 #: src/telephony/client/ui/windows/settings_window.py:125
 msgid "For experienced users"
-msgstr ""
+msgstr "Maka ndị ọrụ nwere ahụmahụ"
 
 #: src/telephony/client/ui/windows/settings_window.py:131
 msgid "Blocked Numbers"
@@ -2966,32 +2764,25 @@ msgstr "Ọnụọgụ akpọchiri"
 
 #: src/telephony/client/ui/windows/settings_window.py:132
 msgid "Tap the pencil to change what a number blocks."
-msgstr ""
+msgstr "Pịa pensụl ka ị gbanwee ihe nọmba na-egbochi."
 
 #: src/telephony/client/ui/windows/settings_window.py:165
 #: src/telephony/client/ui/windows/settings_window.py:400
-#, fuzzy
-#| msgid "No number"
 msgid "No numbers added yet"
-msgstr "Enweghị nọmba"
+msgstr "Etinyebeghị nọmba ọ bụla"
 
 #: src/telephony/client/ui/windows/settings_window.py:195
-#, fuzzy
-#| msgid "Blocklist"
 msgid "Block"
-msgstr "Ndepụta ngọngọ"
+msgstr "Gbochie"
 
 #: src/telephony/client/ui/windows/settings_window.py:202
-#, fuzzy
-#| msgid "Enter number"
 msgid "Enter a number to block"
-msgstr "Tinye nọmba"
+msgstr "Tinye nọmba ị ga-egbochi"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, fuzzy, python-brace-format
-#| msgid "This number is already blocked."
+#, python-brace-format
 msgid "{number} is already on the blocklist."
-msgstr "Akpọchiela nọmba a."
+msgstr "{number} nọ na ndepụta mgbochi ugbua."
 
 #: src/telephony/client/ui/windows/settings_window.py:263
 msgid "My Number"
@@ -3025,11 +2816,11 @@ msgstr "Tinye Ozi Ọjụjụ"
 
 #: src/telephony/client/ui/windows/settings_window.py:301
 msgid "No messages added yet"
-msgstr ""
+msgstr "Etinyebeghị ozi ọ bụla"
 
 #: src/telephony/client/ui/windows/settings_window.py:307
 msgid "Sent when you decline a call with a message."
-msgstr ""
+msgstr "A na-ezipu ya mgbe ị jụrụ oku na ozi."
 
 #: src/telephony/client/ui/windows/settings_window.py:311
 #: src/telephony/client/ui/windows/settings_window.py:844
@@ -3067,29 +2858,27 @@ msgid "Emergency Numbers"
 msgstr "Nọmba mberede"
 
 #: src/telephony/client/ui/windows/settings_window.py:407
-#, fuzzy
-#| msgid "Emergency Numbers"
 msgid "Network Emergency Numbers"
-msgstr "Nọmba mberede"
+msgstr "Nọmba mberede netwọk"
 
 #: src/telephony/client/ui/windows/settings_window.py:408
 msgid "Show Numbers From Network"
-msgstr ""
+msgstr "Gosi nọmba si na netwọk"
 
 #: src/telephony/client/ui/windows/settings_window.py:422
 #: src/telephony/client/ui/windows/settings_window.py:853
 msgid "Request Delivery Reports"
-msgstr ""
+msgstr "Rịọ akụkọ nnyefe"
 
 #: src/telephony/client/ui/windows/settings_window.py:431
 msgid "Show Numbers In Message List"
-msgstr ""
+msgstr "Gosi nọmba na ndepụta ozi"
 
 #: src/telephony/client/ui/windows/settings_window.py:432
 msgid ""
 "Off keeps numbers off the list; one with no contact shows its number as the "
 "name"
-msgstr ""
+msgstr "Mgbe ọ gbanyụrụ, nọmba anaghị apụta na ndepụta; nke enweghị kọntaktị na-egosi nọmba ya dị ka aha"
 
 #: src/telephony/client/ui/windows/settings_window.py:449
 msgid "Address Book Info"
@@ -3117,14 +2906,12 @@ msgid "Notification Exceptions"
 msgstr "Ewepu ọkwa ọkwa"
 
 #: src/telephony/client/ui/windows/settings_window.py:531
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Contacts that always ring"
-msgstr "Jikwaa kọntaktị ndị na-akpọ ụda mgbe niile"
+msgstr "Kọntaktị ndị na-akụ mgbe niile"
 
 #: src/telephony/client/ui/windows/settings_window.py:532
 msgid "A call breaks through silent mode"
-msgstr ""
+msgstr "Oku na-agbaba na ụdị jụụ"
 
 #: src/telephony/client/ui/windows/settings_window.py:538
 #: src/telephony/client/ui/windows/settings_window.py:641
@@ -3140,26 +2927,20 @@ msgid "Set custom ringtones for specific contacts"
 msgstr "Tọọ ụdaolu ahaziri ahazi maka kọntaktị akọwapụtara"
 
 #: src/telephony/client/ui/windows/settings_window.py:554
-#, fuzzy
-#| msgid "Manage contacts that always play sound"
 msgid "Messages that always sound"
-msgstr "Jikwaa kọntaktị ndị na-akpọ ụda mgbe niile"
+msgstr "Ozi ndị na-ada mgbe niile"
 
 #: src/telephony/client/ui/windows/settings_window.py:555
 msgid "A message breaks through silent mode"
-msgstr ""
+msgstr "Ozi na-agbaba na ụdị jụụ"
 
 #: src/telephony/client/ui/windows/settings_window.py:559
-#, fuzzy
-#| msgid "Repeated Calls Bypass"
 msgid "Repeated Messages Bypass"
-msgstr "Gafefe oku ugboro ugboro"
+msgstr "Ịgafe ịdị jụụ maka ozi a na-ekwughachi"
 
 #: src/telephony/client/ui/windows/settings_window.py:561
-#, fuzzy
-#| msgid "If the same number calls 3 times in 5 minutes, force max volume."
 msgid "If the same sender writes 3 times in a minute, play the sound."
-msgstr "Ọ bụrụ na otu nọmba ahụ na-akpọ ugboro 3 n'ime nkeji 5, manye oke olu."
+msgstr "Ọ bụrụ na otu onye na-ezipu dee ugboro 3 n'otu nkeji, kpọọ ụda ahụ."
 
 #: src/telephony/client/ui/windows/settings_window.py:569
 msgid "Set custom notification sounds for specific contacts"
@@ -3266,11 +3047,11 @@ msgstr "Gbachi nkịtị naanị"
 
 #: src/telephony/client/ui/windows/settings_window.py:669
 msgid "Search button for unknown callers during a call"
-msgstr ""
+msgstr "Bọtịnụ nchọta maka ndị a na-amaghị na-akpọ n'oge oku"
 
 #: src/telephony/client/ui/windows/settings_window.py:691
 msgid "Used by the search buttons in calls, call history and group messages."
-msgstr ""
+msgstr "Bọtịnụ nchọta nọ n'oku, akụkọ oku na ozi otu na-eji ya."
 
 #: src/telephony/client/ui/windows/settings_window.py:695
 msgid "Search Engine"
@@ -3306,28 +3087,16 @@ msgstr "URL ọchụchọ omenala"
 
 #: src/telephony/client/ui/windows/settings_window.py:782
 msgid "Always reachable, even without a SIM"
-msgstr ""
+msgstr "A na-eru ya mgbe niile, ọ bụrụgodị na SIM adịghị"
 
 #: src/telephony/client/ui/windows/settings_window.py:844
-#, fuzzy
-#| msgid ""
-#| "This is the call volume for each output. The level applies automatically "
-#| "when a call connects and whenever the output changes during a call, and "
-#| "slider changes are heard live. The hardware applies levels in coarse "
-#| "steps, and the earpiece never goes fully silent. The Bluetooth level is "
-#| "stored for upcoming routing support."
 msgid ""
 "This is the call volume for each output. The level applies automatically "
 "when a call connects and whenever the output changes during a call, and "
 "slider changes are heard live. The hardware applies levels in coarse steps, "
 "and the earpiece never goes fully silent. Bluetooth and USB levels apply "
 "when those call routes are active."
-msgstr ""
-"Nke a bụ olu oku maka mmepụta ọ bụla. A na-etinye ọkwa ahụ na-akpaghị aka "
-"mgbe oku jikọrọ na mgbe ọ bụla mmepụta gbanwere n'oge oku, a na-anụkwa "
-"mgbanwe nke ihe mmịfe ozugbo. Ngwaike na-etinye ọkwa na nzọụkwụ buru ibu, na "
-"ihe ige ntị anaghị agbachi nkịtị kpamkpam. A na-echekwa ọkwa Bluetooth maka "
-"nkwado ụzọ na-abịa."
+msgstr "Nke a bụ ịdị ike olu oku maka mpụta ọ bụla. Ọkwa ahụ na-arụ ọrụ n'onwe ya mgbe oku jikọrọ na mgbe ọ bụla mpụta gbanwere n'oge oku, na mgbanwe nke ihe mmịfe na-ada ozugbo. Ngwaike na-etinye ọkwa na nzọụkwụ buru ibu, na igbe ntị anaghị dị jụụ kpamkpam ma ọlị. Ọkwa Bluetooth na USB na-arụ ọrụ mgbe ụzọ oku ndị ahụ na-arụ ọrụ."
 
 #: src/telephony/client/ui/windows/settings_window.py:847
 msgid ""
@@ -3337,7 +3106,7 @@ msgid ""
 "A confirmation is reliable when it arrives, but many carriers and automated "
 "senders never produce one, so a message without a confirmation may still "
 "have been delivered. Delivered never means read."
-msgstr ""
+msgstr "Mgbe agbanyere ya, a na-arịọ netwọk ka ọ kwado mgbe ozi ederede na ozi mgbasa gị ruru ekwentị onye nnata.\n\nNkwado bụ ihe a pụrụ ịtụkwasị obi mgbe ọ bịara, mana ọtụtụ ụlọ ọrụ na ndị na-ezipu n'onwe ha anaghị emepụta otu ma ọlị, ya mere ozi enweghị nkwado nwere ike na o rutere. „Erutere“ apụtaghị „A gụrụ ya“ ma ọlị."
 
 #: src/telephony/client/ui/windows/settings_window.py:934
 msgid "System Default (Always Enabled)"
@@ -3624,75 +3393,65 @@ msgid "Exported Telephony database successfully."
 msgstr "Ebe nchekwa data ekwentị ebupụrụ nke ọma."
 
 #: src/telephony/client/utils/model_utils.py:24
-#, fuzzy
-#| msgid "Incoming Call..."
 msgid "Incoming"
-msgstr "Oku mbata..."
+msgstr "Na-abata"
 
 #: src/telephony/client/utils/model_utils.py:26
 msgid "Outgoing"
-msgstr ""
+msgstr "Na-apụ"
 
 #: src/telephony/client/utils/model_utils.py:33
 msgid "Declined at the other end"
-msgstr ""
+msgstr "Ajụrụ ya n'akụkụ nke ọzọ"
 
 #: src/telephony/client/utils/model_utils.py:35
 msgid "The network could not connect it"
-msgstr ""
+msgstr "Netwọk enweghị ike ijikọ ya"
 
 #: src/telephony/client/utils/model_utils.py:36
 msgid "Given up before it connected"
-msgstr ""
+msgstr "Hapụrụ ya tupu ọ jikọọ"
 
 #: src/telephony/client/utils/model_utils.py:39
 #: src/telephony/client/utils/model_utils.py:40
-#, fuzzy
-#| msgid "Answer"
 msgid "Answered"
-msgstr "Zaa"
+msgstr "Azara"
 
 #: src/telephony/client/utils/model_utils.py:41
-#, fuzzy
-#| msgid "Unanswered"
 msgid "Not answered"
-msgstr "Anaghị aza ya"
+msgstr "A naghị aza"
 
 #: src/telephony/client/utils/model_utils.py:42
-#, fuzzy
-#| msgid "Decline Message"
 msgid "Declined here"
-msgstr "Ajụ Ozi"
+msgstr "Ajụrụ ya ebe a"
 
 #: src/telephony/client/utils/model_utils.py:50
 msgid "Ended on this phone"
-msgstr ""
+msgstr "Agwụrụ n'ekwentị a"
 
 #: src/telephony/client/utils/model_utils.py:51
 msgid "Ended at the other end"
-msgstr ""
+msgstr "Agwụrụ n'akụkụ nke ọzọ"
 
 #: src/telephony/client/utils/model_utils.py:52
 msgid "Dropped by the network"
-msgstr ""
+msgstr "Netwọk kwụsịrị ya"
 
 #: src/telephony/client/utils/model_utils.py:58
 msgid "Nobody answered here"
-msgstr ""
+msgstr "Ọ dịghị onye zara ebe a"
 
 #: src/telephony/client/utils/model_utils.py:59
 msgid "Declined on this phone"
-msgstr ""
+msgstr "Ajụrụ ya n'ekwentị a"
 
 #: src/telephony/client/utils/model_utils.py:60
 msgid "Hung up here before it connected"
-msgstr ""
+msgstr "Kwụsịrị ya ebe a tupu ọ jikọọ"
 
 #: src/telephony/client/utils/model_utils.py:65
-#, fuzzy
-#| msgid "Modem not ready"
 msgid "The modem did not say"
-msgstr "Modem adịghị njikere"
+msgstr "Modem ekwughị ihe kpatara ya"
 
 #: src/telephony/client/utils/model_utils.py:94
 msgid "0s"
@@ -3727,11 +3486,11 @@ msgstr "Na-eche ndozi satịlaịtị..."
 
 #: src/telephony/daemon/managers/ofono_manager.py:460
 msgid "This device has no modem"
-msgstr ""
+msgstr "Ngwaọrụ a enweghị modem"
 
 #: src/telephony/daemon/managers/ofono_manager.py:463
 msgid "Airplane mode is on"
-msgstr ""
+msgstr "Ụdị ụgbọelu gbanyere"
 
 #: src/telephony/daemon/managers/ofono_manager.py:467
 #: src/telephony/daemon/managers/ofono_manager.py:1059
@@ -3745,7 +3504,7 @@ msgstr "Biko chere, oku gara aga ka na-akwụsị"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1047
 msgid "The call could not be started"
-msgstr ""
+msgstr "Enweghị ike ịmalite oku ahụ"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
 #, python-brace-format
@@ -3772,28 +3531,26 @@ msgid "Failed to obtain location after trying all methods."
 msgstr "Enwetaghị ọnọdụ mgbe ịnwale usoro niile."
 
 #: src/telephony/daemon/telephony_core.py:376
-#, fuzzy
-#| msgid "Turns the radio off and back on, like flight mode."
 msgid "The radio is switched off. Turn it back on to use the modem."
-msgstr "Ọ na-agbanyụ redio ma gbanyekwa ya ọzọ, dịka ọnọdụ ụgbọelu."
+msgstr "Gbanyụrụ redio. Gbanye ya ọzọ ka i wee jiri modem."
 
 #: src/telephony/daemon/telephony_core.py:377
 msgid ""
 "This device reports no modem. Restarting cannot fix a modem that is missing "
 "or has no identity."
-msgstr ""
+msgstr "Ngwaọrụ a na-akọ na modem adịghị. Mmalite ọzọ enweghị ike idozi modem nke na-adịghị ma ọ bụ nke enweghị ozi gbasara onwe ya."
 
 #: src/telephony/daemon/telephony_core.py:401
 msgid "The modem service is not responding."
-msgstr ""
+msgstr "Ọrụ modem anaghị nye nzaghachi."
 
 #: src/telephony/daemon/telephony_core.py:403
 msgid "The modem is answering, but it lost its calling service."
-msgstr ""
+msgstr "Modem na-aza, mana ọ tụfuru ọrụ oku ya."
 
 #: src/telephony/daemon/telephony_core.py:405
 msgid "The modem is answering, but its radio is switched off."
-msgstr ""
+msgstr "Modem na-aza, mana redio ya gbanyụrụ."
 
 #: src/telephony/daemon/telephony_core.py:485
 msgid "Network registration denied"
@@ -3892,10 +3649,10 @@ msgstr "Oku {count} ebubata."
 
 #: src/telephony/shared/managers/eds_manager.py:1294
 msgid "Andromeda contacts come from the system and are read here only."
-msgstr ""
+msgstr "Kọntaktị Andromeda na-abịa site n'usoro na ebe a a na-agụ ha naanị."
 
 #: src/telephony/shared/managers/eds_manager.py:1299
 #, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
-msgstr ""
+msgstr "{book} ejikọghị, ya mere enweghị ike ịgbanwe kọntaktị ya ruo mgbe ọ laghachiri."
