@@ -284,22 +284,22 @@ class MainWindow(Adw.Window):
         self.app.daemon_client.get_own_number(checked)
 
     def check_country_code(self):
-        cc = self.gsettings_mgr.get_setting("default_country_code")
-        if cc:
-            utils.set_custom_region(cc)
+        chosen = self.gsettings_mgr.get_setting("default_country_code")
+        if chosen:
+            utils.set_custom_region(chosen)
             return
 
         def detected(region):
             if region:
-                self.gsettings_mgr.set_setting("default_country_code", region)
+                self.gsettings_mgr.set_setting("detected_country_code", region)
                 utils.set_custom_region(region)
-            else:
+            elif not self.gsettings_mgr.get_setting("detected_country_code"):
                 self.show_setup_hint(_("Please set Default Country Code in Settings"))
 
         self.app.daemon_client.detect_region(detected)
 
     def on_modem_interface_appeared(self, _ofono, interface):
-        if interface != "org.ofono.NetworkRegistration":
+        if interface not in ("org.ofono.SimManager", "org.ofono.NetworkRegistration"):
             return
         if self.gsettings_mgr.get_setting("default_country_code"):
             return

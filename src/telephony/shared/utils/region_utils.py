@@ -8,6 +8,8 @@
 import os
 import locale
 
+import phonenumbers
+
 from gi.repository import Gio
 from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem
@@ -75,9 +77,14 @@ CALLING_CODE_TO_REGION = {
 }
 
 
-def detect_region():
+def is_valid_region(region):
+    """phonenumbers silently falls back to its regex path for a region it does not
+    know, so an unusable code degrades every number instead of failing loudly."""
+    return bool(region) and region in phonenumbers.SUPPORTED_REGIONS
+
+
+def get_modem_mcc_region(interface):
     try:
-        modem_path = None
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
 
         manager = Gio.DBusProxy.new_sync(
@@ -85,43 +92,66 @@ def detect_region():
             "org.ofono", "/", "org.ofono.Manager", None)
 
         result = manager.call_sync("GetModems", None, Gio.DBusCallFlags.NONE, -1, None)
-        modems = result.unpack()[0]
+        modem = get_first_non_hfp_modem(result.unpack()[0])
+        if not modem:
+            return None
 
-        modem = get_first_non_hfp_modem(modems)
-        if modem:
-            modem_path, _props = modem
+        modem_path, _props = modem
+        proxy = Gio.DBusProxy.new_sync(
+            bus, Gio.DBusProxyFlags.NONE, None,
+            "org.ofono", modem_path, interface, None)
 
-        if modem_path:
-            net_proxy = Gio.DBusProxy.new_sync(
-                bus, Gio.DBusProxyFlags.NONE, None,
-                "org.ofono", modem_path, "org.ofono.NetworkRegistration", None)
-
-            props = net_proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
-            data = props.unpack()[0]
-
-            mcc = data.get("MobileCountryCode")
-            if mcc and mcc in MCC_TO_REGION:
-                region = MCC_TO_REGION[mcc]
-                logger.info(f"[Init] Detected Region from SIM (MCC {mcc}): {region}")
-                return region
+        props = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
+        mcc = props.unpack()[0].get("MobileCountryCode")
+        return MCC_TO_REGION.get(mcc) if mcc else None
     except Exception as e:
-        logger.error(f"[Init] Ofono Region Detection Failed: {e}")
+        logger.debug(f"[Init] No MobileCountryCode from {interface}: {e}")
+        return None
 
+
+def get_sim_mcc_region():
+    """The SIM's own country, which is the one the subscriber's national numbers
+    belong to; the serving network's country is wrong while roaming."""
+    return get_modem_mcc_region("org.ofono.SimManager")
+
+
+def get_network_mcc_region():
+    return get_modem_mcc_region("org.ofono.NetworkRegistration")
+
+
+def get_locale_region():
     try:
         loc = locale.getlocale()[0]
         if not loc:
             loc = os.environ.get("LANG") or os.environ.get("LC_ALL") or os.environ.get("LC_CTYPE")
         if loc and "_" in loc:
-            region = loc.split("_")[1].split(".")[0].upper()
-            logger.info(f"[Init] Detected Region from Locale: {region}")
-            return region
+            return loc.split("_")[1].split(".")[0].upper()
     except Exception as e:
-        logger.warning(f"[Init] Region detection warning: {e}")
+        logger.warning(f"[Init] Locale region detection warning: {e}")
+
+    return None
+
+
+def detect_region():
+    sources = (
+        ("SIM", get_sim_mcc_region),
+        ("network", get_network_mcc_region),
+        ("locale", get_locale_region),
+    )
+
+    for name, read_region in sources:
+        region = read_region()
+        if is_valid_region(region):
+            logger.info(f"[Init] Detected region from {name}: {region}")
+            return region
+        if region:
+            logger.warning(f"[Init] Ignoring unusable region {region} from {name}")
 
     return None
 
 
 _SYSTEM_REGION = None
+_SYSTEM_REGION_PROBED = False
 _CUSTOM_REGION = None
 
 
@@ -137,22 +167,27 @@ def set_custom_region(region_code):
         mapped_region = CALLING_CODE_TO_REGION[cleaned]
         logger.info(f"[Utils] Mapped calling code {cleaned} to region {mapped_region}")
         _CUSTOM_REGION = mapped_region
-    else:
-        _CUSTOM_REGION = cleaned.upper()
+        return
+
+    region = cleaned.upper()
+    if not is_valid_region(region):
+        logger.warning(f"[Utils] Ignoring unusable region code {region_code}")
+        _CUSTOM_REGION = None
+        return
+
+    _CUSTOM_REGION = region
 
 
 def get_system_region():
-    global _SYSTEM_REGION
+    global _SYSTEM_REGION, _SYSTEM_REGION_PROBED
 
     if _CUSTOM_REGION:
         return _CUSTOM_REGION
 
-    if _SYSTEM_REGION is None:
-        val = detect_region()
-        if val:
-            _SYSTEM_REGION = val
-        else:
-            logger.warning("[Init] Region detection failed, defaulting to FI")
-            _SYSTEM_REGION = "FI"
+    if not _SYSTEM_REGION_PROBED:
+        _SYSTEM_REGION_PROBED = True
+        _SYSTEM_REGION = detect_region()
+        if not _SYSTEM_REGION:
+            logger.warning("[Init] Region unknown; numbers without a country code stay as dialled")
 
     return _SYSTEM_REGION

@@ -29,7 +29,7 @@ from telephony.daemon.managers.call_audio_manager import CallAudioManager
 from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
-from telephony.shared.utils.region_utils import detect_region, set_custom_region
+from telephony.shared.utils.region_utils import detect_region, get_system_region, set_custom_region
 from telephony.shared.utils.system_utils import (getprop, is_ofono_on_bus, is_ril_running,
                                                  is_gsd_airplane_mode,
                                                  is_vendor_radio_disabled)
@@ -92,6 +92,7 @@ class TelephonyCore:
         self.notification_manager = NotificationManager()
         self.gsettings_mgr = GSettingsManager()
         self.apply_region()
+        self.watch_region_settings()
         self.eds = EdsManager(owns_live_views=True)
         self.db = DatabaseManager(self.eds, self.gsettings_mgr, owns_writes=True)
         self.eds.set_db(self.db, self.gsettings_mgr)
@@ -121,6 +122,7 @@ class TelephonyCore:
         self.ofono.connect("connection-status", self.watch_modem_health)
         self.ofono.connect("network-status-changed", self.watch_network_status)
         self.ofono.connect("sim-pin-required-changed", self.watch_sim_pin)
+        self.ofono.connect("modem-interface-appeared", self.refresh_detected_region)
         GLib.timeout_add_seconds(STARTUP_MODEM_CHECK_SECONDS, lambda: self.watch_modem_health() or False)
         self.ofono.connect("voicemail-changed", self.on_voicemail_changed)
         self.ofono.connect("voicemail-mailbox-changed", lambda *a: self.ensure_voicemail_contact())
@@ -174,13 +176,39 @@ class TelephonyCore:
 
     def apply_region(self):
         def task():
-            country_code = self.gsettings_mgr.get_setting("default_country_code")
-            region = country_code or detect_region()
+            chosen = self.gsettings_mgr.get_setting("default_country_code")
+            region = chosen or self.gsettings_mgr.get_setting("detected_country_code") or detect_region()
             if region:
                 set_custom_region(region)
-                logger.info(f"[App] Numbers without a country code are read as {region}")
+                logger.info(f"[App] Numbers without a country code are read as {get_system_region()}")
 
         run_in_background(task)
+
+    def watch_region_settings(self):
+        """Every number the daemon stores is normalised in this process, so a region
+        the user corrects in the client has to reach it without a restart."""
+        for key in ("changed::default-country-code", "changed::detected-country-code"):
+            self.gsettings_mgr.gsettings.connect(key, lambda *_args: self.apply_region())
+
+    def refresh_detected_region(self, _manager, interface):
+        """The SIM's MCC can only be read once SimManager appears, and the daemon keeps
+        storing numbers whether or not a window is open to re-detect on its behalf."""
+        if interface not in ("org.ofono.SimManager", "org.ofono.NetworkRegistration"):
+            return
+        if self.gsettings_mgr.get_setting("default_country_code"):
+            return
+
+        def task():
+            region = detect_region()
+            if region and region != self.gsettings_mgr.get_setting("detected_country_code"):
+                GLib.idle_add(self.store_detected_region, region)
+
+        run_in_background(task)
+
+    def store_detected_region(self, region):
+        self.gsettings_mgr.set_setting("detected_country_code", region)
+        logger.info(f"[App] Detected region updated to {region}")
+        return False
 
     def announce_changes(self):
         self.db.connect("messages-updated", lambda _db, number, reason: self.dbus_daemon.emit_signal(

@@ -49,7 +49,12 @@
     <key name="default-country-code" type="s">
       <default>''</default>
       <summary>Default Country Code</summary>
-      <description>Default country code for formatting numbers without international prefix.</description>
+      <description>Country code the user chose for formatting numbers without an international prefix. Set only by the user; empty means the detected code applies.</description>
+    </key>
+    <key name="detected-country-code" type="s">
+      <default>''</default>
+      <summary>Detected country code</summary>
+      <description>Country code detected from the SIM, the network or the locale. Replaced whenever a better source becomes available, and always overridden by the user's choice.</description>
     </key>
     <key name="reject-call-message" type="s">
       <default>''</default>
