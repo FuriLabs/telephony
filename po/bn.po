@@ -209,7 +209,6 @@ msgid "Confirm"
 msgstr "নিশ্চিত করুন"
 
 #: src/telephony/client/ui/main_window.py:842
-#, python-brace-format
 msgid "Found {count} duplicate contact."
 msgid_plural "Found {count} duplicate contacts."
 msgstr[0] "{count}টি একই রকম পরিচিতি পাওয়া গেছে।"
@@ -220,7 +219,6 @@ msgid "Resolve"
 msgstr "মিটিয়ে নিন"
 
 #: src/telephony/client/ui/main_window.py:879
-#, python-brace-format
 msgid "Sync started for {count} address books"
 msgstr "{count}টি ঠিকানা বইয়ের জন্য সিঙ্ক শুরু হয়েছে"
 
@@ -411,7 +409,6 @@ msgid "Delete Call"
 msgstr "কল মুছুন"
 
 #: src/telephony/client/ui/main_window.py:1064
-#, python-brace-format
 msgid "The call with {who} on {when} will be removed from your history."
 msgstr "{when}-এ {who}-এর সঙ্গে কলটি আপনার তালিকা থেকে সরিয়ে দেওয়া হবে।"
 
@@ -420,7 +417,6 @@ msgid "Number copied"
 msgstr "নম্বর কপি করা হয়েছে"
 
 #: src/telephony/client/ui/main_window.py:1100
-#, python-brace-format
 msgid "Added to {name}"
 msgstr "{name} এ যোগ করা হয়েছে"
 
@@ -446,7 +442,6 @@ msgid "Save"
 msgstr "সংরক্ষণ করুন"
 
 #: src/telephony/client/ui/views/chat_view.py:148
-#, python-brace-format
 msgid "{count} Participants"
 msgstr "{count} অংশগ্রহণকারীরা"
 
@@ -460,7 +455,6 @@ msgid "Scheduled time must be in the future"
 msgstr "নির্ধারিত সময় ভবিষ্যতে হতে হবে"
 
 #: src/telephony/client/ui/views/chat_view.py:389
-#, python-brace-format
 msgid "Rescheduled for {time}"
 msgstr "{time} এর জন্য পুনঃনির্ধারিত"
 
@@ -522,14 +516,12 @@ msgid "Me"
 msgstr "আমি"
 
 #: src/telephony/client/ui/views/chat_view.py:933
-#, python-brace-format
 msgid ""
 "Forwarded from {sender}:\n"
 "{body}"
 msgstr "{sender} থেকে ফরওয়ার্ড করা হয়েছে: {body}"
 
 #: src/telephony/client/ui/views/chat_view.py:933
-#, python-brace-format
 msgid "Forwarded from {sender}"
 msgstr "{sender} থেকে ফরওয়ার্ড করা হয়েছে"
 
@@ -589,7 +581,6 @@ msgid "Failed to send"
 msgstr "পাঠাতে ব্যর্থ হয়েছে"
 
 #: src/telephony/client/ui/views/chat_view.py:1331
-#, python-brace-format
 msgid "Message scheduled for {time}"
 msgstr "{time} এর জন্য বার্তা নির্ধারিত হয়েছে"
 
@@ -608,7 +599,6 @@ msgid "Search contacts"
 msgstr "পরিচিতি অনুসন্ধান করুন"
 
 #: src/telephony/client/ui/views/contacts_view.py:470
-#, python-brace-format
 msgid "· {count} number"
 msgid_plural "· {count} numbers"
 msgstr[0] "· {count}টি নম্বর"
@@ -642,7 +632,6 @@ msgid "No matching contacts"
 msgstr "মিলে যাওয়া কোনও পরিচিতি নেই"
 
 #: src/telephony/client/ui/views/dialpad_view.py:297
-#, python-brace-format
 msgid "Speed dial {slot}"
 msgstr "দ্রুত ডায়াল {slot}"
 
@@ -709,7 +698,6 @@ msgstr "গত 60 দিন"
 #: src/telephony/client/ui/views/history_view.py:246
 #: src/telephony/daemon/telephony_core.py:601
 #: src/telephony/daemon/telephony_core.py:672
-#, python-brace-format
 msgid "{count} new message"
 msgid_plural "{count} new messages"
 msgstr[0] "{count} নতুন বার্তা"
@@ -776,17 +764,14 @@ msgid "Search Messages..."
 msgstr "বার্তা অনুসন্ধান করুন..."
 
 #: src/telephony/client/ui/views/messages_view.py:620
-#, python-brace-format
 msgid "Start ({count})"
 msgstr "শুরু করুন ( {count} )"
 
 #: src/telephony/client/ui/views/messages_view.py:627
-#, python-brace-format
 msgid "Open ({count})"
 msgstr "খুলুন ({count})"
 
 #: src/telephony/client/ui/views/messages_view.py:694
-#, python-brace-format
 msgid "Add Number: {number}"
 msgstr "নম্বর যোগ করুন: {number}"
 
@@ -828,7 +813,6 @@ msgstr "মুছে দিন"
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:304
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:125
-#, python-brace-format
 msgid "Scheduled: {time}"
 msgstr "নির্ধারিত: {time}"
 
@@ -837,7 +821,6 @@ msgid "Sending..."
 msgstr "পাঠানো হচ্ছে..."
 
 #: src/telephony/client/ui/widgets/chat_bubbles_widget.py:320
-#, python-brace-format
 msgid "{time} · Delivered"
 msgstr "{time} · পৌঁছেছে"
 
@@ -971,12 +954,10 @@ msgid "Hang Up"
 msgstr "হ্যাংআপ করুন"
 
 #: src/telephony/client/ui/widgets/messages_rows_widget.py:108
-#, python-brace-format
 msgid "{time} • Group"
 msgstr "{time} • গ্রুপ"
 
 #: src/telephony/client/ui/widgets/messages_rows_widget.py:114
-#, python-brace-format
 msgid "Draft: {message}"
 msgstr "খসড়া: {message}"
 
@@ -1002,12 +983,10 @@ msgid "erases your data"
 msgstr "আপনার তথ্য মুছে দেয়"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:64
-#, python-brace-format
 msgid "{most} and {last}"
 msgstr "{most} এবং {last}"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:65
-#, python-brace-format
 msgid "For experienced users. This page {listed}."
 msgstr "অভিজ্ঞ ব্যবহারকারীদের জন্য। এই পাতাটি {listed}।"
 
@@ -1111,7 +1090,6 @@ msgid "Authentication cancelled"
 msgstr "প্রমাণীকরণ বাতিল করা হয়েছে৷"
 
 #: src/telephony/client/ui/windows/advanced_settings_window.py:318
-#, python-brace-format
 msgid "Auth error: {e}"
 msgstr "প্রমাণ ত্রুটি: {e}"
 
@@ -1241,7 +1219,6 @@ msgstr "ছবি সংযুক্ত করুন"
 #: src/telephony/client/ui/windows/camera_video_window.py:302
 #: src/telephony/client/ui/windows/qr_scan_window.py:104
 #: src/telephony/client/ui/windows/qr_scan_window.py:118
-#, python-brace-format
 msgid "Error: {e}"
 msgstr "ত্রুটি: {e}"
 
@@ -1264,7 +1241,6 @@ msgstr "ভিডিও সংযুক্ত করুন"
 
 #: src/telephony/client/ui/windows/camera_video_window.py:333
 #: src/telephony/client/ui/windows/camera_video_window.py:436
-#, python-brace-format
 msgid "Failed to record video: {error_msg}"
 msgstr "ভিডিও রেকর্ড করতে ব্যর্থ হয়েছে: {error_msg}"
 
@@ -1273,7 +1249,6 @@ msgid "Recording failed (File empty)."
 msgstr "রেকর্ডিং ব্যর্থ (ফাইল খালি)।"
 
 #: src/telephony/client/ui/windows/camera_video_window.py:455
-#, python-brace-format
 msgid "Large video ({size}KB). Will be compressed on send."
 msgstr "বড় ভিডিও ( {size} KB)। পাঠালে সংকুচিত হবে।"
 
@@ -1426,12 +1401,10 @@ msgid "Clear Date"
 msgstr "তারিখ সাফ করুন"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:428
-#, python-brace-format
 msgid "Select {title}"
 msgstr "{title} নির্বাচন করুন"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:438
-#, python-brace-format
 msgid "Copy {title}"
 msgstr "{title} কপি করুন"
 
@@ -1465,7 +1438,6 @@ msgid "Could not create the QR code"
 msgstr "QR কোড তৈরি করা গেল না"
 
 #: src/telephony/client/ui/windows/contact_editor_window.py:740
-#, python-brace-format
 msgid "{name} will be removed from your address book."
 msgstr "{name} আপনার ঠিকানার বই থেকে সরিয়ে দেওয়া হবে।"
 
@@ -1530,7 +1502,6 @@ msgid "Remove"
 msgstr "সরান"
 
 #: src/telephony/client/ui/windows/custom_tone_list_window.py:282
-#, python-brace-format
 msgid "Select Tone for {name}"
 msgstr "{name} এর জন্য টোন নির্বাচন করুন"
 
@@ -1591,21 +1562,18 @@ msgid "DELETE EVERYTHING"
 msgstr "সবকিছু মুছুন"
 
 #: src/telephony/client/ui/windows/data_management_window.py:66
-#, python-brace-format
 msgid "This will delete {count} call. It cannot be undone."
 msgid_plural "This will delete {count} calls. It cannot be undone."
 msgstr[0] "এতে {count}টি কল মুছে যাবে। এটি আর ফেরানো যাবে না।"
 msgstr[1] "এতে {count}টি কল মুছে যাবে। এটি আর ফেরানো যাবে না।"
 
 #: src/telephony/client/ui/windows/data_management_window.py:75
-#, python-brace-format
 msgid "This will delete {count} message and its attachments."
 msgid_plural "This will delete {count} messages and their attachments."
 msgstr[0] "এতে {count}টি বার্তা ও তার সঙ্গের ফাইল মুছে যাবে।"
 msgstr[1] "এতে {count}টি বার্তা ও তাদের সঙ্গের ফাইল মুছে যাবে।"
 
 #: src/telephony/client/ui/windows/data_management_window.py:84
-#, python-brace-format
 msgid "This will reset {count} custom group name."
 msgid_plural "This will reset {count} custom group names."
 msgstr[0] "এতে {count}টি নিজের দেওয়া দলের নাম গোড়ায় ফিরে যাবে।"
@@ -1616,7 +1584,6 @@ msgid "Delete Group Names"
 msgstr "গ্রুপের নাম মুছুন"
 
 #: src/telephony/client/ui/windows/data_management_window.py:93
-#, python-brace-format
 msgid "This will unblock {count} number."
 msgid_plural "This will unblock {count} numbers."
 msgstr[0] "এতে {count}টি নম্বরের আটকানো উঠে যাবে।"
@@ -1632,7 +1599,6 @@ msgstr "মুছে ফেলা যাবে এমন কোনো কাস�
 
 #: src/telephony/client/ui/windows/data_management_window.py:128
 #: src/telephony/client/ui/windows/settings_window.py:976
-#, python-brace-format
 msgid "Are you sure you want to permanently delete the '{name}' address book?"
 msgstr "আপনি কি নিশ্চিত যে আপনি '{name}' অ্যাড্রেস বুক স্থায়ীভাবে মুছে ফেলতে চান?"
 
@@ -1746,17 +1712,14 @@ msgid "Merging Contacts..."
 msgstr "পরিচিতি মার্জ করা হচ্ছে..."
 
 #: src/telephony/client/ui/windows/duplicate_resolution_window.py:96
-#, python-brace-format
 msgid "Remaining conflicts: {count}"
 msgstr "অবশিষ্ট দ্বন্দ্ব: {count}"
 
 #: src/telephony/client/ui/windows/duplicate_resolution_window.py:113
-#, python-brace-format
 msgid "{number} is saved to contacts:"
 msgstr "{number} পরিচিতিতে সংরক্ষিত হয়:"
 
 #: src/telephony/client/ui/windows/duplicate_resolution_window.py:129
-#, python-brace-format
 msgid "Address Book: {name}"
 msgstr "ঠিকানা বই: {name}"
 
@@ -1769,7 +1732,6 @@ msgid "Keep this, Merge duplicates"
 msgstr "এই রাখুন, সদৃশ মার্জ"
 
 #: src/telephony/client/ui/windows/duplicate_resolution_window.py:318
-#, python-brace-format
 msgid "Merging {current}/{total}..."
 msgstr "মার্জিং {current} / {total} ..."
 
@@ -1790,7 +1752,6 @@ msgid "Speed Dial"
 msgstr "দ্রুত ডায়াল"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:109
-#, python-brace-format
 msgid "{name} · {number}"
 msgstr "{name} · {number}"
 
@@ -1800,12 +1761,10 @@ msgid "Empty"
 msgstr "খালি"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:179
-#, python-brace-format
 msgid "Choose a slot for {name}"
 msgstr "{name}-এর জন্য ঘর বেছে নিন"
 
 #: src/telephony/client/ui/windows/favorites_list_window.py:196
-#, python-brace-format
 msgid "{name} added to slot {slot}"
 msgstr "{name} {slot} ঘরে যোগ হয়েছে"
 
@@ -1870,7 +1829,6 @@ msgid "Export File"
 msgstr "ফাইল রপ্তানি করুন"
 
 #: src/telephony/client/ui/windows/import_export_window.py:118
-#, python-brace-format
 msgid "Exported {count} entries."
 msgstr "{count}টি ঘর বার করা হয়েছে।"
 
@@ -1885,7 +1843,6 @@ msgid "Select File"
 msgstr "ফাইল নির্বাচন করুন"
 
 #: src/telephony/client/ui/windows/import_export_window.py:142
-#, python-brace-format
 msgid "Imported: {added} added, {updated} widened."
 msgstr "আনা হয়েছে: {added}টি যোগ, {updated}টি বাড়ানো।"
 
@@ -1899,7 +1856,6 @@ msgstr "সিম থেকে পরিচিতি আমদানি কর�
 
 #: src/telephony/client/ui/windows/import_export_window.py:161
 #: src/telephony/client/ui/windows/import_export_window.py:165
-#, python-brace-format
 msgid "SIM Import failed: {e}"
 msgstr "সিম আমদানি ব্যর্থ হয়েছে: {e}"
 
@@ -1908,7 +1864,6 @@ msgid "No contacts found on SIM card."
 msgstr "সিম কার্ডে কোনো পরিচিতি পাওয়া যায়নি।"
 
 #: src/telephony/client/ui/windows/import_export_window.py:170
-#, python-brace-format
 msgid "Imported {count} contacts from SIM."
 msgstr "সিম থেকে {count} পরিচিতি আমদানি করা হয়েছে।"
 
@@ -1950,7 +1905,6 @@ msgid "Extracting backup from iPhone... This may take a long time!"
 msgstr "iPhone থেকে ব্যাকআপ বের করা হচ্ছে... এতে অনেক সময় লাগতে পারে!"
 
 #: src/telephony/client/ui/windows/import_export_window.py:231
-#, python-brace-format
 msgid "USB Backup failed: {e}"
 msgstr "ইউএসবি ব্যাকআপ ব্যর্থ হয়েছে: {e}"
 
@@ -1971,7 +1925,6 @@ msgid "Importing iPhone Calls..."
 msgstr "iPhone কল আমদানি করা হচ্ছে..."
 
 #: src/telephony/client/ui/windows/import_export_window.py:253
-#, python-brace-format
 msgid "Error during iOS import: {e}"
 msgstr "iOS আমদানির সময় ত্রুটি: {e}"
 
@@ -2021,7 +1974,6 @@ msgid "Call History"
 msgstr "কল ইতিহাস"
 
 #: src/telephony/client/ui/windows/import_export_window.py:330
-#, python-brace-format
 msgid "Export to {fmt}"
 msgstr "{fmt} এ রপ্তানি করুন"
 
@@ -2056,12 +2008,10 @@ msgid "Where do you want to import contacts?"
 msgstr "আপনি কোথায় পরিচিতি আমদানি করতে চান?"
 
 #: src/telephony/client/ui/windows/import_export_window.py:443
-#, python-brace-format
 msgid "Imported {count} contacts"
 msgstr "{count} পরিচিতি আমদানি করা হয়েছে"
 
 #: src/telephony/client/ui/windows/import_export_window.py:447
-#, python-brace-format
 msgid "Import failed: {e}"
 msgstr "আমদানি ব্যর্থ হয়েছে: {e}"
 
@@ -2083,12 +2033,10 @@ msgid "No contacts found to export"
 msgstr "রপ্তানির জন্য কোনো পরিচিতি পাওয়া যায়নি"
 
 #: src/telephony/client/ui/windows/import_export_window.py:506
-#, python-brace-format
 msgid "Exported {count} contacts"
 msgstr "{count} পরিচিতি রপ্তানি করা হয়েছে"
 
 #: src/telephony/client/ui/windows/import_export_window.py:509
-#, python-brace-format
 msgid "Export error: {e}"
 msgstr "রপ্তানি ত্রুটি: {e}"
 
@@ -2347,7 +2295,6 @@ msgid "Transfer"
 msgstr "হাতবদল করুন"
 
 #: src/telephony/client/ui/windows/incall_window.py:619
-#, python-brace-format
 msgid "Transfer connects {a} and {b} together and you leave the call"
 msgstr "হাতবদল {a} ও {b}-কে একসঙ্গে জুড়ে দেয় এবং আপনি কল ছেড়ে চলে যান"
 
@@ -2362,7 +2309,6 @@ msgstr "একসঙ্গে কল"
 
 #: src/telephony/client/ui/windows/incall_window.py:798
 #: src/telephony/client/ui/windows/incall_window.py:905
-#, python-brace-format
 msgid "{count} participant"
 msgid_plural "{count} participants"
 msgstr[0] "{count}জন অংশগ্রহণকারী"
@@ -2420,7 +2366,6 @@ msgid "Could not restore the modem. Please reboot the phone."
 msgstr "মডেম পুনরুদ্ধার করা যায়নি। অনুগ্রহ করে ফোনটি রিবুট করুন।"
 
 #: src/telephony/client/ui/windows/incall_window.py:1222
-#, python-brace-format
 msgid "Logs saved to {path}"
 msgstr "লগ {path}-এ সংরক্ষিত হয়েছে"
 
@@ -2438,7 +2383,6 @@ msgid "Fast phone dialer and messaging client designed for FuriOS."
 msgstr "FuriOS-এর জন্য তৈরি দ্রুত কল ও বার্তার অ্যাপ।"
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:71
-#, python-brace-format
 msgid "To: {name}"
 msgstr "প্রতি: {name}"
 
@@ -2447,7 +2391,6 @@ msgid "Send Now"
 msgstr "এখন পাঠান"
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:141
-#, python-brace-format
 msgid "Sending message to {number}..."
 msgstr "{number} এ বার্তা পাঠানো হচ্ছে..."
 
@@ -2456,7 +2399,6 @@ msgid "Message removed"
 msgstr "বার্তা সরানো হয়েছে"
 
 #: src/telephony/client/ui/windows/missed_scheduled_messages_window.py:165
-#, python-brace-format
 msgid "Scheduled ({current}/{total})"
 msgstr "নির্ধারিত ( {current} / {total} )"
 
@@ -2504,7 +2446,6 @@ msgstr "বাজার সময়"
 
 #: src/telephony/client/ui/windows/network_services_window.py:102
 #: src/telephony/client/ui/windows/network_services_window.py:300
-#, python-brace-format
 msgid "{count} seconds"
 msgstr "{count} সেকেন্ড"
 
@@ -2778,7 +2719,6 @@ msgid "Enter a number to block"
 msgstr "আটকানোর জন্য নম্বর লিখুন"
 
 #: src/telephony/client/ui/windows/settings_window.py:217
-#, python-brace-format
 msgid "{number} is already on the blocklist."
 msgstr "{number} আগেই আটকানোর তালিকায় আছে।"
 
@@ -3063,7 +3003,6 @@ msgid "Custom URL"
 msgstr "কাস্টম URL"
 
 #: src/telephony/client/ui/windows/settings_window.py:727
-#, python-brace-format
 msgid ""
 "Enter the URL you want to use for searching unknown numbers. Include "
 "'{number}' in the URL where the caller's phone number should go.\n"
@@ -3172,7 +3111,6 @@ msgid "Attach Voice Note"
 msgstr "ভয়েস নোট সংযুক্ত করুন"
 
 #: src/telephony/client/ui/windows/sound_recorder_window.py:279
-#, python-brace-format
 msgid "Recording is too large for MMS (Max {size}). Please retake shorter."
 msgstr ""
 "MMS এর জন্য রেকর্ডিংটি খুব বড় (সর্বোচ্চ {size})। অনুগ্রহ করে ছোট করে আবার রেকর্ড করুন।"
@@ -3367,22 +3305,18 @@ msgstr ""
 "করবে। আপনি কি নিশ্চিত?"
 
 #: src/telephony/client/utils/exporter_android_utils.py:118
-#, python-brace-format
 msgid "Successfully exported {count} messages to XML."
 msgstr "XML-এ {count} বার্তা সফলভাবে রপ্তানি করা হয়েছে।"
 
 #: src/telephony/client/utils/exporter_android_utils.py:178
-#, python-brace-format
 msgid "Successfully exported {count} calls to XML."
 msgstr "XML-এ {count} কল সফলভাবে রপ্তানি হয়েছে৷"
 
 #: src/telephony/client/utils/exporter_local_utils.py:192
-#, python-brace-format
 msgid "Exported {count} messages to Chatty database."
 msgstr "চ্যাটি ডাটাবেসে {count} বার্তা রপ্তানি করা হয়েছে।"
 
 #: src/telephony/client/utils/exporter_local_utils.py:257
-#, python-brace-format
 msgid "Exported {count} calls to Gnome Calls database."
 msgstr "জিনোম কল ডাটাবেসে {count} কল রপ্তানি করা হয়েছে।"
 
@@ -3460,17 +3394,14 @@ msgid "0s"
 msgstr "0 সে"
 
 #: src/telephony/client/utils/model_utils.py:99
-#, python-brace-format
 msgid "{h}h {m}m"
 msgstr "{h} h {m} মি"
 
 #: src/telephony/client/utils/model_utils.py:101
-#, python-brace-format
 msgid "{m}m {s}s"
 msgstr "{m} মি {s}"
 
 #: src/telephony/client/utils/model_utils.py:102
-#, python-brace-format
 msgid "{s}s"
 msgstr "{s}"
 
@@ -3509,22 +3440,18 @@ msgid "The call could not be started"
 msgstr "কল শুরু করা গেল না"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1396
-#, python-brace-format
 msgid "Failed to send: {e}"
 msgstr "পাঠাতে ব্যর্থ হয়েছে: {e}"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1750
-#, python-brace-format
 msgid "Please wait 60 seconds before triggering {prefix} again."
 msgstr "{prefix} আবার ট্রিগার করার আগে দয়া করে 60 সেকেন্ড অপেক্ষা করুন৷"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1930
-#, python-brace-format
 msgid " (Accuracy: {acc}m)"
 msgstr "(নির্ভুলতা: {acc} m)"
 
 #: src/telephony/daemon/managers/ofono_manager.py:1932
-#, python-brace-format
 msgid "I am here: {link}{acc_str}"
 msgstr "আমি এখানে আছি: {link} {acc_str}"
 
@@ -3580,12 +3507,10 @@ msgid "Missed Call"
 msgstr "মিসড কল"
 
 #: src/telephony/daemon/utils/importer_android_utils.py:122
-#, python-brace-format
 msgid "Imported {count} messages from Android backup."
 msgstr "Android ব্যাকআপ থেকে {count} বার্তা আমদানি করা হয়েছে।"
 
 #: src/telephony/daemon/utils/importer_android_utils.py:197
-#, python-brace-format
 msgid "Imported {count} calls from Android backup."
 msgstr "Android ব্যাকআপ থেকে {count} কল আমদানি করা হয়েছে।"
 
@@ -3598,7 +3523,6 @@ msgid "Failed to read iOS SMS database structure."
 msgstr "iOS SMS ডাটাবেস কাঠামো পড়তে ব্যর্থ হয়েছে৷"
 
 #: src/telephony/daemon/utils/importer_ios_utils.py:191
-#, python-brace-format
 msgid "Imported {count} messages from iOS backup."
 msgstr "iOS ব্যাকআপ থেকে {count} বার্তা আমদানি করা হয়েছে।"
 
@@ -3611,7 +3535,6 @@ msgid "Failed to read iOS Calls database structure."
 msgstr "iOS কল ডাটাবেস গঠন পড়তে ব্যর্থ হয়েছে."
 
 #: src/telephony/daemon/utils/importer_ios_utils.py:296
-#, python-brace-format
 msgid "Imported {count} calls from iOS backup."
 msgstr "iOS ব্যাকআপ থেকে {count} কল আমদানি করা হয়েছে।"
 
@@ -3628,7 +3551,6 @@ msgid "Failed to read Chatty database structure."
 msgstr "চ্যাটি ডাটাবেস গঠন পড়তে ব্যর্থ হয়েছে."
 
 #: src/telephony/daemon/utils/importer_local_utils.py:239
-#, python-brace-format
 msgid "Imported {count} messages from Chatty."
 msgstr "চ্যাটি থেকে {count} বার্তা আমদানি করা হয়েছে।"
 
@@ -3645,7 +3567,6 @@ msgid "Failed to read Calls database structure."
 msgstr "কল ডাটাবেস গঠন পড়তে ব্যর্থ হয়েছে."
 
 #: src/telephony/daemon/utils/importer_local_utils.py:364
-#, python-brace-format
 msgid "Imported {count} calls."
 msgstr "আমদানি করা {count} কল।"
 
@@ -3654,7 +3575,6 @@ msgid "Andromeda contacts come from the system and are read here only."
 msgstr "Andromeda-র পরিচিতি ব্যবস্থা থেকে আসে আর এখানে কেবল পড়া হয়।"
 
 #: src/telephony/shared/managers/eds_manager.py:1299
-#, python-brace-format
 msgid ""
 "{book} is not connected, so its contacts cannot be changed until it is back."
 msgstr "{book} জোড়া নেই, তাই ফিরে না আসা পর্যন্ত তার পরিচিতি বদলানো যাবে না।"
