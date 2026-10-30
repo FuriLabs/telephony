@@ -274,8 +274,8 @@ class SettingsWindow(Adw.Bin):
         btn_cc_info = self.info_button(self.show_country_code_info)
         self.entry_country_code.add_suffix(btn_cc_info)
 
-        saved_cc = self.main_window.gsettings_mgr.get_setting(
-            "default_country_code")
+        saved_cc = (self.main_window.gsettings_mgr.get_setting("default_country_code")
+                    or self.main_window.gsettings_mgr.get_setting("detected_country_code"))
         self.entry_country_code.set_text(saved_cc if saved_cc else "")
         self.entry_country_code.set_show_apply_button(True)
         self.entry_country_code.connect("apply", self.on_country_code_apply)
@@ -902,7 +902,11 @@ class SettingsWindow(Adw.Bin):
         cc = row.get_text().strip().upper()
         row.set_text(cc)
         self.main_window.gsettings_mgr.set_setting("default_country_code", cc)
-        set_custom_region(cc)
+        if cc:
+            set_custom_region(cc)
+            return
+
+        self.main_window.check_country_code()
 
     def on_voicemail_apply(self, row):
         self.main_window.gsettings_mgr.set_setting(
