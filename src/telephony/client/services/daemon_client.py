@@ -384,6 +384,12 @@ class DaemonClient:
         return self.call("SetDeliveryReports", GLib.Variant("(b)", (bool(enabled),)),
                          GLib.VariantType("(bs)"), timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
 
+    def set_call_recording(self, enabled):
+        self.call_async("StartCallRecording" if enabled else "StopCallRecording")
+
+    def get_call_recording_state(self, callback):
+        self.call_with_reply("GetCallRecordingState", None, callback)
+
     def set_mic_muted(self, muted):
         self.call_async("MuteMic" if muted else "UnmuteMic")
 
