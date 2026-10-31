@@ -96,6 +96,31 @@ class AdvancedSettingsWindow(Adw.NavigationPage):
             _("Allow Call Transfer"), "allow_call_transfer",
             self.show_transfer_info))
 
+        grp_recording = Adw.PreferencesGroup(
+            title=_("Call Recording"),
+            description=_("Recording calls can require everyone's consent where you live."))
+        recording_settings = self.parent_win.main_window.gsettings_mgr.gsettings
+        row_always = Adw.SwitchRow(
+            title=_("Always Record Calls"),
+            subtitle=_("Starts when a call connects. The button on the call screen still stops it."))
+        row_always.set_active(recording_settings.get_boolean("call-recording-always"))
+        row_always.connect("notify::active", lambda r, _p: recording_settings.set_boolean(
+            "call-recording-always", r.get_active()))
+        grp_recording.add(row_always)
+
+        formats = ("stereo", "mono", "separate")
+        current_format = recording_settings.get_string("call-recording-format")
+        row_format = Adw.ComboRow(
+            title=_("Save As"),
+            model=Gtk.StringList.new([_("One file, caller left and you right"),
+                                      _("One file, both mixed"),
+                                      _("Two files, one for each side")]),
+            selected=formats.index(current_format) if current_format in formats else 0)
+        row_format.connect("notify::selected", lambda r, _p: recording_settings.set_string(
+            "call-recording-format", formats[r.get_selected()]))
+        grp_recording.add(row_format)
+        self.page.add(grp_recording)
+
         grp_restart = Adw.PreferencesGroup()
         self.page.add(grp_restart)
         grp_restart.set_visible(self.parent_win.mode_calls or self.parent_win.mode_messages)

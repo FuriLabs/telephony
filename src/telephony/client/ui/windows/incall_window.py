@@ -159,6 +159,8 @@ class InCallWindow(Adw.Window):
         self.signal_ids = [
             (self.ofono, self.ofono.connect("call-removed", self.on_call_removed)),
             (self.ofono, self.ofono.connect("call-added", lambda *a: self.update_state())),
+            (self.ofono, self.ofono.connect("call-recording-changed",
+                                            lambda _o, active: self.apply_call_recording(active))),
             (self.ofono, self.ofono.connect("audio-changed", lambda *a: self.on_audio_changed())),
             (self.ofono, self.ofono.connect("call-changed", lambda *a: self.update_state())),
             (self.sys_state, self.sys_state.connect("lock-state-changed", self.on_lock_changed)),
@@ -252,6 +254,13 @@ class InCallWindow(Adw.Window):
         self.pill_keypad = self.build_stack_pill(
             "input-dialpad-symbolic", _("Keypad"), self.open_keypad_sheet)
         act_box.append(self.pill_keypad)
+
+        self.call_recording_active = False
+        self.pill_record = self.build_stack_pill(
+            "media-record-symbolic", _("Record"), self.on_record_clicked)
+        self.pill_record.set_visible(False)
+        act_box.append(self.pill_record)
+        self.ofono.daemon.get_call_recording_state(self.on_call_recording_state)
 
         self._context_mode = "actions"
         self.pill_context = self.build_context_pill()
@@ -477,6 +486,21 @@ class InCallWindow(Adw.Window):
             else:
                 self.lbl_pill_ctx_value.set_text("")
 
+    def on_call_recording_state(self, reply):
+        if not reply:
+            return
+        available, active = reply
+        self.pill_record.set_visible(available)
+        self.apply_call_recording(active)
+
+    def apply_call_recording(self, active):
+        self.call_recording_active = active
+        label = self.pill_record.get_child().get_center_widget().get_last_child()
+        label.set_label(_("Stop Recording") if active else _("Record"))
+
+    def on_record_clicked(self):
+        self.ofono.daemon.set_call_recording(not self.call_recording_active)
+
     def open_output_sheet(self):
         def present(reply):
             outputs, _inputs = reply if reply else ([], [])
@@ -669,6 +693,7 @@ class InCallWindow(Adw.Window):
             self.lbl_status.set_text(_("Telephony service is restarting…"))
 
     def update_state(self):
+        self.ofono.daemon.get_call_recording_state(self.on_call_recording_state)
         self.lock_manager.set_locked(self.is_locked)
 
         if self.in_recovery_mode:

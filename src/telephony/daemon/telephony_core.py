@@ -26,6 +26,7 @@ from telephony.shared.managers.eds_manager import EdsManager
 from telephony.daemon.managers.ringback_manager import RingbackManager
 from telephony.daemon.managers.notification_manager import NotificationManager
 from telephony.daemon.managers.call_audio_manager import CallAudioManager
+from telephony.daemon.managers.call_recording_manager import CallRecordingManager
 from telephony.daemon.managers.schedule_manager import ScheduleManager
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.utils.phone_utils import normalize_number, conversation_id, get_own_number
@@ -69,6 +70,7 @@ class TelephonyCore:
         self.callaudiod_dbus = None
         self.sys_state = None
         self.call_audio = None
+        self.call_recording = None
 
         self.notification_counts = defaultdict(int)
         self._hangup_requested_at = 0.0
@@ -108,6 +110,7 @@ class TelephonyCore:
         self.mms.connect("message-received", self.on_mms_received)
 
         self.call_audio = CallAudioManager(self.ofono, self.ofono.audio, self.gsettings_mgr)
+        self.call_recording = CallRecordingManager(self.ofono, self.gsettings_mgr)
         self.callaudiod_dbus = CallAudiodDBusService(self.ofono, self.call_audio)
 
         self.dbus_daemon = TelephonyDaemonDBus(self, self.db, self.ofono, self.eds)

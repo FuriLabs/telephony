@@ -33,6 +33,7 @@ class OfonoMirror(GObject.Object):
 
     __gsignals__ = {
         "audio-changed": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        "call-recording-changed": (GObject.SignalFlags.RUN_FIRST, None, (bool,)),
         "connection-status": (GObject.SignalFlags.RUN_FIRST, None, (str, str)),
         "action-error": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         "call-added": (GObject.SignalFlags.RUN_FIRST, None, (str, object)),
@@ -77,6 +78,7 @@ class OfonoMirror(GObject.Object):
                 ("ModemStateChanged", self.on_sig_modem_state),
                 ("VoicemailChanged", self.on_sig_voicemail),
                 ("AudioRouteChanged", self.on_sig_audio),
+                ("CallRecordingChanged", self.on_sig_call_recording),
                 ("UssdReceived", self.on_sig_ussd),
                 ("UssdRequestReceived", self.on_sig_ussd_request),
                 ("UssdStateChanged", self.on_sig_ussd_state),
@@ -197,6 +199,9 @@ class OfonoMirror(GObject.Object):
         self.voicemail_count = count
         self.emit("voicemail-changed", waiting, count)
         self.schedule_reseed()
+
+    def on_sig_call_recording(self, *args):
+        self.emit("call-recording-changed", args[5].unpack()[0])
 
     def on_sig_audio(self, *args):
         state = args[5].unpack()[0]
