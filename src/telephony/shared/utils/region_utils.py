@@ -83,7 +83,11 @@ def is_valid_region(region):
     return bool(region) and region in phonenumbers.SUPPORTED_REGIONS
 
 
-def get_modem_mcc_region(interface):
+def get_sim_mcc_region():
+    """The SIM's own country, which is the one the subscriber's national numbers
+    belong to. NetworkRegistration also carries an MCC, but that one describes
+    whichever network is serving the modem right now, so abroad it turns every
+    home number into a number in the visited country."""
     try:
         bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
 
@@ -99,24 +103,14 @@ def get_modem_mcc_region(interface):
         modem_path, _props = modem
         proxy = Gio.DBusProxy.new_sync(
             bus, Gio.DBusProxyFlags.NONE, None,
-            "org.ofono", modem_path, interface, None)
+            "org.ofono", modem_path, "org.ofono.SimManager", None)
 
         props = proxy.call_sync("GetProperties", None, Gio.DBusCallFlags.NONE, -1, None)
         mcc = props.unpack()[0].get("MobileCountryCode")
         return MCC_TO_REGION.get(mcc) if mcc else None
     except Exception as e:
-        logger.debug(f"[Init] No MobileCountryCode from {interface}: {e}")
+        logger.debug(f"[Init] No MobileCountryCode from the SIM: {e}")
         return None
-
-
-def get_sim_mcc_region():
-    """The SIM's own country, which is the one the subscriber's national numbers
-    belong to; the serving network's country is wrong while roaming."""
-    return get_modem_mcc_region("org.ofono.SimManager")
-
-
-def get_network_mcc_region():
-    return get_modem_mcc_region("org.ofono.NetworkRegistration")
 
 
 def get_locale_region():
@@ -135,7 +129,6 @@ def get_locale_region():
 def detect_region():
     sources = (
         ("SIM", get_sim_mcc_region),
-        ("network", get_network_mcc_region),
         ("locale", get_locale_region),
     )
 

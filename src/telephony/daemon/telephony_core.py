@@ -192,7 +192,9 @@ class TelephonyCore:
 
     def refresh_detected_region(self, _manager, interface):
         """The SIM's MCC can only be read once SimManager appears, and the daemon keeps
-        storing numbers whether or not a window is open to re-detect on its behalf."""
+        storing numbers whether or not a window is open to re-detect on its behalf.
+        NetworkRegistration is a second attempt rather than a source: its own MCC is
+        the visited country, but by the time it shows up the SIM has usually answered."""
         if interface not in ("org.ofono.SimManager", "org.ofono.NetworkRegistration"):
             return
         if self.gsettings_mgr.get_setting("default_country_code"):
