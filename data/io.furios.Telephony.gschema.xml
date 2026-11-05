@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="io.furios.Telephony" path="/io/furios/Telephony/">
+    <key name="call-recording-always" type="b">
+      <default>false</default>
+      <summary>Always record calls</summary>
+      <description>Start recording automatically when a call connects.</description>
+    </key>
+    <key name="call-recording-format" type="s">
+      <choices>
+        <choice value="stereo"/>
+        <choice value="mono"/>
+        <choice value="separate"/>
+      </choices>
+      <default>"stereo"</default>
+      <summary>Call recording format</summary>
+      <description>One stereo file with the caller left and you right, one mono file with both mixed, or a separate file for each side.</description>
+    </key>
     <key name="initial-import-completed" type="b">
       <default>false</default>
       <summary>Initial import completed</summary>
