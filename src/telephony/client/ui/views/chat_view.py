@@ -987,6 +987,8 @@ class ChatPage(Gtk.Box):
             self.append_new_messages()
         elif change == "status":
             self.sync_message_statuses()
+        elif change == "content":
+            self.reload_chat()
         elif change == "draft":
             return
         else:
