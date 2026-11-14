@@ -557,6 +557,7 @@ class EdsManager(GObject.Object):
                 with self.books_lock:
                     open_books = len(self.books)
                 logger.info(f"[EDS] {open_books} book(s) live over the wire")
+                self.forget_books_the_registry_lost()
                 return
             except Exception as e:
                 logger.warning(f"[EDS] Configured book setup failed, rediscovering: {e}")
@@ -610,10 +611,22 @@ class EdsManager(GObject.Object):
         return {uid: info for uid, info in self.registry_objects().items()
                 if info["enabled"]}
 
+    def forget_books_the_registry_lost(self, all_books=None):
+        """Let the database drop what belongs to books the registry no longer has. Deleting a book or removing its account leaves its contacts cached here, and nothing reads them again, so they only grow the file."""
+        if not self.owns_live_views or not self.db_ref:
+            return
+        try:
+            books = all_books if all_books is not None else self.registry_objects()
+            known = set(books.keys()) | {item["uid"] for item in self.saved_config_entries()}
+            self.db_ref.forget_vanished_books(known)
+        except Exception as e:
+            logger.warning(f"[EDS] Could not check for books that are gone: {e}")
+
     def load_sources_config_locked(self):
         try:
             self.watch_registry()
-            registry_books = self.enabled_registry_books()
+            all_books = self.registry_objects()
+            registry_books = {uid: info for uid, info in all_books.items() if info["enabled"]}
             default_uid = self.default_source_uid()
 
             saved_config = self.saved_config_entries()
@@ -650,6 +663,7 @@ class EdsManager(GObject.Object):
                 current_rank += 1
 
             self.save_sources_config(final_sources_list)
+            self.forget_books_the_registry_lost(all_books)
 
             with self.sources_lock:
                 self.sources = {}

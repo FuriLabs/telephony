@@ -1418,6 +1418,32 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Delete Contact Error: {e}")
             return False
 
+    def forget_vanished_books(self, known_source_uids):
+        """Drop the cached contacts of books the registry no longer has. A book that is only switched off keeps its rows, so switching it back on costs no resync, but a book that was deleted or whose account was removed leaves rows nothing ever reads again. Favourites and the other number lists are left alone, because the same numbers usually come back under a new book."""
+        if self.refuse_write("forget_vanished_books"):
+            return 0
+        if not known_source_uids:
+            logger.debug("[DB] No books known yet, keeping every cached contact")
+            return 0
+        try:
+            with self.lock:
+                c = self.conn_contacts.cursor()
+                c.execute("SELECT DISTINCT source_uid FROM contacts")
+                gone = [row[0] for row in c.fetchall()
+                        if row[0] and row[0] not in known_source_uids]
+                if not gone:
+                    return 0
+                placeholders = ",".join("?" * len(gone))
+                c.execute(f"DELETE FROM contacts WHERE source_uid IN ({placeholders})", gone)
+                dropped = c.rowcount
+                self.conn_contacts.commit()
+            logger.info(f"[DB] Dropped {dropped} cached contacts of books that are gone: {gone}")
+            GLib.idle_add(self.emit, "contacts-updated")
+            return dropped
+        except Exception as e:
+            logger.error(f"[DB] Vanished book cleanup failed: {e}")
+            return 0
+
     def sync_deleted_contacts(self, source_uid, active_uids_list):
         if self.refuse_write("sync_deleted_contacts"):
             return False
