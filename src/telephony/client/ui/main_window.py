@@ -15,7 +15,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw, Gio, GLib, Gdk
 from telephony.shared.utils.log_utils import logger
 
-from telephony.shared.utils.phone_utils import normalize_number
+from telephony.shared.utils.phone_utils import is_ussd_code, normalize_number
 from telephony.shared.utils.system_utils import get_phosh_emergency_calls
 from telephony.shared.utils import region_utils as utils
 from telephony.client.ui.views.history_view import HistoryView
@@ -935,6 +935,10 @@ class MainWindow(Adw.Window):
 
     def start_call(self, number, hide_id=False):
         self.set_focus(None)
+
+        if is_ussd_code(number):
+            self.handle_ussd(str(number).strip())
+            return
 
         if self.ofono and not self.ofono.is_dialing_available():
             description = self.ofono.dial_description

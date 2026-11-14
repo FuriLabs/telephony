@@ -478,9 +478,6 @@ class DialpadView(Adw.Bin):
         )
         return False
 
-    def is_ussd(self, number):
-        return (number.startswith("*") or number.startswith("#")) and number.endswith("#")
-
     def on_digit_clicked(self, digit):
         pos = self.entry.get_position()
         text = self.entry.get_text()
@@ -530,10 +527,7 @@ class DialpadView(Adw.Bin):
             self.app_window.start_call(favorite.get("number", ""))
             return
 
-        if self.is_ussd(number):
-            self.app_window.handle_ussd(number)
-        else:
-            self.app_window.start_call(number)
+        self.app_window.start_call(number)
 
     def on_anon_call_clicked(self, btn):
         raw_number = self.entry.get_text().strip()
@@ -547,10 +541,7 @@ class DialpadView(Adw.Bin):
             self.app_window.start_call(favorite.get("number", ""), hide_id=True)
             return
 
-        if self.is_ussd(number):
-            self.app_window.handle_ussd(number)
-        else:
-            self.app_window.start_call(number, hide_id=True)
+        self.app_window.start_call(number, hide_id=True)
 
     def on_paste_clicked(self, btn):
         clipboard = Gdk.Display.get_default().get_clipboard()

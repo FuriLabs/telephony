@@ -16,6 +16,12 @@ from telephony.shared.utils.ofono_utils import get_first_non_hfp_modem
 from telephony.shared.utils.region_utils import get_system_region
 
 
+def is_ussd_code(number):
+    """A dial string the network answers over the USSD interface instead of placing a call, like *99# or *123*1#."""
+    text = str(number or "").strip()
+    return (text.startswith("*") or text.startswith("#")) and text.endswith("#")
+
+
 def normalize_number(number, permissive=False):
     return normalize_number_cached(number, get_system_region(), permissive)
 
