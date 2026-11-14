@@ -18,7 +18,7 @@ from telephony.client.ui.windows.qr_share_window import QrShareDialog
 from telephony.client.ui.widgets.common_widget import (translate_phone_label,
                                                       blocked_state_text, close_sheet,
                                                       close_sheet_page, present_sheet_page,
-                                                      present_unblock_choice)
+                                                      present_unblock_choice, book_subtitle)
 from telephony.shared.constants import BLOCKLIST_SETTLE_MS, CONTACT_SHEET_HEIGHT
 
 
@@ -340,7 +340,7 @@ class ContactEditor(Adw.NavigationPage):
             found = False
             for s in enabled:
                 if s["uid"] == current_source:
-                    row = Adw.ActionRow(title=s["name"])
+                    row = Adw.ActionRow(title=s["name"], subtitle=book_subtitle(s))
                     row.add_suffix(Gtk.Image(icon_name="object-select-symbolic"))
                     grp.add(row)
                     found = True
@@ -353,7 +353,7 @@ class ContactEditor(Adw.NavigationPage):
             for s in enabled:
                 if not self.uid and s["uid"] in read_only_uids:
                     continue
-                row = Adw.SwitchRow(title=s["name"])
+                row = Adw.SwitchRow(title=s["name"], subtitle=book_subtitle(s))
                 is_active = False
                 if self.uid:
                     if s["uid"] == current_source:

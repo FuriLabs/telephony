@@ -495,6 +495,21 @@ class EntryListGroup(Adw.PreferencesGroup):
             expander.set_subtitle(values.get(self.fields[1]["key"], ""))
 
 
+def book_label(source):
+    """Name an address book on a single line, for the places that have room for one line only. A row with a subtitle should put the account there instead of growing its title."""
+    name = source.get("name") or source.get("uid") or ""
+    account = source.get("account") or ""
+    if not account or account == name:
+        return name
+    return f"{name} · {account}"
+
+
+def book_subtitle(source, extra=None):
+    """The account under an address book name, with room for one more word such as the default marker."""
+    bits = [b for b in (source.get("account") or "", extra or "") if b]
+    return " · ".join(bits)
+
+
 def translate_phone_label(label):
     LABELS = {
         "Mobile": _("Mobile"),

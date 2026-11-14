@@ -9,7 +9,7 @@ from gi.repository import Adw, GLib
 from gettext import gettext as _, ngettext
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.client.ui.widgets.common_widget import (present_alert_sheet, present_choice_sheet,
-                                                      add_choice_row)
+                                                      add_choice_row, book_subtitle)
 
 
 class DataManagementDialog:
@@ -128,7 +128,8 @@ class DataManagementDialog:
                         _("Are you sure you want to permanently delete the '{name}' address book?").format(name=source_name),
                         lambda: callback(uid))
 
-                add_choice_row(group, window, source["name"], chosen, destructive=True)
+                add_choice_row(group, window, source["name"], chosen,
+                               subtitle=book_subtitle(source), destructive=True)
 
         present_choice_sheet(
             self.page, _("Delete Address Book"), build,

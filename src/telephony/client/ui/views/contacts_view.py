@@ -14,7 +14,7 @@ from gettext import gettext as _, ngettext
 
 from telephony.shared.constants import SCROLL_SETTLE_MS
 from telephony.shared.utils.phone_utils import normalize_number
-from telephony.client.ui.widgets.common_widget import (DataLoader, translate_phone_label, present_choice_sheet, add_choice_row, present_sheet_page)
+from telephony.client.ui.widgets.common_widget import (DataLoader, translate_phone_label, present_choice_sheet, add_choice_row, present_sheet_page, book_label)
 from telephony.client.ui.windows.qr_scan_window import QrScanDialog
 from telephony.client.utils.model_utils import ContactItem
 
@@ -120,7 +120,7 @@ class ContactsView(Adw.Bin):
         if (self.app_window and self.app_window.eds is not None):
             sources = self.app_window.eds.get_sources_info()
             for s in sources:
-                self.source_map[s["uid"]] = s["name"]
+                self.source_map[s["uid"]] = book_label(s)
 
     def on_map(self, *args):
         self.update_source_map()

@@ -25,8 +25,9 @@ EDS_SOURCES_BUS_NAME = "org.gnome.evolution.dataserver.Sources5"
 EDS_SOURCES_PATH = "/org/gnome/evolution/dataserver/SourceManager"
 EDS_SOURCE_MANAGER_IFACE = "org.gnome.evolution.dataserver.SourceManager"
 EDS_SOURCE_IFACE = "org.gnome.evolution.dataserver.Source"
-EDS_SOURCE_WRITABLE_IFACE = "org.gnome.evolution.dataserver.Source.Writable"
-EDS_STATUS_CONNECTED = "connected"
+EDS_STATUS_AWAITING_CREDENTIALS = "awaiting-credentials"
+EDS_STATUS_SSL_FAILED = "ssl-failed"
+EDS_REFUSING_STATUSES = (EDS_STATUS_AWAITING_CREDENTIALS, EDS_STATUS_SSL_FAILED)
 EDS_CONNECTION_STATUS_PROP = "ConnectionStatus"
 EDS_STATUS_SETTLE_MS = 1500
 EDS_SOURCE_REMOVABLE_IFACE = "org.gnome.evolution.dataserver.Source.Removable"
@@ -88,6 +89,7 @@ class EdsManager(GObject.Object):
         self._registry_sub_ids = []
         self._status_settle_id = 0
         self._registry_paths = {}
+        self._registry_accounts = {}
         self.is_ready = False
         self._sources_info_cache = None
         self._sources_fetch_running = False
@@ -155,6 +157,7 @@ class EdsManager(GObject.Object):
 
         books = {}
         paths = {}
+        accounts = {}
         for path, ifaces in objects.items():
             props = ifaces.get(EDS_SOURCE_IFACE)
             if not props:
@@ -162,7 +165,14 @@ class EdsManager(GObject.Object):
             uid = props.get("UID", "")
             paths[path] = uid
             parsed = self.parse_source_data(props.get("Data", ""))
-            if parsed is None or not parsed["is_addressbook"]:
+            if parsed is None:
+                continue
+            accounts[uid] = {
+                "name": parsed["name"],
+                "parent": parsed["parent"],
+                "host": parsed["host"],
+            }
+            if not parsed["is_addressbook"]:
                 continue
             books[uid] = {
                 "uid": uid,
@@ -173,10 +183,11 @@ class EdsManager(GObject.Object):
                 "backend": parsed["backend"],
                 "is_local": parsed["backend"] in LOCAL_BACKEND_NAMES,
                 "removable": EDS_SOURCE_REMOVABLE_IFACE in ifaces,
-                "writable": EDS_SOURCE_WRITABLE_IFACE in ifaces,
                 "status": (props.get("ConnectionStatus") or None),
+                "host": parsed["host"],
             }
         self._registry_paths = paths
+        self._registry_accounts = accounts
         return books
 
     def parse_source_data(self, data):
@@ -190,11 +201,13 @@ class EdsManager(GObject.Object):
             return None
         section = parser["Data Source"]
         book = parser["Address Book"] if parser.has_section("Address Book") else {}
+        auth = parser["Authentication"] if parser.has_section("Authentication") else {}
         return {
             "name": section.get("DisplayName", ""),
             "enabled": section.get("Enabled", "true").lower() == "true",
             "parent": section.get("Parent", ""),
             "backend": book.get("BackendName", "") if book else None,
+            "host": auth.get("Host", "") if auth else "",
             "is_addressbook": parser.has_section("Address Book"),
         }
 
@@ -881,7 +894,7 @@ class EdsManager(GObject.Object):
                 is_def = (uid == default_uid)
                 result.append(self.source_info_entry(info, current_rank,
                                                       conf.get("enabled", True) or is_def,
-                                                      is_def, registry_books))
+                                                      is_def))
                 uids_processed.add(uid)
                 current_rank += 1
 
@@ -889,7 +902,7 @@ class EdsManager(GObject.Object):
                 if uid in uids_processed:
                     continue
                 result.append(self.source_info_entry(info, current_rank, True,
-                                                      uid == default_uid, registry_books))
+                                                      uid == default_uid))
                 current_rank += 1
 
             self._sources_info_cache = [dict(item) for item in result]
@@ -899,7 +912,7 @@ class EdsManager(GObject.Object):
             logger.error(f"[EDS] Get Sources Info Error: {e}")
             return []
 
-    def source_info_entry(self, info, rank, enabled, is_def, registry_books):
+    def source_info_entry(self, info, rank, enabled, is_def):
         return {
             "uid": info["uid"],
             "name": info["name"],
@@ -909,17 +922,45 @@ class EdsManager(GObject.Object):
             "is_local": info["is_local"],
             "removable": info["removable"],
             "status": None if info["is_local"] else info["status"],
-            "account": self.account_name_for(info, registry_books),
+            "writable": info["is_local"] or self.book_writable(info["uid"]),
+            "account": self.account_name_for(info),
         }
 
-    def account_name_for(self, info, registry_books):
-        parent = info.get("parent") or ""
-        if not parent or parent.endswith("-stable") or parent == "local":
+    def book_writable(self, uid):
+        """Ask an open book whether it takes changes. A remote server can hand out books it will not let anyone write, like the ones Nextcloud keeps for accounts and recent contacts, and the backend reports that per book. The source carries no such answer, so a book that is not open yet is taken as writable and the backend refuses the save if it is not."""
+        with self.books_lock:
+            record = self.books.get(uid)
+        if not record:
+            return True
+        try:
+            reply = self.get_bus().call_sync(
+                record["bus_name"], record["path"], PROPERTIES_IFACE, "Get",
+                GLib.Variant("(ss)", (EDS_BOOK_IFACE, "Writable")),
+                GLib.VariantType("(v)"), Gio.DBusCallFlags.NONE,
+                EDS_CALL_TIMEOUT_MS, None)
+            return bool(reply.unpack()[0])
+        except GLib.Error as e:
+            logger.debug(f"[EDS] No writability answer from {uid}: {e}")
+            return True
+
+    def account_name_for(self, info):
+        """Name the account a remote book belongs to. The parent of a book is a collection source, which the registry keeps alongside the books, so the chain is walked until a source carries a display name. A book added on its own has one of the backend stubs as its parent and no name to inherit, so its own server host is the only thing that tells two of them apart."""
+        if info.get("is_local"):
             return ""
-        parsed = registry_books.get(parent)
-        if parsed:
-            return parsed["name"]
-        return ""
+
+        parent = info.get("parent") or ""
+        seen = set()
+        while parent and parent not in seen and not parent.endswith("-stable") and parent != "local":
+            seen.add(parent)
+            account = self._registry_accounts.get(parent)
+            if not account:
+                break
+            if account["name"]:
+                return account["name"]
+            parent = account["parent"]
+
+        return info.get("host") or ""
+
 
     def default_source_uid(self):
         schema_source = Gio.SettingsSchemaSource.get_default()
@@ -1288,6 +1329,7 @@ class EdsManager(GObject.Object):
         return self.db_ref.search_contacts_db(query, limit=limit, offset=offset)
 
     def read_only_source_uids(self):
+        """Books that refuse changes. A remote backend drops its connection once a sync is done, so being disconnected says nothing about writing: the write lands in the local cache and the backend goes back online to push it. Only a book the backend itself offers for reading, or one whose login or certificate it rejected, really has to be refused."""
         uids = set()
         for item in self.get_sources_info():
             if item.get("name") == "Andromeda Contacts":
@@ -1295,8 +1337,10 @@ class EdsManager(GObject.Object):
                 continue
             if item.get("is_local"):
                 continue
-            status = (item.get("status") or "").strip().lower()
-            if status and status != EDS_STATUS_CONNECTED:
+            if not item.get("writable"):
+                uids.add(item.get("uid"))
+                continue
+            if (item.get("status") or "").strip().lower() in EDS_REFUSING_STATUSES:
                 uids.add(item.get("uid"))
         return uids
 
@@ -1308,10 +1352,13 @@ class EdsManager(GObject.Object):
                 return _("Andromeda contacts come from the system and are read here only.")
             if item.get("is_local"):
                 return ""
+            if not item.get("writable"):
+                return _("This address book is read-only")
             status = (item.get("status") or "").strip().lower()
-            if status and status != EDS_STATUS_CONNECTED:
-                return _("{book} is not connected, so its contacts cannot be changed "
-                         "until it is back.").format(book=item.get("name") or uid)
+            if status == EDS_STATUS_AWAITING_CREDENTIALS:
+                return _("Login required")
+            if status == EDS_STATUS_SSL_FAILED:
+                return _("Connection failed (SSL)")
             return ""
         return ""
 

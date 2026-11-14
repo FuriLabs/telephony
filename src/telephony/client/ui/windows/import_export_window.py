@@ -11,7 +11,7 @@ import tempfile
 import shutil
 from gi.repository import Gtk, Adw, GLib
 from telephony.client.ui.widgets.common_widget import (present_sheet, on_sheet_closed,
-                                                      sheet_navigation)
+                                                      sheet_navigation, book_subtitle)
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 from telephony.shared.utils.thread_utils import run_in_background
@@ -426,7 +426,7 @@ class ImportExportDialog:
 
         self.show_choices(_("Select Address Book"), [
             (source["name"], (lambda uid=source["uid"]: on_chosen(uid)),
-             _("Default") if source.get("is_system_default") else None)
+             book_subtitle(source, _("Default") if source.get("is_system_default") else ""))
             for source in enabled_sources
         ], description=_("Where do you want to import contacts?"))
 
