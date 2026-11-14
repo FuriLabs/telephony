@@ -136,6 +136,7 @@ class TelephonyCore:
         self.scheduler = ScheduleManager(self.db, self.ofono, self.mms)
         self.scheduler.start()
         run_in_background(self.db.fail_stale_sending)
+        run_in_background(self.db.fail_stale_downloading)
         run_in_background(self.db.repair_blocked_history_names)
         self.run_initial_import()
 
@@ -733,6 +734,20 @@ class TelephonyCore:
             priority=2
         )
 
+    def group_display_name(self, number):
+        """Named the way the conversation list names it, so the notification
+        and the list agree."""
+        parts = [p.strip() for p in str(number).split(",") if p.strip()]
+        custom = self.db.get_group_name(parts) if self.db else None
+        if custom:
+            return custom
+
+        names = []
+        for part in parts:
+            contact_name = self.eds.get_contact_name(part)
+            names.append(contact_name if contact_name and contact_name != "Unknown" else part)
+        return ", ".join(names) if names else _("Unknown")
+
     def broadcast_notification(self, number, body, lookup_number=None):
         norm_num = normalize_number(number)
 
@@ -750,6 +765,10 @@ class TelephonyCore:
         count = self.notification_counts[norm_num]
 
         title = name
+        if "," in str(number):
+            title = self.group_display_name(number)
+            body = _("{sender}: {message}").format(sender=name, message=body)
+
         if count > 1:
             body = ngettext("{count} new message", "{count} new messages", count).format(count=count)
 

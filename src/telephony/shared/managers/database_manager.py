@@ -566,24 +566,44 @@ class DatabaseManager(GObject.Object):
             logger.error(f"[DB] Get Conversation Ids Error: {e}")
             return []
 
-    def add_message(self, remote_number, direction, body, status="unread", attachments=[], sender=None, scheduled_timestamp=None):
+    def thread_participants(self, parts):
+        """An incoming group message lists everyone but the receiver, an
+        outgoing one is addressed to everyone, so without this the same
+        conversation gets two keys and shows up as two threads."""
+        if len(parts) < 2:
+            return parts
+
+        own = self.gsettings_mgr.get_setting("own_number") if self.gsettings_mgr else ""
+        if not own:
+            return parts
+
+        norm_own = normalize_number(own, permissive=True)
+        kept = [p for p in parts if p != norm_own]
+        return kept if kept else parts
+
+    def add_message(self, remote_number, direction, body, status="unread", attachments=[], sender=None, scheduled_timestamp=None, msg_type=None):
         if not remote_number or not direction:
             logger.warning("[DB] Cannot add message: missing remote_number or direction.")
             return None
         if self.refuse_write("add_message"):
             return None
         try:
-            norm_number = ""
             if isinstance(remote_number, list):
-                cleaned = [normalize_number(n, permissive=True) for n in remote_number]
-                norm_number = ",".join(sorted(cleaned))
+                parts = [normalize_number(n, permissive=True) for n in remote_number]
             elif "," in str(remote_number):
-                norm_number = remote_number
+                parts = [normalize_number(n, permissive=True)
+                         for n in str(remote_number).split(",") if n.strip()]
             else:
+                parts = None
+
+            if parts is None:
                 norm_number = normalize_number(remote_number, permissive=True)
+            else:
+                norm_number = ",".join(sorted(self.thread_participants(parts)))
 
             att_json = json.dumps(attachments) if attachments else "[]"
-            msg_type = "mms" if attachments else "sms"
+            if not msg_type:
+                msg_type = "mms" if attachments else "sms"
 
             if not sender:
                 sender = "Me" if direction == "outgoing" else norm_number
@@ -686,6 +706,70 @@ class DatabaseManager(GObject.Object):
                 GLib.idle_add(self.emit, "messages-updated", "", "status")
         except Exception as e:
             logger.error(f"[DB] Fail Stale Sending Error: {e}")
+
+    def complete_incoming_download(self, msg_id, body, attachments, status,
+                                   sender=None, remote_number=None):
+        """A notification carries only the sender, so a group MMS is announced
+        against that one number and only the fetched body says who else was on
+        it. Leaving the old key would strand it in a one-to-one thread. The row
+        stays an MMS either way, a WAP push cannot announce anything else."""
+        if self.refuse_write("complete_incoming_download"):
+            return False
+        try:
+            att_json = json.dumps(attachments) if attachments else "[]"
+            msg_type = "mms"
+
+            norm_number = None
+            if remote_number:
+                if isinstance(remote_number, list):
+                    norm_number = ",".join(sorted(
+                        normalize_number(n, permissive=True) for n in remote_number))
+                else:
+                    norm_number = normalize_number(remote_number, permissive=True)
+
+            with self.lock:
+                c = self.conn_messages.cursor()
+                if norm_number:
+                    c.execute("UPDATE messages SET remote_number=? WHERE id=?",
+                              (norm_number, msg_id))
+                if sender:
+                    c.execute("""UPDATE messages
+                                 SET body=?, attachments=?, status=?, type=?, sender=?
+                                 WHERE id=?""",
+                              (body, att_json, status, msg_type, sender, msg_id))
+                else:
+                    c.execute("""UPDATE messages
+                                 SET body=?, attachments=?, status=?, type=?
+                                 WHERE id=?""",
+                              (body, att_json, status, msg_type, msg_id))
+                c.execute("SELECT remote_number FROM messages WHERE id=?", (msg_id,))
+                row = c.fetchone()
+                self.conn_messages.commit()
+
+            GLib.idle_add(self.emit, "messages-updated", row[0] if row else "", "content")
+            return True
+        except Exception as e:
+            logger.error(f"[DB] Complete Incoming Download Error: {e}")
+            return False
+
+    def fail_stale_downloading(self):
+        """A download interrupted by a restart can never be resumed: mmsd keeps
+        no fetch state across its own restart, so the row would otherwise sit at
+        downloading for good. Mirrors fail_stale_sending for the receive side."""
+        if self.refuse_write("fail_stale_downloading"):
+            return
+        try:
+            with self.lock:
+                c = self.conn_messages.cursor()
+                c.execute("UPDATE messages SET status='download_failed' WHERE status='downloading'")
+                changed = c.rowcount
+                self.conn_messages.commit()
+
+            if changed > 0:
+                logger.warning(f"[DB] Marked {changed} stale downloading messages as failed")
+                GLib.idle_add(self.emit, "messages-updated", "", "status")
+        except Exception as e:
+            logger.error(f"[DB] Fail Stale Downloading Error: {e}")
 
     def update_message_schedule(self, msg_id, status="sent", timestamp=None):
         if self.refuse_write("update_message_schedule"):

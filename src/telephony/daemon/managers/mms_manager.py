@@ -19,7 +19,8 @@ from telephony.shared.utils.phone_utils import get_own_number, normalize_number
 from telephony.shared.utils.thread_utils import run_in_background
 
 
-MMS_RESOLVE_TIMEOUT_SECONDS = 180
+MMS_RESOLVE_TIMEOUT_SECONDS = 900
+MMS_DOWNLOAD_TIMEOUT_SECONDS = 300
 MMS_DELIVERY_WATCH_LIMIT = 50
 UNCLAIMED_STATE_LIMIT = 20
 SEEN_SIGNATURE_LIMIT = 50
@@ -95,9 +96,11 @@ class MmsManager(GObject.Object):
 
         self.inflight_mms = {}
         self.inflight_mms_paths = {}
+        self.downloading_paths = {}
         self.inflight_mms_recipients = {}
         self.unclaimed_mms_states = {}
         self.delivery_watch = {}
+        self.mmsd_watch_id = 0
         self.mms_send_lock = threading.Lock()
 
         if not mimetypes.inited:
@@ -116,6 +119,11 @@ class MmsManager(GObject.Object):
                     None, None, Gio.DBusSignalFlags.NONE,
                     self.on_message_added_raw, None
                 ))
+
+                self.mmsd_watch_id = Gio.bus_watch_name_on_connection(
+                    self.bus, "org.ofono.mms", Gio.BusNameWatcherFlags.NONE,
+                    self.on_mmsd_appeared, self.on_mmsd_vanished
+                )
 
             self.subs.append(self.bus.signal_subscribe(
                 "org.ofono.mms", "org.ofono.mms.Message", "PropertyChanged",
@@ -223,7 +231,15 @@ class MmsManager(GObject.Object):
 
             logger.debug(f"[MMS-LOG] MSG-STATUS | Path: {msg_path} | Status: {status}")
 
-            if status == "sent":
+            if status in ("sent", "sending"):
+                return
+
+            if status == "downloading":
+                self.begin_incoming_download(msg_path, props)
+                return
+
+            if status == "download_failed":
+                self.fail_incoming_download(msg_path)
                 return
 
             if status == "received" or status == "downloaded":
@@ -456,6 +472,15 @@ class MmsManager(GObject.Object):
             self.update_delivery_status(path, value)
             return
 
+        if value == "received" or value == "downloaded":
+            if path in self.downloading_paths:
+                self.load_existing_messages()
+            return
+
+        if value == "download_failed":
+            self.fail_incoming_download(path)
+            return
+
         if value != "sent":
             return
 
@@ -473,6 +498,75 @@ class MmsManager(GObject.Object):
 
         if row_id is not None:
             self.resolve_mms(row_id, "sent", path, delivery_recipients)
+
+    def begin_incoming_download(self, msg_path, props):
+        """A fetch can take a minute and a half, and one that never succeeds
+        used to leave nothing behind at all."""
+        if msg_path in self.downloading_paths:
+            return
+
+        sender = props.get("Sender", "")
+        if isinstance(sender, GLib.Variant):
+            sender = sender.unpack()
+
+        sender = normalize_number(sender, permissive=True) if sender else ""
+        if not sender:
+            logger.debug(f"[MMS] Download announced without a sender, not storing: {msg_path}")
+            return
+
+        if not self.db:
+            return
+
+        row_id = self.db.add_message(
+            remote_number=sender,
+            direction="incoming",
+            body="",
+            status="downloading",
+            sender=sender,
+            msg_type="mms",
+        )
+        if row_id is None:
+            logger.warning(f"[MMS] Could not store the downloading message {msg_path}")
+            return
+
+        self.downloading_paths[msg_path] = row_id
+        GLib.timeout_add_seconds(MMS_DOWNLOAD_TIMEOUT_SECONDS,
+                                 self.timeout_incoming_download, msg_path)
+        logger.info(f"[MMS] Downloading from {sender}, row {row_id}")
+
+    def fail_incoming_download(self, msg_path):
+        row_id = self.downloading_paths.pop(msg_path, None)
+        if row_id is None or not self.db:
+            return
+
+        logger.warning(f"[MMS] Download failed for row {row_id}")
+        self.db.update_message_status(row_id, "download_failed")
+
+    def on_mmsd_appeared(self, connection, name, owner):
+        """The signal subscriptions survive a restart but the proxies do not,
+        so without this an announced download can never be completed."""
+        logger.info("[MMS] mmsd appeared, reconnecting")
+        self.connected = False
+        self.proxy = None
+        self.manager_proxy = None
+        self.init_manager()
+
+    def on_mmsd_vanished(self, connection, name):
+        """A fetch is only ever reported through mmsd, so when mmsd goes the
+        reports go with it and the rows sit on downloading for good."""
+        if not self.downloading_paths:
+            return
+
+        logger.warning(f"[MMS] mmsd vanished with {len(self.downloading_paths)} download(s) in flight")
+        for msg_path in list(self.downloading_paths):
+            self.fail_incoming_download(msg_path)
+
+    def timeout_incoming_download(self, msg_path):
+        """Covers a fetch that stalls while mmsd stays on the bus."""
+        if msg_path in self.downloading_paths:
+            logger.warning(f"[MMS] Download timed out for {msg_path}")
+            self.fail_incoming_download(msg_path)
+        return False
 
     def on_message_send_error(self, conn, sender, path, iface, signal, params, user_data):
         logger.warning(f"[MMS] MessageSendError from daemon: {params.unpack() if params else None}")
@@ -585,14 +679,21 @@ class MmsManager(GObject.Object):
                     logger.debug(f"[MMS] Active chat check failed: {e}")
 
             if self.db:
-                self.db.add_message(
-                    remote_number=saved_remote_number,
-                    direction="incoming",
-                    body=body_text,
-                    status=status,
-                    attachments=final_atts,
-                    sender=sender
-                )
+                row_id = self.downloading_paths.pop(path, None)
+                if row_id is not None:
+                    self.db.complete_incoming_download(
+                        row_id, body_text, final_atts, status, sender,
+                        remote_number=saved_remote_number)
+                else:
+                    self.db.add_message(
+                        remote_number=saved_remote_number,
+                        direction="incoming",
+                        body=body_text,
+                        status=status,
+                        attachments=final_atts,
+                        sender=sender,
+                        msg_type="mms",
+                    )
 
             GLib.idle_add(self.emit, "message-received", sender, recipients, str(date), body_text, final_atts, sender_name)
 
