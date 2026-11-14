@@ -23,6 +23,7 @@ def install_sheet_host(window):
 
     host = Adw.BottomSheet()
     host.set_modal(True)
+    host.set_show_drag_handle(False)
     host.set_content(content)
     window.set_content(host)
     window.sheet_toast_overlay = None
