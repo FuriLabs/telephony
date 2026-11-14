@@ -72,7 +72,13 @@ def main():
     opts = build_arg_parser().parse_args()
 
     logger.remove()
-    logger.add(sys.stderr, level="DEBUG" if opts.debug else "WARNING")
+    if opts.debug:
+        level = "DEBUG"
+    elif opts.incall:
+        level = "INFO"
+    else:
+        level = "WARNING"
+    logger.add(sys.stderr, level=level)
 
     if not any((opts.full, opts.calls, opts.messages, opts.contacts, opts.incall)):
         opts.full = True

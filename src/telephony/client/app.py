@@ -146,6 +146,7 @@ class App(Adw.Application):
             self.incall.defer_present = False
             self.incall.present()
             self.incall.update_state()
+            logger.info(f"[App] Call window presented, mapped={self.incall.get_mapped()}")
         return False
 
     def show_incall_ui(self):
@@ -163,7 +164,8 @@ class App(Adw.Application):
             return
 
         try:
-            app_info.launch(None, None)
+            started = app_info.launch(None, None)
+            logger.info(f"[App] Asked for the call window, launch returned {started}")
         except Exception as e:
             logger.error(f"[App] Could not start the call window: {e}")
 
