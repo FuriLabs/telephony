@@ -232,6 +232,11 @@ class OfonoManager(GObject.Object):
 
         if "org.ofono.MessageWaiting" in added:
             self.load_voicemail_state()
+        if "org.ofono.MessageManager" in added and self.gsettings_mgr:
+            self.set_delivery_reports(
+                self.gsettings_mgr.get_setting("delivery_reports") == "true")
+        if "org.ofono.SupplementaryServices" in added:
+            self.get_ussd_state(self.apply_ussd_state)
         if "org.ofono.NetworkRegistration" in added:
             self.attach_netreg()
         if "org.ofono.NetworkRegistration" in removed:
@@ -641,7 +646,6 @@ class OfonoManager(GObject.Object):
         self.ussd_proxy = self.get_proxy("org.ofono.SupplementaryServices")
         if self.ussd_proxy:
             self.ussd_handler_id = self.ussd_proxy.connect("g-signal", self.on_ussd_signal)
-            self.get_ussd_state(self.apply_ussd_state)
 
         self.cf_proxy = self.get_proxy("org.ofono.CallForwarding")
         if self.cf_proxy:
@@ -654,15 +658,11 @@ class OfonoManager(GObject.Object):
         self.cs_proxy = self.get_proxy("org.ofono.CallSettings")
         if self.cs_proxy:
             self.cs_handler_id = self.cs_proxy.connect("g-signal", self.on_call_settings_signal)
-        if self.gsettings_mgr:
-            enabled = self.gsettings_mgr.get_setting("delivery_reports") == "true"
-            self.set_delivery_reports(enabled)
         self.load_emergency_numbers()
 
         self.mw_proxy = self.get_proxy("org.ofono.MessageWaiting")
         if self.mw_proxy:
             self.mw_handler_id = self.mw_proxy.connect("g-signal", self.on_message_waiting_signal)
-            self.load_voicemail_state()
 
         self.vol_proxy = self.get_proxy("org.ofono.CallVolume")
 
