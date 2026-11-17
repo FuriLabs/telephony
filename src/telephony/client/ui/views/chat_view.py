@@ -126,10 +126,7 @@ class ChatPage(Gtk.Box):
         header = Adw.HeaderBar(show_start_title_buttons=True, show_end_title_buttons=True)
 
         title_text = self.contact_name
-        if title_text == self.number and any(c.isdigit() for c in str(self.number)):
-            title_text = _("Unknown")
-
-        subtitle_text = self.number
+        subtitle_text = "" if title_text == self.number else self.number
 
         if self.is_group:
             participant_names = []
@@ -709,8 +706,7 @@ class ChatPage(Gtk.Box):
                 break
 
         state = blocked_state_text(entry)
-        self.title_widget.set_subtitle(
-            f"{self.plain_subtitle} · {state}" if state else self.plain_subtitle)
+        self.title_widget.set_subtitle(" · ".join(p for p in (self.plain_subtitle, state) if p))
 
     def refresh_block_states(self):
         self.show_blocked_in_title()
@@ -1080,15 +1076,14 @@ class ChatPage(Gtk.Box):
         if not name:
             return
 
-        display_name = name
-        if display_name == self.number:
-            display_name = _("Unknown")
-        elif display_name == "Unknown":
-            display_name = _("Unknown")
+        display_name = _("Unknown") if name == "Unknown" else name
 
         if display_name != self.contact_name:
             self.contact_name = display_name
             self.title_widget.set_title(display_name)
+            if not self.is_group:
+                self.plain_subtitle = "" if display_name == self.number else self.number
+                self.show_blocked_in_title()
 
     def on_group_rename(self, entry):
         new_name = entry.get_text().strip()
