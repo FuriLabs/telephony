@@ -152,6 +152,8 @@ class InCallWindow(Adw.Window):
         self.setup_ui()
 
         self.connect("close-request", self.on_close_req)
+        self.connect("map", self.on_mapped)
+        self.connect("unmap", self.on_unmapped)
 
         self.sys_state = SystemStateService()
         self.is_locked = self.sys_state.is_locked
@@ -1330,6 +1332,12 @@ class InCallWindow(Adw.Window):
             self.maybe_repeat_knock()
 
         return True
+
+    def on_mapped(self, _window):
+        logger.info("[InCall] Call window is on screen")
+
+    def on_unmapped(self, _window):
+        logger.info("[InCall] Call window left the screen")
 
     def on_lock_changed(self, monitor, is_locked):
         self.is_locked = is_locked

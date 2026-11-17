@@ -22,6 +22,8 @@ from telephony.client.window_core import WindowCore
 from telephony.client.ui.main_window import MainWindow
 from telephony.client.ui.windows.incall_window import InCallWindow
 
+CALL_WINDOW_GRACE_SECONDS = 3
+
 
 class App(Adw.Application):
 
@@ -146,6 +148,18 @@ class App(Adw.Application):
             self.incall.defer_present = False
             self.incall.present()
             self.incall.update_state()
+            GLib.timeout_add_seconds(CALL_WINDOW_GRACE_SECONDS,
+                                     self.report_call_window_not_shown)
+        return False
+
+    def report_call_window_not_shown(self):
+        """Say so when a call is up and the window never reached the screen. A call with no window on it leaves the user tapping at nothing, and the only report that ever comes back is that nothing happened, so this speaks at warning level and needs no debug build to be heard."""
+        if self.incall is None or self.incall.get_mapped():
+            return False
+        if self.ofono and not self.ofono.active_calls:
+            return False
+
+        logger.warning("[App] The call window was asked for and is not on screen")
         return False
 
     def show_incall_ui(self):
@@ -163,7 +177,8 @@ class App(Adw.Application):
             return
 
         try:
-            app_info.launch(None, None)
+            started = app_info.launch(None, None)
+            logger.info(f"[App] Asked for the call window, launch returned {started}")
         except Exception as e:
             logger.error(f"[App] Could not start the call window: {e}")
 

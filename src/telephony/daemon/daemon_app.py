@@ -68,7 +68,8 @@ class DaemonApp(Gio.Application):
             return
 
         try:
-            app_info.launch(None, None)
+            started = app_info.launch(None, None)
+            logger.info(f"[Daemon] Asked for the call window, launch returned {started}")
         except Exception as e:
             logger.error(f"[Daemon] Could not start the call window: {e}")
 
