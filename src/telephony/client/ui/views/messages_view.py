@@ -24,6 +24,16 @@ from telephony.client.utils.model_utils import ConversationItem
 TOP_STICK_THRESHOLD_PX = 48
 
 
+def conversation_preview(body, status):
+    if status == "downloading":
+        return _("Receiving…")
+    if status == "download_failed" and not body:
+        return _("Could not be received")
+    if not body:
+        return _("[Multimedia Message]")
+    return body
+
+
 class MessagesView(Adw.Bin):
 
     def __init__(self, db, app_window):
@@ -296,8 +306,7 @@ class MessagesView(Adw.Bin):
             return
 
         body, ts, status, unread = summary
-        if not body:
-            body = _("[Multimedia Message]")
+        body = conversation_preview(body, status)
 
         new_item = ConversationItem(chat_id, old_item.name, body, ts, unread, status=status,
                                     has_name=old_item.has_name)
@@ -437,8 +446,7 @@ class MessagesView(Adw.Bin):
                             has_name = False
                             name = _("Unknown")
 
-            if not body:
-                body = _("[Multimedia Message]")
+            body = conversation_preview(body, status)
 
             processed.append({
                 "number": num,
