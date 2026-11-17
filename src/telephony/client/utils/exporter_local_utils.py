@@ -7,7 +7,6 @@
 
 import sqlite3
 import os
-import shutil
 from datetime import timedelta, timezone
 from gettext import gettext as _
 from telephony.shared.utils.log_utils import logger
@@ -260,6 +259,32 @@ def export_linux_calls(db_manager, dest_db_path):
         return False, str(e)
 
 
+EXPORT_BUSY_TIMEOUT_MS = 5000
+
+
+def inside_data_dir(path, data_dir):
+    """Whether a chosen file would land among the live databases. The file chooser opens on the whole filesystem, so the folder the app writes its own databases into is reachable, and writing an export into it overwrites the data being exported."""
+    holder = os.path.realpath(os.path.dirname(os.path.abspath(path)))
+    return holder == os.path.realpath(data_dir)
+
+
+def snapshot_database(source_db, dest_db_path):
+    """Write a complete copy of a live database, including everything sqlite still holds in the write ahead log beside it. Never writes to the original."""
+    source = None
+    target = None
+    try:
+        source = sqlite3.connect(f"file:{source_db}?mode=ro", uri=True)
+        source.execute(f"PRAGMA busy_timeout = {EXPORT_BUSY_TIMEOUT_MS}")
+        target = sqlite3.connect(dest_db_path)
+        source.backup(target)
+        return True
+    finally:
+        if target is not None:
+            target.close()
+        if source is not None:
+            source.close()
+
+
 def export_linux_telephony(db_manager, dest_db_path, is_messages=True):
     try:
         data_dir = db_manager.get_data_dir()
@@ -268,7 +293,17 @@ def export_linux_telephony(db_manager, dest_db_path, is_messages=True):
         if not os.path.exists(source_db):
             return False, _("Source database not found.")
 
-        shutil.copy2(source_db, dest_db_path)
+        if inside_data_dir(dest_db_path, data_dir):
+            return False, _("That folder holds the live databases. Choose another place for the export.")
+
+        staging = f"{dest_db_path}.part"
+        try:
+            snapshot_database(source_db, staging)
+            os.replace(staging, dest_db_path)
+        finally:
+            if os.path.exists(staging):
+                os.remove(staging)
+
         return True, _("Exported Telephony database successfully.")
     except Exception as e:
         logger.error(f"Telephony export error: {e}")
