@@ -57,6 +57,15 @@ DAEMON_INTERFACE_XML = """
       <arg type="s" name="call_path" direction="in"/>
       <arg type="s" name="sms_text" direction="in"/>
     </method>
+    <method name="StartCallRecording">
+      <arg type="b" name="started" direction="out"/>
+    </method>
+    <method name="StopCallRecording">
+    </method>
+    <method name="GetCallRecordingState">
+      <arg type="b" name="available" direction="out"/>
+      <arg type="b" name="active" direction="out"/>
+    </method>
     <method name="MuteMic">
     </method>
     <method name="UnmuteMic">
@@ -418,6 +427,9 @@ DAEMON_INTERFACE_XML = """
       <arg type="b" name="waiting"/>
       <arg type="i" name="count"/>
     </signal>
+    <signal name="CallRecordingChanged">
+      <arg type="b" name="active"/>
+    </signal>
     <signal name="AudioRouteChanged">
       <arg type="a{sv}" name="state"/>
     </signal>
@@ -501,6 +513,12 @@ class TelephonyDaemonDBus:
             None, None
         )
         logger.info(f"TelephonyDaemonDBus registered on Session Bus at {DAEMON_OBJECT_PATH} (id {self.reg_id})")
+
+        if self.app and self.app.call_recording:
+            self.app.call_recording.connect(
+                "state-changed",
+                lambda _m, active: self.emit_signal("CallRecordingChanged",
+                                                    GLib.Variant("(b)", (active,))))
 
         if self.ofono:
             self.ofono.connect("call-added", self.on_call_added)
@@ -793,6 +811,9 @@ class TelephonyDaemonDBus:
             "Hangup": self.handle_hangup,
             "HangupAll": self.handle_hangupall,
             "SwapCalls": self.handle_swapcalls,
+            "StartCallRecording": self.handle_startcallrecording,
+            "StopCallRecording": self.handle_stopcallrecording,
+            "GetCallRecordingState": self.handle_getcallrecordingstate,
             "MuteMic": self.handle_mutemic,
             "UnmuteMic": self.handle_unmutemic,
             "SetSpeakerphone": self.handle_setspeakerphone,
@@ -940,6 +961,18 @@ class TelephonyDaemonDBus:
         if self.ofono:
             self.ofono.swap_calls()
         invocation.return_value(None)
+
+    def handle_startcallrecording(self, parameters, invocation):
+        started = self.app.call_recording.start()
+        invocation.return_value(GLib.Variant("(b)", (started,)))
+
+    def handle_stopcallrecording(self, parameters, invocation):
+        self.app.call_recording.stop_by_user()
+        invocation.return_value(None)
+
+    def handle_getcallrecordingstate(self, parameters, invocation):
+        recording = self.app.call_recording
+        invocation.return_value(GLib.Variant("(bb)", (recording.available, recording.active)))
 
     def handle_mutemic(self, parameters, invocation):
         self.app.call_audio.set_mic_muted(True)
