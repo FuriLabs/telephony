@@ -1337,8 +1337,12 @@ class TelephonyDaemonDBus:
         invocation.return_value(GLib.Variant("(b)", (success,)))
 
     def run_import(self, invocation, task):
+        """Hand an import to a worker and answer when it is done. An import lands rows straight in the database, which no open window is watching, so the windows are told as well: without that the messages are there and nobody sees them until the app is started again. The rows carry the times they had on the phone they came from, so a window has to read the thread again rather than look for what is newer than what it already shows."""
         def done(result):
             success, msg = result
+            if success and self.db:
+                GLib.idle_add(self.db.emit, "messages-updated", "", "import")
+                GLib.idle_add(self.db.emit, "history-updated")
             invocation.return_value(GLib.Variant("(bs)", (success, msg)))
 
         def failed(error):
