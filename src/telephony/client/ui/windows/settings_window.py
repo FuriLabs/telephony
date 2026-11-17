@@ -8,7 +8,7 @@
 from telephony.shared.utils.thread_utils import run_in_background
 from telephony.shared.constants import (CALL_VOLUME_MIN_PERCENT, CALL_VOLUME_MAX_PERCENT,
                                        CALL_VOLUME_DEFAULT_PERCENT, SETTINGS_SHEET_HEIGHT)
-from gi.repository import Gtk, Adw, GLib
+from gi.repository import Gtk, Adw, GLib, Gio
 from telephony.shared.utils.log_utils import logger
 from gettext import gettext as _
 
@@ -481,12 +481,42 @@ class SettingsWindow(Adw.Bin):
         self.row_add_ab.add_row(self.entry_new_ab)
         self.grp_contacts.add(self.row_add_ab)
 
+        self.add_online_accounts_row()
+
         self.sources_state = self.eds.get_sources_info()
         self.build_sources_list(rebuild_dropdown=True)
 
         if self._eds_signal_id is None:
             self._eds_signal_id = self.eds.connect(
                 "address-books-changed", self.on_books_changed)
+
+    @staticmethod
+    def online_accounts_panel():
+        """The system panel where an online account is added, or nothing when this build has no such panel. Asking for a desktop entry that is not installed raises rather than answering, so the raise is what tells us it is absent."""
+        try:
+            return Gio.DesktopAppInfo.new("gnome-online-accounts-panel.desktop")
+        except TypeError:
+            return None
+
+    def add_online_accounts_row(self):
+        """Say where the online address books come from. They are not added here and never were, which is the part people cannot find."""
+        if not self.online_accounts_panel():
+            return
+
+        self.grp_contacts.add(self.nav_row(
+            _("Open System Settings"),
+            _("Nextcloud and other online address books are added and removed there"),
+            self.open_online_accounts))
+
+    def open_online_accounts(self):
+        panel = self.online_accounts_panel()
+        if not panel:
+            return
+
+        try:
+            panel.launch(None, None)
+        except GLib.Error as e:
+            logger.warning(f"[Settings] Online Accounts panel did not open: {e}")
 
     @staticmethod
     def sources_signature(state):
