@@ -243,6 +243,9 @@ def import_ios_calls(db_manager, file_path):
                 if not phone:
                     continue
 
+                if isinstance(phone, bytes):
+                    phone = phone.decode("utf-8", "ignore")
+
                 originated = get_value(row_dict, ["ZORIGINATED", "originated", "direction"], 0)
                 answered = get_value(row_dict, ["ZANSWERED", "answered", "status"], 1)
                 duration = get_value(row_dict, ["ZDURATION", "duration", "length"], 0)
