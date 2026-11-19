@@ -308,13 +308,15 @@ class ImportExportDialog:
 
     def ask_export_data(self):
         self.show_choices(_("Export Data"), [
-            (_("Linux - Chatty/Calls"), lambda: self.show_export_type_chooser("linux_chatty_calls"), None),
-            (_("Linux - Telephony"), lambda: self.show_export_type_chooser("linux_telephony"), None),
-            (_("Android"), lambda: self.show_export_type_chooser("android"), None),
-            (_("iOS"), lambda: self.show_export_type_chooser("ios"), None),
+            (_("Linux - Chatty/Calls"),
+             lambda: self.show_export_type_chooser("linux_chatty_calls", _("Linux - Chatty/Calls")), None),
+            (_("Telephony"), lambda: self.show_export_type_chooser("linux_telephony", _("Telephony")), None),
+            (_("Android"), lambda: self.show_export_type_chooser("android", _("Android")), None),
+            (_("iOS"), lambda: self.show_export_type_chooser("ios", _("iOS")), None),
         ])
 
-    def show_export_type_chooser(self, dest_format):
+    def show_export_type_chooser(self, dest_format, label):
+        """The format is also named for the title, because the name the user picked reads nothing like the key the export is keyed by."""
         description = None
         if dest_format == "ios":
             description = _("Note: This export uses the Android format. When importing this file onto an iOS device, please use the \"Import From Android\" option.")
@@ -327,7 +329,7 @@ class ImportExportDialog:
         if len(rows) == 1:
             rows[0][1]()
             return
-        self.show_choices(_("Export to {fmt}").format(fmt=dest_format), rows, description=description)
+        self.show_choices(_("Export to {fmt}").format(fmt=label), rows, description=description)
 
     def open_export_file_chooser(self, dest_format, export_type):
         dialog = Gtk.FileChooserNative(title=_("Export File"), transient_for=self.app_window, action=Gtk.FileChooserAction.SAVE)
