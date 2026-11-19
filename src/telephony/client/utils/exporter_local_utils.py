@@ -5,12 +5,17 @@
 # Bardia Moshiri <bardia@furilabs.com>
 # Alaraajavamma <aki@urheiluaki.fi>
 
+import json
+import shutil
 import sqlite3
 import os
+import tempfile
+import zipfile
 from datetime import timedelta, timezone
 from gettext import gettext as _
 from telephony.shared.utils.log_utils import logger
 from telephony.shared.utils.datetime_utils import parse_timestamp
+from telephony.shared.utils.attachment_entry_utils import attachment_file
 
 
 def dt_to_unix(ts_str):
@@ -285,7 +290,57 @@ def snapshot_database(source_db, dest_db_path):
             source.close()
 
 
+def bundle_name(wanted, taken):
+    """A name for one picture inside the bundle that no other picture has taken, so two files called the same thing on the phone stay two files here."""
+    if wanted not in taken:
+        return wanted
+    stem, ext = os.path.splitext(wanted)
+    nth = 2
+    while f"{stem}-{nth}{ext}" in taken:
+        nth += 1
+    return f"{stem}-{nth}{ext}"
+
+
+def pack_attachments(staged_db, bundle):
+    """Put the pictures the messages point at into the bundle and write the name each one was stored under back into the copy of the database. The bundle then says where its own pictures are, instead of leaving the phone that reads it to guess from a file name that another picture may share."""
+    connection = sqlite3.connect(staged_db)
+    try:
+        rows = connection.execute(
+            "SELECT id, attachments FROM messages WHERE attachments IS NOT NULL"
+            " AND attachments != '[]'").fetchall()
+
+        packed = {}
+        taken = set()
+        for row_id, raw in rows:
+            try:
+                stored = json.loads(raw)
+            except Exception as e:
+                logger.warning(f"Unreadable attachment list in export: {e}")
+                continue
+
+            rewritten = []
+            for entry in stored:
+                path = attachment_file(entry)
+                if not path or not os.path.isfile(path):
+                    continue
+
+                name = packed.get(path)
+                if name is None:
+                    name = bundle_name(os.path.basename(path), taken)
+                    taken.add(name)
+                    packed[path] = name
+                    bundle.write(path, f"attachments/{name}")
+                rewritten.append(f"attachments/{name}")
+
+            connection.execute("UPDATE messages SET attachments = ? WHERE id = ?",
+                               (json.dumps(rewritten), row_id))
+        connection.commit()
+    finally:
+        connection.close()
+
+
 def export_linux_telephony(db_manager, dest_db_path, is_messages=True):
+    """Write out our own data for another phone to read. Call history is a database on its own, while messages travel as a bundle holding the database and the pictures the messages point at, because those live as separate files and a lone database would arrive with every multimedia message empty. Either one is written beside the file it is meant to become and moved there once it is whole, so a half written export never replaces whatever was there before."""
     try:
         data_dir = db_manager.get_data_dir()
         source_db = os.path.join(data_dir, "messages.db" if is_messages else "calls.db")
@@ -297,10 +352,20 @@ def export_linux_telephony(db_manager, dest_db_path, is_messages=True):
             return False, _("That folder holds the live databases. Choose another place for the export.")
 
         staging = f"{dest_db_path}.part"
+        work = tempfile.mkdtemp(prefix="telephony-export-")
         try:
-            snapshot_database(source_db, staging)
+            if is_messages:
+                staged = os.path.join(work, "messages.db")
+                snapshot_database(source_db, staged)
+                with zipfile.ZipFile(staging, "w", zipfile.ZIP_DEFLATED) as bundle:
+                    pack_attachments(staged, bundle)
+                    bundle.write(staged, "messages.db")
+            else:
+                snapshot_database(source_db, staging)
+
             os.replace(staging, dest_db_path)
         finally:
+            shutil.rmtree(work, ignore_errors=True)
             if os.path.exists(staging):
                 os.remove(staging)
 

@@ -57,6 +57,13 @@ def cmd_delete_addressbook(args):
         print(f"Failed to delete address book {args.source_uid}.")
 
 
+def cmd_import_telephony(args):
+    proxy = get_proxy()
+    res = proxy.call_sync("ImportTelephony", GLib.Variant("(s)", (args.file_path,)), Gio.DBusCallFlags.NONE, -1, None)
+    success, msg = res.unpack()
+    print(f"Success: {success}, Message: {msg}")
+
+
 def cmd_import_chatty(args):
     proxy = get_proxy()
     res = proxy.call_sync("ImportChatty", GLib.Variant("(ss)", (args.db_path, args.mms_path)), Gio.DBusCallFlags.NONE, -1, None)
@@ -137,6 +144,10 @@ def setup_parsers(subparsers):
     p_da = subparsers.add_parser("delete-addressbook", help="Delete an address book permanently")
     p_da.add_argument("source_uid", type=str, help="Address book UID to delete")
     p_da.set_defaults(func=cmd_delete_addressbook)
+
+    p_it = subparsers.add_parser("import-telephony", help="Import a Telephony export")
+    p_it.add_argument("file_path", type=str, help="Path to the exported zip or database")
+    p_it.set_defaults(func=cmd_import_telephony)
 
     p_ic = subparsers.add_parser("import-chatty", help="Import Chatty database")
     p_ic.add_argument("db_path", type=str, help="Path to chatty.db")

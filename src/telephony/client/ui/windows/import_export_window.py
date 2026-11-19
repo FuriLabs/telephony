@@ -84,6 +84,7 @@ class ImportExportDialog:
         if self.mode_calls:
             rows.append((_("Import From local Calls"), self.ask_import_local_calls, None))
         if self.mode_calls or self.mode_messages:
+            rows.append((_("Import From Telephony"), self.ask_import_telephony, None))
             rows.append((_("Import From Android"), self.ask_import_android, None))
             rows.append((_("Import From iOS"), self.ask_import_ios, None))
             if self.mode_calls and self.mode_messages:
@@ -171,6 +172,38 @@ class ImportExportDialog:
             self.eds.reload()
 
         self.app_window.daemon.import_sim_contacts(source_uid, done)
+
+    def ask_import_telephony(self):
+        rows = []
+        if self.mode_messages:
+            rows.append((_("Select SMS/MMS file"),
+                         lambda: self.choose_telephony_file(_("Messages (SMS/MMS)"), ("*.zip", "*.db")), None))
+        if self.mode_calls:
+            rows.append((_("Select Call history file"),
+                         lambda: self.choose_telephony_file(_("Call History"), ("*.db",)), None))
+        where = _("On the other phone open Telephony, then Settings, then Import and"
+                  " Export, then the row beginning with Export, then Telephony. Copy the"
+                  " file it saves onto this phone and pick it below.")
+        self.show_choices(_("Import From Telephony"), rows, description=where)
+
+    def choose_telephony_file(self, filter_name, patterns):
+        dialog = Gtk.FileChooserNative(title=_("Select File"), transient_for=self.app_window,
+                                       action=Gtk.FileChooserAction.OPEN)
+        filter_ext = Gtk.FileFilter()
+        filter_ext.set_name(filter_name)
+        for pattern in patterns:
+            filter_ext.add_pattern(pattern)
+        dialog.add_filter(filter_ext)
+
+        def on_resp(d, r):
+            if r == Gtk.ResponseType.ACCEPT:
+                path = d.get_file().get_path()
+                self.app_window.notify_loading(_("Importing..."))
+                self.app_window.daemon.import_telephony(path, self.on_import_done)
+            GLib.idle_add(lambda: d.destroy() or False)
+
+        dialog.connect("response", on_resp)
+        dialog.show()
 
     def ask_import_chatty(self):
         def on_wizard_done(db_path, mms_path):
@@ -338,7 +371,7 @@ class ImportExportDialog:
         if dest_format == "android":
             default_name += ".xml"
         elif dest_format == "linux_telephony":
-            default_name += ".db"
+            default_name += ".zip" if export_type == "sms" else ".db"
         elif dest_format == "linux_chatty_calls":
             default_name += ".db"
         elif dest_format == "ios":

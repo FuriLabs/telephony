@@ -261,6 +261,12 @@ class DaemonClient:
     def import_reply(self, reply, callback):
         callback(reply if reply else (False, ""))
 
+    def import_telephony(self, file_path, callback):
+        self.call_with_reply(
+            "ImportTelephony", GLib.Variant("(s)", (file_path or "",)),
+            lambda reply: self.import_reply(reply, callback),
+            timeout_ms=DAEMON_SLOW_CALL_TIMEOUT_MS)
+
     def import_chatty(self, db_path, mms_path, callback):
         self.call_with_reply(
             "ImportChatty", GLib.Variant("(ss)", (db_path or "", mms_path or "")),
