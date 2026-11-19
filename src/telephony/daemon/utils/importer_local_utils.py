@@ -179,6 +179,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
     mms_dir = mms_dir if mms_dir is not None else get_chatty_mms_path()
     chatty_data_dir = os.path.dirname(os.path.normpath(mms_dir))
     count = 0
+    unreadable = 0
 
     try:
         conn = sqlite3.connect(db_path)
@@ -211,6 +212,11 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
             existing_messages = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         for msg in messages:
+            if not msg["time_str"]:
+                logger.warning("[Importer] Skipping Chatty message: unreadable time")
+                unreadable += 1
+                continue
+
             sig = (msg["number"], msg["body"], msg["time_str"], msg["direction"])
             if existing_messages[sig]:
                 existing_messages[sig] -= 1
@@ -235,6 +241,10 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', to_insert)
                 db_manager.conn_messages.commit()
             count = len(to_insert)
+
+        if unreadable and not count:
+            logger.error("[Importer] No message carried a readable time")
+            return False, _("Import failed.")
 
         return True, _("Imported {count} messages from Chatty.").format(count=count)
     except Exception as e:
@@ -262,6 +272,7 @@ def import_local_calls(db_manager, db_path=None):
         return False, _("Calls database not found.")
 
     count = 0
+    unreadable = 0
     try:
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
@@ -320,7 +331,7 @@ def import_local_calls(db_manager, db_path=None):
                     else:
                         dir_str = "outgoing"
 
-                    time_str = format_timestamp(start_dt) if start_dt else format_timestamp()
+                    time_str = format_timestamp(start_dt) if start_dt else None
                 else:
                     duration = get_value(row_dict, ["duration", "length"], 0)
                     inbound = get_value(row_dict, ["inbound", "direction", "type", "is_incoming"])
@@ -335,6 +346,7 @@ def import_local_calls(db_manager, db_path=None):
                 norm_number = normalize_number(str(target))
                 if not norm_number or not time_str:
                     logger.warning("[Importer] Skipping local call: missing required details")
+                    unreadable += 1
                     continue
 
                 sig = (norm_number, time_str, duration, dir_str)
@@ -359,6 +371,10 @@ def import_local_calls(db_manager, db_path=None):
                 db_c.executemany("INSERT INTO history (number, name, direction, duration, timestamp) VALUES (?, ?, ?, ?, ?)", to_insert)
                 db_manager.conn_calls.commit()
             count = len(to_insert)
+
+        if unreadable and not count:
+            logger.error("[Importer] No call carried a readable time")
+            return False, _("Import failed.")
 
         return True, _("Imported {count} calls.").format(count=count)
     except Exception as e:

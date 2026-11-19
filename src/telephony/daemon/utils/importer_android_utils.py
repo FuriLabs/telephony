@@ -39,6 +39,7 @@ def import_android_sms(db_manager, file_path):
         os.makedirs(local_att_dir, exist_ok=True)
 
         count = 0
+        unreadable = 0
         for msg in root.findall("sms") + root.findall("mms"):
             try:
                 phone = get_xml_value(msg, ["address", "number", "contact", "target", "phone"])
@@ -64,6 +65,7 @@ def import_android_sms(db_manager, file_path):
 
                 if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping android message: missing required details")
+                    unreadable += 1
                     continue
 
                 sig = (norm_number, str(body), time_str, dir_str)
@@ -119,6 +121,10 @@ def import_android_sms(db_manager, file_path):
                 db_manager.conn_messages.commit()
             count = len(to_insert)
 
+        if unreadable and not count:
+            logger.error("[Importer] No android message carried a readable time")
+            return False, _("Import failed.")
+
         return True, _("Imported {count} messages from Android backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing Android SMS: {e}")
@@ -140,6 +146,7 @@ def import_android_calls(db_manager, file_path):
             existing_calls = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         count = 0
+        unreadable = 0
         for call in root.findall("call"):
             try:
                 phone = get_xml_value(call, ["number", "address", "phone", "contact", "target"])
@@ -167,6 +174,7 @@ def import_android_calls(db_manager, file_path):
                 norm_number = normalize_number(str(phone))
                 if not norm_number or not time_str:
                     logger.warning("[Importer] Skipping android call: missing required details")
+                    unreadable += 1
                     continue
 
                 sig = (norm_number, time_str, duration, dir_str)
@@ -192,6 +200,10 @@ def import_android_calls(db_manager, file_path):
                 db_c.executemany("INSERT INTO history (number, name, direction, duration, timestamp) VALUES (?, ?, ?, ?, ?)", to_insert)
                 db_manager.conn_calls.commit()
             count = len(to_insert)
+
+        if unreadable and not count:
+            logger.error("[Importer] No android call carried a readable time")
+            return False, _("Import failed.")
 
         return True, _("Imported {count} calls from Android backup.").format(count=count)
     except Exception as e:
