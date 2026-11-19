@@ -7,6 +7,7 @@
 
 from gettext import gettext as _
 
+from collections import Counter
 import json
 import os
 import shutil
@@ -101,7 +102,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
         with db_manager.lock:
             db_c = db_manager.conn_messages.cursor()
             db_c.execute("SELECT remote_number, body, timestamp, direction FROM messages")
-            existing_messages = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
+            existing_messages = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         for row in rows:
             try:
@@ -135,10 +136,9 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                     continue
 
                 sig = (norm_number, str(text), time_str, dir_str)
-                if sig in existing_messages:
+                if existing_messages[sig]:
+                    existing_messages[sig] -= 1
                     continue
-
-                existing_messages.add(sig)
 
                 sender = "Me" if dir_str == "outgoing" else norm_number
 
@@ -234,7 +234,7 @@ def import_ios_calls(db_manager, file_path):
         with db_manager.lock:
             db_c = db_manager.conn_calls.cursor()
             db_c.execute("SELECT number, timestamp, duration, direction FROM history")
-            existing_calls = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
+            existing_calls = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         for row in rows:
             try:
@@ -265,10 +265,9 @@ def import_ios_calls(db_manager, file_path):
                 norm_number = normalize_number(str(phone))
 
                 sig = (norm_number, time_str, duration, dir_str)
-                if sig in existing_calls:
+                if existing_calls[sig]:
+                    existing_calls[sig] -= 1
                     continue
-
-                existing_calls.add(sig)
 
                 real_name = "Unknown"
                 if db_manager.eds:
