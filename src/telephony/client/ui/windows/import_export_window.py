@@ -48,7 +48,7 @@ class ImportExportDialog:
         page_content = Adw.PreferencesPage()
         group = Adw.PreferencesGroup()
         if description:
-            group.set_description(description)
+            group.set_description(GLib.markup_escape_text(description))
         for label, callback, subtitle in entries:
             row = Adw.ActionRow(title=label, activatable=True)
             if subtitle:
