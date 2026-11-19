@@ -87,7 +87,7 @@ def cmd_import_android_calls(args):
 
 def cmd_import_ios_sms(args):
     proxy = get_proxy()
-    res = proxy.call_sync("ImportIosSms", GLib.Variant("(sss)", (args.file_path, "", "")), Gio.DBusCallFlags.NONE, -1, None)
+    res = proxy.call_sync("ImportIosSms", GLib.Variant("(sss)", (args.file_path, args.manifest, args.backup_dir)), Gio.DBusCallFlags.NONE, -1, None)
     success, msg = res.unpack()
     print(f"Success: {success}, Message: {msg}")
 
@@ -157,6 +157,8 @@ def setup_parsers(subparsers):
 
     p_iis = subparsers.add_parser("import-ios-sms", help="Import iOS SMS DB")
     p_iis.add_argument("file_path", type=str, help="Path to sqlite DB")
+    p_iis.add_argument("--manifest", type=str, default="", help="Path to Manifest.db, needed for attachments")
+    p_iis.add_argument("--backup-dir", type=str, default="", help="Path to the backup directory holding the attachment files")
     p_iis.set_defaults(func=cmd_import_ios_sms)
 
     p_iic = subparsers.add_parser("import-ios-calls", help="Import iOS Calls DB")
