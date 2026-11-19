@@ -45,7 +45,34 @@ def copy_attachments(db_manager, source_paths, prefix):
     return copied
 
 
-def read_chatty_history(c, tables, chatty_data_dir):
+def chatty_attachment_path(stored, chatty_data_dir, mms_dir):
+    """Find one Chatty attachment on disk. Chatty records the path relative to its own data folder, so it reads mms/<folder>/<file>. A database from another phone may sit beside a renamed folder or hold the paths of the phone it came from, so the folder that was picked is searched too."""
+    if not stored:
+        return None
+
+    raw = str(stored)
+    if ".." in raw.split("/"):
+        logger.warning("[Importer] Chatty attachment path leaves its folder, skipping")
+        return None
+
+    tail = raw.split("/mms/")[-1] if "/mms/" in raw else raw
+    parts = [part for part in tail.split("/") if part]
+    if not parts:
+        return None
+
+    candidates = [raw] if os.path.isabs(raw) else []
+    candidates.append(os.path.join(chatty_data_dir, raw))
+    candidates.append(os.path.join(mms_dir, *parts))
+    if parts[0] == "mms" and len(parts) > 1:
+        candidates.append(os.path.join(mms_dir, *parts[1:]))
+
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return candidate
+    return None
+
+
+def read_chatty_history(c, tables, chatty_data_dir, mms_dir):
     members = {}
     if "thread_members" in tables and "users" in tables:
         c.execute('''SELECT tm.thread_id, u.username FROM thread_members tm
@@ -63,11 +90,12 @@ def read_chatty_history(c, tables, chatty_data_dir):
                      JOIN files f ON f.id = mf.file_id
                      LEFT JOIN mime_type mt ON mt.id = f.mime_type_id''')
         for row in c.fetchall():
-            path = row["path"]
-            if not path or row["mime"] in ("application/smil", "text/plain"):
+            if row["mime"] in ("application/smil", "text/plain"):
                 continue
-            if not os.path.isabs(path):
-                path = os.path.join(chatty_data_dir, path)
+            path = chatty_attachment_path(row["path"], chatty_data_dir, mms_dir)
+            if not path:
+                logger.warning("[Importer] Chatty attachment is not where the database says, skipping")
+                continue
             attachments.setdefault(row["message_id"], []).append(path)
 
     protocols = ",".join(str(p) for p in CHATTY_SMS_PROTOCOLS)
@@ -189,7 +217,7 @@ def import_local_chatty(db_manager, db_path=None, mms_dir=None):
             tables = {row["name"] for row in c.fetchall()}
 
             if "threads" in tables and "messages" in tables:
-                messages = read_chatty_history(c, tables, chatty_data_dir)
+                messages = read_chatty_history(c, tables, chatty_data_dir, mms_dir)
             else:
                 messages = read_chatty_flat(c, tables, mms_dir)
 
