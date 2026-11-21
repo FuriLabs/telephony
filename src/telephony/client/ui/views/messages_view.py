@@ -364,7 +364,7 @@ class MessagesView(Adw.Bin):
                 if custom_name:
                     name = custom_name
                 else:
-                    name = self.app_window.eds.get_display_name(target) or _("Unknown")
+                    name = self.app_window.eds.get_display_name(target) or self.nameless_title(target)
 
         if name == "Unknown":
             name = _("Unknown")
@@ -490,6 +490,13 @@ class MessagesView(Adw.Bin):
         self.blocked_numbers = self.load_blocked_numbers()
         self.refresh_list()
 
+    def nameless_title(self, number):
+        """What a thread with no contact behind it is called, following the same setting the conversation list follows."""
+        if not any(c.isdigit() for c in str(number)):
+            return str(number)
+
+        return _("Unknown") if self.show_numbers else str(number)
+
     def on_show_numbers_changed(self, _settings, _key):
         self.show_numbers = self.app_window.gsettings_mgr.get_setting("show_numbers_in_message_list") != "false"
         self.refresh_list()
@@ -540,6 +547,9 @@ class MessagesView(Adw.Bin):
 
         if name == "Unknown":
             name = _("Unknown")
+
+        if not isinstance(target_number, list) and name == target_number:
+            name = self.nameless_title(target_number)
 
         if self.active_chat_number == target_number and not target_msg_id:
             if (prefill_text or prefill_attachments) and self.active_chat_page:
