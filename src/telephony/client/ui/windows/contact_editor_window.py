@@ -132,11 +132,11 @@ class ContactEditor(Adw.NavigationPage):
 
         is_read_only_source = False
         refusal = ""
-        if self.uid:
-            current_source = self.uid.split(":", 1)[0] if ":" in self.uid else None
-            if current_source in self.eds.read_only_source_uids():
-                is_read_only_source = True
-                refusal = self.eds.read_only_reason(current_source)
+        current_source = self.contact_source()
+        if current_source and current_source in self.eds.read_only_source_uids():
+            is_read_only_source = True
+            refusal = self.eds.read_only_reason(current_source)
+        self.shown_read_only = is_read_only_source
 
         if self.mode == "VIEW":
             header.set_show_end_title_buttons(True)
@@ -325,11 +325,29 @@ class ContactEditor(Adw.NavigationPage):
         self.toast_overlay.set_child(view)
 
     def add_address_books_group(self, page):
+        """The books are held by the daemon, and asking for them is a round trip. Asking for them as this page is built hands back nothing at all when nobody has asked yet, which is what happens when the editor is opened from a chat or from the call history, so the group is filled once the answer is here."""
         grp = Adw.PreferencesGroup(title=_("Address Books"))
         page.add(grp)
 
         self.source_toggles = {}
-        sources = self.eds.get_sources_info()
+        self.eds.sources_info_async(lambda sources: self.fill_address_books(grp, sources))
+
+    def contact_source(self):
+        """The book this contact is kept in, or nothing for one that is not saved yet."""
+        if not self.uid or ":" not in self.uid:
+            return None
+        return self.uid.split(":", 1)[0]
+
+    def fill_address_books(self, grp, sources):
+        if self._destroyed:
+            return
+
+        current_source = self.contact_source()
+        now_read_only = bool(current_source) and current_source in self.eds.read_only_source_uids()
+        if now_read_only != self.shown_read_only:
+            GLib.idle_add(lambda: self.refresh_ui() or False)
+            return
+
         enabled = [s for s in sources if s["enabled"]]
 
         current_source = None
