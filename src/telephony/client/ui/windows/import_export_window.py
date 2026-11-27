@@ -48,7 +48,7 @@ class ImportExportDialog:
         page_content = Adw.PreferencesPage()
         group = Adw.PreferencesGroup()
         if description:
-            group.set_description(description)
+            group.set_description(GLib.markup_escape_text(description))
         for label, callback, subtitle in entries:
             row = Adw.ActionRow(title=label, activatable=True)
             if subtitle:
@@ -198,7 +198,10 @@ class ImportExportDialog:
             rows.append((_("Select SMS/MMS file"), lambda: self.open_file_chooser("android_sms"), None))
         if self.mode_calls:
             rows.append((_("Select Call history file"), lambda: self.open_file_chooser("android_calls"), None))
-        self.show_choices(_("Import From Android"), rows)
+        where = _("On the Android phone, install SMS Backup & Restore by SyncTech and let"
+                  " it save a backup. It saves one XML file for messages and another one"
+                  " for call history. Copy that file onto this phone, then pick it below.")
+        self.show_choices(_("Import From Android"), rows, description=where)
 
     def ask_import_ios(self):
         rows = [(_("Direct USB Import (Recommended)"), self.start_ios_usb_import, None)]
@@ -206,7 +209,11 @@ class ImportExportDialog:
             rows.append((_("Select SMS/MMS file"), lambda: self.open_file_chooser("ios_sms"), None))
         if self.mode_calls:
             rows.append((_("Select Call history file"), lambda: self.open_file_chooser("ios_calls"), None))
-        self.show_choices(_("Import From iOS"), rows)
+        where = _("Use Direct USB Import if you can: connect the iPhone with a cable and"
+                  " unlock it, and the pictures come across too. Picking a file brings the"
+                  " text only, and that file is the iPhone's sms.db out of an unencrypted"
+                  " computer backup, made with Finder on macOS or iTunes on Windows.")
+        self.show_choices(_("Import From iOS"), rows, description=where)
 
     def start_ios_usb_import(self):
         run_in_background(IOSBackupExtractor.check_connection, on_complete=self.on_ios_connection_checked)

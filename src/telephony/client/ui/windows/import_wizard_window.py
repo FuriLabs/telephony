@@ -74,6 +74,24 @@ class ImportWizardWindow(Adw.NavigationPage):
         lbl_info.set_justify(Gtk.Justification.CENTER)
         self.content_box.append(lbl_info)
 
+        if self.import_type == "chatty":
+            where = _("If Chatty is on this phone, use System Database. To bring messages"
+                      " from another Linux phone, copy two things onto this phone:"
+                      " ~/.purple/chatty/db/chatty-history.db and the mms folder from"
+                      " ~/.local/share/chatty. Then use Custom Database Backup, which asks"
+                      " for the database first and the folder after.")
+        else:
+            where = _("If Calls is on this phone, use System Database. To bring the history"
+                      " from another Linux phone, copy ~/.local/share/calls/records.db onto"
+                      " this phone and use Custom Database Backup.")
+
+        lbl_where = Gtk.Label(label=where)
+        lbl_where.add_css_class("dim-label")
+        lbl_where.add_css_class("caption")
+        lbl_where.set_wrap(True)
+        lbl_where.set_xalign(0)
+        self.content_box.append(lbl_where)
+
         card = Adw.PreferencesGroup()
 
         row_sys = Adw.ActionRow(title=_("System Database"))
@@ -141,6 +159,18 @@ class ImportWizardWindow(Adw.NavigationPage):
         lbl_info.set_wrap(True)
         lbl_info.set_justify(Gtk.Justification.CENTER)
         self.content_box.append(lbl_info)
+
+        lbl_where = Gtk.Label(label=_("Choose the mms folder you copied from the other phone;"
+                                      " on that phone it sits in ~/.local/share/chatty. Skip it"
+                                      " and the usual place on this phone is looked in instead."
+                                      " A picture that is not found is not added later: a message"
+                                      " that is only a picture is left out, and one with text"
+                                      " keeps its text and nothing else."))
+        lbl_where.add_css_class("dim-label")
+        lbl_where.add_css_class("caption")
+        lbl_where.set_wrap(True)
+        lbl_where.set_xalign(0)
+        self.content_box.append(lbl_where)
 
         card = Adw.PreferencesGroup()
 
