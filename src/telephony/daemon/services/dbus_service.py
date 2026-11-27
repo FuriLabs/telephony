@@ -164,6 +164,11 @@ DAEMON_INTERFACE_XML = """
     </method>
 
     <!-- Import operations -->
+    <method name="ImportTelephony">
+      <arg type="s" name="file_path" direction="in"/>
+      <arg type="b" name="success" direction="out"/>
+      <arg type="s" name="message" direction="out"/>
+    </method>
     <method name="ImportChatty">
       <arg type="s" name="db_path" direction="in"/>
       <arg type="s" name="mms_path" direction="in"/>
@@ -843,6 +848,7 @@ class TelephonyDaemonDBus:
             "ClearEverything": self.handle_cleareverything,
             "DeleteAddressBook": self.handle_deleteaddressbook,
             "CreateAddressBook": self.handle_createaddressbook,
+            "ImportTelephony": self.handle_importtelephony,
             "ImportChatty": self.handle_importchatty,
             "ImportLocalCalls": self.handle_importlocalcalls,
             "ImportAndroidSms": self.handle_importandroidsms,
@@ -1349,6 +1355,11 @@ class TelephonyDaemonDBus:
             invocation.return_value(GLib.Variant("(bs)", (False, "")))
             return
         run_in_background(task, on_complete=done, on_error=failed)
+
+    def handle_importtelephony(self, parameters, invocation):
+        from telephony.daemon.utils.importer_telephony_utils import import_telephony_export
+        file_path = parameters.unpack()[0]
+        self.run_import(invocation, lambda: import_telephony_export(self.db, file_path))
 
     def handle_importchatty(self, parameters, invocation):
         from telephony.daemon.utils.importer_local_utils import import_local_chatty

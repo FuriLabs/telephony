@@ -27,6 +27,19 @@ CHATTY_STATUS_DRAFT = 1
 CHATTY_THREAD_GROUP = 1
 
 
+def free_destination(att_dir, name):
+    """A place to put one copied attachment that no file is using. Two phones can both hold a picture called the same thing, and standing one on the other would leave the second message pointing at the first picture."""
+    candidate = os.path.join(att_dir, name)
+    if not os.path.exists(candidate):
+        return candidate
+
+    stem, ext = os.path.splitext(name)
+    nth = 2
+    while os.path.exists(os.path.join(att_dir, f"{stem}-{nth}{ext}")):
+        nth += 1
+    return os.path.join(att_dir, f"{stem}-{nth}{ext}")
+
+
 def copy_attachments(db_manager, source_paths, prefix):
     copied = []
     att_dir = os.path.join(db_manager.get_data_dir(), "attachments")
@@ -36,9 +49,8 @@ def copy_attachments(db_manager, source_paths, prefix):
                 logger.warning(f"[Importer] Attachment missing, skipping: {src}")
                 continue
             os.makedirs(att_dir, exist_ok=True)
-            dest = os.path.join(att_dir, f"{prefix}_{os.path.basename(src)}")
-            if not os.path.exists(dest):
-                shutil.copy2(src, dest)
+            dest = free_destination(att_dir, f"{prefix}_{os.path.basename(src)}")
+            shutil.copy2(src, dest)
             copied.append(dest)
         except Exception as e:
             logger.warning(f"[Importer] Failed to copy attachment {src}: {e}")

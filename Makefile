@@ -14,7 +14,7 @@ SYSTEMD_USER_DIR = $(LIB_DIR)/systemd/user
 LOCALE_DIR = $(DATA_DIR)/locale
 GSCHEMA_DIR = $(DATA_DIR)/glib-2.0/schemas
 
-.PHONY: all build check install uninstall clean
+.PHONY: all build check test install uninstall clean
 
 all: build
 
@@ -22,6 +22,9 @@ check:
 	python3 scripts/check_boundaries.py
 	python3 -m compileall -q src/telephony
 	python3 -m pyflakes src/telephony
+
+test:
+	python3 scripts/check_telephony_bundle.py
 
 build: check
 	mkdir -p build/locale
