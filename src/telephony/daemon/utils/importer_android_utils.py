@@ -10,6 +10,7 @@ import base64
 import time
 from gettext import gettext as _
 
+from collections import Counter
 import json
 import os
 import xml.etree.ElementTree as ET
@@ -32,12 +33,13 @@ def import_android_sms(db_manager, file_path):
         with db_manager.lock:
             db_c = db_manager.conn_messages.cursor()
             db_c.execute("SELECT remote_number, body, timestamp, direction FROM messages")
-            existing_messages = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
+            existing_messages = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         local_att_dir = os.path.join(db_manager.get_data_dir(), "attachments")
         os.makedirs(local_att_dir, exist_ok=True)
 
         count = 0
+        unreadable = 0
         for msg in root.findall("sms") + root.findall("mms"):
             try:
                 phone = get_xml_value(msg, ["address", "number", "contact", "target", "phone"])
@@ -63,13 +65,13 @@ def import_android_sms(db_manager, file_path):
 
                 if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping android message: missing required details")
+                    unreadable += 1
                     continue
 
                 sig = (norm_number, str(body), time_str, dir_str)
-                if sig in existing_messages:
+                if existing_messages[sig]:
+                    existing_messages[sig] -= 1
                     continue
-
-                existing_messages.add(sig)
 
                 attachments_json = "[]"
                 db_msg_type = "sms"
@@ -119,6 +121,10 @@ def import_android_sms(db_manager, file_path):
                 db_manager.conn_messages.commit()
             count = len(to_insert)
 
+        if unreadable and not count:
+            logger.error("[Importer] No android message carried a readable time")
+            return False, _("Import failed.")
+
         return True, _("Imported {count} messages from Android backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing Android SMS: {e}")
@@ -137,9 +143,10 @@ def import_android_calls(db_manager, file_path):
         with db_manager.lock:
             db_c = db_manager.conn_calls.cursor()
             db_c.execute("SELECT number, timestamp, duration, direction FROM history")
-            existing_calls = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
+            existing_calls = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         count = 0
+        unreadable = 0
         for call in root.findall("call"):
             try:
                 phone = get_xml_value(call, ["number", "address", "phone", "contact", "target"])
@@ -167,13 +174,13 @@ def import_android_calls(db_manager, file_path):
                 norm_number = normalize_number(str(phone))
                 if not norm_number or not time_str:
                     logger.warning("[Importer] Skipping android call: missing required details")
+                    unreadable += 1
                     continue
 
                 sig = (norm_number, time_str, duration, dir_str)
-                if sig in existing_calls:
+                if existing_calls[sig]:
+                    existing_calls[sig] -= 1
                     continue
-
-                existing_calls.add(sig)
 
                 real_name = "Unknown"
                 if db_manager.eds:
@@ -193,6 +200,10 @@ def import_android_calls(db_manager, file_path):
                 db_c.executemany("INSERT INTO history (number, name, direction, duration, timestamp) VALUES (?, ?, ?, ?, ?)", to_insert)
                 db_manager.conn_calls.commit()
             count = len(to_insert)
+
+        if unreadable and not count:
+            logger.error("[Importer] No android call carried a readable time")
+            return False, _("Import failed.")
 
         return True, _("Imported {count} calls from Android backup.").format(count=count)
     except Exception as e:

@@ -48,9 +48,9 @@ def get_calls_db_path():
 
 
 def parse_generic_timestamp(ts):
-    """Robust timestamp parser that handles variations such as: - String representations of ISO dates (e.g. '2022-01-01T12:00:00Z') - Standard Unix epochs (10 digits) - JavaScript/Android epochs in milliseconds (13 digits) - Microsecond/Nanosecond epochs (16+ digits) - Mac OS absolute time epochs (offset from 2001-01-01)"""
-    if not ts:
-        return format_timestamp()
+    """Robust timestamp parser that handles variations such as: - String representations of ISO dates (e.g. '2022-01-01T12:00:00Z') - Standard Unix epochs (10 digits) - JavaScript/Android epochs in milliseconds (13 digits) - Microsecond/Nanosecond epochs (16+ digits) - Mac OS absolute time epochs (offset from 2001-01-01). Returns nothing when the time cannot be read."""
+    if ts is None or (isinstance(ts, str) and not ts.strip()):
+        return None
 
     try:
         if isinstance(ts, str) and not ts.replace(".", "", 1).isdigit() and not ts.lstrip("-").isdigit():
@@ -71,4 +71,4 @@ def parse_generic_timestamp(ts):
         return format_timestamp(datetime.fromtimestamp(ts_float))
     except Exception as e:
         logger.warning(f"[Importer] Error parsing timestamp {ts}: {e}")
-        return format_timestamp()
+        return None

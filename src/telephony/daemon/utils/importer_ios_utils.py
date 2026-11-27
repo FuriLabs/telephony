@@ -7,6 +7,7 @@
 
 from gettext import gettext as _
 
+from collections import Counter
 import json
 import os
 import shutil
@@ -29,6 +30,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
         return False, _("File not found.")
 
     count = 0
+    unreadable = 0
     try:
         conn = sqlite3.connect(file_path)
         conn.row_factory = sqlite3.Row
@@ -101,7 +103,7 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
         with db_manager.lock:
             db_c = db_manager.conn_messages.cursor()
             db_c.execute("SELECT remote_number, body, timestamp, direction FROM messages")
-            existing_messages = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
+            existing_messages = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         for row in rows:
             try:
@@ -128,17 +130,17 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
                     time_str = format_timestamp(datetime.fromtimestamp(unix_ts))
                 except Exception as e:
                     logger.warning(f"[Importer] Error parsing iOS message date {date}: {e}")
-                    time_str = format_timestamp()
+                    time_str = None
 
                 if not norm_number or not dir_str or not time_str:
                     logger.warning("[Importer] Skipping iOS message: missing required details")
+                    unreadable += 1
                     continue
 
                 sig = (norm_number, str(text), time_str, dir_str)
-                if sig in existing_messages:
+                if existing_messages[sig]:
+                    existing_messages[sig] -= 1
                     continue
-
-                existing_messages.add(sig)
 
                 sender = "Me" if dir_str == "outgoing" else norm_number
 
@@ -188,6 +190,10 @@ def import_ios_sms(db_manager, file_path, manifest_path=None, backup_dir=None):
             count = len(to_insert)
 
         conn.close()
+        if unreadable and not count:
+            logger.error("[Importer] No message carried a readable time")
+            return False, _("Import failed.")
+
         return True, _("Imported {count} messages from iOS backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing iOS SMS: {e}")
@@ -199,6 +205,7 @@ def import_ios_calls(db_manager, file_path):
         return False, _("File not found.")
 
     count = 0
+    unreadable = 0
     try:
         conn = sqlite3.connect(file_path)
         conn.row_factory = sqlite3.Row
@@ -234,7 +241,7 @@ def import_ios_calls(db_manager, file_path):
         with db_manager.lock:
             db_c = db_manager.conn_calls.cursor()
             db_c.execute("SELECT number, timestamp, duration, direction FROM history")
-            existing_calls = {(r[0], r[1], r[2], r[3]) for r in db_c.fetchall()}
+            existing_calls = Counter((r[0], r[1], r[2], r[3]) for r in db_c.fetchall())
 
         for row in rows:
             try:
@@ -242,6 +249,9 @@ def import_ios_calls(db_manager, file_path):
                 phone = get_value(row_dict, ["ZADDRESS", "address", "target", "number", "phone"])
                 if not phone:
                     continue
+
+                if isinstance(phone, bytes):
+                    phone = phone.decode("utf-8", "ignore")
 
                 originated = get_value(row_dict, ["ZORIGINATED", "originated", "direction"], 0)
                 answered = get_value(row_dict, ["ZANSWERED", "answered", "status"], 1)
@@ -260,23 +270,23 @@ def import_ios_calls(db_manager, file_path):
                     time_str = format_timestamp(datetime.fromtimestamp(unix_ts))
                 except Exception as e:
                     logger.warning(f"[Importer] Error parsing iOS call date {date}: {e}")
-                    time_str = format_timestamp()
+                    time_str = None
 
                 norm_number = normalize_number(str(phone))
-
-                sig = (norm_number, time_str, duration, dir_str)
-                if sig in existing_calls:
+                if not norm_number or not time_str:
+                    logger.warning("[Importer] Skipping iOS call: missing required details")
+                    unreadable += 1
                     continue
 
-                existing_calls.add(sig)
+                sig = (norm_number, time_str, duration, dir_str)
+                if existing_calls[sig]:
+                    existing_calls[sig] -= 1
+                    continue
 
                 real_name = "Unknown"
                 if db_manager.eds:
                     real_name = db_manager.eds.get_contact_name(norm_number) or "Unknown"
 
-                if not norm_number or not dir_str or not time_str:
-                    logger.warning("[Importer] Skipping iOS call: missing required details (timestamp missing)")
-                    continue
                 to_insert.append((norm_number, real_name, dir_str, duration, time_str))
 
             except Exception as e:
@@ -293,6 +303,10 @@ def import_ios_calls(db_manager, file_path):
             count = len(to_insert)
 
         conn.close()
+        if unreadable and not count:
+            logger.error("[Importer] No call carried a readable time")
+            return False, _("Import failed.")
+
         return True, _("Imported {count} calls from iOS backup.").format(count=count)
     except Exception as e:
         logger.error(f"[Importer] Error importing iOS Calls: {e}")
